@@ -12,7 +12,13 @@ import {
   loadFieldTable,
   type BuiltinsIndex,
 } from "./builtins.js";
-import { removeField, setField, type EditTables } from "./object-data-edit.js";
+import {
+  removeField,
+  setField,
+  type EditTables,
+  type StringSources,
+} from "./object-data-edit.js";
+import { foreignReferences } from "./object-data-strings.js";
 import { checkMapFolder, readMapFile } from "./map-folder.js";
 import {
   OBJECT_KINDS,
@@ -176,8 +182,14 @@ export interface ObjectDataEditor {
    * modification. An integer is checked to fit 32 bits, a real is stored as
    * its nearest 32-bit value, and a string, written as literal UTF-8, is
    * checked to hold no NUL byte. A localizable string (a name, a tooltip)
-   * is refused: this version does not write `war3map.wts` yet. Nothing is
-   * written until {@link ObjectDataEditor.save}.
+   * is written as a `TRIGSTR_nnn` reference and its `STRING n` block in
+   * `war3map.wts`: into the string it references when nothing else does,
+   * the Object data or another file of the map folder, else into a new one,
+   * numbered one above every number in use and appended with the World
+   * Editor's comment line; it is checked to hold no NUL byte, no CR and no
+   * line that is `}` alone. A string the edit leaves unreferenced is
+   * removed when nothing else references it. Nothing is written until
+   * {@link ObjectDataEditor.save}.
    *
    * @param field - The object and field to set: Object kind, Rawcode,
    *   field id, and level and data pointer where the kind has them.
@@ -206,8 +218,10 @@ export interface ObjectDataEditor {
    *
    * @remarks
    * The object's other modifications stay as read, and its entries stay in
-   * both files. A field the object does not hold is no change. Nothing is
-   * written until {@link ObjectDataEditor.save}.
+   * both files. A `STRING n` of `war3map.wts` the field referenced is
+   * removed when no other modification of the Object data and no other
+   * file of the map folder references it. A field the object does not hold
+   * is no change. Nothing is written until {@link ObjectDataEditor.save}.
    *
    * @param field - The object and field to remove: Object kind, Rawcode,
    *   field id, and level and data pointer where the kind has them.
@@ -302,6 +316,7 @@ class Editor implements ObjectDataEditor {
   readonly #model: MapFolderModel;
   readonly #builtins: BuiltinsIndex | undefined;
   readonly #tables: EditTables;
+  readonly #strings: StringSources;
 
   constructor(
     mapFolder: string,
@@ -313,6 +328,13 @@ class Editor implements ObjectDataEditor {
     this.#model = model;
     this.#builtins = builtins;
     this.#tables = tables;
+    // Read once, at the first edit that needs it: the files it reads are
+    // ones the editor never writes.
+    let foreign: ReadonlySet<number> | undefined;
+    this.#strings = {
+      foreignReferences: () =>
+        (foreign ??= foreignReferences(mapFolder, model)),
+    };
     mapFolderObjects(model, { builtins });
     this.warnings = [...model.warnings];
   }
@@ -322,11 +344,18 @@ class Editor implements ObjectDataEditor {
     value: number | string,
     options: ObjectDataSetFieldOptions = {},
   ): void {
-    setField(this.#model, this.#tables, field, value, options.type);
+    setField(
+      this.#model,
+      this.#tables,
+      this.#strings,
+      field,
+      value,
+      options.type,
+    );
   }
 
   removeField(field: ObjectDataField): void {
-    removeField(this.#model, this.#tables, field);
+    removeField(this.#model, this.#tables, this.#strings, field);
   }
 
   objects(kind?: ObjectKind): ObjectDataObject[] {
@@ -388,7 +417,8 @@ class Editor implements ObjectDataEditor {
       .filter(
         (name) =>
           this.#model.files.has(name) ||
-          this.#model.objectData.some((file) => file.name === name),
+          this.#model.objectData.some((file) => file.name === name) ||
+          (name === WTS_FILE && this.#model.wts !== undefined),
       )
       .map((name) => {
         const read = this.#model.files.get(name);

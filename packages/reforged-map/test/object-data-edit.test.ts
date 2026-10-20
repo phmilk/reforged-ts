@@ -654,7 +654,6 @@ describe("an edit refused", () => {
       Number.NaN,
       "finite real of 32 bits",
     ],
-    ["a localizable string", "unam", "Captain", "localizable string"],
   ])("%s", (_case, field, value, message) => {
     expectRefused(
       units(),

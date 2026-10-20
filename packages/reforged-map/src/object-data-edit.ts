@@ -20,6 +20,10 @@
 //   one set of flag 0 (none in format versions 1 and 2); a file the kind
 //   did not have is created in format version 3.
 // - A value equal to its base's is kept as a modification (#460).
+// - A localizable string is a `TRIGSTR_nnn` and its `STRING n` block in
+//   war3map.wts (#638, src/object-data-strings.ts): the string it
+//   referenced when nothing else does, else a new one; a string the edit
+//   leaves unreferenced is removed under the same condition.
 
 import type { BuiltinsIndex, FieldEntry, FieldTable } from "./builtins.js";
 import {
@@ -37,12 +41,27 @@ import {
   objectDataFileName,
   objectDataFileNames,
 } from "./object-data.js";
+import {
+  hasString,
+  newNumber,
+  objectDataReferences,
+  putString,
+  reference,
+  referencedNumber,
+  removeString,
+} from "./object-data-strings.js";
+import { resolveString } from "./war3map-wts.js";
 import { ObjectDataWriterError } from "./writer-error.js";
 
 /** What an edit reads besides the model: reforged-builtins' field table and index, or why they are missing. */
 export type EditTables =
   | { readonly fields: FieldTable; readonly builtins: BuiltinsIndex }
   | { readonly missing: string };
+
+/** What an edit reads of the map folder besides the model: the numbers of the `TRIGSTR` references its other files hold. */
+export interface StringSources {
+  foreignReferences(): ReadonlySet<number>;
+}
 
 /** The field of an object an edit addresses, as the caller gives it. */
 export interface FieldAddress {
@@ -80,6 +99,7 @@ const UINT32_MAX = 0xffffffff;
 export function setField(
   model: MapFolderModel,
   tables: EditTables,
+  strings: StringSources,
   address: FieldAddress,
   value: unknown,
   type: ValueType | undefined,
@@ -100,11 +120,7 @@ export function setField(
       `The ${kind} field ${address.field} stores a value of type ${entry.type} (the field table of Game version ${fields.gameVersion}), not ${type}: leave its type out.`,
     );
   }
-  if (entry?.localizable === true) {
-    invalid(
-      `The ${kind} field ${address.field} is a localizable string, which the World Editor keeps in war3map.wts: this version of reforged-map does not write one yet.`,
-    );
-  }
+  const localizable = entry?.localizable === true;
   const { level, dataPointer } = levelOf(address, entry);
   const places = files.map((file) =>
     file === undefined
@@ -117,9 +133,38 @@ export function setField(
       ? skinHeld !== undefined && baseHeld === undefined
       : entry.file === "skin";
   const held = places[skin ? 1 : 0];
-  const valueType = held?.modification.type ?? entry?.type ?? type;
+  const valueType = localizable
+    ? "string"
+    : (held?.modification.type ?? entry?.type ?? type);
   if (valueType === undefined) throw new Error("unreachable: no value type");
-  const stored = checkValue(address, valueType, value);
+  // The modifications the edit replaces or removes, the held one first.
+  const replaced = [held, places[skin ? 0 : 1]].flatMap((place) =>
+    place === undefined ? [] : [place.modification],
+  );
+  let string:
+    | { number: number; text: string; inPlace: boolean; entry: FieldEntry }
+    | undefined;
+  let stored: number | string;
+  const references = objectDataReferences(model, replaced);
+  const foreign = needsForeign(replaced, localizable)
+    ? strings.foreignReferences()
+    : new Set<number>();
+  const free = (number: number) =>
+    !references.has(number) && !foreign.has(number);
+  if (entry?.localizable === true) {
+    const text = checkLocalizable(address, value);
+    const own = replaced
+      .map(referencedNumber)
+      .find(
+        (number) =>
+          number !== undefined && hasString(model, number) && free(number),
+      );
+    const number = own ?? newNumber(model, foreign);
+    string = { number, text, inPlace: own !== undefined, entry };
+    stored = reference(number);
+  } else {
+    stored = checkValue(address, valueType, value);
+  }
 
   for (const inSkin of [false, true]) {
     const name = objectDataFileName(kind, inSkin);
@@ -138,6 +183,7 @@ export function setField(
             })
           : replaceModification(file, target, place, {
               ...place.modification,
+              type: valueType,
               value: stored,
               bytes: undefined,
               bits: undefined,
@@ -147,12 +193,26 @@ export function setField(
     }
     putFile(model, file);
   }
+  if (string !== undefined) {
+    // The string first, so that the comment names the object by a name the
+    // edit sets.
+    model.strings.set(string.number, string.text);
+    putString(
+      model,
+      string.number,
+      string.text,
+      comment(model, fields, builtins, target, kind, string.entry),
+      string.inPlace,
+    );
+  }
+  releaseStrings(model, replaced, string?.number, free);
 }
 
 /** Removes a field of an object from the model, from both files of its kind. */
 export function removeField(
   model: MapFolderModel,
   tables: EditTables,
+  strings: StringSources,
   address: FieldAddress,
 ): void {
   const { fields, builtins } = requireTables(tables);
@@ -165,12 +225,110 @@ export function removeField(
       ? undefined
       : findField(file, target, address.field, level, dataPointer),
   );
+  const removed = places.flatMap((place) =>
+    place === undefined ? [] : [place.modification],
+  );
+  const references = objectDataReferences(model, removed);
+  const foreign = needsForeign(removed, false)
+    ? strings.foreignReferences()
+    : new Set<number>();
   files.forEach((file, index) => {
     const place = places[index];
     if (file !== undefined && place !== undefined) {
       putFile(model, removeModification(file, target, place));
     }
   });
+  releaseStrings(
+    model,
+    removed,
+    undefined,
+    (number) => !references.has(number) && !foreign.has(number),
+  );
+}
+
+/**
+ * Removes the string of each number the replaced or removed modifications
+ * referenced, but `kept`'s, when it is free: no other modification of the
+ * Object data and no other file of the map folder references it.
+ */
+function releaseStrings(
+  model: MapFolderModel,
+  replaced: readonly Modification[],
+  kept: number | undefined,
+  free: (number: number) => boolean,
+): void {
+  for (const number of new Set(replaced.map(referencedNumber))) {
+    if (number !== undefined && number !== kept && free(number)) {
+      removeString(model, number);
+    }
+  }
+}
+
+/** Whether an edit must know the references of the map folder's other files: it writes a string, or drops a reference. */
+function needsForeign(
+  replaced: readonly Modification[],
+  localizable: boolean,
+): boolean {
+  return (
+    localizable ||
+    replaced.some(
+      (modification) => referencedNumber(modification) !== undefined,
+    )
+  );
+}
+
+/**
+ * The World Editor's comment line of a string of the object's field, from
+ * the field table's labels: `// Units: h000 (Captain), Name (Name)`. The
+ * object's name is its field named `Name` in the metadata, at its lowest
+ * level, the Skin file's winning, as the model holds it after the edit;
+ * else its base's or the game's name from the index; none for a kind
+ * without such a field (the buffs).
+ */
+function comment(
+  model: MapFolderModel,
+  fields: FieldTable,
+  builtins: BuiltinsIndex,
+  target: Target,
+  kind: ObjectKind,
+  entry: FieldEntry,
+): string {
+  const kindFields = fields.fields[kind] ?? {};
+  const nameFields = new Set(
+    Object.entries(kindFields)
+      .filter(([, other]) => other.field === "Name")
+      .map(([id]) => id),
+  );
+  let name: Modification | undefined;
+  for (const file of model.objectData) {
+    if (file.kind !== kind) continue;
+    for (const objectEntry of target.custom ? file.custom : file.original) {
+      if (!isTarget(objectEntry, target)) continue;
+      for (const modification of objectEntry.sets.flatMap(
+        (set) => set.modifications,
+      )) {
+        if (
+          nameFields.has(modification.field) &&
+          typeof modification.value === "string" &&
+          (name === undefined || (modification.level ?? 0) <= (name.level ?? 0))
+        ) {
+          name = modification;
+        }
+      }
+    }
+  }
+  const builtin = target.custom ? target.base : target.rawcode;
+  const objectName =
+    nameFields.size === 0
+      ? ""
+      : ((name === undefined
+          ? undefined
+          : resolveString(String(name.value), model)) ??
+        (Object.hasOwn(builtins.objects, builtin)
+          ? builtins.objects[builtin].name
+          : undefined) ??
+        "");
+  return `// ${fields.kinds[kind] ?? kind}: ${target.rawcode} (${objectName}), ${entry.field} (${entry.label})`;
 }
 
 function requireTables(tables: EditTables): {
@@ -360,6 +518,27 @@ function checkValue(
     );
   }
   return real;
+}
+
+/**
+ * A localizable string checked: one war3map.wts can hold, without a NUL
+ * byte or a CR (a line break is an LF), and without a line that is a
+ * closing brace alone, which would end its block.
+ */
+function checkLocalizable(
+  { kind, field }: FieldAddress,
+  value: unknown,
+): string {
+  if (
+    typeof value !== "string" ||
+    /[\0\r]/.test(value) ||
+    value.split("\n").includes("}")
+  ) {
+    invalid(
+      `The ${kind} field ${field} stores a localizable string, which war3map.wts holds: a string without a NUL byte or a CR (a line break is an LF alone), and without a line that is "}" alone: ${describe(value)} is not one.`,
+    );
+  }
+  return value;
 }
 
 /** A file the kind did not have, empty, in format version 3. */

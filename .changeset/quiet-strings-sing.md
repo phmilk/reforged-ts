@@ -1,0 +1,5 @@
+---
+"reforged-map": minor
+---
+
+The Object data editor writes localizable strings: `setField` on a name or a tooltip writes a `TRIGSTR_nnn` reference and its `STRING n` block in `war3map.wts`, in the Editor form, as the 3.0 World Editor saves it. A new string is numbered one above every `STRING n` and every `TRIGSTR` in use (an orphan and a reference to a missing string included), and appended with the file's own line ends and the editor's comment line, `// Units: h000 (Captain), Name (Name)`. A changed string goes into its own `STRING n` when no other modification and no other file of the map folder references its number, into a new one otherwise; a string an edit leaves unreferenced is removed under the same condition. A literal or misplaced localizable string is converted and moved when its field is set, and a map folder without `war3map.wts` gets one with a byte order mark and CRLF. Every other block of `war3map.wts` stays byte for byte. Setting a localizable string is no longer refused with `"invalid-value"`.
