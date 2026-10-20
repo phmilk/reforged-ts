@@ -24,6 +24,15 @@
 //   war3map.wts (#638, src/object-data-strings.ts): the string it
 //   referenced when nothing else does, else a new one; a string the edit
 //   leaves unreferenced is removed under the same condition.
+// - A Custom object is added to the Custom table of both files of its kind,
+//   holding no modification, with a Rawcode its kind does not hold and no
+//   Built-in object of the index has (but a Custom object of another kind
+//   may: the World Editor makes a Custom buff and a Custom destructable
+//   B000), and a base the index has as a Built-in object of its kind (#639).
+// - Removing an object removes every entry of it from both files of its
+//   kind: a Custom object, or a Built-in object's modifications. A string
+//   it referenced is removed under the orphan rule above. Placements of a
+//   removed Custom object are not the writer's (#482).
 
 import type { BuiltinsIndex, FieldEntry, FieldTable } from "./builtins.js";
 import {
@@ -72,6 +81,12 @@ export interface FieldAddress {
   readonly dataPointer?: number;
 }
 
+/** The object an object edit addresses, as the caller gives it. */
+export interface ObjectAddress {
+  readonly kind: ObjectKind;
+  readonly rawcode: string;
+}
+
 /** The object an edit addresses: a Custom object of the map, with its base, or a Built-in object. */
 type Target =
   | { readonly custom: true; readonly rawcode: string; readonly base: string }
@@ -106,7 +121,7 @@ export function setField(
 ): void {
   const { fields, builtins } = requireTables(tables);
   const { kind } = address;
-  const files = kindFiles(model, address);
+  const files = kindFiles(model, address, address.field);
   const target = findTarget(files, builtins, address);
   const entry = fields.fields[kind]?.[address.field];
   if (entry === undefined && type === undefined) {
@@ -216,7 +231,7 @@ export function removeField(
   address: FieldAddress,
 ): void {
   const { fields, builtins } = requireTables(tables);
-  const files = kindFiles(model, address);
+  const files = kindFiles(model, address, address.field);
   const target = findTarget(files, builtins, address);
   const entry = fields.fields[address.kind]?.[address.field];
   const { level, dataPointer } = levelOf(address, entry);
@@ -238,6 +253,99 @@ export function removeField(
       putFile(model, removeModification(file, target, place));
     }
   });
+  releaseStrings(
+    model,
+    removed,
+    undefined,
+    (number) => !references.has(number) && !foreign.has(number),
+  );
+}
+
+/**
+ * Adds a Custom object to the model, in the Custom table of both files of
+ * its kind, holding no modification.
+ */
+export function addObject(
+  model: MapFolderModel,
+  tables: EditTables,
+  address: ObjectAddress & { readonly base: string },
+): void {
+  const { builtins } = requireTables(tables);
+  const { kind, rawcode, base } = address;
+  const files = kindFiles(model, address, undefined, base);
+  for (const file of files) {
+    if (file?.custom.some((entry) => entry.custom === rawcode) === true) {
+      taken(
+        `The map already holds a Custom ${kind} ${printable(rawcode)}: choose another Rawcode, or edit that object.`,
+      );
+    }
+    if (file?.original.some((entry) => entry.original === rawcode) === true) {
+      taken(
+        `The map already modifies the Built-in ${kind} ${printable(rawcode)}: choose another Rawcode.`,
+      );
+    }
+  }
+  if (Object.hasOwn(builtins.objects, rawcode)) {
+    const builtin = builtins.objects[rawcode];
+    taken(
+      `${rawcode} is the Rawcode of the Built-in ${builtin.kind}${builtin.name === undefined ? "" : ` ${builtin.name}`} in Game version ${builtins.gameVersion}, and a Custom object never takes a Built-in Rawcode: choose another Rawcode.`,
+    );
+  }
+  if (!Object.hasOwn(builtins.objects, base)) {
+    throw new ObjectDataWriterError(
+      "unknown-base",
+      `No Built-in ${kind} of Game version ${builtins.gameVersion} has the Rawcode ${printable(base)}, the base given for ${printable(rawcode)}: a Custom object derives from a Built-in object of its kind. Check the base's Rawcode.`,
+    );
+  }
+  if (builtins.objects[base].kind !== kind) {
+    throw new ObjectDataWriterError(
+      "unknown-base",
+      `${base}, the base given for ${printable(rawcode)}, is a Built-in ${builtins.objects[base].kind}, not a ${kind}: a Custom object derives from a Built-in object of its kind. Check the base's Rawcode and the Object kind.`,
+    );
+  }
+  const target: Target = { custom: true, rawcode, base };
+  for (const skin of [false, true]) {
+    const file =
+      files[skin ? 1 : 0] ??
+      newFile(objectDataFileName(kind, skin), kind, skin);
+    putFile(model, withEntry(file, target));
+  }
+}
+
+/**
+ * Removes an object from the model, every entry of it in both files of its
+ * kind: a Custom object, or a Built-in object's modifications.
+ */
+export function removeObject(
+  model: MapFolderModel,
+  tables: EditTables,
+  strings: StringSources,
+  address: ObjectAddress,
+): void {
+  const { builtins } = requireTables(tables);
+  const files = kindFiles(model, address);
+  const target = findTarget(files, builtins, address);
+  const removed = files.flatMap((file) =>
+    file === undefined
+      ? []
+      : (target.custom ? file.custom : file.original)
+          .filter((entry) => isTarget(entry, target))
+          .flatMap((entry) => entry.sets.flatMap((set) => set.modifications)),
+  );
+  const references = objectDataReferences(model, removed);
+  const foreign = needsForeign(removed, false)
+    ? strings.foreignReferences()
+    : new Set<number>();
+  for (const file of files) {
+    if (file === undefined) continue;
+    const table = target.custom ? file.custom : file.original;
+    if (!table.some((entry) => isTarget(entry, target))) continue;
+    const kept = table.filter((entry) => !isTarget(entry, target));
+    putFile(
+      model,
+      target.custom ? { ...file, custom: kept } : { ...file, original: kept },
+    );
+  }
   releaseStrings(
     model,
     removed,
@@ -346,12 +454,14 @@ function requireTables(tables: EditTables): {
 
 /**
  * The base file and the Skin file of the address's kind, undefined when the
- * map folder lacks it; refuses a file the readers left out, and a Rawcode
- * or field id that is not four bytes.
+ * map folder lacks it; refuses a file the readers left out, and a Rawcode,
+ * field id or base that is not four bytes.
  */
 function kindFiles(
   model: MapFolderModel,
-  { kind, rawcode, field }: FieldAddress,
+  { kind, rawcode }: ObjectAddress,
+  field?: string,
+  base?: string,
 ): (ObjectDataFile | undefined)[] {
   if (!OBJECT_KINDS.includes(kind)) {
     invalid(`${kind} is not an Object kind.`);
@@ -359,7 +469,9 @@ function kindFiles(
   for (const [what, code] of [
     ["Rawcode", rawcode],
     ["field id", field],
+    ["base Rawcode", base],
   ] as const) {
+    if (what !== "Rawcode" && code === undefined) continue;
     if (!isFourBytes(code)) {
       invalid(
         `The ${what} ${JSON.stringify(code)} is not four characters of one byte each.`,
@@ -384,7 +496,7 @@ function kindFiles(
 function findTarget(
   files: readonly (ObjectDataFile | undefined)[],
   builtins: BuiltinsIndex,
-  { kind, rawcode }: FieldAddress,
+  { kind, rawcode }: ObjectAddress,
 ): Target {
   for (const file of files) {
     const custom = file?.custom.find((entry) => entry.custom === rawcode);
@@ -705,6 +817,10 @@ function describe(value: unknown): string {
     : typeof value === "number" || typeof value === "bigint"
       ? String(value)
       : `a ${typeof value}`;
+}
+
+function taken(message: string): never {
+  throw new ObjectDataWriterError("rawcode-taken", message);
 }
 
 function invalid(message: string): never {
