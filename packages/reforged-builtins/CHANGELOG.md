@@ -1,5 +1,11 @@
 # reforged-builtins
 
+## 1.0.0-alpha.4
+
+### Minor Changes
+
+- [#647](https://github.com/phmilk/reforged-ts/pull/647) [`8aefb4a`](https://github.com/phmilk/reforged-ts/commit/8aefb4a8dc61db30b6b819703607a62ebd406130) Thanks [@wyller](https://github.com/wyller)! - Ship the field table of each Game version, `3.0.0/fields.json`: per Object kind its label in the World Editor's `war3map.wts` comments, and per field of its metadata the value type, the file it goes in (base or Skin), whether it is localizable, its levels and data column, the base Rawcodes it is specific to, and its enUS label. A tool that writes Object data, such as `reforged-map`'s writer, reads it to write an edit as the World Editor does. It holds no tooltip text, numbers or icons.
+
 ## 1.0.0-alpha.3
 
 ### Patch Changes

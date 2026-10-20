@@ -1,5 +1,20 @@
 # reforged-map
 
+## 1.0.0-alpha.3
+
+### Minor Changes
+
+- [#644](https://github.com/phmilk/reforged-ts/pull/644) [`90f47f4`](https://github.com/phmilk/reforged-ts/commit/90f47f492ef93e81153dac755b433dadb5e270be) Thanks [@wyller](https://github.com/wyller)! - `openObjectData(mapFolder, { projectRoot })` opens a map folder's Object data for a tool that edits it: `objects(kind)` lists its objects as the Object Editor shows them, base and Skin files merged and names resolved, and `save(folder)` saves it to the map folder or to another folder, byte for byte (every Object data file, Skin file and `war3map.wts` comes back with the same bytes when nothing was edited). A save refuses with an `ObjectDataWriterError` of reason `"changed-on-disk"` when a file it would rewrite changed since it was read. The package now reads and writes Object data, and only reads the rest of the map folder (ADR 0015).
+
+- [#646](https://github.com/phmilk/reforged-ts/pull/646) [`d4d96a5`](https://github.com/phmilk/reforged-ts/commit/d4d96a553f8a74e2f23f7c3bb0b1a008f1fb6b1b) Thanks [@wyller](https://github.com/wyller)! - The Object data editor's save runs the World Editor check before its first write: it refuses to write a folder the World Editor shows unsaved edits for, and its result's `worldEditor` says whether the World Editor has the folder open, so a tool can reload it there with `-launch -loadfile`. `checkWorldEditor` runs the check on its own. `save(folder, { worldEditorCheck: false })` turns it off for a folder no World Editor opens, such as the build's staged copy in `dist/`. `ObjectDataWriterError` gains the reasons `"modified-in-world-editor"` and `"world-editor-check-failed"`.
+
+- [#648](https://github.com/phmilk/reforged-ts/pull/648) [`8c05737`](https://github.com/phmilk/reforged-ts/commit/8c05737b969fdbf276f7b4411f35d62794862b18) Thanks [@wyller](https://github.com/wyller)! - `reforged-map textconv <file>`, a git `textconv` driver of Object data: it prints an Object data file as text, one line per object and per modification, so that `git diff` of the map folder shows which object and which field a commit changed, with the old and the new value. A file it cannot read prints the reason and a hex dump, and exits 0. `objectDataText(bytes, fileName)` gives the same text. The README's "Object data in `git diff`" gives the attributes and the git configuration for a repository the Template does not set up.
+
+### Patch Changes
+
+- Updated dependencies [[`8aefb4a`](https://github.com/phmilk/reforged-ts/commit/8aefb4a8dc61db30b6b819703607a62ebd406130)]:
+  - reforged-builtins@1.0.0-alpha.4
+
 ## 1.0.0-alpha.2
 
 ### Minor Changes
