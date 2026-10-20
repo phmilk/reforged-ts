@@ -1,6 +1,7 @@
 // reforged-map: reads a Map project's map folder and returns the code
-// generated from it. Node only, run at build time; it only reads the map
-// folder (ADR 0006, ADR 0014).
+// generated from it. Node only, run at build time (ADR 0014). It reads and
+// writes the map folder's Object data, through the Object data editor, and
+// only reads the rest of the map folder (ADR 0015).
 
 import { loadBuiltins } from "./builtins.js";
 import { checkMapFolder, readMapFile, readMapScript } from "./map-folder.js";
@@ -19,6 +20,17 @@ import { readWar3mapWts } from "./war3map-wts.js";
 import { WTG_FILE, readWar3mapWtg } from "./war3map-wtg.js";
 
 export { MapFolderError } from "./map-folder.js";
+export {
+  ObjectDataWriterError,
+  openObjectData,
+  type ObjectDataEditor,
+  type ObjectDataEditorOptions,
+  type ObjectDataModification,
+  type ObjectDataObject,
+  type ObjectDataSaveResult,
+  type ObjectDataValueType,
+  type ObjectDataWriterErrorReason,
+} from "./object-data-editor.js";
 export type { GameDataSet } from "./builtins.js";
 export type { ObjectKind } from "./model.js";
 

@@ -1,5 +1,6 @@
-// The files of a map folder the readers read. A map folder is only read:
-// nothing here writes to it (ADR 0006).
+// The files of a map folder the readers read. Only the Object data editor
+// (src/object-data-editor.ts) writes to a map folder, and only its Object
+// data files and war3map.wts; the rest of it is only read (ADR 0015).
 
 import fs from "node:fs";
 import path from "node:path";

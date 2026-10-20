@@ -2,9 +2,10 @@
 // from. It holds the Editor globals and the Object data. The war3map.lua
 // reader declares every global (the list of globals is what exists at run
 // time); a later reader, such as the war3map.wtg one, refines the type of
-// what the first one declared, and adds its warnings. The Object data
-// readers keep every file as read, for the writer of ADR 0015. Not exported
-// from the package.
+// what the first one declared, and adds its warnings. The Object data and
+// war3map.wts readers keep every file as read, losslessly: the writer
+// (src/object-data-writer.ts, ADR 0015) gives back the bytes they read. Not
+// exported from the package.
 
 /** Where an Editor global comes from: `gg_` (placed or created in the editor) or `udg_` (the Variable Editor). */
 export type EditorGlobalOrigin = "gg" | "udg";
@@ -51,6 +52,14 @@ export interface Modification {
   readonly value: number | string;
   /** The end marker, as read. */
   readonly end: string;
+  /**
+   * A string's bytes as read, when they are not the UTF-8 of `value` (bytes
+   * that are not valid UTF-8, a leading byte order mark the decoder drops):
+   * `value` is then a view of them, and the writer writes them.
+   */
+  readonly bytes?: Uint8Array;
+  /** A real's 32 bits as read, when `value` cannot carry them: a NaN, whose payload a number loses. */
+  readonly bits?: number;
 }
 
 /**
@@ -70,6 +79,8 @@ export interface ObjectEntry {
   readonly original: string;
   /** The Custom object's Rawcode; absent for a Built-in object. */
   readonly custom?: string;
+  /** The four bytes a Built-in object's entry holds where a Custom Rawcode goes, when they are not four NUL bytes. */
+  readonly customSlot?: string;
   readonly sets: readonly ModificationSet[];
 }
 
@@ -84,6 +95,43 @@ export interface ObjectDataFile {
   readonly original: readonly ObjectEntry[];
   /** The Custom objects it adds, in file order. */
   readonly custom: readonly ObjectEntry[];
+  /** The bytes after the last table, when there are any. */
+  readonly trailing?: Uint8Array;
+}
+
+/**
+ * One `STRING n` block of war3map.wts, as its raw lines: each part holds
+ * its lines' bytes, their line ends included.
+ */
+export interface WtsBlock {
+  /** Its number, from its header. */
+  readonly number: number;
+  /** The bytes between the previous block (or the start of the file, after its byte order mark) and this one. */
+  readonly before: Uint8Array;
+  /** The `STRING n` line. */
+  readonly header: Uint8Array;
+  /** The `//` lines between the header and the opening brace, none or more. */
+  readonly comment: Uint8Array;
+  /** The `{` line. */
+  readonly open: Uint8Array;
+  /** The lines of the string. */
+  readonly body: Uint8Array;
+  /** The `}` line; empty when the file ends inside the body. */
+  readonly close: Uint8Array;
+  /** The string: its body's lines, decoded and joined with LF. */
+  readonly text: string;
+}
+
+/** war3map.wts as read, losslessly: its blocks and every byte between them. */
+export interface WtsFile {
+  /** Whether it starts with a byte order mark. */
+  readonly bom: boolean;
+  /** Its line end: its first one, CRLF when it has none. */
+  readonly eol: "\r\n" | "\n";
+  /** Its blocks, in file order. */
+  readonly blocks: readonly WtsBlock[];
+  /** The bytes after the last block. */
+  readonly after: Uint8Array;
 }
 
 /** A map folder's Editor globals, Object data, strings and Game data set, and the author-facing warnings of reading them. */
@@ -92,8 +140,15 @@ export interface MapFolderModel {
   readonly globals: EditorGlobal[];
   /** The Object data files the map folder holds, base files before Skin files. */
   readonly objectData: ObjectDataFile[];
-  /** The strings of war3map.wts, by their number. */
+  /** The strings of war3map.wts, by their number, derived from `wts`: of two blocks of one number, the last wins. */
   readonly strings: Map<number, string>;
+  /** war3map.wts as read; undefined when the map folder has none. */
+  wts: WtsFile | undefined;
+  /**
+   * The bytes of each Object data file and war3map.wts the readers read, by
+   * file name, in the order read: a file they left out with a warning too.
+   */
+  readonly files: Map<string, Uint8Array>;
   /** The Game data set of war3map.w3i, as the id of reforged-builtins' index (`melee-fk`); undefined when unknown. */
   gameDataSet: string | undefined;
   /** Author-facing, never errors: the build goes on. */
@@ -105,6 +160,8 @@ export function createModel(): MapFolderModel {
     globals: [],
     objectData: [],
     strings: new Map(),
+    wts: undefined,
+    files: new Map(),
     gameDataSet: undefined,
     warnings: [],
   };
