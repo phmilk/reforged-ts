@@ -1,7 +1,8 @@
 /**
  * Seam 1: from the CASC storage of an install to the files of the model,
- * the JSON index and the provenance file of the install's Game version, and
- * the artefacts emitted from the index (`./emit.ts`).
+ * the JSON index, the field table (`./fields.ts`) and the provenance file of
+ * the install's Game version, and the artefacts emitted from the index
+ * (`./emit.ts`).
  *
  * It reads the seven Object kinds of every Game data set: each kind's data
  * (Rawcode and race) from the set's layer when it has the kind's file, else
@@ -31,6 +32,13 @@ import {
   type ProvenanceInput,
 } from "./model.js";
 import { emit, KIND_CONSTANTS, withArticle } from "./emit.js";
+import {
+  buildFieldTable,
+  fieldsPath,
+  labelResolver,
+  serializeFields,
+  type KindMetaData,
+} from "./fields.js";
 import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
 import { constantName, displayName, duplicateConstants } from "./names.js";
 import { Profile } from "./profile.js";
@@ -160,6 +168,11 @@ interface KindSource {
   nameFields: readonly string[];
   /** The profile files of the names, in the enUS layer, for a kind with a name in them. */
   strings?: NamesFiles;
+  /**
+   * The metadata's columns of which one says a field is the kind's, for the
+   * metadata units and items share (`KindMetaData` in `./fields.ts`).
+   */
+  fieldUse?: readonly string[];
 }
 
 /** A kind's names files, matched without regard to case. */
@@ -187,6 +200,7 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/UnitMetaData.slk",
     nameFields: ["unam"],
+    fieldUse: ["useUnit", "useHero", "useBuilding"],
     strings: {
       pattern: /^units\/[a-z]*unitstrings\.txt$/i,
       glob: "Units/*UnitStrings.txt",
@@ -200,6 +214,7 @@ const KINDS: readonly KindSource[] = [
     idColumn: "itemID",
     metaData: "Units/UnitMetaData.slk",
     nameFields: ["unam"],
+    fieldUse: ["useItem"],
     strings: {
       pattern: /^units\/itemstrings\.txt$/i,
       glob: "Units/ItemStrings.txt",
@@ -500,10 +515,33 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     diagnostics.push({ severity: "error", message });
   }
 
+  const gameVersion = gameVersionOf(storage.build);
+  const metaData: KindMetaData[] = [];
+  for (const source of KINDS) {
+    const path = BASE_LAYER + source.metaData;
+    metaData.push({
+      kind: source.kind,
+      path,
+      table: parseSlk(await read(path)),
+      ...(source.fieldUse !== undefined && { use: source.fieldUse }),
+    });
+  }
+  const fieldTable = buildFieldTable(
+    metaData,
+    labelResolver(await worldEditStrings(), WORLD_EDIT_SECTION),
+    storage.build,
+    gameVersion,
+  );
+  for (const message of fieldTable.errors) {
+    diagnostics.push({ severity: "error", message });
+  }
+  for (const message of fieldTable.warnings) {
+    diagnostics.push({ severity: "warning", message });
+  }
+
   if (diagnostics.some((d) => d.severity === "error")) {
     return { ok: false, diagnostics };
   }
-  const gameVersion = gameVersionOf(storage.build);
   const index: BuiltinsIndex = {
     format: INDEX_FORMAT,
     build: storage.build,
@@ -518,6 +556,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     index,
     files: new Map([
       [`${gameVersion}/index.json`, serializeIndex(index)],
+      [fieldsPath(gameVersion), serializeFields(fieldTable.table)],
       [
         `${gameVersion}/provenance.json`,
         serializeProvenance({

@@ -2,7 +2,8 @@
  * Seam 1, the check: `builtins:check` on a package folder that
  * `builtins:generate` wrote from a synthetic CASC storage, and on the
  * committed package. It emits every artefact from each index again and fails
- * on any difference, on an index of the wrong shape, on a Game version
+ * on any difference, on an index or a field table of the wrong shape, on a
+ * field table not written as the generator writes it, on a Game version
  * without its provenance and on `exports` that the Game versions do not call
  * for. Also the artefacts emitted from an index the storage helpers cannot
  * express yet: Game data sets and names with TSDoc's special characters.
@@ -13,6 +14,7 @@ import { describe, expect, it } from "vitest";
 import { main as check } from "../src/cli/check.js";
 import { main as generate } from "../src/cli/generate.js";
 import { emit } from "../src/emit.js";
+import { serializeFields, type FieldTable } from "../src/fields.js";
 import type { BuiltinsIndex } from "../src/model.js";
 import {
   strings,
@@ -35,6 +37,7 @@ const UNITS = [
 const EXPORTS = {
   "./3.0.0": { types: "./3.0.0.d.ts" },
   "./3.0.0/index.json": "./3.0.0/index.json",
+  "./3.0.0/fields.json": "./3.0.0/fields.json",
   "./units": { types: "./3.0.0/units.d.ts", tstl: "./3.0.0/units" },
   "./package.json": "./package.json",
 };
@@ -100,7 +103,7 @@ describe("builtins:check", () => {
 
     expect(stderr).toBe("");
     expect(stdout).toBe(
-      "Built-in objects match: 3 artefacts of Game version 3.0.0 are exactly what the committed index emits.\n",
+      "Built-in objects match: 3 artefacts of Game version 3.0.0 are exactly what the committed index emits, and its field table is as the generator writes it.\n",
     );
     expect(status).toBe(0);
   });
@@ -197,6 +200,71 @@ describe("builtins:check", () => {
       "Built-in objects drift: 1 problem. " +
         DRIFT +
         "- [ ] 3.0.0/index.json: not written as the generator writes it (one object per line, in code-point order).\n",
+    );
+  });
+
+  it("fails on a missing field table", async () => {
+    const root = await packageFolder();
+    await rm(join(root, "3.0.0", "fields.json"));
+
+    const { status, stderr } = await runCheck(root);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      "Built-in objects drift: 1 problem. " +
+        DRIFT +
+        "- [ ] 3.0.0/fields.json: missing.\n",
+    );
+  });
+
+  it("fails on a field table of the wrong shape, naming each problem", async () => {
+    const root = await packageFolder();
+    const path = join(root, "3.0.0", "fields.json");
+    const table = JSON.parse(await readFile(path, "utf8")) as FieldTable;
+    const units = table.fields.unit as Record<string, unknown>;
+    units.toolong = { ...table.fields.unit.umvs, specific: ["h 1"] };
+    units.unam = { ...table.fields.unit.unam, type: "text", file: "both" };
+    units.umvs = { ...table.fields.unit.umvs, localizable: true };
+    table.kinds.buff = "";
+    await writeFile(
+      path,
+      serializeFields({ ...table, format: 2, build: "3.0.0.24000" }),
+    );
+
+    const { status, stderr } = await runCheck(root);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      "Built-in objects drift: 8 problems. " +
+        DRIFT +
+        [
+          "format is 2, not 1.",
+          'build is "3.0.0.24000", not 3.0.0.24268, the index\'s.',
+          'kinds.buff is "", not a label.',
+          "fields.unit.toolong: not a field id of four characters.",
+          'fields.unit.toolong.specific is ["h 1"], not a list of the metadata\'s useSpecific items.',
+          "fields.unit.umvs is localizable but not a string.",
+          'fields.unit.unam.type is "text", not a value type.',
+          'fields.unit.unam.file is "both", not base or skin.',
+        ]
+          .map((problem) => `- [ ] 3.0.0/fields.json: ${problem}\n`)
+          .join(""),
+    );
+  });
+
+  it("fails on a field table not written as the generator writes it", async () => {
+    const root = await packageFolder();
+    const path = join(root, "3.0.0", "fields.json");
+    const table = JSON.parse(await readFile(path, "utf8")) as FieldTable;
+    await writeFile(path, JSON.stringify(table, null, 2));
+
+    const { status, stderr } = await runCheck(root);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      "Built-in objects drift: 1 problem. " +
+        DRIFT +
+        "- [ ] 3.0.0/fields.json: not written as the generator writes it (one field per line, in code-point order).\n",
     );
   });
 

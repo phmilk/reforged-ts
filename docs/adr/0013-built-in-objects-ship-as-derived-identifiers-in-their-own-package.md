@@ -41,3 +41,9 @@ The data is generated on a maintainer's machine from the local install during `n
 The package was named `reforged-objects` when this was decided; ADR 0014 renamed it `reforged-builtins`, next to `reforged-map`, which reads a map's own objects.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/464
+
+## Amendment (2026-10-20)
+
+The package also ships, per Game version, the field table (#632): per Object kind, the label the World Editor writes in `war3map.wts` comments, and per field of the kind's `*MetaData.slk` its id, value type, file (base or Skin), whether it is localizable, whether it has levels and which data column, the base Rawcodes it is specific to, its metadata `field` name and its enUS label. `reforged-map`'s Object data writer needs these facts to write an edit as the editor does, with no game file at run time. It holds identifiers and the enUS labels the World Editor writes into `war3map.wts`, and still no tooltip text, numbers or icons. It is generated with the index, from the Patch's metadata and enUS editor strings, whose files the same provenance file pins. Where the World Editor's save treats a field unlike its metadata, the editor's behaviour wins, recorded in the generator with the fixture that shows it.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/632
