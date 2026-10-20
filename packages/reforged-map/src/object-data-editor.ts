@@ -20,36 +20,12 @@ import { readObjectData, sameBytes } from "./object-data.js";
 import { encodeObjectDataFile, encodeWts } from "./object-data-writer.js";
 import { mapFolderObjects, type MapFolderObject } from "./objects.js";
 import { WTS_FILE, readWar3mapWts, resolveString } from "./war3map-wts.js";
-
-/**
- * Why the Object data editor refused: `"changed-on-disk"`, a file it would
- * rewrite changed on disk since it was read.
- */
-export type ObjectDataWriterErrorReason = "changed-on-disk";
-
-/**
- * An edit or a save the Object data editor refuses. Its `reason` says
- * which, for a caller to switch on, and its message what the author does
- * next. Nothing is written when it is thrown.
- */
-export class ObjectDataWriterError extends Error {
-  /** `"ObjectDataWriterError"`, the error's name in a stack trace and in `String(error)`. */
-  override name = "ObjectDataWriterError";
-  /** Why the editor refused. */
-  readonly reason: ObjectDataWriterErrorReason;
-  /** The file of the map folder it is about (`war3map.w3u`), when it is about one. */
-  readonly file: string | undefined;
-
-  constructor(
-    reason: ObjectDataWriterErrorReason,
-    message: string,
-    file?: string,
-  ) {
-    super(message);
-    this.reason = reason;
-    this.file = file;
-  }
-}
+import {
+  checkWorldEditor,
+  type WorldEditorCheckOptions,
+  type WorldEditorState,
+} from "./world-editor.js";
+import { ObjectDataWriterError } from "./writer-error.js";
 
 /** The type of a modification's value, as the file stores it: an integer, a real, an unreal (a real the editor shows unbounded) or a string. */
 export type ObjectDataValueType = ValueType;
@@ -92,6 +68,23 @@ export interface ObjectDataObject {
 export interface ObjectDataSaveResult {
   /** The files it wrote, by file name, each kind's base file then its Skin file, then `war3map.wts`: empty when no file's bytes changed. */
   readonly written: string[];
+  /**
+   * What the World Editor showed of the folder saved to, before the first
+   * write: `"open"` tells the caller to reload the map there with
+   * `-launch -loadfile`. Undefined when the World Editor check was off.
+   */
+  readonly worldEditor: WorldEditorState | undefined;
+}
+
+/** The options of {@link ObjectDataEditor.save}. */
+export interface ObjectDataSaveOptions {
+  /**
+   * Whether to run the World Editor check ({@link checkWorldEditor}) on the
+   * folder saved to, before the first write, or the options to run it with:
+   * on when left out. Turn it off for a folder no World Editor opens, such
+   * as the build's staged copy in `dist/`.
+   */
+  worldEditorCheck?: boolean | WorldEditorCheckOptions;
 }
 
 /** The options of {@link openObjectData}. */
@@ -130,19 +123,30 @@ export interface ObjectDataEditor {
    * @remarks
    * Every file is encoded first. A save to the map folder compares the bytes
    * on disk of each file it would rewrite with the bytes it read, and
-   * refuses on any difference; then it writes only the files whose bytes
-   * change. A save to another folder, created when missing, writes each file
-   * whose bytes differ from that folder's. A file the readers left out
-   * (truncated, of an unknown format version, an object with more than one
-   * set) is never rewritten: a save to another folder copies its bytes.
+   * refuses on any difference; a save to another folder, created when
+   * missing, picks each file whose bytes differ from that folder's. Then,
+   * before the first write, it runs the World Editor check
+   * ({@link checkWorldEditor}) on the folder saved to, unless it is off: a
+   * World Editor showing unsaved edits for that folder refuses the save
+   * when a file would be written, and a failed check refuses it always.
+   * Then it writes only the files whose bytes change. A file the readers
+   * left out (truncated, of an unknown format version, an object with more
+   * than one set) is never rewritten: a save to another folder copies its
+   * bytes. Reloading the map in a World Editor that holds it
+   * (`-launch -loadfile`) is the caller's.
    *
    * @param folder - The folder to save to; the map folder when left out.
-   * @returns The files written.
+   * @param options - Whether to run the World Editor check, and how.
+   * @returns The files written, and what the World Editor showed of the
+   *   folder.
    * @throws {@link ObjectDataWriterError} With the reason
    *   `"changed-on-disk"`, when a file it would rewrite in the map folder
-   *   changed since it was read; nothing is written.
+   *   changed since it was read; `"modified-in-world-editor"`, when a World
+   *   Editor shows unsaved edits for the folder and a file would be
+   *   written; `"world-editor-check-failed"`, when the World Editor check
+   *   could not read the windows' titles. Nothing is written.
    */
-  save(folder?: string): ObjectDataSaveResult;
+  save(folder?: string, options?: ObjectDataSaveOptions): ObjectDataSaveResult;
 }
 
 /**
@@ -246,15 +250,22 @@ class Editor implements ObjectDataEditor {
     };
   }
 
-  save(folder?: string): ObjectDataSaveResult {
+  save(
+    folder?: string,
+    options: ObjectDataSaveOptions = {},
+  ): ObjectDataSaveResult {
     const files = [...this.#model.files].map(([name, read]) => ({
       name,
       read,
       encoded: this.#encode(name, read),
     }));
-    return {
-      written: writeMapFiles(this.mapFolder, folder ?? this.mapFolder, files),
-    };
+    const { worldEditorCheck = true } = options;
+    return writeMapFiles(
+      this.mapFolder,
+      folder ?? this.mapFolder,
+      files,
+      worldEditorCheck === true ? {} : worldEditorCheck || undefined,
+    );
   }
 
   /** The bytes of a file the editor read: encoded from the model, or as read when the readers left it out. */
@@ -277,16 +288,19 @@ export interface MapFileWrite {
 
 /**
  * Writes the files whose bytes change into `target`, and returns their
- * names. In the map folder, a file changes when its encoded bytes differ
- * from those read, and every such file's bytes on disk must still be those
- * read, or nothing is written; in another folder, when they differ from
- * that folder's.
+ * names and the World Editor's state. In the map folder, a file changes
+ * when its encoded bytes differ from those read, and every such file's
+ * bytes on disk must still be those read, or nothing is written; in another
+ * folder, when they differ from that folder's. Then the World Editor check
+ * runs on `target`, unless `worldEditorCheck` is undefined: "modified"
+ * refuses when a file changes, and a failed check always does.
  */
 export function writeMapFiles(
   mapFolder: string,
   target: string,
   files: readonly MapFileWrite[],
-): string[] {
+  worldEditorCheck?: WorldEditorCheckOptions,
+): ObjectDataSaveResult {
   const own = sameFolder(mapFolder, target);
   const changed = files.filter(({ name, read, encoded }) => {
     const baseline = own ? read : readMapFile(target, name);
@@ -308,11 +322,22 @@ export function writeMapFiles(
       }
     }
   }
+  const worldEditor =
+    worldEditorCheck === undefined
+      ? undefined
+      : checkWorldEditor(target, worldEditorCheck);
+  if (worldEditor === "modified" && changed.length > 0) {
+    throw new ObjectDataWriterError(
+      "modified-in-world-editor",
+      `The World Editor shows unsaved edits for ${target} (its title ends in " *]"): nothing was written. ` +
+        `Save or discard them in the World Editor first, then save again.`,
+    );
+  }
   if (changed.length > 0) fs.mkdirSync(target, { recursive: true });
   for (const { name, encoded } of changed) {
     fs.writeFileSync(path.join(target, name), encoded);
   }
-  return changed.map(({ name }) => name);
+  return { written: changed.map(({ name }) => name), worldEditor };
 }
 
 /** Whether two paths name one folder: resolved, and through their real paths when both exist. */

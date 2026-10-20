@@ -21,16 +21,24 @@ import { WTG_FILE, readWar3mapWtg } from "./war3map-wtg.js";
 
 export { MapFolderError } from "./map-folder.js";
 export {
-  ObjectDataWriterError,
   openObjectData,
   type ObjectDataEditor,
   type ObjectDataEditorOptions,
   type ObjectDataModification,
   type ObjectDataObject,
+  type ObjectDataSaveOptions,
   type ObjectDataSaveResult,
   type ObjectDataValueType,
-  type ObjectDataWriterErrorReason,
 } from "./object-data-editor.js";
+export {
+  checkWorldEditor,
+  type WorldEditorCheckOptions,
+  type WorldEditorState,
+} from "./world-editor.js";
+export {
+  ObjectDataWriterError,
+  type ObjectDataWriterErrorReason,
+} from "./writer-error.js";
 export type { GameDataSet } from "./builtins.js";
 export type { ObjectKind } from "./model.js";
 

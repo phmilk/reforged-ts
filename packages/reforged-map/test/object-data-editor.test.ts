@@ -26,6 +26,9 @@ import { buildObjectData, buildWts } from "./support/object-data.js";
 
 afterAll(removeTemporary);
 
+/** Save options whose World Editor check sees no window: the check's own tests are in world-editor.test.ts. */
+const NO_WINDOW = { worldEditorCheck: { readWindowTitles: () => [] } };
+
 /** A copy of the committed fixture map folder `name` in a temporary folder. */
 function copyFixture(name: string): string {
   const folder = path.join(makeTempDir(), name);
@@ -60,7 +63,10 @@ function expectNoOpSave(folder: string): void {
   const before = snapshot(folder);
   const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
 
-  expect(editor.save()).toEqual({ written: [] });
+  expect(editor.save(undefined, NO_WINDOW)).toEqual({
+    written: [],
+    worldEditor: "no-window",
+  });
   expect(snapshot(folder)).toEqual(before);
 }
 
@@ -69,7 +75,10 @@ function expectCopy(folder: string, names: readonly string[]): void {
   const target = path.join(makeTempDir(), "copy.w3m");
   const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
 
-  expect(editor.save(target)).toEqual({ written: names });
+  expect(editor.save(target, NO_WINDOW)).toEqual({
+    written: names,
+    worldEditor: "no-window",
+  });
   for (const name of names) {
     expect(digest(path.join(target, name)), name).toBe(
       digest(path.join(folder, name)),
@@ -208,7 +217,8 @@ describe("a save to another folder", () => {
     fs.rmSync(path.join(target, "war3mapSkin.w3h"));
     const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
 
-    expect(editor.save(target)).toEqual({
+    expect(editor.save(target, NO_WINDOW)).toEqual({
+      worldEditor: "no-window",
       written: ["war3map.w3u", "war3mapSkin.w3h"],
     });
     expect(snapshot(target)).toEqual(snapshot(folder));
@@ -639,7 +649,7 @@ describe("a file changed on disk since it was read", () => {
           encoded: new Uint8Array([2]),
         },
       ]),
-    ).toEqual(["war3map.w3u"]);
+    ).toEqual({ written: ["war3map.w3u"], worldEditor: undefined });
     expect([...fs.readFileSync(path.join(folder, "war3map.w3u"))]).toEqual([3]);
   });
 });
