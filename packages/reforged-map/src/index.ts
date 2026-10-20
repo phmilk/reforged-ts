@@ -24,10 +24,12 @@ export {
   openObjectData,
   type ObjectDataEditor,
   type ObjectDataEditorOptions,
+  type ObjectDataField,
   type ObjectDataModification,
   type ObjectDataObject,
   type ObjectDataSaveOptions,
   type ObjectDataSaveResult,
+  type ObjectDataSetFieldOptions,
   type ObjectDataValueType,
 } from "./object-data-editor.js";
 export {

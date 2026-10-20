@@ -7,7 +7,12 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { loadBuiltins, type BuiltinsIndex } from "./builtins.js";
+import {
+  loadBuiltins,
+  loadFieldTable,
+  type BuiltinsIndex,
+} from "./builtins.js";
+import { removeField, setField, type EditTables } from "./object-data-edit.js";
 import { checkMapFolder, readMapFile } from "./map-folder.js";
 import {
   OBJECT_KINDS,
@@ -16,7 +21,11 @@ import {
   type ObjectKind,
   type ValueType,
 } from "./model.js";
-import { readObjectData, sameBytes } from "./object-data.js";
+import {
+  objectDataFileNames,
+  readObjectData,
+  sameBytes,
+} from "./object-data.js";
 import { encodeObjectDataFile, encodeWts } from "./object-data-writer.js";
 import { mapFolderObjects, type MapFolderObject } from "./objects.js";
 import { WTS_FILE, readWar3mapWts, resolveString } from "./war3map-wts.js";
@@ -96,6 +105,38 @@ export interface ObjectDataEditorOptions {
   projectRoot?: string;
 }
 
+/** The field of an object an edit addresses: its Object kind, Rawcode and field id, and its level and data pointer in the kinds that store them. */
+export interface ObjectDataField {
+  /** The Object kind of the object. */
+  readonly kind: ObjectKind;
+  /** The object's Rawcode: a Custom object of the map (`h000`), or a Built-in object (`hfoo`). */
+  readonly rawcode: string;
+  /** The field's id (`umvs`), four characters. */
+  readonly field: string;
+  /**
+   * The level, or a doodad's variation, in the abilities, doodads and
+   * upgrades only: required for a field the field table gives levels, 0
+   * when left out otherwise.
+   */
+  readonly level?: number;
+  /**
+   * The data pointer, in the abilities, doodads and upgrades only: the
+   * field table's data column, else 0, when left out.
+   */
+  readonly dataPointer?: number;
+}
+
+/** The options of {@link ObjectDataEditor.setField}. */
+export interface ObjectDataSetFieldOptions {
+  /**
+   * The value type of a field the field table of `reforged-builtins` does
+   * not know (Object adoption's raw escape, #484), which is set only with
+   * one. A field the table knows takes the table's type: a different one
+   * is refused.
+   */
+  readonly type?: ObjectDataValueType;
+}
+
 /** A map folder's Object data and `war3map.wts`, opened by {@link openObjectData}. */
 export interface ObjectDataEditor {
   /** The path of the map folder it opened. */
@@ -116,6 +157,66 @@ export interface ObjectDataEditor {
    *   modifications.
    */
   objects(kind?: ObjectKind): ObjectDataObject[];
+  /**
+   * Sets a field of an object, to be written in the Editor form on the next
+   * save.
+   *
+   * @remarks
+   * The field goes into the file the World Editor keeps it in, the base or
+   * the Skin file of its kind, as the field table of `reforged-builtins`
+   * says. When the object holds the field there, its value is replaced in
+   * place, its position, value type, level, data pointer and end marker
+   * kept; else it is appended to the object's modifications, with the field
+   * table's value type and the end marker the 3.0 World Editor writes, the
+   * object's own Rawcode (a Custom object's, not its base's). The
+   * field held in the other file is removed from there, and the object's
+   * other modifications stay as read. The object is added to both files of
+   * its kind when either lacks it, and a file the kind did not have is
+   * created in format version 3. A value equal to its base's is kept as a
+   * modification. An integer is checked to fit 32 bits, a real is stored as
+   * its nearest 32-bit value, and a string, written as literal UTF-8, is
+   * checked to hold no NUL byte. A localizable string (a name, a tooltip)
+   * is refused: this version does not write `war3map.wts` yet. Nothing is
+   * written until {@link ObjectDataEditor.save}.
+   *
+   * @param field - The object and field to set: Object kind, Rawcode,
+   *   field id, and level and data pointer where the kind has them.
+   * @param value - Its value: an integer, a real or a string, as its type
+   *   is.
+   * @param options - The value type of a field the field table does not
+   *   know.
+   * @throws {@link ObjectDataWriterError} With the reason
+   *   `"builtins-missing"`, when `reforged-builtins` or its field table
+   *   could not be read; `"file-not-read"`, when the readers left out a file
+   *   of the kind; `"unknown-object"`, when the kind holds no object of the
+   *   Rawcode and no Built-in object has it; `"unknown-field"`, when the
+   *   field table does not know the field and no type was given;
+   *   `"field-held-twice"`, when a file holds the field twice for the
+   *   object; `"invalid-value"`, when the value, its type, the level or the
+   *   data pointer is not one the file can hold. Nothing is changed.
+   */
+  setField(
+    field: ObjectDataField,
+    value: number | string,
+    options?: ObjectDataSetFieldOptions,
+  ): void;
+  /**
+   * Removes a field of an object, from both files of its kind, so that it
+   * goes back to its base's value on the next save.
+   *
+   * @remarks
+   * The object's other modifications stay as read, and its entries stay in
+   * both files. A field the object does not hold is no change. Nothing is
+   * written until {@link ObjectDataEditor.save}.
+   *
+   * @param field - The object and field to remove: Object kind, Rawcode,
+   *   field id, and level and data pointer where the kind has them.
+   * @throws {@link ObjectDataWriterError} With the reason
+   *   `"builtins-missing"`, `"file-not-read"`, `"unknown-object"`,
+   *   `"field-held-twice"` or `"invalid-value"`, as
+   *   {@link ObjectDataEditor.setField} does. Nothing is changed.
+   */
+  removeField(field: ObjectDataField): void;
   /**
    * Saves the Object data to the map folder it opened, or to another
    * folder.
@@ -157,7 +258,10 @@ export interface ObjectDataEditor {
  * The Object data files of the seven Object kinds and their Skin files are
  * read in format versions 1, 2 and 3, and `war3map.wts`, by the readers of
  * {@link generateObjects}; what they read is kept losslessly, so a save
- * with no edit gives back the same bytes. Files are read only through
+ * with no edit gives back the same bytes. The field table of
+ * `reforged-builtins`, which every edit needs, is read from the Map
+ * project's installation, its newest Game version; without it, listing and
+ * a save with no edit still work. Files are read only through
  * Node's `fs`, which shares delete, one whole-file read per file: no file
  * stays open.
  *
@@ -175,11 +279,20 @@ export function openObjectData(
   const model = createModel();
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
-  const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
+  const projectRoot = options.projectRoot ?? mapFolder;
+  const builtins = loadBuiltins(projectRoot);
+  const fields = loadFieldTable(projectRoot);
+  const tables: EditTables =
+    "missing" in fields
+      ? fields
+      : "missing" in builtins
+        ? builtins
+        : { fields: fields.table, builtins: builtins.index };
   return new Editor(
     mapFolder,
     model,
     "index" in builtins ? builtins.index : undefined,
+    tables,
   );
 }
 
@@ -188,17 +301,32 @@ class Editor implements ObjectDataEditor {
   readonly warnings: readonly string[];
   readonly #model: MapFolderModel;
   readonly #builtins: BuiltinsIndex | undefined;
+  readonly #tables: EditTables;
 
   constructor(
     mapFolder: string,
     model: MapFolderModel,
     builtins: BuiltinsIndex | undefined,
+    tables: EditTables,
   ) {
     this.mapFolder = mapFolder;
     this.#model = model;
     this.#builtins = builtins;
+    this.#tables = tables;
     mapFolderObjects(model, { builtins });
     this.warnings = [...model.warnings];
+  }
+
+  setField(
+    field: ObjectDataField,
+    value: number | string,
+    options: ObjectDataSetFieldOptions = {},
+  ): void {
+    setField(this.#model, this.#tables, field, value, options.type);
+  }
+
+  removeField(field: ObjectDataField): void {
+    removeField(this.#model, this.#tables, field);
   }
 
   objects(kind?: ObjectKind): ObjectDataObject[] {
@@ -254,11 +382,18 @@ class Editor implements ObjectDataEditor {
     folder?: string,
     options: ObjectDataSaveOptions = {},
   ): ObjectDataSaveResult {
-    const files = [...this.#model.files].map(([name, read]) => ({
-      name,
-      read,
-      encoded: this.#encode(name, read),
-    }));
+    // Each kind's base file then its Skin file, then war3map.wts: those
+    // read, and those an edit created.
+    const files = [...objectDataFileNames(), WTS_FILE]
+      .filter(
+        (name) =>
+          this.#model.files.has(name) ||
+          this.#model.objectData.some((file) => file.name === name),
+      )
+      .map((name) => {
+        const read = this.#model.files.get(name);
+        return { name, read, encoded: this.#encode(name, read) };
+      });
     const { worldEditorCheck = true } = options;
     return writeMapFiles(
       this.mapFolder,
@@ -269,12 +404,13 @@ class Editor implements ObjectDataEditor {
   }
 
   /** The bytes of a file the editor read: encoded from the model, or as read when the readers left it out. */
-  #encode(name: string, read: Uint8Array): Uint8Array {
+  #encode(name: string, read: Uint8Array | undefined): Uint8Array {
     const file = this.#model.objectData.find((other) => other.name === name);
     if (file !== undefined) return encodeObjectDataFile(file);
     if (name === WTS_FILE && this.#model.wts !== undefined) {
       return encodeWts(this.#model.wts);
     }
+    if (read === undefined) throw new Error(`unreachable: ${name} not read`);
     return read;
   }
 }

@@ -75,7 +75,7 @@ export class ObjectDataError extends Error {
 }
 
 /** Names the Object data file of a kind: `war3map.w3u`, or `war3mapSkin.w3u` for its Skin file. */
-function objectDataFileName(kind: ObjectKind, skin: boolean): string {
+export function objectDataFileName(kind: ObjectKind, skin: boolean): string {
   return `war3map${skin ? "Skin" : ""}.${EXTENSIONS[kind]}`;
 }
 

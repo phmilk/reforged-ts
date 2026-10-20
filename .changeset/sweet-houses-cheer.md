@@ -1,0 +1,5 @@
+---
+"reforged-map": minor
+---
+
+The Object data editor sets and removes fields: `setField({ kind, rawcode, field, level, dataPointer }, value, { type })` and `removeField(...)`, written on `save` in the Editor form, as the 3.0 World Editor saves it, so that its next save does not move them: each field in the file the field table of `reforged-builtins` names (base or Skin), replaced in place or appended with the end marker the editor writes (the object's own Rawcode, a Custom object's included), moved out of the other file, and the object listed in both files of its kind. Integers, reals and non-localizable strings are written; a localizable string is refused until `war3map.wts` is written. Every edit needs `reforged-builtins` (its field table, newest Game version, from the Map project); without it, opening, listing and a save with no edit still work. `ObjectDataWriterError` gains the reasons `"builtins-missing"`, `"file-not-read"`, `"unknown-object"`, `"unknown-field"`, `"field-held-twice"` and `"invalid-value"`.
