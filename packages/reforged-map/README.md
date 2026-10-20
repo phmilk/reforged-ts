@@ -160,17 +160,44 @@ const { written } = editor.save();
 
 - `warnings` gives the readers' warnings, the ones `generateObjects` gives of the objects ([Errors and warnings](#errors-and-warnings)).
 - `objects(kind)` lists the objects of a kind, or of every kind when left out, as the Object Editor shows them: each Custom object and each modified Built-in object, sorted by Rawcode, its base file and Skin file merged, named by its name, else its base's or the game's from `reforged-builtins`. Each modification gives its field id, value type, level and data pointer (abilities, doodads and upgrades only), its value, a `TRIGSTR_nnn` resolved through `war3map.wts`, its value as stored, and the file it is in.
-- `save(folder)` saves to the map folder it opened, or to another folder, created when missing, and returns the files it wrote. It encodes every file first. To the map folder, it writes only the files whose bytes change, after comparing the bytes on disk of each with the bytes it read: on any difference, it throws an `ObjectDataWriterError` whose `reason` is `"changed-on-disk"`, and writes nothing. To another folder, it writes each file whose bytes differ from that folder's.
+- `save(folder, { worldEditorCheck })` saves to the map folder it opened, or to another folder, created when missing, and returns the files it wrote (`written`) and what the World Editor showed of that folder (`worldEditor`). It encodes every file first. To the map folder, it writes only the files whose bytes change, after comparing the bytes on disk of each with the bytes it read: on any difference, it throws an `ObjectDataWriterError` whose `reason` is `"changed-on-disk"`, and writes nothing. To another folder, it writes each file whose bytes differ from that folder's. Then, before the first write, it runs [the World Editor check](#the-world-editor-check) on the folder it saves to.
 
 **The round trip.** A save writes each file from what the readers read: in the format version it was read in (1, 2 or 3), with its objects, their modifications, duplicates, set counts and flags, end markers and field ids (a three-character one such as `Crs` included) as read, a string's bytes and a real's 32 bits, and the bytes after its last table. `war3map.wts` is written from its blocks' raw lines, with the bytes between them, its byte order mark and its line ends. So a save with no edit writes no file, and a save to another folder copies every Object data file, Skin file and `war3map.wts` byte for byte. A file the readers left out (truncated, of an unknown format version, an object with more than one set) is never rewritten: a save to another folder copies its bytes.
 
 **Files.** The editor reads and writes through Node's `fs` only, which opens a file with delete sharing on Windows, so a World Editor save while a tool runs never fails on a file it holds ([#475](https://github.com/phmilk/reforged-ts/issues/475)). Each read or write is of one whole file, in one call: no handle is held across calls, and there is no lock and no watcher.
 
-**The writer error.** `ObjectDataWriterError` is the one error the editor throws on a refused edit or save; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `file` the file it is about, and its message says what the author does next:
+**The writer error.** `ObjectDataWriterError` is the one error the editor throws on a refused edit or save, and the one the World Editor check throws; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `file` the file it is about, and its message says what the author does next:
 
-| `reason`            | When                                                                                       | What the author does                                 |
-| ------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| `"changed-on-disk"` | A file the save would rewrite changed on disk since it was read: a World Editor save, say. | Open the map folder again, and make the edits again. |
+| `reason`                      | When                                                                                              | What the author does                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `"changed-on-disk"`           | A file the save would rewrite changed on disk since it was read: a World Editor save, say.        | Open the map folder again, and make the edits again.                                                       |
+| `"modified-in-world-editor"`  | The World Editor shows unsaved edits for the folder the save would write.                         | Save or discard them in the World Editor, then save again.                                                 |
+| `"world-editor-check-failed"` | The World Editor check could not read the windows' titles: it could not run, failed or timed out. | Check that `powershell.exe` runs from the shell, or turn the check off for a folder no World Editor opens. |
+
+### The World Editor check
+
+An edit made in the World Editor and not yet saved shows only in its main window's title, `Warcraft III World Editor - [<path> *]` ([#475](https://github.com/phmilk/reforged-ts/issues/475)). A tool that wrote the map folder then would lose that edit, or have its own lost on the World Editor's next save. So `checkWorldEditor(mapFolder)` tells, from a map folder's path, what the World Editor shows of it:
+
+- `"no-window"`: no World Editor window holds it;
+- `"open"`: a window holds it without unsaved edits;
+- `"modified"`: a window holds it with unsaved edits, its title ending in ` *]`.
+
+It lists the top-level windows whose title has the form `Warcraft III World Editor - [<path>]`, and keeps those whose path is the map folder's, compared with `/` and `\` alike, ignoring case and a trailing separator. It reads the titles through `EnumWindows` and `GetWindowText` in a short-lived `powershell.exe` (about a second and a half): on Windows, and on WSL, where `powershell.exe` is on the path and the map folder's path is converted with `wslpath -w`. On any other system, and for a folder that does not exist, no World Editor can hold the folder, and the state is `"no-window"` without running anything. A check that cannot run `powershell.exe`, fails or takes longer than its `timeout` (15 seconds by default) throws an `ObjectDataWriterError` whose `reason` is `"world-editor-check-failed"`: it is never `"no-window"`. Its `readWindowTitles` option reads the titles instead of the system, for tests.
+
+A save runs it on the folder it saves to, after comparing the bytes on disk and before its first write:
+
+- `"modified"` refuses the save, with the reason `"modified-in-world-editor"`, when a file would be written; a save that writes nothing returns it;
+- `"open"` writes, and the result carries it: the caller then reloads the map in the World Editor with `-launch -loadfile`, which the Object data editor never sends;
+- a failed check refuses the save always.
+
+The check is on by default. `save(folder, { worldEditorCheck: false })` turns it off, for a folder no World Editor opens, such as the build's staged copy in `dist/`; the result's `worldEditor` is then `undefined`. `worldEditorCheck` also takes the check's options.
+
+```ts
+const { worldEditor } = editor.save();
+if (worldEditor === "open") {
+  // Reload the map in the World Editor that holds it: `-launch -loadfile`.
+}
+```
 
 ## Errors and warnings
 
