@@ -7,7 +7,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { loadBuiltins } from "./builtins.js";
+import { loadBuiltins, type BuiltinsIndex } from "./builtins.js";
 import { checkMapFolder, readMapFile } from "./map-folder.js";
 import {
   OBJECT_KINDS,
@@ -183,12 +183,12 @@ class Editor implements ObjectDataEditor {
   readonly mapFolder: string;
   readonly warnings: readonly string[];
   readonly #model: MapFolderModel;
-  readonly #builtins: Parameters<typeof mapFolderObjects>[1]["builtins"];
+  readonly #builtins: BuiltinsIndex | undefined;
 
   constructor(
     mapFolder: string,
     model: MapFolderModel,
-    builtins: Parameters<typeof mapFolderObjects>[1]["builtins"],
+    builtins: BuiltinsIndex | undefined,
   ) {
     this.mapFolder = mapFolder;
     this.#model = model;
