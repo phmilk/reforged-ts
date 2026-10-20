@@ -1,5 +1,7 @@
 // Object data files (war3map.w3u and its siblings) and war3map.wts for the
-// tests, in the layout the reader reads (src/object-data.ts has it).
+// tests, in the layout the reader reads (src/object-data.ts has it). This
+// encoder stays independent of the package's writer, so that the tests
+// never make their input with the code under test.
 
 /** One modification, as a test declares it; its type follows its value when left out. */
 export interface TestModification {
@@ -9,6 +11,12 @@ export interface TestModification {
   type?: number;
   level?: number;
   dataPointer?: number;
+  /** The end marker; the object's Custom Rawcode, else its original one, when left out. */
+  end?: string;
+  /** A real's 32 bits, written in place of `value` (a NaN with its payload). */
+  bits?: number;
+  /** A string's bytes, written in place of `value`'s UTF-8 (bytes that are not valid UTF-8). */
+  bytes?: Uint8Array;
 }
 
 /** One object, as a test declares it: a Built-in object when `custom` is left out. */
@@ -27,6 +35,8 @@ export interface TestObjectData {
   custom?: TestObject[];
   /** Whether each modification has a level and a data pointer, as in the abilities, doodads and upgrades files. */
   levels?: boolean;
+  /** Bytes after the last table. */
+  trailing?: Uint8Array;
 }
 
 /** The bytes of an Object data file holding these objects, in this order. */
@@ -56,18 +66,24 @@ export function buildObjectData(data: TestObjectData): Uint8Array {
             writer.uint32(modification.level ?? 0);
             writer.uint32(modification.dataPointer ?? 0);
           }
-          if (typeof modification.value === "string") {
+          if (modification.bytes !== undefined) {
+            writer.raw(modification.bytes);
+            writer.raw(new Uint8Array([0]));
+          } else if (typeof modification.value === "string") {
             writer.cString(modification.value);
+          } else if (modification.bits !== undefined) {
+            writer.uint32(modification.bits);
           } else if (type === 0) {
             writer.uint32(modification.value);
           } else {
             writer.float32(modification.value);
           }
-          writer.rawcode(object.custom ?? object.original);
+          writer.rawcode(modification.end ?? object.custom ?? object.original);
         }
       }
     }
   }
+  if (data.trailing !== undefined) writer.raw(data.trailing);
   return writer.bytes();
 }
 
@@ -118,6 +134,10 @@ class Writer {
 
   cString(text: string): void {
     this.#parts.push(new TextEncoder().encode(text), new Uint8Array([0]));
+  }
+
+  raw(bytes: Uint8Array): void {
+    this.#parts.push(bytes);
   }
 
   bytes(): Uint8Array {
