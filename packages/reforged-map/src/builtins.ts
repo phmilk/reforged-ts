@@ -1,12 +1,19 @@
-// The index of reforged-builtins, an optional peer: resolved from the Map
-// project's installation, never from this package's, and read for the
-// newest Game version it holds, the one its kind entry points resolve to.
+// The index and the field table of reforged-builtins, an optional peer:
+// resolved from the Map project's installation, never from this package's,
+// and read for the newest Game version it holds, the one its kind entry
+// points resolve to.
 
 import fs from "node:fs";
 import path from "node:path";
 
 /** The index format this package reads. */
 const INDEX_FORMAT = 1;
+
+/** The field table format this package reads. */
+const FIELDS_FORMAT = 1;
+
+/** The field table's file, next to the index of its Game version. */
+const FIELDS_FILE = "fields.json";
 
 /** One Built-in object of the index, as far as this package reads it. */
 export interface BuiltinObject {
@@ -39,6 +46,33 @@ export interface BuiltinsIndex {
 /** The index, or why there is none, in words an author reads after "reforged-builtins ". */
 export type BuiltinsResult =
   { readonly index: BuiltinsIndex } | { readonly missing: string };
+
+/** One field of an Object kind in the field table, as far as this package reads it. */
+export interface FieldEntry {
+  /** The type a modification of it stores. */
+  readonly type: "int" | "real" | "unreal" | "string";
+  /** The file of its kind the World Editor keeps it in. */
+  readonly file: "base" | "skin";
+  /** Whether the World Editor writes a value of it as a `TRIGSTR` into war3map.wts. */
+  readonly localizable: boolean;
+  /** Whether it holds a value per level (a doodad's variation). */
+  readonly levels: boolean;
+  /** Its data column, a modification's data pointer, when the metadata has one. */
+  readonly data?: number;
+}
+
+/** What this package reads of reforged-builtins' field table. */
+export interface FieldTable {
+  readonly gameVersion: string;
+  /** Each Object kind's fields, by id. */
+  readonly fields: Readonly<
+    Record<string, Readonly<Record<string, FieldEntry>> | undefined>
+  >;
+}
+
+/** The field table, or why there is none, in words an author reads after "reforged-builtins ". */
+export type FieldTableResult =
+  { readonly table: FieldTable } | { readonly missing: string };
 
 /** The kind entry point whose target names the newest Game version. */
 const KIND_ENTRY = "./units";
@@ -88,6 +122,46 @@ export function builtinsFiles(projectRoot: string): BuiltinsFiles | undefined {
  * and reads the index of the Game version its kind entry points resolve to.
  */
 export function loadBuiltins(projectRoot: string): BuiltinsResult {
+  const result = loadArtefact(
+    projectRoot,
+    (index) => index,
+    "an index",
+    INDEX_FORMAT,
+  );
+  return "missing" in result
+    ? result
+    : { index: result.artefact as BuiltinsIndex };
+}
+
+/**
+ * Resolves reforged-builtins from `projectRoot`, as {@link builtinsFiles},
+ * and reads the field table of the Game version its kind entry points
+ * resolve to, next to its index. An installation of reforged-builtins older
+ * than its field table has none.
+ */
+export function loadFieldTable(projectRoot: string): FieldTableResult {
+  const result = loadArtefact(
+    projectRoot,
+    (index) => path.join(path.dirname(index), FIELDS_FILE),
+    "a field table",
+    FIELDS_FORMAT,
+  );
+  return "missing" in result
+    ? result
+    : { table: result.artefact as FieldTable };
+}
+
+/**
+ * Reads a JSON artefact of the Game version the kind entry points resolve
+ * to, at the path `locate` gives from its index's, if it is of `format`;
+ * else why not, in words after "reforged-builtins ".
+ */
+function loadArtefact(
+  projectRoot: string,
+  locate: (index: string) => string,
+  what: string,
+  format: number,
+): { readonly artefact: unknown } | { readonly missing: string } {
   try {
     const files = builtinsFiles(projectRoot);
     if (files === undefined) return { missing: "is not installed" };
@@ -99,17 +173,21 @@ export function loadBuiltins(projectRoot: string): BuiltinsResult {
         missing: `names no Game version in its ${KIND_ENTRY} entry point`,
       };
     }
-    const index = JSON.parse(
-      fs.readFileSync(files.index, "utf8"),
-    ) as BuiltinsIndex & {
-      format?: number;
-    };
-    if (index.format !== INDEX_FORMAT) {
+    const file = locate(files.index);
+    if (file !== files.index && !fs.existsSync(file)) {
       return {
-        missing: `has an index of format ${String(index.format)}, which reforged-map does not read (it reads format ${String(INDEX_FORMAT)})`,
+        missing: `has no ${path.basename(file)} for its Game version ${path.basename(path.dirname(file))}: install a newer reforged-builtins`,
       };
     }
-    return { index };
+    const artefact = JSON.parse(fs.readFileSync(file, "utf8")) as {
+      format?: number;
+    };
+    if (artefact.format !== format) {
+      return {
+        missing: `has ${what} of format ${String(artefact.format)}, which reforged-map does not read (it reads format ${String(format)})`,
+      };
+    }
+    return { artefact };
   } catch (error) {
     return { missing: `could not be read (${(error as Error).message})` };
   }

@@ -1,5 +1,5 @@
 // The Object data editor over a map folder on disk (#633): open, read and
-// save, then compare bytes. A save with no edit writes no file and leaves
+// save, then compare bytes; its edits are in object-data-edit.test.ts. A save with no edit writes no file and leaves
 // every file byte for byte, on the map folders the World Editor saved, on
 // wc3libs' fixtures (test/fixtures/wc3libs, Apache-2.0) and on edge cases
 // the test-only encoder builds; a save to another folder copies every file
@@ -12,9 +12,9 @@ import { afterAll, describe, expect, it } from "vitest";
 import {
   ObjectDataWriterError,
   openObjectData,
+  type ObjectDataEditor,
   type ObjectDataObject,
 } from "../src/index.js";
-import { writeMapFiles } from "../src/object-data-editor.js";
 import {
   PACKAGE_ROOT,
   fixtureMap,
@@ -568,27 +568,38 @@ describe("read", () => {
 });
 
 describe("a file changed on disk since it was read", () => {
-  it("is refused with the writer error, and nothing is written", () => {
-    const folder = mapFolder({
-      "war3map.w3u": new Uint8Array([1]),
-      "war3map.w3t": new Uint8Array([2]),
+  /** A map folder of a Custom unit h000 in both units files, and a Custom item I000 in the base items file. */
+  const unitsAndItems = () =>
+    mapFolder({
+      "war3map.w3u": buildObjectData({
+        custom: [{ original: "hfoo", custom: "h000" }],
+      }),
+      "war3mapSkin.w3u": buildObjectData({
+        custom: [{ original: "hfoo", custom: "h000" }],
+      }),
+      "war3map.w3t": buildObjectData({
+        custom: [{ original: "ratc", custom: "I000" }],
+      }),
     });
-    fs.writeFileSync(path.join(folder, "war3map.w3t"), new Uint8Array([9]));
 
+  /** The editor of the folder, with h000's speed set in war3map.w3u and I000's gold cost in war3map.w3t and a new war3mapSkin.w3t. */
+  function edited(folder: string): ObjectDataEditor {
+    const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
+    editor.setField({ kind: "unit", rawcode: "h000", field: "umvs" }, 320);
+    editor.setField({ kind: "item", rawcode: "I000", field: "igol" }, 600);
+    return editor;
+  }
+
+  /** Expects the save to be refused as changed on disk, naming the file, with every file as before. */
+  function expectChangedOnDisk(
+    folder: string,
+    editor: ObjectDataEditor,
+    file: string,
+  ): void {
+    const before = snapshot(folder);
     let error: unknown;
     try {
-      writeMapFiles(folder, folder, [
-        {
-          name: "war3map.w3u",
-          read: new Uint8Array([1]),
-          encoded: new Uint8Array([3]),
-        },
-        {
-          name: "war3map.w3t",
-          read: new Uint8Array([2]),
-          encoded: new Uint8Array([4]),
-        },
-      ]);
+      editor.save(undefined, NO_WINDOW);
     } catch (caught) {
       error = caught;
     }
@@ -597,59 +608,49 @@ describe("a file changed on disk since it was read", () => {
     expect(error).toMatchObject({
       name: "ObjectDataWriterError",
       reason: "changed-on-disk",
-      file: "war3map.w3t",
+      file,
     });
     expect(String(error)).toContain("Open the map folder again");
-    expect([...fs.readFileSync(path.join(folder, "war3map.w3u"))]).toEqual([1]);
-    expect([...fs.readFileSync(path.join(folder, "war3map.w3t"))]).toEqual([9]);
+    expect(snapshot(folder)).toEqual(before);
+  }
+
+  it("is refused with the writer error, and nothing is written", () => {
+    const folder = unitsAndItems();
+    const editor = edited(folder);
+    fs.writeFileSync(path.join(folder, "war3map.w3t"), new Uint8Array([9]));
+
+    expectChangedOnDisk(folder, editor, "war3map.w3t");
   });
 
-  it("is refused when it was deleted, and a file that appeared where none was read too", () => {
-    const folder = mapFolder({ "war3map.w3u": new Uint8Array([1]) });
-    fs.rmSync(path.join(folder, "war3map.w3u"));
+  it("is refused when it was deleted, and when a file appeared where none was read", () => {
+    const deleted = unitsAndItems();
+    const editor = edited(deleted);
+    fs.rmSync(path.join(deleted, "war3map.w3u"));
+    expectChangedOnDisk(deleted, editor, "war3map.w3u");
 
-    expect(() =>
-      writeMapFiles(folder, folder, [
-        {
-          name: "war3map.w3u",
-          read: new Uint8Array([1]),
-          encoded: new Uint8Array([3]),
-        },
-      ]),
-    ).toThrow(ObjectDataWriterError);
-
-    fs.writeFileSync(path.join(folder, "war3map.w3t"), "new");
-    expect(() =>
-      writeMapFiles(folder, folder, [
-        {
-          name: "war3map.w3t",
-          read: undefined,
-          encoded: new Uint8Array([3]),
-        },
-      ]),
-    ).toThrow(ObjectDataWriterError);
+    const appeared = unitsAndItems();
+    const other = edited(appeared);
+    fs.writeFileSync(path.join(appeared, "war3mapSkin.w3t"), "new");
+    expectChangedOnDisk(appeared, other, "war3mapSkin.w3t");
   });
 
   it("is written when unchanged, only the files whose bytes change", () => {
-    const folder = mapFolder({
-      "war3map.w3u": new Uint8Array([1]),
-      "war3map.w3t": new Uint8Array([2]),
-    });
+    const folder = unitsAndItems();
+    const skin = digest(path.join(folder, "war3mapSkin.w3u"));
 
-    expect(
-      writeMapFiles(folder, folder, [
-        {
-          name: "war3map.w3u",
-          read: new Uint8Array([1]),
-          encoded: new Uint8Array([3]),
-        },
-        {
-          name: "war3map.w3t",
-          read: new Uint8Array([2]),
-          encoded: new Uint8Array([2]),
-        },
-      ]),
-    ).toEqual({ written: ["war3map.w3u"], worldEditor: undefined });
-    expect([...fs.readFileSync(path.join(folder, "war3map.w3u"))]).toEqual([3]);
+    expect(edited(folder).save(undefined, NO_WINDOW)).toEqual({
+      written: ["war3map.w3u", "war3map.w3t", "war3mapSkin.w3t"],
+      worldEditor: "no-window",
+    });
+    expect(digest(path.join(folder, "war3mapSkin.w3u"))).toBe(skin);
+  });
+
+  it("is not checked for a file the save does not rewrite", () => {
+    const folder = unitsAndItems();
+    const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
+    editor.setField({ kind: "unit", rawcode: "h000", field: "umvs" }, 320);
+    fs.writeFileSync(path.join(folder, "war3map.w3t"), new Uint8Array([9]));
+
+    expect(editor.save(undefined, NO_WINDOW).written).toEqual(["war3map.w3u"]);
   });
 });
