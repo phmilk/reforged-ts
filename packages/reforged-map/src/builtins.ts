@@ -59,11 +59,17 @@ export interface FieldEntry {
   readonly levels: boolean;
   /** Its data column, a modification's data pointer, when the metadata has one. */
   readonly data?: number;
+  /** Its metadata `field` name (`Name`, `Tip`), the first part of the World Editor's comment of its string in war3map.wts. */
+  readonly field: string;
+  /** Its enUS label (`Tooltip - Basic`), the second part of that comment. */
+  readonly label: string;
 }
 
 /** What this package reads of reforged-builtins' field table. */
 export interface FieldTable {
   readonly gameVersion: string;
+  /** Each Object kind's label in the World Editor's comments of war3map.wts (`Units`, `Buffs/Effects`). */
+  readonly kinds: Readonly<Record<string, string | undefined>>;
   /** Each Object kind's fields, by id. */
   readonly fields: Readonly<
     Record<string, Readonly<Record<string, FieldEntry>> | undefined>
