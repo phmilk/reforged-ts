@@ -1,7 +1,8 @@
 /**
  * `builtins:check [--root <folder>]`: the drift gate, run by `pnpm check`
  * without the game. Emits every artefact from each committed index again
- * and fails on any difference, on an index of the wrong shape, on a Game
+ * and fails on any difference, on an index or a field table of the wrong
+ * shape, on a field table not written as the generator writes it, on a Game
  * version without its provenance file and on `exports` that do not match
  * the Game versions (`../check.ts`). Exit codes: 0 in sync, 1 on a problem,
  * 2 on usage. A leading `--` is skipped, as `builtins:generate` does.
@@ -42,7 +43,7 @@ export async function main(
     return 1;
   }
   output.stdout(
-    `Built-in objects match: ${String(result.compared)} artefacts of Game version ${result.gameVersions.join(", ")} are exactly what the committed index emits.\n`,
+    `Built-in objects match: ${String(result.compared)} artefacts of Game version ${result.gameVersions.join(", ")} are exactly what the committed index emits, and its field table is as the generator writes it.\n`,
   );
   return 0;
 }
