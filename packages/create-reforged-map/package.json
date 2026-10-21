@@ -1,0 +1,47 @@
+{
+  "name": "create-reforged-map",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Creates a reforged-ts Map project from the Template in one command: the Template's files, its dependencies installed, its maintenance files removed and a first commit.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua",
+    "create",
+    "scaffold"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/create-reforged-map"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "bin": {
+    "create-reforged-map": "./dist/cli.js"
+  },
+  "files": [
+    "/dist/**/*.js",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root ../.. --project create-reforged-map"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -24,6 +24,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `packages/reforged-test/`: the Lua test harness the library's tests run on.
 - `packages/reforged-map/`: the reader of a Map project's map folder, run at build time: the declarations and the Lua stub of its Editor globals.
 - `packages/reforged-builtins/`: the Built-in objects of each Patch (ADR 0013): the committed JSON index per Game version, its provenance and the unpublished generator that extracts them from an install.
+- `packages/create-reforged-map/`: the creation CLI (ADR 0018), private until its release: `create`, which makes a Map project from the Template, and the command over it.
 - `packages/eslint-plugin-reforged/`: the lint layer of the Guards. Read its `AGENTS.md` before adding or changing a rule, its fixtures, docs page or data files.
 - `website/`: the pages of the docs site.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).

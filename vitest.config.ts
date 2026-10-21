@@ -50,6 +50,19 @@ export default defineConfig({
         },
       },
       {
+        // The creation CLI, in Node, through `create` and its entry function,
+        // on Template archives and folders the tests write, with a recording
+        // Runner; one test runs the command end to end with git and pnpm.
+        test: {
+          name: "create-reforged-map",
+          root: "packages/create-reforged-map",
+          // The end-to-end test starts git and pnpm: seconds on Windows.
+          testTimeout: 30_000,
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
         // The library, compiled with its tests by typescript-to-lua and run
         // on the reforged-test harness, and compiled with its examples, the
         // runnable ones run on the harness too. The global setup compiles
