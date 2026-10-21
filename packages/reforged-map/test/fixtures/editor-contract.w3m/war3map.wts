@@ -1,0 +1,168 @@
+﻿STRING 1
+{
+Player 1
+}
+
+STRING 2
+{
+Force 1
+}
+
+STRING 3
+{
+reforged-ts-templante
+}
+
+STRING 4
+{
+Any
+}
+
+STRING 5
+{
+Nondescript
+}
+
+STRING 6
+{
+Unknown
+}
+
+STRING 7
+// Units: hfoo (Militia), Name (Name)
+{
+Militia
+}
+
+STRING 8
+// Units: h000 (Major), Name (Name)
+{
+Major
+}
+
+STRING 9
+// Units: h001 (Chevalier Noir), Name (Name)
+{
+Chevalier Noir
+}
+
+STRING 10
+// Items: I000 (Captain's Claws), Name (Name)
+{
+Captain's Claws
+}
+
+STRING 11
+// Destructibles: B000 (Gate), Name (Name)
+{
+Gate
+}
+
+STRING 12
+// Doodads: AObr (Skull Brazier), Name (Name)
+{
+Skull Brazier
+}
+
+STRING 13
+// Doodads: D000 (Statue of the Captain), Name (Name)
+{
+Statue of the Captain
+}
+
+STRING 14
+// Abilities: A000 (Arctic Blizzard), Name (Name)
+{
+Arctic Blizzard
+}
+
+STRING 15
+// Buffs/Effects: Binf (), Bufftip (Tooltip)
+{
+Burning Fire
+}
+
+STRING 16
+// Buffs/Effects: B000 (), Bufftip (Tooltip)
+{
+Holy Fire
+}
+
+STRING 18
+// Units: h002 (Sergeant), Name (Name)
+{
+Sergeant
+}
+
+STRING 19
+// Units: h002 (Sergeant), EditorSuffix (Name - Editor Suffix)
+{
+(contract)
+}
+
+STRING 20
+// Items: I001 (Sergeant's Claws), Name (Name)
+{
+Sergeant's Claws
+}
+
+STRING 21
+// Abilities: A001 (Greater Light), Name (Name)
+{
+Greater Light
+}
+
+STRING 22
+// Abilities: A001 (Greater Light), Tip (Tooltip - Normal)
+{
+Greater Light II
+}
+
+STRING 23
+// Buffs/Effects: B001 (Weakness), EditorName (Name (Editor Only))
+{
+Weakness
+}
+
+STRING 24
+// Buffs/Effects: B001 (Weakness), Bufftip (Tooltip)
+{
+Weakened
+}
+
+STRING 25
+// Buffs/Effects: Bslo (), Bufftip (Tooltip)
+{
+Slowed
+}
+
+STRING 26
+// Buffs/Effects: B003 (Blizzard (Caster)), Bufftip (Tooltip)
+{
+Frozen
+}
+
+STRING 27
+// Destructibles: B002 (Supply Barrel), Name (Name)
+{
+Supply Barrel
+}
+
+STRING 28
+// Doodads: D001 (Statue of the Sergeant), Name (Name)
+{
+Statue of the Sergeant
+}
+
+STRING 29
+// Upgrades: R001 (Sharper Powder), Name (Name)
+{
+Sharper Powder
+}
+
+STRING 30
+// Upgrades: R002 (Black Gunpowder,Refined Gunpowder,Imbued Gunpowder), Name (Name)
+{
+Finer Powder
+}
+
