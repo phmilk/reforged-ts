@@ -185,8 +185,16 @@ export function item(
   };
 }
 
-/** `issue` as the `BoardIssue` fragment answers it. */
-export function issueNode(issue: BoardIssue): Record<string, unknown> {
+/**
+ * `issue` as the `BoardIssue` fragment answers it, by `author`: by default
+ * Renovate for a bot's issue and a person for any other.
+ */
+export function issueNode(
+  issue: BoardIssue,
+  author: unknown = issue.bot
+    ? { __typename: "Bot", login: "renovate" }
+    : { __typename: "User", login: "alice" },
+): Record<string, unknown> {
   const names = (values: readonly string[], key: string) => ({
     nodes: values.map((value) => ({ [key]: value })),
   });
@@ -196,7 +204,7 @@ export function issueNode(issue: BoardIssue): Record<string, unknown> {
     state: issue.state,
     updatedAt: issue.updatedAt,
     repository: { nameWithOwner: issue.repository },
-    author: { __typename: issue.bot ? "Bot" : "User" },
+    author,
     labels: names(issue.labels, "name"),
     assignees: names(issue.assignees, "login"),
     parent:
@@ -277,7 +285,9 @@ const page = (nodes: unknown[]) => ({
 /**
  * Answers that read `state` and, once `CreateProject` was answered with its
  * id, the project `created`; the project's items are `items` and the open
- * issues of both repositories `issues` (none by default); every mutation
+ * issues of both repositories `issues` (none by default), each by its
+ * author in `authors` under its key (`owner/name#number`) when there, by
+ * `issueNode`'s default otherwise; every mutation
  * succeeds but `failing`, refused with an error, and an add answers the id
  * `PVTI_<the content id>`.
  */
@@ -288,6 +298,7 @@ export function reading(
     failing?: string;
     items?: readonly ProjectItem[];
     issues?: readonly BoardIssue[];
+    authors?: Readonly<Record<string, unknown>>;
   } = {},
 ): Answers {
   const projects = [state.project, options.created ?? null];
@@ -423,7 +434,13 @@ export function reading(
                         `${text(variables.owner)}/${text(variables.name)}` &&
                       state === "OPEN",
                   )
-                  .map(issueNode),
+                  .map((issue) => {
+                    const key = `${issue.repository}#${String(issue.number)}`;
+                    return options.authors !== undefined &&
+                      key in options.authors
+                      ? issueNode(issue, options.authors[key])
+                      : issueNode(issue);
+                  }),
               ),
             },
           },

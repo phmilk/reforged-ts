@@ -3,6 +3,7 @@ import {
   applyBoardReconcile,
   applyBoardSetup,
   assumedState,
+  BOARD_APP_LOGIN,
   BOARD_MUTATIONS,
   BOARD_OWNER,
   BOARD_README,
@@ -1295,6 +1296,28 @@ describe("readReconcileState", () => {
             `${String(variables.owner)}/${String(variables.name)}`,
         ),
     ).toEqual([LIBRARY, TEMPLATE]);
+  });
+
+  it("reads an issue of the repositories' App as a member's, any other Bot's as a bot's", async () => {
+    // A New Patch report, opened by patch-watch.yml with the App's token (#655).
+    const report = issue(642, { labels: ["needs-triage", "game-patch"] });
+    const dashboard = issue(215, { bot: true });
+    const orphan = issue(7);
+
+    const state = await readReconcileState(
+      graphQlApi(
+        reading(STATE, {
+          issues: [report, dashboard, orphan],
+          authors: {
+            [`${LIBRARY}#642`]: { __typename: "Bot", login: BOARD_APP_LOGIN },
+            // A deleted account.
+            [`${LIBRARY}#7`]: null,
+          },
+        }),
+      ),
+    );
+
+    expect(state.issues).toEqual([report, dashboard, orphan]);
   });
 
   it("stops when no project has the title, naming board:setup", async () => {
