@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-// The package's command, `create-reforged-map <folder> --template <archive
-// or folder>`: a thin shell over `create` (src/create.ts), which does every
-// stage. It reads the arguments, makes the Template source and runs the
-// commands as processes.
+// The package's command, `create-reforged-map <folder>`: a thin shell over
+// `create` (src/create.ts), which does every stage. It reads the arguments,
+// makes the Template source (the download from GitHub, or the archive or
+// folder `--template` names) and runs the commands as processes.
 
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { create } from "./create.js";
 import { runInherited, type Runner } from "./process.js";
-import { localTemplate } from "./template.js";
+import { githubTemplate, localTemplate, type Fetch } from "./template.js";
 
 export const USAGE =
-  "Usage: create-reforged-map <folder> --template <archive or folder> [--skip-install] [--skip-git]";
+  "Usage: create-reforged-map <folder> [--template <archive or folder>] [--skip-install] [--skip-git]";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -20,11 +20,14 @@ export interface Output {
 
 export interface Context {
   run: Runner;
+  /** What downloads the Template: the global `fetch` when absent. */
+  fetch?: Fetch;
 }
 
 interface Options {
   folder: string;
-  template: string;
+  /** The local Template; the download from GitHub when absent. */
+  template: string | undefined;
   skipInstall: boolean;
   skipGit: boolean;
 }
@@ -50,7 +53,10 @@ export async function main(
       skipInstall: options.skipInstall,
       skipGit: options.skipGit,
     },
-    template: localTemplate(options.template),
+    template:
+      options.template === undefined
+        ? githubTemplate({ fetch: context.fetch })
+        : localTemplate(options.template),
     run: context.run,
     print: (line) => {
       output.stdout(`${line}\n`);
@@ -62,8 +68,8 @@ export async function main(
 }
 
 /**
- * The options of `args`: one folder, `--template` with its value, and each
- * flag at most once; `undefined` on anything else.
+ * The options of `args`: one folder, `--template` with its value at most
+ * once, and each flag at most once; `undefined` on anything else.
  */
 function parseArgs(args: readonly string[]): Options | undefined {
   let folder: string | undefined;
@@ -88,7 +94,7 @@ function parseArgs(args: readonly string[]): Options | undefined {
       folder = arg;
     }
   }
-  if (folder === undefined || template === undefined) return undefined;
+  if (folder === undefined) return undefined;
   return {
     folder,
     template,

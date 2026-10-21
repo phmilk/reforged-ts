@@ -14,6 +14,7 @@ import {
   stat,
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
+import { satisfies } from "./engines.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import type { TemplateSource } from "./template.js";
 
@@ -36,6 +37,11 @@ export interface CreateInput {
   run: Runner;
   /** Prints one line for the author, without its line break. */
   print: (line: string) => void;
+  /**
+   * The running Node's version, held to the Template's `engines`:
+   * `process.version` when absent.
+   */
+  nodeVersion?: string;
 }
 
 /** A stage of the creation, as a failure names it. */
@@ -105,7 +111,9 @@ interface Step {
  * written into a temporary folder next to the target and moved into place
  * once it is read, so a failure before the move leaves nothing in the
  * target. A failure after it leaves the folder and names the stage and the
- * commands to finish by hand. `template:detach` runs whatever is skipped.
+ * commands to finish by hand. Once the Template is written, a running Node
+ * that its `engines.node` does not admit is warned about, not refused.
+ * `template:detach` runs whatever is skipped.
  * When git has no identity, the files stay staged, the commands to commit
  * are printed, and the creation still succeeds.
  */
@@ -133,14 +141,21 @@ export async function create(input: CreateInput): Promise<CreateResult> {
   const parent = dirname(folder);
   let createdParent: string | undefined;
   let staging: string | undefined;
+  let nodeRange: string | undefined;
   try {
     createdParent = await mkdir(parent, { recursive: true });
     staging = await mkdtemp(join(parent, `.${basename(folder)}-`));
     await template.write(staging);
-    await readTemplate(staging);
+    nodeRange = await readTemplate(staging);
   } catch (error) {
     await removeAll(staging, createdParent);
     return fail("template", errorMessage(error));
+  }
+  const nodeVersion = input.nodeVersion ?? process.version;
+  if (nodeRange !== undefined && satisfies(nodeVersion, nodeRange) === false) {
+    print(
+      `Warning: Node ${nodeVersion} does not satisfy the Template's engines requirement, node ${nodeRange}: its scripts may fail on it. Install a Node it admits (https://nodejs.org) before you build the project.`,
+    );
   }
 
   print(`Moving it into ${answers.folder}`);
@@ -210,10 +225,11 @@ async function exitCode(
 }
 
 /**
- * Reads the Template written into `folder`; throws when it is not one: its
- * `package.json` must name the `template:detach` script.
+ * Reads the Template written into `folder` and resolves with its
+ * `engines.node` range, if it has one; throws when it is not a Template:
+ * its `package.json` must name the `template:detach` script.
  */
-async function readTemplate(folder: string): Promise<void> {
+async function readTemplate(folder: string): Promise<string | undefined> {
   let manifest: unknown;
   try {
     manifest = JSON.parse(await readFile(join(folder, "package.json"), "utf8"));
@@ -235,6 +251,16 @@ async function readTemplate(folder: string): Promise<void> {
       `the Template's package.json has no \`${DETACH_SCRIPT}\` script, which removes its maintenance files.`,
     );
   }
+  const engines =
+    typeof manifest === "object" && manifest !== null && "engines" in manifest
+      ? manifest.engines
+      : undefined;
+  return typeof engines === "object" &&
+    engines !== null &&
+    "node" in engines &&
+    typeof engines.node === "string"
+    ? engines.node
+    : undefined;
 }
 
 /**
