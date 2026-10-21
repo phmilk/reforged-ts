@@ -19,6 +19,12 @@ const FIELDS_FILE = "fields.json";
 export interface BuiltinObject {
   readonly kind: string;
   readonly name?: string;
+  /**
+   * The name the World Editor's comments in war3map.wts give it, when it is
+   * not `name`: a buff's editor name (empty when it has none), an upgrade's
+   * names of every level.
+   */
+  readonly commentName?: string;
   /** Its race (`human`), when it has one. */
   readonly race?: string;
   /** The ids of the Game data sets that hold it (`melee-tft`). */

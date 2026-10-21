@@ -972,6 +972,50 @@ describe("builtins:generate on every Object kind", () => {
     ]);
   });
 
+  it("gives a buff and an upgrade the name the World Editor's comments give them where it is not their name (#654)", async () => {
+    const storage = await writeStorage(
+      allKinds({
+        [base("Units/UpgradeData.slk")]: slkTable(
+          ["upgradeid", "race"],
+          [
+            ["Rhme", "human"],
+            ["Rhra", "human"],
+            ["Rhfs", "human"],
+          ],
+        ),
+        [strings("HumanUpgradeStrings.txt")]: profile({
+          Rhme: {
+            Name: "Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords",
+          },
+          // Quoted items lose their quotes, as the editor lists them.
+          Rhra: { Name: '"Black Gunpowder","Refined, Gunpowder"' },
+          // One level: its names are its name.
+          Rhfs: { Name: "Fragmentation Shards" },
+        }),
+      }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stderr } = await run(storage.installDir, outDir);
+
+    expect(stderr).toBe("");
+    expect(status).toBe(0);
+    const index = JSON.parse(
+      await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+    ) as { objects: Record<string, { name?: string; commentName?: string }> };
+    const commentNames = Object.fromEntries(
+      Object.entries(index.objects)
+        .filter(([, entry]) => entry.commentName !== undefined)
+        .map(([id, entry]) => [id, entry.commentName]),
+    );
+    // BHbz's editor name is its name; Binf has none, named by its tooltip.
+    expect(commentNames).toEqual({
+      Binf: "",
+      Rhme: "Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords",
+      Rhra: "Black Gunpowder,Refined, Gunpowder",
+    });
+  });
+
   it("warns of a name set twice only when the name it gives changes", async () => {
     const storage = await writeStorage(allKinds());
     const outDir = await tempDir("out");

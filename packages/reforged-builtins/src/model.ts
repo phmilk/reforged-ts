@@ -23,6 +23,12 @@ export interface IndexEntry {
   kind: ObjectKind;
   /** The enUS name; absent when the game gives none. */
   name?: string;
+  /**
+   * The name the World Editor's comments in `war3map.wts` give the object,
+   * when it is not `name`: a buff's editor name, empty when it has none,
+   * and an upgrade's names of every level, as the game lists them.
+   */
+  commentName?: string;
   /** Lower-case, as the game writes it (`human`, `nightelf`); absent for a kind without one. */
   race?: string;
   /** The ids of the Game data sets that hold the object. */
@@ -88,6 +94,9 @@ export function serializeIndex(index: BuiltinsIndex): string {
       const ordered: IndexEntry = {
         kind: entry.kind,
         ...(entry.name !== undefined && { name: entry.name }),
+        ...(entry.commentName !== undefined && {
+          commentName: entry.commentName,
+        }),
         ...(entry.race !== undefined && { race: entry.race }),
         sets: entry.sets,
         constant: entry.constant,

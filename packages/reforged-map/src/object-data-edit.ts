@@ -388,10 +388,11 @@ function needsForeign(
 /**
  * The World Editor's comment line of a string of the object's field, from
  * the field table's labels: `// Units: h000 (Captain), Name (Name)`. The
- * object's name is its field named `Name` in the metadata, at its lowest
- * level, the Skin file's winning, as the model holds it after the edit;
- * else its base's or the game's name from the index; none for a kind
- * without such a field (the buffs).
+ * object's name is its field named `Name` in the metadata (a buff's
+ * `EditorName`) at level 0, the Skin file's winning, as the model holds it
+ * after the edit; else its base's or the game's name in the editor's
+ * comments, from the index: a buff's editor name, empty when it has none,
+ * and an upgrade's names of every level (#640, #654).
  */
 function comment(
   model: MapFolderModel,
@@ -402,9 +403,10 @@ function comment(
   entry: FieldEntry,
 ): string {
   const kindFields = fields.fields[kind] ?? {};
+  const nameField = kind === "buff" ? "EditorName" : "Name";
   const nameFields = new Set(
     Object.entries(kindFields)
-      .filter(([, other]) => other.field === "Name")
+      .filter(([, other]) => other.field === nameField)
       .map(([id]) => id),
   );
   let name: Modification | undefined;
@@ -418,7 +420,7 @@ function comment(
         if (
           nameFields.has(modification.field) &&
           typeof modification.value === "string" &&
-          (name === undefined || (modification.level ?? 0) <= (name.level ?? 0))
+          (modification.level ?? 0) === 0
         ) {
           name = modification;
         }
@@ -426,16 +428,16 @@ function comment(
     }
   }
   const builtin = target.custom ? target.base : target.rawcode;
+  const builtinObject = Object.hasOwn(builtins.objects, builtin)
+    ? builtins.objects[builtin]
+    : undefined;
   const objectName =
-    nameFields.size === 0
-      ? ""
-      : ((name === undefined
-          ? undefined
-          : resolveString(String(name.value), model)) ??
-        (Object.hasOwn(builtins.objects, builtin)
-          ? builtins.objects[builtin].name
-          : undefined) ??
-        "");
+    (name === undefined
+      ? undefined
+      : resolveString(String(name.value), model)) ??
+    builtinObject?.commentName ??
+    builtinObject?.name ??
+    "";
   return `// ${fields.kinds[kind] ?? kind}: ${target.rawcode} (${objectName}), ${entry.field} (${entry.label})`;
 }
 

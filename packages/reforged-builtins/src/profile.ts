@@ -102,6 +102,15 @@ export class Profile {
     return value === undefined ? undefined : firstItem(value);
   }
 
+  /**
+   * The list `key` holds, each item unquoted and the items joined by `,`,
+   * as the World Editor names an upgrade by its names of every level.
+   */
+  list(section: string, key: string): string | undefined {
+    const value = this.#raw(section, key);
+    return value === undefined ? undefined : unquoteItems(value);
+  }
+
   /** The value of `key` in section `section` as its line spells it, both matched without regard to case. */
   #raw(section: string, key: string): string | undefined {
     return this.#sections.get(section.toLowerCase())?.get(key.toLowerCase());
@@ -113,6 +122,26 @@ function firstItem(value: string): string {
   if (value.startsWith('"')) return unquote(value);
   const comma = value.indexOf(",");
   return (comma === -1 ? value : value.slice(0, comma)).trim();
+}
+
+/** A list as a line spells it, the quotes around its items removed. */
+function unquoteItems(value: string): string {
+  if (!value.includes('"')) return value;
+  const items: string[] = [];
+  let at = 0;
+  for (;;) {
+    let comma: number;
+    if (value[at] === '"') {
+      const close = value.indexOf('"', at + 1);
+      items.push(value.slice(at + 1, close === -1 ? undefined : close));
+      comma = close === -1 ? -1 : value.indexOf(",", close + 1);
+    } else {
+      comma = value.indexOf(",", at);
+      items.push(value.slice(at, comma === -1 ? undefined : comma));
+    }
+    if (comma === -1) return items.join(",");
+    at = comma + 1;
+  }
 }
 
 function unquote(value: string): string {

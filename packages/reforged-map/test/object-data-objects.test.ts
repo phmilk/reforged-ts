@@ -234,7 +234,10 @@ const KINDS: readonly KindCase[] = [
     name: {
       field: "gnam",
       text: "Sharper Swords",
-      comment: "// Upgrades: R001 (Sharper Swords), Name (Name)",
+      // A name at level 1 never names an upgrade: its base's names of every
+      // level do (#654).
+      comment:
+        "// Upgrades: R001 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)",
     },
     path: { field: "gar1", value: "ReplaceableTextures\\BTNSword.blp" },
     level: 1,
@@ -349,6 +352,64 @@ describe("adding a Custom object", () => {
         .filter(({ rawcode }) => KINDS.some((kase) => kase.rawcode === rawcode))
         .map(({ kind, rawcode, base }) => [kind, rawcode, base]),
     ).toEqual(KINDS.map(({ kind, rawcode, base }) => [kind, rawcode, base]));
+  });
+
+  it("names a buff by its editor name and an upgrade by its name at level 0 in the comments, else as the index gives its base's, as the World Editor does (#654)", () => {
+    const folder = mapFolder({ "war3map.wts": wts([[1, undefined, "first"]]) });
+    const editor = open(folder);
+
+    // A buff with an editor name; one from a base with an editor name, and
+    // one from a base without, neither setting it; an upgrade named at
+    // level 0, and one named at level 1 only.
+    editor.addObject({ kind: "buff", rawcode: "B001", base: "Bslo" });
+    editor.setField(
+      { kind: "buff", rawcode: "B001", field: "fnam" },
+      "Weakness",
+    );
+    editor.setField({ kind: "buff", rawcode: "B001", field: "ftip" }, "Weak");
+    editor.addObject({ kind: "buff", rawcode: "B002", base: "BHbz" });
+    editor.setField({ kind: "buff", rawcode: "B002", field: "ftip" }, "Frozen");
+    editor.addObject({ kind: "buff", rawcode: "B003", base: "Binf" });
+    editor.setField({ kind: "buff", rawcode: "B003", field: "ftip" }, "Fire");
+    editor.addObject({ kind: "upgrade", rawcode: "R001", base: "Rhra" });
+    editor.setField(
+      { kind: "upgrade", rawcode: "R001", field: "gnam", level: 0 },
+      "Sharper Powder",
+    );
+    editor.addObject({ kind: "upgrade", rawcode: "R002", base: "Rhra" });
+    editor.setField(
+      { kind: "upgrade", rawcode: "R002", field: "gnam", level: 1 },
+      "Finer Powder",
+    );
+    editor.save(undefined, NO_WINDOW);
+
+    expect(textOf(folder, "war3map.wts")).toBe(
+      wts([
+        [1, undefined, "first"],
+        [
+          2,
+          "// Buffs/Effects: B001 (Weakness), EditorName (Name (Editor Only))",
+          "Weakness",
+        ],
+        [3, "// Buffs/Effects: B001 (Weakness), Bufftip (Tooltip)", "Weak"],
+        [
+          4,
+          "// Buffs/Effects: B002 (Blizzard (Caster)), Bufftip (Tooltip)",
+          "Frozen",
+        ],
+        [5, "// Buffs/Effects: B003 (), Bufftip (Tooltip)", "Fire"],
+        [
+          6,
+          "// Upgrades: R001 (Sharper Powder), Name (Name)",
+          "Sharper Powder",
+        ],
+        [
+          7,
+          "// Upgrades: R002 (Black Gunpowder,Refined Gunpowder,Imbued Gunpowder), Name (Name)",
+          "Finer Powder",
+        ],
+      ]),
+    );
   });
 
   it("creates both files of a kind that had none, in format version 3, the object holding no modification", () => {
