@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_STACKS_REQUIRED",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

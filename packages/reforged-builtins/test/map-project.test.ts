@@ -1,9 +1,9 @@
 /**
  * Seam 2: the package as a Map project consumes it. The package is packed
  * and installed into a temporary folder; fixture projects list the
- * workspace's `reforged-types/3.0.0` and `reforged-builtins/3.0.0` in
+ * workspace's `reforged-types/3.0.1` and `reforged-builtins/3.0.1` in
  * `types`, import `reforged-builtins/units`, and are compiled against the
- * committed 3.0.0 artefacts with TypeScript and with typescript-to-lua,
+ * committed 3.0.1 artefacts with TypeScript and with typescript-to-lua,
  * whose bundle runs on Lua 5.3 through reforged-test.
  */
 import { mkdir, copyFile, readFile, writeFile } from "node:fs/promises";
@@ -101,14 +101,14 @@ describe.each([
       .sort();
 
     expect(files).toEqual([
-      "/3.0.0.d.ts",
-      "/3.0.0/abilities.d.ts",
-      "/3.0.0/buffs.d.ts",
-      "/3.0.0/destructables.d.ts",
-      "/3.0.0/doodads.d.ts",
-      "/3.0.0/items.d.ts",
-      "/3.0.0/units.d.ts",
-      "/3.0.0/upgrades.d.ts",
+      "/3.0.1.d.ts",
+      "/3.0.1/abilities.d.ts",
+      "/3.0.1/buffs.d.ts",
+      "/3.0.1/destructables.d.ts",
+      "/3.0.1/doodads.d.ts",
+      "/3.0.1/items.d.ts",
+      "/3.0.1/units.d.ts",
+      "/3.0.1/upgrades.d.ts",
     ]);
   });
 });
@@ -145,7 +145,7 @@ describe("a Map project bundled with typescript-to-lua for Lua 5.3", () => {
     );
 
     expect(modules.sort()).toEqual([
-      "lua_modules.reforged-builtins.3_0_0.units",
+      "lua_modules.reforged-builtins.3_0_1.units",
       "main",
     ]);
     expect(bundle).toContain("Footman_hfoo = 1751543663,");

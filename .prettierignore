@@ -18,8 +18,8 @@ probe/.probe/
 # Patch files, the record the seed script writes, the Built-in objects and the
 # field table their generator's test expects, and the pnpm lockfile.
 packages/reforged-types/overlay/
-packages/reforged-types/3.0.0/
-packages/reforged-types/3.0.0.d.ts
+packages/reforged-types/[0-9]*/
+packages/reforged-types/[0-9]*.d.ts
 packages/reforged-types/vendor/
 packages/reforged-types/scripts/war3-types-strict.json
 packages/reforged-builtins/[0-9]*/

@@ -180,22 +180,22 @@ describe("Item.equipmentType", () => {
     it(`is the member for ${name}`, () => {
       const item = Item.create(ration, 0, 0);
       const type = withNative(
-        "GetItemEquipmentType",
+        "BlzGetItemEquipmentType",
         () => constant,
         () => item.equipmentType,
       );
       expect(type).toEqual(member);
       expect(stubCalls()).toContainCall(
-        `GetItemEquipmentType(${handleRef("item", item.handle)})`,
+        `BlzGetItemEquipmentType(${handleRef("item", item.handle)})`,
       );
     });
   }
 
-  it("throws naming GetItemEquipmentType for a handle no constant names", () => {
+  it("throws naming BlzGetItemEquipmentType for a handle no constant names", () => {
     const item = Item.create(ration, 0, 0);
     let read: EquipmentType | undefined;
     const message = withNative(
-      "GetItemEquipmentType",
+      "BlzGetItemEquipmentType",
       () => ConvertEquipmentType(42),
       () =>
         raisedIn(() => {
@@ -203,7 +203,7 @@ describe("Item.equipmentType", () => {
         }),
     );
     expect(message).toEqual(
-      "reforged-ts: GetItemEquipmentType returned a value EquipmentType does not name",
+      "reforged-ts: BlzGetItemEquipmentType returned a value EquipmentType does not name",
     );
     expect(read).toBeUndefined();
   });
@@ -225,22 +225,22 @@ describe("Item.tag", () => {
     it(`is the member for ${name}`, () => {
       const item = Item.create(ration, 0, 0);
       const tag = withNative(
-        "GetItemTag",
+        "BlzGetItemTag",
         () => constant,
         () => item.tag,
       );
       expect(tag).toEqual(member);
       expect(stubCalls()).toContainCall(
-        `GetItemTag(${handleRef("item", item.handle)})`,
+        `BlzGetItemTag(${handleRef("item", item.handle)})`,
       );
     });
   }
 
-  it("throws naming GetItemTag for a handle no constant names", () => {
+  it("throws naming BlzGetItemTag for a handle no constant names", () => {
     const item = Item.create(ration, 0, 0);
     let read: ItemTag | undefined;
     const message = withNative(
-      "GetItemTag",
+      "BlzGetItemTag",
       () => ConvertItemTag(42),
       () =>
         raisedIn(() => {
@@ -248,52 +248,52 @@ describe("Item.tag", () => {
         }),
     );
     expect(message).toEqual(
-      "reforged-ts: GetItemTag returned a value ItemTag does not name",
+      "reforged-ts: BlzGetItemTag returned a value ItemTag does not name",
     );
     expect(read).toBeUndefined();
   });
 });
 
 describe("Item.isEquipped and Item.isInBag", () => {
-  it("isEquipped is what IsItemEquipped answers for the item", () => {
+  it("isEquipped is what BlzIsItemEquipped answers for the item", () => {
     const item = Item.create(ration, 0, 0);
     const equipped = withNative(
-      "IsItemEquipped",
+      "BlzIsItemEquipped",
       () => true,
       () => item.isEquipped,
     );
     expect(equipped).toEqual(true);
     expect(stubCalls()).toContainCall(
-      `IsItemEquipped(${handleRef("item", item.handle)})`,
+      `BlzIsItemEquipped(${handleRef("item", item.handle)})`,
     );
   });
 
-  it("isInBag is what IsItemInBag answers for the item", () => {
+  it("isInBag is what BlzIsItemInBag answers for the item", () => {
     const item = Item.create(ration, 0, 0);
     const bagged = withNative(
-      "IsItemInBag",
+      "BlzIsItemInBag",
       () => true,
       () => item.isInBag,
     );
     expect(bagged).toEqual(true);
     expect(stubCalls()).toContainCall(
-      `IsItemInBag(${handleRef("item", item.handle)})`,
+      `BlzIsItemInBag(${handleRef("item", item.handle)})`,
     );
   });
 });
 
 describe("Item.color", () => {
-  it("sets the item's colour through SetItemColor", () => {
+  it("sets the item's colour through BlzSetItemColor", () => {
     const item = Item.create(ration, 0, 0);
     withNative(
-      "SetItemColor",
+      "BlzSetItemColor",
       () => undefined,
       () => {
         item.color = PLAYER_COLOR_BLUE;
       },
     );
     expect(stubCalls()).toContainCall(
-      `SetItemColor(${handleRef("item", item.handle)}, PLAYER_COLOR_BLUE)`,
+      `BlzSetItemColor(${handleRef("item", item.handle)}, PLAYER_COLOR_BLUE)`,
     );
   });
 });

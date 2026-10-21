@@ -1,0 +1,35 @@
+{
+  "name": "ChooseRandomItemExWithFilterAndIncludes",
+  "source": "common.j",
+  "returns": {
+    "nullable": false,
+    "kind": "item"
+  },
+  "params": [
+    {
+      "name": "whichType",
+      "nullable": false
+    },
+    {
+      "name": "level",
+      "nullable": false
+    },
+    {
+      "name": "whichEquipmentType",
+      "nullable": false
+    },
+    {
+      "name": "whichTag",
+      "nullable": false
+    },
+    {
+      "name": "includeInvalidMorphs",
+      "nullable": false
+    },
+    {
+      "name": "includeNonPickRandom",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

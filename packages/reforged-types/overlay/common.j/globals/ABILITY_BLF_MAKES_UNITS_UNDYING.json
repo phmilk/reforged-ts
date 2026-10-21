@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_MAKES_UNITS_UNDYING",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

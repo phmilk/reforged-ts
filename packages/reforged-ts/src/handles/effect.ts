@@ -347,6 +347,22 @@ export class Effect extends Handle<effect> {
   }
 
   /**
+   * Removes the effect at once, without the death animation `destroy` plays.
+   * @remarks
+   * In Dev mode the removed Wrapper becomes a tombstone, as after `destroy`:
+   * any later access raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   * @example An effect removed at once, another destroyed with its death animation
+   * {@includeCode ../../examples/game/remove-effect.ts}
+   * @native BlzRemoveEffect
+   */
+  public remove() {
+    BlzRemoveEffect(this.handle);
+    this.release();
+  }
+
+  /**
    * Plays the model's animation of the given type, with the subanimation tags
    * the effect has, replacing the one it plays.
    * @param animType - The animation type, such as `ANIM_TYPE_SPELL`.

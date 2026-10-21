@@ -1,0 +1,9 @@
+{
+  "name": "RemoveEffectAsyncBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "since": "3.0.1.24370"
+}

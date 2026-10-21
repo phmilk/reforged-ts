@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_BONUS_RESOLVE_PERCENT",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

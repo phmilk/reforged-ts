@@ -71,6 +71,12 @@ function buildConfig(name: string | null): string {
 /** The Build of the Typings' manifest the Probes compile against. */
 const TYPINGS_PATCH = readPatch(PROBE_FOLDERS.manifest);
 
+/** `build` with its last part moved by `by`: a Build of its Game version. */
+function laterBuild(build: string, by: number): string {
+  const parts = build.split(".");
+  return [...parts.slice(0, 3), String(Number(parts[3]) + by)].join(".");
+}
+
 /**
  * A `.build.info` as the Battle.net app writes it (read on 3.0.0.24268): a
  * header of `<name>!<type>:<size>` columns, then one row per region, the
@@ -337,19 +343,14 @@ describe("probe:run", () => {
 
     expect(stderr).toBe("");
     expect(code).toBe(0);
-    const staging = path.join(
-      context.folders.output,
-      "hello",
-      "staging",
-      "probe.w3m",
-    );
+    const archive = path.join(context.folders.output, "hello", "probe.w3m");
     expect(events).toEqual([
       {
         at: 0,
         event: "start",
         command: {
           command: ELSEWHERE,
-          args: ["-loadfile", staging, ...LAUNCH_ARGS],
+          args: ["-loadfile", archive, ...LAUNCH_ARGS],
         },
       },
       { at: 12_000, event: "key", pid: 4242 },
@@ -720,6 +721,61 @@ describe("probe:run", () => {
     expect(events).toEqual([]);
     expect(existsSync(context.folders.output)).toBe(false);
   });
+
+  it("runs on a client on the --client-build, a later Build of the Typings' Game version, saying so and keeping the client's Build", async () => {
+    const later = laterBuild(TYPINGS_PATCH, 1);
+    const { code, stdout, stderr, context } = await run({
+      args: ["hello", "--client-build", later],
+      client: later,
+      script: game(12),
+    });
+
+    expect(stderr).toBe("");
+    expect(code).toBe(0);
+    expect(stdout.split("\n")[0]).toBe(
+      `The game client is on Build ${later}, which --client-build accepts in place of ${TYPINGS_PATCH}, the Patch of the Typings: the run tests the Typings of ${TYPINGS_PATCH} on ${later}, and the report names both.`,
+    );
+    expect(stdout.split("\n")[1]).toMatch(/^Built Probe hello, run /);
+    const read = readProbeRun("hello", {
+      machine: context.machine,
+      stateFolder: context.folders.state,
+    });
+    expect(read).toMatchObject({ state: "finished", client: later });
+  });
+
+  it("refuses a client on neither the Typings' Patch nor the --client-build, naming all three, exit code 4", async () => {
+    const { code, stderr, events } = await run({
+      args: ["hello", "--client-build", laterBuild(TYPINGS_PATCH, 1)],
+      client: laterBuild(TYPINGS_PATCH, 2),
+    });
+
+    expect(code).toBe(4);
+    expect(stderr).toBe(
+      `probe:run failed: The game client is on Build ${laterBuild(TYPINGS_PATCH, 2)} (${BUILD_INFO}), not on ${TYPINGS_PATCH}, the Patch of the Typings, nor on ${laterBuild(TYPINGS_PATCH, 1)}, the --client-build: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${TYPINGS_PATCH} is skipped.\n`,
+    );
+    expect(events).toEqual([]);
+  });
+
+  it.each([
+    ["an earlier Build", laterBuild(TYPINGS_PATCH, -1)],
+    ["the Typings' Patch", TYPINGS_PATCH],
+    ["a Build of another Game version", `9.9.9.${TYPINGS_PATCH.split(".")[3]}`],
+    ["no Build", "latest"],
+  ])(
+    "refuses a --client-build that is %s, not a later Build of the Typings' Game version, exit code 4",
+    async (_, clientBuild) => {
+      const { code, stderr, events } = await run({
+        args: ["hello", "--client-build", clientBuild],
+      });
+      const gameVersion = TYPINGS_PATCH.split(".").slice(0, 3).join(".");
+
+      expect(code).toBe(4);
+      expect(stderr).toBe(
+        `probe:run failed: --client-build ${clientBuild} is not a later Build of Game version ${gameVersion}, the Game version of ${TYPINGS_PATCH}, the Patch of the Typings: only a client ahead of the Patch within its Game version can stand in for it.\n`,
+      );
+      expect(events).toEqual([]);
+    },
+  );
 
   it("takes the Build the build config names, as builtins:generate does, saying so without failing when .build.info gives another Version", async () => {
     const { code, stdout, stderr, context } = await run({

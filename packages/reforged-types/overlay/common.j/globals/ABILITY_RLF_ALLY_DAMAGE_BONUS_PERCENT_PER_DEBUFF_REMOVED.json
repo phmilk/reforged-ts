@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_ALLY_DAMAGE_BONUS_PERCENT_PER_DEBUFF_REMOVED",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

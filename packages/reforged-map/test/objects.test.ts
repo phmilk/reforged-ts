@@ -786,7 +786,7 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
         ...BANNER,
         "",
         "/**",
-        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.",
+        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.",
         " *",
         " * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
         " */",
@@ -811,14 +811,14 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
     expect(overloads(output)).toContain(
       [
         "/**",
-        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, which this map modifies.",
+        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.1, which this map modifies.",
         " *",
         " * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
         " */",
         'declare function FourCC(id: "hfoo"): Rawcode<"unit">;',
         "",
         "/**",
-        " * Knight (`hkni`), a Built-in unit of Patch 3.0.0, which this map modifies.",
+        " * Knight (`hkni`), a Built-in unit of Patch 3.0.1, which this map modifies.",
       ].join("\n"),
     );
     expect(constantsOf(customUnits(output))).toEqual([]);
@@ -891,7 +891,7 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
 
     expect(overloadedOf(overloads(output))).toEqual(["h000", "hkni", "AHbz"]);
     expect(overloads(output)).toContain(
-      " * Blizzard (`AHbz`), a Built-in ability of Patch 3.0.0, named Ice Storm in this map.\n *\n * Its constant is `Abilities.Blizzard_AHbz`, from `reforged-builtins/abilities`.",
+      " * Blizzard (`AHbz`), a Built-in ability of Patch 3.0.1, named Ice Storm in this map.\n *\n * Its constant is `Abilities.Blizzard_AHbz`, from `reforged-builtins/abilities`.",
     );
     expect(constantsOf(customUnits(output))).toEqual(["Captain_h000"]);
   });
@@ -954,7 +954,7 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
     );
 
     expect(output.warnings).toEqual([
-      "war3map.w3t adds the Custom item hfoo, whose Rawcode is the Built-in unit Footman's (hfoo) in Patch 3.0.0: hfoo is read as this map's Custom item.",
+      "war3map.w3t adds the Custom item hfoo, whose Rawcode is the Built-in unit Footman's (hfoo) in Patch 3.0.1: hfoo is read as this map's Custom item.",
     ]);
     expect(overloadedOf(overloads(output))).toEqual([]);
     expect(constantsOf(file(output, CONSTANTS_FILES.item))).toEqual([
@@ -1012,7 +1012,7 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
     );
 
     expect(output.warnings).toEqual([
-      "war3map.w3u adds the Custom unit hkni, whose Rawcode is the Built-in unit Knight's (hkni) in Patch 3.0.0: hkni is read as this map's Custom unit.",
+      "war3map.w3u adds the Custom unit hkni, whose Rawcode is the Built-in unit Knight's (hkni) in Patch 3.0.1: hkni is read as this map's Custom unit.",
     ]);
     expect(overloads(output)).toContain(
       " * Captain (`hkni`), a Custom unit of this map, derived from Footman (`hfoo`).",

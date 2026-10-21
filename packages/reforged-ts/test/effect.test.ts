@@ -288,3 +288,24 @@ describe("Effect named animations", () => {
     });
   });
 }
+
+// Effect#remove, over BlzRemoveEffect of Patch 3.0.1.24370 (#642).
+{
+  const glow = Effect.create(
+    "Abilities\\Spells\\Human\\Heal\\HealTarget.mdl",
+    0,
+    0,
+  );
+  const glowRef = handleRef("effect", glow.handle);
+
+  describeNatives("Effect#remove", [
+    nativeCase({
+      native: "BlzRemoveEffect",
+      answer: () => undefined,
+      member: () => {
+        glow.remove();
+      },
+      line: `BlzRemoveEffect(${glowRef})`,
+    }),
+  ]);
+}

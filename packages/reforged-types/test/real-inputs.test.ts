@@ -1,5 +1,7 @@
 /**
- * Seam 1 on real inputs: the vendored 3.0.0.24268 Patch and the real Overlay.
+ * Seam 1 on real inputs: the vendored Patches, 3.0.0.24268 and the supported
+ * 3.0.1.24370, and the real Overlay; the counts and facts are the supported
+ * Patch's.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -9,7 +11,8 @@ import { generate, type GenerateSuccess } from "../src/index.js";
 import { generatedFile } from "./support/fixture.js";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
-const patchDir = join(packageRoot, "vendor", "3.0.0.24268");
+const previousDir = join(packageRoot, "vendor", "3.0.0.24268");
+const patchDir = join(packageRoot, "vendor", "3.0.1.24370");
 const overlayDir = join(packageRoot, "overlay");
 
 let result: GenerateSuccess;
@@ -18,14 +21,17 @@ let blizzardJ: string;
 let commonAi: string;
 
 beforeAll(async () => {
-  const generated = await generate({ patchDir, overlayDir });
+  const generated = await generate({
+    patchDirs: [previousDir, patchDir],
+    overlayDir,
+  });
   if (!generated.ok) {
     throw new Error(generated.diagnostics.map((d) => d.message).join("\n"));
   }
   result = generated;
-  commonJ = generatedFile(result, "3.0.0/common.j.d.ts");
-  blizzardJ = generatedFile(result, "3.0.0/blizzard.j.d.ts");
-  commonAi = generatedFile(result, "3.0.0/common.ai.d.ts");
+  commonJ = generatedFile(result, "3.0.1/common.j.d.ts");
+  blizzardJ = generatedFile(result, "3.0.1/blizzard.j.d.ts");
+  commonAi = generatedFile(result, "3.0.1/common.ai.d.ts");
 }, 60_000);
 
 /** Occurrences of a line pattern in a generated file. */
@@ -79,27 +85,33 @@ const FUNCTION = /^declare function /;
 const TYPE = /^declare interface /;
 const GLOBAL = /^declare (const|let) /;
 
-describe("Patch 3.0.0.24268 with the real Overlay", () => {
-  it("generates the three files without a diagnostic", () => {
-    expect(result.patch).toBe("3.0.0.24268");
+describe("Patch 3.0.1.24370 with the real Overlay", () => {
+  it("generates the three files of each Patch without a diagnostic", () => {
+    expect(result.patch).toBe("3.0.1.24370");
+    expect(result.patches).toEqual(["3.0.0.24268", "3.0.1.24370"]);
     expect([...result.files.keys()]).toEqual([
       "3.0.0/common.j.d.ts",
       "3.0.0/blizzard.j.d.ts",
       "3.0.0/common.ai.d.ts",
       "3.0.0/manifest.json",
       "3.0.0.d.ts",
+      "3.0.1/common.j.d.ts",
+      "3.0.1/blizzard.j.d.ts",
+      "3.0.1/common.ai.d.ts",
+      "3.0.1/manifest.json",
+      "3.0.1.d.ts",
       "async-natives.json",
     ]);
     expect(result.diagnostics).toEqual([]);
   });
 
   it("declares every declaration the inventory counts", async () => {
-    // 1,681 natives and 139 types (plus the `handle` root) in common.j.
-    expect(count(commonJ, FUNCTION)).toBe(1681);
+    // 1,712 natives and 139 types (plus the `handle` root) in common.j.
+    expect(count(commonJ, FUNCTION)).toBe(1712);
     expect(count(commonJ, TYPE)).toBe(139 + 1);
-    expect(count(commonJ, GLOBAL)).toBe(1738);
-    // 1,056 functions in Blizzard.j.
-    expect(count(blizzardJ, FUNCTION)).toBe(1056);
+    expect(count(commonJ, GLOBAL)).toBe(1871);
+    // 1,064 functions in Blizzard.j.
+    expect(count(blizzardJ, FUNCTION)).toBe(1064);
     expect(count(blizzardJ, TYPE)).toBe(0);
     expect(count(blizzardJ, GLOBAL)).toBe(522);
     // 123 natives and 120 functions in common.ai: the output does not tell
@@ -140,7 +152,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
       },
       returns: {
         unit: 6,
-        item: 5,
+        item: 6,
         ability: 4,
         destructable: 1,
         doodad: 1,
@@ -160,7 +172,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         destructable: 2,
         any: 1,
       },
-      returns: { unit: 3, item: 3, ability: 1, any: 1 },
+      returns: { unit: 3, item: 4, ability: 1, any: 1 },
       globals: { destructable: 3, any: 1 },
     });
     expect(rawcodes(commonAi)).toEqual({
@@ -189,7 +201,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     );
   });
 
-  it("marks GetLocalPlayer @async, and 67 Natives in all", () => {
+  it("marks GetLocalPlayer @async, and 69 Natives in all", () => {
     expect(commonJ).toContain(
       [
         "/**",
@@ -201,7 +213,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         "declare function GetLocalPlayer(): player;",
       ].join("\n"),
     );
-    expect(count(commonJ, /^ \* @async$/)).toBe(67);
+    expect(count(commonJ, /^ \* @async$/)).toBe(69);
     expect(count(blizzardJ + commonAi, /^ \* @async$/)).toBe(0);
   });
 
@@ -217,11 +229,18 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     );
   });
 
-  it("tags the 137 new Natives and the 51 new constants with @patch, nothing else", () => {
+  it("tags the declarations new in 3.0.0 and in 3.0.1 with @patch, nothing else", () => {
+    // 3.0.0.24268: 137 Natives and 51 constants of common.j.
     const since = / \* @patch 3\.0\.0\.24268$/;
     expect(count(commonJ, since)).toBe(137 + 51);
     expect(count(blizzardJ + commonAi, since)).toBe(0);
-    expect(count(commonJ + blizzardJ + commonAi, /@patch /)).toBe(188);
+    // 3.0.1.24370: 31 Natives and 133 constants of common.j, 8 functions and
+    // 2 globals of Blizzard.j.
+    const next = / \* @patch 3\.0\.1\.24370$/;
+    expect(count(commonJ, next)).toBe(31 + 133);
+    expect(count(blizzardJ, next)).toBe(8 + 2);
+    expect(count(commonAi, next)).toBe(0);
+    expect(count(commonJ + blizzardJ + commonAi, /@patch /)).toBe(188 + 174);
     expect(commonJ).toMatch(
       / \* @patch 3\.0\.0\.24268\n \* @see \{@link https:\/\/lep\.duckdns\.org\/jassbot\/doc\/BlzGetUnitAbilityCooldownPercent\}\n \*\/\ndeclare function BlzGetUnitAbilityCooldownPercent\(/,
     );
@@ -236,27 +255,27 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     );
   });
 
-  it("references the Rawcode types and the common.j and blizzard.j outputs from the 3.0.0 entry, never common.ai", () => {
-    const references = generatedFile(result, "3.0.0.d.ts").match(
+  it("references the Rawcode types and the common.j and blizzard.j outputs from the 3.0.1 entry, never common.ai", () => {
+    const references = generatedFile(result, "3.0.1.d.ts").match(
       /^\/\/\/ <reference .*\/>$/gm,
     );
     expect(references).toEqual([
       '/// <reference types="lua-types/5.3" resolution-mode="require" />',
       '/// <reference path="./rawcode.d.ts" />',
       '/// <reference path="./lua-runtime.d.ts" />',
-      '/// <reference path="./3.0.0/common.j.d.ts" />',
-      '/// <reference path="./3.0.0/blizzard.j.d.ts" />',
+      '/// <reference path="./3.0.1/common.j.d.ts" />',
+      '/// <reference path="./3.0.1/blizzard.j.d.ts" />',
     ]);
   });
 
-  it("lists the 67 async Natives in async-natives.json, sorted", () => {
+  it("lists the 69 async Natives in async-natives.json, sorted", () => {
     const names = JSON.parse(
       generatedFile(result, "async-natives.json"),
     ) as string[];
-    expect(names).toHaveLength(67);
+    expect(names).toHaveLength(69);
     expect(names).toContain("GetLocalPlayer");
     expect(names).toEqual([...names].sort());
-    expect(new Set(names).size).toBe(67);
+    expect(new Set(names).size).toBe(69);
     for (const name of names) {
       expect(commonJ).toContain(`declare function ${name}(`);
     }
@@ -264,16 +283,16 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
 
   it("lists every function and global in the manifest", () => {
     const manifest = JSON.parse(
-      generatedFile(result, "3.0.0/manifest.json"),
+      generatedFile(result, "3.0.1/manifest.json"),
     ) as { patch: string; entries: { name: string; async?: boolean }[] };
     const declared = [commonJ, blizzardJ, commonAi].reduce(
       (sum, text) => sum + count(text, FUNCTION) + count(text, GLOBAL),
       0,
     );
-    expect(manifest.patch).toBe("3.0.0.24268");
+    expect(manifest.patch).toBe("3.0.1.24370");
     expect(manifest.entries).toHaveLength(declared);
     expect(manifest.entries).toHaveLength(
-      1681 + 1738 + 1056 + 522 + 123 + 120 + 472,
+      1712 + 1871 + 1064 + 522 + 123 + 120 + 472,
     );
     expect(
       manifest.entries.find((e: { name: string }) => e.name === "CreateUnit"),
@@ -296,7 +315,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     });
     expect(
       manifest.entries.filter((e: { async?: boolean }) => e.async),
-    ).toHaveLength(67);
+    ).toHaveLength(69);
   });
 
   it("equals the committed output (the drift gate)", async () => {

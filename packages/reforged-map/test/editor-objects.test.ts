@@ -147,10 +147,10 @@ describe("the Object data saved by the 3.0 World Editor", () => {
   it("gives each modified Built-in object an overload naming the game's object, and the map's name when renamed", () => {
     const overloads = contents(OBJECTS_DECLARATIONS_FILE);
     expect(overloads).toContain(
-      "Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.",
+      "Footman (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.",
     );
     expect(overloads).toContain(
-      "Holy Light (`AHhb`), a Built-in ability of Patch 3.0.0, which this map modifies.",
+      "Holy Light (`AHhb`), a Built-in ability of Patch 3.0.1, which this map modifies.",
     );
     for (const { rawcode, origin } of OBJECTS) {
       if (origin === "modified") {

@@ -1,4 +1,4 @@
-// The Nullability sweep's Slice `nullability-getters` (#391): the 18
+// The Nullability sweep's Slice `nullability-getters` (#391): the 20
 // enum-getters and the 8 intrinsic-properties, in `common.j` order, each
 // declared for the getters' case generators (./nullability/getter.ts), and
 // what each call returned recorded (./nullability/case-runner.ts).
@@ -70,6 +70,10 @@ function sliceCases(): ReturnCase[] {
       GetItemEquipmentType(i),
     ),
     enumGetterCases("GetItemTag", [whichItem], ([i]) => GetItemTag(i)),
+    enumGetterCases("BlzGetItemEquipmentType", [whichItem], ([i]) =>
+      BlzGetItemEquipmentType(i),
+    ),
+    enumGetterCases("BlzGetItemTag", [whichItem], ([i]) => BlzGetItemTag(i)),
     intrinsicPropertyCases("GetUnitLoc", [whichUnit], ([u]) => GetUnitLoc(u)),
     intrinsicPropertyCases("GetOwningPlayer", [whichUnit], ([u]) =>
       GetOwningPlayer(u),

@@ -306,7 +306,7 @@ describe("the event responses (data/event-responses.json)", () => {
     const commonJ = readFileSync(
       fileURLToPath(
         new URL(
-          "../../reforged-types/vendor/3.0.0.24268/common.j",
+          "../../reforged-types/vendor/3.0.1.24370/common.j",
           import.meta.url,
         ),
       ),

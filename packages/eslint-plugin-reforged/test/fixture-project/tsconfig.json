@@ -13,7 +13,7 @@
     "types": [
       "@typescript-to-lua/language-extensions",
       "lua-types/5.3",
-      "reforged-types/3.0.0"
+      "reforged-types/3.0.1"
     ],
     "strict": true,
     "noEmit": true,

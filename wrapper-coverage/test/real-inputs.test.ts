@@ -68,11 +68,11 @@ describe("the committed report", () => {
     expect(status).toBe(0);
   });
 
-  it("counts the common.j Natives of Patch 3.0.0.24268 against the 31 Wrappers", async () => {
+  it("counts the common.j Natives of Patch 3.0.1.24370 against the 31 Wrappers", async () => {
     const { report } = await freshRun();
 
-    expect(report.patch).toBe("3.0.0.24268");
-    expect(report.totals.natives).toBe(1681);
+    expect(report.patch).toBe("3.0.1.24370");
+    expect(report.totals.natives).toBe(1712);
     expect(report.wrappers).toHaveLength(31);
   });
 

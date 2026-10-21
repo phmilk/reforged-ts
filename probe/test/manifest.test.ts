@@ -49,7 +49,7 @@ describe("typingsManifest", () => {
 
   it("is what the Probe runner builds against in the workspace", () => {
     expect(TYPINGS_MANIFEST).toMatch(
-      /reforged-types[\\/]3\.0\.0[\\/]manifest\.json$/,
+      /reforged-types[\\/]3\.0\.1[\\/]manifest\.json$/,
     );
   });
 });

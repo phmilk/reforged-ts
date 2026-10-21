@@ -257,10 +257,10 @@ export class Unit extends Widget {
   /**
    * Gets the size of the unit's bag, its extended inventory.
    * @returns The number of bag slots.
-   * @native UnitExtendedInventorySize
+   * @native BlzUnitExtendedInventorySize
    */
   public get bagSize() {
-    return UnitExtendedInventorySize(this.handle);
+    return BlzUnitExtendedInventorySize(this.handle);
   }
 
   /**
@@ -1214,10 +1214,10 @@ export class Unit extends Widget {
    * Gets the item in one slot of the unit's bag, its extended inventory.
    * @param index - The bag slot, from 0.
    * @returns The item, or `undefined` when the slot is empty.
-   * @native UnitItemInBagSlot
+   * @native BlzUnitItemInBagSlot
    */
   public bagItem(index: number): Item | undefined {
-    return Item.fromHandle(UnitItemInBagSlot(this.handle, index));
+    return Item.fromHandle(BlzUnitItemInBagSlot(this.handle, index));
   }
 
   /**
@@ -1232,11 +1232,11 @@ export class Unit extends Widget {
    * Checks whether the unit can equip items of an equipment type.
    * @param equipmentType - The equipment type.
    * @returns True when the unit can equip such items.
-   * @native UnitCanEquipItemOfEquipmentType
+   * @native BlzUnitCanEquipItemOfEquipmentType
    * @native ConvertEquipmentType
    */
   public canEquip(equipmentType: EquipmentType) {
-    return UnitCanEquipItemOfEquipmentType(
+    return BlzUnitCanEquipItemOfEquipmentType(
       this.handle,
       ConvertEquipmentType(equipmentType),
     );
@@ -1489,22 +1489,22 @@ export class Unit extends Widget {
    * Equips an item on the unit.
    * @param whichItem - The item to equip.
    * @returns True when the item was equipped.
-   * @native UnitEquipItem
+   * @native BlzUnitEquipItem
    */
   public equip(whichItem: Item): boolean {
-    return UnitEquipItem(this.handle, whichItem.handle);
+    return BlzUnitEquipItem(this.handle, whichItem.handle);
   }
 
   /**
    * Gets the item equipped in one of the unit's loadout slots.
    * @param slot - The loadout slot.
    * @returns The item, or `undefined` when the slot is empty.
-   * @native UnitItemInEquipmentSlot
+   * @native BlzUnitItemInEquipmentSlot
    * @native ConvertLoadoutSlot
    */
   public equippedItem(slot: LoadoutSlot): Item | undefined {
     return Item.fromHandle(
-      UnitItemInEquipmentSlot(this.handle, ConvertLoadoutSlot(slot)),
+      BlzUnitItemInEquipmentSlot(this.handle, ConvertLoadoutSlot(slot)),
     );
   }
 
@@ -1755,23 +1755,21 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit has any item equipped.
-   * @remarks
-   * The Native's name is misspelt: `UnitHasAnyItemEquiped`.
    * @returns True when an item is equipped.
-   * @native UnitHasAnyItemEquiped
+   * @native BlzUnitHasAnyItemEquipped
    */
   public hasAnyEquipped() {
-    return UnitHasAnyItemEquiped(this.handle);
+    return BlzUnitHasAnyItemEquipped(this.handle);
   }
 
   /**
    * Checks whether an item is in the unit's bag.
    * @param whichItem - The item to look for in the bag.
    * @returns True when the item is in the bag.
-   * @native UnitHasItemBagged
+   * @native BlzUnitHasItemBagged
    */
   public hasBagged(whichItem: Item) {
-    return UnitHasItemBagged(this.handle, whichItem.handle);
+    return BlzUnitHasItemBagged(this.handle, whichItem.handle);
   }
 
   /**
@@ -1815,22 +1813,22 @@ export class Unit extends Widget {
    * Checks whether one of the unit's loadout slots is empty.
    * @param slot - The loadout slot.
    * @returns True when the slot is empty.
-   * @native UnitHasLoadoutSlotEmpty
+   * @native BlzUnitHasLoadoutSlotEmpty
    * @native ConvertLoadoutSlot
    */
   public hasEmptySlot(slot: LoadoutSlot) {
-    return UnitHasLoadoutSlotEmpty(this.handle, ConvertLoadoutSlot(slot));
+    return BlzUnitHasLoadoutSlotEmpty(this.handle, ConvertLoadoutSlot(slot));
   }
 
   /**
    * Checks whether the unit has an item of an equipment type equipped.
    * @param equipmentType - The equipment type.
    * @returns True when such an item is equipped.
-   * @native UnitHasItemEquipmentOfType
+   * @native BlzUnitHasItemEquipmentOfType
    * @native ConvertEquipmentType
    */
   public hasEquipmentOfType(equipmentType: EquipmentType) {
-    return UnitHasItemEquipmentOfType(
+    return BlzUnitHasItemEquipmentOfType(
       this.handle,
       ConvertEquipmentType(equipmentType),
     );
@@ -1840,10 +1838,10 @@ export class Unit extends Widget {
    * Checks whether the unit has an item equipped.
    * @param whichItem - The item to look for among the equipped ones.
    * @returns True when the item is equipped.
-   * @native UnitHasItemEquipped
+   * @native BlzUnitHasItemEquipped
    */
   public hasEquipped(whichItem: Item) {
-    return UnitHasItemEquipped(this.handle, whichItem.handle);
+    return BlzUnitHasItemEquipped(this.handle, whichItem.handle);
   }
 
   /**
@@ -1854,6 +1852,39 @@ export class Unit extends Widget {
    */
   public hasItem(whichItem: Item) {
     return UnitHasItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * Restores life to the unit, up to its maximum life.
+   * @remarks
+   * The World Editor's own heal actions pass `isItem` false and
+   * `applyStatBonuses` true, and their hint says they use the source's
+   * healing bonuses. Measured on 3.0.1.24371 (#642): a negative amount takes
+   * life away, and on a dead unit the life is set without reviving it. On a
+   * footman, which has no healing bonus, `isItem` and `applyStatBonuses`
+   * changed neither the life restored nor the value returned.
+   * @param source - The unit the healing comes from, whose healing bonuses
+   * apply: the unit itself for a heal of its own.
+   * @param amount - The life to restore.
+   * @param isItem - True when the healing comes from an item.
+   * @param applyStatBonuses - True to apply the source's healing bonuses.
+   * @returns The life restored: less than `amount` when the unit reaches its
+   * maximum life.
+   * @native BlzUnitHeal
+   */
+  public heal(
+    source: Unit,
+    amount: number,
+    isItem: boolean,
+    applyStatBonuses: boolean,
+  ) {
+    return BlzUnitHeal(
+      this.handle,
+      source.handle,
+      amount,
+      isItem,
+      applyStatBonuses,
+    );
   }
 
   /**
@@ -1957,11 +1988,11 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is alive.
-   * @returns True when the unit is alive; false once it died or was removed.
-   * @native UnitAlive
+   * @returns True when the unit is alive; false once it died.
+   * @native BlzUnitIsAlive
    */
   public isAlive(): boolean {
-    return UnitAlive(this.handle);
+    return BlzUnitIsAlive(this.handle);
   }
 
   /**
@@ -2631,6 +2662,17 @@ export class Unit extends Widget {
   }
 
   /**
+   * Resets the hero's talents and refunds its talent points.
+   * @remarks
+   * On a unit without talents it does nothing, as measured on 3.0.1.24371
+   * (#642).
+   * @native BlzResetUnitTalents
+   */
+  public resetTalents() {
+    BlzResetUnitTalents(this.handle);
+  }
+
+  /**
    * Revives the dead hero at a point.
    * @remarks
    * A hero with a food cost revives only when its owner has the food for it.
@@ -3240,22 +3282,22 @@ export class Unit extends Widget {
   /**
    * Unequips an item from the unit.
    * @param whichItem - The item to unequip.
-   * @native UnitUnequipItem
+   * @native BlzUnitUnequipItem
    */
   public unequip(whichItem: Item) {
-    UnitUnequipItem(this.handle, whichItem.handle);
+    BlzUnitUnequipItem(this.handle, whichItem.handle);
   }
 
   /**
    * Unequips the item in one of the unit's loadout slots.
    * @param slot - The loadout slot.
    * @returns The unequipped item, or `undefined` when the slot is empty.
-   * @native UnitUnequipItemFromSlot
+   * @native BlzUnitUnequipItemFromSlot
    * @native ConvertLoadoutSlot
    */
   public unequipSlot(slot: LoadoutSlot): Item | undefined {
     return Item.fromHandle(
-      UnitUnequipItemFromSlot(this.handle, ConvertLoadoutSlot(slot)),
+      BlzUnitUnequipItemFromSlot(this.handle, ConvertLoadoutSlot(slot)),
     );
   }
 

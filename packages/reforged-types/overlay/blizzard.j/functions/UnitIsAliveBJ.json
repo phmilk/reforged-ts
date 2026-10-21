@@ -1,0 +1,14 @@
+{
+  "name": "UnitIsAliveBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

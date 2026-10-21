@@ -13,7 +13,7 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps
 | [`reforged-map`](packages/reforged-map)                     | Reads a Map project's map folder at build time and writes the declarations and the Lua stub of its Editor globals.                          |
 | [`reforged-builtins`](packages/reforged-builtins)           | The Built-in objects of each Patch: `FourCC` overloads by Object kind and a constant per object, derived from the game's data.              |
 
-The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
+The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.1`.
 
 **Build phase.** Until 1.0.0, every version of the six packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). No alpha is published yet. Once the first one is, npm gives `latest` to it, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
 

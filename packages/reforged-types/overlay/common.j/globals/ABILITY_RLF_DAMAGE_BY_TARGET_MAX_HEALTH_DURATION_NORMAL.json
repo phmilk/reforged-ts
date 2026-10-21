@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_DAMAGE_BY_TARGET_MAX_HEALTH_DURATION_NORMAL",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

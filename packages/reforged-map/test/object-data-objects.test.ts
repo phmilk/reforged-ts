@@ -5,7 +5,7 @@
 // writer, and the expected war3map.wts by `wts` below, in the layout of the
 // 3.0 World Editor's own save in test/fixtures/editor-objects.w3m. The
 // field facts are those of reforged-builtins' field table of Game version
-// 3.0.0, and the Built-in objects those of its index.
+// 3.0.1, and the Built-in objects those of its index.
 
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -650,7 +650,7 @@ describe("an object edit refused", () => {
     [
       "no Built-in object has",
       "h000",
-      "No Built-in unit of Game version 3.0.0 has the Rawcode h000",
+      "No Built-in unit of Game version 3.0.1 has the Rawcode h000",
     ],
     [
       "of another kind",

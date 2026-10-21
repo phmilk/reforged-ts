@@ -2,7 +2,7 @@
 
 TypeScript declarations for the Natives of Warcraft III Reforged, generated from the game's own Patch files, for map scripts compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/).
 
-**Supported Patch: 3.0.0.24268** (Game version 3.0.0). The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370** (Game version 3.0.1). The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 
@@ -21,7 +21,7 @@ Add the entry of your Game version to `types` in `tsconfig.json`, next to the ty
 ```json
 {
   "compilerOptions": {
-    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"]
+    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1"]
   }
 }
 ```
@@ -31,7 +31,7 @@ That one line declares every `common.j` Native, type and global, the `Blizzard.j
 The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out. To opt in, add their file as well:
 
 ```json
-"types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0", "reforged-types/3.0.0/common.ai"]
+"types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1", "reforged-types/3.0.1/common.ai"]
 ```
 
 What the declarations give you:

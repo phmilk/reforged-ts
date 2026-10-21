@@ -103,7 +103,7 @@ describe("converterTable", () => {
 });
 
 describe("the converter table of the Typings' Patch", () => {
-  it("holds the 88 converters of the Overlay and their 1,724 constants", async () => {
+  it("holds the 88 converters of the Overlay and their 1,857 constants", async () => {
     const patch = readPatch(TYPINGS_MANIFEST);
     const commonJ = await readFile(
       join(VENDOR_FOLDER, patch, "common.j"),
@@ -113,7 +113,7 @@ describe("the converter table of the Typings' Patch", () => {
     expect(table).toHaveLength(88);
     expect(
       table.reduce((count, { constants }) => count + constants.length, 0),
-    ).toBe(1724);
+    ).toBe(1857);
     expect(
       table
         .filter(({ constants }) => constants.length === 0)

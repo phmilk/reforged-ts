@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_BURN_DAMAGE_PULSE_FREQUENCY",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

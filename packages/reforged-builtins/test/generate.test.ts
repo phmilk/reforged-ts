@@ -44,11 +44,23 @@ const NO_GAME: InstallMachine = {
   isFile: () => false,
 };
 
-async function run(installDir: string, outDir: string, build?: string) {
+/**
+ * The Build the synthetic installs are on (`test/support/casc.ts`), which
+ * `run` adopts in place of reforged-types' own unless told otherwise.
+ */
+const SYNTHETIC_BUILD = "3.0.0.24268";
+
+/** Runs the CLI on `installDir`, adopting `build`: reforged-types' `reforged.patch` when null. */
+async function run(
+  installDir: string,
+  outDir: string,
+  build: string | null = SYNTHETIC_BUILD,
+  extra: readonly string[] = [],
+) {
   let stdout = "";
   let stderr = "";
   const status = await main(
-    ["--install", installDir, "--out", outDir],
+    ["--install", installDir, "--out", outDir, ...extra],
     { stdout: (text) => (stdout += text), stderr: (text) => (stderr += text) },
     {
       machine: {
@@ -57,7 +69,7 @@ async function run(installDir: string, outDir: string, build?: string) {
           file.startsWith(installDir) && file.endsWith(".build.info"),
       },
       cwd: outDir,
-      ...(build !== undefined && { typingsBuild: build }),
+      ...(build !== null && { typingsBuild: build }),
     },
   );
   return { status, stdout, stderr };
@@ -168,6 +180,48 @@ describe("builtins:generate", () => {
         .sort()
         .map(input),
     });
+  });
+
+  it("records an install on the --client-build as reforged-types' Build, its provenance naming the client's", async () => {
+    const storage = await writeStorage(
+      unitStorage(HUMAN, [], { build: "3.0.1.25001" }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stdout, stderr } = await run(
+      storage.installDir,
+      outDir,
+      "3.0.1.25000",
+      ["--client-build", "3.0.1.25001"],
+    );
+
+    expect(stderr).toBe("");
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      `Read the install at ${storage.installDir} (Build 3.0.1.25000): `,
+    );
+    expect(stdout).toContain(
+      "- warning: The install is on Build 3.0.1.25001, which --client-build accepts in place of 3.0.1.25000, the Patch of reforged-types: the Built-in objects are recorded as 3.0.1.25000, and provenance.json names 3.0.1.25001 as the client's Build.\n",
+    );
+    expect(await readdir(outDir)).toEqual(["3.0.1", "3.0.1.d.ts"]);
+    const index = JSON.parse(
+      await readFile(join(outDir, "3.0.1", "index.json"), "utf8"),
+    ) as { build: string; gameVersion: string };
+    expect([index.build, index.gameVersion]).toEqual(["3.0.1.25000", "3.0.1"]);
+    const fields = JSON.parse(
+      await readFile(join(outDir, "3.0.1", "fields.json"), "utf8"),
+    ) as { build: string };
+    expect(fields.build).toBe("3.0.1.25000");
+    const provenance = await readFile(
+      join(outDir, "3.0.1", "provenance.json"),
+      "utf8",
+    );
+    expect(provenance).toMatch(
+      /^\{\n {2}"build": "3\.0\.1\.25000",\n {2}"clientBuild": "3\.0\.1\.25001",\n {2}"buildConfig": /,
+    );
+    expect(
+      (JSON.parse(provenance) as { buildConfig: string }).buildConfig,
+    ).toBe(storage.buildConfigKey);
   });
 
   it("emits the units' FourCC overloads, constants' declarations and Lua module from the index", async () => {
@@ -461,6 +515,7 @@ return {
             file.startsWith(storage.installDir) && file.endsWith(".build.info"),
         },
         cwd: outDir,
+        typingsBuild: SYNTHETIC_BUILD,
       },
     );
 
@@ -543,10 +598,13 @@ describe("readFully", () => {
 });
 
 /** Runs the generator on a storage it must refuse, and asserts nothing is written. */
-async function refused(options: StorageOptions) {
+async function refused(
+  options: StorageOptions,
+  build: string | null = SYNTHETIC_BUILD,
+) {
   const storage = await writeStorage(options);
   const outDir = await tempDir("out");
-  const result = await run(storage.installDir, outDir);
+  const result = await run(storage.installDir, outDir, build);
   expect(result.status).toBe(1);
   expect(result.stdout).toBe("");
   expect(await readdir(outDir)).toEqual([]);
@@ -555,16 +613,64 @@ async function refused(options: StorageOptions) {
 
 describe("builtins:generate refuses, writing nothing", () => {
   it("an install on another Build than reforged-types', naming both", async () => {
-    expect(typingsBuild()).toBe("3.0.0.24268");
+    expect(typingsBuild()).toBe("3.0.1.24370");
     const { stderr, storage } = await refused(
       unitStorage(HUMAN, [], { build: "3.0.1.25000" }),
+      null,
     );
 
     expect(stderr).toBe(
       "Generation failed. No file was written.\n\n" +
-        `- error: The install at ${storage.installDir} is on Build 3.0.1.25000 (its build config, ${buildConfigFile(storage)}), not on 3.0.0.24268, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.\n`,
+        `- error: The install at ${storage.installDir} is on Build 3.0.1.25000 (its build config, ${buildConfigFile(storage)}), not on 3.0.1.24370, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.\n`,
     );
   });
+
+  it("an install on neither reforged-types' Build nor the --client-build, naming all three", async () => {
+    const storage = await writeStorage(
+      unitStorage(HUMAN, [], { build: "3.0.1.25002" }),
+    );
+    const outDir = await tempDir("out");
+    const { status, stdout, stderr } = await run(
+      storage.installDir,
+      outDir,
+      "3.0.1.25000",
+      ["--client-build", "3.0.1.25001"],
+    );
+
+    expect(status).toBe(1);
+    expect(stdout).toBe("");
+    expect(stderr).toContain(
+      `- error: The install at ${storage.installDir} is on Build 3.0.1.25002 (its build config, ${buildConfigFile(storage)}), not on 3.0.1.25000, the Patch of reforged-types (its reforged.patch), nor on 3.0.1.25001, its --client-build: the Built-in objects and the Typings would come from different Builds.\n`,
+    );
+    expect(await readdir(outDir)).toEqual([]);
+  });
+
+  it.each([
+    ["an earlier Build", "3.0.1.24999"],
+    ["the same Build", "3.0.1.25000"],
+    ["a Build of another Game version", "3.0.2.25001"],
+    ["no Build", "latest"],
+  ])(
+    "a --client-build that is %s, not a later Build of the Patch's Game version",
+    async (_, clientBuild) => {
+      const storage = await writeStorage(
+        unitStorage(HUMAN, [], { build: "3.0.1.25001" }),
+      );
+      const outDir = await tempDir("out");
+      const { status, stderr } = await run(
+        storage.installDir,
+        outDir,
+        "3.0.1.25000",
+        ["--client-build", clientBuild],
+      );
+
+      expect(status).toBe(1);
+      expect(stderr).toContain(
+        `- error: --client-build ${clientBuild} is not a later Build of Game version 3.0.1, the Game version of 3.0.1.25000, the Patch of reforged-types (its reforged.patch): only a client ahead of the Patch within its Game version can stand in for it.\n`,
+      );
+      expect(await readdir(outDir)).toEqual([]);
+    },
+  );
 
   it("a storage it cannot read, still warning that .build.info gives another Build", async () => {
     const { stderr, storage } = await refused({

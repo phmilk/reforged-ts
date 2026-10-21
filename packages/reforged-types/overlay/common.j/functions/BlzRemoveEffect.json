@@ -1,0 +1,14 @@
+{
+  "name": "BlzRemoveEffect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

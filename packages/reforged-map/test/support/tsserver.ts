@@ -121,8 +121,8 @@ export function createPluginProject(options: PluginProjectOptions): string {
       strict: true,
       noEmit: true,
       types: [
-        "reforged-types/3.0.0",
-        ...(builtins ? ["reforged-builtins/3.0.0"] : []),
+        "reforged-types/3.0.1",
+        ...(builtins ? ["reforged-builtins/3.0.1"] : []),
       ],
       plugins: [{ name: "reforged-map/typescript-plugin", ...options.plugin }],
     },

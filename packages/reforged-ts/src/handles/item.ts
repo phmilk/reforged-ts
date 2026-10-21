@@ -70,10 +70,10 @@ export class Item extends Widget {
   /**
    * The item's colour, set like `MapPlayer.color`. Write-only: the game has
    * no Native that reads it back.
-   * @native SetItemColor
+   * @native BlzSetItemColor
    */
   public set color(color: playercolor) {
-    SetItemColor(this.handle, color);
+    BlzSetItemColor(this.handle, color);
   }
 
   /**
@@ -83,14 +83,14 @@ export class Item extends Widget {
    * be equipped.
    * @throws When the game returns an equipment type no member names, such as
    * one a later Patch adds:
-   * `reforged-ts: GetItemEquipmentType returned a value EquipmentType does not name`,
+   * `reforged-ts: BlzGetItemEquipmentType returned a value EquipmentType does not name`,
    * at the line that read it.
-   * @native GetItemEquipmentType
+   * @native BlzGetItemEquipmentType
    */
   public get equipmentType() {
     return equipmentTypeOf(
-      GetItemEquipmentType(this.handle),
-      "GetItemEquipmentType",
+      BlzGetItemEquipmentType(this.handle),
+      "BlzGetItemEquipmentType",
     );
   }
 
@@ -114,19 +114,19 @@ export class Item extends Widget {
   /**
    * Tells whether a unit has the item equipped in one of its loadout slots.
    * @returns `true` when the item is equipped.
-   * @native IsItemEquipped
+   * @native BlzIsItemEquipped
    */
   public get isEquipped() {
-    return IsItemEquipped(this.handle);
+    return BlzIsItemEquipped(this.handle);
   }
 
   /**
    * Tells whether the item lies in a unit's bag.
    * @returns `true` when the item is in a bag.
-   * @native IsItemInBag
+   * @native BlzIsItemInBag
    */
   public get isInBag() {
-    return IsItemInBag(this.handle);
+    return BlzIsItemInBag(this.handle);
   }
 
   /**
@@ -296,12 +296,12 @@ export class Item extends Widget {
    * in, such as a quest reward, a boss drop or a shop item.
    * @returns The tag; `ItemTag.Undefined` for an item with none.
    * @throws When the game returns a tag no member names, such as one a later
-   * Patch adds: `reforged-ts: GetItemTag returned a value ItemTag does not name`,
+   * Patch adds: `reforged-ts: BlzGetItemTag returned a value ItemTag does not name`,
    * at the line that read it.
-   * @native GetItemTag
+   * @native BlzGetItemTag
    */
   public get tag() {
-    return itemTagOf(GetItemTag(this.handle), "GetItemTag");
+    return itemTagOf(BlzGetItemTag(this.handle), "BlzGetItemTag");
   }
 
   /**
@@ -711,10 +711,10 @@ export class Item extends Widget {
   /**
    * Gets the item a unit equips.
    * @returns The item, or `undefined` outside an equip event.
-   * @native GetEquippedItem
+   * @native BlzGetEquippedItem
    */
   public static fromEquipped(): Item | undefined {
-    return this.fromHandle(GetEquippedItem());
+    return this.fromHandle(BlzGetEquippedItem());
   }
 
   /**
@@ -785,10 +785,10 @@ export class Item extends Widget {
   /**
    * Gets the item a unit unequips.
    * @returns The item, or `undefined` outside an unequip event.
-   * @native GetUnequippedItem
+   * @native BlzGetUnequippedItem
    */
   public static fromUnequipped(): Item | undefined {
-    return this.fromHandle(GetUnequippedItem());
+    return this.fromHandle(BlzGetUnequippedItem());
   }
 
   /**

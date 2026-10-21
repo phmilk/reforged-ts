@@ -317,7 +317,7 @@ describe("openRawcodeLookup", () => {
   });
 
   it("gives the Game version of the index it read", () => {
-    expect(openSample().gameVersion()).toBe("3.0.0");
+    expect(openSample().gameVersion()).toBe("3.0.1");
   });
 
   it("builds its model on the first lookup and keeps it within the interval", () => {
@@ -363,7 +363,7 @@ describe("openRawcodeLookup", () => {
     );
 
     expect(JSON.parse(output)).toEqual({
-      gameVersion: "3.0.0",
+      gameVersion: "3.0.1",
       status: "known",
       name: "Captain",
     });

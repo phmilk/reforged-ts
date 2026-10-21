@@ -18,6 +18,7 @@ import {
   type ProbeFolders,
 } from "../src/folders.js";
 import { readGameData } from "../src/game-data.js";
+import { openArchive } from "../src/pack.js";
 import { stateFile } from "../src/state.js";
 
 /** The fixture Probes folders this file made, removed after its tests. */
@@ -82,6 +83,22 @@ describe("buildProbe", () => {
     expect(staged).toEqual(
       Buffer.concat([editorScript, Buffer.from("\n"), bundle]),
     );
+  });
+
+  it("packs the staged folder into an archive of every staged file, byte for byte", async () => {
+    const folders = await tempFolders();
+    const result = buildProbe("hello", folders);
+
+    expect(result.archive).toBe(join(folders.output, "hello", "probe.w3m"));
+    const archive = openArchive(await readFile(result.archive));
+    const files = await readdir(result.stagingFolder);
+    for (const file of files) {
+      const entry = archive.get(file);
+      expect(entry, file).toBeDefined();
+      expect(Buffer.from(entry?.bytes() ?? new Uint8Array())).toEqual(
+        await readFile(join(result.stagingFolder, file)),
+      );
+    }
   });
 
   it("stages every other file of the map folder unchanged", async () => {
@@ -317,7 +334,7 @@ describe("probe:build", () => {
       await readFile(stateFile(folders.state, "hello"), "utf8"),
     ) as { runId: string };
     expect(output.stdout).toBe(
-      `Built Probe hello, run ${runId}: ${join(folders.output, "hello", "staging", "probe.w3m")}\n`,
+      `Built Probe hello, run ${runId}: ${join(folders.output, "hello", "probe.w3m")}\n`,
     );
   });
 

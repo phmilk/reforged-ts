@@ -18,6 +18,8 @@
   "BlzGetAbilityResearchExtendedTooltip",
   "BlzGetAbilityResearchTooltip",
   "BlzGetAbilityTooltip",
+  "BlzGetCameraAllowsHotkeyTargetLock",
+  "BlzGetHUDScale",
   "BlzGetItemDescription",
   "BlzGetItemExtendedTooltip",
   "BlzGetItemTooltip",

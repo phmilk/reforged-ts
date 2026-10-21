@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_MIND_CONTROLLED_UNIT_LIMIT",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

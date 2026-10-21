@@ -711,28 +711,30 @@ describe("Unit equipment and bag", () => {
     };
   };
 
-  it("equip is what UnitEquipItem answers for the unit and the item", () => {
+  it("equip is what BlzUnitEquipItem answers for the unit and the item", () => {
     const { unit, item, unitRef, itemRef } = heroAndItem();
     const equipped = withNative(
-      "UnitEquipItem",
+      "BlzUnitEquipItem",
       () => true,
       () => unit.equip(item),
     );
     expect(equipped).toBe(true);
-    expect(stubCalls()).toContainCall(`UnitEquipItem(${unitRef}, ${itemRef})`);
+    expect(stubCalls()).toContainCall(
+      `BlzUnitEquipItem(${unitRef}, ${itemRef})`,
+    );
   });
 
-  it("unequip passes the unit and the item to UnitUnequipItem", () => {
+  it("unequip passes the unit and the item to BlzUnitUnequipItem", () => {
     const { unit, item, unitRef, itemRef } = heroAndItem();
     withNative(
-      "UnitUnequipItem",
+      "BlzUnitUnequipItem",
       () => undefined,
       () => {
         unit.unequip(item);
       },
     );
     expect(stubCalls()).toContainCall(
-      `UnitUnequipItem(${unitRef}, ${itemRef})`,
+      `BlzUnitUnequipItem(${unitRef}, ${itemRef})`,
     );
   });
 
@@ -740,85 +742,87 @@ describe("Unit equipment and bag", () => {
     const { unit, item, unitRef, itemRef } = heroAndItem();
     expect(
       withNative(
-        "UnitHasItemEquipped",
+        "BlzUnitHasItemEquipped",
         () => true,
         () => unit.hasEquipped(item),
       ),
     ).toBe(true);
     expect(
       withNative(
-        "UnitHasItemBagged",
+        "BlzUnitHasItemBagged",
         () => false,
         () => unit.hasBagged(item),
       ),
     ).toBe(false);
     expect(stubCalls()).toContainCall(
-      `UnitHasItemEquipped(${unitRef}, ${itemRef})`,
+      `BlzUnitHasItemEquipped(${unitRef}, ${itemRef})`,
     );
     expect(stubCalls()).toContainCall(
-      `UnitHasItemBagged(${unitRef}, ${itemRef})`,
+      `BlzUnitHasItemBagged(${unitRef}, ${itemRef})`,
     );
   });
 
-  it("hasAnyEquipped is what UnitHasAnyItemEquiped answers for the unit", () => {
+  it("hasAnyEquipped is what BlzUnitHasAnyItemEquipped answers for the unit", () => {
     const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitHasAnyItemEquiped",
+        "BlzUnitHasAnyItemEquipped",
         () => true,
         () => unit.hasAnyEquipped(),
       ),
     ).toBe(true);
-    expect(stubCalls()).toContainCall(`UnitHasAnyItemEquiped(${unitRef})`);
+    expect(stubCalls()).toContainCall(`BlzUnitHasAnyItemEquipped(${unitRef})`);
   });
 
-  it("bagSize is what UnitExtendedInventorySize answers for the unit", () => {
+  it("bagSize is what BlzUnitExtendedInventorySize answers for the unit", () => {
     const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitExtendedInventorySize",
+        "BlzUnitExtendedInventorySize",
         () => 12,
         () => unit.bagSize,
       ),
     ).toEqual(12);
-    expect(stubCalls()).toContainCall(`UnitExtendedInventorySize(${unitRef})`);
+    expect(stubCalls()).toContainCall(
+      `BlzUnitExtendedInventorySize(${unitRef})`,
+    );
   });
 
   it("the equipment-type predicates pass the converted EquipmentType to their Native", () => {
     const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitHasItemEquipmentOfType",
+        "BlzUnitHasItemEquipmentOfType",
         () => true,
         () => unit.hasEquipmentOfType(EquipmentType.Ring),
       ),
     ).toBe(true);
     expect(
       withNative(
-        "UnitCanEquipItemOfEquipmentType",
+        "BlzUnitCanEquipItemOfEquipmentType",
         () => false,
         () => unit.canEquip(EquipmentType.Offhand),
       ),
     ).toBe(false);
     expect(stubCalls()).toContainCall(
-      `UnitHasItemEquipmentOfType(${unitRef}, EQUIPMENT_TYPE_RING)`,
+      `BlzUnitHasItemEquipmentOfType(${unitRef}, EQUIPMENT_TYPE_RING)`,
     );
     expect(stubCalls()).toContainCall(
-      `UnitCanEquipItemOfEquipmentType(${unitRef}, EQUIPMENT_TYPE_OFFHAND)`,
+      `BlzUnitCanEquipItemOfEquipmentType(${unitRef}, EQUIPMENT_TYPE_OFFHAND)`,
     );
   });
 
-  it("hasEmptySlot passes the converted LoadoutSlot to UnitHasLoadoutSlotEmpty", () => {
+  it("hasEmptySlot passes the converted LoadoutSlot to BlzUnitHasLoadoutSlotEmpty", () => {
     const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitHasLoadoutSlotEmpty",
+        "BlzUnitHasLoadoutSlotEmpty",
         () => true,
         () => unit.hasEmptySlot(LoadoutSlot.RingAlt),
       ),
     ).toBe(true);
     expect(stubCalls()).toContainCall(
-      `UnitHasLoadoutSlotEmpty(${unitRef}, EQUIPMENT_LOADOUT_SLOT_RINGALT)`,
+      `BlzUnitHasLoadoutSlotEmpty(${unitRef}, EQUIPMENT_LOADOUT_SLOT_RINGALT)`,
     );
   });
 
@@ -826,23 +830,23 @@ describe("Unit equipment and bag", () => {
     const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitItemInEquipmentSlot",
+        "BlzUnitItemInEquipmentSlot",
         () => item.handle,
         () => unit.equippedItem(LoadoutSlot.Head),
       ),
     ).toBe(item);
     expect(
       withNative(
-        "UnitItemInEquipmentSlot",
+        "BlzUnitItemInEquipmentSlot",
         () => undefined,
         () => unit.equippedItem(LoadoutSlot.Trinket),
       ),
     ).toBeUndefined();
     expect(stubCalls()).toContainCall(
-      `UnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_HEAD)`,
+      `BlzUnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_HEAD)`,
     );
     expect(stubCalls()).toContainCall(
-      `UnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_TRINKET)`,
+      `BlzUnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_TRINKET)`,
     );
   });
 
@@ -850,23 +854,23 @@ describe("Unit equipment and bag", () => {
     const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitUnequipItemFromSlot",
+        "BlzUnitUnequipItemFromSlot",
         () => item.handle,
         () => unit.unequipSlot(LoadoutSlot.Chest),
       ),
     ).toBe(item);
     expect(
       withNative(
-        "UnitUnequipItemFromSlot",
+        "BlzUnitUnequipItemFromSlot",
         () => undefined,
         () => unit.unequipSlot(LoadoutSlot.Boots),
       ),
     ).toBeUndefined();
     expect(stubCalls()).toContainCall(
-      `UnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_CHEST)`,
+      `BlzUnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_CHEST)`,
     );
     expect(stubCalls()).toContainCall(
-      `UnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_BOOTS)`,
+      `BlzUnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_BOOTS)`,
     );
   });
 
@@ -874,20 +878,20 @@ describe("Unit equipment and bag", () => {
     const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
-        "UnitItemInBagSlot",
+        "BlzUnitItemInBagSlot",
         () => item.handle,
         () => unit.bagItem(3),
       ),
     ).toBe(item);
     expect(
       withNative(
-        "UnitItemInBagSlot",
+        "BlzUnitItemInBagSlot",
         () => undefined,
         () => unit.bagItem(4),
       ),
     ).toBeUndefined();
-    expect(stubCalls()).toContainCall(`UnitItemInBagSlot(${unitRef}, 3)`);
-    expect(stubCalls()).toContainCall(`UnitItemInBagSlot(${unitRef}, 4)`);
+    expect(stubCalls()).toContainCall(`BlzUnitItemInBagSlot(${unitRef}, 3)`);
+    expect(stubCalls()).toContainCall(`BlzUnitItemInBagSlot(${unitRef}, 4)`);
   });
 });
 
@@ -1137,4 +1141,38 @@ describe("Unit equipment and bag", () => {
       }
     });
   });
+}
+
+// The members over the unit Natives Patch 3.0.1.24370 added (#642), one case
+// each; what each Native does in game is in the member's doc comment.
+{
+  const unit = Unit.create(owner, footman, 0, 0);
+  const unitRef = handleRef("unit", unit.handle);
+  const healer = Unit.create(owner, footman, 64, 0);
+  const healerRef = handleRef("unit", healer.handle);
+
+  describeNatives("Unit members over the Natives of 3.0.1", [
+    nativeCase({
+      native: "BlzUnitIsAlive",
+      answer: () => false,
+      member: () => unit.isAlive(),
+      line: `BlzUnitIsAlive(${unitRef})`,
+      returns: false,
+    }),
+    nativeCase({
+      native: "BlzUnitHeal",
+      answer: () => 20,
+      member: () => unit.heal(healer, 50, true, false),
+      line: `BlzUnitHeal(${unitRef}, ${healerRef}, 50, true, false)`,
+      returns: 20,
+    }),
+    nativeCase({
+      native: "BlzResetUnitTalents",
+      answer: () => undefined,
+      member: () => {
+        unit.resetTalents();
+      },
+      line: `BlzResetUnitTalents(${unitRef})`,
+    }),
+  ]);
 }

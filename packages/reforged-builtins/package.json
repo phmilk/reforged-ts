@@ -27,7 +27,7 @@
     "access": "public"
   },
   "reforged": {
-    "patch": "3.0.0.24268"
+    "patch": "3.0.1.24370"
   },
   "exports": {
     "./3.0.0": {
@@ -35,33 +35,38 @@
     },
     "./3.0.0/index.json": "./3.0.0/index.json",
     "./3.0.0/fields.json": "./3.0.0/fields.json",
+    "./3.0.1": {
+      "types": "./3.0.1.d.ts"
+    },
+    "./3.0.1/index.json": "./3.0.1/index.json",
+    "./3.0.1/fields.json": "./3.0.1/fields.json",
     "./units": {
-      "types": "./3.0.0/units.d.ts",
-      "tstl": "./3.0.0/units"
+      "types": "./3.0.1/units.d.ts",
+      "tstl": "./3.0.1/units"
     },
     "./items": {
-      "types": "./3.0.0/items.d.ts",
-      "tstl": "./3.0.0/items"
+      "types": "./3.0.1/items.d.ts",
+      "tstl": "./3.0.1/items"
     },
     "./abilities": {
-      "types": "./3.0.0/abilities.d.ts",
-      "tstl": "./3.0.0/abilities"
+      "types": "./3.0.1/abilities.d.ts",
+      "tstl": "./3.0.1/abilities"
     },
     "./buffs": {
-      "types": "./3.0.0/buffs.d.ts",
-      "tstl": "./3.0.0/buffs"
+      "types": "./3.0.1/buffs.d.ts",
+      "tstl": "./3.0.1/buffs"
     },
     "./destructables": {
-      "types": "./3.0.0/destructables.d.ts",
-      "tstl": "./3.0.0/destructables"
+      "types": "./3.0.1/destructables.d.ts",
+      "tstl": "./3.0.1/destructables"
     },
     "./doodads": {
-      "types": "./3.0.0/doodads.d.ts",
-      "tstl": "./3.0.0/doodads"
+      "types": "./3.0.1/doodads.d.ts",
+      "tstl": "./3.0.1/doodads"
     },
     "./upgrades": {
-      "types": "./3.0.0/upgrades.d.ts",
-      "tstl": "./3.0.0/upgrades"
+      "types": "./3.0.1/upgrades.d.ts",
+      "tstl": "./3.0.1/upgrades"
     },
     "./package.json": "./package.json"
   },

@@ -1,5 +1,5 @@
 // The Nullability sweep's Slice `nullability-event-responses-2` (#387): the
-// other 36 event responses in `common.j` order, `GetManipulatingUnit` to
+// other 38 event responses in `common.j` order, `GetManipulatingUnit` to
 // `BlzGetTriggerPlayerKey`, each called once outside its event
 // (./nullability/nullable.ts), and what each call returned recorded
 // (./nullability/case-runner.ts).
@@ -19,7 +19,9 @@ const EVENT_RESPONSES: readonly [string, () => unknown][] = [
   ["GetManipulatingUnit", () => GetManipulatingUnit()],
   ["GetManipulatedItem", () => GetManipulatedItem()],
   ["GetEquippedItem", () => GetEquippedItem()],
+  ["BlzGetEquippedItem", () => BlzGetEquippedItem()],
   ["GetUnequippedItem", () => GetUnequippedItem()],
+  ["BlzGetUnequippedItem", () => BlzGetUnequippedItem()],
   ["BlzGetAbsorbingItem", () => BlzGetAbsorbingItem()],
   ["BlzGetStackingItemSource", () => BlzGetStackingItemSource()],
   ["BlzGetStackingItemTarget", () => BlzGetStackingItemTarget()],

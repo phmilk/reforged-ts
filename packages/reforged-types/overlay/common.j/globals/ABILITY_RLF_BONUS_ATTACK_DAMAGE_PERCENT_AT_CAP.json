@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_BONUS_ATTACK_DAMAGE_PERCENT_AT_CAP",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

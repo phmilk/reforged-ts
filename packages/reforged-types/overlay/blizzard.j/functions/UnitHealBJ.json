@@ -1,0 +1,18 @@
+{
+  "name": "UnitHealBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "life",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_DISPEL_MAGIC_BONUS_DAMAGE_TO_SUMMONS",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

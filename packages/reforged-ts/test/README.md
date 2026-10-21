@@ -142,11 +142,11 @@ Use it instead of editing the shipped stub files when one test needs a Native to
 
 ### Enum members and the sentinel rule
 
-A member that takes one of the library's TypeScript enums (`EquipmentType`, `ItemTag`, `LoadoutSlot`) converts it at call time (`ConvertLoadoutSlot(slot)`), and one that returns an enum matches the Native's answer against the named constants. The equipment converters of reforged-test follow the sentinel rule its README describes: one cached value per integer, the named constant being that value. So a test asserts the constant by name in the call log, `UnitItemInEquipmentSlot(unit#…, EQUIPMENT_LOADOUT_SLOT_HEAD)`, and feeds a reader a constant (`EQUIPMENT_TYPE_HEAD`) through `withNative` to expect the enum member. A value no member names is a converted integer with no named constant, which the reader must refuse at the reading line:
+A member that takes one of the library's TypeScript enums (`EquipmentType`, `ItemTag`, `LoadoutSlot`) converts it at call time (`ConvertLoadoutSlot(slot)`), and one that returns an enum matches the Native's answer against the named constants. The equipment converters of reforged-test follow the sentinel rule its README describes: one cached value per integer, the named constant being that value. So a test asserts the constant by name in the call log, `BlzUnitItemInEquipmentSlot(unit#…, EQUIPMENT_LOADOUT_SLOT_HEAD)`, and feeds a reader a constant (`EQUIPMENT_TYPE_HEAD`) through `withNative` to expect the enum member. A value no member names is a converted integer with no named constant, which the reader must refuse at the reading line:
 
 ```ts
 const message = withNative(
-  "GetItemEquipmentType",
+  "BlzGetItemEquipmentType",
   () => ConvertEquipmentType(42), // no EQUIPMENT_TYPE_* is this value
   () =>
     raisedIn(() => {
@@ -154,7 +154,7 @@ const message = withNative(
     }),
 );
 expect(message).toEqual(
-  "reforged-ts: GetItemEquipmentType returned a value EquipmentType does not name",
+  "reforged-ts: BlzGetItemEquipmentType returned a value EquipmentType does not name",
 );
 ```
 
