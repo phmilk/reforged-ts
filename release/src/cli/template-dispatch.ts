@@ -10,13 +10,18 @@
  * every version of the payload, asked every 15 seconds for at most
  * `<minutes>`: the Template's sync installs them as soon as it starts.
  *
+ * A release that publishes none of the six packages of a matrix row (the
+ * creation CLI alone) has nothing to dispatch: it says so and writes no
+ * `<file>`, which the workflow reads as no dispatch.
+ *
  * Relative paths resolve against the folder the command was started from.
- * Exit codes: 0 written, 1 the plan cannot be read or dispatched, or npm
- * does not list the release in time, 2 usage.
+ * Exit codes: 0 written, or nothing to dispatch, 1 the plan cannot be read
+ * or dispatched, or npm does not list the release in time, 2 usage.
  */
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
+import { ROW_PACKAGES } from "../packages.js";
 import { TEMPLATE_REPOSITORY } from "../template-clone.js";
 import {
   awaitOnNpm,
@@ -81,6 +86,12 @@ export async function main(
       resolve(context.cwd, options["--pack-dir"]),
       context.root,
     );
+    if (body === undefined) {
+      const message = `The release publishes none of ${Object.values(ROW_PACKAGES).join(", ")}: the Template has nothing to sync, and nothing is dispatched.`;
+      output.stdout(`${message}\n`);
+      await appendSummary(context.env, `## Template dispatch\n\n${message}\n`);
+      return 0;
+    }
     if (minutes !== undefined) {
       await awaitOnNpm(body.client_payload.versions, {
         fetcher: context.fetcher,

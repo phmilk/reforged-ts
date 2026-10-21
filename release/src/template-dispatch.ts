@@ -65,15 +65,17 @@ export class TemplateDispatchError extends Error {
  * - `llmsUrl`: the docs version the packages of the library version link
  *   (`docsLabel`): its `major.minor`, or `next` for a prerelease.
  *
- * Throws a `TemplateDispatchError` when the plan publishes none of the six
- * packages, one of them is in neither the plan nor the workspace, or the
- * library version names no docs version, and a `PublishPlanError` on a plan
- * that cannot be read.
+ * Resolves with `undefined` when the plan publishes packages, but none of
+ * the six: a release of the creation CLI alone, which no Map project
+ * depends on, leaves the Template's ranges as they are. Throws a
+ * `TemplateDispatchError` when the plan publishes no package, one of the six
+ * is in neither the plan nor the workspace, or the library version names no
+ * docs version, and a `PublishPlanError` on a plan that cannot be read.
  */
 export async function templateDispatch(
   packDir: string,
   root: string,
-): Promise<TemplateDispatch> {
+): Promise<TemplateDispatch | undefined> {
   const { file, plan } = await readPublishPlan(packDir);
   const planned = new Map(
     publishEntries(plan, file).map(({ name, version }) => [name, version]),
@@ -88,8 +90,9 @@ export async function templateDispatch(
 
   const tagPackage = names.find((name) => planned.has(name));
   if (tagPackage === undefined) {
+    if (planned.size > 0) return undefined;
     throw new TemplateDispatchError(
-      `The publish plan publishes none of ${names.join(", ")}: there is no release to dispatch.`,
+      "The publish plan publishes no package: there is no release to dispatch.",
     );
   }
   const version = (name: ReleasedPackage): string => {

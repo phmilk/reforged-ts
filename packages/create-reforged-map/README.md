@@ -2,7 +2,20 @@
 
 Creates a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project from the [Template](https://github.com/phmilk/reforged-ts-template) in one command: the Template's files in a new folder, a git repository, the dependencies installed, the Template maintenance files removed by the Template's own `pnpm template:detach`, and a first commit ([ADR 0018](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0018-a-creation-cli-makes-a-map-project-from-the-gated-template.md)).
 
-**Work in progress, not published yet** ([#657](https://github.com/phmilk/reforged-ts/issues/657)). It creates a project from the Template downloaded from GitHub, or given as a local archive or folder; the Template gate's run of it and the publication come next.
+```sh
+npx create-reforged-map@next my-map
+pnpm create reforged-map@next my-map
+```
+
+Either runs the command of the newest alpha without installing it (`pnpm create reforged-map` runs `create-reforged-map`). It needs pnpm on the `PATH`, and git unless `--skip-git`.
+
+**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+
+<!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
+
+**For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
+
+**Build phase: write `@next`.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. npm gives `latest` to a package's first version, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published: a bare `npx create-reforged-map` would run that first alpha, whatever alphas came after it. Every doc therefore writes `create-reforged-map@next` until 1.0.0, when `latest` moves to it.
 
 ## Usage
 
@@ -33,3 +46,5 @@ It has no runtime dependency: Node alone runs it.
 ## Tests
 
 `pnpm --filter create-reforged-map test` calls `create` with a Template archive the tests build from a minimal Template-shaped fixture and a recording `Runner`, with no network and no process but the fixture's detach script; the download runs on a `fetch` the tests answer, with the archive, error statuses or network errors; the command's tests give its entry function the arguments and either no terminal or the lines an author types, the prompts themselves untested; one test runs the command end to end with git and pnpm, the install skipped.
+
+Every release runs it on the real Template too: the Template gate of the release workflow has the packed command create a project from an archive of the Template at the ref it gates, with the install skipped, and checks the Seeds prepared and the Template maintenance gone, whether or not the release publishes this package ([The Template gate](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#the-template-gate)). The workspace's tarball test runs the packed command with Node alone.

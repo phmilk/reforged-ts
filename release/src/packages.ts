@@ -35,6 +35,14 @@ export const MAP_PACKAGE = "reforged-map";
 export const BUILTINS_PACKAGE = "reforged-builtins";
 
 /**
+ * The creation CLI, which makes a Map project from the Template (ADR 0018).
+ * No Map project depends on it, so it has no field in a matrix row and no
+ * version in the Template dispatch; the Template gate runs it on every
+ * release.
+ */
+export const CREATION_PACKAGE = "create-reforged-map";
+
+/**
  * The six packages of a compatibility matrix row, by row field, in matrix
  * order: the order of the row's fields, the tables' columns and the
  * Template dispatch's tag.

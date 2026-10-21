@@ -1,7 +1,6 @@
 {
   "name": "create-reforged-map",
   "version": "0.0.0",
-  "private": true,
   "description": "Creates a reforged-ts Map project from the Template in one command: the Template's files, its dependencies installed, its maintenance files removed and a first commit.",
   "license": "MIT",
   "type": "module",
@@ -25,6 +24,12 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
   "bin": {
     "create-reforged-map": "./dist/cli.js"
   },
@@ -37,7 +42,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
-    "test": "vitest run --root ../.. --project create-reforged-map"
+    "test": "vitest run --root ../.. --project create-reforged-map",
+    "prepare": "pnpm run build"
   },
   "devDependencies": {
     "@types/node": "catalog:",

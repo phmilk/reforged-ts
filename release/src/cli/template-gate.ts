@@ -2,8 +2,10 @@
  * `release:template-gate --template <path> --pack-dir <dir>`: installs the
  * tarballs of the publish plan in the pack output of `changeset pack` into
  * the Template checkout as overrides in its pnpm-workspace.yaml, then runs
- * the Template's build in release mode, its lint and its tests, and stops
- * at the first failure, naming the command.
+ * the Template's build in release mode, its lint and its tests, then has the
+ * packed create-reforged-map make a Map project from an archive of the
+ * checkout in a temporary folder, and checks it; it stops at the first
+ * failure, naming the command.
  *
  * `release:template-gate --print-ref --pack-dir <dir>` prints the Template
  * ref to check out for that release: `v<major>` of the library version the
@@ -13,7 +15,10 @@
  * Exit codes: 0 pass, 1 a command failed or the inputs cannot be read, 2
  * usage.
  */
-import { resolve } from "node:path";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { CREATION_PACKAGE } from "../packages.js";
 import { commandLine, runInherited, type Runner } from "../process.js";
 import { releaseTemplateRef, runTemplateGate } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
@@ -32,7 +37,10 @@ const USAGE =
 export interface Context {
   /** The folder relative paths resolve against. */
   cwd: string;
-  /** The workspace, for the library version when the plan lacks it. */
+  /**
+   * The workspace, for the library version and the creation CLI when the
+   * plan lacks them.
+   */
   root: string;
   run: Runner;
 }
@@ -91,11 +99,14 @@ export async function main(
       return 0;
     }
 
+    const scratch = await mkdtemp(join(tmpdir(), "reforged-template-gate-"));
     const result = await runTemplateGate({
       template: resolve(context.cwd, String(options.template)),
       packDir,
+      root: context.root,
+      scratch,
       run: context.run,
-    });
+    }).finally(() => rm(scratch, { recursive: true, force: true }));
     const packages = result.installed
       .map(({ name, version }) => `${name}@${version}`)
       .join(", ");
@@ -104,7 +115,7 @@ export async function main(
       return 1;
     }
     output.stdout(
-      `The Template builds, lints and passes its tests with ${packages}.\n`,
+      `The Template builds, lints and passes its tests with ${packages}, and ${CREATION_PACKAGE} creates a Map project from it.\n`,
     );
     return 0;
   } catch (error) {
@@ -116,12 +127,16 @@ export async function main(
 /**
  * A `Runner` that spawns the command with the process's own output, after
  * printing it. On Windows `pnpm` is a `.cmd` shim, which only a shell
- * starts; the gate's arguments hold no spaces or shell characters.
+ * starts; the gate's pnpm arguments hold no spaces or shell characters.
+ * git and node start without one, so the creation CLI gets its description
+ * as one argument.
  */
 export function spawnRunner(output: Output): Runner {
   return (command) => {
     output.stdout(`> ${commandLine(command)}\n`);
-    return runInherited(command, { shell: process.platform === "win32" });
+    return runInherited(command, {
+      shell: process.platform === "win32" && command.command === "pnpm",
+    });
   };
 }
 
