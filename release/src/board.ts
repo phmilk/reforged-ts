@@ -28,6 +28,14 @@ export const BOARD_OWNER = "phmilk";
  */
 export const BOARD_TITLE = "Reforged-TS";
 
+/**
+ * The login of the repositories' GitHub App, as GraphQL spells it: the one
+ * Bot whose issues are members, since `patch-watch.yml` opens its New Patch
+ * reports with the App's token (#655). A registration of the App under
+ * another name changes this.
+ */
+export const BOARD_APP_LOGIN = "reforged-ts-bot";
+
 /** The repositories the board spans and is linked to, as `owner/name`. */
 export const BOARD_REPOSITORIES: readonly string[] = [
   `${BOARD_OWNER}/reforged-ts`,
@@ -161,7 +169,7 @@ Precedence top-down; the first rule that matches wins.
 
 ## Members
 
-Every open issue of both repositories; no pull request, no bot item. Specs and maps as parents, whose sub-issues GitHub adds by itself. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
+Every open issue of both repositories, the App's New Patch reports among them; no pull request, no other bot's issue. Specs and maps as parents, whose sub-issues GitHub adds by itself. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
 
 ## Views
 
@@ -325,7 +333,7 @@ export const BOARD_MUTATIONS = {
 const BOARD_ISSUE_FRAGMENT = `fragment BoardIssue on Issue {
   id number state updatedAt
   repository { nameWithOwner }
-  author { __typename }
+  author { __typename login }
   labels(first: 30) { nodes { name } }
   assignees(first: 10) { nodes { login } }
   parent { id number repository { nameWithOwner } labels(first: 30) { nodes { name } } }
@@ -963,7 +971,10 @@ export interface BoardIssue extends IssueRef {
    * never restart the fourteen days.
    */
   updatedAt: string;
-  /** Whether a Bot authored it (Renovate's Dependency Dashboard): never a member. */
+  /**
+   * Whether a Bot other than the App (`BOARD_APP_LOGIN`) authored it, such as
+   * Renovate's Dependency Dashboard: never a member.
+   */
   bot: boolean;
   labels: readonly string[];
   assignees: readonly string[];
@@ -1153,17 +1164,18 @@ function itemName(content: ItemContent): string {
 /**
  * The requests that make the board agree with GitHub, given its `state` at
  * `now`, and nothing when it already does. Membership both ways: every open
- * issue of both repositories that no bot authored is added when it has no
- * item (its Status written on the item the add makes), and an item that
- * holds anything else (a pull request, a bot's issue, an issue of another
- * repository, a draft, a redacted item) is removed. Each item's Status is
- * set to what `statusOf` gives its issue when it differs. A closed issue
- * stays Done until its own `updatedAt` is `ARCHIVE_AFTER_DAYS` old, then
- * its item is archived; an archived item whose issue is open is unarchived,
- * and its Status written. A closed issue is never added. A plan that
- * removes more items than `limits.maxDeletes` (`MAX_DELETES`) is refused
- * with a `BoardError` that lists the removals and names the flag that
- * allows them: the brake against a run that would empty the board.
+ * issue of both repositories that no bot but the App authored is added when
+ * it has no item (its Status written on the item the add makes), and an
+ * item that holds anything else (a pull request, another bot's issue, an
+ * issue of another repository, a draft, a redacted item) is removed. Each
+ * item's Status is set to what `statusOf` gives its issue when it differs.
+ * A closed issue stays Done until its own `updatedAt` is
+ * `ARCHIVE_AFTER_DAYS` old, then its item is archived; an archived item
+ * whose issue is open is unarchived, and its Status written. A closed issue
+ * is never added. A plan that removes more items than `limits.maxDeletes`
+ * (`MAX_DELETES`) is refused with a `BoardError` that lists the removals
+ * and names the flag that allows them: the brake against a run that would
+ * empty the board.
  */
 export function planBoardReconcile(
   state: ReconcileState,
@@ -1344,7 +1356,10 @@ function readIssue(node: unknown): BoardIssue | undefined {
     id: node.id,
     state: node.state,
     updatedAt: node.updatedAt,
-    bot: isRecord(node.author) && node.author.__typename === "Bot",
+    bot:
+      isRecord(node.author) &&
+      node.author.__typename === "Bot" &&
+      node.author.login !== BOARD_APP_LOGIN,
     labels: namesOf(node.labels, "name"),
     assignees: namesOf(node.assignees, "login"),
     parent:

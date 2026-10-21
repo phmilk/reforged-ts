@@ -1,11 +1,14 @@
 The files in this folder, except this NOTICE and the LICENSE, come from
 wc3libs (https://github.com/inwc3/wc3libs) at commit
 0542c4140012dfb872ac01513ff68f5cbef98658, unmodified: the war3map*.wtg files
-from src/test/resources/wc3data/WTG, and the Object data files war3map.w3a
-and war3map_format3.w3a (W3A), war3map.w3b (W3B), war3map.w3d (W3D),
-war3map.w3h (W3H), war3map.w3q (W3Q), war3map.w3t (W3T), and war3map.w3u,
-war3map_v3_lumber_bounty.w3u and war3mapSkin_v3_lumber_bounty.w3u (W3U) from
-the folders of src/test/resources/wc3data named after them.
+from src/test/resources/wc3data/WTG, war3map_v3_filled.wts from
+src/test/resources/wc3data/WTS, and the Object data files war3map.w3a,
+war3map_format3.w3a, war3map_large_v3.w3a, threeLetterId.w3a and
+war3mapSkin.w3a (W3A), war3map.w3b (W3B), war3map.w3d (W3D), war3map.w3h
+(W3H), war3map.w3q (W3Q), war3map.w3t (W3T), and war3map.w3u,
+war3map_v3_lumber_bounty.w3u, war3mapSkin_v3_lumber_bounty.w3u and
+war3mapReforged.w3u (W3U) from the folders of src/test/resources/wc3data
+named after them.
 
 wc3libs
 Copyright 2016 Water

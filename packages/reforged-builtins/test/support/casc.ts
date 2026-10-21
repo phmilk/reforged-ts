@@ -304,16 +304,25 @@ export function unitMetaDataSlk(field = "Name", slk = "Profile"): string {
   return (
     [
       "ID;PWXL;N;E",
-      "B;X3;Y3;D0",
+      "B;X6;Y3;D0",
       'C;X1;Y1;K"ID"',
       'C;X2;K"field"',
       'C;X3;K"slk"',
+      'C;X4;K"type"',
+      'C;X5;K"useUnit"',
+      'C;X6;K"useItem"',
       'C;X1;Y2;K"umvs"',
       'C;X2;K"spd"',
       'C;X3;K"UnitBalance"',
+      'C;X4;K"int"',
+      "C;X5;K1",
+      "C;X6;K0",
       'C;X1;Y3;K"unam"',
       `C;X2;K"${field}"`,
       `C;X3;K"${slk}"`,
+      'C;X4;K"string"',
+      "C;X5;K1",
+      "C;X6;K1",
       "E",
     ].join("\r\n") + "\r\n"
   );
@@ -355,21 +364,43 @@ export function slkTable(
   return lines.join("\r\n") + "\r\n";
 }
 
-/** A metadata row: the ID, its field, the table that holds it and its repeat. */
+/** A metadata row: the ID, its field, the table that holds it, its repeat and its type. */
 export interface SyntheticMeta {
   id: string;
   field: string;
   slk: string;
   repeat?: string;
+  /** `string` by default. */
+  type?: string;
 }
 
 /** A synthetic `*MetaData.slk` of the given rows. */
 export function metaDataSlk(rows: readonly SyntheticMeta[]): string {
   return slkTable(
-    ["ID", "field", "slk", "repeat"],
-    rows.map((row) => [row.id, row.field, row.slk, row.repeat]),
+    ["ID", "field", "slk", "repeat", "type"],
+    rows.map((row) => [
+      row.id,
+      row.field,
+      row.slk,
+      row.repeat,
+      row.type ?? "string",
+    ]),
   );
 }
+
+/**
+ * The editor strings of the Object Editor's tabs, which label each kind in
+ * the field table, as the enUS strings spell them.
+ */
+export const OBJECT_TABS: Readonly<Record<string, string>> = {
+  WESTRING_OBJTAB_UNITS: "Units",
+  WESTRING_OBJTAB_ITEMS: "Items",
+  WESTRING_OBJTAB_ABILITIES: "Abilities",
+  WESTRING_OBJTAB_BUFFS: "Buffs/Effects",
+  WESTRING_OBJTAB_DESTRUCTABLES: "Destructibles",
+  WESTRING_OBJTAB_DOODADS: "Doodads",
+  WESTRING_OBJTAB_UPGRADES: "Upgrades",
+};
 
 /** A synthetic profile file: one section per entry, its keys in order. */
 export function profile(
@@ -394,9 +425,12 @@ export const WORLD_EDIT_GAME_STRINGS =
 
 /**
  * The other six kinds' files, with no object: data tables of no row, their
- * metadata, and empty names files.
+ * metadata, and empty names files; and the editor strings of the kinds'
+ * labels.
  */
 export const NO_OTHER_KINDS: Readonly<Record<string, string>> = {
+  [WORLD_EDIT_GAME_STRINGS]: "",
+  [WORLD_EDIT_STRINGS]: profile({ WorldEditStrings: OBJECT_TABS }),
   [base("Units/ItemData.slk")]: slkTable(["itemID"], []),
   [strings("ItemStrings.txt")]: "",
   [base("Units/AbilityData.slk")]: slkTable(["alias", "race"], []),

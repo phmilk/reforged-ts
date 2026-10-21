@@ -1,6 +1,6 @@
 {
   "name": "reforged-builtins",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "The Built-in objects of each Warcraft III Reforged Patch, reduced to derived identifiers: Rawcode, Object kind, race, enUS name and Game data sets.",
   "license": "MIT",
   "type": "module",
@@ -34,6 +34,7 @@
       "types": "./3.0.0.d.ts"
     },
     "./3.0.0/index.json": "./3.0.0/index.json",
+    "./3.0.0/fields.json": "./3.0.0/fields.json",
     "./units": {
       "types": "./3.0.0/units.d.ts",
       "tstl": "./3.0.0/units"
@@ -69,6 +70,7 @@
     "/[0-9]*/*.d.ts",
     "/[0-9]*/*.lua",
     "/[0-9]*/index.json",
+    "/[0-9]*/fields.json",
     "/LICENSE",
     "/README.md"
   ],

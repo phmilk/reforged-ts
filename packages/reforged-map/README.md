@@ -1,6 +1,6 @@
 # reforged-map
 
-Reads a Warcraft III Reforged map folder at build time and returns the code a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project generates from it: the declarations of its Editor globals, and the `FourCC` overloads and constants of its objects. For a tool that reads the map, such as a lint rule or a hover, it gives a lookup from a Rawcode to its object. Its TypeScript plugin, `reforged-map/typescript-plugin`, shows that object on the hover of a Rawcode literal and goes to its constant. Node only: nothing of it reaches the map's Lua.
+Reads a Warcraft III Reforged map folder at build time and returns the code a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project generates from it: the declarations of its Editor globals, and the `FourCC` overloads and constants of its objects. For a tool that reads the map, such as a lint rule or a hover, it gives a lookup from a Rawcode to its object, and for a tool that edits its Object data, an Object data editor that saves it byte for byte. Its command, `reforged-map textconv`, lets `git diff` show Object data as text. Its TypeScript plugin, `reforged-map/typescript-plugin`, shows that object on the hover of a Rawcode literal and goes to its constant. Node only: nothing of it reaches the map's Lua.
 
 A Map project gets it through the [Template](https://github.com/phmilk/reforged-ts-template), whose build calls it on every install, build and watch. It needs `reforged-types` 1.0.0-alpha.5 or later as a peer, the first that declares the Rawcode types. [`reforged-builtins`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins) is an optional peer, resolved from the Map project's own installation: its index names a Custom object after its base and gives the lookup the Built-in objects. Without it, `generateObjects` names such an object `Unnamed`, with a warning, and the lookup is unavailable.
 
@@ -45,7 +45,7 @@ A `udg_` variable whose Variable Editor type names an Object kind is declared wi
 
 An array is a `Record<number, T>` of the same type. These are every type of the Variable Editor of Patch 3.0 that names an Object kind. The other types it stores as integers (`animtype`, `subanimtype`, `imagetype`, `mousebuttontype`, `terrainshape`, `terraintype`, `equipmenttype`, `itemtag`) are enumerations, not Rawcodes, and stay `number`. The types come from `war3map.wtg` in the 1.31+ format (`WTG!`, format `0x80000004`, sub-version 7), which the 3.0 World Editor and HiveWE write; only its header and its variables block are read, never the triggers, so no `TriggerData.txt` is needed. The list of globals still comes from `war3map.lua`: a variable `war3map.wtg` declares and `war3map.lua` does not is ignored. The wtg type wins over the `war3map.lua` initializer (`0`, `__jarray(0)`, HiveWE's `nil` and `__jarray("")`); every other type keeps the type `war3map.lua` gives it. The Lua stub sets a Rawcode variable to its header literal, as any other. The [Rawcodes guide](https://github.com/phmilk/reforged-ts/blob/master/website/docs/guides/rawcodes.md#gui-variables-of-an-object-type) shows these variables in a Map project, and how a Map project generated before this package switches to it.
 
-The package only reads the map folder (ADR 0006). The generated files are git-ignored and read-only in a Map project: a global is added or renamed in the World Editor, never in them.
+The package reads and writes the map folder's Object data, and only reads the rest of the map folder (ADR 0015): only [the Object data editor](#the-object-data-editor) writes, and only the Object data files and `war3map.wts`. The generated files are git-ignored and read-only in a Map project: a global is added or renamed in the World Editor, never in them.
 
 ## The map's objects
 
@@ -144,6 +144,148 @@ It reads the literals the lint rule `no-unknown-rawcodes` reads: the single stri
 
 **Cost.** The lookup checks the modification times of the files it reads at most once a second, which costs about a millisecond. A hover that follows a save reads the map folder and the `reforged-builtins` index again, in the request: on a map folder of 500 Custom units, 60 to 160 ms on an 8-core machine under WSL2, once per save.
 
+## The Object data editor
+
+`openObjectData(mapFolder, { projectRoot })` opens a map folder's Object data, for a tool that edits it, such as Object sync or the Studio (ADR 0015). It reads the Object data files of the seven Object kinds, their Skin files and `war3map.wts` with the readers of `generateObjects`, and keeps what they read losslessly. `projectRoot` is a folder of the Map project, from which `reforged-builtins` is resolved, as for `generateObjects`; the map folder when left out.
+
+```ts
+import { ObjectDataWriterError, openObjectData } from "reforged-map";
+
+const editor = openObjectData("maps/my-map.w3m", { projectRoot: "." });
+for (const unit of editor.objects("unit")) {
+  console.log(unit.rawcode, unit.name, unit.modifications.length);
+}
+const { written } = editor.save();
+```
+
+- `warnings` gives the readers' warnings, the ones `generateObjects` gives of the objects ([Errors and warnings](#errors-and-warnings)).
+- `objects(kind)` lists the objects of a kind, or of every kind when left out, as the Object Editor shows them: each Custom object and each modified Built-in object, sorted by Rawcode, its base file and Skin file merged, named by its name, else its base's or the game's from `reforged-builtins`. Each modification gives its field id, value type, level and data pointer (abilities, doodads and upgrades only), its value, a `TRIGSTR_nnn` resolved through `war3map.wts`, its value as stored, and the file it is in.
+- `save(folder, { worldEditorCheck })` saves to the map folder it opened, or to another folder, created when missing, and returns the files it wrote (`written`) and what the World Editor showed of that folder (`worldEditor`). It encodes every file first. To the map folder, it writes only the files whose bytes change, after comparing the bytes on disk of each with the bytes it read: on any difference, it throws an `ObjectDataWriterError` whose `reason` is `"changed-on-disk"`, and writes nothing. To another folder, it writes each file whose bytes differ from that folder's. Then, before the first write, it runs [the World Editor check](#the-world-editor-check) on the folder it saves to.
+
+- `setField({ kind, rawcode, field, level, dataPointer }, value, { type })` sets a field of a Custom object of the map or of a Built-in object, and `removeField({ kind, rawcode, field, level, dataPointer })` removes it from both files of its kind, so that it goes back to its base's value. `level` and `dataPointer` are the abilities', doodads' and upgrades' only: `level` is required for a field with levels, and `dataPointer` defaults to the field's data column. Each edit is checked at once, throws an `ObjectDataWriterError` and changes nothing when it is refused; nothing is written until `save`.
+
+```ts
+editor.setField({ kind: "unit", rawcode: "h000", field: "umvs" }, 320);
+editor.setField({ kind: "unit", rawcode: "h000", field: "unam" }, "Captain");
+editor.setField(
+  { kind: "ability", rawcode: "A000", field: "amcs", level: 2 },
+  95,
+);
+editor.removeField({ kind: "unit", rawcode: "hfoo", field: "uhpm" });
+editor.save();
+```
+
+- `addObject({ kind, rawcode, base })` adds a Custom object, from its Rawcode and the Rawcode of the Built-in object it derives from, and `removeObject({ kind, rawcode })` removes a Custom object, or resets a Built-in object by removing every modification of it, from both files of its kind. They are checked at once and written on `save`, as the field edits are.
+
+```ts
+editor.addObject({ kind: "unit", rawcode: "h002", base: "hfoo" });
+editor.setField({ kind: "unit", rawcode: "h002", field: "unam" }, "Sergeant");
+editor.removeObject({ kind: "unit", rawcode: "h001" });
+editor.removeObject({ kind: "unit", rawcode: "hkni" });
+editor.save();
+```
+
+**The Editor form.** An edit is written as the 3.0 World Editor saves it, so that its next save leaves it where it is. A field goes into the file the World Editor keeps it in, the base or the Skin file of its kind, as the field table of `reforged-builtins` says (read from the Map project's installation, its newest Game version, as the index). When the object holds the field there, its value is replaced in place: its position, value type, level, data pointer and end marker are kept. Otherwise it is appended to the object's modifications, with the field table's value type and the end marker the editor writes: the object's own Rawcode, a Custom object's included. ([#460](https://github.com/phmilk/reforged-ts/issues/460), section 4, gives four NUL bytes for a Custom object; the 3.0 World Editor's own save in `test/fixtures/editor-objects.w3m` writes its Custom Rawcode, and the editor's behaviour wins.) The field held in the other file (a foreign layout) is removed from there, and the object's other modifications stay as read. The object is added to both files of its kind when either lacks it, with one set of flag 0 (in format versions 1 and 2, without one), and a file the kind did not have is created in format version 3. A value equal to its base's is kept as a modification. An integer must fit in 32 bits, a real is stored as its nearest 32-bit value, and a string, written as literal UTF-8, must hold no NUL byte. A field the field table does not know is set only with its value type given, `{ type }` (Object adoption's raw escape, [#484](https://github.com/phmilk/reforged-ts/issues/484)), in the base file unless only the Skin file holds it. An added Custom object is appended to the Custom table of both files of its kind, with one set of flag 0 and no modification, so that a file that holds none of its fields still lists it, as the World Editor does; its fields then go each into its own file. Its Rawcode must be one no object of its kind holds and no Built-in object of `reforged-builtins`' index has, of any kind, but a Custom object of another kind may hold it: the World Editor makes a Custom buff and a Custom destructable `B000`. Its base must be a Built-in object of its kind in the index. A removed object loses every entry in both files, and a string it referenced goes under the rule of an unreferenced string below; its placements on the terrain stay, which are the caller's ([#482](https://github.com/phmilk/reforged-ts/issues/482)).
+
+**The field table.** Where a field goes, its value type, whether it has levels and a data column, whether it is localizable and the labels of its comment in `war3map.wts` all come from the field table of `reforged-builtins`, `<Game version>/fields.json`, never from a game file at run time. Its generator reads every row of the seven kinds' `*MetaData.slk` in the game's install, labelled through the World Editor's strings: a field goes to the Skin file when its metadata's `netsafe` is not 0, and is localizable when the metadata externalizes its text. Where the 3.0 World Editor's own save puts a field elsewhere, the table carries an override of the generator, naming the fixture that shows it, as for the doodads' `dnam`, which the editor keeps in `war3map.w3d`. The [field table's section](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins#the-field-table-tool-authors) of the `reforged-builtins` README gives its shape and its provenance.
+
+**Without `reforged-builtins`.** It is an optional peer, resolved from `projectRoot` at its newest Game version, and an edit needs both its index and its field table. Without them (not installed, unreadable, or of a format this package does not read), the editor still opens the map folder, gives its warnings, lists its objects (an object that sets no name then has no `name` without the index), saves with no edit, which writes no file, and copies the Object data to another folder byte for byte, the World Editor check running as with it. `checkWorldEditor` and `reforged-map textconv` never read it. Each `setField`, `removeField`, `addObject` and `removeObject` throws an `ObjectDataWriterError` whose `reason` is `"builtins-missing"`, its message saying why the peer could not be read.
+
+**Localizable strings.** A localizable string (a name, a tooltip: a text field of the field table, not a path such as `umdl`) is written as the World Editor writes it, a `TRIGSTR_nnn` reference, zero-padded to three digits, and its `STRING n` block in `war3map.wts`. A string held as literal text, or in the other file, is converted and moved when its field is set ([#475](https://github.com/phmilk/reforged-ts/issues/475)).
+
+- **A new string** is numbered one above the highest of every `STRING n` of `war3map.wts` and every `TRIGSTR` the Object data or another file of the map folder references, an orphan and a reference to a missing string included, so that the World Editor and the editor never hand out one number twice: a gap is never filled.
+- **A changed string** goes into its own `STRING n` when no other modification of the Object data references its number and no other file of the map folder (`war3map.lua`, `war3map.w3i`, `war3map.wtg`, any file at its top level) holds `TRIGSTR_n`, in any zero padding; into a new one otherwise, so that a rename never changes another object's text ([#484](https://github.com/phmilk/reforged-ts/issues/484)).
+- **A string an edit leaves unreferenced**, by a set, a `removeField` or a `removeObject`, is removed under the same condition, and kept otherwise.
+- **A new block** is appended, its number being the highest, with the file's own line ends and byte order mark, a blank line after it, and the World Editor's comment line from the field table's labels, `// Units: h000 (Captain), Name (Name)`: the Object kind's label, the Rawcode, the object's name (its `Name` field after the edit, else its base's or the game's; none for a buff), the field's metadata name and its enUS label. A levelled field's comment names no level, a guess the World Editor contract fixture ([#640](https://github.com/phmilk/reforged-ts/issues/640)) settles. A block rewritten in place gets its comment line again; the rest of `war3map.wts`, every block no edit changes included, stays byte for byte. A map folder without `war3map.wts` gets one, with a byte order mark and CRLF.
+- **A localizable value** is a string without a NUL byte or a CR, a line break being an LF alone, and without a line that is `}` alone, which would end its block.
+
+**The round trip.** A save writes each file from what the readers read: in the format version it was read in (1, 2 or 3), with its objects, their modifications, duplicates, set counts and flags, end markers and field ids (a three-character one such as `Crs` included) as read, a string's bytes and a real's 32 bits, and the bytes after its last table. `war3map.wts` is written from its blocks' raw lines, with the bytes between them, its byte order mark and its line ends. So a save with no edit writes no file, and a save to another folder copies every Object data file, Skin file and `war3map.wts` byte for byte. A file the readers left out (truncated, of an unknown format version, an object with more than one set) is never rewritten: a save to another folder copies its bytes.
+
+**Files.** The editor reads and writes through Node's `fs` only, which opens a file with delete sharing on Windows, so a World Editor save while a tool runs never fails on a file it holds ([#475](https://github.com/phmilk/reforged-ts/issues/475)). Each read or write is of one whole file, in one call: no handle is held across calls, and there is no lock and no watcher.
+
+**The writer error.** `ObjectDataWriterError` is the one error the editor throws on a refused edit or save, and the one the World Editor check throws; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `file` the file it is about, and its message says what the author does next:
+
+| `reason`                      | When                                                                                                                | What the author does                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `"changed-on-disk"`           | A file the save would rewrite changed on disk since it was read: a World Editor save, say.                          | Open the map folder again, and make the edits again.                                                       |
+| `"modified-in-world-editor"`  | The World Editor shows unsaved edits for the folder the save would write.                                           | Save or discard them in the World Editor, then save again.                                                 |
+| `"world-editor-check-failed"` | The World Editor check could not read the windows' titles: it could not run, failed or timed out.                   | Check that `powershell.exe` runs from the shell, or turn the check off for a folder no World Editor opens. |
+| `"builtins-missing"`          | An edit, when `reforged-builtins` or its field table could not be read from the Map project.                        | Install `reforged-builtins` in the Map project, or pass its root as `projectRoot`.                         |
+| `"file-not-read"`             | An edit of a kind one of whose files the readers left out, named by `file`.                                         | Save the map with the World Editor of 3.0, then open it again.                                             |
+| `"unknown-object"`            | An edit of a Rawcode the kind holds no Custom object of, and no Built-in object has.                                | Check the Rawcode and the Object kind.                                                                     |
+| `"rawcode-taken"`             | An added Custom object whose Rawcode an object of its kind or a Built-in object of the index has.                   | Choose another Rawcode.                                                                                    |
+| `"unknown-base"`              | An added Custom object whose base no Built-in object of its kind in the index has.                                  | Check the base's Rawcode and the Object kind.                                                              |
+| `"unknown-field"`             | A field the field table does not know, set without a value type.                                                    | Give its value type, `{ type }`.                                                                           |
+| `"field-held-twice"`          | An edit of a field one file, named by `file`, holds twice for the object (at one level and data pointer).           | Save the map with the World Editor, which keeps one, then open it again.                                   |
+| `"invalid-value"`             | A value a file cannot hold, a value type other than the field table's, or a missing or wrong level or data pointer. | Give a value of the field's type, and the level of a field with levels.                                    |
+
+### The World Editor check
+
+An edit made in the World Editor and not yet saved shows only in its main window's title, `Warcraft III World Editor - [<path> *]` ([#475](https://github.com/phmilk/reforged-ts/issues/475)). A tool that wrote the map folder then would lose that edit, or have its own lost on the World Editor's next save. So `checkWorldEditor(mapFolder)` tells, from a map folder's path, what the World Editor shows of it:
+
+- `"no-window"`: no World Editor window holds it;
+- `"open"`: a window holds it without unsaved edits;
+- `"modified"`: a window holds it with unsaved edits, its title ending in ` *]`.
+
+It lists the top-level windows whose title has the form `Warcraft III World Editor - [<path>]`, and keeps those whose path is the map folder's, compared with `/` and `\` alike, ignoring case and a trailing separator. It reads the titles through `EnumWindows` and `GetWindowText` in a short-lived `powershell.exe` (about a second and a half): on Windows, and on WSL, where `powershell.exe` is on the path and the map folder's path is converted with `wslpath -w`. On any other system, and for a folder that does not exist, no World Editor can hold the folder, and the state is `"no-window"` without running anything. A check that cannot run `powershell.exe`, fails or takes longer than its `timeout` (15 seconds by default) throws an `ObjectDataWriterError` whose `reason` is `"world-editor-check-failed"`: it is never `"no-window"`. Its `readWindowTitles` option reads the titles instead of the system, for tests.
+
+A save runs it on the folder it saves to, after comparing the bytes on disk and before its first write:
+
+- `"modified"` refuses the save, with the reason `"modified-in-world-editor"`, when a file would be written; a save that writes nothing returns it;
+- `"open"` writes, and the result carries it: the caller then reloads the map in the World Editor with `-launch -loadfile`, which the Object data editor never sends;
+- a failed check refuses the save always.
+
+The check is on by default. `save(folder, { worldEditorCheck: false })` turns it off, for a folder no World Editor opens, such as the build's staged copy in `dist/`; the result's `worldEditor` is then `undefined`. `worldEditorCheck` also takes the check's options.
+
+```ts
+const { worldEditor } = editor.save();
+if (worldEditor === "open") {
+  // Reload the map in the World Editor that holds it: `-launch -loadfile`.
+}
+```
+
+## Object data in `git diff`
+
+The Object data files are binary, so `git diff` of a change made in the Object Editor says only "Binary files differ". The package's command, `reforged-map textconv <file>`, is a git `textconv` driver: it prints one Object data file as text, so that `git diff` of the map folder shows which object and which field a commit changed, with the old and the new value:
+
+```diff
+@@ -6,5 +6,5 @@ custom h000 from hfoo
+   uhpm int = 800
+   umpm int = 100
+   udef int = 4
+-  umvs int = 300
++  umvs int = 320
+   usid int = 1200
+```
+
+**One line.** The text starts with a header line, the file's name, its format version and the count of each table (`war3map.w3u, format version 3: 1 builtin, 2 custom`). Then come the objects in file order, the Built-in objects first, one line each, `builtin hfoo` or `custom h000 from hfoo`. Under each object, indented, is one line per modification: the field id, the value type (`int`, `real`, `unreal`, `string`), the level and the data pointer for abilities, doodads and upgrades (`amcs int level 2 data 0 = 100`), then `=` and the value. Since an object's line starts with a letter and a modification's with spaces, git's hunk header names the object above the change. More detail:
+
+- An integer is in decimal. A real is the shortest decimal that reads back to its 32 bits, or the bits in hex (`0x7fc00000`) when it is not a finite number.
+- A string is JSON-quoted, with a character a reader cannot see escaped (`"\ufeffTip"`). Its bytes are in hex when they are not valid UTF-8.
+- A `TRIGSTR_nnn` is shown as stored: git passes the driver one file, and `war3map.wts` is text, so its own diff shows the `STRING n` whose text changed.
+- Some things show only where they differ from what the 3.0 World Editor writes: an object's set count and flags (`, 0 sets`, `, 1 set, flag 7`) when it does not hold one set of flag 0, and a Built-in object's Custom slot when it is not four NUL bytes. The same goes for a modification's end marker (`, end "\u0000\u0000\u0000\u0000"`) when it is not the object's own Rawcode, a Custom object's Custom Rawcode included.
+- A Rawcode or field id that is not four printable characters is JSON-quoted (`"Crs\u0000"`).
+- Bytes after the last table follow as a hex dump.
+
+The Object kind and the Skin flag come from the end of the file's name (`war3mapSkin.w3a`), which git keeps on the temporary files it passes, and the text names the file as the game does. The same bytes give the same text on every machine. A file the driver cannot read (truncated, an unknown format version, more than one set) prints the reason, then a hex dump of the file, and exits 0, since a failing `textconv` aborts `git diff`. The command loads only the reader, never the generators or `reforged-builtins`, so a diff over the fourteen files stays quick. It exits 2 on a wrong use and 1 on a file it cannot open. `objectDataText(bytes, fileName)`, exported from the main entry, gives the same text, for a tool that shows a diff of Object data itself.
+
+**The setup.** A Map project made from the Template has it already: its `.gitattributes` names the driver, and `pnpm install` sets the local git configuration. In another repository, add the attributes, here for map folders anywhere in the repository:
+
+```gitattributes
+**/*.w3m/** -text
+**/*.w3m/war3map.w3[utahbdq] diff=reforged-object-data
+**/*.w3m/war3mapSkin.w3[utahbdq] diff=reforged-object-data
+```
+
+`-text` keeps every byte of the map folder as the World Editor wrote it, whatever `core.autocrlf` says. Then set the driver in each clone. git runs it from the work tree's top, so the path below assumes `reforged-map` is installed there; adjust it when the Map project is a subfolder of the repository:
+
+```sh
+git config diff.reforged-object-data.textconv "node node_modules/reforged-map/dist/cli.js textconv"
+git config diff.reforged-object-data.cachetextconv true
+```
+
+The command runs the clone's own installation of `reforged-map` with Node, without a package manager's start-up for each file. `cachetextconv` keeps each blob's text in git's notes, so a file is converted once. The configuration is local to the clone: git never takes a command from a repository's files.
+
 ## Errors and warnings
 
 A missing map folder throws a `MapFolderError` whose message says what to do in the World Editor, and so does a map folder without `war3map.lua` (a map saved with JASS as its script language) for `generateEditorGlobals`. Everything else is a warning, and the build goes on. Of the Editor globals:
@@ -164,7 +306,7 @@ Of the objects, each naming its file or its object:
 
 ## Fixtures
 
-`test/fixtures/blank-map.w3m` holds the `war3map.lua` and `war3map.wtg` of the Template's blank map, as the 3.0 World Editor saved them (the Template's `tests/pipeline/fixtures/blank-map.w3m`). `test/fixtures/wc3libs` holds fixtures of [wc3libs](https://github.com/inwc3/wc3libs), taken unmodified from its `src/test/resources/wc3data` at commit `0542c4140012dfb872ac01513ff68f5cbef98658`, under the Apache License 2.0 (its `LICENSE` and `NOTICE`): four `war3map.wtg` files, three in the 1.31+ format and one older, and ten Object data files, an abilities file of format version 2 and one of version 3, a base and Skin pair of units files of version 3, and an empty file of version 2 for each of the six other Object kinds. The tests copy an Object data fixture into a temporary map folder under the name the game gives it. `test/fixtures/editor-variables.w3m` is the Template's map folder saved by the World Editor of Patch 3.0.0.24268, holding one GUI variable of each Variable Editor type that names an Object kind, plus `integer` and `ordercode`, each as a scalar and as an array, with and without an initial value. Its variables were seeded into `war3map.wtg` by a script, then loaded, checked in the Variable Editor and saved by the World Editor, which wrote both `war3map.wtg` and `war3map.lua`: `test/fixtures/editor-variables.md` gives the Build, the editor and the steps. `test/fixtures/editor-objects.w3m` is the Template's map folder saved by the same World Editor, holding a Custom object of each of the seven Object kinds, a modified Built-in object of each kind, three of them renamed, a Custom object with a non-ASCII name, a three-level ability, and a Custom buff and a Custom destructable both at `B000`. Its objects were seeded into the Object data files by a script, then loaded and saved by the World Editor, which moved their names into the Skin files and `war3map.wts`: `test/fixtures/editor-objects.md` gives the Build, the editor, the steps and what the editor wrote. Git stores these folders byte for byte. The tests build other `war3map.wtg` files in a temporary folder (`test/support/wtg.ts`), and Object data files and `war3map.wts` in format versions 1, 2 and 3 (`test/support/object-data.ts`), and type-check the generated files in a Map project against the workspace's `reforged-types` and `reforged-ts`, and `reforged-builtins` for the modified Built-in objects. The tests of the TypeScript plugin pack the package with `pnpm pack`, unpack it where tsserver's `--pluginProbeLocations` finds it, and drive the workspace's tsserver over Map projects they build in a temporary folder (`test/support/tsserver.ts`); `test/fixtures/map-folder-discovery.json` is the table of cases of the map folder's discovery, shared with the lint rule's tests. Each `test/fixtures/*map-project` folder holds the generated files the tests expect and the code that uses them, its negative fixtures asserted by error code and line. Run `pnpm build` before running the package's tests on their own.
+`test/fixtures/blank-map.w3m` holds the `war3map.lua` and `war3map.wtg` of the Template's blank map, as the 3.0 World Editor saved them (the Template's `tests/pipeline/fixtures/blank-map.w3m`). `test/fixtures/wc3libs` holds fixtures of [wc3libs](https://github.com/inwc3/wc3libs), taken unmodified from its `src/test/resources/wc3data` at commit `0542c4140012dfb872ac01513ff68f5cbef98658`, under the Apache License 2.0 (its `LICENSE` and `NOTICE`): four `war3map.wtg` files, three in the 1.31+ format and one older, a `war3map.wts` (`war3map_v3_filled.wts`), and fourteen Object data files: an abilities file of format version 2 and four of version 3 (`war3map_format3.w3a`, the large `war3map_large_v3.w3a`, `threeLetterId.w3a` with a three-character field id, and the Skin file `war3mapSkin.w3a`), a base and Skin pair of units files of version 3, a third units file of version 3 (`war3mapReforged.w3u`), and an empty file of version 2 for each of the six other Object kinds. The tests copy a fixture into a temporary map folder under the name the game gives it; the Object data editor's tests round-trip each one, and the two World Editor map folders below, byte for byte, and the `textconv` driver's tests print each one as text, then run `git diff` through the driver in a temporary git repository. `test/fixtures/editor-variables.w3m` is the Template's map folder saved by the World Editor of Patch 3.0.0.24268, holding one GUI variable of each Variable Editor type that names an Object kind, plus `integer` and `ordercode`, each as a scalar and as an array, with and without an initial value. Its variables were seeded into `war3map.wtg` by a script, then loaded, checked in the Variable Editor and saved by the World Editor, which wrote both `war3map.wtg` and `war3map.lua`: `test/fixtures/editor-variables.md` gives the Build, the editor and the steps. `test/fixtures/editor-objects.w3m` is the Template's map folder saved by the same World Editor, holding a Custom object of each of the seven Object kinds, a modified Built-in object of each kind, three of them renamed, a Custom object with a non-ASCII name, a three-level ability, and a Custom buff and a Custom destructable both at `B000`. Its objects were seeded into the Object data files by a script, then loaded and saved by the World Editor, which moved their names into the Skin files and `war3map.wts`: `test/fixtures/editor-objects.md` gives the Build, the editor, the steps and what the editor wrote. Git stores these folders byte for byte. The tests build other `war3map.wtg` files in a temporary folder (`test/support/wtg.ts`), and Object data files and `war3map.wts` in format versions 1, 2 and 3 (`test/support/object-data.ts`, an encoder independent of the package's writer, so that no test makes its input with the code under test), and type-check the generated files in a Map project against the workspace's `reforged-types` and `reforged-ts`, and `reforged-builtins` for the modified Built-in objects. The tests of the TypeScript plugin pack the package with `pnpm pack`, unpack it where tsserver's `--pluginProbeLocations` finds it, and drive the workspace's tsserver over Map projects they build in a temporary folder (`test/support/tsserver.ts`); `test/fixtures/map-folder-discovery.json` is the table of cases of the map folder's discovery, shared with the lint rule's tests. Each `test/fixtures/*map-project` folder holds the generated files the tests expect and the code that uses them, its negative fixtures asserted by error code and line. Run `pnpm build` before running the package's tests on their own.
 
 ## License
 

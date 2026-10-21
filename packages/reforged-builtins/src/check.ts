@@ -1,8 +1,9 @@
 /**
  * The check of the committed artefacts, without the game: each Game
- * version's index is validated, its artefacts are emitted again and compared
- * byte for byte with the committed ones, its provenance file must exist, and
- * the package's `exports` must be the ones the Game versions call for.
+ * version's index and field table are validated, the index's artefacts are
+ * emitted again and compared byte for byte with the committed ones, its
+ * provenance file must exist, and the package's `exports` must be the ones
+ * the Game versions call for.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -14,6 +15,12 @@ import {
   luaModule,
   overloadsPath,
 } from "./emit.js";
+import {
+  fieldsPath,
+  serializeFields,
+  validateFields,
+  type FieldTable,
+} from "./fields.js";
 import {
   byCodePoint,
   gameVersionOf,
@@ -83,6 +90,13 @@ export async function checkPackage(root: string): Promise<CheckResult> {
       continue;
     }
     const shape = validateIndex(parsed, gameVersion);
+    problems.push(
+      ...(await checkFields(
+        root,
+        gameVersion,
+        shape.length === 0 ? (parsed as BuiltinsIndex).build : undefined,
+      )),
+    );
     if (shape.length > 0) {
       problems.push(...shape.map((problem) => `${indexPath}: ${problem}`));
       continue;
@@ -213,6 +227,35 @@ export function validateIndex(value: unknown, gameVersion: string): string[] {
 }
 
 /**
+ * The field table of a Game version: present, of the right shape, of the
+ * Build of the index beside it when that index is valid (`build`), and
+ * written as the generator writes it. Its provenance is the Game version's
+ * provenance file, which the generator writes with it.
+ */
+async function checkFields(
+  root: string,
+  gameVersion: string,
+  build: string | undefined,
+): Promise<string[]> {
+  const path = fieldsPath(gameVersion);
+  const text = await readText(join(root, path));
+  if (text === undefined) return [`${path}: missing.`];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch (error) {
+    return [`${path}: not JSON (${(error as Error).message}).`];
+  }
+  const shape = validateFields(parsed, gameVersion, build);
+  if (shape.length > 0) return shape.map((problem) => `${path}: ${problem}`);
+  return serializeFields(parsed as FieldTable) === text
+    ? []
+    : [
+        `${path}: not written as the generator writes it (one field per line, in code-point order).`,
+      ];
+}
+
+/**
  * The generated files committed but no longer emitted: an overloads' entry
  * at the root, or a declarations file or Lua module in a Game version's
  * folder, that no index emits. The files of an `unchecked` Game version, whose
@@ -260,6 +303,7 @@ export function expectedExports(
   for (const gameVersion of gameVersions) {
     exports[`./${gameVersion}`] = { types: `./${overloadsPath(gameVersion)}` };
     exports[`./${gameVersion}/index.json`] = `./${gameVersion}/index.json`;
+    exports[`./${fieldsPath(gameVersion)}`] = `./${fieldsPath(gameVersion)}`;
   }
   const newest = gameVersions.at(-1);
   if (newest !== undefined) {
