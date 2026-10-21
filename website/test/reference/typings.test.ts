@@ -146,12 +146,10 @@ describe("the Typings reference", () => {
     }
   });
 
-  it("gives the index page a slug whose last segment has no dot", async () => {
+  it("names the index page so that its route's last segment has no dot, with no slug", async () => {
     const reference = await generate();
 
-    expect(await page(reference, "index.md")).toMatch(
-      /^---\nslug: overview\n---\n\n# 9\.9\.9\n/,
-    );
+    expect(await page(reference, "overview.md")).toMatch(/^# 9\.9\.9\n/);
   });
 
   it("routes a Native and a global whose names differ in case alone apart", () => {
@@ -334,7 +332,7 @@ describe("the sidebar", () => {
 
   it("lists each Game version's index page in the Typings' own sidebar", async () => {
     const typings = only(typingsReferences(FIXTURE, temp));
-    await writeText(temp, "9.9.9/index.md", "# 9.9.9");
+    await writeText(temp, "9.9.9/overview.md", "# 9.9.9");
 
     const items = await typingsSidebar([typings])({
       version: { contentPath: temp, versionName: "current" },
@@ -346,7 +344,7 @@ describe("the sidebar", () => {
         label: "Typings",
         collapsible: false,
         link: { type: "doc", id: "index" },
-        items: [{ type: "doc", id: "9.9.9/index", label: "9.9.9" }],
+        items: [{ type: "doc", id: "9.9.9/overview", label: "9.9.9" }],
       },
     ]);
   });
