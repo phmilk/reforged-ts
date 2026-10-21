@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_EXPLOSION_DAMAGE",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

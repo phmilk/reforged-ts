@@ -1,10 +1,12 @@
 // The Nullability sweep's Slice `nullability-lookups-2` (#389): the other 28
-// lookups in `common.j` order, `LoadUnitPoolHandle` to `BlzGetItemAbility`,
-// each called once where it should find nothing (./nullability/nullable.ts),
-// and what each call returned recorded (./nullability/case-runner.ts).
+// lookups of 3.0.0 in `common.j` order, `LoadUnitPoolHandle` to
+// `BlzGetItemAbility`, then the 3 equipment lookups 3.0.1.24370 added, in
+// `common.j` order, each called once where it should find nothing
+// (./nullability/nullable.ts), and what each call returned recorded
+// (./nullability/case-runner.ts).
 // `pnpm probe:nullability-report nullability-lookups-2` turns its Result
 // file into this Slice's section of the sweep report. `BlzFrameGetChild`
-// runs in `nullability-risky`, and the equipment lookups ran in
+// runs in `nullability-risky`, and the equipment lookups of 3.0.0 ran in
 // `nullability-lookups-1`. The arguments come from the Fixtures
 // (./nullability/fixtures.ts), built before the cases run; every case is of
 // group a.
@@ -15,6 +17,7 @@ import { UNKNOWN_NAME } from "./nullability/constructor";
 import { inGroupOrder } from "./nullability/expand";
 import {
   emptyHashtable,
+  liveHero,
   liveItem,
   liveUnit,
   oneCellMultiboard,
@@ -35,8 +38,8 @@ const LACKED_ABILITY = "AHhb";
 /**
  * The Slice's lookups, in `common.j` order, each with its case's label and
  * call, over the Fixtures built here before any case runs: an empty
- * hashtable, a multiboard of one cell, a footman, a `'ratf'` and an origin
- * frame type out of range.
+ * hashtable, a multiboard of one cell, a footman, a `'ratf'`, an origin
+ * frame type out of range and a hero with an empty inventory.
  */
 function lookups(): readonly [string, string, () => unknown][] {
   const table = emptyHashtable();
@@ -44,6 +47,7 @@ function lookups(): readonly [string, string, () => unknown][] {
   const footman = liveUnit();
   const item = liveItem();
   const frameType = outOfRangeOriginFrameType();
+  const hero = liveHero();
   const load = (
     native: string,
     call: (table: hashtable, parentKey: number, childKey: number) => unknown,
@@ -109,6 +113,17 @@ function lookups(): readonly [string, string, () => unknown][] {
       "BlzGetItemAbility",
       "ability it lacks",
       () => BlzGetItemAbility(item, FourCC(LACKED_ABILITY)),
+    ],
+    [
+      "BlzUnitUnequipItemFromSlot",
+      "empty slot",
+      () => BlzUnitUnequipItemFromSlot(hero, EQUIPMENT_LOADOUT_SLOT_HEAD),
+    ],
+    ["BlzUnitItemInBagSlot", "empty slot", () => BlzUnitItemInBagSlot(hero, 0)],
+    [
+      "BlzUnitItemInEquipmentSlot",
+      "empty slot",
+      () => BlzUnitItemInEquipmentSlot(hero, EQUIPMENT_LOADOUT_SLOT_HEAD),
     ],
   ];
 }

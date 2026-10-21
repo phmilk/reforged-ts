@@ -33,11 +33,14 @@ export function gameVersionRoute(gameVersion: string): string {
 }
 
 /**
- * The slug of a Game version's index page, relative to its folder: a route
- * ending in the Game version (`/typings/3.0.0`) is taken for a file with an
- * extension by a static server, which answers 404 (`docusaurus serve`, #188).
+ * The file name, without `.md`, of a Game version's index page, which is its
+ * route's last segment too: a route ending in the Game version
+ * (`/typings/3.0.0`) is taken for a file with an extension by a static
+ * server, which answers 404 (`docusaurus serve`, #188). A file name, not a
+ * `slug` on an `index.md`: docusaurus-plugin-llms resolves such a slug to the
+ * first Game version's route for every Game version (#642).
  */
-export const GAME_VERSION_INDEX_SLUG = "overview";
+export const GAME_VERSION_INDEX = "overview";
 
 /** The part of a Patch's `manifest.json` the site reads. */
 export interface TypingsManifest {

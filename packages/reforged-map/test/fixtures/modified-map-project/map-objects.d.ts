@@ -3,7 +3,7 @@
 // Do not edit: create and rename the objects in the World Editor.
 
 /**
- * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.
+ * Footman (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.
  *
  * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.
  */

@@ -2,7 +2,7 @@
 // the Editor form, then saving and comparing bytes. Each rule's expected
 // file is built by the test-only encoder (test/support/object-data.ts),
 // independent of the writer; the field facts are those of reforged-builtins'
-// field table of Game version 3.0.0 (umvs and uacq in the units' base file,
+// field table of Game version 3.0.1 (umvs and uacq in the units' base file,
 // umdl and usca in their Skin file, unam a localizable string).
 
 import { createHash } from "node:crypto";

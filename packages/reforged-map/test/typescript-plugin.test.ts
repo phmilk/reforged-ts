@@ -56,7 +56,7 @@ const LOCAL_FOURCC = [
 ].join("\n");
 
 const FOOTMAN = [
-  "**Footman** (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.",
+  "**Footman** (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.",
   "Race: human.",
   "In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
   "Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
@@ -147,7 +147,7 @@ describe("hover on a Rawcode literal", () => {
   it("shows a Built-in object from a template literal without substitutions", async () => {
     expect(await hover("`hkni`")).toBe(
       [
-        "**Knight** (`hkni`), a Built-in unit of Patch 3.0.0.",
+        "**Knight** (`hkni`), a Built-in unit of Patch 3.0.1.",
         "Race: human.",
         "In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
         "Its constant is `Units.Knight_hkni`, from `reforged-builtins/units`.",
@@ -171,11 +171,11 @@ describe("hover on a Rawcode literal", () => {
   it("shows a Built-in object outside the map's Game data set, with the lint rule's sentence", async () => {
     expect(await hover('"Asa2"')).toBe(
       [
-        "**Pillage** (`Asa2`), a Built-in ability of Patch 3.0.0.",
+        "**Pillage** (`Asa2`), a Built-in ability of Patch 3.0.1.",
         "Race: orc.",
         "In the Custom (The Frozen Throne) Game data set.",
         "Its constant is `Abilities.Pillage_Asa2`, from `reforged-builtins/abilities`.",
-        "`Asa2` (Pillage) is a Built-in ability of Patch 3.0.0 but not of this map's Game data set (Melee (Forsaken Kingdom)).",
+        "`Asa2` (Pillage) is a Built-in ability of Patch 3.0.1 but not of this map's Game data set (Melee (Forsaken Kingdom)).",
       ].join("\n\n"),
     );
   });
@@ -183,7 +183,7 @@ describe("hover on a Rawcode literal", () => {
   it("shows an unknown Rawcode with the lint rule's sentence and the Rawcodes one edit away", async () => {
     expect(await hover('"h00A"')).toBe(
       [
-        "`h00A` is neither a Built-in object of Patch 3.0.0 nor an object of this map.",
+        "`h00A` is neither a Built-in object of Patch 3.0.1 nor an object of this map.",
         "One edit away:\n- `h000` (Captain, unit)\n- `h001` (Chevalier Élu, unit)",
       ].join("\n\n"),
     );
@@ -197,7 +197,7 @@ describe("hover on a Rawcode literal", () => {
 
   it("shows an unknown Rawcode with nothing one edit away without a list", async () => {
     expect(await hover('"~~~~"')).toBe(
-      "`~~~~` is neither a Built-in object of Patch 3.0.0 nor an object of this map.",
+      "`~~~~` is neither a Built-in object of Patch 3.0.1 nor an object of this map.",
     );
   });
 
@@ -272,7 +272,7 @@ describe("what the plugin leaves alone", () => {
       /^function FourCC\(id: "hfoo"\): Rawcode<"unit">/,
     );
     expect(info?.documentation).toBe(
-      "Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.\n\nIts constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
+      "Footman (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.\n\nIts constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
     );
   });
 

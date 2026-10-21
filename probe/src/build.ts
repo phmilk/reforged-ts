@@ -2,8 +2,8 @@
  * `probe:build`: compiles a Probe with the runner's in-game module as the
  * bundle's entry, bakes the Probe's name, a fresh runId and the Patch of the
  * Typings it compiles against into the bundle, composes the editor script
- * and the bundle into the map script and stages the map folder. Needs no
- * game.
+ * and the bundle into the map script, stages the map folder and packs it
+ * into the archive the game is started on. Needs no game.
  */
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
@@ -20,6 +20,7 @@ import {
 } from "./folders.js";
 import { gameDataMessage, writeGameData, type GameData } from "./game-data.js";
 import { gameVersion, readPatch } from "./manifest.js";
+import { packMapFolder } from "./pack.js";
 import { probeFile } from "./probes.js";
 import {
   EDITOR_SCRIPT,
@@ -62,6 +63,8 @@ export interface BuildResult {
   patch: string;
   /** The staged copy of the map folder, holding the composed script. */
   stagingFolder: string;
+  /** The staged map folder packed, the file `probe:run` starts the game on (#642). */
+  archive: string;
   /** The bundle, as baked and composed. */
   bundleFile: string;
   /** The Game data the staged `war3map.w3i` was given; empty when it keeps the map's own. */
@@ -78,9 +81,9 @@ export interface BuildOptions {
   gameData?: GameData;
 }
 
-/** The line a command prints for a build: the Probe, the Game data it set, its runId and where it was staged. */
+/** The line a command prints for a build: the Probe, the Game data it set, its runId and its archive. */
 export function builtMessage(result: BuildResult): string {
-  return `Built Probe ${result.probe}${gameDataMessage(result.gameData)}, run ${result.runId}: ${result.stagingFolder}`;
+  return `Built Probe ${result.probe}${gameDataMessage(result.gameData)}, run ${result.runId}: ${result.archive}`;
 }
 
 /**
@@ -89,7 +92,9 @@ export function builtMessage(result: BuildResult): string {
  * map folder whose `war3map.lua` is the editor script, one newline and the
  * bundle, and whose `war3map.w3i` declares the Game Data Set, the Game
  * Data Version and the melee map flag `gameData` sets, the map folder's
- * where it sets none (#575). The runner writes the Patch of
+ * where it sets none (#575); then that folder packed, as
+ * `<folders.output>/<probe>/<map folder's name>`, since 3.0.1 opens no map
+ * folder (#642). The runner writes the Patch of
  * `folders.manifest` in the run's `BEGIN` line, so the run names the
  * Typings it was built against, and the Game data it set (#619). Stores the runId, with `client`, the Build
  * of the game client `probe:run` runs it on, and the Game data it set, in
@@ -150,6 +155,8 @@ export function buildProbe(
     path.join(stagingFolder, EDITOR_SCRIPT),
     composeMapScript(editorScript, baked),
   );
+  const archive = path.join(outputFolder, path.basename(folders.map));
+  fs.writeFileSync(archive, packMapFolder(stagingFolder));
 
   writeState(folders.state, {
     probe,
@@ -162,6 +169,7 @@ export function buildProbe(
     runId,
     patch,
     stagingFolder,
+    archive,
     bundleFile: bundle.file,
     gameData,
   };

@@ -64,6 +64,8 @@ async function regenerate(root: string): Promise<void> {
           file.startsWith(storage.installDir) && file.endsWith(".build.info"),
       },
       cwd: root,
+      // The Build of the synthetic install (test/support/casc.ts).
+      typingsBuild: "3.0.0.24268",
     },
   );
   expect(status).toBe(0);

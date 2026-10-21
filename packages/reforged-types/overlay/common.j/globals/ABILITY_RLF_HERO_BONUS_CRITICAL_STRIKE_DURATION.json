@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_HERO_BONUS_CRITICAL_STRIKE_DURATION",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

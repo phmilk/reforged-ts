@@ -1,0 +1,22 @@
+{
+  "patch": "3.0.1.24370",
+  "tag": "Reforged-v3.0.1.24370-w3",
+  "commit": "4224ef84fed5cf552bd9bd80ca893f53c539c986",
+  "upstream": "https://github.com/Luashine/jass-history",
+  "path": "timeline/scripts",
+  "downloaded": "2026-10-20",
+  "files": {
+    "common.j": {
+      "sha256": "25c357a35081633fb2ee553b843885b39102272ec4036860c7f5c8f7a55c05cd",
+      "bytes": 398522
+    },
+    "blizzard.j": {
+      "sha256": "23ac8f0fe4db34132a47aabd8feb74e5eb2d7a55f19f19a2afa5a188b5a5cc77",
+      "bytes": 497915
+    },
+    "common.ai": {
+      "sha256": "c6ad51b462d642c58acc426234ed88c588a296ec0351b2627c4c2dacdef43394",
+      "bytes": 96014
+    }
+  }
+}

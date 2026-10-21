@@ -28,7 +28,6 @@ import {
   CommentTag,
   Converter,
   OptionDefaults,
-  PageEvent,
   ParameterType,
   type ProjectReflection,
   ReflectionKind,
@@ -36,7 +35,6 @@ import {
 } from "typedoc";
 import {
   entryPage,
-  GAME_VERSION_INDEX_SLUG,
   HANDLE_TYPES_FILE,
   handleTypePage,
   readHandleTypes,
@@ -116,7 +114,6 @@ export function load(app: Application): void {
   gateOnValidation(app);
   mergeTypingsFiles(app);
   checkTypingsPages(app);
-  slugTypingsIndex(app);
   linkNatives(app);
 }
 
@@ -292,18 +289,6 @@ function checkTypingsPages(app: Application): void {
 /** The Handle types of the `common.j.d.ts` next to a Typings `manifest.json`. */
 function handleTypesBeside(manifest: string): string[] {
   return readHandleTypes(join(dirname(manifest), HANDLE_TYPES_FILE));
-}
-
-/**
- * Gives a Typings reference's index page the slug `typings.mts` says, in
- * front matter: TypeDoc writes none.
- */
-function slugTypingsIndex(app: Application): void {
-  app.renderer.on(PageEvent.END, (page) => {
-    if (app.options.getValue("typingsManifest") === "") return;
-    if (page.url !== "index.md") return;
-    page.contents = `---\nslug: ${GAME_VERSION_INDEX_SLUG}\n---\n\n${page.contents ?? ""}`;
-  });
 }
 
 /**

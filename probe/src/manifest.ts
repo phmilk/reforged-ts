@@ -34,6 +34,22 @@ function compareBuilds(a: string, b: string): number {
 }
 
 /**
+ * Whether `client` is a Build of `build`'s Game version, later than it: a
+ * client ahead that `--client-build` may accept in place of `build`, as
+ * `builtins:generate` accepts one.
+ */
+export function isLaterBuildOfGameVersion(
+  client: string,
+  build: string,
+): boolean {
+  return (
+    BUILD_PATTERN.test(client) &&
+    gameVersion(client) === gameVersion(build) &&
+    compareBuilds(client, build) > 0
+  );
+}
+
+/**
  * The manifest of the Typings the Probes compile against, under the
  * reforged-types folder `typesFolder`: the one of the Game version of the
  * newest Build vendored under its `vendor/`, so a Patch that opens a new

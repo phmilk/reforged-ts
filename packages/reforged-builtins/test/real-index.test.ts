@@ -230,7 +230,7 @@ describe("the package", () => {
 
   it("carries the Patch of reforged-types and of its index", async () => {
     const { reforged } = await manifest();
-    const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
+    const index = JSON.parse(await read("3.0.1/index.json")) as BuiltinsIndex;
 
     expect(reforged.patch).toBe(typingsBuild());
     expect(index.build).toBe(reforged.patch);

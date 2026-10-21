@@ -1,7 +1,8 @@
 /**
- * `builtins:generate [--install <folder>] [--out <folder>]`: finds the
- * install (`../install.ts`), refuses one whose Build is not
- * `reforged-types`' `reforged.patch`, then writes the index and the
+ * `builtins:generate [--install <folder>] [--out <folder>] [--client-build
+ * <Build>]`: finds the install (`../install.ts`), refuses one whose Build is
+ * not `reforged-types`' `reforged.patch` (or `--client-build`, a later Build
+ * of its Game version accepted in its place), then writes the index and the
  * provenance file of its Game version, and the artefacts emitted from the
  * index, under `--out` (the package root by default). Prints the counts,
  * then the warnings; on any error it writes nothing, prints the errors and
@@ -100,6 +101,7 @@ export async function main(
 ): Promise<number> {
   let install: string | undefined;
   let outDir = packageRoot;
+  let clientBuild: string | undefined;
   for (let i = args[0] === "--" ? 1 : 0; i < args.length; i += 2) {
     const value = args.at(i + 1);
     if (value === undefined) {
@@ -108,6 +110,7 @@ export async function main(
     }
     if (args[i] === INSTALL_OPTION) install = value;
     else if (args[i] === "--out") outDir = resolve(context.cwd, value);
+    else if (args[i] === "--client-build") clientBuild = value;
     else {
       output.stderr(USAGE);
       return 2;
@@ -126,6 +129,7 @@ export async function main(
   const result = await generate({
     installDir,
     build: context.typingsBuild ?? typingsBuild(),
+    ...(clientBuild !== undefined && { clientBuild }),
   });
   if (!result.ok) {
     output.stderr(

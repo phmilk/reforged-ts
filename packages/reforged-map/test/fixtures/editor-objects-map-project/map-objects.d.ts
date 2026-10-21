@@ -17,7 +17,7 @@ declare function FourCC(id: "h000"): Rawcode<"unit">;
 declare function FourCC(id: "h001"): Rawcode<"unit">;
 
 /**
- * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.
+ * Footman (`hfoo`), a Built-in unit of Patch 3.0.1, named Militia in this map.
  *
  * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.
  */
@@ -31,7 +31,7 @@ declare function FourCC(id: "hfoo"): Rawcode<"unit">;
 declare function FourCC(id: "I000"): Rawcode<"item">;
 
 /**
- * Claws of Attack +12 (`ratc`), a Built-in item of Patch 3.0.0, which this map modifies.
+ * Claws of Attack +12 (`ratc`), a Built-in item of Patch 3.0.1, which this map modifies.
  *
  * Its constant is `Items.ClawsOfAttack12_ratc`, from `reforged-builtins/items`.
  */
@@ -45,28 +45,28 @@ declare function FourCC(id: "ratc"): Rawcode<"item">;
 declare function FourCC(id: "A000"): Rawcode<"ability">;
 
 /**
- * Holy Light (`AHhb`), a Built-in ability of Patch 3.0.0, which this map modifies.
+ * Holy Light (`AHhb`), a Built-in ability of Patch 3.0.1, which this map modifies.
  *
  * Its constant is `Abilities.HolyLight_AHhb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHhb"): Rawcode<"ability">;
 
 /**
- * Inner Fire (`Binf`), a Built-in buff of Patch 3.0.0, named Burning Fire in this map.
+ * Inner Fire (`Binf`), a Built-in buff of Patch 3.0.1, named Burning Fire in this map.
  *
  * Its constant is `Buffs.InnerFire_Binf`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Binf"): Rawcode<"buff">;
 
 /**
- * Summer Tree Wall (`LTlt`), a Built-in destructable of Patch 3.0.0, which this map modifies.
+ * Summer Tree Wall (`LTlt`), a Built-in destructable of Patch 3.0.1, which this map modifies.
  *
  * Its constant is `Destructables.SummerTreeWall_LTlt`, from `reforged-builtins/destructables`.
  */
 declare function FourCC(id: "LTlt"): Rawcode<"destructable">;
 
 /**
- * Brazier Skull (`AObr`), a Built-in doodad of Patch 3.0.0, named Skull Brazier in this map.
+ * Brazier Skull (`AObr`), a Built-in doodad of Patch 3.0.1, named Skull Brazier in this map.
  *
  * Its constant is `Doodads.BrazierSkull_AObr`, from `reforged-builtins/doodads`.
  */
@@ -87,7 +87,7 @@ declare function FourCC(id: "D000"): Rawcode<"doodad">;
 declare function FourCC(id: "R000"): Rawcode<"upgrade">;
 
 /**
- * Iron Plating (`Rhar`), a Built-in upgrade of Patch 3.0.0, which this map modifies.
+ * Iron Plating (`Rhar`), a Built-in upgrade of Patch 3.0.1, which this map modifies.
  *
  * Its constant is `Upgrades.IronPlating_Rhar`, from `reforged-builtins/upgrades`.
  */

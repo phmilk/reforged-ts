@@ -13,7 +13,7 @@
     "lib": ["ESNext"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "types": ["reforged-types/3.0.1", "@typescript-to-lua/language-extensions"],
     "strict": true,
     "noEmit": true,
     "paths": { "reforged-ts": ["../../../../reforged-ts/src/index.ts"] }

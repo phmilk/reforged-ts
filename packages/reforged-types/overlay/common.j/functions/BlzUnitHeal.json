@@ -1,0 +1,30 @@
+{
+  "name": "BlzUnitHeal",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "source",
+      "nullable": false
+    },
+    {
+      "name": "life",
+      "nullable": false
+    },
+    {
+      "name": "isItem",
+      "nullable": false
+    },
+    {
+      "name": "applyStatBonuses",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

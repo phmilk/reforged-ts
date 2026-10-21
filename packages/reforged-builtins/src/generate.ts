@@ -19,6 +19,7 @@ import {
   openStorage,
   type CascStorage,
 } from "./casc/storage.js";
+import { BUILD, compareVersions } from "./check.js";
 import {
   byCodePoint,
   gameVersionOf,
@@ -297,6 +298,13 @@ export interface GenerateOptions {
   installDir: string;
   /** The Build the install must be on: `reforged-types`' `reforged.patch`. */
   build: string;
+  /**
+   * A later Build of `build`'s Game version the install may be on in its
+   * place (`--client-build`): a hotfix the Patch files of `build` still
+   * describe. The model is recorded as `build`; the provenance file names
+   * this one.
+   */
+  clientBuild?: string;
 }
 
 export interface GenerateSuccess {
@@ -335,17 +343,32 @@ export async function generate(
     if (error instanceof CascError) return fail(error.message);
     throw error;
   }
-  if (storage.build !== options.build) {
+  const { clientBuild } = options;
+  if (
+    clientBuild !== undefined &&
+    !isLaterBuildOfGameVersion(clientBuild, options.build)
+  ) {
     return fail(
-      `The install at ${options.installDir} is on Build ${storage.build} (its build config, ${storage.buildConfigFile}), not on ${options.build}, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.`,
+      `--client-build ${clientBuild} is not a later Build of Game version ${gameVersionOf(options.build)}, the Game version of ${options.build}, the Patch of reforged-types (its reforged.patch): only a client ahead of the Patch within its Game version can stand in for it.`,
+    );
+  }
+  if (storage.build !== options.build && storage.build !== clientBuild) {
+    return fail(
+      `The install at ${options.installDir} is on Build ${storage.build} (its build config, ${storage.buildConfigFile}), not on ${options.build}, the Patch of reforged-types (its reforged.patch)${clientBuild === undefined ? "" : `, nor on ${clientBuild}, its --client-build`}: the Built-in objects and the Typings would come from different Builds.`,
     );
   }
   let result: GenerateResult;
   try {
-    result = await extract(storage);
+    result = await extract(storage, options.build);
   } catch (error) {
     if (!(error instanceof CascError)) throw error;
     result = fail(error.message);
+  }
+  if (storage.build !== options.build) {
+    result.diagnostics.unshift({
+      severity: "warning",
+      message: `The install is on Build ${storage.build}, which --client-build accepts in place of ${options.build}, the Patch of reforged-types: the Built-in objects are recorded as ${options.build}, and provenance.json names ${storage.build} as the client's Build.`,
+    });
   }
   if (storage.buildInfoVersion !== storage.build) {
     result.diagnostics.unshift({
@@ -356,7 +379,20 @@ export async function generate(
   return result;
 }
 
-async function extract(storage: CascStorage): Promise<GenerateResult> {
+/** Whether `client` is a Build of `build`'s Game version, later than it. */
+function isLaterBuildOfGameVersion(client: string, build: string): boolean {
+  return (
+    BUILD.test(client) &&
+    gameVersionOf(client) === gameVersionOf(build) &&
+    compareVersions(client, build) > 0
+  );
+}
+
+/** The model of the storage's content, recorded as the Build `build`. */
+async function extract(
+  storage: CascStorage,
+  build: string,
+): Promise<GenerateResult> {
   const diagnostics: Diagnostic[] = [];
   const inputs: ProvenanceInput[] = [];
   const texts = new Map<string, Promise<string>>();
@@ -515,7 +551,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     diagnostics.push({ severity: "error", message });
   }
 
-  const gameVersion = gameVersionOf(storage.build);
+  const gameVersion = gameVersionOf(build);
   const metaData: KindMetaData[] = [];
   for (const source of KINDS) {
     const path = BASE_LAYER + source.metaData;
@@ -529,7 +565,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
   const fieldTable = buildFieldTable(
     metaData,
     labelResolver(await worldEditStrings(), WORLD_EDIT_SECTION),
-    storage.build,
+    build,
     gameVersion,
   );
   for (const message of fieldTable.errors) {
@@ -544,14 +580,14 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
   }
   const index: BuiltinsIndex = {
     format: INDEX_FORMAT,
-    build: storage.build,
+    build,
     gameVersion,
     gameDataSets: GAME_DATA_SETS.map(({ id, label }) => ({ id, label })),
     objects,
   };
   return {
     ok: true,
-    build: storage.build,
+    build,
     gameVersion,
     index,
     files: new Map([
@@ -560,7 +596,8 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       [
         `${gameVersion}/provenance.json`,
         serializeProvenance({
-          build: storage.build,
+          build,
+          ...(storage.build !== build && { clientBuild: storage.build }),
           buildConfig: storage.buildConfigKey,
           inputs,
         }),

@@ -1,0 +1,19 @@
+{
+  "name": "BlzUnitUnequipItemFromSlot",
+  "source": "common.j",
+  "returns": {
+    "nullable": true,
+    "family": "lookup"
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "slot",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

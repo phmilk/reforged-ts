@@ -1,0 +1,10 @@
+{
+  "name": "BlzGetUnequippedItem",
+  "source": "common.j",
+  "returns": {
+    "nullable": true,
+    "family": "event-response"
+  },
+  "params": [],
+  "since": "3.0.1.24370"
+}

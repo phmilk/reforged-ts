@@ -56,6 +56,11 @@ export interface ProvenanceInput {
 /** The provenance file: the only trace of the raw files. Never published. */
 export interface Provenance {
   build: string;
+  /**
+   * The Build the install was on when it is not `build`: a later Build of
+   * its Game version that `--client-build` accepted in its place.
+   */
+  clientBuild?: string;
   /** The build config's key, from `.build.info`. */
   buildConfig: string;
   inputs: ProvenanceInput[];
@@ -110,6 +115,9 @@ function block(lines: string, open: string, close: string): string {
 export function serializeProvenance(provenance: Provenance): string {
   const ordered: Provenance = {
     build: provenance.build,
+    ...(provenance.clientBuild !== undefined && {
+      clientBuild: provenance.clientBuild,
+    }),
     buildConfig: provenance.buildConfig,
     inputs: [...provenance.inputs]
       .sort((a, b) => byCodePoint(a.path, b.path))

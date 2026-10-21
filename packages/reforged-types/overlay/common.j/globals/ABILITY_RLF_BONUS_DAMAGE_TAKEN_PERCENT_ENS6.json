@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_BONUS_DAMAGE_TAKEN_PERCENT_ENS6",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

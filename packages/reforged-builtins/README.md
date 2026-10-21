@@ -2,13 +2,13 @@
 
 The Built-in objects of each Warcraft III Reforged Patch, reduced to the identifiers code needs to name them: Rawcode, Object kind, race, enUS name and the Game data sets that hold the object ([ADR 0013](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0013-built-in-objects-ship-as-derived-identifiers-in-their-own-package.md)). It never holds tooltip text, numbers or icons.
 
-It holds the Built-in objects of Patch 3.0.0.24268, in the seven Object kinds and the six Game data sets: their JSON index, their `FourCC` overloads and their constants; and the field table of their Object data, for tools that write it.
+It holds the Built-in objects of Patch 3.0.1.24370, in the seven Object kinds and the six Game data sets: their JSON index, their `FourCC` overloads and their constants; and the field table of their Object data, for tools that write it.
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
 **Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add -D reforged-builtins@next`. npm gives `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
 
 ## In a Map project
 
@@ -17,7 +17,7 @@ Add the overloads' entry of your Game version to `types`, next to the Typings':
 ```json
 {
   "compilerOptions": {
-    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
+    "types": ["reforged-types/3.0.1", "reforged-builtins/3.0.1"]
   }
 }
 ```
@@ -61,7 +61,7 @@ A map's objects follow two of its options in the World Editor: its Game Data Set
 
 ## Finding a Rawcode (agents and tools)
 
-To find the Rawcode of an object by its name, search the index of the newest Game version, one object per line: `grep -i '"name":"footman"' packages/reforged-builtins/3.0.0/index.json` (or the installed `node_modules/reforged-builtins/3.0.0/index.json`) gives `"hfoo": {"kind":"unit",…,"constant":"Footman_hfoo"}`. The kind names the entry point to import, one kind at a time: `unit` is `reforged-builtins/units`'s `Units`, `ability` `reforged-builtins/abilities`'s `Abilities`, and so on. Import only the kinds the file uses: each is a module of its own in the bundle.
+To find the Rawcode of an object by its name, search the index of the newest Game version, one object per line: `grep -i '"name":"footman"' packages/reforged-builtins/3.0.1/index.json` (or the installed `node_modules/reforged-builtins/3.0.1/index.json`) gives `"hfoo": {"kind":"unit",…,"constant":"Footman_hfoo"}`. The kind names the entry point to import, one kind at a time: `unit` is `reforged-builtins/units`'s `Units`, `ability` `reforged-builtins/abilities`'s `Abilities`, and so on. Import only the kinds the file uses: each is a module of its own in the bundle.
 
 ## Check-time cost
 
@@ -192,7 +192,7 @@ Each Game version's index is emitted three ways, every file with a banner that s
 
 ## Generating it (maintainers)
 
-`pnpm builtins:generate [--install <folder>] [--out <folder>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build is not `reforged-types`' `reforged.patch`, naming both. The Build is the one the build config names (`build-name`), which describes the content: the Battle.net app has been seen to give `.build.info` another Version for the same build config (3.0.0.24248 for the build config of 3.0.0.24268), which is then a warning.
+`pnpm builtins:generate [--install <folder>] [--out <folder>] [--client-build <Build>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build is not `reforged-types`' `reforged.patch`, naming both. `--client-build` accepts, as `probe:run` does, an install on that Build in its place when it is a later Build of the Patch's Game version: a hotfix whose Patch files are the Patch's, as 3.0.1.24371's were 3.0.1.24370's (#642). The Built-in objects are then recorded as the Patch, a warning says so, and the provenance file names the install's Build in `clientBuild`, next to its build config; a `--client-build` that is not a later Build of the Game version is an error. The Build is the one the build config names (`build-name`), which describes the content: the Battle.net app has been seen to give `.build.info` another Version for the same build config (3.0.0.24248 for the build config of 3.0.0.24268), which is then a warning.
 
 It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only). The Game data sets read the layers the game reads, measured by Probe runs on 3.0.0.24268 under each Game Data Set and Game Data Version ([`docs/research/builtins-layers.md`](../../docs/research/builtins-layers.md), [#575](https://github.com/phmilk/reforged-ts/issues/575)). A set of a Game Data Set and a Game Data Version reads `_Balance/<Set>_V<version>.w3mod:`, where the version is 0 for Reign of Chaos, 1 for The Frozen Throne and 2 for Forsaken Kingdom, and leaves out every unit, item and ability whose `version` cell is greater, an object of a later expansion; a destructable or a buff of a later version is still created or given to a unit, as measured ([#622](https://github.com/phmilk/reforged-ts/issues/622)), so both keep every row. Upgrades keep every row too: no layer has one of a later version than the sets that read it, and the game holds those it lists, as measured. Doodads, which no Native creates, are not measured and keep every row. The install has `Custom_V0`, `Custom_V1` and `Melee_V0` only, and a set whose layer has no file of a kind reads the base layer's, `War3.w3mod:`: Melee of The Frozen Throne reads the base layer without Forsaken Kingdom's objects, and both sets of Forsaken Kingdom read it whole. Each layer's file of a kind replaces the base layer's whole: no layer has destructables or doodads. Default reads Custom, or Melee on a map whose "Melee Map" flag is set, as the runs measured. The runs created units, items, abilities and destructables, gave units buffs and researched upgrades.
 

@@ -16,9 +16,9 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "types": [
-      "reforged-types/3.0.0",
+      "reforged-types/3.0.1",
       "@typescript-to-lua/language-extensions",
-      "reforged-builtins/3.0.0"
+      "reforged-builtins/3.0.1"
     ],
     "strict": true,
     "noEmit": true,

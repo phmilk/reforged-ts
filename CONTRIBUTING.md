@@ -42,7 +42,7 @@ The README's [Rules for library code](README.md#rules-for-library-code) apply to
 
 ## The Typings and a new Patch
 
-The Typings are generated from the game's Patch files and the Overlay. Never edit the generated files (`packages/reforged-types/3.0.0/`, `3.0.0.d.ts`, `async-natives.json`): `pnpm typings:check` fails on any difference from what the generator writes.
+The Typings are generated from the game's Patch files and the Overlay. Never edit the generated files (the Game version folders such as `packages/reforged-types/3.0.1/`, their `.d.ts` entries, `async-natives.json`): `pnpm typings:check` fails on any difference from what the generator writes.
 
 **Curating the Overlay.** A fact about a Native (its nullability, a deprecation, whether its value is async, a note) goes in its Overlay entry: one JSON file per Native under `packages/reforged-types/overlay/<Patch file>/functions/` or `globals/`, shaped like its neighbours. Run `pnpm typings:generate` and commit the entry with the regenerated output; the pull request is where the curation is reviewed. The curation rules and the generator's messages are in [`packages/reforged-types/AGENTS.md`](packages/reforged-types/AGENTS.md); they are the project's rules for everyone, not only for agents.
 

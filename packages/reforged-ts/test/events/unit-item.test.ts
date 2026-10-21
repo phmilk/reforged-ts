@@ -4,8 +4,8 @@
 // pawnItem, and the 3.0.0 equip and unequip) and their Of twins through on(),
 // and the equipment and sold-item lookups: the suites of support/events.ts, which fire the
 // Subscription's Trigger with a stubbed context and observe the call log and
-// what the handler received. Every context answers both GetEquippedItem and
-// GetUnequippedItem with different items, so equip yielding the equipped
+// what the handler received. Every context answers both BlzGetEquippedItem and
+// BlzGetUnequippedItem with different items, so equip yielding the equipped
 // item and unequip the unequipped one is asserted by their payloads.
 
 import type { EventDescriptor } from "../../src/index";
@@ -29,8 +29,8 @@ const unequipped = Item.create(FourCC("bgst"), 0, 0);
 const items = {
   GetManipulatedItem: manipulated.handle,
   GetSoldItem: sold.handle,
-  GetEquippedItem: equipped.handle,
-  GetUnequippedItem: unequipped.handle,
+  BlzGetEquippedItem: equipped.handle,
+  BlzGetUnequippedItem: unequipped.handle,
 };
 
 interface ItemPayload {
@@ -105,7 +105,7 @@ const rows: ItemRow[] = [
     of: UnitEvents.equipOf,
     event: "EVENT_PLAYER_UNIT_EQUIP_ITEM",
     twin: "EVENT_UNIT_EQUIP_ITEM",
-    native: "GetEquippedItem",
+    native: "BlzGetEquippedItem",
     item: equipped,
   },
   {
@@ -114,7 +114,7 @@ const rows: ItemRow[] = [
     of: UnitEvents.unequipOf,
     event: "EVENT_PLAYER_UNIT_UNEQUIP_ITEM",
     twin: "EVENT_UNIT_UNEQUIP_ITEM",
-    native: "GetUnequippedItem",
+    native: "BlzGetUnequippedItem",
     item: unequipped,
   },
 ];
@@ -151,7 +151,7 @@ for (const row of rows) {
 describeLookup({
   name: "Item.fromEquipped",
   lookup: () => Item.fromEquipped(),
-  context: { GetEquippedItem: equipped.handle },
+  context: { BlzGetEquippedItem: equipped.handle },
   expected: equipped,
 });
 
@@ -165,6 +165,6 @@ describeLookup({
 describeLookup({
   name: "Item.fromUnequipped",
   lookup: () => Item.fromUnequipped(),
-  context: { GetUnequippedItem: unequipped.handle },
+  context: { BlzGetUnequippedItem: unequipped.handle },
   expected: unequipped,
 });

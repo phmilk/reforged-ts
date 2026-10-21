@@ -16,5 +16,119 @@
     "reason": "It returns nothing for the item it creates when the inventory is full, the unit cannot carry items or it is dead, although the item exists on the ground; Unit#addItemById calls CreateItem and UnitAddItem instead, so it returns that item (#261).",
     "source": "jassdoc on UnitAddItemById: \"If inventory is full or unit is dead then the item is dropped on the ground at unit position\", returning \"null if inventory is full, unit cannot carry items\" (https://lep.duckdns.org/jassbot/doc/UnitAddItemById)",
     "date": "2026-09-29"
+  },
+  {
+    "native": "UnitEquipItem",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitEquipItem, of the same parameters, which Unit#equip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitEquipItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitUnequipItem",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItem, of the same parameters, which Unit#unequip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitUnequipItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitUnequipItemFromSlot",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItemFromSlot, of the same parameters, which Unit#unequipSlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitUnequipItemFromSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitHasItemBagged",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemBagged, of the same parameters, which Unit#hasBagged calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemBagged ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitExtendedInventorySize",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitExtendedInventorySize, of the same parameters, which Unit#bagSize calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitExtendedInventorySize ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitItemInBagSlot",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInBagSlot, of the same parameters, which Unit#bagItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitItemInBagSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitItemInEquipmentSlot",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInEquipmentSlot, of the same parameters, which Unit#equippedItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitItemInEquipmentSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitHasItemEquipped",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipped, of the same parameters, which Unit#hasEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemEquipped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitHasLoadoutSlotEmpty",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasLoadoutSlotEmpty, of the same parameters, which Unit#hasEmptySlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasLoadoutSlotEmpty ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitHasAnyItemEquiped",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasAnyItemEquipped, of the same parameters, which Unit#hasAnyEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasAnyItemEquiped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitHasItemEquipmentOfType",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipmentOfType, of the same parameters, which Unit#hasEquipmentOfType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemEquipmentOfType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "UnitCanEquipItemOfEquipmentType",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitCanEquipItemOfEquipmentType, of the same parameters, which Unit#canEquip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitCanEquipItemOfEquipmentType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "GetEquippedItem",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetEquippedItem, of the same parameters, which Item.fromEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetEquippedItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "GetUnequippedItem",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetUnequippedItem, of the same parameters, which Item.fromUnequipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetUnequippedItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "SetItemColor",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzSetItemColor, of the same parameters, which Item#color calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... SetItemColor ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "IsItemEquipped",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemEquipped, of the same parameters, which Item#isEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... IsItemEquipped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "IsItemInBag",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemInBag, of the same parameters, which Item#isInBag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... IsItemInBag ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "GetItemEquipmentType",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemEquipmentType, of the same parameters, which Item#equipmentType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetItemEquipmentType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
+  },
+  {
+    "native": "GetItemTag",
+    "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemTag, of the same parameters, which Item#tag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch.",
+    "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetItemTag ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); the common.j of 3.0.1.24370 declares both.",
+    "date": "2026-10-21"
   }
 ]

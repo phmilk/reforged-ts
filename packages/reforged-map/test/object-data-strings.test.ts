@@ -7,7 +7,7 @@
 // test/fixtures/editor-objects.w3m: each block followed by a blank line,
 // its comment `// <kind label>: <rawcode> (<object's name>), <field>
 // (<field's label>)`. The field facts are those of reforged-builtins' field
-// table of Game version 3.0.0 (unam and utip localizable in the units' Skin
+// table of Game version 3.0.1 (unam and utip localizable in the units' Skin
 // file, umvs in their base file).
 
 import fs from "node:fs";

@@ -4,7 +4,7 @@ TypeScript Wrappers and Systems over the Lua API of Warcraft III Reforged, for c
 
 A fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts) targeting Warcraft III 3.0.0 and later. The [w3ts documentation](https://cipherxof.github.io/w3ts/) describes the upstream API this fork started from.
 
-**Supported Patch: 3.0.0.24268** (Game version 3.0.0). The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370** (Game version 3.0.1). The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 
@@ -29,7 +29,7 @@ Add the typescript-to-lua language extensions and the Typings of your Game versi
 ```json
 {
   "compilerOptions": {
-    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"]
+    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1"]
   }
 }
 ```

@@ -17,7 +17,11 @@ import type { PluginConfig } from "@docusaurus/types";
 import type { PluginOptions as DocsPluginOptions } from "@docusaurus/plugin-content-docs";
 import type { PluginOptions as MarkdownOptions } from "docusaurus-plugin-typedoc";
 import type { TypeDocOptions } from "typedoc";
-import { gameVersionRoute, TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
+import {
+  GAME_VERSION_INDEX,
+  gameVersionRoute,
+  TYPINGS_ROUTE_BASE,
+} from "./typedoc/typings.mts";
 
 const SITE = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE = join(SITE, "..");
@@ -309,6 +313,7 @@ export function referenceTypedocOptions(
           // Generated from the Patch: the doc comments are the Jass types,
           // and a handle type's brand has none.
           validation: { notDocumented: false },
+          entryFileName: GAME_VERSION_INDEX,
         }),
     ...(reference.nativeTypings?.typingsManifest === undefined
       ? {}
@@ -443,13 +448,13 @@ function findSection(
   return undefined;
 }
 
-/** The doc id of a reference's index page, once its TypeDoc run wrote it. */
+/** The doc id of a Typings reference's index page, once its TypeDoc run wrote it. */
 function generatedIndex(contentPath: string, reference: Reference): string {
-  const file = join(contentPath, reference.dir, "index.md");
+  const file = join(contentPath, reference.dir, `${GAME_VERSION_INDEX}.md`);
   if (!existsSync(file)) {
     throw new Error(notGenerated(file, reference));
   }
-  return `${reference.dir}/index`;
+  return `${reference.dir}/${GAME_VERSION_INDEX}`;
 }
 
 function notGenerated(file: string, reference: Reference): string {

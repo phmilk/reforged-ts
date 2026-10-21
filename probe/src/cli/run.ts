@@ -1,13 +1,15 @@
 /**
  * `probe:run <probe> [--game-executable <file>] [--begin-timeout <seconds>]
  * [--stall-timeout <seconds>] [--game-data-set <set>] [--game-data-version
- * <version>] [--melee-map]`: run by the agent, native Windows only. Runs
- * the Probe in the game end to end and blocks until the run ends, printing
- * one progress line per event, then exactly what `probe:read` prints for the
- * run. Exit codes are `probe:read`'s: 0 `finished`, 1 `failed`, 2 `crashed`
- * (a stall included), 3 `not-started` (no `BEGIN` came); 4 when the command
- * itself fails (a usage or author error, printed on one line, a game
- * client on another Build than the Patch of the Typings included, or a bug),
+ * <version>] [--melee-map] [--client-build <Build>]`: run by the agent,
+ * native Windows only. Runs the Probe in the game end to end and blocks
+ * until the run ends, printing one progress line per event, then exactly
+ * what `probe:read` prints for the run. Exit codes are `probe:read`'s: 0
+ * `finished`, 1 `failed`, 2 `crashed` (a stall included), 3 `not-started`
+ * (no `BEGIN` came); 4 when the command itself fails (a usage or author
+ * error, printed on one line, a game client on another Build than the Patch
+ * of the Typings included, unless `--client-build` names it, a later Build
+ * of their Game version, or a bug),
  * after ending the game if it had started. Ctrl+C, or a stop of the command,
  * ends the game and reads the run.
  */
@@ -32,7 +34,7 @@ import {
   type Output,
 } from "./common.js";
 
-const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}] [--${GAME_DATA_OPTIONS.melee}]\n`;
+const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}] [--${GAME_DATA_OPTIONS.melee}] [--client-build <Build>]\n`;
 
 /** Where the command builds, the machine it runs the game on, and the workspace its paths are relative to. */
 export type Context = Omit<RunContext, "progress">;
@@ -57,6 +59,7 @@ export async function main(
       {
         gameExecutable: parsed.gameExecutable,
         gameData: gameDataOf(parsed.values),
+        clientBuild: parsed.clientBuild,
       },
       { begin: parsed.beginTimeout, stall: parsed.stallTimeout },
       {
@@ -77,6 +80,7 @@ export async function main(
 interface CommandLine {
   probe: string;
   gameExecutable?: string;
+  clientBuild?: string;
   beginTimeout: number;
   stallTimeout: number;
   /** Every option as `parseArgs` read it, for the Game data. */
@@ -100,6 +104,7 @@ function parseCommandLine(args: readonly string[]): CommandLine | undefined {
       args: [...args],
       options: {
         "game-executable": { type: "string" },
+        "client-build": { type: "string" },
         "begin-timeout": { type: "string" },
         "stall-timeout": { type: "string" },
         ...GAME_DATA_ARGS,
@@ -124,6 +129,9 @@ function parseCommandLine(args: readonly string[]): CommandLine | undefined {
     probe: positionals[0],
     ...(values["game-executable"] !== undefined && {
       gameExecutable: values["game-executable"],
+    }),
+    ...(values["client-build"] !== undefined && {
+      clientBuild: values["client-build"],
     }),
     beginTimeout,
     stallTimeout,

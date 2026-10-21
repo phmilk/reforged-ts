@@ -1,0 +1,313 @@
+{
+  "build": "3.0.1.24370",
+  "clientBuild": "3.0.1.24371",
+  "buildConfig": "dd5e630e7a6ad6466075eb1c50e283af",
+  "inputs": [
+    {
+      "path": "War3.w3mod:Doodads/DoodadMetaData.slk",
+      "contentKey": "bf3c8deb8d1f9a7f283f43ab9367d0ad",
+      "sha256": "6b90d07dca8524c3b668c0694396d13377c0b829d9124a41ce78fdbd2bc01965",
+      "size": 9610
+    },
+    {
+      "path": "War3.w3mod:Doodads/Doodads.slk",
+      "contentKey": "5b90a97d3156d2e8f588b46f1d9d61f3",
+      "sha256": "276153f438c05e694eb6488062f0e21619d445b086fb865828b043d43e0c5b59",
+      "size": 296201
+    },
+    {
+      "path": "War3.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "134ef7c646d8fd24e2d8814d83769268",
+      "sha256": "f50bb4052f3c1163821ff6fd7354cfdb7e1813747611bf8e3445e9c1134686ce",
+      "size": 41055
+    },
+    {
+      "path": "War3.w3mod:Units/AbilityBuffMetaData.slk",
+      "contentKey": "ca297e7ad933f60656efd5e2a37af15e",
+      "sha256": "ed6616cb83214b3bd044b170dfd3061045aeca9591889d64d348e356613dc4da",
+      "size": 5926
+    },
+    {
+      "path": "War3.w3mod:Units/AbilityData.slk",
+      "contentKey": "60bb51d5ab7cb35637f85a8b0c0914ef",
+      "sha256": "b1c0cbc3d61a1bd046c0f5ccf9804cc6da850e329f907ab852f2a3c13068f19f",
+      "size": 3558165
+    },
+    {
+      "path": "War3.w3mod:Units/AbilityMetaData.slk",
+      "contentKey": "ea978febfa64ea4ac9f52015e6860a93",
+      "sha256": "17bef0f64792d4be22610346b333e0378f35650a3b1a59cc36fc1d25f38f715d",
+      "size": 287364
+    },
+    {
+      "path": "War3.w3mod:Units/DestructableData.slk",
+      "contentKey": "cb568c4d9241f04a08127beee5434843",
+      "sha256": "30877804d70b365eb8c8914bca6d283389b6c831bda02a2509cc0786e0a0a8cc",
+      "size": 198338
+    },
+    {
+      "path": "War3.w3mod:Units/DestructableMetaData.slk",
+      "contentKey": "00472ba6644e381d5241d90daa6a8a7f",
+      "sha256": "eea5c3d22e3224e36c6f3187be9ea65aedd21197b49a04abf6825abc92d3c5f8",
+      "size": 13085
+    },
+    {
+      "path": "War3.w3mod:Units/ItemData.slk",
+      "contentKey": "6326c3600048789ffdb28d4f6a451ae4",
+      "sha256": "10d5382259eb4fa2fdb8521719c352615a0769d82c26ee0c504fe822e4ffa222",
+      "size": 282453
+    },
+    {
+      "path": "War3.w3mod:Units/UnitData.slk",
+      "contentKey": "a4965708a6a47417d5139b5fdf891322",
+      "sha256": "162dde17ca9187e823bef9dd260cfa7df299d97c28e8d746f1b1f2eab478d77c",
+      "size": 343546
+    },
+    {
+      "path": "War3.w3mod:Units/UnitMetaData.slk",
+      "contentKey": "0b0457b4d80a569529a58d14ec6bcc75",
+      "sha256": "a8f987c31abae5e2a658be937e59f42bffc520a0bd2269e2da2cde6d60ebcae4",
+      "size": 73808
+    },
+    {
+      "path": "War3.w3mod:Units/UpgradeData.slk",
+      "contentKey": "f32ded8ca455f2575698c324e6be8d3f",
+      "sha256": "6d2d73161f4543dd3c454f1faf621e49b53291c415d72a83ca92f315bf17d840",
+      "size": 36769
+    },
+    {
+      "path": "War3.w3mod:Units/UpgradeMetaData.slk",
+      "contentKey": "cbddacab1a59450bd5602409af34bf51",
+      "sha256": "f1ea94517975da1b93cf53f21ff0bb2c4c07f8cd803963b36575370f96108e84",
+      "size": 9796
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "2e305104b26fd76ae531e7f63089f242",
+      "sha256": "3217dcff134e7500da3f836ced19a8a02d970a347586d220e7d67909010487a1",
+      "size": 30865
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/AbilityData.slk",
+      "contentKey": "326fc82a4f0554627ad53c0d50922bb6",
+      "sha256": "0c4889eb012d6af66201be86ae8b01a73f034676ffe55ed87c399adb8e496688",
+      "size": 860113
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/ItemData.slk",
+      "contentKey": "27d7a2f843d260384077658e33edf33c",
+      "sha256": "e03db266d1162988a8138f94539dc6e43dcde8c196f93b4f249c7296ab689a36",
+      "size": 85067
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/UnitData.slk",
+      "contentKey": "20e44f3dbc89af1d7f02cfa7e7418dd4",
+      "sha256": "9d507f568f7ae28ed0e2fbd7c269321a1d4029fb25b06c35668dd7e84da4957e",
+      "size": 310675
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/UpgradeData.slk",
+      "contentKey": "beac24826a23551265f3d98b1ec3d4b8",
+      "sha256": "169794f21ab846856b7716f81bf32f99725d78235cdbe5ef9154105eab25f9f3",
+      "size": 23993
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "589a64993c583ff5870cffa388451d21",
+      "sha256": "39ebbe352109eccb16361ad1d123aad596f9868b258c2207898b42b6c692056a",
+      "size": 31125
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/AbilityData.slk",
+      "contentKey": "910fa67d09ce92bc8e936e92c3391c24",
+      "sha256": "052195ebf094e49ded0a0ebc281cada420e30a46a0a40ca83f52748daac8c9d3",
+      "size": 862143
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/ItemData.slk",
+      "contentKey": "08d7570865a5087fa6f2445712131e16",
+      "sha256": "e8c8d74198fd4645b40bbe545c938d1e691ca46e923ac9a118cac8d67d0a34d5",
+      "size": 102976
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/UnitData.slk",
+      "contentKey": "09dc022ad8a002789f2699537332f2f2",
+      "sha256": "60ae721088aae8f1bba4f399bec7e955665280a7f8bf183e9085de8b482232ea",
+      "size": 320130
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/UpgradeData.slk",
+      "contentKey": "46569960c9fba3f5d3b50f550aac46b8",
+      "sha256": "2b4bd5cacf7f9c365817e5a1039054a43dfa56b32601d7cfed9483d963dba313",
+      "size": 36769
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "2e305104b26fd76ae531e7f63089f242",
+      "sha256": "3217dcff134e7500da3f836ced19a8a02d970a347586d220e7d67909010487a1",
+      "size": 30865
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/AbilityData.slk",
+      "contentKey": "fbc2eb5414e51492e53efab8901d1f35",
+      "sha256": "aed918adf6984598578f5951863a961480cddca7496e1e75c77d69635d0cd996",
+      "size": 860086
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/ItemData.slk",
+      "contentKey": "d6e28507827680a54181b6180c93ca40",
+      "sha256": "06b267e50b143ddbcf0ce7a68befd87d6652b57c7e23557a4f324f619c882daa",
+      "size": 84365
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/UnitData.slk",
+      "contentKey": "056e50a7e5378010ba3bade5131f341a",
+      "sha256": "9987a1380b9a3f89e7679017890f44d261417f21029570db9f15e11ac9c5e995",
+      "size": 310315
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/UpgradeData.slk",
+      "contentKey": "04495879216787893996620f5b49d670",
+      "sha256": "a7972d9ec94b41e7319d2390bfe295a6c6ecacbcc92b839d99dd0f0ec570078e",
+      "size": 24004
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt",
+      "contentKey": "764b96fc0565db0480b81b20f71c1734",
+      "sha256": "469954dbe272c316e62dd183a9e1363de040c9e1dffd5d4e7fb6b31aafa614fc",
+      "size": 36462
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:UI/WorldEditStrings.txt",
+      "contentKey": "22d76b7ad3e03c5d299c7fa6b2cdaa68",
+      "sha256": "f881e404efb877c031e515172e2fe10e624a2a0c00a32c8620580808a79b8fd5",
+      "size": 536873
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/CampaignAbilityStrings.txt",
+      "contentKey": "243df607a0228bd73137ca3d87c7485f",
+      "sha256": "48f22f4f11144f9fd5319ca802d1d17641d09c5bcb14e3ea5295d99ef43075c9",
+      "size": 235407
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/CampaignUnitStrings.txt",
+      "contentKey": "ef0c176f1cae7e709522983c99b405c1",
+      "sha256": "cd7b8ae9dedb976bc57cf3c4550810c534c36470668b7268b11c47f04237cb76",
+      "size": 50261
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/CampaignUpgradeStrings.txt",
+      "contentKey": "3209dbc98d7ffd1df57202795c922780",
+      "sha256": "a2b9d8f0b66bb23f50ecf78cd16b6bab318df0f8765eec93f66a05da901dc427",
+      "size": 1739
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/CommonAbilityStrings.txt",
+      "contentKey": "cc9080829e7ac7e0b7ebd72e9cf23034",
+      "sha256": "b7e9c5b4221a435a3901c88a1af5311ebbfca4e4e8b5f6386e5ee519f5cc36c0",
+      "size": 3663
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/HumanAbilityStrings.txt",
+      "contentKey": "95ff2931f6c7cf4d1fa4a4a80cf08ec7",
+      "sha256": "5fcffe29475067d594c34c1d44eebc1c5a2a717970f3e71b977165287828cb0a",
+      "size": 29857
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/HumanUnitStrings.txt",
+      "contentKey": "389678c68e8960052a42201b5c7b00a9",
+      "sha256": "ea7adbe34031725a8bee15b30650f00f23f1448d0ba0c4c26f9000afe580adf9",
+      "size": 14568
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/HumanUpgradeStrings.txt",
+      "contentKey": "230f19a4154bf7bcf4f36dd59c45a208",
+      "sha256": "62196c8469c99861140cdc843a3ce08bd2e1f10b0c3253ad320e874fc4e57fa7",
+      "size": 8500
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/ItemAbilityStrings.txt",
+      "contentKey": "2efe62be8c213a762e246454b21ad21f",
+      "sha256": "882bd54c2f6a83f1c20a6fe792f78950d570b64163094c144ee44e8a132b790e",
+      "size": 44776
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/ItemStrings.txt",
+      "contentKey": "4cc6bee1f7b8860b0b921a4acb721c20",
+      "sha256": "fd1d591ab07c0cbfedfa932b6b2c36f08f44028a6778577f8bd208d23d3955a4",
+      "size": 254010
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NeutralAbilityStrings.txt",
+      "contentKey": "229f47606ec5e907102f74eeb3013a1e",
+      "sha256": "ce3a27b40a56044f6fb3d3981cc2be93f9a5f8ff28f76c1aa6029acbfd3c9595",
+      "size": 139771
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NeutralUnitStrings.txt",
+      "contentKey": "efd2f076419939da80a9205609b6a3b2",
+      "sha256": "77c0ebfc658b1e68be62550c8253caadb8e97dc589fee00ae2452ce8232646a7",
+      "size": 75794
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NeutralUpgradeStrings.txt",
+      "contentKey": "f79db6a607cd3564eac9ff6b21e7f352",
+      "sha256": "7de7936c06b35727655e260b9fd0ba67014e0715ab7f5431a70ea2e9d57a3c4a",
+      "size": 281
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NightElfAbilityStrings.txt",
+      "contentKey": "df0ee20203501c7908f8269969d1436f",
+      "sha256": "3d01a12000649b7b3d3462168ca5ac051d4a8a3c5e28d2630ad4261d7df7939a",
+      "size": 32324
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NightElfUnitStrings.txt",
+      "contentKey": "bba0d56cb2af7455d6ce1c961533931a",
+      "sha256": "aac81e403b8c9fd5f4d78c60b21102da4ee6f104ff29503dd056e01a7ac05271",
+      "size": 16425
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NightElfUpgradeStrings.txt",
+      "contentKey": "ab5febbe5fa87b17a2046a7820806538",
+      "sha256": "e2cf9fa0292b5cd58517ee2fb645b318e41b9d83bef9673d8b7fb9e73cec2624",
+      "size": 8481
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/OrcAbilityStrings.txt",
+      "contentKey": "be31d0ecb829367844a9f7b69286cd67",
+      "sha256": "482c86c8c02d652016eac14b66bab67b8e865b53b5c3471f49d40fa299d27612",
+      "size": 31222
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/OrcUnitStrings.txt",
+      "contentKey": "1f0722ef57be70a2e034021dc4607174",
+      "sha256": "0cdea35694ad989cf551d1640015fd9922f64018cab8a5fe78ab5cf92b32a93a",
+      "size": 14434
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/OrcUpgradeStrings.txt",
+      "contentKey": "7f14c35d6e8c50f63d946b1df8a6d0fd",
+      "sha256": "098317b1973461fed179e8ef281f9a45af368e5fa709f88d1801377716621b9e",
+      "size": 9831
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/UndeadAbilityStrings.txt",
+      "contentKey": "757665bb02c6fe0847212892e98730ce",
+      "sha256": "de6a318be5cbd46fe1f4d04269667174c5c46c8b78d322e96906f1f109c34515",
+      "size": 36114
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/UndeadUnitStrings.txt",
+      "contentKey": "9e6b564dfa15464700f1e8f4328d00dc",
+      "sha256": "dc67dcc85e611268fc0cbba1e7beb19f609e3afae96ec9955c8391fe51027e6d",
+      "size": 13314
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/UndeadUpgradeStrings.txt",
+      "contentKey": "6b5995629ed3d17afa9a86ac9a66626b",
+      "sha256": "041690d435a2dee7f87edfa845a44a2ec400150144a2be2a2652ff33748c07d0",
+      "size": 9485
+    }
+  ]
+}

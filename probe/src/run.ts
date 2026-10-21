@@ -18,7 +18,11 @@ import {
   type GameOptions,
 } from "./game.js";
 import type { GameData } from "./game-data.js";
-import { readPatch } from "./manifest.js";
+import {
+  gameVersion,
+  isLaterBuildOfGameVersion,
+  readPatch,
+} from "./manifest.js";
 import type { GameProcess, Machine, SpawnCommand } from "./machine.js";
 import {
   field,
@@ -35,7 +39,10 @@ import {
 /**
  * Confirmed in game on 3.0.0.24268 (#32): `-launch` skips the menus, `-editor`
  * reuses the saved login (without it 3.0 asks for one), and the game loads an
- * unpacked map folder given to `-loadfile`.
+ * unpacked map folder given to `-loadfile`. On 3.0.1.24371 it no longer
+ * does (#642): given the map folder, the game shows the Battle.net login,
+ * then its menu, whatever the arguments; given the same map packed, it opens
+ * the map at once, with these arguments and without a login.
  */
 export const LAUNCH_ARGS: readonly string[] = [
   "-launch",
@@ -44,14 +51,14 @@ export const LAUNCH_ARGS: readonly string[] = [
   "windowed",
 ];
 
-/** The command that opens the game on `mapFolder`: `<exe> -loadfile <folder> -launch -editor -windowmode windowed`. */
+/** The command that opens the game on the map `archive`: `<exe> -loadfile <archive> -launch -editor -windowmode windowed`. */
 export function launchCommand(
   executable: string,
-  mapFolder: string,
+  archive: string,
 ): SpawnCommand {
   return {
     command: executable,
-    args: ["-loadfile", mapFolder, ...LAUNCH_ARGS],
+    args: ["-loadfile", archive, ...LAUNCH_ARGS],
   };
 }
 
@@ -87,6 +94,12 @@ export const END_WAIT_MILLISECONDS = 10_000;
 /** Where the game is, and the Game data the staged map declares (`buildProbe`'s). */
 export interface RunOptions extends GameOptions {
   gameData?: GameData;
+  /**
+   * A later Build of the Typings' Game version the client may be on in
+   * place of their Patch (`--client-build`): a hotfix the Patch files still
+   * describe. The state file keeps the client's Build, for the report.
+   */
+  clientBuild?: string;
 }
 
 /** Where `probe:run` builds, the machine it runs the game on, and what it reports to. */
@@ -146,9 +159,23 @@ export async function runProbe(
     );
   }
   const patch = readPatch(folders.manifest);
-  if (client.build !== patch) {
+  const { clientBuild } = options;
+  if (
+    clientBuild !== undefined &&
+    !isLaterBuildOfGameVersion(clientBuild, patch)
+  ) {
     throw new AuthorError(
-      `The game client is on Build ${client.build} (${client.file}), not on ${patch}, the Patch of the Typings: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${patch} is skipped.`,
+      `--client-build ${clientBuild} is not a later Build of Game version ${gameVersion(patch)}, the Game version of ${patch}, the Patch of the Typings: only a client ahead of the Patch within its Game version can stand in for it.`,
+    );
+  }
+  if (client.build !== patch && client.build !== clientBuild) {
+    throw new AuthorError(
+      `The game client is on Build ${client.build} (${client.file}), not on ${patch}, the Patch of the Typings${clientBuild === undefined ? "" : `, nor on ${clientBuild}, the --client-build`}: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${patch} is skipped.`,
+    );
+  }
+  if (client.build !== patch) {
+    progress(
+      `The game client is on Build ${client.build}, which --client-build accepts in place of ${patch}, the Patch of the Typings: the run tests the Typings of ${patch} on ${client.build}, and the report names both.`,
     );
   }
   const build = buildProbe(probe, folders, {
@@ -161,7 +188,7 @@ export async function runProbe(
   const seconds = () =>
     `${String(Math.round((machine.now() - startedAt) / 1000))}s`;
   const game = await machine.startGame(
-    launchCommand(executable, build.stagingFolder),
+    launchCommand(executable, build.archive),
   );
   progress(`started pid=${String(game.pid)}`);
 

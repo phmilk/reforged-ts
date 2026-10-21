@@ -33,7 +33,7 @@ import {
 /** A Game version's folder name: `3.0.0`. */
 const GAME_VERSION = /^\d+\.\d+\.\d+$/;
 /** A Build: `3.0.0.24268`. */
-const BUILD = /^\d+\.\d+\.\d+\.\d+$/;
+export const BUILD = /^\d+\.\d+\.\d+\.\d+$/;
 /** A Rawcode a Built-in object may have: four characters of `[A-Za-z0-9]`. */
 const RAWCODE = /^[A-Za-z0-9]{4}$/;
 /**

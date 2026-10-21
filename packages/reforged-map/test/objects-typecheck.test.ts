@@ -240,7 +240,7 @@ describe("a modified Built-in object and a shared Rawcode in a Map project with 
     expect(
       program
         .getSourceFiles()
-        .find((f) => f.fileName.endsWith("/reforged-builtins/3.0.0.d.ts"))
+        .find((f) => f.fileName.endsWith("/reforged-builtins/3.0.1.d.ts"))
         ?.text,
     ).toContain('declare function FourCC(id: "hfoo"): Rawcode<"unit">;');
 

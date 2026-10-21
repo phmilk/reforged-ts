@@ -37,7 +37,7 @@ const fixturesRoot = fileURLToPath(
 
 /** The `types` entries of a Map project (the Template's). */
 const MAP_PROJECT_TYPES = [
-  "reforged-types/3.0.0",
+  "reforged-types/3.0.1",
   "@typescript-to-lua/language-extensions",
 ];
 

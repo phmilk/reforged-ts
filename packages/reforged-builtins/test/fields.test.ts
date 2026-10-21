@@ -69,6 +69,8 @@ async function run(installDir: string) {
           file.startsWith(installDir) && file.endsWith(".build.info"),
       },
       cwd: outDir,
+      // The Build of the synthetic install (test/support/casc.ts).
+      typingsBuild: "3.0.0.24268",
     },
   );
   const fields = await readFile(

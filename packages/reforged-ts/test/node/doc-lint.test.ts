@@ -17,7 +17,7 @@ const WORKSPACE_URL = new URL("../../../../", import.meta.url);
 const WORKSPACE = fileURLToPath(WORKSPACE_URL);
 const LIBRARY = join(WORKSPACE, "packages/reforged-ts");
 const FIXTURES = join(LIBRARY, "test/node/fixtures/doc-lint");
-const TYPINGS = join(WORKSPACE, "packages/reforged-types/3.0.0");
+const TYPINGS = join(WORKSPACE, "packages/reforged-types/3.0.1");
 
 // Imported by URL: the configuration is JavaScript, which this program does
 // not type-check.

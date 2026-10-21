@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_ENABLE_CHAIN_EXPLOSION",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

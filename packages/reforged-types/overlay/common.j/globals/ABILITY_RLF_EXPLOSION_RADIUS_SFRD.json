@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_EXPLOSION_RADIUS_SFRD",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}

@@ -101,8 +101,8 @@ async function repository(
 describe("readWatchRepository", () => {
   it("reads this repository's supported Patch and vendored Builds", async () => {
     expect(await readWatchRepository(repositoryRoot)).toEqual({
-      supported: "3.0.0.24268",
-      vendored: ["3.0.0.24268"],
+      supported: "3.0.1.24370",
+      vendored: ["3.0.0.24268", "3.0.1.24370"],
     });
   });
 

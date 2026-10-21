@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetThematicMusicAbsoluteVolume",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "volume",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.1.24370"
+}

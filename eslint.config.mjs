@@ -137,8 +137,8 @@ export default defineConfig(
     "packages/reforged-ts/dist-examples/**",
     // What tools own: the vendored Patch files and the generated Typings.
     "packages/reforged-types/vendor/**",
-    "packages/reforged-types/3.0.0/**",
-    "packages/reforged-types/3.0.0.d.ts",
+    "packages/reforged-types/[0-9]*/**",
+    "packages/reforged-types/[0-9]*.d.ts",
     // The Built-in objects' artefacts, emitted from each Game version's index.
     "packages/reforged-builtins/[0-9]*/**",
     "packages/reforged-builtins/[0-9]*.d.ts",

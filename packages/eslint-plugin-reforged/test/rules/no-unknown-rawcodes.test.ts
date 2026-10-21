@@ -123,7 +123,7 @@ ruleTester.run("no-unknown-rawcodes", ruleOf("no-unknown-rawcodes"), {
       errors: [
         {
           messageId: "unknownRawcode",
-          data: { rawcode: "`h00A`", gameVersion: "3.0.0" },
+          data: { rawcode: "`h00A`", gameVersion: "3.0.1" },
           line: 1,
           column: 18,
           suggestions: h00ASuggestions(
@@ -176,7 +176,7 @@ ruleTester.run("no-unknown-rawcodes", ruleOf("no-unknown-rawcodes"), {
       errors: [
         {
           messageId: "unknownRawcode",
-          data: { rawcode: "`1747988545` (`h00A`)", gameVersion: "3.0.0" },
+          data: { rawcode: "`1747988545` (`h00A`)", gameVersion: "3.0.1" },
           suggestions: h00ASuggestions(
             (rawcode) =>
               `const u = ${String(rawcode === "h000" ? 1747988528 : 1747988529)} as Rawcode<"unit">;`,
@@ -190,7 +190,7 @@ ruleTester.run("no-unknown-rawcodes", ruleOf("no-unknown-rawcodes"), {
       errors: [
         {
           messageId: "unknownRawcode",
-          data: { rawcode: "`0x68303041` (`h00A`)", gameVersion: "3.0.0" },
+          data: { rawcode: "`0x68303041` (`h00A`)", gameVersion: "3.0.1" },
           suggestions: h00ASuggestions(
             (rawcode) =>
               `const u = <UnknownRawcode>${String(rawcode === "h000" ? 1747988528 : 1747988529)};`,
@@ -204,7 +204,7 @@ ruleTester.run("no-unknown-rawcodes", ruleOf("no-unknown-rawcodes"), {
       errors: [
         {
           messageId: "unknownRawcode",
-          data: { rawcode: "`zzzz`", gameVersion: "3.0.0" },
+          data: { rawcode: "`zzzz`", gameVersion: "3.0.1" },
           suggestions: [],
         },
       ],
@@ -219,7 +219,7 @@ ruleTester.run("no-unknown-rawcodes", ruleOf("no-unknown-rawcodes"), {
             rawcode: "`Asa2`",
             name: " (Pillage)",
             kind: "ability",
-            gameVersion: "3.0.0",
+            gameVersion: "3.0.1",
             set: "Melee (Forsaken Kingdom)",
           },
           suggestions: [],

@@ -21,7 +21,7 @@ const fixturesRoot = (fixtures: string): string =>
 
 /** The `types` entries of a Map project (the Template's). */
 const MAP_PROJECT_TYPES = [
-  "reforged-types/3.0.0",
+  "reforged-types/3.0.1",
   "@typescript-to-lua/language-extensions",
 ];
 
@@ -33,7 +33,7 @@ const LINKED_PACKAGES = [
 ];
 
 /** The `types` entry of reforged-builtins' overloads, which a Map project turns on by adding it. */
-const BUILTINS_TYPES = "reforged-builtins/3.0.0";
+const BUILTINS_TYPES = "reforged-builtins/3.0.1";
 
 /** How the Map project is set up beyond its fixtures. */
 export interface MapProjectOptions {

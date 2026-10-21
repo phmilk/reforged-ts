@@ -31,14 +31,14 @@ const fixturesRoot = join(packageRoot, "test", "fixtures", "map-project");
 
 /** The Template's `types` with the package's overloads after the Typings. */
 export const TYPES = [
-  "reforged-types/3.0.0",
-  "reforged-builtins/3.0.0",
+  "reforged-types/3.0.1",
+  "reforged-builtins/3.0.1",
   "@typescript-to-lua/language-extensions",
 ];
 /** The same, the package's overloads first. */
 export const TYPES_REVERSED = [
-  "reforged-builtins/3.0.0",
-  "reforged-types/3.0.0",
+  "reforged-builtins/3.0.1",
+  "reforged-types/3.0.1",
   "@typescript-to-lua/language-extensions",
 ];
 

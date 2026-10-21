@@ -2,7 +2,7 @@
 
 Type-aware ESLint rules that catch the Warcraft III scripting pitfalls (desync, crash, leak) in a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project before the map compiles. The lint layer of the Guards.
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 

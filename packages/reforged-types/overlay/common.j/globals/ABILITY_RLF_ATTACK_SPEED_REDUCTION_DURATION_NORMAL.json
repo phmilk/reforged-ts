@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_ATTACK_SPEED_REDUCTION_DURATION_NORMAL",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.1.24370"
+}
