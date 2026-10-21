@@ -10,7 +10,7 @@ import BehaviourChanges from "./_generated/w3ts-3-to-reforged-ts-1/behaviour-cha
 
 # w3ts 3.x to reforged-ts 1.0
 
-reforged-ts 1.0 continues w3ts 3.0.2 for Warcraft III 3.0.0 and later, under a new package name. Its first major removes the deprecated constructors and the old Hook code, gives every Wrapper one error rule, and moves the Systems onto real `Promise`s. Follow this page from top to bottom:
+reforged-ts 1.0 continues w3ts 3.0.2 for Warcraft III 3.0.1 and later, under a new package name. Its first major removes the deprecated constructors and the old Hook code, gives every Wrapper one error rule, and moves the Systems onto real `Promise`s. Follow this page from top to bottom:
 
 1. [Install and tsconfig](#install-and-tsconfig): replace the packages and select the Typings.
 2. [Old-to-new table](#old-to-new-table): every symbol reforged-ts 1.0 removes or renames, with its replacement.

@@ -2,7 +2,7 @@
 "reforged-ts": minor
 ---
 
-Support Patch 3.0.1.24370: the library compiles against `reforged-types/3.0.1`.
+Support Patch 3.0.1.24370, the library's new minimum: it compiles against `reforged-types/3.0.1`, and a map built with it needs a 3.0.1 client. Move your `types` entry from `reforged-types/3.0.0` to `reforged-types/3.0.1`. On a 3.0.0 client the equipment members and `Unit#isAlive` call Natives that do not exist there.
 
 - `Unit#heal(source, amount, isItem, applyStatBonuses)` restores life and returns the life restored (`BlzUnitHeal`).
 - `Unit#resetTalents()` resets a hero's talents and refunds its talent points (`BlzResetUnitTalents`).
