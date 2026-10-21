@@ -16,7 +16,7 @@ The credential stays inside the project in three layers, any one of which suffic
 - A shorter schedule in the library. GitHub's schedule allows five minutes at best and often runs ten to thirty minutes late; it spends runs and never reaches a minute.
 - The App's webhook to a hosted service. It would be real time and need no workflow in any repository, but the project hosts nothing.
 - A repository of the board's own, holding `board.yml` and the board's code, with the library a Board repository like the others. It fits "the board is the project's" best, but moves the code out of `release/` and reopens ADR 0016 for no gain today; deferred, not rejected. Should it happen, only the dispatch's target changes.
-- A creation CLI that leaves the Template maintenance files out of a new Map project (#549). A convenience, never the boundary: the Template is public and can always be cloned, forked or used as a template, so the layers above hold whatever the CLI does.
+- A creation CLI that leaves the Template maintenance files out of a new Map project (#549), now planned as `create-reforged-map` (ADR 0018). A convenience, never the boundary: the Template is public and can always be cloned, forked or used as a template, so the layers above hold whatever the CLI does.
 
 ## Consequences
 
