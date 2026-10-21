@@ -15,7 +15,10 @@ export interface TemplateSource {
   write: (folder: string) => Promise<void>;
 }
 
-/** The Template's repository on GitHub. */
+/**
+ * The Template's repository on GitHub: the one the release gate clones,
+ * which a test of the release scripts holds equal to it.
+ */
 export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";
 
 /**

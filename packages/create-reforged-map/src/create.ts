@@ -85,11 +85,24 @@ export const COMMIT_MESSAGE = "chore: create the Map project from the Template";
 export const DETACH_SCRIPT = "template:detach";
 
 /**
- * What pnpm's commands add to the environment: pnpm switches to the version
+ * What `pnpm install` adds to the environment: pnpm switches to the version
  * the Template's `packageManager` pins, which `pnpm create` turns off in the
  * environment of the program it runs.
  */
-const PNPM_ENV = { npm_config_manage_package_manager_versions: "true" };
+const INSTALL_ENV = { npm_config_manage_package_manager_versions: "true" };
+
+/**
+ * What `pnpm template:detach` adds to the environment: it runs on the pnpm
+ * already there, never one it downloads, so a creation without the install
+ * from a local Template needs no network. The detach needs Node's built-ins
+ * alone. pnpm does not
+ * switch versions, and Corepack, when it starts pnpm, does not read the
+ * project's `packageManager`.
+ */
+const DETACH_ENV = {
+  npm_config_manage_package_manager_versions: "false",
+  COREPACK_ENABLE_PROJECT_SPEC: "0",
+};
 
 const STAGE_NAMES: Record<Stage, string> = {
   check: "the checks",
@@ -131,8 +144,8 @@ interface Step {
  * exist or is empty; `pnpm` runs, and `git` unless skipped. The Template is
  * written into a temporary folder next to the target, its Seeds prepared
  * there with the project name and the description, and moved into place,
- * so a failure before the move, a missing anchor among them, leaves nothing
- * in the target. A failure after it leaves the folder and names the stage
+ * so a failure before the move or during it, a missing anchor among them,
+ * leaves nothing in the target. A failure after it leaves the folder and names the stage
  * and the commands to finish by hand. Once the Template is written, a
  * running Node that its `engines.node` does not admit is warned about, not
  * refused. `template:detach` runs whatever is skipped. When git has no
@@ -278,35 +291,28 @@ async function readTemplate(folder: string): Promise<string | undefined> {
       cause: error,
     });
   }
-  const scripts =
-    typeof manifest === "object" && manifest !== null && "scripts" in manifest
-      ? manifest.scripts
-      : undefined;
-  if (
-    typeof scripts !== "object" ||
-    scripts === null ||
-    !(DETACH_SCRIPT in scripts)
-  ) {
+  const scripts = isRecord(manifest) ? manifest.scripts : undefined;
+  if (!isRecord(scripts) || !(DETACH_SCRIPT in scripts)) {
     throw new Error(
       `the Template's package.json has no \`${DETACH_SCRIPT}\` script, which removes its maintenance files.`,
     );
   }
-  const engines =
-    typeof manifest === "object" && manifest !== null && "engines" in manifest
-      ? manifest.engines
-      : undefined;
-  return typeof engines === "object" &&
-    engines !== null &&
-    "node" in engines &&
-    typeof engines.node === "string"
+  const engines = isRecord(manifest) ? manifest.engines : undefined;
+  return isRecord(engines) && typeof engines.node === "string"
     ? engines.node
     : undefined;
+}
+
+/** Whether a parsed JSON value is an object (not an array, not `null`). */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 /**
  * Moves the folder `staging` to `folder`: a rename when `folder` does not
  * exist, else a rename of each of its entries, so an empty folder the
- * author is in stays the same folder.
+ * author is in stays the same folder. A rename that fails partway removes
+ * the entries already moved, so `folder` is left empty, as it was.
  */
 async function moveInto(staging: string, folder: string): Promise<void> {
   const found = await stat(folder).catch(() => null);
@@ -318,8 +324,17 @@ async function moveInto(staging: string, folder: string): Promise<void> {
   if ((await readdir(folder)).length > 0) {
     throw new Error(`${folder} is no longer empty.`);
   }
-  for (const entry of await readdir(staging)) {
-    await rename(join(staging, entry), join(folder, entry));
+  const moved: string[] = [];
+  try {
+    for (const entry of await readdir(staging)) {
+      await rename(join(staging, entry), join(folder, entry));
+      moved.push(entry);
+    }
+  } catch (error) {
+    for (const entry of moved) {
+      await rm(join(folder, entry), { recursive: true, force: true });
+    }
+    throw error;
   }
   await rm(staging, { recursive: true });
 }
@@ -339,11 +354,14 @@ function projectSteps(answers: Answers, folder: string): Step[] {
     args,
     cwd: folder,
   });
-  const pnpm = (...args: string[]): Command => ({
+  const pnpm = (
+    env: Readonly<Record<string, string>>,
+    ...args: string[]
+  ): Command => ({
     command: "pnpm",
     args,
     cwd: folder,
-    env: PNPM_ENV,
+    env,
   });
   const steps: Step[] = [];
   if (!answers.skipGit) {
@@ -357,13 +375,13 @@ function projectSteps(answers: Answers, folder: string): Step[] {
     steps.push({
       stage: "install",
       label: "Installing the dependencies",
-      command: pnpm("install"),
+      command: pnpm(INSTALL_ENV, "install"),
     });
   }
   steps.push({
     stage: "detach",
     label: "Removing the Template maintenance",
-    command: pnpm(DETACH_SCRIPT),
+    command: pnpm(DETACH_ENV, DETACH_SCRIPT),
   });
   if (!answers.skipGit) {
     steps.push(

@@ -51,10 +51,11 @@ const NO_TERMINAL = "standard input is not a terminal, so nothing is asked";
  * The answers of `given`, the missing ones asked for when `prompts` is
  * interactive: the folder, until one is typed; the project name, the
  * folder's base name when left blank, asked again with the reason while it
- * is not a valid npm package name; the description, none when left blank.
- * With `yes`, or without a terminal, the name and the description take
- * their defaults; without a terminal a missing folder, or a name that is
- * not a valid package name, refuses the answers naming its option.
+ * is not a valid npm package name, a `--name` that is not one included;
+ * the description, none when left blank. With `yes`, or without a
+ * terminal, the name and the description take their defaults, and a name
+ * that is not a valid package name refuses the answers naming its option;
+ * so does a missing folder without a terminal.
  */
 export async function gatherAnswers(
   given: GivenAnswers,
@@ -94,17 +95,18 @@ export async function gatherAnswers(
   }
 
   const fallback = defaultProjectName(folder);
+  let name: string | undefined;
   if (given.name !== undefined) {
     const problem = packageNameProblem(given.name);
-    if (problem !== undefined) {
-      return {
-        ok: false,
-        reason: "usage",
-        message: `The project name ${JSON.stringify(given.name)} of --name is not a valid npm package name: ${problem}.`,
-      };
+    if (problem === undefined) name = given.name;
+    else {
+      const refusal = `The project name ${JSON.stringify(given.name)} of --name is not a valid npm package name: ${problem}.`;
+      if (!interactive || given.yes) {
+        return { ok: false, reason: "usage", message: refusal };
+      }
+      print(refusal);
     }
   }
-  let name = given.name;
   if (name === undefined && (!interactive || given.yes)) {
     const problem = packageNameProblem(fallback);
     if (problem !== undefined) {

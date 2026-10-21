@@ -8,8 +8,8 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-/** What the Seeds are prepared with. */
-export interface Seeds {
+/** The project's identity, which its Seeds are prepared with. */
+export interface ProjectIdentity {
   /** The project name: `package.json`'s `name` and the README's title. */
   name: string;
   /**
@@ -23,8 +23,8 @@ export interface Seeds {
 /** The heading of `AGENTS.md` whose body becomes the description. */
 export const YOUR_PROJECT = "## Your project";
 
-/** A Seed, from its text and the Seeds, to its prepared text. */
-type Prepare = (text: string, seeds: Seeds) => string;
+/** A Seed, from its text and the project's identity, to its prepared text. */
+type Prepare = (text: string, project: ProjectIdentity) => string;
 
 const DOCUMENTS: readonly (readonly [file: string, prepare: Prepare])[] = [
   ["package.json", preparedManifest],
@@ -42,7 +42,7 @@ const FENCE = /^ {0,3}(`{3,}|~{3,})/;
  */
 export async function prepareSeeds(
   folder: string,
-  seeds: Seeds,
+  project: ProjectIdentity,
 ): Promise<void> {
   const prepared: [path: string, text: string][] = [];
   for (const [file, prepare] of DOCUMENTS) {
@@ -50,7 +50,7 @@ export async function prepareSeeds(
     const text = await readFile(path, "utf8").catch((error: unknown) => {
       throw new Error(`the Template has no ${file}.`, { cause: error });
     });
-    prepared.push([path, prepare(text, seeds)]);
+    prepared.push([path, prepare(text, project)]);
   }
   for (const [path, text] of prepared) await writeFile(path, text);
 }
@@ -60,7 +60,7 @@ export async function prepareSeeds(
  * as its `description` (after `name` when the Template has none), every
  * other field in its place.
  */
-function preparedManifest(text: string, seeds: Seeds): string {
+function preparedManifest(text: string, project: ProjectIdentity): string {
   const manifest: unknown = JSON.parse(text);
   if (
     typeof manifest !== "object" ||
@@ -72,11 +72,11 @@ function preparedManifest(text: string, seeds: Seeds): string {
       "the Template's package.json has no `name` field, which the project name replaces.",
     );
   }
-  const { description } = seeds;
+  const { description } = project;
   const fields: [string, unknown][] = [];
   for (const [key, value] of Object.entries(manifest)) {
     if (key === "name") {
-      fields.push([key, seeds.name]);
+      fields.push([key, project.name]);
       if (description !== undefined && !("description" in manifest)) {
         fields.push(["description", description]);
       }
@@ -93,7 +93,7 @@ function preparedManifest(text: string, seeds: Seeds): string {
  * The README with the project name as its first-level title, and the
  * description in a paragraph of its own right under it.
  */
-function preparedReadme(text: string, seeds: Seeds): string {
+function preparedReadme(text: string, project: ProjectIdentity): string {
   const document = markdown(text);
   const title = document.lines.findIndex(
     (line, i) => document.free[i] && line.startsWith("# "),
@@ -104,9 +104,9 @@ function preparedReadme(text: string, seeds: Seeds): string {
     );
   }
   const lines = [...document.lines];
-  lines[title] = `# ${seeds.name}`;
-  if (seeds.description !== undefined) {
-    const paragraph = ["", seeds.description];
+  lines[title] = `# ${project.name}`;
+  if (project.description !== undefined) {
+    const paragraph = ["", project.description];
     if ((lines[title + 1] ?? "") !== "") paragraph.push("");
     lines.splice(title + 1, 0, ...paragraph);
   }
@@ -117,7 +117,7 @@ function preparedReadme(text: string, seeds: Seeds): string {
  * `AGENTS.md` with the description as the body of "Your project", up to the
  * next heading of its level or above; the Template's text without one.
  */
-function preparedAgents(text: string, seeds: Seeds): string {
+function preparedAgents(text: string, project: ProjectIdentity): string {
   const document = markdown(text);
   const { lines, free } = document;
   const heading = lines.findIndex(
@@ -128,7 +128,7 @@ function preparedAgents(text: string, seeds: Seeds): string {
       `the Template's AGENTS.md has no \`${YOUR_PROJECT}\` heading, whose body the description replaces.`,
     );
   }
-  if (seeds.description === undefined) return text;
+  if (project.description === undefined) return text;
   let end = heading + 1;
   while (
     end < lines.length &&
@@ -144,7 +144,7 @@ function preparedAgents(text: string, seeds: Seeds): string {
   return [
     ...lines.slice(0, heading + 1),
     "",
-    seeds.description,
+    project.description,
     "",
     ...lines.slice(end),
   ].join(document.eol);

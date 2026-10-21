@@ -222,22 +222,69 @@ describe("create-reforged-map", () => {
       "it has characters a URL does not take as they are (only letters, digits, - . _ ~ and one @scope/ prefix)",
     ],
     ["tower!", "it has one of the characters ~'!()*"],
-  ])("refuses the project name %j of --name: %s", async (name, reason) => {
+  ])(
+    "without a terminal, refuses the project name %j of --name: %s",
+    async (name, reason) => {
+      const folder = join(await tempDir("target"), "my-map");
+      const runner = recordingRunner();
+
+      expect(
+        await runCli(
+          [folder, "--template", await templateArchive(), "--name", name],
+          { run: runner.run },
+        ),
+      ).toEqual({
+        status: 2,
+        stdout: "",
+        stderr: `The project name ${JSON.stringify(name)} of --name is not a valid npm package name: ${reason}.\n`,
+        questions: [],
+      });
+      expect(runner.commands).toEqual([]);
+      expect(await exists(folder)).toBe(false);
+    },
+  );
+
+  it("on a terminal, refuses a --name that is not a valid npm package name with the reason, and asks again", async () => {
     const folder = join(await tempDir("target"), "my-map");
-    const runner = recordingRunner();
+    const result = await runCli(
+      [folder, "--template", await templateArchive(), "--name", "Tower Walk"],
+      { run: recordingRunner().run, typed: ["tower-walk", ""] },
+    );
+
+    expect(result).toMatchObject({
+      status: 0,
+      stderr:
+        'The project name "Tower Walk" of --name is not a valid npm package name: it has capital letters.\n',
+      questions: [
+        "Project name (my-map): ",
+        "A one-line description of the map (optional): ",
+      ],
+    });
+    expect(await packageJson(folder)).toMatchObject({ name: "tower-walk" });
+  });
+
+  it("with --yes on a terminal, refuses a --name that is not a valid npm package name, asking nothing", async () => {
+    const folder = join(await tempDir("target"), "my-map");
 
     expect(
       await runCli(
-        [folder, "--template", await templateArchive(), "--name", name],
-        { run: runner.run, typed: [] },
+        [
+          folder,
+          "--yes",
+          "--template",
+          await templateArchive(),
+          "--name",
+          "Tower",
+        ],
+        { run: recordingRunner().run, typed: [] },
       ),
     ).toEqual({
       status: 2,
       stdout: "",
-      stderr: `The project name ${JSON.stringify(name)} of --name is not a valid npm package name: ${reason}.\n`,
+      stderr:
+        'The project name "Tower" of --name is not a valid npm package name: it has capital letters.\n',
       questions: [],
     });
-    expect(runner.commands).toEqual([]);
     expect(await exists(folder)).toBe(false);
   });
 

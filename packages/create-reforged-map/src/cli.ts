@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// The package's command, `create-reforged-map [<folder>] [--template
-// <archive or folder>] [--name <name>] [--description <text>] [--yes]`: a
-// thin shell over `create` (src/create.ts), which does every stage. It reads
-// the arguments, asks for the answers they leave out (src/answers.ts), makes
-// the Template source (the download from GitHub, or the archive or folder
-// `--template` names) and runs the commands as processes.
+// The package's command, `create-reforged-map` with the arguments `USAGE`
+// lists: a thin shell over `create` (src/create.ts), which does every
+// stage. It reads the arguments, asks for the answers they leave out
+// (src/answers.ts), makes the Template source (the download from GitHub, or
+// the archive or folder `--template` names) and runs the commands as
+// processes.
 
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -72,8 +72,7 @@ export async function main(
     },
   });
   if (!gathered.ok) {
-    output.stderr(`${gathered.message}
-`);
+    output.stderr(`${gathered.message}\n`);
     return gathered.reason === "usage" ? 2 : 1;
   }
   const result = await create({

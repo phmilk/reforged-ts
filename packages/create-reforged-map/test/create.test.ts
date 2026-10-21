@@ -103,7 +103,7 @@ describe("create", () => {
     expect(manifest.scripts).not.toHaveProperty("template:detach");
   });
 
-  it("runs the checks, then git, the install, the detach and the commit in the new folder", async () => {
+  it("runs the checks, then git, the install, the detach and the commit in the new folder, the install alone on the pnpm the Template pins", async () => {
     const runner = recordingRunner();
     const { folder } = await runCreate({ run: runner.run });
 
@@ -120,7 +120,10 @@ describe("create", () => {
     ).toEqual([
       undefined,
       { npm_config_manage_package_manager_versions: "true" },
-      { npm_config_manage_package_manager_versions: "true" },
+      {
+        npm_config_manage_package_manager_versions: "false",
+        COREPACK_ENABLE_PROJECT_SPEC: "0",
+      },
     ]);
   });
 
