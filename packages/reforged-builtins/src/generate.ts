@@ -167,6 +167,14 @@ interface KindSource {
    * shows its tooltip's title.
    */
   nameFields: readonly string[];
+  /**
+   * The metadata's ID of the field the World Editor names the object by in
+   * its comments of `war3map.wts`, for a kind where it is not the name:
+   * a buff's editor name alone, which most buffs lack, and an upgrade's
+   * names of every level. Its value is the index's `commentName` where it
+   * differs from the name (#654).
+   */
+  commentField?: string;
   /** The profile files of the names, in the enUS layer, for a kind with a name in them. */
   strings?: NamesFiles;
   /**
@@ -240,6 +248,7 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/AbilityBuffMetaData.slk",
     nameFields: ["fnam", "ftip"],
+    commentField: "fnam",
     strings: ABILITY_STRINGS,
   },
   {
@@ -266,6 +275,7 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/UpgradeMetaData.slk",
     nameFields: ["gnam"],
+    commentField: "gnam",
     strings: {
       pattern: /^units\/[a-z]*upgradestrings\.txt$/i,
       glob: "Units/*UpgradeStrings.txt",
@@ -434,6 +444,11 @@ async function extract(
       fields.push(await nameField(source, id, read));
     }
     const profile = await namesProfile(storage, source, fields, read);
+    const commentField =
+      source.commentField === undefined
+        ? undefined
+        : (fields.find((field) => field.id === source.commentField) ??
+          (await nameField(source, source.commentField, read)));
 
     // Each set's file of the kind: its layer's when the layer has one, else
     // the base layer's. Each file is checked once, however many sets read it.
@@ -514,6 +529,19 @@ async function extract(
           break;
         }
       }
+      // The World Editor's comments give the field's raw value: every level
+      // of an upgrade's names, and no buff's tooltip in place of its editor
+      // name.
+      let commentName: string | undefined;
+      if (commentField !== undefined) {
+        commentName =
+          (commentField.inProfile
+            ? keys(commentField)
+                .map((key) => profile.list(rawcode, key))
+                .find((value) => value !== undefined)
+            : row.get(commentField.field)) ?? "";
+        if (commentName === name) commentName = undefined;
+      }
       const race =
         source.raceColumn === undefined
           ? undefined
@@ -528,6 +556,7 @@ async function extract(
       objects[rawcode] = {
         kind: source.kind,
         ...(name !== "" && { name }),
+        ...(commentName !== undefined && { commentName }),
         ...(race !== undefined && race !== "" && { race }),
         sets,
         constant,

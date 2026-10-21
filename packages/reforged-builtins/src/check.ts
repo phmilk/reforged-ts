@@ -131,7 +131,7 @@ export async function checkPackage(root: string): Promise<CheckResult> {
 /**
  * The shape of an index, as one problem per line: `format`, the Build and
  * the Game version of its folder, the Game data sets, and each object's
- * Rawcode, kind, name, race, sets and constant.
+ * Rawcode, kind, name, comment name, race, sets and constant.
  */
 export function validateIndex(value: unknown, gameVersion: string): string[] {
   if (!isRecord(value)) return ["not a JSON object."];
@@ -200,6 +200,15 @@ export function validateIndex(value: unknown, gameVersion: string): string[] {
       if (text !== undefined && (typeof text !== "string" || text === "")) {
         problems.push(`${at}.${field} is ${JSON.stringify(text)}, not a text.`);
       }
+    }
+    if (
+      entry.commentName !== undefined &&
+      (typeof entry.commentName !== "string" ||
+        entry.commentName === (entry.name ?? ""))
+    ) {
+      problems.push(
+        `${at}.commentName is ${JSON.stringify(entry.commentName)}, not a text other than its name.`,
+      );
     }
     if (
       !Array.isArray(entry.sets) ||
