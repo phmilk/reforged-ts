@@ -68,7 +68,7 @@ interface Expected {
   readonly bin?: Readonly<Record<string, string>>;
   /**
    * Whether its binaries run on the tarball's files alone, with Node and no
-   * dependency installed, as the Template gate runs the creation CLI: each
+   * dependency installed, as the Template gate runs the Creation CLI: each
    * refuses an option it does not take with its usage and exit code 2.
    */
   readonly runsAlone?: boolean;

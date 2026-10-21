@@ -346,7 +346,7 @@ jobs:
       # does not publish; the tag and the URLs follow from them. It waits
       # until npm lists them: the Template's sync installs them as soon as it
       # starts. A release of none of the six packages of a matrix row (the
-      # creation CLI alone) writes no body, and nothing is dispatched.
+      # Creation CLI alone) writes no body, and nothing is dispatched.
       - id: payload
         name: Payload
         run: |

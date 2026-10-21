@@ -50,7 +50,7 @@ export default defineConfig({
         },
       },
       {
-        // The creation CLI, in Node, through `create` and its entry function,
+        // The Creation CLI, in Node, through `create` and its entry function,
         // on Template archives and folders the tests write, with a recording
         // Runner; one test runs the command end to end with git and pnpm.
         test: {

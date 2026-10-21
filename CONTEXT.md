@@ -84,6 +84,10 @@ _Avoid_: template file, scaffold, boilerplate file
 The Template in its role as the Map project every library release must build, with the packed packages, before it is published.
 _Avoid_: example project, demo map, integration test
 
+**Creation CLI**:
+The package `create-reforged-map` and its command, which makes a Map project from the Template at the line the Reference consumer is gated at: the Template's files, its Seeds prepared with the project name and description, git, the install, the Template's own `template:detach` and a first commit (ADR 0018). It keeps no copy of the Template.
+_Avoid_: scaffolder, generator, starter, create command
+
 **Toolchain**:
 The tools that turn a Map project's TypeScript into a Lua map script: TypeScript, typescript-to-lua, lint and build.
 _Avoid_: build system, pipeline, stack
