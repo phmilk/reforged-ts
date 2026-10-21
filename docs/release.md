@@ -340,7 +340,7 @@ It takes a Template checkout and the output folder of `changeset pack`, which ho
 
 **A package the Template does not depend on yet.** The plan may hold one: `reforged-map` is released before the Template takes it up ([phmilk/reforged-ts-template#68](https://github.com/phmilk/reforged-ts-template/issues/68)), and `reforged-builtins` before the Object data slice of `reforged-map`. The gate writes its override all the same, and pnpm leaves it unused; the check that the install put the packed version in place covers only the packages the Template depends on.
 
-The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm --silent release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
+The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm --silent release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan. The creation CLI downloads the same line: `TEMPLATE_REF` in `packages/create-reforged-map/src/template.ts`, which `release/test/template-ref.test.ts` holds equal to `templateRef` of the library's version in the workspace, so a new library major fails the tests until the constant moves with it.
 
 Each Template command runs on the pnpm the Template's `packageManager` pins, as in a Map project, whatever pnpm runs this workspace. pnpm turns its switch to a project's pinned version off in the environment of the scripts it runs, so the gate turns it back on for the Template's commands (`npm_config_manage_package_manager_versions=true`).
 
