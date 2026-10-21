@@ -11,7 +11,7 @@
  * `<minutes>`: the Template's sync installs them as soon as it starts.
  *
  * A release that publishes none of the six packages of a matrix row (the
- * creation CLI alone) has nothing to dispatch: it says so and writes no
+ * Creation CLI alone) has nothing to dispatch: it says so and writes no
  * `<file>`, which the workflow reads as no dispatch.
  *
  * Relative paths resolve against the folder the command was started from.

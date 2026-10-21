@@ -35,7 +35,7 @@ export const MAP_PACKAGE = "reforged-map";
 export const BUILTINS_PACKAGE = "reforged-builtins";
 
 /**
- * The creation CLI, which makes a Map project from the Template (ADR 0018).
+ * The Creation CLI, which makes a Map project from the Template (ADR 0018).
  * No Map project depends on it, so it has no field in a matrix row and no
  * version in the Template dispatch; the Template gate runs it on every
  * release.

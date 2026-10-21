@@ -38,7 +38,7 @@ export interface Context {
   /** The folder relative paths resolve against. */
   cwd: string;
   /**
-   * The workspace, for the library version and the creation CLI when the
+   * The workspace, for the library version and the Creation CLI when the
    * plan lacks them.
    */
   root: string;
@@ -128,7 +128,7 @@ export async function main(
  * A `Runner` that spawns the command with the process's own output, after
  * printing it. On Windows `pnpm` is a `.cmd` shim, which only a shell
  * starts; the gate's pnpm arguments hold no spaces or shell characters.
- * git and node start without one, so the creation CLI gets its description
+ * git and node start without one, so the Creation CLI gets its description
  * as one argument.
  */
 export function spawnRunner(output: Output): Runner {

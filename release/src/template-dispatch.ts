@@ -66,7 +66,7 @@ export class TemplateDispatchError extends Error {
  *   (`docsLabel`): its `major.minor`, or `next` for a prerelease.
  *
  * Resolves with `undefined` when the plan publishes packages, but none of
- * the six: a release of the creation CLI alone, which no Map project
+ * the six: a release of the Creation CLI alone, which no Map project
  * depends on, leaves the Template's ranges as they are. Throws a
  * `TemplateDispatchError` when the plan publishes no package, one of the six
  * is in neither the plan nor the workspace, or the library version names no

@@ -3,6 +3,11 @@
  * `pnpm pack` and `changeset pack` write, every entry under `package/`. It
  * reads ustar headers and pax paths, files and folders; any other entry is
  * an error, since a package the workspace packs holds none.
+ *
+ * It is not the Creation CLI's reader (`create-reforged-map/src/tar.ts`):
+ * the release scripts compile all of `src/` with no other package built,
+ * in the release jobs that install with `--ignore-scripts`, so they import
+ * no build output of another package.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
