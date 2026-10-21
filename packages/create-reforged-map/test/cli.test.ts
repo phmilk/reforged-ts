@@ -44,6 +44,21 @@ describe("create-reforged-map", () => {
     [["my-map", "--template", "a.tar.gz", "--template", "b.tar.gz"]],
     [["my-map", "--template", "t.tar.gz", "--skip-git", "--skip-git"]],
     [["my-map", "--template", "t.tar.gz", "--force"]],
+    [["my-map", "--template", "t.tar.gz", "--name"]],
+    [["my-map", "--template", "t.tar.gz", "--name", ""]],
+    [["my-map", "--template", "t.tar.gz", "--name", "a", "--name", "b"]],
+    [["my-map", "--template", "t.tar.gz", "--description", "--skip-git"]],
+    [
+      [
+        "my-map",
+        "--template",
+        "t.tar.gz",
+        "--description",
+        "a",
+        "--description",
+        "b",
+      ],
+    ],
   ])("prints the usage and exits 2 on %j", async (args) => {
     const runner = recordingRunner();
 
@@ -77,6 +92,44 @@ describe("create-reforged-map", () => {
       "pnpm --version",
       "pnpm template:detach",
     ]);
+  });
+
+  it("passes the project name and the description to the Seeds", async () => {
+    const folder = join(await tempDir("target"), "my-map");
+    const result = await runCli(
+      [
+        folder,
+        "--description",
+        "A tower defense where the towers walk.",
+        "--template",
+        await templateArchive(),
+        "--name",
+        "tower-walk",
+      ],
+      recordingRunner().run,
+    );
+
+    expect(result).toMatchObject({ status: 0, stderr: "" });
+    expect(result.stdout).toContain("Preparing the Seeds for tower-walk\n");
+    expect(
+      JSON.parse(await readFile(join(folder, "package.json"), "utf8")),
+    ).toMatchObject({
+      name: "tower-walk",
+      description: "A tower defense where the towers walk.",
+    });
+  });
+
+  it("names the project after the folder without --name", async () => {
+    const folder = join(await tempDir("target"), "orc-siege");
+    const result = await runCli(
+      [folder, "--template", await templateArchive()],
+      recordingRunner().run,
+    );
+
+    expect(result).toMatchObject({ status: 0, stderr: "" });
+    expect(
+      JSON.parse(await readFile(join(folder, "package.json"), "utf8")),
+    ).toMatchObject({ name: "orc-siege" });
   });
 
   it("prints why the creation stopped and exits 1", async () => {

@@ -1,8 +1,9 @@
 /**
  * Creating a Map project from the Template, every stage in order: the
  * checks, the Template written into a temporary folder next to the target,
- * the move into place, then git, the install, the Template's own
- * `template:detach` and the first commit. The CLI is a thin shell over it.
+ * its Seeds prepared, the move into place, then git, the install, the
+ * Template's own `template:detach` and the first commit. The CLI is a thin
+ * shell over it.
  */
 import {
   mkdir,
@@ -15,6 +16,7 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { commandLine, type Command, type Runner } from "./process.js";
+import { prepareSeeds } from "./seeds.js";
 import type { TemplateSource } from "./template.js";
 
 /** What the author chose. */
@@ -24,6 +26,17 @@ export interface Answers {
    * relative to the working folder. It does not exist, or is empty.
    */
   folder: string;
+  /**
+   * The project name: `package.json`'s `name` and the README's title. The
+   * folder's base name when absent (`defaultProjectName`).
+   */
+  name?: string;
+  /**
+   * A one-line description of the map: `package.json`'s `description`, a
+   * paragraph under the README's title and the body of `AGENTS.md`'s "Your
+   * project". Absent or blank, the documents keep the Template's text.
+   */
+  description?: string;
   /** Leave `pnpm install` out: the author installs later. */
   skipInstall: boolean;
   /** Leave git out: no repository, no commit. */
@@ -40,7 +53,14 @@ export interface CreateInput {
 
 /** A stage of the creation, as a failure names it. */
 export type Stage =
-  "check" | "template" | "move" | "git" | "install" | "detach" | "commit";
+  | "check"
+  | "template"
+  | "seeds"
+  | "move"
+  | "git"
+  | "install"
+  | "detach"
+  | "commit";
 
 export type CreateResult =
   | {
@@ -68,6 +88,7 @@ const PNPM_ENV = { npm_config_manage_package_manager_versions: "true" };
 const STAGE_NAMES: Record<Stage, string> = {
   check: "the checks",
   template: "writing the Template",
+  seeds: "preparing the Seeds",
   move: "the move into place",
   git: "git init",
   install: "the install",
@@ -102,12 +123,13 @@ interface Step {
  * Creates a Map project in `answers.folder` from `template`. Everything that
  * can refuse the creation is checked before any write: the folder does not
  * exist or is empty; `pnpm` runs, and `git` unless skipped. The Template is
- * written into a temporary folder next to the target and moved into place
- * once it is read, so a failure before the move leaves nothing in the
- * target. A failure after it leaves the folder and names the stage and the
- * commands to finish by hand. `template:detach` runs whatever is skipped.
- * When git has no identity, the files stay staged, the commands to commit
- * are printed, and the creation still succeeds.
+ * written into a temporary folder next to the target, its Seeds prepared
+ * there with the project name and the description, and moved into place,
+ * so a failure before the move, a missing anchor among them, leaves nothing
+ * in the target. A failure after it leaves the folder and names the stage
+ * and the commands to finish by hand. `template:detach` runs whatever is
+ * skipped. When git has no identity, the files stay staged, the commands to
+ * commit are printed, and the creation still succeeds.
  */
 export async function create(input: CreateInput): Promise<CreateResult> {
   const { answers, template, run, print } = input;
@@ -141,6 +163,19 @@ export async function create(input: CreateInput): Promise<CreateResult> {
   } catch (error) {
     await removeAll(staging, createdParent);
     return fail("template", errorMessage(error));
+  }
+
+  const name = answers.name ?? defaultProjectName(answers.folder);
+  const description = answers.description?.trim();
+  print(`Preparing the Seeds for ${name}`);
+  try {
+    await prepareSeeds(staging, {
+      name,
+      description: description === "" ? undefined : description,
+    });
+  } catch (error) {
+    await removeAll(staging, createdParent);
+    return fail("seeds", errorMessage(error));
   }
 
   print(`Moving it into ${answers.folder}`);
@@ -178,6 +213,11 @@ export async function create(input: CreateInput): Promise<CreateResult> {
 
   printNextSteps(print, answers, await mapFolders(folder));
   return { ok: true, folder, committed: !answers.skipGit };
+}
+
+/** The project name of a project in `folder` given none: its base name. */
+export function defaultProjectName(folder: string): string {
+  return basename(resolve(folder));
 }
 
 /**

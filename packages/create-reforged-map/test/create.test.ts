@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   COMMIT_MESSAGE,
   create,
+  defaultProjectName,
   type Answers,
   type CreateResult,
 } from "../src/create.js";
@@ -38,6 +39,9 @@ const ALL_COMMANDS = [
   "git var GIT_COMMITTER_IDENT",
   COMMIT,
 ];
+
+/** The fixture's README after its title and first paragraph. */
+const README_TAIL = "## Links\n\n- The library.\n";
 
 /** The fixture's files once `template:detach` has run. */
 const DETACHED_FILES = Object.keys(TEMPLATE_FILES)
@@ -123,6 +127,7 @@ describe("create", () => {
     expect(printed).toEqual([
       "Checking the folder, pnpm and git",
       expect.stringMatching(/^Writing the Template from .+template\.tar\.gz$/),
+      "Preparing the Seeds for my-map",
       `Moving it into ${folder}`,
       "Initialising git: git init",
       "Installing the dependencies: pnpm install",
@@ -419,4 +424,233 @@ describe("create", () => {
       expect(await listFiles(folder)).toEqual(DETACHED_FILES);
     },
   );
+});
+
+/** The text of `path` under `folder`. */
+const read = (folder: string, path: string): Promise<string> =>
+  readFile(join(folder, ...path.split("/")), "utf8");
+
+/** The fixture's package.json once detached, `fields` changed in place. */
+function manifestWith(fields: Record<string, unknown>): string {
+  const manifest = JSON.parse(TEMPLATE_FILES["package.json"] as string) as {
+    scripts: Record<string, string>;
+  };
+  delete manifest.scripts["template:detach"];
+  return `${JSON.stringify({ ...manifest, ...fields }, null, 2)}\n`;
+}
+
+/** The fixture's AGENTS.md once detached, "Your project" holding `body`. */
+const agentsWith = (body: string): string =>
+  `# Map project\n\n## Overview\n\nA map.\n\n## Your project\n\n${body}\n`;
+
+/** The fixture's package.json without its `name`. */
+function namelessManifest(): string {
+  const manifest = JSON.parse(
+    TEMPLATE_FILES["package.json"] as string,
+  ) as Record<string, unknown>;
+  delete manifest.name;
+  return JSON.stringify(manifest);
+}
+
+describe("create: the Seeds", () => {
+  const DESCRIPTION = "A tower defense where the towers walk.";
+
+  it("writes the project name and the description in package.json, the README and AGENTS.md, and nothing else", async () => {
+    const { result, folder } = await runCreate({
+      answers: { name: "tower-walk", description: DESCRIPTION },
+    });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(await read(folder, "package.json")).toBe(
+      manifestWith({ name: "tower-walk", description: DESCRIPTION }),
+    );
+    expect(await read(folder, "README.md")).toBe(
+      `# tower-walk\n\n${DESCRIPTION}\n\nA Map project template.\n\n${README_TAIL}`,
+    );
+    expect(await read(folder, "AGENTS.md")).toBe(agentsWith(DESCRIPTION));
+  });
+
+  it.each([
+    ["no description", {}],
+    ["a blank description", { description: "  " }],
+  ])(
+    "keeps the Template's text but for the name with %s",
+    async (_what, answers) => {
+      const { result, folder } = await runCreate({
+        answers: { name: "tower-walk", ...answers },
+      });
+
+      expect(result).toMatchObject({ ok: true });
+      expect(await read(folder, "package.json")).toBe(
+        manifestWith({ name: "tower-walk" }),
+      );
+      expect(await read(folder, "README.md")).toBe(
+        `# tower-walk\n\nA Map project template.\n\n${README_TAIL}`,
+      );
+      expect(await read(folder, "AGENTS.md")).toBe(
+        agentsWith("This section belongs to the map's author."),
+      );
+    },
+  );
+
+  it("names the project after the folder's base name by default", async () => {
+    const { folder, printed } = await runCreate({ folder: "orc-siege" });
+
+    expect(defaultProjectName(folder)).toBe("orc-siege");
+    expect(printed).toContain("Preparing the Seeds for orc-siege");
+    expect(await read(folder, "package.json")).toBe(
+      manifestWith({ name: "orc-siege" }),
+    );
+    expect(await read(folder, "README.md")).toMatch(/^# orc-siege\n\n/);
+  });
+
+  it("finds each anchor past what it never writes: code blocks, sync markers, the sections after Your project", async () => {
+    const readme = [
+      "<!-- reforged-ts:banner:start -->",
+      "# not the title",
+      "<!-- reforged-ts:banner:end -->",
+      "```md",
+      "# not the title either",
+      "```",
+      "# reforged-ts-template",
+      "Right under the title.",
+      "",
+    ].join("\r\n");
+    const agents = [
+      "# Map project",
+      "",
+      "~~~md",
+      "## Your project",
+      "~~~",
+      "",
+      "## Your project",
+      "",
+      "The Template's text.",
+      "",
+      "### Its own subsection",
+      "",
+      "```sh",
+      "## not a section",
+      "```",
+      "",
+      "## After",
+      "",
+      "<!-- reforged-ts:docs:start -->",
+      "Synced.",
+      "<!-- reforged-ts:docs:end -->",
+      "",
+    ];
+    const { result, folder } = await runCreate({
+      answers: { name: "tower-walk", description: DESCRIPTION },
+      template: await templateArchive({
+        ...TEMPLATE_FILES,
+        "README.md": readme,
+        "AGENTS.md": agents.join("\n"),
+      }),
+    });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(await read(folder, "README.md")).toBe(
+      readme.replace(
+        "# reforged-ts-template\r\n",
+        `# tower-walk\r\n\r\n${DESCRIPTION}\r\n\r\n`,
+      ),
+    );
+    expect(await read(folder, "AGENTS.md")).toBe(
+      [...agents.slice(0, 7), "", DESCRIPTION, "", ...agents.slice(16)].join(
+        "\n",
+      ),
+    );
+  });
+
+  it("puts the description after the name when the Template's package.json has none", async () => {
+    const manifest = JSON.parse(TEMPLATE_FILES["package.json"] as string) as {
+      description?: string;
+    };
+    delete manifest.description;
+    const { folder } = await runCreate({
+      answers: { name: "tower-walk", description: DESCRIPTION },
+      template: await templateArchive({
+        ...TEMPLATE_FILES,
+        "package.json": JSON.stringify(manifest),
+      }),
+    });
+
+    const prepared = JSON.parse(await read(folder, "package.json")) as object;
+    expect(Object.keys(prepared).slice(0, 3)).toEqual([
+      "name",
+      "description",
+      "version",
+    ]);
+    expect(prepared).toMatchObject({ description: DESCRIPTION });
+  });
+
+  it.each([
+    [
+      "package.json's `name` field",
+      { "package.json": namelessManifest() },
+      "the Template's package.json has no `name` field, which the project name replaces.",
+    ],
+    [
+      "the README's first-level title",
+      {
+        "README.md":
+          "Title-less.\n\n```md\n# in a code block\n```\n\n<!-- reforged-ts:x:start -->\n# synced\n<!-- reforged-ts:x:end -->\n",
+      },
+      "the Template's README.md has no first-level title (a line starting `# `), which the project name replaces.",
+    ],
+    ["the README", { "README.md": null }, "the Template has no README.md."],
+    [
+      "AGENTS.md's `## Your project` heading",
+      { "AGENTS.md": "# Map project\n\n## Your projects\n\nA map.\n" },
+      "the Template's AGENTS.md has no `## Your project` heading, whose body the description replaces.",
+    ],
+    ["AGENTS.md", { "AGENTS.md": null }, "the Template has no AGENTS.md."],
+  ])(
+    "fails naming %s when it is missing, with no target left and nothing run",
+    async (_anchor, changes: Record<string, string | null>, reason) => {
+      // A `null` content leaves the file out.
+      const files = Object.fromEntries(
+        Object.entries({ ...TEMPLATE_FILES, ...changes }).filter(
+          (entry): entry is [string, string | Uint8Array] => entry[1] !== null,
+        ),
+      );
+      for (const description of [DESCRIPTION, undefined]) {
+        const runner = recordingRunner();
+        const { result, folder } = await runCreate({
+          answers: { description },
+          run: runner.run,
+          template: await templateArchive(files),
+          folder: "a/my-map",
+        });
+
+        expect(result).toEqual({
+          ok: false,
+          stage: "seeds",
+          message: `The creation stopped at preparing the Seeds: ${reason}`,
+        });
+        expect(lines(runner.commands)).toEqual(ALL_COMMANDS.slice(0, 2));
+        expect(await entries(dirname(dirname(folder)))).toEqual([]);
+      }
+    },
+  );
+
+  it("refuses to replace a body of Your project that holds sync markers", async () => {
+    const { result, folder } = await runCreate({
+      answers: { description: DESCRIPTION },
+      template: await templateArchive({
+        ...TEMPLATE_FILES,
+        "AGENTS.md":
+          "# Map project\n\n## Your project\n\n<!-- reforged-ts:docs:start -->\nSynced.\n<!-- reforged-ts:docs:end -->\n",
+      }),
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      stage: "seeds",
+      message:
+        "The creation stopped at preparing the Seeds: the body of `## Your project` in the Template's AGENTS.md holds sync markers, whose text the description would replace.",
+    });
+    expect(await entries(dirname(folder))).toEqual([]);
+  });
 });

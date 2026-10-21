@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // The package's command, `create-reforged-map <folder> --template <archive
-// or folder>`: a thin shell over `create` (src/create.ts), which does every
+// or folder> [--name <name>] [--description <text>]`: a thin shell over `create` (src/create.ts), which does every
 // stage. It reads the arguments, makes the Template source and runs the
 // commands as processes.
 
@@ -11,7 +11,7 @@ import { runInherited, type Runner } from "./process.js";
 import { localTemplate } from "./template.js";
 
 export const USAGE =
-  "Usage: create-reforged-map <folder> --template <archive or folder> [--skip-install] [--skip-git]";
+  "Usage: create-reforged-map <folder> --template <archive or folder> [--name <name>] [--description <text>] [--skip-install] [--skip-git]";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -25,6 +25,8 @@ export interface Context {
 interface Options {
   folder: string;
   template: string;
+  name?: string;
+  description?: string;
   skipInstall: boolean;
   skipGit: boolean;
 }
@@ -47,6 +49,8 @@ export async function main(
   const result = await create({
     answers: {
       folder: options.folder,
+      name: options.name,
+      description: options.description,
       skipInstall: options.skipInstall,
       skipGit: options.skipGit,
     },
@@ -61,23 +65,30 @@ export async function main(
   return 1;
 }
 
+/** The options that take a value. */
+const VALUE_OPTIONS = ["--template", "--name", "--description"] as const;
+
+type ValueOption = (typeof VALUE_OPTIONS)[number];
+
 /**
- * The options of `args`: one folder, `--template` with its value, and each
- * flag at most once; `undefined` on anything else.
+ * The options of `args`: one folder, `--template` with its value, `--name`
+ * and `--description` with theirs, and each option at most once;
+ * `undefined` on anything else.
  */
 function parseArgs(args: readonly string[]): Options | undefined {
   let folder: string | undefined;
-  let template: string | undefined;
+  const values = new Map<ValueOption, string>();
   const flags = new Set<string>();
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg === "--template") {
+    const option = VALUE_OPTIONS.find((name) => name === arg);
+    if (option !== undefined) {
       const value = args.at(i + 1);
-      if (template !== undefined || value === undefined || value === "") {
+      if (values.has(option) || value === undefined || value === "") {
         return undefined;
       }
       if (value.startsWith("--")) return undefined;
-      template = value;
+      values.set(option, value);
       i++;
     } else if (arg === "--skip-install" || arg === "--skip-git") {
       if (flags.has(arg)) return undefined;
@@ -88,10 +99,13 @@ function parseArgs(args: readonly string[]): Options | undefined {
       folder = arg;
     }
   }
+  const template = values.get("--template");
   if (folder === undefined || template === undefined) return undefined;
   return {
     folder,
     template,
+    name: values.get("--name"),
+    description: values.get("--description"),
     skipInstall: flags.has("--skip-install"),
     skipGit: flags.has("--skip-git"),
   };
