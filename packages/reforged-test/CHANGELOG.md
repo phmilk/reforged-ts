@@ -1,5 +1,11 @@
 # reforged-test
 
+## 1.0.0-alpha.5
+
+### Minor Changes
+
+- [#643](https://github.com/phmilk/reforged-ts/pull/643) [`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa) Thanks [@reforged-ts-bot](https://github.com/apps/reforged-ts-bot)! - The trigger stubs answer `BlzGetEquippedItem` and `BlzGetUnequippedItem`, the event responses Patch 3.0.1.24370 added for the equipment events.
+
 ## 1.0.0-alpha.4
 
 ### Minor Changes
