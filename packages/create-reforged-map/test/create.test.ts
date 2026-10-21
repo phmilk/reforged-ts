@@ -58,6 +58,7 @@ async function runCreate(
     run?: Runner;
     template?: string;
     folder?: string;
+    nodeVersion?: string;
   } = {},
 ): Promise<{ result: CreateResult; folder: string; printed: string[] }> {
   const folder = join(await tempDir("target"), options.folder ?? "my-map");
@@ -72,6 +73,8 @@ async function runCreate(
     template: localTemplate(options.template ?? (await templateArchive())),
     run: options.run ?? recordingRunner().run,
     print: (line) => printed.push(line),
+    // A Node the fixture's engines (>=24) admits, whatever runs the tests.
+    nodeVersion: options.nodeVersion ?? "v24.0.0",
   });
   return { result, folder, printed };
 }
@@ -142,6 +145,46 @@ describe("create", () => {
       "  pnpm test:map",
     ]);
   });
+
+  it("warns, once the Template is written, when the running Node is below its engines, and goes on", async () => {
+    const { result, printed, folder } = await runCreate({
+      nodeVersion: "v22.13.0",
+    });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(printed.slice(1, 5)).toEqual([
+      expect.stringMatching(/^Writing the Template from /),
+      "Warning: Node v22.13.0 does not satisfy the Template's engines requirement, node >=24: its scripts may fail on it. Install a Node it admits (https://nodejs.org) before you build the project.",
+      "Preparing the Seeds for my-map",
+      `Moving it into ${folder}`,
+    ]);
+  });
+
+  it.each([
+    ["v24.0.0", TEMPLATE_FILES],
+    ["v25.2.1", TEMPLATE_FILES],
+    [
+      "v18.0.0",
+      {
+        ...TEMPLATE_FILES,
+        "package.json": JSON.stringify({
+          name: "reforged-ts-template",
+          scripts: { "template:detach": "node scripts/detach.mjs" },
+        }),
+      },
+    ],
+  ])(
+    "does not warn with Node %s, which the Template's engines admit or leave unsaid",
+    async (nodeVersion, files) => {
+      const { result, printed } = await runCreate({
+        nodeVersion,
+        template: await templateArchive(files),
+      });
+
+      expect(result).toMatchObject({ ok: true });
+      expect(printed.filter((line) => line.startsWith("Warning"))).toEqual([]);
+    },
+  );
 
   it("leaves the install out with skipInstall, and names it in the next steps", async () => {
     const runner = recordingRunner();

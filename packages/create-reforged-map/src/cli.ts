@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-// The package's command, `create-reforged-map <folder> --template <archive
-// or folder> [--name <name>] [--description <text>]`: a thin shell over `create` (src/create.ts), which does every
-// stage. It reads the arguments, makes the Template source and runs the
-// commands as processes.
+// The package's command, `create-reforged-map <folder> [--name <name>]
+// [--description <text>]`: a thin shell over `create` (src/create.ts), which
+// does every stage. It reads the arguments, makes the Template source (the
+// download from GitHub, or the archive or folder `--template` names) and
+// runs the commands as processes.
 
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { create } from "./create.js";
 import { runInherited, type Runner } from "./process.js";
-import { localTemplate } from "./template.js";
+import { githubTemplate, localTemplate, type Fetch } from "./template.js";
 
 export const USAGE =
-  "Usage: create-reforged-map <folder> --template <archive or folder> [--name <name>] [--description <text>] [--skip-install] [--skip-git]";
+  "Usage: create-reforged-map <folder> [--template <archive or folder>] [--name <name>] [--description <text>] [--skip-install] [--skip-git]";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -20,11 +21,14 @@ export interface Output {
 
 export interface Context {
   run: Runner;
+  /** What downloads the Template: the global `fetch` when absent. */
+  fetch?: Fetch;
 }
 
 interface Options {
   folder: string;
-  template: string;
+  /** The local Template; the download from GitHub when absent. */
+  template: string | undefined;
   name?: string;
   description?: string;
   skipInstall: boolean;
@@ -54,7 +58,10 @@ export async function main(
       skipInstall: options.skipInstall,
       skipGit: options.skipGit,
     },
-    template: localTemplate(options.template),
+    template:
+      options.template === undefined
+        ? githubTemplate({ fetch: context.fetch })
+        : localTemplate(options.template),
     run: context.run,
     print: (line) => {
       output.stdout(`${line}\n`);
@@ -71,8 +78,8 @@ const VALUE_OPTIONS = ["--template", "--name", "--description"] as const;
 type ValueOption = (typeof VALUE_OPTIONS)[number];
 
 /**
- * The options of `args`: one folder, `--template` with its value, `--name`
- * and `--description` with theirs, and each option at most once;
+ * The options of `args`: one folder, `--template`, `--name` and
+ * `--description` with their values, and each option at most once;
  * `undefined` on anything else.
  */
 function parseArgs(args: readonly string[]): Options | undefined {
@@ -99,11 +106,10 @@ function parseArgs(args: readonly string[]): Options | undefined {
       folder = arg;
     }
   }
-  const template = values.get("--template");
-  if (folder === undefined || template === undefined) return undefined;
+  if (folder === undefined) return undefined;
   return {
     folder,
-    template,
+    template: values.get("--template"),
     name: values.get("--name"),
     description: values.get("--description"),
     skipInstall: flags.has("--skip-install"),

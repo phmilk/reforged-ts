@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { main, USAGE } from "../src/cli.js";
 import type { Runner } from "../src/process.js";
+import { TEMPLATE_REF, type Fetch } from "../src/template.js";
 import {
   MAINTENANCE_PATHS,
   TEMPLATE_FILES,
@@ -14,7 +15,7 @@ import {
   templateArchive,
 } from "./support/template.js";
 
-async function runCli(args: readonly string[], run?: Runner) {
+async function runCli(args: readonly string[], run?: Runner, fetch?: Fetch) {
   let stdout = "";
   let stderr = "";
   const output = {
@@ -24,7 +25,7 @@ async function runCli(args: readonly string[], run?: Runner) {
   const status = await main(
     args,
     output,
-    ...(run === undefined ? [] : [{ run }]),
+    ...(run === undefined ? [] : [{ run, fetch }]),
   );
   return { status, stdout, stderr };
 }
@@ -36,7 +37,6 @@ describe("create-reforged-map", () => {
 
   it.each([
     [[]],
-    [["my-map"]],
     [["--template", "t.tar.gz"]],
     [["my-map", "--template"]],
     [["my-map", "--template", "--skip-git"]],
@@ -130,6 +130,31 @@ describe("create-reforged-map", () => {
     expect(
       JSON.parse(await readFile(join(folder, "package.json"), "utf8")),
     ).toMatchObject({ name: "orc-siege" });
+  });
+
+  it("downloads the Template from GitHub at the CLI's ref without --template", async () => {
+    const folder = join(await tempDir("target"), "my-map");
+    const archive = new Uint8Array(await readFile(await templateArchive()));
+    const urls: string[] = [];
+    const fetch: Fetch = (url) => {
+      urls.push(url);
+      return Promise.resolve(new Response(archive));
+    };
+    const runner = recordingRunner();
+    const result = await runCli(
+      [folder, "--skip-install", "--skip-git"],
+      runner.run,
+      fetch,
+    );
+
+    expect(result).toMatchObject({ status: 0, stderr: "" });
+    expect(urls).toEqual([
+      `https://codeload.github.com/phmilk/reforged-ts-template/tar.gz/${TEMPLATE_REF}`,
+    ]);
+    expect(lines(runner.commands)).toEqual([
+      "pnpm --version",
+      "pnpm template:detach",
+    ]);
   });
 
   it("prints why the creation stopped and exits 1", async () => {
