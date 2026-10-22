@@ -1,42 +1,131 @@
 {
-  "description": "How a tool finds the map folder without an option: the folders directly under <project root>/maps/ whose names end in .w3x or .w3m, ignoring case. One is the map folder; none or several is no map folder. `maps` lists the entries of maps/, a folder ending in a slash, a file otherwise, or is null when maps/ is absent. `found` is the map folder's name, or null with `reason`, `none` or `several`. Shared by the tests of reforged-map/typescript-plugin and of the lint rule no-unknown-rawcodes (#595, #582).",
+  "description": "How a tool finds the map folder without an option (ADR 0020): the one folder directly at the project root whose name ends in .w3x or .w3m, ignoring case; with none there, the one directly under <project root>/maps/, until 1.0.0. Several at the root, or none at the root and several under maps/, is no map folder. `root` lists the entries of the project root besides maps/, and `maps` the entries of maps/, or is null when maps/ is absent: a folder ends in a slash, a file does not. `found` is the map folder's path relative to the project root, or null with `reason`, `none` or `several`. Shared by the tests of reforged-map/typescript-plugin and of the lint rule no-unknown-rawcodes (#595, #582, #694).",
   "cases": [
     {
-      "name": "one .w3m folder",
-      "maps": ["my-map.w3m/"],
+      "name": "one .w3m folder at the root",
+      "root": ["src/", "package.json", "my-map.w3m/"],
+      "maps": null,
       "found": "my-map.w3m"
     },
     {
-      "name": "one .w3x folder",
-      "maps": ["my-map.w3x/"],
+      "name": "one .w3x folder at the root",
+      "root": ["my-map.w3x/"],
+      "maps": null,
       "found": "my-map.w3x"
     },
     {
-      "name": "an upper-case extension",
+      "name": "an upper-case extension at the root",
+      "root": ["My Map.W3M/"],
+      "maps": null,
+      "found": "My Map.W3M"
+    },
+    {
+      "name": "none at the root and one under maps/",
+      "root": ["src/"],
+      "maps": ["my-map.w3m/"],
+      "found": "maps/my-map.w3m"
+    },
+    {
+      "name": "one at the root and one under maps/: the root's",
+      "root": ["new.w3m/"],
+      "maps": ["old.w3m/"],
+      "found": "new.w3m"
+    },
+    {
+      "name": "one at the root and several under maps/: the root's",
+      "root": ["new.w3m/"],
+      "maps": ["a.w3m/", "b.w3x/"],
+      "found": "new.w3m"
+    },
+    {
+      "name": "two map folders at the root",
+      "root": ["a.w3m/", "b.w3x/"],
+      "maps": null,
+      "found": null,
+      "reason": "several"
+    },
+    {
+      "name": "two map folders at the root and one under maps/",
+      "root": ["a.w3m/", "b.w3x/"],
+      "maps": ["old.w3m/"],
+      "found": null,
+      "reason": "several"
+    },
+    {
+      "name": "a packed map at the root, a file",
+      "root": ["my-map.w3x"],
+      "maps": null,
+      "found": null,
+      "reason": "none"
+    },
+    {
+      "name": "a packed map at the root and a map folder under maps/",
+      "root": ["packed.w3x"],
+      "maps": ["my-map.w3m/"],
+      "found": "maps/my-map.w3m"
+    },
+    {
+      "name": "none at the root or under maps/",
+      "root": ["src/"],
+      "maps": [],
+      "found": null,
+      "reason": "none"
+    },
+    {
+      "name": "one .w3m folder under maps/",
+      "root": [],
+      "maps": ["my-map.w3m/"],
+      "found": "maps/my-map.w3m"
+    },
+    {
+      "name": "one .w3x folder under maps/",
+      "root": [],
+      "maps": ["my-map.w3x/"],
+      "found": "maps/my-map.w3x"
+    },
+    {
+      "name": "an upper-case extension under maps/",
+      "root": [],
       "maps": ["My Map.W3X/"],
-      "found": "My Map.W3X"
+      "found": "maps/My Map.W3X"
     },
     {
-      "name": "one map folder beside a folder and a file that are not",
+      "name": "one map folder under maps/ beside a folder and a file that are not",
+      "root": [],
       "maps": ["backup/", "notes.txt", "packed.w3x", "my-map.w3m/"],
-      "found": "my-map.w3m"
+      "found": "maps/my-map.w3m"
     },
     {
-      "name": "a map folder nested one level down",
+      "name": "a map folder nested one level down under maps/",
+      "root": [],
       "maps": ["old/", "old/my-map.w3m/"],
       "found": null,
       "reason": "none"
     },
     {
-      "name": "a packed map, a file",
+      "name": "a packed map under maps/, a file",
+      "root": [],
       "maps": ["my-map.w3x"],
       "found": null,
       "reason": "none"
     },
-    { "name": "an empty maps/", "maps": [], "found": null, "reason": "none" },
-    { "name": "no maps/", "maps": null, "found": null, "reason": "none" },
     {
-      "name": "two map folders",
+      "name": "an empty maps/",
+      "root": [],
+      "maps": [],
+      "found": null,
+      "reason": "none"
+    },
+    {
+      "name": "no maps/",
+      "root": [],
+      "maps": null,
+      "found": null,
+      "reason": "none"
+    },
+    {
+      "name": "two map folders under maps/",
+      "root": [],
       "maps": ["a.w3m/", "b.w3x/"],
       "found": null,
       "reason": "several"

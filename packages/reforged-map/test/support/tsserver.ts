@@ -54,9 +54,11 @@ export function packPlugin(): string {
 
 /** How {@link createPluginProject} sets the Map project up. */
 export interface PluginProjectOptions {
+  /** The map folders to copy at the project root, by their name there. */
+  atRoot?: Readonly<Record<string, string>>;
   /** The map folders to copy under `maps/`, by their name there. */
   maps?: Readonly<Record<string, string>>;
-  /** The map folder the generated code is generated from: the only one under `maps/` by default. */
+  /** The map folder the generated code is generated from: the first at the root, or else under `maps/`, by default. */
   generateFrom?: string;
   /** The plugin's tsconfig entry beyond its name. */
   plugin?: Readonly<Record<string, unknown>>;
@@ -72,7 +74,7 @@ const LINKED_PACKAGES = ["reforged-types"];
 /**
  * A Map project in a new temporary directory, in the Template's shape: a
  * package.json, a tsconfig.base.json holding the plugin's entry, which
- * tsconfig.json extends, the map folders under `maps/`, the code generated
+ * tsconfig.json extends, the map folders at its root and under `maps/`, the code generated
  * from one of them in `src/generated/`, and reforged-types and
  * reforged-builtins installed. Returns its folder.
  */
@@ -93,11 +95,16 @@ export function createPluginProject(options: PluginProjectOptions): string {
     fs.mkdirSync(path.dirname(link), { recursive: true });
     fs.symlinkSync(fs.realpathSync(target), link, "junction");
   }
+  for (const [name, source] of Object.entries(options.atRoot ?? {})) {
+    fs.cpSync(source, path.join(dir, name), { recursive: true });
+  }
   for (const [name, source] of Object.entries(options.maps ?? {})) {
     fs.cpSync(source, path.join(dir, "maps", name), { recursive: true });
   }
   const generateFrom =
-    options.generateFrom ?? Object.values(options.maps ?? {}).at(0);
+    options.generateFrom ??
+    Object.values(options.atRoot ?? {}).at(0) ??
+    Object.values(options.maps ?? {}).at(0);
   if (generateFrom !== undefined) {
     const generated = path.join(dir, "src", "generated");
     fs.mkdirSync(generated, { recursive: true });

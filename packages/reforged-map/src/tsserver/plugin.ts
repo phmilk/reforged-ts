@@ -20,7 +20,7 @@ import { rawcodeLiteralAt, type RawcodeLiteral } from "./literal.js";
 /** The prefix of every line the plugin writes to the tsserver log. */
 const LOG_PREFIX = "reforged-map/typescript-plugin:";
 
-/** The folder, under the project root, where the map folder is looked for without the option. */
+/** The folder, under the project root, where the map folder is looked for without the option and with none at the root, until 1.0.0 (ADR 0020). */
 const MAPS_FOLDER = "maps";
 
 /** The lines already logged in this tsserver process: each is logged once. */
@@ -59,7 +59,7 @@ export function create(
   const option = config?.mapFolder;
   if (option !== undefined && typeof option !== "string") {
     log(
-      "The mapFolder option is not a string: it is ignored, and the map folder is looked for under maps/.",
+      "The mapFolder option is not a string: it is ignored, and the map folder is looked for at the project root, then under maps/.",
     );
   }
   const source = rawcodeSource(
@@ -208,7 +208,7 @@ interface RawcodeSource {
 
 /**
  * The map folder named by the option, against the project root, or found as
- * the one map folder under `<project root>/maps/`, looked for again at most
+ * the one map folder at the project root or else under its `maps/`, looked for again at most
  * once per second; and the lookup over it, shared by every project with the
  * same map folder and project root.
  */
@@ -269,24 +269,20 @@ function rawcodeSource(
 }
 
 /**
- * The one map folder directly under `<root>/maps/`: a folder whose name ends
- * in `.w3x` or `.w3m`, ignoring case. None or several is a reason naming
- * what was found and the option to set.
+ * The map folders directly in `folder`: the folders, or links to one, whose
+ * names end in `.w3x` or `.w3m`, ignoring case, sorted; none when `folder`
+ * cannot be read.
  */
-export function discoverMapFolder(
-  root: string,
-): { mapFolder: string } | { reason: string } {
-  const maps = path.join(root, MAPS_FOLDER);
-  let names: string[];
+function mapFoldersIn(folder: string): string[] {
   try {
-    names = fs
-      .readdirSync(maps, { withFileTypes: true })
+    return fs
+      .readdirSync(folder, { withFileTypes: true })
       .filter(
         (entry) =>
           (entry.isDirectory() ||
             (entry.isSymbolicLink() &&
               fs
-                .statSync(path.join(maps, entry.name), {
+                .statSync(path.join(folder, entry.name), {
                   throwIfNoEntry: false,
                 })
                 ?.isDirectory() === true)) &&
@@ -295,15 +291,35 @@ export function discoverMapFolder(
       .map((entry) => entry.name)
       .sort();
   } catch {
-    names = [];
+    return [];
   }
-  if (names.length === 1) return { mapFolder: path.join(maps, names[0]) };
+}
+
+/**
+ * The one map folder directly at `<root>`, or with none there the one
+ * directly under `<root>/maps/`, until 1.0.0 (ADR 0020): a folder whose name
+ * ends in `.w3x` or `.w3m`, ignoring case. None or several is a reason
+ * naming what was found, where it looked and the option to set.
+ */
+export function discoverMapFolder(
+  root: string,
+): { mapFolder: string } | { reason: string } {
   const option =
     'set the mapFolder option of reforged-map/typescript-plugin in tsconfig.json ({ "name": "reforged-map/typescript-plugin", "mapFolder": "<path>" })';
+  const atRoot = mapFoldersIn(root);
+  if (atRoot.length === 1) return { mapFolder: path.join(root, atRoot[0]) };
+  if (atRoot.length > 1) {
+    return {
+      reason: `${String(atRoot.length)} map folders at ${root} (${atRoot.join(", ")}): ${option} to the one to read.`,
+    };
+  }
+  const maps = path.join(root, MAPS_FOLDER);
+  const names = mapFoldersIn(maps);
+  if (names.length === 1) return { mapFolder: path.join(maps, names[0]) };
   return {
     reason:
       names.length === 0
-        ? `no map folder (a folder whose name ends in .w3x or .w3m) under ${maps}: ${option}.`
+        ? `no map folder (a folder whose name ends in .w3x or .w3m) at ${root} or under ${maps}: ${option}.`
         : `${String(names.length)} map folders under ${maps} (${names.join(", ")}): ${option} to the one to read.`,
   };
 }

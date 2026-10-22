@@ -30,6 +30,7 @@ const CAPTAIN_HOVER =
 /** A case of the shared discovery table. */
 interface DiscoveryCase {
   name: string;
+  root: string[];
   maps: string[] | null;
   found: string | null;
   reason?: "none" | "several";
@@ -81,25 +82,27 @@ async function opened(
 }
 
 describe("the discovery of the map folder", () => {
-  it.each(DISCOVERY)("$name", ({ maps, found, reason }) => {
+  it.each(DISCOVERY)("$name", ({ root: entries, maps, found, reason }) => {
     const root = makeTempDir();
+    const place = (folder: string, entry: string): void => {
+      const target = path.join(folder, entry);
+      if (entry.endsWith("/")) fs.mkdirSync(target, { recursive: true });
+      else fs.writeFileSync(target, "");
+    };
+    for (const entry of entries) place(root, entry);
     if (maps !== null) {
       fs.mkdirSync(path.join(root, "maps"));
-      for (const entry of maps) {
-        const target = path.join(root, "maps", entry);
-        if (entry.endsWith("/")) fs.mkdirSync(target, { recursive: true });
-        else fs.writeFileSync(target, "");
-      }
+      for (const entry of maps) place(path.join(root, "maps"), entry);
     }
     const result = discoverMapFolder(root);
     if (found !== null) {
-      expect(result).toEqual({ mapFolder: path.join(root, "maps", found) });
+      expect(result).toEqual({ mapFolder: path.join(root, found) });
     } else {
       expect(result).toEqual({
         reason: expect.stringMatching(
           reason === "several"
-            ? /^2 map folders under .*: set the mapFolder option/
-            : /^no map folder .*: set the mapFolder option/,
+            ? /^2 map folders (at|under) .*: set the mapFolder option/
+            : /^no map folder .* at .* or under .*maps: set the mapFolder option/,
         ) as unknown,
       });
     }
@@ -107,6 +110,16 @@ describe("the discovery of the map folder", () => {
 });
 
 describe("finding the map folder", OPENS_A_PROJECT, () => {
+  it("finds the one map folder at the project root with no option", async () => {
+    const project = await opened(
+      createPluginProject({
+        atRoot: { "my-map.w3m": EDITOR_MAP },
+        files: { "src/rawcodes.ts": CAPTAIN },
+      }),
+    );
+    expect(await hoverCaptain(project)).toMatch(CAPTAIN_HOVER);
+  });
+
   it("finds the one map folder under maps/ with no option", async () => {
     const project = await opened(
       createPluginProject({
@@ -169,7 +182,7 @@ describe("finding the map folder", OPENS_A_PROJECT, () => {
     [
       "no map folder",
       {},
-      /^Rawcode details are unavailable: no map folder \(a folder whose name ends in \.w3x or \.w3m\) under .*maps: set the mapFolder option of reforged-map\/typescript-plugin in tsconfig\.json/,
+      /^Rawcode details are unavailable: no map folder \(a folder whose name ends in \.w3x or \.w3m\) at .* or under .*maps: set the mapFolder option of reforged-map\/typescript-plugin in tsconfig\.json/,
     ],
     [
       "two map folders",
