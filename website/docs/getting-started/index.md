@@ -29,7 +29,7 @@ Run the Creation CLI from the folder to create the project in; it makes the proj
 npx create-reforged-map@next my-map
 ```
 
-`pnpm create reforged-map@next my-map` does the same. In a terminal it asks for the project name, the folder's name when left blank, and a one-line description of the map; then it downloads the Template into `my-map`, writes the name and the description into `package.json` and the README, and the description into `AGENTS.md` too, installs the packages, runs `pnpm template:detach` to remove the files that serve only the Template's own development, and makes a first commit. `--yes` takes the defaults without asking, and `--name` and `--description` give the answers; [its README](https://github.com/phmilk/reforged-ts/tree/master/packages/create-reforged-map#usage) lists the other options.
+`pnpm create reforged-map@next my-map` does the same. In a terminal it asks for the project name, the folder's name when left blank, and a one-line description of the map; then it downloads the Template into `my-map`, writes the name and the description into `package.json` and the README, and the description into `AGENTS.md` too, names the map folder after the project (`my-map.w3m`, at its root) and points `mapFolder` in `reforged.config.ts` at it, installs the packages, runs `pnpm template:detach` to remove the files that serve only the Template's own development, and makes a first commit. `--yes` takes the defaults without asking, and `--name` and `--description` give the answers; [its README](https://github.com/phmilk/reforged-ts/tree/master/packages/create-reforged-map#usage) lists the other options.
 
 Write `@next` until 1.0.0. During the build phase the library publishes its packages as `1.0.0-alpha.N` under npm's `next` dist-tag, and npm keeps `latest` on the first alpha, so a bare `npx create-reforged-map` runs that one.
 
@@ -37,14 +37,15 @@ Write `@next` until 1.0.0. During the build phase the library publishes its pack
 
 1. On the [Template's page](https://github.com/phmilk/reforged-ts-template), click **Use this template** and create your repository.
 2. Clone it and open a terminal in the clone.
-3. Install: `pnpm install`. To build against a local clone of the library instead, run `pnpm use:local ../reforged-ts`.
-4. Detach: `pnpm template:detach`, then commit what it deletes, the files that serve only the Template's own development.
+3. Name the map: rename the map folder, `reforged-ts-template.w3m` at the root, after your project (`my-map.w3m`), and set `mapFolder` in `reforged.config.ts` to the new name.
+4. Install: `pnpm install`. To build against a local clone of the library instead, run `pnpm use:local ../reforged-ts`.
+5. Detach: `pnpm template:detach`, then commit what it deletes, the files that serve only the Template's own development.
 
 ## Run it in the game
 
 1. Open a terminal in the project. The install wrote the files under `src/generated`: the build mode and the typings of the map's Editor globals. After the CLI's `--skip-install`, run `pnpm install` first.
-2. Open the map folder, `maps/reforged-ts-template.w3m`, in the World Editor and save it. Leave Scenario > Map Options > Script Language on Lua: the build appends your code to the script the editor writes. To rename the map, save it under `maps` with the new name and set `mapFolder` in `reforged.config.ts`.
-3. Build: `pnpm build`. It prints the packed archive, `dist/reforged-ts-template.w3m`.
+2. Open the map folder, `my-map.w3m` at the project's root beside `src/`, in the World Editor and save it. Leave Scenario > Map Options > Script Language on Lua: the build appends your code to the script the editor writes. To rename the map, save it at the root with the new name and set `mapFolder` in `reforged.config.ts`.
+3. Build: `pnpm build`. It prints the packed archive, `dist/my-map-0.0.0-dev.w3m`: the map folder's name, the `version` of `package.json`, and `-dev` for a dev build. `pnpm build --mode release` packs `dist/my-map-0.0.0.w3m`, the archive you ship.
 4. Play: `pnpm test:map` builds, then opens the game on the built map, windowed. When the game is not in a Battle.net install location, set the `WC3_EXECUTABLE` environment variable to its executable.
 
 ## The starter code
@@ -101,7 +102,7 @@ Three ideas carry every Map project:
 ## The project's layout
 
 - `src/`: the map's code, `src/main.ts` first. The build compiles it with typescript-to-lua into one Lua bundle and appends it to the script the World Editor saved.
-- `maps/`: the map folder. The World Editor owns it; the build copies it, adds the code and packs the archive into `dist/`.
+- `my-map.w3m/`: the map folder, named after the project. The World Editor owns it; the build copies it, adds the code and packs the archive into `dist/`.
 - `reforged.config.ts`: the build's configuration (the map folder, the output folder, the mode). It is committed, so it holds only what every machine shares.
 - `tests/lua/` and `tests/stubs/`: the map's tests on the Lua harness and the Native stubs they need.
 - `AGENTS.md` and `CONTEXT.md`: the instructions and the glossary a coding agent reads. They are Seeds: yours after generation. Add your map's own terms to `CONTEXT.md`.
