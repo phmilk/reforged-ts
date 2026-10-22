@@ -1859,10 +1859,11 @@ export class Unit extends Widget {
    * @remarks
    * The World Editor's own heal actions pass `isItem` false and
    * `applyStatBonuses` true, and their hint says they use the source's
-   * healing bonuses. Measured on 3.0.1.24371 (#642): a negative amount takes
-   * life away, and on a dead unit the life is set without reviving it. On a
-   * footman, which has no healing bonus, `isItem` and `applyStatBonuses`
-   * changed neither the life restored nor the value returned.
+   * healing bonuses. Measured on Patch 3.0.1.24370 (client 3.0.1.24371,
+   * #642): a negative amount takes life away, and on a dead unit the life is
+   * set without reviving it. On a footman, which has no healing bonus,
+   * `isItem` and `applyStatBonuses` changed neither the life restored nor the
+   * value returned.
    * @param source - The unit the healing comes from, whose healing bonuses
    * apply: the unit itself for a heal of its own.
    * @param amount - The life to restore.
@@ -2664,8 +2665,11 @@ export class Unit extends Widget {
   /**
    * Resets the hero's talents and refunds its talent points.
    * @remarks
-   * On a unit without talents it does nothing, as measured on 3.0.1.24371
-   * (#642).
+   * The refund is the World Editor's own hint for the action ("Resets Unit
+   * talents if any and refunds talent points."): no Native reads talents or
+   * talent points, so it awaits a check on screen (#672). On a unit without
+   * talents it does nothing, as measured on Patch 3.0.1.24370 (client
+   * 3.0.1.24371, #642).
    * @native BlzResetUnitTalents
    */
   public resetTalents() {

@@ -3,13 +3,14 @@
  * 3.0.1 no longer opens a map folder given to `-loadfile`: the game goes to
  * its menu, by way of the Battle.net login, while the same map packed opens
  * at once, without a login (#642). The writer is the Template's
- * (`scripts/pack.ts` of phmilk/reforged-ts-template), from reforged-ts#32.
+ * (`scripts/pack.ts` of phmilk/reforged-ts-template), from reforged-ts#32. A
+ * failure of the writer is a bug, not the author's to act on: it throws a
+ * plain Error, which prints with its stack.
  */
 
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { AuthorError } from "./errors.js";
 
 // Deep import of the parser only: the package root pulls in the WebGL viewer.
 // Loaded through require because the module is CommonJS with a `default` export.
@@ -24,7 +25,7 @@ const War3Map = (
 export type War3Map = InstanceType<War3MapClass>;
 
 /** The editor's import list. */
-export const IMPORTS_FILE = "war3map.imp";
+const IMPORTS_FILE = "war3map.imp";
 
 /**
  * `War3Map` whose save does not parse `war3map.w3i` (the opaque-w3i override
@@ -38,8 +39,7 @@ class OpaqueW3iMap extends War3Map {
   override save(): Uint8Array {
     if (!this.has(IMPORTS_FILE)) this.setImportsFile();
     const bytes = this.archive.save();
-    if (!bytes)
-      throw new AuthorError("The MPQ writer failed to save the archive.");
+    if (!bytes) throw new Error("The MPQ writer failed to save the archive.");
     return bytes;
   }
 }
@@ -49,7 +49,7 @@ class OpaqueW3iMap extends War3Map {
  * relative, backslash-separated, sorted by code unit so the archive does not
  * depend on directory listing order.
  */
-export function listMapFiles(folder: string): string[] {
+function listMapFiles(folder: string): string[] {
   const names: string[] = [];
   const walk = (dir: string, prefix: string[]) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -80,7 +80,7 @@ export function packMapFolder(folder: string): Uint8Array {
   const names = listMapFiles(folder);
   const map = new OpaqueW3iMap();
   if (!map.archive.resizeHashtable(names.length + 2)) {
-    throw new AuthorError(
+    throw new Error(
       `The MPQ writer could not size its hash table for ${String(names.length)} files.`,
     );
   }
@@ -90,9 +90,7 @@ export function packMapFolder(folder: string): Uint8Array {
     const added =
       name === IMPORTS_FILE ? map.set(name, buffer) : map.import(name, buffer);
     if (!added) {
-      throw new AuthorError(
-        `The MPQ writer could not add ${name} to the archive.`,
-      );
+      throw new Error(`The MPQ writer could not add ${name} to the archive.`);
     }
   }
   return map.save();

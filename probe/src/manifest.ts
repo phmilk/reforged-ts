@@ -36,7 +36,9 @@ function compareBuilds(a: string, b: string): number {
 /**
  * Whether `client` is a Build of `build`'s Game version, later than it: a
  * client ahead that `--client-build` may accept in place of `build`, as
- * `builtins:generate` accepts one.
+ * `builtins:generate` accepts one. It mirrors the function of the same name
+ * in packages/reforged-builtins/src/generate.ts, which the package does not
+ * export: change both together.
  */
 export function isLaterBuildOfGameVersion(
   client: string,
