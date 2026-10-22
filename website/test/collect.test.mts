@@ -63,6 +63,7 @@ describe("collect", () => {
       "contributing/adr/_category_.json",
       "contributing/adr/index.md",
       "contributing/agent-conventions.md",
+      "contributing/development-loop.md",
       "contributing/glossary.md",
       "guides/lint-rules/_category_.json",
       "guides/lint-rules/index.md",
@@ -78,6 +79,7 @@ describe("collect", () => {
       "the glossary",
       "the ADRs",
       "the agent conventions",
+      "the development loop",
       "the lint plugin's conventions",
       "the Typings' conventions",
       "the changelog of reforged-ts",
@@ -94,7 +96,8 @@ describe("collect", () => {
 title: "Glossary"
 sidebar_position: 2
 custom_edit_url: ${GITHUB}/CONTEXT.md
-format: md
+mdx:
+  format: md
 ---
 
 :::note[Generated page]
@@ -347,7 +350,7 @@ describe("main", () => {
     const { out, output } = capture();
     expect(await main([], output, await fixture())).toBe(0);
     expect(out.stdout).toContain(
-      "docs:collect: 10 sources collected, 8 skipped.\n  collected the supported Patch: _supported-patch.md\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the migration guide: migration/_generated/w3ts-3-to-reforged-ts-1/renames.md, migration/_generated/w3ts-3-to-reforged-ts-1/behaviour-changes.md\n  collected the glossary: contributing/glossary.md\n",
+      "docs:collect: 11 sources collected, 8 skipped.\n  collected the supported Patch: _supported-patch.md\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the migration guide: migration/_generated/w3ts-3-to-reforged-ts-1/renames.md, migration/_generated/w3ts-3-to-reforged-ts-1/behaviour-changes.md\n  collected the glossary: contributing/glossary.md\n",
     );
     expect(out.stdout).toContain(
       "  skipped the contributing guide: The contribution model (#193) adds CONTRIBUTING.md.\n",

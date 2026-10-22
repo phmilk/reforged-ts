@@ -310,8 +310,12 @@ function render(page: Page, links: LinkTargets): string {
     `sidebar_position: ${String(page.position)}`,
     ...(page.slug === undefined ? [] : [`slug: ${JSON.stringify(page.slug)}`]),
     `custom_edit_url: ${editUrl}`,
-    // Plain Markdown, as GitHub renders the source: `<` and `{` are text.
-    "format: md",
+    // Plain Markdown, as GitHub renders the source: `<` and `{` are text, an
+    // HTML comment is a comment. Docusaurus reads the format of a page from
+    // `mdx.format`, and ignores a `format` key; read as MDX, the page would
+    // fail on an HTML comment, which `future.v4` rejects there.
+    "mdx:",
+    "  format: md",
     "---",
   ];
   const note = [

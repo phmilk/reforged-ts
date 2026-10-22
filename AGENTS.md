@@ -34,6 +34,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills".
+- Diagrams: the README's "Map" indexes them. Read a flow's diagram before changing the flow: the packages, a pull request's CI, the release, an issue's life, the development loop, the Claim board, a Patch's adoption, a Probe run, the docs site, the Init stages.
 
 ## Rules
 

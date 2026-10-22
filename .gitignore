@@ -130,6 +130,7 @@ website/docs/contributing/guide.md
 website/docs/contributing/glossary.md
 website/docs/contributing/adr/
 website/docs/contributing/agent-conventions.md
+website/docs/contributing/development-loop.md
 website/docs/contributing/adding-a-wrapper.md
 website/docs/contributing/adding-a-lint-rule.md
 website/docs/contributing/adding-a-patch.md

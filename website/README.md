@@ -2,6 +2,97 @@
 
 The docs site, on Docusaurus 3.10, served at https://phmilk.github.io/reforged-ts ([#40](https://github.com/phmilk/reforged-ts/issues/40), ADR 0005). A private workspace package: never published, never versioned ([the website](../docs/release.md#the-website)).
 
+## From the sources to a Docs version
+
+What the site is built from, how "Next" reaches GitHub Pages, and how a minor of the library cuts a Docs version. Each node is detailed in the section the table under the diagram names; the diagram is an index into them, not a second source.
+
+```mermaid
+flowchart TD
+  %% diagram: docs-site
+  subgraph sources["The sources docs:collect reads, listed in scripts/sources.mts"]
+    glossary["the glossary: CONTEXT.md"]
+    adrs["the ADRs: docs/adr/"]
+    agent_conventions["the agent conventions: AGENTS.md"]
+    development_loop["the development loop: docs/agents/development-loop.md"]
+    contributing_guide["the contributing guide: CONTRIBUTING.md"]
+    how_tos["the how-tos: /add-wrapper and the AGENTS.md of reforged-types and of eslint-plugin-reforged"]
+    lint_rules["the lint rules' pages: the docs/ of eslint-plugin-reforged"]
+    changelogs["the changelogs: the CHANGELOG.md of each published package"]
+    migration["the migration guide: the rename map and the behaviour changes of reforged-ts"]
+    supported_patch["the supported Patch: the Patch field of reforged-types"]
+  end
+  collect["pnpm docs:collect: the collected pages, git-ignored, rewritten at every run"]
+  hand_written["the hand-written pages of website/docs/"]
+  library_reference["the library's API reference: TypeDoc over the sources of reforged-ts"]
+  typings_pages["the Typings' pages: TypeDoc, a page per entry of the manifest of each Game version of reforged-types, not versioned"]
+  docs_next["Next: the docs tree, website/docs/"]
+  kept["the kept Docs versions: versions.json, versioned_docs/ and versioned_sidebars/, committed"]
+  build["the Docusaurus build: pnpm docs:build; pnpm docs:check, strict, a step of ci.yml"]
+  llms["the LLM files: llms.txt, llms-full.txt and a Markdown copy of each page, per Docs version and once for the Typings"]
+
+  sources --> collect
+  collect --> docs_next
+  hand_written --> docs_next
+  library_reference --> docs_next
+  docs_next --> build
+  kept --> build
+  typings_pages --> build
+  build --> llms
+
+  subgraph deploy["docs.yml, on every push to master"]
+    deploy_next["deploy-next: website/build to GitHub Pages, Next at docs/next"]
+  end
+  build --> deploy_next
+  llms --> deploy_next
+
+  subgraph cut["A Docs version's cut, on each minor of reforged-ts"]
+    release_job["release.yml, its docs-cut job, once the publish job published reforged-ts"]
+    rehearsal["docs.yml, its cut-version job on a workflow_dispatch: the rehearsal"]
+    cut_version["docs-cut.yml, its cut-version job"]
+    decide["pnpm release:docs-cut: only a tag reforged-ts@major.minor.0 cuts one"]
+    no_cut["any other tag: a notice, no Docs version"]
+    version["pnpm docs:version, labelled major.minor: docs:collect, then Next frozen into versioned_docs/"]
+    prune["the pruning: the last three minors of each major stay; pnpm docs:prune applies it alone"]
+    pull_request["the cut's pull request, with auto-merge"]
+  end
+  release_job --> cut_version
+  rehearsal -.->|"auto-merge turned off"| cut_version
+  cut_version --> decide
+  decide -->|"a minor"| version
+  decide -->|"a prerelease or a patch"| no_cut
+  docs_next -.->|"frozen"| version
+  version --> prune
+  prune --> pull_request
+  pull_request -->|"merged"| kept
+  pull_request -->|"its merge, a push to master"| deploy_next
+```
+
+| Node                                                       | Read                                                                                                                                          |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| The sources, `docs:collect`                                | [Collected pages](#collected-pages): the source kinds; the list itself, one entry per source, is [`scripts/sources.mts`](scripts/sources.mts) |
+| the glossary                                               | "the glossary" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                           |
+| the ADRs                                                   | "the ADRs" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                               |
+| the agent conventions                                      | "the agent conventions" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                  |
+| the development loop                                       | "the development loop" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                   |
+| the contributing guide                                     | "the contributing guide" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                 |
+| the how-tos                                                | "the add-wrapper Agent skill", "the lint plugin's conventions" and "the Typings' conventions" in [`scripts/sources.mts`](scripts/sources.mts) |
+| the lint rules' pages                                      | "the lint rule pages" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages), the Lint rules guide              |
+| the changelogs                                             | `changelogs` in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages), the Changelog section                      |
+| the migration guide                                        | [Migration pages](#migration-pages)                                                                                                           |
+| the supported Patch                                        | [Collected pages](#collected-pages), its last paragraph; [the `reforged.patch` field](../docs/release.md#the-reforgedpatch-field)             |
+| `pnpm docs:collect`, the collected pages                   | [Collected pages](#collected-pages)                                                                                                           |
+| the hand-written pages                                     | [Layout](#layout), `docs/`; [Code samples](#code-samples)                                                                                     |
+| the library's API reference, the Typings' pages            | [Commands](#commands), the paragraph on the API reference; [Layout](#layout), `reference.ts`                                                  |
+| Next, the kept Docs versions                               | [Layout](#layout), `docs/` and `versioning.ts`; [Docs versions](#docs-versions)                                                               |
+| the Docusaurus build, `pnpm docs:build`, `pnpm docs:check` | [Commands](#commands)                                                                                                                         |
+| the LLM files                                              | [Search and LLM files](#search-and-llm-files)                                                                                                 |
+| `docs.yml`, `deploy-next`                                  | [docs/release.md, "The docs workflow"](../docs/release.md#the-docs-workflow)                                                                  |
+| `release.yml`, `docs-cut`                                  | [docs/release.md, "The release workflow"](../docs/release.md#the-release-workflow)                                                            |
+| `docs.yml`, `cut-version`: the rehearsal                   | [docs/release.md, "The docs workflow"](../docs/release.md#the-docs-workflow)                                                                  |
+| `docs-cut.yml`, `cut-version`; `pnpm release:docs-cut`     | [docs/release.md, "The docs workflow"](../docs/release.md#the-docs-workflow)                                                                  |
+| `pnpm docs:version`, the pruning                           | [Docs versions](#docs-versions)                                                                                                               |
+| the cut's pull request, "docs: version"                    | [docs/release.md, "The docs workflow"](../docs/release.md#the-docs-workflow); [Docs versions](#docs-versions)                                 |
+
 ## Commands
 
 From the workspace root:
@@ -29,6 +120,7 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 - `src/components/`: the components the pages import (`MatrixLink`, the compatibility matrix's links, which leaves a docs version the site no longer keeps as text).
 - `versioning.ts`: the docs versions as the site serves them, from `versions.json`; `versions.json`, `versioned_docs/` and `versioned_sidebars/` are what `docs:version` writes, committed.
 - `llms.ts`: the files for AI agents, `llms.txt` and `llms-full.txt` per docs version and a Markdown copy of each page ([Search and LLM files](#search-and-llm-files)).
+- `mermaid.ts`: the check of the build that every `mermaid` block of a docs page reaches it as the Mermaid theme's component, drawn in light and dark, and that no page shows one as code ([Diagrams](#diagrams)).
 - `config.ts`: the configuration, built by `docusaurus.config.ts` and, strict, by `docusaurus.check.config.ts`.
 - `reference.ts`: the API reference, one docusaurus-plugin-typedoc instance per entry of `siteReferences()` (the library: `docs/api/reforged-ts/`; the Typings: `typings/<Game version>/`, one per folder of `reforged-types` with a `manifest.json`; all git-ignored, rewritten at every build), the docs tree's sidebar generator, which puts the library's sidebar under the API section followed by a link to the Typings, and the Typings' own. The Typings are a docs instance of their own (id `typings`, folder `typings/`, whose `index.mdx` is committed), not versioned: served at `/typings`, a Game version's reference at `/typings/<Game version>/overview` (a route ending in `3.0.0` would be taken for a file by a static server) and an entry's page at `/typings/<Game version>/functions/<Name>` or `/typings/<Game version>/variables/<Name>`, whatever the docs version. A Game version's reference is its index page alone in the sidebar: a sidebar of its thousands of pages would be rendered into each of them. Each Game version's TypeDoc run compiles its Jass files with a tsconfig written to `node_modules/.cache/typings-reference/`.
 - `audit.ts`: `docs:audit`, the library's reference run as an audit ([The docs audit](#the-docs-audit)).
@@ -48,7 +140,7 @@ It runs in `pnpm check` and on both CI legs, in about 10 s; `docs:check` runs on
 
 ## Collected pages
 
-`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases), and the generated sections of the Migration section's hand-written pages. Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
+`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, the development loop from `docs/agents/development-loop.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases), and the generated sections of the Migration section's hand-written pages. Each gets front matter, whose `mdx.format: md` has Docusaurus compile it as plain Markdown, as GitHub renders its source (an HTML comment, such as a generated region's marker, stays a comment; `<` and `{` are text; `test/site/collected-pages.test.ts` compiles each page so), and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
 
 The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` (the migration guide's in `scripts/migration.mts`) and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do. Each run deletes a source's outputs whole before writing them, so a folder output holds nothing hand-written: a source that writes next to hand-written pages owns single files or a subfolder of its own.
 
@@ -80,6 +172,10 @@ The search is `@easyops-cn/docusaurus-search-local`, offline, over the docs only
 - `/typings/llms.txt`, `/typings/llms-full.txt` and `/typings/<Game version>/functions/<Name>.md`: the same for the Typings.
 
 The plugin's own versions mode places the files and their links for versions at the site root, not under `baseUrl` and `/docs`, so `llms.ts` runs it once per version with that version's routes alone, then checks what it wrote: both files, and a Markdown copy of a page of the version behind each link, else the build fails (the plugin itself only logs its errors). It copies the partials a page imports into the page; an MDX comment is removed, and a JSX expression would be copied as written, so a partial states its facts as Markdown (the supported Patch). The four package READMEs link the `llms.txt` of their docs version, which the release stamps ([the docs version stamp](../docs/release.md#the-version-step-releaseversion)).
+
+## Diagrams
+
+A ` ```mermaid ` block of a page, hand-written or collected, is a diagram ([#676](https://github.com/phmilk/reforged-ts/issues/676), ADR 0019): `markdown.mermaid` is on in `config.ts`, and `@docusaurus/theme-mermaid` draws it in the browser, in the colour mode being read (Mermaid's `default` theme in light, its `dark` theme in dark). The built HTML holds no picture of a diagram, only the page's script that draws it, so the build checks what it can (`mermaid.ts`, a `postBuild` that fails the build and names each problem): every `mermaid` block of the source of a docs page, Next and every cut version, reaches the build's JavaScript as the `value` of a `mermaid` element, the element the theme's Mermaid component draws; that component is in the build; `themeConfig.mermaid.theme`, as Docusaurus validated it, names a Mermaid theme for light and for dark; and no page shows a `mermaid` block as code, which is what a block becomes when Mermaid is off. A Docs version cut copies the block with its page and renders it as Next does. The Markdown copy of a page in the LLM files keeps the block's Mermaid source as written (`test/site/llms.test.ts`). An invalid block does not fail the build: the page shows Mermaid's error in its place, so look at a new diagram with `pnpm docs:start`, or on GitHub, which renders the same Markdown.
 
 ## Code samples
 

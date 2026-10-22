@@ -23,6 +23,7 @@
     "@docusaurus/faster": "catalog:",
     "@docusaurus/plugin-client-redirects": "catalog:",
     "@docusaurus/preset-classic": "catalog:",
+    "@docusaurus/theme-mermaid": "catalog:",
     "@easyops-cn/docusaurus-search-local": "catalog:",
     "@mdx-js/react": "catalog:",
     "docusaurus-plugin-llms": "catalog:",
@@ -38,6 +39,7 @@
     "typedoc-plugin-markdown": "catalog:"
   },
   "devDependencies": {
+    "@docusaurus/mdx-loader": "catalog:",
     "@docusaurus/module-type-aliases": "catalog:",
     "@docusaurus/plugin-content-docs": "catalog:",
     "@docusaurus/tsconfig": "catalog:",
