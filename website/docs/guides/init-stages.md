@@ -33,6 +33,45 @@ Init.onGameStart(() => {
 
 Pick the earliest stage that has what the code needs. Handles and state the rest of the map reads: `onGlobals`. Event registrations: `onTriggers`, or later. Code that depends on what the editor's own initialization triggers did: `onInitTriggers`. Anything that needs the game running (Timers counting, [sync](systems.md#sync), the [host election](systems.md#host)): `onGameStart`.
 
+## From load to game start
+
+The map script loads, the game runs `config` in the lobby, then `main`, and each Init stage runs right after the editor's function it follows. Native calls wait for an Init stage, the first being `globals`: before the map script only `InitGlobals`, `MarkGameStarted` and `InitBlizzard` exist, and the editor's script defines the rest ([Runtime facts](runtime-facts.md#the-entry-points), measured in the game).
+
+```mermaid
+flowchart TD
+  %% diagram: init-stages
+  subgraph no_stage["No Init stage yet: Native calls wait for one"]
+    load["The map script loads: module top level runs<br/>the library wraps the editor's functions that exist<br/>and captures the others when the script defines them"]
+    config["config, in the lobby<br/>no Init stage: only addScriptHook's<br/>W3TS_HOOK.CONFIG_BEFORE and W3TS_HOOK.CONFIG_AFTER"]
+    load --> config
+  end
+  subgraph main_function["main"]
+    init_globals["InitGlobals"]
+    globals_stage(["Init stage globals, Init.onGlobals<br/>the library's Hooks, then the Map project's,<br/>each under pcall"])
+    init_custom_triggers["InitCustomTriggers"]
+    triggers_stage(["Init stage triggers, Init.onTriggers<br/>the library's Hooks, then the Map project's,<br/>each under pcall"])
+    run_initialization_triggers["RunInitializationTriggers"]
+    init_triggers_stage(["Init stage initTriggers, Init.onInitTriggers<br/>the library's Hooks, then the Map project's,<br/>each under pcall"])
+    init_globals ==>|"map code calls Natives from here on"| globals_stage
+    globals_stage --> init_custom_triggers --> triggers_stage
+    triggers_stage --> run_initialization_triggers --> init_triggers_stage
+  end
+  mark_game_started["MarkGameStarted, from a 0.01-second Timer of Blizzard.j"]
+  game_start_stage(["Init stage gameStart, Init.onGameStart<br/>first, each earlier stage that never ran, in stage order<br/>then the library's Hooks, then the Map project's,<br/>each under pcall"])
+  config --> init_globals
+  init_triggers_stage -->|"main returns, the game starts a moment later"| mark_game_started
+  mark_game_started --> game_start_stage
+```
+
+| Node                                                                  | Details                                                                                                                                                                                                                                                           |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The map script loads                                                  | [Nothing at module top level](#nothing-at-module-top-level), [Where the library hooks in](#where-the-library-hooks-in)                                                                                                                                            |
+| `config`                                                              | [`addScriptHook`](#addscripthook); `config` runs before `main` ([Runtime facts](runtime-facts.md#the-entry-points)) and in the lobby ([#131, its run on #53](https://github.com/phmilk/reforged-ts/issues/53#issuecomment-5881143836)), both measured in the game |
+| `InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`      | The table above, [Where the library hooks in](#where-the-library-hooks-in)                                                                                                                                                                                        |
+| `MarkGameStarted`                                                     | The table above                                                                                                                                                                                                                                                   |
+| The Init stages `globals`, `triggers`, `initTriggers` and `gameStart` | [How callbacks run](#how-callbacks-run), [`Init`](../api/reforged-ts/variables/Init.md)                                                                                                                                                                           |
+| Map code calls Natives from the `globals` stage on                    | [Runtime facts: The entry points](runtime-facts.md#the-entry-points), [Creation before the globals Init stage](desync-safety-and-guards.md#creation-before-the-globals-init-stage-d7)                                                                             |
+
 ## How callbacks run
 
 - **Once, in order.** Each stage runs once. The library's callbacks for a stage run first, then the Map project's, in the order they were registered.

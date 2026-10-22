@@ -544,7 +544,12 @@ const external: Record<
   "workflows" | "packages" | "skills",
   Record<string, string[]>
 > = {
-  workflows: { "phmilk/reforged-ts-template": ["sync.yml"] },
+  // The Template's own board.yml and claim.yml share their names with this
+  // repository's: they are its callers of board-dispatch.yml and
+  // claim-check.yml (docs/release.md, "The board").
+  workflows: {
+    "phmilk/reforged-ts-template": ["board.yml", "claim.yml", "sync.yml"],
+  },
   packages: { "phmilk/reforged-ts-template": ["reforged-ts-template"] },
   // The published skills of mattpocock/skills (skills/engineering and
   // skills/productivity), read on 2026-10-22: docs/agents/ says how they are
@@ -642,6 +647,16 @@ const diagrams = files
   .sort()
   .flatMap((file) => readDiagrams(file, read(file)));
 
+// The `##` heading of a Markdown file's section that holds a line, from 1.
+function sectionOf(file: string, line: number): string {
+  return (
+    read(file)
+      .split(/\r?\n/)
+      .slice(0, line)
+      .findLast((text) => text.startsWith("## ")) ?? "(no section)"
+  );
+}
+
 describe("the diagrams of the repository", () => {
   it("reads the sets a diagram may cover from the repository", () => {
     expect(workflows, "the files of .github/workflows/").toContain("ci.yml");
@@ -697,6 +712,22 @@ describe("the diagrams of the repository", () => {
         state,
       );
     }
+  });
+
+  it("include the Claim board's reconcile, in the board section of the release doc", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("claim-board"))
+        .map(({ file, line }) => `${file}, ${sectionOf(file, line)}`),
+    ).toEqual(["docs/release.md, ## The board"]);
+  });
+
+  it("include the Init stages, in the Init stages guide of the docs site", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("init-stages"))
+        .map(({ file }) => file),
+    ).toEqual(["website/docs/guides/init-stages.md"]);
   });
 
   // #683: the README's "Map" lists every diagram, and every diagram is

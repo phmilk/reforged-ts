@@ -608,6 +608,60 @@ gh workflow run docs.yml --ref master -f version=1.99.0
 
 The Claim board is one Projects (v2) project on the owner's account, public, over both repositories: every open issue of `phmilk/reforged-ts` and `phmilk/reforged-ts-template` with a Status derived from GitHub state, written by one reconcile that is its single writer ([ADR 0016](adr/0016-the-assignee-is-the-claim-and-the-board-is-a-derived-view.md)). The protocol itself is the Claim section of [`docs/agents/issue-tracker.md`](agents/issue-tracker.md#claim), and nothing in it requires reading the board. Nobody moves a card by hand.
 
+```mermaid
+flowchart LR
+  %% diagram: claim-board
+  subgraph library["phmilk/reforged-ts"]
+    issues["issues: opened, reopened, closed, deleted, transferred, assigned, unassigned, labeled, unlabeled"]
+    pull_requests["pull_request_target into master: opened, reopened, closed, edited, converted_to_draft, ready_for_review"]
+    hourly["schedule: hourly"]
+    by_hand["workflow_dispatch: by hand"]
+    claim_dispatch["claim.yml, the claim check: job dispatch of claim-check.yml"]
+    board_dispatch["board-dispatch.yml, job dispatch: refuses a repository off its list"]
+    board["board.yml, job reconcile: one concurrency group board, checks out master"]
+    environment["environment board: PROJECT_TOKEN, admits master alone"]
+    reconcile["pnpm board:reconcile: the single writer"]
+  end
+  subgraph template["the Template: phmilk/reforged-ts-template"]
+    template_events["issues and pull_request_target into main, the same types as board.yml"]
+    template_board["the Template's caller: board.yml, job dispatch"]
+    template_claim["claim.yml, the claim check: job board-dispatch of claim-check.yml"]
+    template_environment["environment board: APP_PRIVATE_KEY, admits main alone"]
+  end
+  github["GitHub state: every open issue of both Board repositories, every item of the Claim board"]
+  claim_board["the Claim board: one Status per item"]
+  issues --> board
+  pull_requests --> board
+  hourly --> board
+  by_hand --> board
+  claim_dispatch -->|"after an assignment it makes: gh workflow run board.yml"| board
+  template_events --> template_board
+  template_board -->|"calls board-dispatch.yml@master"| board_dispatch
+  template_claim -->|"after an assignment it makes: calls board-dispatch.yml@master"| board_dispatch
+  template_environment -.->|"the App's key, passed by name"| board_dispatch
+  board_dispatch -->|"repository_dispatch board-repository-event, an empty payload"| board
+  board --> reconcile
+  environment -.->|"PROJECT_TOKEN, refused on any other ref"| reconcile
+  reconcile -->|"reads everything, on every run"| github
+  reconcile -->|"writes only the differences: a card moved by hand is put back"| claim_board
+```
+
+Every trigger runs the same full reconcile, which reads every open issue and every item from GitHub and writes only what differs, so no event carries data, a missed one is caught by the next run, and a card moved by hand is put back: that is why nobody moves one. A Board repository other than this one reaches `board.yml` only through `board-dispatch.yml`, since no event of it reaches this repository.
+
+| Node                                                                  | Read                                                                                                                                                                          |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `issues`, `pull_request_target`, `schedule`, `workflow_dispatch`      | "The workflow" below: each trigger, and why the pull-request events are `pull_request_target` into `master`                                                                   |
+| `claim.yml`, job `dispatch` of `claim-check.yml`                      | "The workflow" below, its last sentence; the check itself: "The check" in the [Claim section](agents/issue-tracker.md#claim)                                                  |
+| `board-dispatch.yml`                                                  | "The reusable dispatch" under "The other Board repositories" below; [ADR 0017](adr/0017-board-repositories-reach-the-claim-board-through-a-repository-dispatch.md)            |
+| `board.yml`, job `reconcile`                                          | "The workflow" below                                                                                                                                                          |
+| environment `board` of this repository                                | "The workflow" below: what keeps the token on `master`'s code alone                                                                                                           |
+| `pnpm board:reconcile`                                                | "The reconcile" below                                                                                                                                                         |
+| the Template's caller, its events                                     | "The Template's caller" under "The other Board repositories" below                                                                                                            |
+| the Template's `claim.yml`, job `board-dispatch` of `claim-check.yml` | "The claim check" under "The other Board repositories" below                                                                                                                  |
+| the Template's environment `board`                                    | "The Template's environment `board`" under "The other Board repositories" below                                                                                               |
+| GitHub state                                                          | "Members and archiving" below: what the reconcile reads                                                                                                                       |
+| the Claim board                                                       | "The definition is code" and "The rules" below: the project and how each Status is derived; [ADR 0016](adr/0016-the-assignee-is-the-claim-and-the-board-is-a-derived-view.md) |
+
 **The definition is code.** `release/src/board.ts` holds the title (`Reforged-TS`, how the project is found among the owner's projects), the Status field (the built-in single select rewritten in place to six options, Backlog, Ready, Blocked, In progress, In review and Done, in that order, each with a colour and a one-line description), the three views (`Board`, a board by Status, with Assignees, Labels and Parent issue on each card; `By assignee` and `By parent`, tables with the columns Title, Assignees, Status, Repository, Labels, Parent issue, Sub-issues progress and Linked pull requests), the project README (the rules in prose, "nothing here is moved by hand", the link to the Claim section), the public visibility and the links to both repositories, which list the board in each Projects tab. The Board view's column field (Status) and the tables' group-by (Assignees, Parent issue) have no API: they are set once by hand, as the board stage of the repository-setup wizard lists them. A rename of the project on GitHub changes `BOARD_TITLE` and the project together: under any other title the reconcile finds no project and the setup would create a second one.
 
 **The setup.** `pnpm board:setup` makes the project match the definition through the GraphQL API, as the `gh` login, which must be the owner's and hold the `project` scope (`gh auth refresh -s project`; a login with `repo` alone is refused). It finds the project by its title and creates it when it is missing, else updates it in place, and only what differs: the Status options are rewritten when a name, a colour or a description differs (every option is sent, since the list replaces the set; an existing one, matched by name, carries its id, so the items keep their value, and an option new to GitHub gets its items' values back from the reconcile's next run), a missing view is created and a drifted view's name, layout or visible fields updated, a missing repository link added, the visibility and the README restored. A project that matches draws no request, so it can be re-run. On a project it creates, GitHub's default view (`View 1`) stays as a fourth view, to delete by hand. `pnpm board:setup --dry-run` prints every request and sends none; when GitHub cannot be read (no `gh` login, no `project` scope), it prints the plan that creates everything, with a note, so the dry run never needs the token. Exit codes: 0 applied (or planned), 1 the state cannot be read, the login is not the owner's or a request failed, 2 usage.
