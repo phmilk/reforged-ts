@@ -32,12 +32,12 @@ import {
   requiredStatusChecks,
   RULESET_FILE,
 } from "./repo-settings.js";
+import { LIBRARY_REPOSITORY } from "./template-clone.js";
 import { isRecord } from "./unknown.js";
 import { jobRuns } from "./workflow-modes.js";
 import {
   localWorkflow,
   readWorkflow,
-  REPOSITORY,
   stringList,
   WORKFLOW_FOLDER,
   type Workflow,
@@ -105,33 +105,65 @@ interface Drawn {
   checks: { key: string; name: string }[];
   /** Every raw key a node or subgraph takes, for the id clash check. */
   keys: string[];
-  /** The raw key of each check node skipped in this repository. */
+  /** The raw key of each node skipped in this repository. */
   skipped: string[];
 }
 
-/** What GitHub knows of a run of this repository's workflows. */
-const HERE = new Map([["github.repository", REPOSITORY]]);
+const nothingDrawn = (): Drawn => ({
+  lines: [],
+  edges: [],
+  checks: [],
+  keys: [],
+  skipped: [],
+});
 
 /**
- * The jobs of `workflow`, their nodes keyed under `path`, their check names
- * under `prefix`, indented by `indent`; each skipped here when its
- * condition rules it out in this repository, or `callerSkipped`.
+ * Adds `inner` to `drawn` as the subgraph keyed `key`, labelled `label`,
+ * whose first and last lines are indented by `indent`.
+ */
+function addSubgraph(
+  drawn: Drawn,
+  inner: Drawn,
+  subgraph: { key: string; label: string; indent: string },
+): void {
+  const { key, label, indent } = subgraph;
+  drawn.lines.push(
+    `${indent}subgraph ${mermaidId(key)}[${mermaidLabel(label)}]`,
+    ...inner.lines,
+    `${indent}end`,
+  );
+  drawn.edges.push(...inner.edges);
+  drawn.checks.push(...inner.checks);
+  drawn.keys.push(key, ...inner.keys);
+  drawn.skipped.push(...inner.skipped);
+}
+
+/** What GitHub knows of a run of this repository's workflows. */
+const HERE = new Map([["github.repository", LIBRARY_REPOSITORY]]);
+
+/** Where the jobs of a workflow are drawn. */
+interface Placement {
+  /** The raw key their nodes are keyed under. */
+  path: string;
+  /** What their check names start with: their callers' names. */
+  prefix: string;
+  /** The indent of their lines. */
+  indent: string;
+  /** Whether their caller is skipped in this repository, and so they are. */
+  callerSkipped: boolean;
+}
+
+/**
+ * The jobs of `workflow`, placed by `placement`; each skipped here when its
+ * condition rules it out in this repository, or its caller is.
  */
 async function drawJobs(
   root: string,
   workflow: Workflow,
-  path: string,
-  prefix: string,
-  indent: string,
-  callerSkipped: boolean,
+  placement: Placement,
 ): Promise<Drawn> {
-  const drawn: Drawn = {
-    lines: [],
-    edges: [],
-    checks: [],
-    keys: [],
-    skipped: [],
-  };
+  const { path, prefix, indent, callerSkipped } = placement;
+  const drawn = nothingDrawn();
   const runs = jobRuns(workflow.jobs, HERE);
   const anchors = new Map<string, string[]>();
   for (const job of workflow.jobs) {
@@ -139,28 +171,22 @@ async function drawJobs(
     const name = prefix + (job.name ?? id);
     const key = `${path}/${id}`;
     const skipped = callerSkipped || runs.get(id) === false;
+    const labelHere = (label: string) =>
+      skipped ? `${label}, skipped here` : label;
     const called = job.uses === undefined ? undefined : localWorkflow(job.uses);
     anchors.set(id, [key]);
     if (called !== undefined) {
-      const inner = await drawJobs(
-        root,
-        await readWorkflow(root, called),
+      const inner = await drawJobs(root, await readWorkflow(root, called), {
+        path: key,
+        prefix: `${name} / `,
+        indent: `${indent}  `,
+        callerSkipped: skipped,
+      });
+      addSubgraph(drawn, inner, {
         key,
-        `${name} / `,
-        `${indent}  `,
-        skipped,
-      );
-      drawn.lines.push(
-        `${indent}subgraph ${mermaidId(key)}[${mermaidLabel(
-          `${called}, called by the job ${name}`,
-        )}]`,
-        ...inner.lines,
-        `${indent}end`,
-      );
-      drawn.edges.push(...inner.edges);
-      drawn.checks.push(...inner.checks);
-      drawn.keys.push(key, ...inner.keys);
-      drawn.skipped.push(...inner.skipped);
+        label: `${called}, called by the job ${name}`,
+        indent,
+      });
       continue;
     }
     if (job.uses !== undefined) {
@@ -168,10 +194,11 @@ async function drawJobs(
       // names, are not read.
       drawn.lines.push(
         `${indent}${mermaidId(key)}[[${mermaidLabel(
-          `${name} / (a job of ${job.uses})`,
+          labelHere(`${name} / (a job of ${job.uses})`),
         )}]]`,
       );
       drawn.keys.push(key);
+      if (skipped) drawn.skipped.push(key);
       continue;
     }
     const nodes = matrixLegs(workflow.file, id, job.matrix).map((values) => ({
@@ -179,9 +206,8 @@ async function drawJobs(
       name: values.length > 0 ? `${name} (${values.join(", ")})` : name,
     }));
     for (const node of nodes) {
-      const label = skipped ? `${node.name}, skipped here` : node.name;
       drawn.lines.push(
-        `${indent}${mermaidId(node.key)}[${mermaidLabel(label)}]`,
+        `${indent}${mermaidId(node.key)}[${mermaidLabel(labelHere(node.name))}]`,
       );
     }
     drawn.checks.push(...nodes);
@@ -238,32 +264,26 @@ async function render(root: string): Promise<string> {
   const files = (await readdir(join(root, WORKFLOW_FOLDER)))
     .filter((file) => /\.ya?ml$/.test(file))
     .sort(byCodePoint);
-  const lines: string[] = [];
+  const drawn = nothingDrawn();
   const triggers: string[] = [];
-  const edges: string[] = [];
-  const checks: { key: string; name: string }[] = [];
-  const keys: string[] = [];
-  const skipped: string[] = [];
   for (const file of files) {
     const workflow = await readWorkflow(root, file);
     const events = pullRequestEvents(workflow.on);
     if (events.length === 0) continue;
-    const drawn = await drawJobs(root, workflow, file, "", "  ", false);
-    lines.push(
-      `subgraph ${mermaidId(file)}[${mermaidLabel(file)}]`,
-      ...drawn.lines,
-      "end",
-    );
+    const jobs = await drawJobs(root, workflow, {
+      path: file,
+      prefix: "",
+      indent: "  ",
+      callerSkipped: false,
+    });
+    addSubgraph(drawn, jobs, { key: file, label: file, indent: "" });
     for (const event of events) {
       triggers.push(
         `${PULL_REQUEST} -->|${mermaidLabel(event)}| ${mermaidId(file)}`,
       );
     }
-    edges.push(...drawn.edges);
-    checks.push(...drawn.checks);
-    keys.push(file, ...drawn.keys);
-    skipped.push(...drawn.skipped);
   }
+  const { lines, edges, checks, keys, skipped } = drawn;
   assertDistinctIds(keys, [CONTRIBUTOR, RENOVATE, PULL_REQUEST]);
 
   const required = requiredStatusChecks(await readRuleset(root));

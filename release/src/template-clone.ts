@@ -7,6 +7,12 @@
  */
 import type { GitRunner } from "./git.js";
 
+/**
+ * The library's repository, on GitHub, which the workflows belong to:
+ * `github.repository` when they run there.
+ */
+export const LIBRARY_REPOSITORY = "phmilk/reforged-ts";
+
 /** The Template repository, on GitHub. */
 export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";
 
