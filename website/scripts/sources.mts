@@ -91,11 +91,18 @@ export const SOURCES: readonly Source[] = [
     position: 4,
   }),
   markdownFile({
+    name: "the development loop",
+    from: "docs/agents/development-loop.md",
+    to: "contributing/development-loop.md",
+    title: "The development loop",
+    position: 5,
+  }),
+  markdownFile({
     name: "the add-wrapper Agent skill",
     from: ".claude/skills/add-wrapper/SKILL.md",
     to: "contributing/adding-a-wrapper.md",
     title: "Adding a Wrapper",
-    position: 5,
+    position: 6,
     absent: "The add-wrapper Agent skill (#202) is not written yet.",
   }),
   markdownFile({
@@ -103,14 +110,14 @@ export const SOURCES: readonly Source[] = [
     from: "packages/eslint-plugin-reforged/AGENTS.md",
     to: "contributing/adding-a-lint-rule.md",
     title: "Adding a lint rule",
-    position: 6,
+    position: 7,
   }),
   markdownFile({
     name: "the Typings' conventions",
     from: "packages/reforged-types/AGENTS.md",
     to: "contributing/adding-a-patch.md",
     title: "Adding a Patch",
-    position: 7,
+    position: 8,
   }),
 
   // The Changelog section: one page per package and the index.
