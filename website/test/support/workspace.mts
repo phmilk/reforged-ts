@@ -233,8 +233,8 @@ export const TYPINGS_MANIFEST = JSON.stringify({
 /**
  * The files of a fixture repository with every required source of
  * `SOURCES`: a glossary, two ADRs, one changelog (reforged-ts's), the agent
- * conventions, a lint plugin with two rules, the Typings' package.json and
- * the library's rename map (its schema next to it, the built declarations,
+ * conventions, the development loop, a lint plugin with two rules, the
+ * Typings' package.json and the library's rename map (its schema next to it, the built declarations,
  * the behaviour changes, the migration page); no CONTRIBUTING.md, no Agent
  * skill, no other changelog.
  */
@@ -255,6 +255,8 @@ export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
   "docs/release.md": "# Release\n",
   "packages/reforged-ts/CHANGELOG.md": CHANGELOG,
   "AGENTS.md": "# fixture\n\n## Commands\n\nRun `pnpm check`.\n",
+  "docs/agents/development-loop.md":
+    "# The development loop\n\nClaim, then implement.\n",
   "packages/eslint-plugin-reforged/AGENTS.md":
     "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../CONTEXT.md) and [a bad escape](%zz.md).\n",
   "packages/reforged-types/AGENTS.md":

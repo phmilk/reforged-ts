@@ -552,8 +552,8 @@ const external: Record<
   },
   packages: { "phmilk/reforged-ts-template": ["reforged-ts-template"] },
   // The published skills of mattpocock/skills (skills/engineering and
-  // skills/productivity), read on 2026-10-22: docs/agents/ says how they are
-  // installed.
+  // skills/productivity), read on 2026-10-22: docs/agents/development-loop.md
+  // says how they are installed.
   skills: {
     "mattpocock/skills": [
       "ask-matt",
@@ -696,6 +696,16 @@ describe("the diagrams of the repository", () => {
       ]),
     );
     expect(citations.packages).toContain("reforged-types");
+  });
+
+  it("include the development loop, covering the Agent skills, in its agents doc", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("development-loop"))
+        .map(({ file, covers }) => ({ file, covers })),
+    ).toEqual([
+      { file: "docs/agents/development-loop.md", covers: ["skills"] },
+    ]);
   });
 
   it("include the docs site, in the website's README", () => {

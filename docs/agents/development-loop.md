@@ -1,0 +1,95 @@
+# The development loop
+
+The development loop takes a piece of work from an on-ramp to a merged pull request, one Agent skill per step. Most of its Agent skills live outside this repository.
+
+## Where the Agent skills come from
+
+- **External.** Every skill of the loop but the project's three comes from [`mattpocock/skills`](https://github.com/mattpocock/skills), installed once per agent on each machine, never committed here. In Claude Code:
+
+  ```sh
+  claude plugin install mattpocock-skills@claude-plugins-official
+  ```
+
+  Any other agent takes editable copies with `npx skills@latest add mattpocock/skills -a <agent>`, and the upstream README's [Installation](https://github.com/mattpocock/skills#installation-30-second-setup) gives the plugin commands of Codex, Copilot and Gemini. Pick one way per agent: both install every skill twice. Checked against that README on 2026-10-22.
+
+- **Set up for this repository.** The three agents docs, [`issue-tracker.md`](issue-tracker.md), [`triage-labels.md`](triage-labels.md) and [`domain.md`](domain.md), are the output of `/setup-matt-pocock-skills`, with the "Agent skills" block of [`AGENTS.md`](../../AGENTS.md#agent-skills) that points at them. The external skills read them for this repository's tracker, labels and domain docs; the repository has since edited them (the Claim, the kind labels), so they are its own: change a convention there, never in a skill.
+- **The project's.** `add-wrapper`, `add-lint-rule` and `new-patch` live in `.claude/skills/`, listed with their triggers under "Skills" in `AGENTS.md`.
+- **Named in a diagram.** An external skill a diagram cites is declared, with its source, in the `external` list of `test/conventions/diagrams.test.ts`: add it there first.
+
+## The loop
+
+An on-ramp shapes the work, the spec and its tickets fix it, the Claim takes it, and an implementation skill carries it to the pull request:
+
+```mermaid
+flowchart TD
+  %% diagram: development-loop
+  %% covers: skills
+  subgraph on_ramps["the on-ramps"]
+    triage["/triage"]
+    wayfinder["/wayfinder"]
+    research["/research"]
+    prototype["/prototype"]
+    diagnosing_bugs["/diagnosing-bugs"]
+  end
+  grill_with_docs["/grill-with-docs"]
+  to_spec["/to-spec: a spec"]
+  to_tickets["/to-tickets: its tickets"]
+  claim["the Claim, the first write: gh issue edit --add-assignee @me"]
+  implement["/implement, which does not claim"]
+  implement_spec["/implement-spec, which does not claim"]
+  tdd["/tdd"]
+  code_review["/code-review"]
+  add_wrapper["/add-wrapper"]
+  add_lint_rule["/add-lint-rule"]
+  new_patch["/new-patch"]
+  pull_request["a pull request with its changeset, pnpm check green"]
+  merge["the merge into master"]
+
+  wayfinder --> grill_with_docs
+  research --> grill_with_docs
+  prototype --> grill_with_docs
+  diagnosing_bugs --> grill_with_docs
+  triage -->|"a ready-for-agent issue"| claim
+  diagnosing_bugs -->|"a bug fixed at once"| claim
+  grill_with_docs --> to_spec
+  to_spec --> to_tickets
+  to_tickets --> claim
+  claim -->|"a ticket or an issue"| implement
+  claim -->|"a spec with its tickets"| implement_spec
+  claim -->|"a Native to cover"| add_wrapper
+  claim -->|"a pitfall to guard at lint level"| add_lint_rule
+  claim -->|"a new Patch"| new_patch
+  implement --> tdd
+  implement_spec -->|"one implementer per ticket"| tdd
+  tdd --> code_review
+  code_review --> pull_request
+  add_wrapper --> pull_request
+  add_lint_rule --> pull_request
+  new_patch --> pull_request
+  pull_request -->|"the required checks green, a review"| merge
+```
+
+| Node               | Details in                                                                                                                                                                                   |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/triage`          | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/triage/SKILL.md); the labels it applies: [`triage-labels.md`](triage-labels.md)                           |
+| `/wayfinder`       | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md); its map and tickets: [Wayfinding operations](issue-tracker.md#wayfinding-operations) |
+| `/research`        | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/research/SKILL.md)                                                                                        |
+| `/prototype`       | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md)                                                                                       |
+| `/diagnosing-bugs` | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md)                                                                                 |
+| `/grill-with-docs` | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/SKILL.md); the docs it reads and writes: [`domain.md`](domain.md)                         |
+| `/to-spec`         | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md); its label: [Kind labels](triage-labels.md#kind-labels)                                 |
+| `/to-tickets`      | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-tickets/SKILL.md); its label: [Kind labels](triage-labels.md#kind-labels)                              |
+| the Claim          | [Claim](issue-tracker.md#claim) in the issue tracker doc                                                                                                                                     |
+| `/implement`       | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/implement/SKILL.md)                                                                                       |
+| `/implement-spec`  | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/implement-spec/SKILL.md)                                                                                  |
+| `/tdd`             | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md)                                                                                             |
+| `/code-review`     | [its `SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/code-review/SKILL.md)                                                                                     |
+| `/add-wrapper`     | [its `SKILL.md`](../../.claude/skills/add-wrapper/SKILL.md)                                                                                                                                  |
+| `/add-lint-rule`   | [its `SKILL.md`](../../.claude/skills/add-lint-rule/SKILL.md); [Adding or changing a rule](../../packages/eslint-plugin-reforged/AGENTS.md#adding-or-changing-a-rule)                        |
+| `/new-patch`       | [its `SKILL.md`](../../.claude/skills/new-patch/SKILL.md); [New Patch loop](../../packages/reforged-types/AGENTS.md#new-patch-loop)                                                          |
+| a pull request     | [Pull requests](../../CONTRIBUTING.md#pull-requests) and [Changesets](../../CONTRIBUTING.md#changesets) in the contributing guide                                                            |
+| the merge          | [Pull requests](../../CONTRIBUTING.md#pull-requests): the required checks                                                                                                                    |
+
+- **The Claim is the first write**: `gh issue edit <n> --add-assignee @me` before the branch, the first commit, any comment and the pull request. `/implement` and `/implement-spec` do not claim by themselves: claim the ticket, the issue, or the spec with its tickets, then invoke one. A spec you will split and implement yourself is claimed before `/to-tickets`, then the tickets the split creates; the on-ramps, triage and the split write without a Claim.
+- **A project skill replaces `/implement`** for its task: `/add-wrapper` covers a Native, `/add-lint-rule` guards a pitfall at lint level, `/new-patch` adopts a Patch. Each carries its own steps to the pull request and its changeset.
+- **`/implement` works one ticket or issue** on the current branch: `/tdd` at agreed seams, then `/code-review`. **`/implement-spec` works a whole spec** on one branch and one draft pull request closing the spec and its tickets: an implementer per ticket on the frontier of the task graph, each in its own worktree driving `/tdd`, a merger after each, then `/code-review` on the whole.

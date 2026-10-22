@@ -13,6 +13,7 @@ flowchart TD
     glossary["the glossary: CONTEXT.md"]
     adrs["the ADRs: docs/adr/"]
     agent_conventions["the agent conventions: AGENTS.md"]
+    development_loop["the development loop: docs/agents/development-loop.md"]
     contributing_guide["the contributing guide: CONTRIBUTING.md"]
     how_tos["the how-tos: /add-wrapper and the AGENTS.md of reforged-types and of eslint-plugin-reforged"]
     lint_rules["the lint rules' pages: the docs/ of eslint-plugin-reforged"]
@@ -72,6 +73,7 @@ flowchart TD
 | the glossary                                               | "the glossary" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                           |
 | the ADRs                                                   | "the ADRs" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                               |
 | the agent conventions                                      | "the agent conventions" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                  |
+| the development loop                                       | "the development loop" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                   |
 | the contributing guide                                     | "the contributing guide" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages)                                 |
 | the how-tos                                                | "the add-wrapper Agent skill", "the lint plugin's conventions" and "the Typings' conventions" in [`scripts/sources.mts`](scripts/sources.mts) |
 | the lint rules' pages                                      | "the lint rule pages" in [`scripts/sources.mts`](scripts/sources.mts); [Collected pages](#collected-pages), the Lint rules guide              |
@@ -138,7 +140,7 @@ It runs in `pnpm check` and on both CI legs, in about 10 s; `docs:check` runs on
 
 ## Collected pages
 
-`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases), and the generated sections of the Migration section's hand-written pages. Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
+`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, the development loop from `docs/agents/development-loop.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases), and the generated sections of the Migration section's hand-written pages. Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
 
 The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` (the migration guide's in `scripts/migration.mts`) and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do. Each run deletes a source's outputs whole before writing them, so a folder output holds nothing hand-written: a source that writes next to hand-written pages owns single files or a subfolder of its own.
 
