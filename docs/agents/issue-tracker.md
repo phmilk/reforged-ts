@@ -24,6 +24,69 @@ Infer the repo from `git remote -v`; `gh` does this automatically when run insid
 
 A Claim marks an issue as taken by one login: it is held while that login is among the issue's assignees. It binds every Collaborator (a person with push access to this repository or the Template's) and every Agent a Collaborator runs: an Agent writes as the Collaborator's login, so its Claim is the Collaborator's. The assignee is the source; the board (below) is a view of it.
 
+An issue's life, from the form or the skill that creates it to its close; under each state, its Status on the Claim board:
+
+```mermaid
+stateDiagram-v2
+  %% diagram: issue-life
+  state "needs-triage" as needs_triage
+  state "needs-info" as needs_info
+  state "ready-for-agent" as ready_for_agent
+  state "ready-for-human" as ready_for_human
+  state "an open blocker" as blocked
+  state "wontfix" as wontfix
+  state "claimed" as claimed
+  state "a draft pull request" as draft
+  state "a pull request in review" as review
+  state "stale" as stale
+  state "closed" as closed
+  needs_triage : Backlog
+  needs_info : Backlog
+  ready_for_agent : Ready
+  ready_for_human : Ready
+  blocked : Blocked
+  wontfix : Done
+  claimed : In progress
+  draft : In progress
+  stale : In progress
+  review : In review
+  closed : Done
+
+  [*] --> needs_triage : an issue form, bug, enhancement or game-patch
+  [*] --> ready_for_agent : /to-spec or /to-tickets, spec or ticket
+  needs_triage --> needs_info : /triage
+  needs_info --> needs_triage : the reporter answers
+  needs_triage --> ready_for_agent : /triage
+  needs_triage --> ready_for_human : /triage
+  needs_triage --> wontfix : /triage
+  ready_for_agent --> blocked : blocked by an open issue
+  blocked --> ready_for_agent : its last blocker closes
+  ready_for_agent --> claimed : the Claim, the first write
+  ready_for_human --> claimed
+  claimed --> ready_for_agent : release
+  claimed --> draft : opened, checked by claim.yml
+  draft --> review : marked ready for review
+  review --> closed : merged, it closes the issue
+  claimed --> stale : 3 days without a commit or a comment
+  draft --> stale : 3 days without a commit or a comment
+  stale --> claimed : takeover
+  wontfix --> [*]
+  closed --> [*]
+```
+
+| State                                | Status on the Claim board | Defined in                                                                                                                                        |
+| ------------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `needs-triage`                       | Backlog                   | [Triage labels](triage-labels.md); an issue form (`.github/ISSUE_TEMPLATE/`) sets it with its own label                                           |
+| `needs-info`                         | Backlog                   | [Triage labels](triage-labels.md)                                                                                                                 |
+| `ready-for-agent`, `ready-for-human` | Ready                     | [Triage labels](triage-labels.md); a spec or a ticket gets its labels from `to-spec` or `to-tickets`: [Kind labels](triage-labels.md#kind-labels) |
+| `wontfix`                            | Done                      | [Triage labels](triage-labels.md)                                                                                                                 |
+| an open blocker                      | Blocked                   | "Claimable" below; "Blocking" under [Wayfinding operations](#wayfinding-operations)                                                               |
+| claimed                              | In progress               | "First write", "Claimable" and "One login per issue" below; "Release" for the way back                                                            |
+| a draft pull request                 | In progress               | "The check" below                                                                                                                                 |
+| a pull request in review             | In review                 | "The board" below                                                                                                                                 |
+| stale                                | In progress               | "Stale" below, with the takeover                                                                                                                  |
+| closed                               | Done                      | "A pull request names what it delivers" below                                                                                                     |
+
 - **First write.** Before working on an issue, assign yourself: `gh issue edit <n> --add-assignee @me`, before the branch, the first commit, any comment and the pull request. Read the issue back: if it now has two assignees, the later one withdraws (`--remove-assignee @me`) and says so in a comment.
 - **Claimable.** An open issue with no assignee that is `ready-for-agent` or `ready-for-human`, a ticket of a wayfinder map on its frontier (no open blocker), or a `ready-for-agent` spec (claimed whole, with its tickets: below). Not claimable: `needs-triage` and `needs-info` (triaged, not claimed) and a map. Triage and splitting are not claimed: their writes are the brief, the labels and the new issues; whoever implements claims. A bug you find and fix at once: open the issue and claim it in one gesture.
 - **One login per issue.** An issue assigned to another login is theirs: do not add yourself, do not post a brief on it, do not open a pull request that closes it. A second assignee is added only by the first, for pairing; any other two assignees are a conflict to resolve, not work in pair.
