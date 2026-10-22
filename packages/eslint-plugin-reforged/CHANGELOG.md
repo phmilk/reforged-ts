@@ -1,5 +1,18 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.7
+
+### Minor Changes
+
+- [#643](https://github.com/phmilk/reforged-ts/pull/643) [`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa) Thanks [@reforged-ts-bot](https://github.com/apps/reforged-ts-bot)! - Support Patch 3.0.1.24370: the event responses `BlzGetEquippedItem` and `BlzGetUnequippedItem` are guarded as their unprefixed twins are, and the data cites the `common.j` of 3.0.1.
+
+### Patch Changes
+
+- Updated dependencies [[`d3c0594`](https://github.com/phmilk/reforged-ts/commit/d3c0594fefdbea7f7dc610fa441f83d2e8e32380), [`aed0f6d`](https://github.com/phmilk/reforged-ts/commit/aed0f6d5d24259fdc6a066fe552244f4361b8a47), [`259dc15`](https://github.com/phmilk/reforged-ts/commit/259dc1536a4c3481dc344f028bbecdbef83a568a), [`e0da304`](https://github.com/phmilk/reforged-ts/commit/e0da30408103337ffb32b3624018326e6948c0ac), [`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa), [`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa), [`e44c3be`](https://github.com/phmilk/reforged-ts/commit/e44c3beb22b33109ab94e10f9897f737f3b3d041), [`6f7489c`](https://github.com/phmilk/reforged-ts/commit/6f7489c0bf980462d6f194fbd9ab130951e9c285)]:
+  - reforged-map@1.0.0-alpha.4
+  - reforged-ts@1.0.0-alpha.19
+  - reforged-types@1.0.0-alpha.6
+
 ## 1.0.0-alpha.6
 
 ### Minor Changes

@@ -1,5 +1,25 @@
 # reforged-builtins
 
+## 1.0.0-alpha.5
+
+### Major Changes
+
+- [#643](https://github.com/phmilk/reforged-ts/pull/643) [`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa) Thanks [@reforged-ts-bot](https://github.com/apps/reforged-ts-bot)! - The Built-in objects of Patch 3.0.1.24370, as the Game version `3.0.1`: list `reforged-builtins/3.0.1` in `types`.
+
+  - Added: the abilities `ADN3`, `AHRg`, `AIgs`, `AIst`, `ATar` (Talent Retraining) and `Astt`, the buffs `BUda` and `Bsot`, the item `cgah` and the doodad `NSr0` (Archway). The Custom set of Reign of Chaos gains the items `sxpl` and `vpur`.
+  - Removed: the doodad `NSra`, whose constant was `Archway_NSra`.
+  - Renamed constants, whose objects the game renamed: `ItemBash15251_AIBq` is `ItemBash15_AIBq`, `ItemBash10252_AIBw` is `ItemBash10_AIBw`, `ItemAuraCommand8_AIcq` is `ItemAuraCommand5_AIcq`, `Unnamed_AIs2` is `ItemAttackSpeedBonus_AIs2` and `ItemHugeFlailWS_Ahf1` is `ItemHugeFlailTC_Ahf1`. Replace the old names in your code.
+
+### Minor Changes
+
+- [#668](https://github.com/phmilk/reforged-ts/pull/668) [`d3c0594`](https://github.com/phmilk/reforged-ts/commit/d3c0594fefdbea7f7dc610fa441f83d2e8e32380) Thanks [@wyller](https://github.com/wyller)! - The index of `reforged-builtins` gives a buff and an upgrade a `commentName` where the World Editor's comments in `war3map.wts` name them otherwise than `name`: a buff's editor name, empty when it has none, and an upgrade's names of every level. The Object data editor of `reforged-map` names an object in those comments as the 3.0 World Editor does: a buff by its editor name (`fnam`), an upgrade by its name at level 0 only, else by its base's `commentName`, so that the World Editor no longer rewrites the comment on its next save.
+
+### Patch Changes
+
+- [#669](https://github.com/phmilk/reforged-ts/pull/669) [`259dc15`](https://github.com/phmilk/reforged-ts/commit/259dc1536a4c3481dc344f028bbecdbef83a568a) Thanks [@wyller](https://github.com/wyller)! - The READMEs say what the World Editor contract fixture settled: the writer's output of an edit of every Object kind is byte-identical to the 3.0.1 World Editor's save of it, `unsf` and `ushr` stay in the Skin file, and a levelled field's comment names no level.
+- Updated dependencies [[`f2644a6`](https://github.com/phmilk/reforged-ts/commit/f2644a6dea0120599dae7f2dfc5353b1d08675fa)]:
+  - reforged-types@1.0.0-alpha.6
+
 ## 1.0.0-alpha.4
 
 ### Minor Changes
