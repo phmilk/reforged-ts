@@ -12,9 +12,8 @@
  * `name` (its id without one), `<name> (<values>)` for a matrix leg, and
  * `<caller job> / <called job>` for a job of a called workflow.
  */
-import { readdir, readFile } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { parse } from "yaml";
 import type { Diagram } from "./diagrams.js";
 import {
   mermaidBlock,
@@ -29,8 +28,13 @@ import {
   RULESET_FILE,
 } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
+import {
+  readWorkflow,
+  WORKFLOW_FOLDER,
+  type Workflow,
+  type WorkflowStep,
+} from "./workflows.js";
 
-const WORKFLOWS = ".github/workflows";
 /** The workflow whose steps the table lists. */
 const STEPS_WORKFLOW = "ci.yml";
 const PULL_REQUEST_EVENTS = ["pull_request", "pull_request_target"] as const;
@@ -38,18 +42,6 @@ const PULL_REQUEST_EVENTS = ["pull_request", "pull_request_target"] as const;
 const COLLABORATOR = "collaborator";
 const RENOVATE = "renovate";
 const PULL_REQUEST = "pull_request";
-
-type Workflow = Record<string, unknown> & { jobs: Record<string, unknown> };
-
-async function readWorkflow(root: string, file: string): Promise<Workflow> {
-  const value: unknown = parse(
-    await readFile(join(root, WORKFLOWS, file), "utf8"),
-  );
-  if (!isRecord(value) || !isRecord(value.jobs)) {
-    throw new Error(`${WORKFLOWS}/${file}: not a workflow (no jobs).`);
-  }
-  return value as Workflow;
-}
 
 const strings = (value: unknown): string[] =>
   Array.isArray(value) ? value.map(String) : [];
@@ -72,9 +64,11 @@ function pullRequestEvents(on: unknown): string[] {
   });
 }
 
-/** The values of each leg of a job's matrix, in GitHub's order; none without one. */
-function matrixLegs(file: string, id: string, strategy: unknown): string[][] {
-  const matrix = isRecord(strategy) ? strategy.matrix : undefined;
+/**
+ * The values of each leg of the matrix of the job `id` of `file`, in
+ * GitHub's order; one leg of no value without a matrix.
+ */
+function matrixLegs(file: string, id: string, matrix: unknown): string[][] {
   if (matrix === undefined) return [[]];
   const lists = isRecord(matrix) ? Object.entries(matrix) : [];
   if (
@@ -85,7 +79,7 @@ function matrixLegs(file: string, id: string, strategy: unknown): string[][] {
     )
   ) {
     throw new Error(
-      `${WORKFLOWS}/${file}: the matrix of the job ${id} is not a set of lists (include, exclude or an expression), whose check names the CI diagram cannot tell.`,
+      `${file}: the matrix of the job ${id} is not a set of lists (include, exclude or an expression), whose check names the CI diagram cannot tell.`,
     );
   }
   return lists.reduce<string[][]>(
@@ -108,12 +102,11 @@ interface Drawn {
 }
 
 /**
- * The jobs of `workflow` (the file `file`), their nodes keyed under `path`,
- * their check names under `prefix`, indented by `indent`.
+ * The jobs of `workflow`, their nodes keyed under `path`, their check names
+ * under `prefix`, indented by `indent`.
  */
 async function drawJobs(
   root: string,
-  file: string,
   workflow: Workflow,
   path: string,
   prefix: string,
@@ -121,23 +114,17 @@ async function drawJobs(
 ): Promise<Drawn> {
   const drawn: Drawn = { lines: [], edges: [], checks: [], keys: [] };
   const anchors = new Map<string, string[]>();
-  const needs = new Map<string, string[]>();
-  for (const [id, job] of Object.entries(workflow.jobs)) {
-    if (!isRecord(job)) continue;
-    const name = prefix + (typeof job.name === "string" ? job.name : id);
+  for (const job of workflow.jobs) {
+    const { id } = job;
+    const name = prefix + (job.name ?? id);
     const key = `${path}/${id}`;
-    needs.set(
-      id,
-      typeof job.needs === "string" ? [job.needs] : strings(job.needs),
-    );
-    const called =
-      typeof job.uses === "string" && job.uses.startsWith(`./${WORKFLOWS}/`)
-        ? job.uses.slice(`./${WORKFLOWS}/`.length)
-        : undefined;
+    const local = `./${WORKFLOW_FOLDER}/`;
+    const called = job.uses?.startsWith(local)
+      ? job.uses.slice(local.length)
+      : undefined;
     if (called !== undefined) {
       const inner = await drawJobs(
         root,
-        called,
         await readWorkflow(root, called),
         key,
         `${name} / `,
@@ -156,8 +143,7 @@ async function drawJobs(
       anchors.set(id, [key]);
       continue;
     }
-    const legs = matrixLegs(file, id, job.strategy);
-    const nodes = legs.map((values) => ({
+    const nodes = matrixLegs(workflow.file, id, job.matrix).map((values) => ({
       key: [key, ...values].join("/"),
       name: values.length > 0 ? `${name} (${values.join(", ")})` : name,
     }));
@@ -173,9 +159,9 @@ async function drawJobs(
       nodes.map((node) => node.key),
     );
   }
-  for (const [id, needed] of needs) {
-    for (const from of needed.flatMap((need) => anchors.get(need) ?? [])) {
-      for (const to of anchors.get(id) ?? []) {
+  for (const job of workflow.jobs) {
+    for (const from of job.needs.flatMap((need) => anchors.get(need) ?? [])) {
+      for (const to of anchors.get(job.id) ?? []) {
         drawn.edges.push(`${mermaidId(from)} --> ${mermaidId(to)}`);
       }
     }
@@ -200,44 +186,34 @@ function table(header: readonly string[], rows: readonly string[][]): string {
 const code = (text: string) => `\`${text.replaceAll("|", "\\|")}\``;
 
 /** What a step is called: its name, the action it uses, or its first command. */
-function stepLabel(step: Record<string, unknown>): string {
-  if (typeof step.name === "string") return step.name;
-  if (typeof step.uses === "string") return step.uses.replace(/@.*$/, "");
-  const run = typeof step.run === "string" ? step.run : "";
-  return (
-    run
-      .split("\n")
-      .find((line) => line.trim() !== "")
-      ?.trim() ?? ""
-  );
+function stepLabel(step: WorkflowStep): string {
+  if (step.name !== undefined) return step.name;
+  if (step.uses !== undefined) return step.uses.replace(/@.*$/, "");
+  const lines = (step.run ?? "").split("\n");
+  return lines.find((line) => line.trim() !== "")?.trim() ?? "";
 }
 
 /** The table of the steps of `ci.yml`, whose one job holds them. */
 async function stepsTable(root: string): Promise<string> {
   const workflow = await readWorkflow(root, STEPS_WORKFLOW);
-  const jobs = Object.values(workflow.jobs).filter(
-    (job) => isRecord(job) && Array.isArray(job.steps),
-  ) as { steps: unknown[] }[];
+  const jobs = workflow.jobs.filter((job) => job.steps !== undefined);
   if (jobs.length !== 1) {
     throw new Error(
-      `${WORKFLOWS}/${STEPS_WORKFLOW}: ${String(jobs.length)} jobs with steps; the steps table of the CI diagram lists the steps of one job.`,
+      `${workflow.file}: ${String(jobs.length)} jobs with steps; the steps table of the CI diagram lists the steps of one job.`,
     );
   }
   const rows = jobs
-    .flatMap((job) => job.steps)
-    .filter(isRecord)
+    .flatMap((job) => job.steps ?? [])
     .map((step, index) => [
       String(index + 1),
       code(stepLabel(step)),
-      typeof step.if === "string"
-        ? code(step.if.trim().replace(/\s+/g, " "))
-        : "",
+      step.if === undefined ? "" : code(step.if.replace(/\s+/g, " ")),
     ]);
   return table(["#", `Step of ${code(STEPS_WORKFLOW)}`, code("if")], rows);
 }
 
 async function render(root: string): Promise<string> {
-  const files = (await readdir(join(root, WORKFLOWS)))
+  const files = (await readdir(join(root, WORKFLOW_FOLDER)))
     .filter((file) => /\.ya?ml$/.test(file))
     .sort(byCodePoint);
   const lines: string[] = [];
@@ -249,7 +225,7 @@ async function render(root: string): Promise<string> {
     const workflow = await readWorkflow(root, file);
     const events = pullRequestEvents(workflow.on);
     if (events.length === 0) continue;
-    const drawn = await drawJobs(root, file, workflow, file, "", "  ");
+    const drawn = await drawJobs(root, workflow, file, "", "  ");
     lines.push(
       `subgraph ${mermaidId(file)}[${mermaidLabel(file)}]`,
       ...drawn.lines,
