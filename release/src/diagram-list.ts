@@ -5,9 +5,11 @@
  */
 import { packagesDiagram } from "./diagram-packages.js";
 import { pullRequestCiDiagram } from "./diagram-pull-request-ci.js";
+import { releaseDiagram } from "./diagram-release.js";
 import type { Diagram } from "./diagrams.js";
 
 export const DIAGRAMS: readonly Diagram[] = [
   packagesDiagram,
   pullRequestCiDiagram,
+  releaseDiagram,
 ];

@@ -38,6 +38,7 @@ async function repository(readme: string): Promise<string> {
   return root;
 }
 
+/** The CLI, by default with the packages diagram alone: the fixture holds its sources. */
 async function runCli(
   root: string,
   args: string[],
