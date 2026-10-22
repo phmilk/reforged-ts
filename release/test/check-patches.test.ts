@@ -25,6 +25,7 @@ const AGREEING: Record<string, unknown> = {
   "eslint-plugin-reforged": OLD,
   "reforged-map": OLD,
   "reforged-builtins": OLD,
+  "create-reforged-map": OLD,
 };
 
 /**
@@ -67,6 +68,7 @@ describe("checkPatches", () => {
     expect(await check(await workspace())).toEqual({
       ok: true,
       patches: [
+        { name: "create-reforged-map", patch: OLD },
         { name: "eslint-plugin-reforged", patch: OLD },
         { name: "reforged-builtins", patch: OLD },
         { name: "reforged-map", patch: OLD },
@@ -224,6 +226,7 @@ describe("checkPatches", () => {
 
     expect(result.problems).toEqual([]);
     expect(result.patches.map(({ name }) => name)).toEqual([
+      "create-reforged-map",
       "eslint-plugin-reforged",
       "reforged-builtins",
       "reforged-map",
@@ -295,7 +298,7 @@ describe("release:check-patches", () => {
       status: 0,
       stdout:
         `Every publishable package names a Patch the Typings ship an entry for, the library the newest (${NEW}): ` +
-        `eslint-plugin-reforged ${OLD}, reforged-builtins ${OLD}, reforged-map ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
+        `create-reforged-map ${OLD}, eslint-plugin-reforged ${OLD}, reforged-builtins ${OLD}, reforged-map ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
       stderr: "",
     });
   });

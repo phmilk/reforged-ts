@@ -76,7 +76,7 @@ describe("templateDispatch", () => {
       entry("reforged-types", "1.3.0"),
     );
 
-    expect((await templateDispatch(pack, root)).client_payload).toEqual({
+    expect((await templateDispatch(pack, root))?.client_payload).toEqual({
       tag: "reforged-types@1.3.0",
       versions: {
         "reforged-ts": "1.2.0",
@@ -103,7 +103,7 @@ describe("templateDispatch", () => {
       entry("reforged-map", "1.0.0-alpha.0"),
     );
 
-    expect((await templateDispatch(pack, root)).client_payload).toMatchObject({
+    expect((await templateDispatch(pack, root))?.client_payload).toMatchObject({
       tag: "reforged-types@1.0.0-alpha.5",
       versions: {
         ...ON_NPM,
@@ -113,14 +113,16 @@ describe("templateDispatch", () => {
     });
 
     const alone = await packDir(entry("reforged-map", "1.0.1"));
-    expect((await templateDispatch(alone, root)).client_payload).toMatchObject({
-      tag: "reforged-map@1.0.1",
-      versions: {
-        ...ON_NPM,
-        "reforged-types": "1.0.0-alpha.5",
-        "reforged-map": "1.0.1",
+    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
+      {
+        tag: "reforged-map@1.0.1",
+        versions: {
+          ...ON_NPM,
+          "reforged-types": "1.0.0-alpha.5",
+          "reforged-map": "1.0.1",
+        },
       },
-    });
+    );
   });
 
   it("dispatches the first release of reforged-builtins with the version of each package, under its own tag when alone", async () => {
@@ -130,24 +132,32 @@ describe("templateDispatch", () => {
     });
     const alone = await packDir(entry("reforged-builtins", "1.0.0-alpha.0"));
 
-    expect((await templateDispatch(alone, root)).client_payload).toMatchObject({
-      tag: "reforged-builtins@1.0.0-alpha.0",
-      versions: ON_NPM,
-    });
+    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
+      {
+        tag: "reforged-builtins@1.0.0-alpha.0",
+        versions: ON_NPM,
+      },
+    );
 
     const withLibrary = await packDir(
       entry("reforged-builtins", "1.0.0-alpha.0"),
       entry("reforged-ts", "1.0.0-alpha.2"),
     );
     expect(
-      (await templateDispatch(withLibrary, root)).client_payload,
+      (await templateDispatch(withLibrary, root))?.client_payload,
     ).toMatchObject({ tag: "reforged-ts@1.0.0-alpha.2", versions: ON_NPM });
   });
 
-  it("refuses a plan that publishes none of the six packages", async () => {
+  it("dispatches nothing for a release of create-reforged-map alone, which leaves the Template's ranges as they are", async () => {
+    const root = await workspace(ON_NPM);
+    const pack = await packDir(entry("create-reforged-map", "1.0.0-alpha.1"));
+    expect(await templateDispatch(pack, root)).toBeUndefined();
+  });
+
+  it("refuses a plan that publishes no package", async () => {
     const root = await workspace(ON_NPM);
     await expect(templateDispatch(await packDir(), root)).rejects.toThrow(
-      "The publish plan publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map, reforged-builtins: there is no release to dispatch.",
+      "The publish plan publishes no package: there is no release to dispatch.",
     );
   });
 
@@ -297,7 +307,7 @@ describe("release:template-dispatch", () => {
     );
 
     const body = await templateDispatch(pack, root);
-    const payload = JSON.stringify(body.client_payload, null, 2);
+    const payload = JSON.stringify(body?.client_payload, null, 2);
     expect(result).toEqual({
       status: 0,
       stdout: `reforged-ts-release, tag reforged-ts@1.0.0-alpha.3:\n${payload}\n`,
@@ -352,6 +362,28 @@ describe("release:template-dispatch", () => {
       ) as unknown,
     });
     await expect(readFile(join(late, "dispatch.json"))).rejects.toThrow();
+  });
+
+  it("writes no out file for a release with nothing to dispatch, saying so", async () => {
+    const root = await workspace(ON_NPM);
+    const pack = await packDir(entry("create-reforged-map", "1.0.0-alpha.1"));
+    const cwd = await tempDir("cwd");
+    const summary = join(cwd, "summary.md");
+    const message =
+      "The release publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map, reforged-builtins: the Template has nothing to sync, and nothing is dispatched.\n";
+
+    expect(
+      await runCli(
+        ["--pack-dir", pack, "--out", "dispatch.json", "--await-npm", "1"],
+        root,
+        cwd,
+        { GITHUB_STEP_SUMMARY: summary },
+      ),
+    ).toEqual({ status: 0, stdout: message, stderr: "" });
+    await expect(readFile(join(cwd, "dispatch.json"))).rejects.toThrow();
+    expect(await readFile(summary, "utf8")).toBe(
+      `## Template dispatch\n\n${message}`,
+    );
   });
 
   it("exits 1 on a plan it cannot dispatch and 2 on bad arguments", async () => {

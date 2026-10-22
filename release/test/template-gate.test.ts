@@ -1,153 +1,26 @@
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { join, posix, sep } from "node:path";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import { main } from "../src/cli/template-gate.js";
-import { commandLine, type Command, type Runner } from "../src/process.js";
+import type { Runner } from "../src/process.js";
 import { runTemplateGate, templateRef } from "../src/template-gate.js";
+import {
+  ALL_FOUR,
+  ALPHA,
+  CLI,
+  allSteps,
+  creationSteps,
+  fakeRunner,
+  fileUrl,
+  gate,
+  lines,
+  overridesOf,
+  packOutput,
+  STEP_LABELS,
+  TEMPLATE_STEPS,
+  templateCheckout,
+} from "./support/template-gate.js";
 import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
-
-const ALPHA = "1.0.0-alpha.0";
-
-interface PlanEntry {
-  name: string;
-  version?: string;
-  kind?: "publish" | "tag-only";
-}
-
-/**
- * A pack output as `changeset pack` writes it: a tarball per publish entry
- * under `packages/`, and the plan in chunks of one entry. `extra` tarballs
- * are written without a plan entry.
- */
-async function packOutput(
-  entries: readonly PlanEntry[],
-  extra: readonly string[] = [],
-): Promise<string> {
-  const dir = await tempDir("pack");
-  const plan = [];
-  for (const { name, version = ALPHA, kind = "publish" } of entries) {
-    if (kind === "tag-only") {
-      plan.push([{ kind, name, version }]);
-      continue;
-    }
-    const path = `packages/${name}-${version}.tgz`;
-    const bytes = `tarball of ${name}@${version}`;
-    await writeText(dir, path, bytes);
-    const integrity = `sha256-${createHash("sha256").update(bytes).digest("base64")}`;
-    plan.push([
-      {
-        kind,
-        name,
-        version,
-        access: "public",
-        tag: "alpha",
-        tarball: { path, integrity },
-      },
-    ]);
-  }
-  for (const name of extra) {
-    await writeText(dir, `packages/${name}-${ALPHA}.tgz`, "not in the plan");
-  }
-  await writeText(
-    dir,
-    "publish-plan.json",
-    JSON.stringify({ version: 1, plan }),
-  );
-  return dir;
-}
-
-const ALL_FOUR: readonly PlanEntry[] = [
-  { name: "reforged-test" },
-  { name: "reforged-types" },
-  { name: "reforged-ts" },
-  { name: "eslint-plugin-reforged" },
-];
-
-/**
- * A Template checkout: the scripts and dependencies of the real one, and
- * the pnpm settings `workspace` when given.
- */
-async function templateCheckout(
-  scripts: readonly string[] = ["build", "lint", "test"],
-  workspace?: string,
-): Promise<string> {
-  const dir = await tempDir("template");
-  await writeText(
-    dir,
-    "package.json",
-    JSON.stringify({
-      name: "reforged-ts-template",
-      private: true,
-      scripts: Object.fromEntries(
-        scripts.map((script) => [script, `node scripts/${script}.ts`]),
-      ),
-      dependencies: { "reforged-ts": "^1.0.0", "reforged-types": "^1.0.0" },
-      devDependencies: { "reforged-test": "^1.0.0", typescript: "6.0.2" },
-    }),
-  );
-  if (workspace !== undefined)
-    await writeText(dir, "pnpm-workspace.yaml", workspace);
-  return dir;
-}
-
-/** The overrides the Template's pnpm-workspace.yaml holds. */
-async function overridesOf(template: string): Promise<Record<string, string>> {
-  const settings = parse(
-    await readFile(join(template, "pnpm-workspace.yaml"), "utf8"),
-  ) as { overrides?: Record<string, string> } | null;
-  return settings?.overrides ?? {};
-}
-
-const fileUrl = (packDir: string, path: string) =>
-  `file:${join(packDir, path).split(sep).join(posix.sep)}`;
-
-/**
- * A runner standing in for pnpm: it records the commands, fails the one
- * named in `failing`, and on install puts in `node_modules` the version
- * each package's override names (or the one of `installs`), except the
- * packages of `absent`, which nothing in the Template depends on.
- */
-function fakePnpm(
-  options: {
-    failing?: string;
-    installs?: Record<string, string>;
-    absent?: readonly string[];
-  } = {},
-): { run: Runner; commands: Command[] } {
-  const commands: Command[] = [];
-  const run: Runner = async (command) => {
-    commands.push(command);
-    if (commandLine(command) === options.failing) return 1;
-    if (command.args[0] === "install") {
-      // The gate runs every command in the checkout.
-      const cwd = command.cwd ?? "";
-      for (const [name, spec] of Object.entries(await overridesOf(cwd))) {
-        if (options.absent?.includes(name)) continue;
-        const version =
-          options.installs?.[name] ??
-          /-(\d+\.\d+\.\d+[^/]*)\.tgz$/.exec(spec)?.[1];
-        await writeText(
-          cwd,
-          `node_modules/${name}/package.json`,
-          JSON.stringify({ name, version }),
-        );
-      }
-    }
-    return 0;
-  };
-  return { run, commands };
-}
-
-const lines = (commands: readonly Command[]) => commands.map(commandLine);
-
-const ALL_STEPS = [
-  "pnpm install --no-frozen-lockfile",
-  "pnpm run build --mode release",
-  "pnpm run lint",
-  "pnpm run test",
-];
 
 describe("runTemplateGate", () => {
   it("installs exactly the tarballs in the publish plan, as overrides in pnpm-workspace.yaml, keeping its settings", async () => {
@@ -165,11 +38,7 @@ describe("runTemplateGate", () => {
     );
     const manifest = await readFile(join(template, "package.json"), "utf8");
 
-    const result = await runTemplateGate({
-      template,
-      packDir,
-      run: fakePnpm().run,
-    });
+    const { result } = await gate(template, packDir);
 
     expect(result.installed.map(({ name }) => name)).toEqual([
       "reforged-ts",
@@ -198,7 +67,7 @@ describe("runTemplateGate", () => {
     const packDir = await packOutput([{ name: "reforged-ts" }]);
     const template = await templateCheckout([]);
 
-    await runTemplateGate({ template, packDir, run: fakePnpm().run });
+    await gate(template, packDir);
 
     expect(await overridesOf(template)).toEqual({
       "reforged-ts": fileUrl(packDir, `packages/reforged-ts-${ALPHA}.tgz`),
@@ -208,61 +77,74 @@ describe("runTemplateGate", () => {
   it("passes a plan holding a package the Template does not depend on yet, overriding it all the same", async () => {
     const packDir = await packOutput([...ALL_FOUR, { name: "reforged-map" }]);
     const template = await templateCheckout();
-    const pnpm = fakePnpm({ absent: ["reforged-map"] });
+    const runner = fakeRunner({ absent: ["reforged-map"] });
 
-    const result = await runTemplateGate({ template, packDir, run: pnpm.run });
+    const { result, scratch } = await gate(template, packDir, runner.run);
 
     expect(result.ok).toBe(true);
-    expect(lines(pnpm.commands)).toEqual(ALL_STEPS);
+    expect(lines(runner.commands)).toEqual(allSteps(scratch));
     expect(result.installed.map(({ name }) => name)).toContain("reforged-map");
     expect(await overridesOf(template)).toMatchObject({
       "reforged-map": fileUrl(packDir, `packages/reforged-map-${ALPHA}.tgz`),
     });
   });
 
-  it("runs the install, then build in release mode, lint and tests, in the checkout", async () => {
+  it("runs the install, build in release mode, lint and tests in the checkout, then the creation step", async () => {
     const packDir = await packOutput(ALL_FOUR);
     const template = await templateCheckout();
-    const pnpm = fakePnpm();
+    const runner = fakeRunner();
 
-    const result = await runTemplateGate({ template, packDir, run: pnpm.run });
+    const { result, root, scratch } = await gate(template, packDir, runner.run);
 
     expect(result.ok).toBe(true);
-    expect(lines(pnpm.commands)).toEqual(ALL_STEPS);
-    expect(pnpm.commands.every(({ cwd }) => cwd === template)).toBe(true);
+    expect(lines(runner.commands)).toEqual(allSteps(scratch));
+    expect(runner.commands.map(({ cwd }) => cwd)).toEqual([
+      ...TEMPLATE_STEPS.map(() => template),
+      template,
+      join(root, "packages", CLI),
+      scratch,
+    ]);
   });
 
-  it("runs every command on the pnpm the Template pins, which a pnpm script's environment turns off", async () => {
+  it("runs the Template's commands on the pnpm it pins, which a pnpm script's environment turns off", async () => {
     const packDir = await packOutput(ALL_FOUR);
-    const pnpm = fakePnpm();
+    const runner = fakeRunner();
 
-    await runTemplateGate({
-      template: await templateCheckout(),
+    const { scratch } = await gate(
+      await templateCheckout(),
       packDir,
-      run: pnpm.run,
-    });
+      runner.run,
+    );
 
-    expect(pnpm.commands.map(({ env }) => env)).toEqual(
-      ALL_STEPS.map(() => ({
+    expect(runner.commands.map(({ env }) => env)).toEqual([
+      ...TEMPLATE_STEPS.map(() => ({
         npm_config_manage_package_manager_versions: "true",
       })),
-    );
+      ...creationSteps(scratch).map(() => undefined),
+    ]);
   });
 
-  it.each(ALL_STEPS.map((failing, index) => [failing, index]))(
+  it.each(STEP_LABELS.map((label, index) => [label, index]))(
     "stops at `%s` when it fails, naming it",
-    async (failing, index) => {
+    async (_label, index) => {
       const packDir = await packOutput(ALL_FOUR);
       const template = await templateCheckout();
-      const pnpm = fakePnpm({ failing });
+      const root = await writeWorkspace();
+      const scratch = await tempDir("scratch");
+      const failing = allSteps(scratch)[index] ?? "";
+      const runner = fakeRunner({ failing });
 
       const result = await runTemplateGate({
         template,
         packDir,
-        run: pnpm.run,
+        root,
+        scratch,
+        run: runner.run,
       });
 
-      expect(lines(pnpm.commands)).toEqual(ALL_STEPS.slice(0, index + 1));
+      expect(lines(runner.commands)).toEqual(
+        allSteps(scratch).slice(0, index + 1),
+      );
       expect(result).toMatchObject({
         ok: false,
         failed: failing,
@@ -274,11 +156,11 @@ describe("runTemplateGate", () => {
   it("stops at a script the Template lacks, naming it", async () => {
     const packDir = await packOutput(ALL_FOUR);
     const template = await templateCheckout(["build", "test"]);
-    const pnpm = fakePnpm();
+    const runner = fakeRunner();
 
-    const result = await runTemplateGate({ template, packDir, run: pnpm.run });
+    const { result } = await gate(template, packDir, runner.run);
 
-    expect(lines(pnpm.commands)).toEqual(ALL_STEPS.slice(0, 2));
+    expect(lines(runner.commands)).toEqual(TEMPLATE_STEPS.slice(0, 2));
     expect(result).toMatchObject({
       ok: false,
       failed: "pnpm run lint",
@@ -290,11 +172,11 @@ describe("runTemplateGate", () => {
   it("fails when the install did not put the packed versions in place", async () => {
     const packDir = await packOutput(ALL_FOUR);
     const template = await templateCheckout();
-    const pnpm = fakePnpm({ installs: { "reforged-types": "1.0.0" } });
+    const runner = fakeRunner({ installs: { "reforged-types": "1.0.0" } });
 
-    const result = await runTemplateGate({ template, packDir, run: pnpm.run });
+    const { result } = await gate(template, packDir, runner.run);
 
-    expect(lines(pnpm.commands)).toEqual(ALL_STEPS.slice(0, 1));
+    expect(lines(runner.commands)).toEqual(TEMPLATE_STEPS.slice(0, 1));
     expect(result).toMatchObject({
       ok: false,
       failed: "pnpm install --no-frozen-lockfile",
@@ -307,18 +189,14 @@ describe("runTemplateGate", () => {
   it("refuses a tarball that does not match the plan's integrity, before running anything", async () => {
     const packDir = await packOutput(ALL_FOUR);
     await writeText(packDir, `packages/reforged-ts-${ALPHA}.tgz`, "rebuilt");
-    const pnpm = fakePnpm();
+    const runner = fakeRunner();
 
     await expect(
-      runTemplateGate({
-        template: await templateCheckout(),
-        packDir,
-        run: pnpm.run,
-      }),
+      gate(await templateCheckout(), packDir, runner.run),
     ).rejects.toThrow(
       `The tarball of reforged-ts@${ALPHA} does not match the publish plan's integrity`,
     );
-    expect(pnpm.commands).toEqual([]);
+    expect(runner.commands).toEqual([]);
   });
 });
 
@@ -343,7 +221,7 @@ describe("templateRef", () => {
 });
 
 describe("release:template-gate", () => {
-  async function runCli(args: string[], run: Runner = fakePnpm().run) {
+  async function runCli(args: string[], run: Runner = fakeRunner().run) {
     let stdout = "";
     let stderr = "";
     const cwd = await tempDir("cwd");
@@ -395,9 +273,15 @@ describe("release:template-gate", () => {
       "--pack-dir",
       packDir,
     ];
-    expect(await runCli(args)).toMatchObject({ status: 0, stderr: "" });
+    expect(await runCli(args)).toMatchObject({
+      status: 0,
+      stdout: expect.stringContaining(
+        "The Template builds, lints and passes its tests with eslint-plugin-reforged@1.0.0-alpha.0, reforged-test@1.0.0-alpha.0, reforged-ts@1.0.0-alpha.0, reforged-types@1.0.0-alpha.0, and create-reforged-map creates a Map project from it.\n",
+      ) as unknown,
+      stderr: "",
+    });
     expect(
-      await runCli(args, fakePnpm({ failing: "pnpm run test" }).run),
+      await runCli(args, fakeRunner({ failing: "pnpm run test" }).run),
     ).toMatchObject({
       status: 1,
       stderr: expect.stringContaining(

@@ -26,10 +26,11 @@ describe("readPublishablePackages", () => {
     expect(packages[0].manifest.reforged).toEqual({ patch: "3.0.0.24268" });
   });
 
-  it("reads the six publishable packages of this repository", async () => {
+  it("reads the seven publishable packages of this repository", async () => {
     const packages = await readPublishablePackages(repositoryRoot);
 
     expect(packages.map(({ name, dir }) => ({ name, dir }))).toEqual([
+      { name: "create-reforged-map", dir: "packages/create-reforged-map" },
       {
         name: "eslint-plugin-reforged",
         dir: "packages/eslint-plugin-reforged",

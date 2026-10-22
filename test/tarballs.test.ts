@@ -1,14 +1,22 @@
 /**
  * The publishable packages as npm receives them. Each package is packed with
  * `pnpm pack` into a temporary folder, and the tarball itself is read: its
- * file list, and the manifest pnpm wrote into it after rewriting the
- * workspace ranges. Run after `pnpm build` (as `pnpm check` does): the build
- * output is what the tarballs are checked for.
+ * file list, the manifest pnpm wrote into it after rewriting the workspace
+ * ranges, and the binaries that manifest declares. Run after `pnpm build`
+ * (as `pnpm check` does): the build output is what the tarballs are checked
+ * for.
  */
-import { exec } from "node:child_process";
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { exec, spawnSync } from "node:child_process";
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { gunzipSync } from "node:zlib";
@@ -56,6 +64,14 @@ interface Expected {
   readonly sideEffectsFree: boolean;
   /** Peer dependencies on workspace packages, and whether each is optional. */
   readonly workspacePeers: Readonly<Record<string, boolean>>;
+  /** Its binaries, by name, each a file of the tarball; none when absent. */
+  readonly bin?: Readonly<Record<string, string>>;
+  /**
+   * Whether its binaries run on the tarball's files alone, with Node and no
+   * dependency installed, as the Template gate runs the Creation CLI: each
+   * refuses an option it does not take with its usage and exit code 2.
+   */
+  readonly runsAlone?: boolean;
 }
 
 // Every tarball holds its manifest, LICENSE and README.md.
@@ -160,6 +176,7 @@ const PACKAGES: readonly Expected[] = [
     // Required: the generated declarations name the Typings' types.
     // Optional: the index names a Custom object that keeps its base's name.
     workspacePeers: { "reforged-builtins": true, "reforged-types": false },
+    bin: { "reforged-map": "dist/cli.js" },
   },
   {
     dir: "reforged-builtins",
@@ -183,6 +200,17 @@ const PACKAGES: readonly Expected[] = [
     sideEffectsFree: true,
     // Required: the overloads and constants are the Typings' Rawcode types.
     workspacePeers: { "reforged-types": false },
+  },
+  {
+    dir: "create-reforged-map",
+    // The command and the modules it imports; no declarations, since it
+    // publishes no API.
+    allowed: [/^dist\/[^/]+\.js$/],
+    required: ["dist/cli.js", "dist/create.js", "dist/tar.js"],
+    sideEffectsFree: true,
+    workspacePeers: {},
+    bin: { "create-reforged-map": "dist/cli.js" },
+    runsAlone: true,
   },
 ];
 
@@ -296,6 +324,38 @@ describe.each(PACKAGES)("the $dir tarball", (expected) => {
     expect(peers).toEqual(expected.workspacePeers);
   });
 
+  it("declares its binaries, each a Node script of the tarball", () => {
+    const { manifest, files, read } = tarball();
+    const bin = binaries(manifest);
+    expect(bin).toEqual(expected.bin ?? {});
+    for (const path of Object.values(bin)) {
+      expect(files).toContain(path);
+      expect(read(path)).toMatch(/^#!\/usr\/bin\/env node\n/);
+    }
+  });
+
+  it.runIf(expected.runsAlone === true)(
+    "runs its binaries on the tarball's files alone, with Node",
+    async () => {
+      const { manifest, files, read } = tarball();
+      expect(dependencies(manifest, "dependencies")).toEqual({});
+      const folder = await mkdtemp(join(temp, `${expected.dir}-alone-`));
+      for (const path of files) {
+        await mkdir(dirname(join(folder, path)), { recursive: true });
+        await writeFile(join(folder, path), read(path));
+      }
+      for (const path of Object.values(binaries(manifest))) {
+        const result = spawnSync(
+          process.execPath,
+          [join(folder, path), "--no-such-option"],
+          { cwd: folder, encoding: "utf8" },
+        );
+        expect(result.stderr).toMatch(/^Usage: /);
+        expect(result.status).toBe(2);
+      }
+    },
+  );
+
   it("carries the package metadata npm shows", () => {
     const { manifest } = tarball();
     expect(manifest.name).toBe(expected.dir);
@@ -343,6 +403,20 @@ function versionOf(name: string): string {
   const manifest = [...sources.values()].find((m) => m.name === name);
   if (manifest === undefined) throw new Error(`no workspace package ${name}`);
   return manifest.version;
+}
+
+/** The binaries of a packed manifest, by name, their paths without `./`. */
+function binaries(manifest: Manifest): Record<string, string> {
+  const bin =
+    typeof manifest.bin === "string"
+      ? { [manifest.name]: manifest.bin }
+      : ((manifest.bin ?? {}) as Record<string, string>);
+  return Object.fromEntries(
+    Object.entries(bin).map(([name, path]) => [
+      name,
+      path.replace(/^\.\//, ""),
+    ]),
+  );
 }
 
 function dependencies(
