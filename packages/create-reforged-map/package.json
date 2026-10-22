@@ -28,7 +28,7 @@
     "access": "public"
   },
   "reforged": {
-    "patch": "3.0.0.24268"
+    "patch": "3.0.1.24370"
   },
   "bin": {
     "create-reforged-map": "./dist/cli.js"
