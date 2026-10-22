@@ -664,6 +664,14 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["docs/agents/issue-tracker.md"]);
   });
 
+  it("include the docs site, in the website's README", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("docs-site"))
+        .map(({ file }) => file),
+    ).toEqual(["website/README.md"]);
+  });
+
   // #683: the README's "Map" lists every diagram, and every diagram is
   // listed in it. Compare the names of `diagrams` with the Map's table here,
   // with a fixture case of a diagram missing from the Map in "the extraction
