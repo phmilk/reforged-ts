@@ -40,6 +40,18 @@ export interface WorkflowStep {
   if?: string;
 }
 
+/**
+ * The file of `.github/workflows/` a job's `uses:` calls when it is a
+ * workflow of this repository (`./.github/workflows/docs-cut.yml` is
+ * `docs-cut.yml`); undefined for a workflow of another repository.
+ */
+export function localWorkflow(uses: string): string | undefined {
+  const prefix = `./${WORKFLOW_FOLDER}/`;
+  if (!uses.startsWith(prefix)) return undefined;
+  const file = uses.slice(prefix.length);
+  return file.includes("/") ? undefined : file;
+}
+
 export interface Workflow {
   /** Its `/`-separated path from the root. */
   file: string;
@@ -49,7 +61,11 @@ export interface Workflow {
   jobs: WorkflowJob[];
 }
 
-const strings = (value: unknown): string[] =>
+/**
+ * A field written as one string or a list of strings (`needs`, `branches`,
+ * `types`), as the list of its strings.
+ */
+export const stringList = (value: unknown): string[] =>
   typeof value === "string"
     ? [value]
     : Array.isArray(value)
@@ -99,7 +115,7 @@ export async function readWorkflow(
         : undefined;
       return {
         id,
-        needs: strings(fields.needs),
+        needs: stringList(fields.needs),
         ...(ifText === undefined ? {} : { if: ifText }),
         ...(typeof fields.uses === "string" ? { uses: fields.uses } : {}),
         ...(typeof fields.name === "string" ? { name: fields.name } : {}),

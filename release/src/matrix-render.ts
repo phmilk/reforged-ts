@@ -3,6 +3,7 @@
  * tables made from it, the docs site's partial and the Template's README
  * fragment. The same matrix always renders to the same bytes.
  */
+import { markdownTable } from "./markdown-table.js";
 import {
   canonicalRow,
   FRAGMENT_FILE,
@@ -68,17 +69,9 @@ function table(rows: readonly MatrixRow[]): string {
       row.cutDate,
       `[${row.docs.slice(row.docs.lastIndexOf("/") + 1)}](${row.docs})`,
     ]);
-  const lines = [HEADERS, ...body].map((cells) => cells.map(cell));
-  const widths = HEADERS.map((_, column) =>
-    Math.max(3, ...lines.map((cells) => (cells[column] ?? "").length)),
-  );
-  const line = (cells: readonly string[]) =>
-    `| ${cells.map((text, column) => text + " ".repeat((widths[column] ?? 0) - text.length)).join(" | ")} |\n`;
-  const [header = [], ...others] = lines;
-  return (
-    line(header) +
-    line(widths.map((width) => "-".repeat(width))) +
-    others.map(line).join("")
+  return markdownTable(
+    HEADERS.map(cell),
+    body.map((cells) => cells.map(cell)),
   );
 }
 

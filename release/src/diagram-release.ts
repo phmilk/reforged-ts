@@ -6,13 +6,14 @@
  */
 import type { Diagram } from "./diagrams.js";
 import {
+  assertDistinctIds,
   mermaidBlock,
   mermaidId,
-  mermaidIds,
   mermaidLabel,
 } from "./mermaid.js";
+import { TEMPLATE_REPOSITORY } from "./template-clone.js";
 import { jobModes } from "./workflow-modes.js";
-import { readWorkflow } from "./workflows.js";
+import { localWorkflow, readWorkflow } from "./workflows.js";
 
 const WORKFLOW = "release.yml";
 /** The job whose outputs decide the mode of a run. */
@@ -21,7 +22,7 @@ const WORKFLOW_ID = "release_yml";
 
 /** The Template's sync workflow, which the release dispatches to. */
 const TEMPLATE_SYNC = {
-  repository: "phmilk/reforged-ts-template",
+  repository: TEMPLATE_REPOSITORY,
   workflow: "sync.yml",
   /** The job of `release.yml` that sends the dispatch. */
   dispatchedBy: "template-dispatch",
@@ -31,7 +32,7 @@ const SYNC_ID = mermaidId(TEMPLATE_SYNC.workflow);
 
 /** The node of a reusable workflow a job calls: its id and its label. */
 function calledWorkflow(uses: string): { id: string; label: string } {
-  const local = /^\.\/\.github\/workflows\/([^/]+)$/.exec(uses)?.[1];
+  const local = localWorkflow(uses);
   if (local !== undefined) return { id: mermaidId(local), label: local };
   const [path = uses] = uses.split("@");
   const [owner = "", repository = ""] = path.split("/");
@@ -63,7 +64,7 @@ async function render(root: string): Promise<string> {
       uses === undefined ? [] : [[uses, calledWorkflow(uses)] as const],
     ),
   );
-  const ids = mermaidIds(
+  assertDistinctIds(
     jobs.map(({ id }) => id),
     [
       WORKFLOW_ID,
@@ -72,22 +73,25 @@ async function render(root: string): Promise<string> {
       ...[...called.values()].map(({ id }) => id),
     ],
   );
-  const id = (job: string) => ids.get(job) ?? job;
 
   const modes = jobModes(jobs, SELECT);
   const edges: string[] = [];
   for (const job of jobs) {
     const label = mermaidLabel(modes.get(job.id) ?? "always");
     edges.push(
-      ...job.needs.map((need) => `${id(need)} -->|${label}| ${id(job.id)}`),
+      ...job.needs.map(
+        (need) => `${mermaidId(need)} -->|${label}| ${mermaidId(job.id)}`,
+      ),
     );
     const workflow = job.uses === undefined ? undefined : called.get(job.uses);
     if (workflow !== undefined) {
-      edges.push(`${id(job.id)} -->|${mermaidLabel("calls")}| ${workflow.id}`);
+      edges.push(
+        `${mermaidId(job.id)} -->|${mermaidLabel("calls")}| ${workflow.id}`,
+      );
     }
     if (job.id === TEMPLATE_SYNC.dispatchedBy) {
       edges.push(
-        `${id(job.id)} -.->|${mermaidLabel("dispatches the release")}| ${SYNC_ID}`,
+        `${mermaidId(job.id)} -.->|${mermaidLabel("dispatches the release")}| ${SYNC_ID}`,
       );
     }
   }
@@ -95,7 +99,7 @@ async function render(root: string): Promise<string> {
   return mermaidBlock("release", "flowchart LR", [
     `%% Generated from ${WORKFLOW}: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs.`,
     `subgraph ${WORKFLOW_ID}[${mermaidLabel(WORKFLOW)}]`,
-    ...jobs.map((job) => `  ${id(job.id)}[${mermaidLabel(job.id)}]`),
+    ...jobs.map((job) => `  ${mermaidId(job.id)}[${mermaidLabel(job.id)}]`),
     "end",
     ...[...called.values()].map(
       ({ id: node, label }) => `${node}[[${mermaidLabel(label)}]]`,

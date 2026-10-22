@@ -14,17 +14,18 @@ export function mermaidId(name: string): string {
 }
 
 /**
- * The ids of `names` by name; throws when two names share an id, or one
- * takes an id of `reserved` (a subgraph's, an external node's).
+ * Throws when two of `names` share a {@link mermaidId}, or one takes an id
+ * of `reserved` (a subgraph's, an external node's): two nodes would then be
+ * drawn as one. A diagram calls it once over every name it draws, then
+ * writes each node's id with `mermaidId`.
  */
-export function mermaidIds(
+export function assertDistinctIds(
   names: Iterable<string>,
-  reserved: Iterable<string> = [],
-): Map<string, string> {
+  reserved: Iterable<string>,
+): void {
   const taken = new Map<string, string>(
     [...reserved].map((id) => [id, `the reserved id ${id}`]),
   );
-  const ids = new Map<string, string>();
   for (const name of names) {
     const id = mermaidId(name);
     const holder = taken.get(id);
@@ -32,9 +33,7 @@ export function mermaidIds(
       throw new Error(`${name} and ${holder} share the Mermaid id ${id}.`);
     }
     taken.set(id, name);
-    ids.set(name, id);
   }
-  return ids;
 }
 
 /** `text` as a quoted Mermaid label, its double quotes escaped. */

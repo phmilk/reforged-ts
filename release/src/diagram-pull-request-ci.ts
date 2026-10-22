@@ -16,11 +16,12 @@ import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import type { Diagram } from "./diagrams.js";
 import {
+  assertDistinctIds,
   mermaidBlock,
   mermaidId,
-  mermaidIds,
   mermaidLabel,
 } from "./mermaid.js";
+import { markdownTable } from "./markdown-table.js";
 import { byCodePoint } from "./order.js";
 import {
   readRuleset,
@@ -29,7 +30,9 @@ import {
 } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
 import {
+  localWorkflow,
   readWorkflow,
+  stringList,
   WORKFLOW_FOLDER,
   type Workflow,
   type WorkflowStep,
@@ -43,9 +46,6 @@ const COLLABORATOR = "collaborator";
 const RENOVATE = "renovate";
 const PULL_REQUEST = "pull_request";
 
-const strings = (value: unknown): string[] =>
-  Array.isArray(value) ? value.map(String) : [];
-
 /** The label of each pull-request event of `on` that triggers the workflow. */
 function pullRequestEvents(on: unknown): string[] {
   return PULL_REQUEST_EVENTS.flatMap((event) => {
@@ -54,8 +54,8 @@ function pullRequestEvents(on: unknown): string[] {
     }
     if (!isRecord(on) || !(event in on)) return [];
     const filter = on[event];
-    const branches = strings(isRecord(filter) ? filter.branches : undefined);
-    const types = strings(isRecord(filter) ? filter.types : undefined);
+    const branches = stringList(isRecord(filter) ? filter.branches : undefined);
+    const types = stringList(isRecord(filter) ? filter.types : undefined);
     return [
       event +
         (branches.length > 0 ? ` into ${branches.join(", ")}` : "") +
@@ -118,10 +118,7 @@ async function drawJobs(
     const { id } = job;
     const name = prefix + (job.name ?? id);
     const key = `${path}/${id}`;
-    const local = `./${WORKFLOW_FOLDER}/`;
-    const called = job.uses?.startsWith(local)
-      ? job.uses.slice(local.length)
-      : undefined;
+    const called = job.uses === undefined ? undefined : localWorkflow(job.uses);
     if (called !== undefined) {
       const inner = await drawJobs(
         root,
@@ -169,20 +166,6 @@ async function drawJobs(
   return drawn;
 }
 
-/** A Markdown table padded the way Prettier pads it (ASCII text). */
-function table(header: readonly string[], rows: readonly string[][]): string {
-  const widths = header.map((cell, column) =>
-    Math.max(3, cell.length, ...rows.map((row) => (row[column] ?? "").length)),
-  );
-  const line = (cells: readonly string[]) =>
-    `| ${cells.map((cell, column) => cell.padEnd(widths[column] ?? 0)).join(" | ")} |\n`;
-  return (
-    line(header) +
-    line(widths.map((width) => "-".repeat(width))) +
-    rows.map(line).join("")
-  );
-}
-
 const code = (text: string) => `\`${text.replaceAll("|", "\\|")}\``;
 
 /** What a step is called: its name, the action it uses, or its first command. */
@@ -209,7 +192,10 @@ async function stepsTable(root: string): Promise<string> {
       code(stepLabel(step)),
       step.if === undefined ? "" : code(step.if.replace(/\s+/g, " ")),
     ]);
-  return table(["#", `Step of ${code(STEPS_WORKFLOW)}`, code("if")], rows);
+  return markdownTable(
+    ["#", `Step of ${code(STEPS_WORKFLOW)}`, code("if")],
+    rows,
+  );
 }
 
 async function render(root: string): Promise<string> {
@@ -240,7 +226,7 @@ async function render(root: string): Promise<string> {
     checks.push(...drawn.checks);
     keys.push(file, ...drawn.keys);
   }
-  mermaidIds(keys, [COLLABORATOR, RENOVATE, PULL_REQUEST]);
+  assertDistinctIds(keys, [COLLABORATOR, RENOVATE, PULL_REQUEST]);
 
   const required = requiredStatusChecks(await readRuleset(root));
   const names = new Set(checks.map(({ name }) => name));
