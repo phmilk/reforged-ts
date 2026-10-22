@@ -6,6 +6,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parse } from "yaml";
+import { LIBRARY_REPOSITORY } from "./template-clone.js";
 import { isRecord } from "./unknown.js";
 
 /** The folder of the workflows, from a repository root. */
@@ -41,12 +42,6 @@ export interface WorkflowStep {
 }
 
 /**
- * The repository these workflows belong to: `github.repository` when they
- * run here.
- */
-export const REPOSITORY = "phmilk/reforged-ts";
-
-/**
  * The file of `.github/workflows/` a job's `uses:` calls when it is a
  * workflow of this repository, by its path
  * (`./.github/workflows/docs-cut.yml` is `docs-cut.yml`) or in full
@@ -57,7 +52,7 @@ export const REPOSITORY = "phmilk/reforged-ts";
 export function localWorkflow(uses: string): string | undefined {
   const prefixes = [
     `./${WORKFLOW_FOLDER}/`,
-    `${REPOSITORY}/${WORKFLOW_FOLDER}/`,
+    `${LIBRARY_REPOSITORY}/${WORKFLOW_FOLDER}/`,
   ];
   const prefix = prefixes.find((start) => uses.startsWith(start));
   if (prefix === undefined) return undefined;
