@@ -249,6 +249,25 @@ describe("the CI diagram of a pull request", () => {
     expect(markdown).not.toContain("classDef skipped");
   });
 
+  it("draws a job calling another repository's workflow its condition keeps from running here as skipped here", async () => {
+    const markdown = await pullRequestCiDiagram.render(
+      await repository({
+        ...WORKFLOWS,
+        "claim-check.yml": CLAIM_CHECK.replace(
+          "    needs: [check]\n",
+          "    needs: [check]\n    if: github.repository == 'owner/repo'\n",
+        ),
+      }),
+    );
+
+    expect(markdown).toContain(
+      '      claim_yml_claim_remote[["claim / remote / (a job of owner/repo/.github/workflows/remote.yml@main), skipped here"]]\n',
+    );
+    expect(markdown).toContain(
+      "  class claim_yml_claim_board_dispatch_dispatch,claim_yml_claim_after_board,claim_yml_claim_remote skipped\n",
+    );
+  });
+
   it("fails on a check the ruleset requires that no job reports, as after renaming a job or a matrix value", async () => {
     const renamed = CI.replace("os: [ubuntu, windows]", "os: [ubuntu, macos]");
 

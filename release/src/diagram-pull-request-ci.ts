@@ -105,7 +105,7 @@ interface Drawn {
   checks: { key: string; name: string }[];
   /** Every raw key a node or subgraph takes, for the id clash check. */
   keys: string[];
-  /** The raw key of each check node skipped in this repository. */
+  /** The raw key of each node skipped in this repository. */
   skipped: string[];
 }
 
@@ -194,10 +194,11 @@ async function drawJobs(
       // names, are not read.
       drawn.lines.push(
         `${indent}${mermaidId(key)}[[${mermaidLabel(
-          `${name} / (a job of ${job.uses})`,
+          labelHere(`${name} / (a job of ${job.uses})`),
         )}]]`,
       );
       drawn.keys.push(key);
+      if (skipped) drawn.skipped.push(key);
       continue;
     }
     const nodes = matrixLegs(workflow.file, id, job.matrix).map((values) => ({
