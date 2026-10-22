@@ -107,6 +107,28 @@ describe("AGENTS.md", () => {
   });
 });
 
+describe("README.md", () => {
+  // AGENTS.md sends an Agent to a README section by its heading, in quotes:
+  //   One package's scripts and tests: the README's "Commands".
+  // Renaming or removing the section breaks the pointer.
+  const pointers = [...agents.matchAll(/the README's "([^"]+)"/g)].map(
+    ([, heading = ""]) => heading,
+  );
+
+  it("keeps the sections AGENTS.md points at", () => {
+    // #683 adds "Map".
+    expect(pointers, "the README sections AGENTS.md points at").toEqual([
+      "Commands",
+      "Rules for library code",
+    ]);
+    const readme = headings(read("README.md"), "##");
+    expect(
+      pointers.filter((heading) => !readme.includes(heading)),
+      "the README sections AGENTS.md points at, as `##` headings of README.md: rename the pointer with the section",
+    ).toEqual([]);
+  });
+});
+
 describe("CLAUDE.md", () => {
   it("is exactly the import line of AGENTS.md", () => {
     expect(
