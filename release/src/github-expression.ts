@@ -182,15 +182,12 @@ export function printExpression(expression: Expression): string {
 }
 
 /**
- * A value no condition names: equal to none of the values a condition
- * compares with, and truthy (the mode `none` of the release, which no job's
- * condition names).
+ * A value an expression may hold. A symbol is an opaque value, one no
+ * condition can write: equal to none of the values a condition writes, of
+ * unknown equality with another opaque value, and truthy.
  */
-export const OTHER = Symbol("other");
-
-/** A value an expression may hold. */
 export type Value =
-  string | number | boolean | null | typeof OTHER | readonly Value[];
+  string | number | boolean | null | symbol | readonly Value[];
 
 /** What `facts` tell of a property or a call; undefined when unknown. */
 export type Facts = (fact: Fact) => Value | undefined;
@@ -206,7 +203,7 @@ const isList = (value: Value): value is readonly Value[] =>
 
 /** Whether `value` passes an `if`. */
 export function truthy(value: Value): boolean {
-  if (value === OTHER || isList(value)) return true;
+  if (typeof value === "symbol" || isList(value)) return true;
   if (typeof value === "string") return value !== "";
   if (typeof value === "number") return value !== 0;
   return value === true;
@@ -220,7 +217,7 @@ function compareValues(
 ): boolean | undefined {
   if (op !== "==" && op !== "!=") return undefined;
   if (isList(left) || isList(right)) return undefined;
-  if (left === OTHER && right === OTHER) return undefined;
+  if (typeof left === "symbol" && typeof right === "symbol") return undefined;
   const normal = (value: Value) =>
     typeof value === "string" ? value.toLowerCase() : value;
   const equal = normal(left) === normal(right);
@@ -261,7 +258,8 @@ const FUNCTIONS = new Map<
   ],
 ]);
 
-const known = (reduced: Reduced): reduced is { value: Value } =>
+/** Whether the facts decide `reduced`: it holds a value, not a residue. */
+export const known = (reduced: Reduced): reduced is { value: Value } =>
   "value" in reduced;
 
 /**

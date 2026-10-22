@@ -11,7 +11,7 @@
  * cannot, and `failure()` and `cancelled()` are false.
  */
 import {
-  OTHER,
+  known,
   parseExpression,
   printExpression,
   reduce,
@@ -53,13 +53,13 @@ function conditionsOf(jobs: readonly WorkflowJob[]): Map<string, Expression> {
 }
 
 /**
- * Whether each of `jobs` runs, by id, when the properties of `known` (by
- * path, `github.repository`) hold their values.
+ * Whether each of `jobs` runs, by id, when the properties `given` (by path,
+ * `github.repository`) hold their values.
  */
 function runsOf(
   jobs: readonly WorkflowJob[],
   conditions: ReadonlyMap<string, Expression>,
-  known: ReadonlyMap<string, Value>,
+  given: ReadonlyMap<string, Value>,
 ): Map<string, Runs> {
   const byId = new Map(jobs.map((job) => [job.id, job]));
   const memo = new Map<string, Runs | null>();
@@ -67,7 +67,7 @@ function runsOf(
 
   const facts = (job: WorkflowJob) => (fact: Fact) => {
     if (fact.type === "property") {
-      if (known.has(fact.path)) return known.get(fact.path);
+      if (given.has(fact.path)) return given.get(fact.path);
       const need = /^needs\.([\w-]+)\.result$/.exec(fact.path)?.[1];
       if (need === undefined || !byId.has(need)) return undefined;
       return mayRun(need) ? "success" : "skipped";
@@ -96,7 +96,7 @@ function runsOf(
     }
     memo.set(id, null);
     const reduced = reduce(condition, facts(job));
-    const runs = "value" in reduced ? truthy(reduced.value) : reduced.residue;
+    const runs = known(reduced) ? truthy(reduced.value) : reduced.residue;
     memo.set(id, runs);
     return runs;
   }
@@ -105,16 +105,23 @@ function runsOf(
 }
 
 /**
- * Whether each of `jobs` runs, by id, when the properties of `known` (by
- * path, `github.repository`) hold their values: `false` when it cannot,
+ * Whether each of `jobs` runs, by id, when the properties `given` (by path,
+ * `github.repository`) hold their values: `false` when it cannot,
  * `true` when it does, else the residue of its condition, which it runs on.
  */
 export function jobRuns(
   jobs: readonly WorkflowJob[],
-  known: ReadonlyMap<string, Value>,
+  given: ReadonlyMap<string, Value>,
 ): Map<string, Runs> {
-  return runsOf(jobs, conditionsOf(jobs), known);
+  return runsOf(jobs, conditionsOf(jobs), given);
 }
+
+/**
+ * The value of a deciding output that no condition names, as an opaque
+ * value: equal to none of the values a condition compares with, and truthy
+ * (the mode `none` of the release, which no job's condition names).
+ */
+const OTHER = Symbol("other");
 
 /** One combination of the deciding outputs' values, by output. */
 type Scenario = ReadonlyMap<string, string | typeof OTHER>;
@@ -231,13 +238,13 @@ export function jobModes(
     jobs.map(({ id }) => [id, [] as { name: string; residue: string }[]]),
   );
   for (const { scenario, name } of scenarios) {
-    const known = new Map<string, Value>(
+    const given = new Map<string, Value>(
       [...scenario].map(([output, value]) => [
         `needs.${decider}.outputs.${output}`,
         value,
       ]),
     );
-    for (const [id, runs] of runsOf(jobs, conditions, known)) {
+    for (const [id, runs] of runsOf(jobs, conditions, given)) {
       if (runs === false) continue;
       const residue = runs === true ? "" : printExpression(runs);
       modes.get(id)?.push({ name, residue });
