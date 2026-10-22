@@ -16,6 +16,7 @@ import {
   typingsSidebar,
 } from "./reference";
 import { llmsFilesPlugin } from "./llms";
+import { mermaidCheckPlugin } from "./mermaid";
 import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
 import {
   cutVersions,
@@ -65,6 +66,10 @@ export function siteConfig(options: SiteOptions): Config {
     onBrokenLinks: "throw",
     onBrokenAnchors: options.strict ? "throw" : "warn",
     markdown: {
+      // A `mermaid` block of a page is a diagram (#676, ADR 0019), drawn by
+      // the Mermaid theme below in the colour mode being read: Mermaid's
+      // `default` theme in light, its `dark` theme in dark.
+      mermaid: true,
       hooks: { onBrokenMarkdownLinks: "throw" },
     },
 
@@ -115,12 +120,16 @@ export function siteConfig(options: SiteOptions): Config {
       ],
       // Each cut version's root also as a folder index (/docs/<label>).
       () => versionRootIndexesPlugin(cut),
+      // No page of a docs version shows a `mermaid` block as code.
+      () => mermaidCheckPlugin(),
       // llms.txt, llms-full.txt and each page as Markdown, per docs version
       // and once for the Typings.
       llmsFilesPlugin(cut),
     ],
 
     themes: [
+      // The diagrams of `markdown.mermaid`.
+      "@docusaurus/theme-mermaid",
       // Offline search over the docs version being read: one index per docs
       // version, the one of the version shown loaded by the search bar. The
       // Typings, not versioned, are indexed once, apart: their pages search

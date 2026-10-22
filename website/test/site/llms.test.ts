@@ -1,11 +1,17 @@
 // The site's files for AI agents (#186): one set per docs version and one
 // for the Typings, and the check of what docusaurus-plugin-llms wrote, on a
 // build folder written here.
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import type { LoadContext, Plugin } from "@docusaurus/types";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { llmsProblems, llmsTargets, llmsUrl } from "../../llms";
+import {
+  llmsFilesPlugin,
+  llmsProblems,
+  llmsTargets,
+  llmsUrl,
+} from "../../llms";
 
 const SITE_URL = "https://phmilk.github.io/reforged-ts";
 
@@ -101,5 +107,59 @@ describe("the LLM files", () => {
         ),
       );
     });
+  });
+});
+
+describe("the Markdown copy of a page", () => {
+  /** A `mermaid` block, as a page of the site holds it. */
+  const DIAGRAM = [
+    "```mermaid",
+    "%% diagram: packages",
+    "flowchart LR",
+    '  library["reforged-ts"] --> typings["reforged-types"]',
+    "```",
+  ].join("\n");
+
+  it("keeps a mermaid block's source as text", async () => {
+    const site = join(build, "site");
+    const outDir = join(build, "out");
+    await write(
+      "site/docs/contributing/guide.md",
+      `---\ntitle: Contributing guide\nformat: md\n---\n\nThe packages:\n\n${DIAGRAM}\n\nEach package has its README.\n`,
+    );
+    await write("site/typings/index.md", "# reforged-types\n\nThe Typings.\n");
+    const plugin = llmsFilesPlugin([]);
+    if (typeof plugin !== "function") throw new Error("Not a plugin module.");
+    const context = {
+      siteDir: site,
+      outDir,
+      siteConfig: {
+        title: "reforged-ts",
+        tagline: "TypeScript for Warcraft III maps, compiled to Lua.",
+        url: "https://phmilk.github.io",
+        baseUrl: "/reforged-ts/",
+      },
+    } as unknown as LoadContext;
+    const { postBuild } = (await plugin(context, undefined)) as Plugin;
+
+    await postBuild?.({
+      ...context,
+      outDir,
+      routesPaths: [
+        "/reforged-ts/docs/next/contributing/guide",
+        "/reforged-ts/typings",
+      ],
+    } as unknown as Parameters<NonNullable<Plugin["postBuild"]>>[0]);
+
+    const copy = await readFile(
+      join(outDir, "docs/next/contributing/guide.md"),
+      "utf8",
+    );
+    const full = await readFile(
+      join(outDir, "docs/next/llms-full.txt"),
+      "utf8",
+    );
+    expect(copy).toContain(DIAGRAM);
+    expect(full).toContain(DIAGRAM);
   });
 });

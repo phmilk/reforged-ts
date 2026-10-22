@@ -23,6 +23,7 @@
     "@docusaurus/faster": "catalog:",
     "@docusaurus/plugin-client-redirects": "catalog:",
     "@docusaurus/preset-classic": "catalog:",
+    "@docusaurus/theme-mermaid": "catalog:",
     "@easyops-cn/docusaurus-search-local": "catalog:",
     "@mdx-js/react": "catalog:",
     "docusaurus-plugin-llms": "catalog:",

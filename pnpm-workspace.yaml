@@ -88,6 +88,9 @@ catalog:
   "@docusaurus/module-type-aliases": 3.10.2
   "@docusaurus/tsconfig": 3.10.2
   "@docusaurus/types": 3.10.2
+  # The docs site's Mermaid diagrams (#676, ADR 0019): the theme that renders
+  # a `mermaid` block of a page, in the light and the dark theme.
+  "@docusaurus/theme-mermaid": 3.10.2
   "@mdx-js/react": ^3.1.1
   react: ^19.3.0
   react-dom: ^19.3.0
