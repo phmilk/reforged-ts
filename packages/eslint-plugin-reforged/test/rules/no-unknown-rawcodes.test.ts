@@ -2,8 +2,18 @@
 // reforged-map's World Editor-saved one (fixture-project/maps/), through the
 // workspace's real reforged-map and reforged-builtins; and through a stub
 // lookup (support/stub-rawcode-lookup.cjs) for the unavailable and throwing
-// cases.
-import { cpSync, mkdirSync, mkdtempSync, rmSync, utimesSync } from "node:fs";
+// cases. The discovery's table of cases is shared with reforged-map's
+// TypeScript plugin's tests (#694): reforged-map's
+// test/fixtures/map-folder-discovery.json.
+import {
+  cpSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -21,6 +31,7 @@ import {
 } from "vitest";
 
 import { createPlugin } from "../../src/index.js";
+import { discoverMapFolder } from "../../src/rules/no-unknown-rawcodes.js";
 import { fixtureFile, fixtureProjectRoot } from "../support/fixture-project.js";
 import { lintWithRecommended } from "../support/lint.js";
 import { ruleOf } from "../support/plugin.js";
@@ -269,6 +280,62 @@ function spyOnWarnings() {
       .filter((line) => line.includes("reforged/no-unknown-rawcodes"));
 }
 
+/** A case of the shared discovery table. */
+interface DiscoveryCase {
+  name: string;
+  root: string[];
+  maps: string[] | null;
+  found: string | null;
+  reason?: "none" | "several";
+}
+
+const DISCOVERY = (
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../../../reforged-map/test/fixtures/map-folder-discovery.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ) as { cases: DiscoveryCase[] }
+).cases;
+
+describe("the discovery of the map folder", () => {
+  it.each(DISCOVERY)("$name", ({ root: entries, maps, found, reason }) => {
+    const root = makeTemporary();
+    const place = (folder: string, entry: string): void => {
+      const target = path.join(folder, entry);
+      if (entry.endsWith("/")) {
+        mkdirSync(target, { recursive: true });
+      } else {
+        writeFileSync(target, "");
+      }
+    };
+    for (const entry of entries) {
+      place(root, entry);
+    }
+    if (maps !== null) {
+      mkdirSync(path.join(root, "maps"));
+      for (const entry of maps) {
+        place(path.join(root, "maps"), entry);
+      }
+    }
+    const result = discoverMapFolder(root);
+    if (found !== null) {
+      expect(result).toEqual({ mapFolder: path.join(root, found) });
+    } else {
+      expect(result).toEqual({
+        reason: expect.stringMatching(
+          reason === "several"
+            ? /^2 map folders (at|under) .*: set settings\.reforged\.mapFolder/
+            : /^no map folder .* at .* or under .*maps: set settings\.reforged\.mapFolder/,
+        ) as unknown,
+      });
+    }
+  });
+});
+
 describe("finding the map folder", () => {
   const warnings = spyOnWarnings();
 
@@ -283,14 +350,29 @@ describe("finding the map folder", () => {
   const code =
     'const a = FourCC("zzzz");\nconst b = FourCC("zzzz");\nconst c = FourCC("hfo");';
 
-  it("turns the existence check off with one warning when maps/ holds none", () => {
+  it("finds the one map folder at the project root with no setting", () => {
+    // The project root lies in the package, where reforged-builtins resolves,
+    // like the fixture project's.
+    const root = mkdtempSync(path.join(fixtureProjectRoot, "..", "root-"));
+    temporary.push(root);
+    cpSync(mapFolder, path.join(root, "my-map.w3m"), { recursive: true });
+    const messages = lintWithRecommended(code, pluginAt(root));
+    expect(messages.map((each) => each.messageId)).toEqual([
+      "unknownRawcode",
+      "unknownRawcode",
+      "malformedRawcode",
+    ]);
+    expect(warnings()).toEqual([]);
+  });
+
+  it("turns the existence check off with one warning when neither the root nor maps/ holds one", () => {
     const root = makeTemporary();
     const messages = lintWithRecommended(code, pluginAt(root));
     expect(messages.map((each) => each.messageId)).toEqual([
       "malformedRawcode",
     ]);
     expect(warnings()).toEqual([
-      `eslint-plugin-reforged: reforged/no-unknown-rawcodes checks only that a Rawcode is four characters: no map folder (a folder whose name ends in .w3x or .w3m) under ${path.join(root, "maps")}: set settings.reforged.mapFolder in the ESLint config to the map folder, absolute or relative to ${root}.`,
+      `eslint-plugin-reforged: reforged/no-unknown-rawcodes checks only that a Rawcode is four characters: no map folder (a folder whose name ends in .w3x or .w3m) at ${root} or under ${path.join(root, "maps")}: set settings.reforged.mapFolder in the ESLint config to the map folder, absolute or relative to ${root}.`,
     ]);
   });
 
@@ -333,7 +415,7 @@ describe("finding the map folder", () => {
       "malformedRawcode",
     ]);
     expect(warnings()).toEqual([
-      "eslint-plugin-reforged: reforged/no-unknown-rawcodes: settings.reforged.mapFolder is not a string, so the map folder is looked for under maps/.",
+      "eslint-plugin-reforged: reforged/no-unknown-rawcodes: settings.reforged.mapFolder is not a string, so the map folder is looked for at the project root, then under maps/.",
     ]);
   });
 

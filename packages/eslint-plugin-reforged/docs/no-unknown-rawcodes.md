@@ -54,13 +54,13 @@ None. The rule reads one ESLint shared setting, `settings.reforged.mapFolder`, t
 {
   settings: {
     reforged: {
-      mapFolder: "maps/my-map.w3x";
+      mapFolder: "data/my-map.w3x";
     }
   }
 }
 ```
 
-Without it, the rule reads the one map folder under the project's `maps/`, a folder whose name ends in `.w3x` or `.w3m`, ignoring case: the Template keeps its map there and needs no setting. With none or several, the rule warns once, naming what it found, and only the four-character check runs until the setting is added.
+Without it, the rule reads the one map folder directly at the project root, a folder whose name ends in `.w3x` or `.w3m`, ignoring case, or with none there the one under the project's `maps/`, where a Map project made before ADR 0020 keeps it, until 1.0.0: either needs no setting. One at the root wins over any under `maps/`. With none at either, or several, the rule warns once, naming what it found and where it looked, and only the four-character check runs until the setting is added.
 
 ## Suggestions and fixes
 
