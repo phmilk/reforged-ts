@@ -1,6 +1,6 @@
 {
   "name": "create-reforged-map",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Creates a reforged-ts Map project from the Template in one command: the Template's files, its dependencies installed, its maintenance files removed and a first commit.",
   "license": "MIT",
   "type": "module",
