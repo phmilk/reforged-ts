@@ -46,6 +46,68 @@ The Typings are generated from the game's Patch files and the Overlay. Never edi
 
 **Curating the Overlay.** A fact about a Native (its nullability, a deprecation, whether its value is async, a note) goes in its Overlay entry: one JSON file per Native under `packages/reforged-types/overlay/<Patch file>/functions/` or `globals/`, shaped like its neighbours. Run `pnpm typings:generate` and commit the entry with the regenerated output; the pull request is where the curation is reviewed. The curation rules and the generator's messages are in [`packages/reforged-types/AGENTS.md`](packages/reforged-types/AGENTS.md); they are the project's rules for everyone, not only for agents.
 
+A Patch's adoption end to end, by actor: the Patch watch opens the work, an Agent (or a person) curates the Overlay and regenerates the Typings, a machine with the game runs what only the game can tell, and the pull request carries the result.
+
+```mermaid
+flowchart TB
+  %% diagram: patch-adoption
+  form["the New game Patch issue form, .github/ISSUE_TEMPLATE/new-game-patch.yml"]
+
+  subgraph patch_watch ["The Patch watch: patch-watch.yml, job watch, daily"]
+    w_plan["pnpm patch-watch:plan: a live Build on jass-history newer than the supported one"]
+    w_generate["pnpm typings:generate with its tag: the Patch files vendored, the generator run"]
+    w_issue["the New Patch issue, game-patch and needs-triage"]
+    w_draft["the draft pull request: the vendored Patch files, the generator's output as its checklist"]
+    w_plan --> w_generate --> w_issue --> w_draft
+  end
+
+  subgraph agent ["The Agent, following /new-patch (a person follows the New Patch loop)"]
+    a_overlay["write the Overlay entries the checklist names, one JSON per Native in reforged-types"]
+    a_generate["pnpm typings:generate, until it exits 0"]
+    a_typings["the generated Typings: a Game version folder, async-natives.json; never edited by hand"]
+    a_review["review the generated diff: each change breaking or additive"]
+    a_cover["pnpm coverage:report: each new Native wrapped with /add-wrapper or excluded"]
+    a_patch["move the reforged.patch fields: pnpm release:check-patches"]
+    a_check["pnpm check, with the Drift check pnpm typings:check"]
+    a_overlay -->|"edited by hand"| a_generate
+    a_generate -->|"a checklist item left"| a_overlay
+    a_generate -->|"writes"| a_typings
+  end
+
+  subgraph machine ["A machine with the game"]
+    g_stop["without the game: stop and hand these steps to a human"]
+    g_builtins["pnpm builtins:generate: the Built-in objects of the Build"]
+    g_sweep["the Nullability sweep: pnpm probe:run and pnpm probe:nullability-report on every Slice"]
+    g_builtins --> g_sweep
+  end
+
+  subgraph pull_request ["The pull request"]
+    p_checklist["its body: the checklist, every item checked, and the record of the diff"]
+    p_changeset["a minor changeset of reforged-types, the other packages by the bump rules"]
+    p_merge["merged when the checklist is complete and pnpm typings:check is green; it closes the New Patch issue"]
+    p_checklist --> p_changeset --> p_merge
+  end
+
+  form --> w_issue
+  w_draft -->|"its tag and checklist"| a_overlay
+  a_typings -->|"the game installed"| g_builtins
+  a_typings -->|"no game"| g_stop
+  g_sweep -.->|"a mismatch widens an Overlay entry"| a_overlay
+  g_sweep --> a_review --> a_cover --> a_patch --> a_check
+  a_check --> p_checklist
+```
+
+| Node                                                                                           | Details in                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The issue form                                                                                 | [`new-game-patch.yml`](.github/ISSUE_TEMPLATE/new-game-patch.yml); step 1 below                                                                                                                                             |
+| The Patch watch: the plan, the generation, the issue, the draft                                | [`patch-watch.yml`](.github/workflows/patch-watch.yml); steps 1 and 2 below                                                                                                                                                 |
+| The Overlay entries, `typings:generate` until it exits 0                                       | "Curating the Overlay" above; steps 1 to 4 of the [New Patch loop](packages/reforged-types/AGENTS.md#new-patch-loop) and its [Curation rules](packages/reforged-types/AGENTS.md#curation-rules)                             |
+| The generated Typings, never edited by hand                                                    | The first paragraph of this section                                                                                                                                                                                         |
+| `builtins:generate` and the Nullability sweep, on a machine with the game; the stop without it | Steps 5 and 6 of the [New Patch loop](packages/reforged-types/AGENTS.md#new-patch-loop) and of the [`new-patch` skill](.claude/skills/new-patch/SKILL.md); [What stays for a human](probe/README.md#what-stays-for-a-human) |
+| The review of the diff, the coverage, the `reforged.patch` fields                              | Steps 7 to 9 of the [`new-patch` skill](.claude/skills/new-patch/SKILL.md); [The `reforged.patch` field](docs/release.md#the-reforgedpatch-field)                                                                           |
+| `pnpm check`                                                                                   | Step 11 of the [`new-patch` skill](.claude/skills/new-patch/SKILL.md); step 8 of the [New Patch loop](packages/reforged-types/AGENTS.md#new-patch-loop)                                                                     |
+| The pull request: its checklist, its changesets, the merge                                     | Steps 10 and 12 of the [`new-patch` skill](.claude/skills/new-patch/SKILL.md); [Choosing the bump for a Patch](docs/release.md#choosing-the-bump-for-a-patch); step 4 below                                                 |
+
 **How a new Patch flows.**
 
 1. The Patch watch reads [jass-history](https://github.com/Luashine/jass-history) daily. When a live Build newer than the supported one is tagged, it opens a "New Patch" issue (`game-patch`, `needs-triage`) and a draft pull request that vendored the Patch files and ran the generator. If you notice a Patch first, report it with the "New game Patch" issue form.
