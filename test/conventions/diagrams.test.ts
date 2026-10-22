@@ -664,6 +664,14 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["docs/agents/issue-tracker.md"]);
   });
 
+  it("include the docs site, in the website's README", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("docs-site"))
+        .map(({ file }) => file),
+    ).toEqual(["website/README.md"]);
+  });
+
   it("include the Init stages, in the Init stages guide of the docs site", () => {
     expect(
       diagrams
