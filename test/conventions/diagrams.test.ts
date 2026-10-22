@@ -48,6 +48,10 @@
 //    shape).
 // 5. No `click`: the docs collector does not rewrite a link inside a
 //    diagram. The table under the diagram links each node to its section.
+// 6. Its row in the README's "Map": `| <to understand> | \`<name>\` |
+//    [<doc>, "<section>"](<doc>#<section>) |`, the link to its doc and to the
+//    heading right above the block. A diagram without its row fails, and so
+//    does a row naming no diagram.
 //
 // A hand-written diagram can still draw a wrong edge between two names that
 // exist: the test does not see it (ADR 0019, "Consequences").
@@ -79,6 +83,8 @@ interface Diagram {
   file: string;
   // The line of the block's opening fence, from 1.
   line: number;
+  // The text of the heading right above the block, of any level.
+  heading: string | undefined;
   // The `%% diagram:` names it declares: one, unless it is wrong.
   names: string[];
   // The `%% covers:` sets it declares, as written.
@@ -162,12 +168,21 @@ function cite(text: string): Citations {
 }
 
 // The body of each fenced code block of a Markdown file whose info string is
-// `mermaid`, with the line of its opening fence. Fences follow CommonMark: a
-// block closes on a fence of the same character at least as long as the
-// opening one, so a `mermaid` block shown inside a longer fence is not read.
-function mermaidBlocks(markdown: string): { line: number; lines: string[] }[] {
-  const blocks: { line: number; lines: string[] }[] = [];
+// `mermaid`, with the line of its opening fence and the heading right above
+// it. Fences follow CommonMark: a block closes on a fence of the same
+// character at least as long as the opening one, so a `mermaid` block shown
+// inside a longer fence is not read, and a `#` line inside a fence is no
+// heading.
+function mermaidBlocks(
+  markdown: string,
+): { line: number; heading: string | undefined; lines: string[] }[] {
+  const blocks: {
+    line: number;
+    heading: string | undefined;
+    lines: string[];
+  }[] = [];
   let open: { fence: string; mermaid: boolean; line: number } | undefined;
+  let heading: string | undefined;
   let body: string[] = [];
   markdown.split(/\r?\n/).forEach((text, index) => {
     if (open === undefined) {
@@ -177,6 +192,8 @@ function mermaidBlocks(markdown: string): { line: number; lines: string[] }[] {
         open = { fence, mermaid: info === "mermaid", line: index + 1 };
         body = [];
       }
+      heading =
+        /^ {0,3}#{1,6}\s+(.*?)(?:\s+#+)?\s*$/.exec(text)?.[1] ?? heading;
       return;
     }
     const closing = /^\s*(`{3,}|~{3,})\s*$/.exec(text)?.[1];
@@ -185,7 +202,7 @@ function mermaidBlocks(markdown: string): { line: number; lines: string[] }[] {
       closing.startsWith(open.fence.charAt(0)) &&
       closing.length >= open.fence.length
     ) {
-      if (open.mermaid) blocks.push({ line: open.line, lines: body });
+      if (open.mermaid) blocks.push({ line: open.line, heading, lines: body });
       open = undefined;
       return;
     }
@@ -197,7 +214,7 @@ function mermaidBlocks(markdown: string): { line: number; lines: string[] }[] {
 // The diagrams of a Markdown file: its `mermaid` blocks, each with its
 // declarations and what it cites. Pure: the file is given as text.
 function readDiagrams(file: string, markdown: string): Diagram[] {
-  return mermaidBlocks(markdown).map(({ line, lines }) => {
+  return mermaidBlocks(markdown).map(({ line, heading, lines }) => {
     const declared = (key: string) =>
       lines.flatMap((text) => {
         const value = new RegExp(`^\\s*%%\\s*${key}:\\s*(.*?)\\s*$`).exec(
@@ -209,6 +226,7 @@ function readDiagrams(file: string, markdown: string): Diagram[] {
     return {
       file,
       line,
+      heading,
       names: declared("diagram"),
       covers: declared("covers"),
       citations: cite(shown.join("\n")),
@@ -297,6 +315,109 @@ function diagramProblems(
   return problems;
 }
 
+// A row of the README's "Map": the diagram it names and the link to where it
+// sits, each undefined when the row does not hold one.
+interface MapRow {
+  // Its line in the README, from 1.
+  line: number;
+  diagram: string | undefined;
+  link: string | undefined;
+}
+
+// The rows of the table of the README's "Map" whose header opens on
+// "To understand": `| <to understand> | \`<name>\` | [<where>](<link>) |`.
+// Pure: the README is given as text.
+function readMap(readme: string): MapRow[] {
+  const rows: MapRow[] = [];
+  let inMap = false;
+  let inTable = false;
+  let fenced = false;
+  readme.split(/\r?\n/).forEach((text, index) => {
+    if (/^\s*(`{3,}|~{3,})/.test(text)) fenced = !fenced;
+    if (fenced) return;
+    if (text.startsWith("## ")) inMap = text === "## Map";
+    if (!inMap || !text.startsWith("|")) {
+      inTable = false;
+      return;
+    }
+    if (/^\|\s*To understand\s*\|/.test(text)) {
+      inTable = true;
+      return;
+    }
+    if (!inTable || /^\|[\s:|-]*$/.test(text)) return;
+    const [, , diagram = "", where = ""] = text.split("|");
+    rows.push({
+      line: index + 1,
+      diagram: /^\s*`([^`]+)`\s*$/.exec(diagram)?.[1],
+      link: /\]\(([^)\s]+)\)/.exec(where)?.[1],
+    });
+  });
+  return rows;
+}
+
+// The anchor GitHub gives a heading: lower case, punctuation dropped, spaces
+// turned into hyphens.
+function anchor(heading: string): string {
+  return heading
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N} _-]/gu, "")
+    .replaceAll(" ", "-");
+}
+
+// The link a Map row of a diagram holds: its doc, from the root, and the
+// anchor of the heading right above it; only the anchor in the README itself.
+function mapLink({ file, heading }: Diagram): string {
+  const section = `#${anchor(heading ?? "")}`;
+  return file === "README.md" ? section : `${file}${section}`;
+}
+
+// Every way the Map and the diagrams differ: a diagram without its row, a row
+// naming no diagram or one that does not exist, a diagram listed twice, a row
+// linking elsewhere than the diagram's doc and section.
+function mapProblems(
+  rows: readonly MapRow[],
+  diagrams: readonly Diagram[],
+): string[] {
+  const byName = new Map(
+    diagrams.flatMap((diagram) =>
+      diagram.names.length === 1 ? [[diagram.names[0] ?? "", diagram]] : [],
+    ),
+  );
+  const listed = new Set<string>();
+  const problems = rows.flatMap(({ line, diagram: name, link }) => {
+    const where = `README.md:${String(line)}`;
+    if (name === undefined) {
+      return [
+        `${where}: a row of the Map names no diagram: write its name in backticks in the second column`,
+      ];
+    }
+    if (listed.has(name)) {
+      return [`${where}: the Map lists diagram "${name}" twice: keep one row`];
+    }
+    listed.add(name);
+    const diagram = byName.get(name);
+    if (diagram === undefined) {
+      return [
+        `${where}: the Map lists diagram "${name}", which no mermaid block declares: remove the row, or add the diagram`,
+      ];
+    }
+    const expected = mapLink(diagram);
+    return link === expected
+      ? []
+      : [
+          `${where}: the Map's row of diagram "${name}" links ${link ?? "nothing"}, not its doc and section: ${expected}`,
+        ];
+  });
+  for (const [name, { file, line }] of byName) {
+    if (!listed.has(name)) {
+      problems.push(
+        `diagram "${name}" (${file}:${String(line)}) is missing from the README's "Map": add its row`,
+      );
+    }
+  }
+  return problems;
+}
+
 describe("the extraction of a diagram", () => {
   const fixture: Repository = {
     known: {
@@ -343,6 +464,7 @@ describe("the extraction of a diagram", () => {
     expect(diagram).toEqual({
       file: "docs/a.md",
       line: 3,
+      heading: "A doc",
       names: ["a-b"],
       covers: [],
       citations: {
@@ -377,6 +499,26 @@ describe("the extraction of a diagram", () => {
     expect(readDiagrams("docs/a.md", markdown).map(({ line }) => line)).toEqual(
       [11],
     );
+  });
+
+  it("reads the heading right above a block, not a `#` line inside a fence", () => {
+    const markdown = [
+      "# A doc",
+      "",
+      "## The section ##",
+      "",
+      "```sh",
+      "# a comment",
+      "```",
+      "",
+      "```mermaid",
+      "flowchart LR",
+      "```",
+      "",
+    ].join("\n");
+    expect(
+      readDiagrams("docs/a.md", markdown).map(({ heading }) => heading),
+    ).toEqual(["The section"]);
   });
 
   it("passes a named block citing what exists", () => {
@@ -536,6 +678,131 @@ describe("the extraction of a diagram", () => {
   });
 });
 
+describe("the Map", () => {
+  const diagrams = [
+    ...readDiagrams(
+      "README.md",
+      [
+        "## Map",
+        "",
+        "```mermaid",
+        "flowchart LR",
+        "  %% diagram: a-b",
+        "```",
+      ].join("\n"),
+    ),
+    ...readDiagrams(
+      "docs/c.md",
+      [
+        "# C",
+        "",
+        "### The `c-d` flow",
+        "",
+        "```mermaid",
+        "flowchart LR",
+        "  %% diagram: c-d",
+        "```",
+      ].join("\n"),
+    ),
+  ];
+
+  function readme(...rows: string[]): string {
+    return [
+      "## Docs",
+      "",
+      "| To understand | Read the diagram | In |",
+      "| --- | --- | --- |",
+      "| not the Map | `x-y` | [x](x.md) |",
+      "",
+      "## Map",
+      "",
+      "| To understand | Read the diagram | In |",
+      "| ------------- | :--------------: | -- |",
+      ...rows,
+      "",
+      "```mermaid",
+      "flowchart LR",
+      "  %% diagram: a-b",
+      "```",
+      "",
+      "| Node | Read |",
+      "| --- | --- |",
+      "| `a` | [a](a.md) |",
+      "",
+      "## Commands",
+      "",
+    ].join("\n");
+  }
+
+  const ab = '| the a and the b | `a-b` | [README.md, "Map"](#map) |';
+  const cd =
+    '| the c and the d | `c-d` | [docs/c.md, "The c-d flow"](docs/c.md#the-c-d-flow) |';
+
+  it("reads only the rows of the Map's table of diagrams", () => {
+    expect(readMap(readme(ab, cd))).toEqual([
+      { line: 11, diagram: "a-b", link: "#map" },
+      { line: 12, diagram: "c-d", link: "docs/c.md#the-c-d-flow" },
+    ]);
+  });
+
+  it("passes a Map listing every diagram, at its doc and section", () => {
+    expect(mapProblems(readMap(readme(ab, cd)), diagrams)).toEqual([]);
+  });
+
+  it("fails on a diagram missing from the Map, naming it", () => {
+    expect(mapProblems(readMap(readme(ab)), diagrams)).toEqual([
+      expect.stringContaining(
+        `diagram "c-d" (docs/c.md:5) is missing from the README's "Map"`,
+      ),
+    ]);
+  });
+
+  it("fails on a row of the Map with no diagram, naming it", () => {
+    expect(
+      mapProblems(
+        readMap(readme(ab, cd, "| the e | `e-f` | [docs/e.md](docs/e.md) |")),
+        diagrams,
+      ),
+    ).toEqual([
+      expect.stringContaining(
+        `README.md:13: the Map lists diagram "e-f", which no mermaid block declares`,
+      ),
+    ]);
+  });
+
+  it("fails on a row naming no diagram", () => {
+    expect(
+      mapProblems(
+        readMap(readme(ab, cd, "| the e | e-f | [docs/e.md](docs/e.md) |")),
+        diagrams,
+      ),
+    ).toEqual([
+      expect.stringContaining(
+        "README.md:13: a row of the Map names no diagram",
+      ),
+    ]);
+  });
+
+  it("fails on a diagram listed twice", () => {
+    expect(mapProblems(readMap(readme(ab, cd, ab)), diagrams)).toEqual([
+      expect.stringContaining(`the Map lists diagram "a-b" twice`),
+    ]);
+  });
+
+  it("fails on a row linking elsewhere than the diagram's doc and section", () => {
+    expect(
+      mapProblems(
+        readMap(readme(ab, "| the c | `c-d` | [docs/c.md](docs/c.md#c) |")),
+        diagrams,
+      ),
+    ).toEqual([
+      expect.stringContaining(
+        `the Map's row of diagram "c-d" links docs/c.md#c, not its doc and section: docs/c.md#the-c-d-flow`,
+      ),
+    ]);
+  });
+});
+
 // What the diagrams may cite from outside the repository, by source: a
 // diagram of a flow that crosses into another repository or runs an Agent
 // skill installed per machine names them. Add a name here, under its source,
@@ -647,16 +914,6 @@ const diagrams = files
   .sort()
   .flatMap((file) => readDiagrams(file, read(file)));
 
-// The `##` heading of a Markdown file's section that holds a line, from 1.
-function sectionOf(file: string, line: number): string {
-  return (
-    read(file)
-      .split(/\r?\n/)
-      .slice(0, line)
-      .findLast((text) => text.startsWith("## ")) ?? "(no section)"
-  );
-}
-
 describe("the diagrams of the repository", () => {
   it("reads the sets a diagram may cover from the repository", () => {
     expect(workflows, "the files of .github/workflows/").toContain("ci.yml");
@@ -747,8 +1004,8 @@ describe("the diagrams of the repository", () => {
     expect(
       diagrams
         .filter(({ names }) => names.includes("claim-board"))
-        .map(({ file, line }) => `${file}, ${sectionOf(file, line)}`),
-    ).toEqual(["docs/release.md, ## The board"]);
+        .map(({ file, heading }) => `${file}, ${String(heading)}`),
+    ).toEqual(["docs/release.md, The board"]);
   });
 
   it("include the Init stages, in the Init stages guide of the docs site", () => {
@@ -759,9 +1016,19 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["website/docs/guides/init-stages.md"]);
   });
 
-  // #683: the README's "Map" lists every diagram, and every diagram is
-  // listed in it. Compare the names of `diagrams` with the Map's table here,
-  // with a fixture case of a diagram missing from the Map in "the extraction
-  // of a diagram" above. The "Map" heading itself is guarded with the other
-  // README sections AGENTS.md points at, in agents-md.test.ts.
+  // The "Map" heading itself is guarded with the other README sections
+  // AGENTS.md points at, in agents-md.test.ts.
+  it("are each listed in the README's Map, at their doc and section, and the Map lists only them", () => {
+    expect(
+      mapProblems(readMap(read("README.md")), diagrams),
+      `the README's "Map" and the mermaid blocks of the tracked Markdown files: give each diagram one row, as rule 6 of the header comment of test/conventions/diagrams.test.ts says`,
+    ).toEqual([]);
+  });
+
+  it("are reached from the docs site's Contributing page, through the Map on GitHub", () => {
+    expect(
+      read("website/docs/contributing/index.mdx"),
+      "the README is not collected: the Contributing page links its Map",
+    ).toContain("https://github.com/phmilk/reforged-ts#map");
+  });
 });
