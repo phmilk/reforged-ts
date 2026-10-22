@@ -21,4 +21,6 @@ The upstream template's open issues all trace to compile-time object-data editin
 
 ADR 0015 revises the Object data half of this decision: the map folder owns Object data, and any editor that round-trips it faithfully may edit it, the World Editor or the Studio (HiveWE is not a target for now, ADR 0014); code declares Object definitions, which `reforged-map` writes. Terrain and placed units stay the World Editor's.
 
+ADR 0018 supersedes the deferral of the scaffolder: `create-reforged-map` makes a Map project from the Template at the line the release gate builds, and **Use this template** stays the other way in.
+
 Decision record: https://github.com/phmilk/reforged-ts/issues/23

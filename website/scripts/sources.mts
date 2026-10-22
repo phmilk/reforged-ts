@@ -20,6 +20,7 @@ const PACKAGES = [
   "eslint-plugin-reforged",
   "reforged-map",
   "reforged-builtins",
+  "create-reforged-map",
 ];
 
 export const SOURCES: readonly Source[] = [

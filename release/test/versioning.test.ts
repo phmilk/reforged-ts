@@ -247,6 +247,30 @@ describe("changeset version", { timeout: 60_000 }, () => {
     });
   });
 
+  it("gives create-reforged-map 1.0.0-alpha.0 first, entering at 0.0.0 with a major in the repository's pre mode", async () => {
+    const root = await scratchWorkspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      await readFile(join(repositoryRoot, ".changeset/pre.json"), "utf8"),
+    );
+    // Pinned, not read: the release that publishes create-reforged-map has
+    // already versioned the repository's manifest past 0.0.0.
+    await setVersion(root, "create-reforged-map", "0.0.0");
+    const before = await versions(root);
+    await addChangeset(root, "create-reforged-map", {
+      "create-reforged-map": "major",
+    });
+
+    await changeset(root, "version");
+
+    // No package depends on it: nothing else moves.
+    expect(await versions(root)).toEqual({
+      ...before,
+      "create-reforged-map": "1.0.0-alpha.0",
+    });
+  });
+
   it("moves only the Typings for a minor on the Typings in pre mode", async () => {
     const root = await beforeFirstPublish();
     await changeset(root, "version");

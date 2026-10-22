@@ -135,6 +135,7 @@ describe("release:publish-check", () => {
             "eslint-plugin-reforged",
             "reforged-map",
             "reforged-builtins",
+            "create-reforged-map",
           ],
         ),
       },
@@ -147,7 +148,7 @@ describe("release:publish-check", () => {
       status: 0,
       stdout:
         "Ready for trusted publishing: pnpm 12.6.0, npm 11.19.0, " +
-        "eslint-plugin-reforged, reforged-builtins, reforged-map, reforged-test, reforged-ts, reforged-types on npm.\n",
+        "create-reforged-map, eslint-plugin-reforged, reforged-builtins, reforged-map, reforged-test, reforged-ts, reforged-types on npm.\n",
       stderr: "",
     });
   });
@@ -161,12 +162,12 @@ describe("release:publish-check", () => {
     expect(result.stderr.trimEnd().split("\n")).toEqual([
       expect.stringContaining("cannot request an OIDC token") as unknown,
       expect.stringContaining(
-        "Not on npm yet: eslint-plugin-reforged, reforged-builtins, reforged-map.",
+        "Not on npm yet: create-reforged-map, eslint-plugin-reforged, reforged-builtins, reforged-map.",
       ) as unknown,
     ]);
   });
 
-  it("names reforged-builtins as not on npm until its first publish, the others being there", async () => {
+  it("names create-reforged-map as not on npm until its first publish, the others being there", async () => {
     const result = await runCli([], {
       published: [
         "reforged-ts",
@@ -174,11 +175,12 @@ describe("release:publish-check", () => {
         "reforged-test",
         "eslint-plugin-reforged",
         "reforged-map",
+        "reforged-builtins",
       ],
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toMatch(
-      /^Not on npm yet: reforged-builtins\. .*first-publish wizard/,
+      /^Not on npm yet: create-reforged-map\. .*first-publish wizard/,
     );
   });
 

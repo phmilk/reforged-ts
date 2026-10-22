@@ -2,19 +2,26 @@
  * `release:template-gate`, programmatic entry point: the Template, as the
  * Reference consumer, built against the packed packages before they are
  * published (ADR 0006). It installs the tarballs the publish plan lists into
- * a Template checkout as overrides in its pnpm-workspace.yaml, then runs the
- * Template's build in release mode, its lint and its tests, and stops at the
- * first failure.
+ * a Template checkout as overrides in its pnpm-workspace.yaml, then runs
+ * the Template's build in release mode, its lint and its tests, then has the
+ * packed Creation CLI make a Map project from it (ADR 0018), and stops at
+ * the first failure.
  */
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { parseDocument } from "yaml";
 import { byCodePoint } from "./order.js";
+import { creationFailure } from "./creation-step.js";
+import { CREATION_PACKAGE, LIBRARY_PACKAGE } from "./packages.js";
 import { commandLine, type Command, type Runner } from "./process.js";
-import { LIBRARY_PACKAGE } from "./packages.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
 import { parseSemver } from "./semver.js";
+import {
+  exitFailure,
+  TemplateGateError,
+  type StepFailure,
+} from "./template-gate-failure.js";
 import { errorMessage, isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
 
@@ -24,11 +31,6 @@ export interface PackedPackage {
   version: string;
   /** The tarball, absolute. */
   tarball: string;
-}
-
-/** Inputs the gate cannot work from: the pack output or the checkout. */
-export class TemplateGateError extends Error {
-  override name = "TemplateGateError";
 }
 
 /**
@@ -161,10 +163,17 @@ export const TEMPLATE_STEPS: readonly {
 ];
 
 export interface TemplateGateInput {
-  /** The Template checkout. */
+  /** The Template checkout, a git repository. */
   template: string;
   /** The output folder of `changeset pack`. */
   packDir: string;
+  /** The workspace, whose Creation CLI is packed when the plan lacks it. */
+  root: string;
+  /**
+   * An empty folder for the creation step: the Template's archive, the
+   * unpacked Creation CLI and the Map project it creates.
+   */
+  scratch: string;
   run: Runner;
 }
 
@@ -183,11 +192,14 @@ type Manifest = Record<string, unknown>;
 /**
  * Installs the tarballs of the publish plan in `packDir` into the Template
  * checkout, as `overrides` entries in its `pnpm-workspace.yaml`, then runs its
- * build in release mode, its lint and its tests. Stops at the first command
- * that fails, or at the first script the Template lacks, and names it. Each
- * command runs on the pnpm the Template pins. Throws a `TemplateGateError`
- * when the pack output or the checkout cannot be read. The checkout keeps the
- * overrides and any lockfile the install writes: gate a throwaway clone.
+ * build in release mode, its lint and its tests, each on the pnpm the
+ * Template pins. Then the creation step (`creation-step.ts`): the packed
+ * Creation CLI makes a Map project in `scratch` from an archive of the
+ * checkout, which the step checks. Stops at the first command that fails, or at
+ * the first script the Template lacks, and names it. Throws a
+ * `TemplateGateError` when the pack output, the checkout or the Creation
+ * CLI's tarball cannot be read. The checkout keeps the overrides and any
+ * lockfile the install writes: gate a throwaway clone.
  */
 export async function runTemplateGate(
   input: TemplateGateInput,
@@ -208,7 +220,7 @@ export async function runTemplateGate(
 
   await writeOverrides(input.template, installed);
 
-  const fail = (failed: string, message: string): TemplateGateResult => ({
+  const fail = ({ failed, message }: StepFailure): TemplateGateResult => ({
     ok: false,
     installed,
     failed,
@@ -222,11 +234,11 @@ export async function runTemplateGate(
     env: TEMPLATE_ENV,
   };
   const installStatus = await input.run(install);
-  if (installStatus !== 0) {
-    return fail(commandLine(install), `exit code ${String(installStatus)}.`);
-  }
+  if (installStatus !== 0) return fail(exitFailure(install, installStatus));
   const ignored = await overridesIgnored(input.template, manifest, installed);
-  if (ignored !== undefined) return fail(commandLine(install), ignored);
+  if (ignored !== undefined) {
+    return fail({ failed: commandLine(install), message: ignored });
+  }
 
   const scripts = isRecord(manifest.scripts) ? manifest.scripts : {};
   for (const step of TEMPLATE_STEPS) {
@@ -237,15 +249,24 @@ export async function runTemplateGate(
       env: TEMPLATE_ENV,
     };
     if (typeof scripts[step.script] !== "string") {
-      return fail(
-        commandLine(command),
-        `the Template has no \`${step.script}\` script.`,
-      );
+      return fail({
+        failed: commandLine(command),
+        message: `the Template has no \`${step.script}\` script.`,
+      });
     }
     const status = await input.run(command);
-    if (status !== 0)
-      return fail(commandLine(command), `exit code ${String(status)}.`);
+    if (status !== 0) return fail(exitFailure(command, status));
   }
+
+  const creation = await creationFailure({
+    template: input.template,
+    scripts,
+    tarball: installed.find(({ name }) => name === CREATION_PACKAGE)?.tarball,
+    root: input.root,
+    scratch: input.scratch,
+    run: input.run,
+  });
+  if (creation !== undefined) return fail(creation);
   return { ok: true, installed };
 }
 

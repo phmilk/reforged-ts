@@ -562,7 +562,7 @@ describe("release:version", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toMatch(
-      /^Docs version 1\.1: wrote packages\/eslint-plugin-reforged\/package\.json, packages\/eslint-plugin-reforged\/README\.md, packages\/reforged-builtins\/README\.md, packages\/reforged-map\/README\.md, packages\/reforged-test\/README\.md, packages\/reforged-ts\/README\.md, packages\/reforged-types\/README\.md\.\n/,
+      /^Docs version 1\.1: wrote packages\/eslint-plugin-reforged\/package\.json, packages\/create-reforged-map\/README\.md, packages\/eslint-plugin-reforged\/README\.md, packages\/reforged-builtins\/README\.md, packages\/reforged-map\/README\.md, packages\/reforged-test\/README\.md, packages\/reforged-ts\/README\.md, packages\/reforged-types\/README\.md\.\n/,
     );
     const files = await stamped(root);
     const plugin = files.get("packages/eslint-plugin-reforged/package.json");
