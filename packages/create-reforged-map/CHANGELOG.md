@@ -1,5 +1,11 @@
 # create-reforged-map
 
+## 1.0.0-alpha.2
+
+### Minor Changes
+
+- [#699](https://github.com/phmilk/reforged-ts/pull/699) [`e3fd5aa`](https://github.com/phmilk/reforged-ts/commit/e3fd5aa526f9283fd471adadf9eb976a8632cf31) Thanks [@wyller](https://github.com/wyller)! - A new Map project's map folder is at its root and named after its package (ADR 0020): `create-reforged-map my-map` moves the Template's map folder, from its root or from under `maps/`, to `my-map.w3m` at the project root, removes `maps/` when that leaves it empty, and sets `mapFolder` in `reforged.config.ts` to it before the install. A scoped package names it after the part past its scope. The next steps name that folder to open in the World Editor. A Template with no map folder, several, or a `reforged.config.ts` without `mapFolder` stops the creation at the new stage "placing the map folder", with nothing left in the target ([#695](https://github.com/phmilk/reforged-ts/issues/695)).
+
 ## 1.0.0-alpha.1
 
 ### Patch Changes

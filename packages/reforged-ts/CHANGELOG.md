@@ -1,5 +1,11 @@
 # reforged-ts
 
+## 1.0.0-alpha.21
+
+### Patch Changes
+
+- [#691](https://github.com/phmilk/reforged-ts/pull/691) [`00d79d4`](https://github.com/phmilk/reforged-ts/commit/00d79d49190d6711cbb56d9e5f1f5784472d735a) Thanks [@phmilk](https://github.com/phmilk)! - The refund of talent points by `Unit#resetTalents` is confirmed on screen on Patch 3.0.1.24370, and its remarks say what the reset does to the abilities a chosen talent adds to the hero ([#672](https://github.com/phmilk/reforged-ts/issues/672)).
+
 ## 1.0.0-alpha.20
 
 ### Patch Changes

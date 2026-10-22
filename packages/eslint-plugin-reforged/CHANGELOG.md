@@ -1,5 +1,17 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.8
+
+### Minor Changes
+
+- [#698](https://github.com/phmilk/reforged-ts/pull/698) [`a79a93d`](https://github.com/phmilk/reforged-ts/commit/a79a93de3691f0a01ae3dee378fa20236cf34284) Thanks [@wyller](https://github.com/wyller)! - The map folder is found at the Map project's root (ADR 0020). Without an option, the TypeScript plugin's hover and go to definition and the lint rule `no-unknown-rawcodes` read the one folder directly at the project root whose name ends in `.w3m` or `.w3x`; with none there, they fall back to the one under `maps/`, as before, until 1.0.0. One at the root wins over any under `maps/`, and the message when none is found names both places. To move a Map project's map folder: move it from `maps/` to the project root, then set `mapFolder` in `reforged.config.ts` to its new path ([#694](https://github.com/phmilk/reforged-ts/issues/694)).
+
+### Patch Changes
+
+- Updated dependencies [[`00d79d4`](https://github.com/phmilk/reforged-ts/commit/00d79d49190d6711cbb56d9e5f1f5784472d735a), [`a79a93d`](https://github.com/phmilk/reforged-ts/commit/a79a93de3691f0a01ae3dee378fa20236cf34284)]:
+  - reforged-ts@1.0.0-alpha.21
+  - reforged-map@1.0.0-alpha.5
+
 ## 1.0.0-alpha.7
 
 ### Minor Changes
