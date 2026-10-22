@@ -722,6 +722,14 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["docs/release.md, ## The board"]);
   });
 
+  it("include the Init stages, in the Init stages guide of the docs site", () => {
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("init-stages"))
+        .map(({ file }) => file),
+    ).toEqual(["website/docs/guides/init-stages.md"]);
+  });
+
   // #683: the README's "Map" lists every diagram, and every diagram is
   // listed in it. Compare the names of `diagrams` with the Map's table here,
   // with a fixture case of a diagram missing from the Map in "the extraction
