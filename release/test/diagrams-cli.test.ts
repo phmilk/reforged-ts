@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/diagrams.js";
-import { DIAGRAMS } from "../src/diagram-list.js";
+import { packagesDiagram } from "../src/diagram-packages.js";
 import type { Diagram } from "../src/diagrams.js";
 import { gitIn } from "../src/git.js";
 import { writeText, writeWorkspace } from "./support/workspace.js";
@@ -38,10 +38,11 @@ async function repository(readme: string): Promise<string> {
   return root;
 }
 
+/** The CLI, by default with the packages diagram alone: the fixture holds its sources. */
 async function runCli(
   root: string,
   args: string[],
-  diagrams: readonly Diagram[] = DIAGRAMS,
+  diagrams: readonly Diagram[] = [packagesDiagram],
 ) {
   let stdout = "";
   let stderr = "";
