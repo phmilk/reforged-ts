@@ -12,14 +12,14 @@ import { commandLine, type Runner } from "../src/process.js";
 import { localTemplate } from "../src/template.js";
 import {
   LONG_PATH,
-  MAINTENANCE_PATHS,
   MAP_FOLDER,
   ROOT_TEMPLATE_FILES,
   TEMPLATE_FILES,
   configWith,
+  detachedFiles,
+  filesWith,
   lines,
   listFiles,
-  placedPath,
   recordingRunner,
   tempDir,
   templateArchive,
@@ -46,13 +46,6 @@ const ALL_COMMANDS = [
 
 /** The fixture's README after its title and first paragraph. */
 const README_TAIL = "## Links\n\n- The library.\n";
-
-/** The fixture's files once `template:detach` has run, in a project named `name`. */
-const detachedFiles = (name = "my-map"): string[] =>
-  Object.keys(TEMPLATE_FILES)
-    .filter((path) => !MAINTENANCE_PATHS.includes(path))
-    .map((path) => placedPath(path, name))
-    .sort();
 
 /**
  * Runs `create` into `folder` under a new temporary folder, from the
@@ -663,12 +656,7 @@ describe("create: the Seeds", () => {
   ])(
     "fails naming %s when it is missing, with no target left and nothing run",
     async (_anchor, changes: Record<string, string | null>, reason) => {
-      // A `null` content leaves the file out.
-      const files = Object.fromEntries(
-        Object.entries({ ...TEMPLATE_FILES, ...changes }).filter(
-          (entry): entry is [string, string | Uint8Array] => entry[1] !== null,
-        ),
-      );
+      const files = filesWith(TEMPLATE_FILES, changes);
       for (const description of [DESCRIPTION, undefined]) {
         const runner = recordingRunner();
         const { result, folder } = await runCreate({
@@ -708,17 +696,6 @@ describe("create: the Seeds", () => {
     expect(await entries(dirname(folder))).toEqual([]);
   });
 });
-
-/** The fixture with `changes`, a `null` content leaving the file out. */
-const filesWith = (
-  base: Readonly<Record<string, string | Uint8Array>>,
-  changes: Record<string, string | Uint8Array | null>,
-): Record<string, string | Uint8Array> =>
-  Object.fromEntries(
-    Object.entries({ ...base, ...changes }).filter(
-      (entry): entry is [string, string | Uint8Array] => entry[1] !== null,
-    ),
-  );
 
 describe("create: the map folder", () => {
   it.each([
@@ -771,6 +748,27 @@ describe("create: the map folder", () => {
     expect(await entries(join(folder, "maps"))).toEqual(["README.md"]);
     expect(await read(folder, "reforged.config.ts")).toBe(
       configWith("my-map.W3X"),
+    );
+  });
+
+  it("renames a map folder at the root whose name differs from the package's only in case", async () => {
+    const { result, folder } = await runCreate({
+      answers: { name: "fixture" },
+      template: await templateArchive(
+        Object.fromEntries(
+          Object.entries(ROOT_TEMPLATE_FILES).map(([path, content]) => [
+            path.replace(/^fixture\.w3m\//, "Fixture.w3m/"),
+            path === "reforged.config.ts" ? configWith("Fixture.w3m") : content,
+          ]),
+        ),
+      ),
+    });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(await entries(folder)).toContain("fixture.w3m");
+    expect(await entries(folder)).not.toContain("Fixture.w3m");
+    expect(await read(folder, "reforged.config.ts")).toBe(
+      configWith("fixture.w3m"),
     );
   });
 

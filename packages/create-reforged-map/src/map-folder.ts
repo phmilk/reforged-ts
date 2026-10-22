@@ -15,13 +15,13 @@ import {
 import { join } from "node:path";
 
 /** The file whose `mapFolder` names the map folder. */
-export const CONFIG_FILE = "reforged.config.ts";
+const CONFIG_FILE = "reforged.config.ts";
 
 /** The folder the Template kept its map folder in before ADR 0020. */
 const MAPS_FOLDER = "maps";
 
 /** A map folder's name: its suffix, ignoring case. */
-const MAP_FOLDER = /\.w3[mx]$/i;
+const MAP_FOLDER_SUFFIX = /\.w3[mx]$/i;
 
 /** The `mapFolder` field of the config: its key, its quote and its value. */
 const MAP_FOLDER_FIELD = /^(\s*mapFolder\s*:\s*)(["'`])([^"'`\r\n]*)\2/m;
@@ -33,8 +33,8 @@ const MAP_FOLDER_FIELD = /^(\s*mapFolder\s*:\s*)(["'`])([^"'`\r\n]*)\2/m;
  * part after the scope of a scoped `name`. Removes `maps/` when that leaves
  * it empty, and sets `mapFolder` in the config to the new path. Resolves
  * with that path, relative to `folder`. Throws when the Template has no
- * single map folder, or a config without a `mapFolder` field, with nothing
- * changed.
+ * single map folder, no config or a config without a `mapFolder` field,
+ * with nothing changed.
  */
 export async function placeMapFolder(
   folder: string,
@@ -65,7 +65,12 @@ export async function placeMapFolder(
     );
   }
   if (from !== placed) {
-    if ((await stat(join(folder, placed)).catch(() => null)) !== null) {
+    // A name that differs only in case is the same folder where the file
+    // system ignores case: the rename alone changes it.
+    if (
+      from.toLowerCase() !== placed.toLowerCase() &&
+      (await stat(join(folder, placed)).catch(() => null)) !== null
+    ) {
       throw new Error(
         `the Template already has a ${placed} at its root, where its map folder goes.`,
       );
@@ -94,7 +99,9 @@ async function mapFoldersIn(folder: string): Promise<string[]> {
     () => [],
   );
   return entries
-    .filter((entry) => entry.isDirectory() && MAP_FOLDER.test(entry.name))
+    .filter(
+      (entry) => entry.isDirectory() && MAP_FOLDER_SUFFIX.test(entry.name),
+    )
     .map((entry) => entry.name)
     .sort();
 }

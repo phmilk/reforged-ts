@@ -1,9 +1,9 @@
 /**
  * Creating a Map project from the Template, every stage in order: the
  * checks, the Template written into a temporary folder next to the target,
- * its Seeds prepared, its map folder placed, the move into place, then git, the install, the
- * Template's own `template:detach` and the first commit. The CLI is a thin
- * shell over it.
+ * its Seeds prepared, its map folder placed, the move into place, then git,
+ * the install, the Template's own `template:detach` and the first commit.
+ * The CLI is a thin shell over it.
  */
 import {
   mkdir,
@@ -146,10 +146,9 @@ interface Step {
  * can refuse the creation is checked before any write: the folder does not
  * exist or is empty; `pnpm` runs, and `git` unless skipped. The Template is
  * written into a temporary folder next to the target, its Seeds prepared
- * there with the project name and the description, its map folder renamed
- * after the project name at its root with `mapFolder` set to it, and moved
- * into place,
- * so a failure before the move or during it, a missing anchor among them,
+ * there with the project name and the description, its map folder moved
+ * to its root and named after the project with `mapFolder` set to it, and
+ * the whole moved into place, so a failure before the move or during it, a missing anchor among them,
  * leaves nothing in the target. A failure after it leaves the folder and names the stage
  * and the commands to finish by hand. Once the Template is written, a
  * running Node that its `engines.node` does not admit is warned about, not

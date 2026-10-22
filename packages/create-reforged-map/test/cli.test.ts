@@ -6,11 +6,10 @@ import { main, USAGE } from "../src/cli.js";
 import { runInherited, type Runner } from "../src/process.js";
 import { TEMPLATE_REF, type Fetch } from "../src/template.js";
 import {
-  MAINTENANCE_PATHS,
   ROOT_TEMPLATE_FILES,
   TEMPLATE_FILES,
   configWith,
-  placedPath,
+  detachedFiles,
   lines,
   listFiles,
   recordingRunner,
@@ -442,10 +441,7 @@ describe("create-reforged-map", () => {
       expect(git("rev-list", "--count", "HEAD")).toBe("1");
       expect(git("status", "--porcelain")).toBe("");
       const tracked = git("ls-files").split("\n").sort();
-      const expected = Object.keys(TEMPLATE_FILES)
-        .filter((path) => !MAINTENANCE_PATHS.includes(path))
-        .map((path) => placedPath(path, "my-map"))
-        .sort();
+      const expected = detachedFiles();
       expect(tracked).toEqual(expected);
       expect(
         (await listFiles(folder)).filter((path) => !path.startsWith(".git/")),

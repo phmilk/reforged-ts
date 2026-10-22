@@ -91,6 +91,24 @@ export const ROOT_TEMPLATE_FILES: Readonly<
 export const placedPath = (path: string, name: string): string =>
   path.replace(/^(maps\/)?fixture\.w3m\//, `${name}.w3m/`);
 
+/** The fixture's files once `template:detach` has run, in a project named `name`. */
+export const detachedFiles = (name = "my-map"): string[] =>
+  Object.keys(TEMPLATE_FILES)
+    .filter((path) => !MAINTENANCE_PATHS.includes(path))
+    .map((path) => placedPath(path, name))
+    .sort();
+
+/** `files` with `changes`, a `null` content leaving the file out. */
+export const filesWith = (
+  files: Readonly<Record<string, string | Uint8Array>>,
+  changes: Readonly<Record<string, string | Uint8Array | null>>,
+): Record<string, string | Uint8Array> =>
+  Object.fromEntries(
+    Object.entries({ ...files, ...changes }).filter(
+      (entry): entry is [string, string | Uint8Array] => entry[1] !== null,
+    ),
+  );
+
 /** A new empty folder under the system's temporary folder. */
 export function tempDir(name: string): Promise<string> {
   return mkdtemp(join(tmpdir(), `create-reforged-map-${name}-`));
