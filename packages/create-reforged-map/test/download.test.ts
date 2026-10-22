@@ -4,8 +4,7 @@ import { describe, expect, it } from "vitest";
 import { create, type CreateResult } from "../src/create.js";
 import { githubTemplate, TEMPLATE_REF, type Fetch } from "../src/template.js";
 import {
-  MAINTENANCE_PATHS,
-  TEMPLATE_FILES,
+  detachedFiles,
   listFiles,
   recordingRunner,
   tempDir,
@@ -59,11 +58,7 @@ describe("githubTemplate", () => {
     expect(printed).toContain(
       `Writing the Template from GitHub, phmilk/reforged-ts-template at ${TEMPLATE_REF}`,
     );
-    expect(await listFiles(folder)).toEqual(
-      Object.keys(TEMPLATE_FILES)
-        .filter((path) => !MAINTENANCE_PATHS.includes(path))
-        .sort(),
-    );
+    expect(await listFiles(folder)).toEqual(detachedFiles());
   });
 
   it("downloads another ref when given one", async () => {

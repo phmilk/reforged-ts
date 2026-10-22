@@ -6,8 +6,10 @@ import { main, USAGE } from "../src/cli.js";
 import { runInherited, type Runner } from "../src/process.js";
 import { TEMPLATE_REF, type Fetch } from "../src/template.js";
 import {
-  MAINTENANCE_PATHS,
+  ROOT_TEMPLATE_FILES,
   TEMPLATE_FILES,
+  configWith,
+  detachedFiles,
   lines,
   listFiles,
   recordingRunner,
@@ -410,40 +412,51 @@ describe("create-reforged-map", () => {
     });
   });
 
-  it("creates a Map project end to end with git and pnpm: the Template's files, the maintenance gone, one commit", async () => {
-    // git reads no configuration of this machine, and has an identity.
-    const config = join(await tempDir("git-config"), "gitconfig");
-    await writeFile(config, "");
-    vi.stubEnv("GIT_CONFIG_GLOBAL", config);
-    vi.stubEnv("GIT_CONFIG_NOSYSTEM", "1");
-    for (const role of ["AUTHOR", "COMMITTER"]) {
-      vi.stubEnv(`GIT_${role}_NAME`, "Map Author");
-      vi.stubEnv(`GIT_${role}_EMAIL`, "author@example.com");
-    }
-    const folder = join(await tempDir("target"), "my-map");
-    const result = await runCli([
-      folder,
-      "--template",
-      await templateArchive(),
-      "--skip-install",
-    ]);
+  it.each([
+    ["under maps/", TEMPLATE_FILES],
+    ["at its root", ROOT_TEMPLATE_FILES],
+  ])(
+    "creates a Map project end to end with git and pnpm from a Template with its map folder %s: the Template's files, the map folder at the root named after the package, the maintenance gone, one commit",
+    async (_layout, files) => {
+      // git reads no configuration of this machine, and has an identity.
+      const config = join(await tempDir("git-config"), "gitconfig");
+      await writeFile(config, "");
+      vi.stubEnv("GIT_CONFIG_GLOBAL", config);
+      vi.stubEnv("GIT_CONFIG_NOSYSTEM", "1");
+      for (const role of ["AUTHOR", "COMMITTER"]) {
+        vi.stubEnv(`GIT_${role}_NAME`, "Map Author");
+        vi.stubEnv(`GIT_${role}_EMAIL`, "author@example.com");
+      }
+      const folder = join(await tempDir("target"), "my-map");
+      const result = await runCli([
+        folder,
+        "--template",
+        await templateArchive(files),
+        "--skip-install",
+      ]);
 
-    expect(result).toMatchObject({ status: 0, stderr: "" });
-    const git = (...args: string[]) =>
-      execFileSync("git", args, { cwd: folder, encoding: "utf8" }).trim();
-    expect(git("rev-list", "--count", "HEAD")).toBe("1");
-    expect(git("status", "--porcelain")).toBe("");
-    const tracked = git("ls-files").split("\n").sort();
-    const expected = Object.keys(TEMPLATE_FILES)
-      .filter((path) => !MAINTENANCE_PATHS.includes(path))
-      .sort();
-    expect(tracked).toEqual(expected);
-    expect(
-      (await listFiles(folder)).filter((path) => !path.startsWith(".git/")),
-    ).toEqual(expected);
-    const manifest = JSON.parse(
-      await readFile(join(folder, "package.json"), "utf8"),
-    ) as { scripts: Record<string, string> };
-    expect(Object.keys(manifest.scripts)).toEqual(["build"]);
-  });
+      expect(result).toMatchObject({ status: 0, stderr: "" });
+      const git = (...args: string[]) =>
+        execFileSync("git", args, { cwd: folder, encoding: "utf8" }).trim();
+      expect(git("rev-list", "--count", "HEAD")).toBe("1");
+      expect(git("status", "--porcelain")).toBe("");
+      const tracked = git("ls-files").split("\n").sort();
+      const expected = detachedFiles();
+      expect(tracked).toEqual(expected);
+      expect(
+        (await listFiles(folder)).filter((path) => !path.startsWith(".git/")),
+      ).toEqual(expected);
+      const manifest = JSON.parse(
+        await readFile(join(folder, "package.json"), "utf8"),
+      ) as { scripts: Record<string, string> };
+      expect(Object.keys(manifest.scripts)).toEqual(["build"]);
+      expect(await stat(join(folder, "maps")).catch(() => null)).toBeNull();
+      expect(await readFile(join(folder, "reforged.config.ts"), "utf8")).toBe(
+        configWith("my-map.w3m"),
+      );
+      expect(result.stdout).toContain(
+        "  open my-map.w3m in the World Editor\n",
+      );
+    },
+  );
 });

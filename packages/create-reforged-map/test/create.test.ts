@@ -1,5 +1,5 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   COMMIT_MESSAGE,
@@ -12,8 +12,12 @@ import { commandLine, type Runner } from "../src/process.js";
 import { localTemplate } from "../src/template.js";
 import {
   LONG_PATH,
-  MAINTENANCE_PATHS,
+  MAP_FOLDER,
+  ROOT_TEMPLATE_FILES,
   TEMPLATE_FILES,
+  configWith,
+  detachedFiles,
+  filesWith,
   lines,
   listFiles,
   recordingRunner,
@@ -42,11 +46,6 @@ const ALL_COMMANDS = [
 
 /** The fixture's README after its title and first paragraph. */
 const README_TAIL = "## Links\n\n- The library.\n";
-
-/** The fixture's files once `template:detach` has run. */
-const DETACHED_FILES = Object.keys(TEMPLATE_FILES)
-  .filter((path) => !MAINTENANCE_PATHS.includes(path))
-  .sort();
 
 /**
  * Runs `create` into `folder` under a new temporary folder, from the
@@ -90,13 +89,13 @@ describe("create", () => {
     const { result, folder } = await runCreate({ run: runner.run });
 
     expect(result).toEqual({ ok: true, folder, committed: true });
-    expect(await listFiles(folder)).toEqual(DETACHED_FILES);
+    expect(await listFiles(folder)).toEqual(detachedFiles());
     expect(await readFile(join(folder, ...LONG_PATH.split("/")), "utf8")).toBe(
       TEMPLATE_FILES[LONG_PATH],
     );
-    expect(
-      await readFile(join(folder, "maps/fixture.w3m/war3map.w3i")),
-    ).toEqual(Buffer.from(TEMPLATE_FILES["maps/fixture.w3m/war3map.w3i"]));
+    expect(await readFile(join(folder, "my-map.w3m/war3map.w3i"))).toEqual(
+      Buffer.from(TEMPLATE_FILES[`${MAP_FOLDER}/war3map.w3i`]),
+    );
     const manifest = JSON.parse(
       await readFile(join(folder, "package.json"), "utf8"),
     ) as { scripts: Record<string, string> };
@@ -134,6 +133,7 @@ describe("create", () => {
       "Checking the folder, pnpm and git",
       expect.stringMatching(/^Writing the Template from .+template\.tar\.gz$/),
       "Preparing the Seeds for my-map",
+      "Placing the map folder at the project root",
       `Moving it into ${folder}`,
       "Initialising git: git init",
       "Installing the dependencies: pnpm install",
@@ -143,7 +143,7 @@ describe("create", () => {
       "",
       `Created the Map project in ${folder}. Next steps:`,
       `  cd ${folder}`,
-      "  open maps/fixture.w3m in the World Editor",
+      "  open my-map.w3m in the World Editor",
       "  pnpm build",
       "  pnpm test:map",
     ]);
@@ -155,10 +155,11 @@ describe("create", () => {
     });
 
     expect(result).toMatchObject({ ok: true });
-    expect(printed.slice(1, 5)).toEqual([
+    expect(printed.slice(1, 6)).toEqual([
       expect.stringMatching(/^Writing the Template from /),
       "Warning: Node v22.13.0 does not satisfy the Template's engines requirement, node >=24: its scripts may fail on it. Install a Node it admits (https://nodejs.org) before you build the project.",
       "Preparing the Seeds for my-map",
+      "Placing the map folder at the project root",
       `Moving it into ${folder}`,
     ]);
   });
@@ -203,7 +204,7 @@ describe("create", () => {
     expect(printed.slice(-5)).toEqual([
       expect.stringMatching(/^ {2}cd /),
       "  pnpm install",
-      "  open maps/fixture.w3m in the World Editor",
+      "  open my-map.w3m in the World Editor",
       "  pnpm build",
       "  pnpm test:map",
     ]);
@@ -222,7 +223,7 @@ describe("create", () => {
       "pnpm install",
       "pnpm template:detach",
     ]);
-    expect(await listFiles(folder)).toEqual(DETACHED_FILES);
+    expect(await listFiles(folder)).toEqual(detachedFiles());
   });
 
   it("runs the detach alone in the new folder with both skipped", async () => {
@@ -248,7 +249,7 @@ describe("create", () => {
     const { result, folder } = await runCreate({ template });
 
     expect(result).toMatchObject({ ok: true });
-    expect(await listFiles(folder)).toEqual(DETACHED_FILES);
+    expect(await listFiles(folder)).toEqual(detachedFiles());
   });
 
   it("creates the project in an empty folder that exists, and in one whose parents do not", async () => {
@@ -266,7 +267,7 @@ describe("create", () => {
       });
 
       expect(result, folder).toMatchObject({ ok: true });
-      expect(await listFiles(folder)).toEqual(DETACHED_FILES);
+      expect(await listFiles(folder)).toEqual(detachedFiles(basename(folder)));
     }
     expect((await entries(parent))?.sort()).toEqual(["a", "empty"]);
   });
@@ -467,7 +468,7 @@ describe("create", () => {
           "  pnpm test:map",
         ]),
       );
-      expect(await listFiles(folder)).toEqual(DETACHED_FILES);
+      expect(await listFiles(folder)).toEqual(detachedFiles());
     },
   );
 });
@@ -655,12 +656,7 @@ describe("create: the Seeds", () => {
   ])(
     "fails naming %s when it is missing, with no target left and nothing run",
     async (_anchor, changes: Record<string, string | null>, reason) => {
-      // A `null` content leaves the file out.
-      const files = Object.fromEntries(
-        Object.entries({ ...TEMPLATE_FILES, ...changes }).filter(
-          (entry): entry is [string, string | Uint8Array] => entry[1] !== null,
-        ),
-      );
+      const files = filesWith(TEMPLATE_FILES, changes);
       for (const description of [DESCRIPTION, undefined]) {
         const runner = recordingRunner();
         const { result, folder } = await runCreate({
@@ -699,4 +695,133 @@ describe("create: the Seeds", () => {
     });
     expect(await entries(dirname(folder))).toEqual([]);
   });
+});
+
+describe("create: the map folder", () => {
+  it.each([
+    ["under maps/", TEMPLATE_FILES],
+    ["at its root", ROOT_TEMPLATE_FILES],
+  ])(
+    "moves the Template's map folder %s to the root, named after the package, and points mapFolder at it",
+    async (_layout, files) => {
+      const { result, folder, printed } = await runCreate({
+        answers: { name: "tower-walk" },
+        template: await templateArchive(files),
+      });
+
+      expect(result).toMatchObject({ ok: true });
+      expect(
+        await readFile(join(folder, "tower-walk.w3m/war3map.w3i")),
+      ).toEqual(Buffer.from(TEMPLATE_FILES[`${MAP_FOLDER}/war3map.w3i`]));
+      expect(await entries(join(folder, "maps"))).toBeNull();
+      expect(await entries(join(folder, "fixture.w3m"))).toBeNull();
+      expect(await read(folder, "reforged.config.ts")).toBe(
+        configWith("tower-walk.w3m"),
+      );
+      expect(printed).toContain("  open tower-walk.w3m in the World Editor");
+    },
+  );
+
+  it("names the map folder after the part of a scoped package name past its scope", async () => {
+    const { folder } = await runCreate({
+      answers: { name: "@orc-maps/tower-walk" },
+    });
+
+    expect(await entries(join(folder, "tower-walk.w3m"))).toEqual([
+      "war3map.w3i",
+    ]);
+    expect(await read(folder, "reforged.config.ts")).toBe(
+      configWith("tower-walk.w3m"),
+    );
+  });
+
+  it("keeps the suffix the Template ships, and a maps/ that holds something else", async () => {
+    const { folder } = await runCreate({
+      template: await templateArchive({
+        ...filesWith(TEMPLATE_FILES, { [`${MAP_FOLDER}/war3map.w3i`]: null }),
+        "maps/Fixture.W3X/war3map.w3i": "map",
+        "maps/README.md": "Maps.\n",
+      }),
+    });
+
+    expect(await read(folder, "my-map.W3X/war3map.w3i")).toBe("map");
+    expect(await entries(join(folder, "maps"))).toEqual(["README.md"]);
+    expect(await read(folder, "reforged.config.ts")).toBe(
+      configWith("my-map.W3X"),
+    );
+  });
+
+  it("renames a map folder at the root whose name differs from the package's only in case", async () => {
+    const { result, folder } = await runCreate({
+      answers: { name: "fixture" },
+      template: await templateArchive(
+        Object.fromEntries(
+          Object.entries(ROOT_TEMPLATE_FILES).map(([path, content]) => [
+            path.replace(/^fixture\.w3m\//, "Fixture.w3m/"),
+            path === "reforged.config.ts" ? configWith("Fixture.w3m") : content,
+          ]),
+        ),
+      ),
+    });
+
+    expect(result).toMatchObject({ ok: true });
+    expect(await entries(folder)).toContain("fixture.w3m");
+    expect(await entries(folder)).not.toContain("Fixture.w3m");
+    expect(await read(folder, "reforged.config.ts")).toBe(
+      configWith("fixture.w3m"),
+    );
+  });
+
+  it("finds the map folder at the root before any under maps/, and leaves maps/ alone then", async () => {
+    const { folder } = await runCreate({
+      template: await templateArchive({
+        ...ROOT_TEMPLATE_FILES,
+        "maps/old.w3m/war3map.w3i": "old",
+      }),
+    });
+
+    expect(await entries(join(folder, "my-map.w3m"))).toEqual(["war3map.w3i"]);
+    expect(await read(folder, "maps/old.w3m/war3map.w3i")).toBe("old");
+  });
+
+  it.each([
+    [
+      "no map folder",
+      { [`${MAP_FOLDER}/war3map.w3i`]: null, "maps/notes.txt": "" },
+      "the Template has no map folder (a folder ending in .w3m or .w3x) at its root or under maps/.",
+    ],
+    [
+      "two map folders",
+      { "maps/other.w3x/war3map.w3i": "" },
+      "the Template has 2 map folders (fixture.w3m, other.w3x), where a Map project has one.",
+    ],
+    [
+      "no config",
+      { "reforged.config.ts": null },
+      "the Template has no reforged.config.ts.",
+    ],
+    [
+      "a config without mapFolder",
+      { "reforged.config.ts": 'export default { outputFolder: "dist" };\n' },
+      "the Template's reforged.config.ts has no `mapFolder` field, which the map folder's new path replaces.",
+    ],
+  ])(
+    "fails with %s, with no target left and nothing run",
+    async (_what, changes: Record<string, string | null>, reason) => {
+      const runner = recordingRunner();
+      const { result, folder } = await runCreate({
+        run: runner.run,
+        template: await templateArchive(filesWith(TEMPLATE_FILES, changes)),
+        folder: "a/my-map",
+      });
+
+      expect(result).toEqual({
+        ok: false,
+        stage: "map",
+        message: `The creation stopped at placing the map folder: ${reason}`,
+      });
+      expect(lines(runner.commands)).toEqual(ALL_COMMANDS.slice(0, 2));
+      expect(await entries(dirname(dirname(folder)))).toEqual([]);
+    },
+  );
 });

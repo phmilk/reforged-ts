@@ -1,9 +1,9 @@
 /**
  * Creating a Map project from the Template, every stage in order: the
  * checks, the Template written into a temporary folder next to the target,
- * its Seeds prepared, the move into place, then git, the install, the
- * Template's own `template:detach` and the first commit. The CLI is a thin
- * shell over it.
+ * its Seeds prepared, its map folder placed, the move into place, then git,
+ * the install, the Template's own `template:detach` and the first commit.
+ * The CLI is a thin shell over it.
  */
 import {
   mkdir,
@@ -16,6 +16,7 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { satisfies } from "./engines.js";
+import { placeMapFolder } from "./map-folder.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import { prepareSeeds } from "./seeds.js";
 import type { TemplateSource } from "./template.js";
@@ -62,6 +63,7 @@ export type Stage =
   | "check"
   | "template"
   | "seeds"
+  | "map"
   | "move"
   | "git"
   | "install"
@@ -108,6 +110,7 @@ const STAGE_NAMES: Record<Stage, string> = {
   check: "the checks",
   template: "writing the Template",
   seeds: "preparing the Seeds",
+  map: "placing the map folder",
   move: "the move into place",
   git: "git init",
   install: "the install",
@@ -143,8 +146,9 @@ interface Step {
  * can refuse the creation is checked before any write: the folder does not
  * exist or is empty; `pnpm` runs, and `git` unless skipped. The Template is
  * written into a temporary folder next to the target, its Seeds prepared
- * there with the project name and the description, and moved into place,
- * so a failure before the move or during it, a missing anchor among them,
+ * there with the project name and the description, its map folder moved
+ * to its root and named after the project with `mapFolder` set to it, and
+ * the whole moved into place, so a failure before the move or during it, a missing anchor among them,
  * leaves nothing in the target. A failure after it leaves the folder and names the stage
  * and the commands to finish by hand. Once the Template is written, a
  * running Node that its `engines.node` does not admit is warned about, not
@@ -206,6 +210,15 @@ export async function create(input: CreateInput): Promise<CreateResult> {
     return fail("seeds", errorMessage(error));
   }
 
+  print("Placing the map folder at the project root");
+  let mapFolder: string;
+  try {
+    mapFolder = await placeMapFolder(staging, name);
+  } catch (error) {
+    await removeAll(staging, createdParent);
+    return fail("map", errorMessage(error));
+  }
+
   print(`Moving it into ${answers.folder}`);
   try {
     await moveInto(staging, folder);
@@ -218,7 +231,7 @@ export async function create(input: CreateInput): Promise<CreateResult> {
   for (const [index, step] of steps.entries()) {
     if (step.commits === true && !(await hasIdentity(run, folder))) {
       printIdentityHelp(print, steps.slice(index));
-      printNextSteps(print, answers, await mapFolders(folder));
+      printNextSteps(print, answers, mapFolder);
       return { ok: true, folder, committed: false };
     }
     print(`${step.label}: ${commandLine(step.command)}`);
@@ -239,7 +252,7 @@ export async function create(input: CreateInput): Promise<CreateResult> {
     );
   }
 
-  printNextSteps(print, answers, await mapFolders(folder));
+  printNextSteps(print, answers, mapFolder);
   return { ok: true, folder, committed: !answers.skipGit };
 }
 
@@ -426,19 +439,10 @@ function printIdentityHelp(
   for (const { command } of remaining) print(`  ${commandLine(command)}`);
 }
 
-/** The map folders under `maps/` of the project in `folder`. */
-async function mapFolders(folder: string): Promise<string[]> {
-  const entries = await readdir(join(folder, "maps")).catch(() => []);
-  return entries
-    .filter((entry) => /\.w3[mx]$/i.test(entry))
-    .sort()
-    .map((entry) => `maps/${entry}`);
-}
-
 function printNextSteps(
   print: (line: string) => void,
   answers: Answers,
-  maps: readonly string[],
+  mapFolder: string,
 ): void {
   print("");
   print(`Created the Map project in ${answers.folder}. Next steps:`);
@@ -446,9 +450,7 @@ function printNextSteps(
     print(`  cd ${answers.folder}`);
   }
   if (answers.skipInstall) print("  pnpm install");
-  print(
-    `  open ${maps.length === 1 ? maps[0] : "the map folder under maps/"} in the World Editor`,
-  );
+  print(`  open ${mapFolder} in the World Editor`);
   print("  pnpm build");
   print("  pnpm test:map");
 }
