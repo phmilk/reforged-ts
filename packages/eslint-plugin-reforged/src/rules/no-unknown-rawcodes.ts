@@ -47,10 +47,10 @@ type Options = [];
 type MessageIds =
   "unknownRawcode" | "notInGameDataSet" | "malformedRawcode" | "replaceRawcode";
 
-/** The folder, under the project root, where the map folder is looked for without the setting. */
+/** The folder, under the project root, where the map folder is looked for without the setting and with none at the root, until 1.0.0 (ADR 0020). */
 const MAPS_FOLDER = "maps";
 
-/** How often the map folder is looked for again under `maps/`, as the lookup checks its files: once a second. */
+/** How often the map folder is looked for again, as the lookup checks its files: once a second. */
 const DISCOVERY_INTERVAL = 1000;
 
 /** The setting that names the map folder. */
@@ -73,34 +73,51 @@ type RawcodeLiteral =
 type MapFolder = { readonly mapFolder: string } | { readonly reason: string };
 
 /**
- * The one map folder directly under `<root>/maps/`: a folder whose name ends
- * in `.w3x` or `.w3m`, ignoring case. None or several is a reason naming
- * what was found and the setting to add.
+ * The map folders directly in `folder`: the folders whose names end in
+ * `.w3x` or `.w3m`, ignoring case, sorted; none when `folder` cannot be read.
  */
-export function discoverMapFolder(root: string): MapFolder {
-  const maps = path.join(root, MAPS_FOLDER);
-  let names: string[];
+function mapFoldersIn(folder: string): string[] {
   try {
-    names = readdirSync(maps)
+    return readdirSync(folder)
       .filter(
         (entry) =>
           /\.w3[xm]$/i.test(entry) &&
-          statSync(path.join(maps, entry), {
+          statSync(path.join(folder, entry), {
             throwIfNoEntry: false,
           })?.isDirectory() === true,
       )
       .sort();
   } catch {
-    names = [];
+    return [];
   }
+}
+
+/**
+ * The one map folder directly at `<root>`, or with none there the one
+ * directly under `<root>/maps/`, until 1.0.0 (ADR 0020): a folder whose name
+ * ends in `.w3x` or `.w3m`, ignoring case. None or several is a reason
+ * naming what was found, where it looked and the setting to add.
+ */
+export function discoverMapFolder(root: string): MapFolder {
+  const setting = `set ${SETTING} in the ESLint config to the map folder, absolute or relative to ${root}.`;
+  const atRoot = mapFoldersIn(root);
+  if (atRoot.length === 1) {
+    return { mapFolder: path.join(root, atRoot[0]) };
+  }
+  if (atRoot.length > 1) {
+    return {
+      reason: `${String(atRoot.length)} map folders at ${root} (${atRoot.join(", ")}): ${setting}`,
+    };
+  }
+  const maps = path.join(root, MAPS_FOLDER);
+  const names = mapFoldersIn(maps);
   if (names.length === 1) {
     return { mapFolder: path.join(maps, names[0]) };
   }
-  const setting = `set ${SETTING} in the ESLint config to the map folder, absolute or relative to ${root}.`;
   return {
     reason:
       names.length === 0
-        ? `no map folder (a folder whose name ends in .w3x or .w3m) under ${maps}: ${setting}`
+        ? `no map folder (a folder whose name ends in .w3x or .w3m) at ${root} or under ${maps}: ${setting}`
         : `${String(names.length)} map folders under ${maps} (${names.join(", ")}): ${setting}`,
   };
 }
@@ -176,7 +193,7 @@ function createLookups(
     }
     if (setting !== undefined) {
       warn(
-        `${SETTING} is not a string, so the map folder is looked for under ${MAPS_FOLDER}/.`,
+        `${SETTING} is not a string, so the map folder is looked for at the project root, then under ${MAPS_FOLDER}/.`,
         false,
       );
     }
