@@ -2665,11 +2665,13 @@ export class Unit extends Widget {
   /**
    * Resets the hero's talents and refunds its talent points.
    * @remarks
-   * The refund is the World Editor's own hint for the action ("Resets Unit
-   * talents if any and refunds talent points."): no Native reads talents or
-   * talent points, so it awaits a check on screen (#672). On a unit without
-   * talents it does nothing, as measured on Patch 3.0.1.24370 (client
-   * 3.0.1.24371, #642).
+   * Each talent chosen is an ability on the hero: a Paladin given the
+   * Talents ability `ATal` and three talents had `Aap1`, `ACcw` and `ATce`,
+   * and `ATal` at level 4; the reset removed the three and brought `ATal`
+   * back to level 1. The refund was seen on screen, since no Native reads
+   * talent points: the three points the talents had spent were back in the
+   * panel. Both on Patch 3.0.1.24370 (client 3.0.1.24371, #672). On a unit
+   * without talents it does nothing (#642).
    * @native BlzResetUnitTalents
    */
   public resetTalents() {
