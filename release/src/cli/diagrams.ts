@@ -13,6 +13,7 @@ import {
   GENERATE_COMMAND,
   type Comparison,
   type Diagram,
+  type Problem,
 } from "../diagrams.js";
 import { repositoryRoot } from "../workspace.js";
 import {
@@ -32,18 +33,17 @@ export interface Context {
   diagrams: readonly Diagram[];
 }
 
-export const DEFAULT_CONTEXT: Context = {
-  root: repositoryRoot,
-  diagrams: DIAGRAMS,
-};
+const checklist = (problems: readonly Problem[]) =>
+  problems.map(({ message }) => `- [ ] ${message}\n`).join("");
 
-const checklist = (comparison: Comparison) =>
-  comparison.problems.map(({ message }) => `- [ ] ${message}\n`).join("");
+/** `1 region is` or `<n> regions are`. */
+const regionsAre = (count: number) =>
+  `${plural(count, "region", "regions")} ${count === 1 ? "is" : "are"}`;
 
 export async function main(
   args: readonly string[],
   output: Output,
-  context: Context = DEFAULT_CONTEXT,
+  context: Context = { root: repositoryRoot, diagrams: DIAGRAMS },
 ): Promise<number> {
   const [mode, ...rest] = args;
   if ((mode !== "generate" && mode !== "check") || rest.length > 0) {
@@ -58,18 +58,18 @@ export async function main(
     output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
-  const regions = plural(comparison.regions, "region", "regions");
+  const regions = regionsAre(comparison.regions);
 
   if (mode === "check") {
     if (comparison.problems.length > 0) {
       output.stderr(
         `Diagrams drift: ${plural(comparison.problems.length, "problem", "problems")}. ` +
-          `Run \`${GENERATE_COMMAND}\` and commit the result.\n\n${checklist(comparison)}`,
+          `Run \`${GENERATE_COMMAND}\` and commit the result.\n\n${checklist(comparison.problems)}`,
       );
       return 1;
     }
     output.stdout(
-      `Diagrams match: ${regions} ${comparison.regions === 1 ? "is" : "are"} exactly what \`${GENERATE_COMMAND}\` writes.\n`,
+      `Diagrams match: ${regions} exactly what \`${GENERATE_COMMAND}\` writes.\n`,
     );
     return 0;
   }
@@ -80,7 +80,7 @@ export async function main(
   if (unfixable.length > 0) {
     output.stderr(
       `Diagrams: ${plural(unfixable.length, "problem", "problems")} the generator cannot fix, so it wrote nothing.\n\n` +
-        checklist({ ...comparison, problems: unfixable }),
+        checklist(unfixable),
     );
     return 1;
   }
@@ -90,7 +90,7 @@ export async function main(
   }
   output.stdout(
     written.length === 0
-      ? `No file changed: ${regions} ${comparison.regions === 1 ? "is" : "are"} what the generator writes.\n`
+      ? `No file changed: ${regions} what the generator writes.\n`
       : `Wrote ${written.join(", ")}.\n`,
   );
   return 0;
