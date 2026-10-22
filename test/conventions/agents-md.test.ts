@@ -116,9 +116,9 @@ describe("README.md", () => {
   );
 
   it("keeps the sections AGENTS.md points at", () => {
-    // #683 adds "Map".
     expect(pointers, "the README sections AGENTS.md points at").toEqual([
       "Commands",
+      "Map",
       "Rules for library code",
     ]);
     const readme = headings(read("README.md"), "##");
