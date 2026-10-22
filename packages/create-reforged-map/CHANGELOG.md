@@ -1,5 +1,11 @@
 # create-reforged-map
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- [#689](https://github.com/phmilk/reforged-ts/pull/689) [`5b69e36`](https://github.com/phmilk/reforged-ts/commit/5b69e360497577242f67270f0fec6b71ec273b40) Thanks [@phmilk](https://github.com/phmilk)! - Supported Patch: 3.0.1.24370, the library's minimum Patch. Its `reforged.patch` moves from 3.0.0.24268.
+
 ## 1.0.0-alpha.0
 
 ### Major Changes

@@ -1,5 +1,11 @@
 # reforged-ts
 
+## 1.0.0-alpha.20
+
+### Patch Changes
+
+- [#674](https://github.com/phmilk/reforged-ts/pull/674) [`1104646`](https://github.com/phmilk/reforged-ts/commit/1104646ec130abf95ad670d6e87204cebe6765ac) Thanks [@phmilk](https://github.com/phmilk)! - Patch 3.0.1.24370 is the library's minimum: a map built with it needs a 3.0.1 client, since the equipment members and `Unit#isAlive` call Natives a 3.0.0 client does not have. List `reforged-types/3.0.1` in `types`. `Unit#resetTalents` says where its refund of talent points comes from, the World Editor's own hint, which awaits a check on screen ([#672](https://github.com/phmilk/reforged-ts/issues/672)).
+
 ## 1.0.0-alpha.19
 
 ### Minor Changes
