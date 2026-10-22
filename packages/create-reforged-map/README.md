@@ -9,7 +9,7 @@ pnpm create reforged-map@next my-map
 
 Either runs the command of the newest alpha without installing it (`pnpm create reforged-map` runs `create-reforged-map`). It needs pnpm on the `PATH`, and git unless `--skip-git`.
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 
