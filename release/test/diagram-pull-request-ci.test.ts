@@ -51,13 +51,33 @@ jobs:
       - run: node check.ts
   dispatch:
     needs: check
+    if: \${{ !cancelled() && github.repository == 'phmilk/reforged-ts' }}
     runs-on: ubuntu-latest
     steps:
       - run: gh workflow run board.yml
+  board-dispatch:
+    name: board-dispatch
+    needs: check
+    if: \${{ !cancelled() && contains(fromJSON('["phmilk/reforged-ts-template"]'), github.repository) }}
+    uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master
+  after-board:
+    needs: board-dispatch
+    runs-on: ubuntu-latest
+    steps:
+      - run: "true"
   remote:
     name: remote
     needs: [check]
     uses: owner/repo/.github/workflows/remote.yml@main
+`;
+
+const BOARD_DISPATCH = `name: board-dispatch
+on: workflow_call
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh api repos/phmilk/reforged-ts/dispatches
 `;
 
 const BOARD = `name: board
@@ -115,6 +135,7 @@ async function repository(
 
 const WORKFLOWS = {
   "board.yml": BOARD,
+  "board-dispatch.yml": BOARD_DISPATCH,
   "ci.yml": CI,
   "claim.yml": CLAIM,
   "claim-check.yml": CLAIM_CHECK,
@@ -132,10 +153,10 @@ describe("the CI diagram of a pull request", () => {
         "flowchart LR\n" +
         "  %% diagram: pull-request-ci\n" +
         "  %% Generated from the workflows a pull_request or pull_request_target event triggers, and the required checks of the committed ruleset.\n" +
-        '  collaborator(["Collaborator"])\n' +
+        '  contributor(["Contributor, a Collaborator or not"])\n' +
         '  renovate(["Renovate"])\n' +
         '  pull_request(["pull request"])\n' +
-        '  collaborator -->|"opens, with a changeset"| pull_request\n' +
+        '  contributor -->|"opens, with a changeset"| pull_request\n' +
         '  renovate -->|"opens a dependency upgrade, with no changeset"| pull_request\n' +
         '  subgraph board_yml["board.yml"]\n' +
         '    board_yml_reconcile["reconcile"]\n' +
@@ -148,16 +169,24 @@ describe("the CI diagram of a pull request", () => {
         '    subgraph claim_yml_claim["claim-check.yml, called by the job claim"]\n' +
         '      claim_yml_claim_check["claim / check"]\n' +
         '      claim_yml_claim_dispatch["claim / dispatch"]\n' +
-        '      claim_yml_claim_remote["claim / remote"]\n' +
+        '      subgraph claim_yml_claim_board_dispatch["board-dispatch.yml, called by the job claim / board-dispatch"]\n' +
+        '        claim_yml_claim_board_dispatch_dispatch["claim / board-dispatch / dispatch, skipped here"]\n' +
+        "      end\n" +
+        '      claim_yml_claim_after_board["claim / after-board, skipped here"]\n' +
+        '      claim_yml_claim_remote[["claim / remote / (a job of owner/repo/.github/workflows/remote.yml@main)"]]\n' +
         "    end\n" +
         "  end\n" +
         '  pull_request -->|"pull_request_target into main: opened, closed"| board_yml\n' +
         '  pull_request -->|"pull_request"| ci_yml\n' +
         '  pull_request -->|"pull_request_target: opened, edited"| claim_yml\n' +
         "  claim_yml_claim_check --> claim_yml_claim_dispatch\n" +
+        "  claim_yml_claim_check --> claim_yml_claim_board_dispatch\n" +
+        "  claim_yml_claim_board_dispatch --> claim_yml_claim_after_board\n" +
         "  claim_yml_claim_check --> claim_yml_claim_remote\n" +
         "  classDef required stroke-width:4px\n" +
         "  class ci_yml_ci_ubuntu,ci_yml_ci_windows,claim_yml_claim_check required\n" +
+        "  classDef skipped stroke-dasharray:5 5\n" +
+        "  class claim_yml_claim_board_dispatch_dispatch,claim_yml_claim_after_board skipped\n" +
         "```\n" +
         "\n" +
         "| #   | Step of `ci.yml`   | `if`                                                                      |\n" +
@@ -171,12 +200,53 @@ describe("the CI diagram of a pull request", () => {
 
   it("highlights the checks the committed ruleset requires, whichever they are", async () => {
     const markdown = await pullRequestCiDiagram.render(
-      await repository(WORKFLOWS, ["claim / remote", "reconcile"]),
+      await repository(WORKFLOWS, ["claim / dispatch", "reconcile"]),
     );
 
     expect(markdown).toContain(
-      "  class board_yml_reconcile,claim_yml_claim_remote required\n",
+      "  class board_yml_reconcile,claim_yml_claim_dispatch required\n",
     );
+  });
+
+  it("names the check of a job of a called workflow after its caller, its job and its own job", async () => {
+    const root = await repository(WORKFLOWS, [
+      "claim / board-dispatch / dispatch",
+    ]);
+    await expect(pullRequestCiDiagram.render(root)).resolves.toContain(
+      "  class claim_yml_claim_board_dispatch_dispatch required\n",
+    );
+
+    await expect(
+      pullRequestCiDiagram.render(
+        await repository(WORKFLOWS, ["claim / board-dispatch"]),
+      ),
+    ).rejects.toThrow('requires "claim / board-dispatch", which no job');
+    await expect(
+      pullRequestCiDiagram.render(
+        await repository(WORKFLOWS, ["claim / remote"]),
+      ),
+    ).rejects.toThrow('requires "claim / remote", which no job');
+  });
+
+  it("draws a job its condition keeps from running in this repository as skipped here, and the jobs that need it", async () => {
+    const markdown = await pullRequestCiDiagram.render(
+      await repository({
+        ...WORKFLOWS,
+        "claim-check.yml": CLAIM_CHECK.replace(
+          "phmilk/reforged-ts-template",
+          "phmilk/reforged-ts",
+        ),
+      }),
+    );
+
+    expect(markdown).toContain(
+      '        claim_yml_claim_board_dispatch_dispatch["claim / board-dispatch / dispatch"]\n',
+    );
+    expect(markdown).toContain(
+      '      claim_yml_claim_after_board["claim / after-board"]\n',
+    );
+    expect(markdown).not.toContain("skipped here");
+    expect(markdown).not.toContain("classDef skipped");
   });
 
   it("fails on a check the ruleset requires that no job reports, as after renaming a job or a matrix value", async () => {

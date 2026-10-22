@@ -166,29 +166,83 @@ export function rewriteLinks(
 
 /**
  * Calls `visit` on every line of `markdown`, telling it whether the line
- * belongs to a fenced code block (its fences included).
+ * belongs to a fenced code block (its fences included), and whether it is
+ * the block's opening fence, with its info string, or its closing one.
  */
 function forEachLine(
   markdown: string,
-  visit: (line: string, inCode: boolean) => void,
+  visit: (
+    line: string,
+    inCode: boolean,
+    fence?: { edge: "open"; info: string } | { edge: "close" },
+  ) => void,
 ): void {
   let fence: string | undefined;
   for (const line of markdown.split("\n")) {
     const marker = /^ {0,3}(`{3,}|~{3,})/.exec(line)?.[1];
     if (fence === undefined) {
-      if (marker !== undefined) fence = marker;
-      visit(line, marker !== undefined);
+      if (marker === undefined) {
+        visit(line, false);
+        continue;
+      }
+      fence = marker;
+      const info = line.slice(line.indexOf(marker) + marker.length).trim();
+      visit(line, true, { edge: "open", info });
       continue;
     }
-    visit(line, true);
     if (
       marker?.startsWith(fence.charAt(0)) &&
       marker.length >= fence.length &&
       /^ {0,3}(`+|~+) *$/.test(line)
     ) {
       fence = undefined;
+      visit(line, true, { edge: "close" });
+      continue;
     }
+    visit(line, true);
   }
+}
+
+/** A fenced code block: its body and the line of its opening fence. */
+export interface FencedBlock {
+  /** 1-based. */
+  line: number;
+  /** Its lines between the fences, joined by `\n`, as Markdown reads it. */
+  body: string;
+}
+
+/**
+ * The fenced code blocks of `markdown` whose info string starts with the
+ * word `language` (`mermaid`), in order; a block left open ends with the
+ * document, as in CommonMark.
+ */
+export function fencedBlocks(
+  markdown: string,
+  language: string,
+): FencedBlock[] {
+  const blocks: FencedBlock[] = [];
+  let open: { line: number; lines: string[] } | undefined;
+  let number = 0;
+  forEachLine(normalizeNewlines(markdown), (line, inCode, fence) => {
+    number += 1;
+    if (fence?.edge === "open") {
+      open =
+        fence.info.split(/\s/)[0] === language
+          ? { line: number, lines: [] }
+          : undefined;
+    } else if (fence?.edge === "close") {
+      if (open !== undefined) {
+        blocks.push({ line: open.line, body: open.lines.join("\n") });
+      }
+      open = undefined;
+    } else if (inCode) {
+      open?.lines.push(line);
+    }
+  });
+  if (open !== undefined) {
+    blocks.push({ line: open.line, body: open.lines.join("\n") });
+  }
+  return blocks;
 }
 
 /**

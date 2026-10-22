@@ -120,7 +120,8 @@ export function siteConfig(options: SiteOptions): Config {
       ],
       // Each cut version's root also as a folder index (/docs/<label>).
       () => versionRootIndexesPlugin(cut),
-      // No page of a docs version shows a `mermaid` block as code.
+      // Every `mermaid` block reaches the build as the Mermaid theme's
+      // component, in light and dark, and no page shows one as code.
       () => mermaidCheckPlugin(),
       // llms.txt, llms-full.txt and each page as Markdown, per docs version
       // and once for the Typings.

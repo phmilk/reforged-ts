@@ -33,9 +33,9 @@
 //    - A package: any word holding `reforged` (`reforged-ts`,
 //      `eslint-plugin-reforged`, a scoped `@scope/reforged-x`), the name of a
 //      workspace package, or of a package of another repository declared in
-//      `external.packages` (the Template's, `reforged-ts-template`). A word
-//      right after a `/` is not read: `phmilk/reforged-ts` is a repository,
-//      `reforged/no-bj` a lint rule. Write "the Template" and "a Map project"
+//      `external.packages` (the Template's, `reforged-ts-template`, once a
+//      diagram cites it). A word right after a `/` is not read:
+//      `phmilk/reforged-ts` is a repository, `reforged/no-bj` a lint rule. Write "the Template" and "a Map project"
 //      in words: they are terms of CONTEXT.md, not identifiers.
 //    - An Agent skill: its slash command, `/tdd`, where no letter, digit,
 //      `_`, `-`, `.`, `:`, `@` or `/` comes right before the `/` (a path or
@@ -169,10 +169,11 @@ function cite(text: string): Citations {
 
 // The body of each fenced code block of a Markdown file whose info string is
 // `mermaid`, with the line of its opening fence and the heading right above
-// it. Fences follow CommonMark: a block closes on a fence of the same
-// character at least as long as the opening one, so a `mermaid` block shown
-// inside a longer fence is not read, and a `#` line inside a fence is no
-// heading.
+// it. Fences follow CommonMark, as the generator's do (release/src/diagrams.ts):
+// a fence is indented by three spaces at most (four make indented code), and
+// a block closes on a fence of the same character at least as long as the
+// opening one, so a `mermaid` block shown inside a longer fence is not read,
+// and a `#` line inside a fence is no heading.
 function mermaidBlocks(
   markdown: string,
 ): { line: number; heading: string | undefined; lines: string[] }[] {
@@ -186,7 +187,7 @@ function mermaidBlocks(
   let body: string[] = [];
   markdown.split(/\r?\n/).forEach((text, index) => {
     if (open === undefined) {
-      const opening = /^\s*(`{3,}|~{3,})\s*([^\s`]*)/.exec(text);
+      const opening = /^ {0,3}(`{3,}|~{3,})\s*([^\s`]*)/.exec(text);
       if (opening) {
         const [, fence = "", info = ""] = opening;
         open = { fence, mermaid: info === "mermaid", line: index + 1 };
@@ -196,7 +197,7 @@ function mermaidBlocks(
         /^ {0,3}#{1,6}\s+(.*?)(?:\s+#+)?\s*$/.exec(text)?.[1] ?? heading;
       return;
     }
-    const closing = /^\s*(`{3,}|~{3,})\s*$/.exec(text)?.[1];
+    const closing = /^ {0,3}(`{3,}|~{3,})\s*$/.exec(text)?.[1];
     if (
       closing !== undefined &&
       closing.startsWith(open.fence.charAt(0)) &&
@@ -499,6 +500,28 @@ describe("the extraction of a diagram", () => {
     expect(readDiagrams("docs/a.md", markdown).map(({ line }) => line)).toEqual(
       [11],
     );
+  });
+
+  it("reads a fence indented by three spaces at most, as the generator does: four make indented code", () => {
+    const markdown = [
+      "    ```mermaid",
+      "    flowchart LR",
+      "      %% diagram: indented-code",
+      "    ```",
+      "",
+      "   ```mermaid",
+      "   flowchart LR",
+      "     %% diagram: three-spaces",
+      "    ```",
+      "   ```",
+      "",
+    ].join("\n");
+    expect(
+      readDiagrams("docs/a.md", markdown).map(({ line, names }) => ({
+        line,
+        names,
+      })),
+    ).toEqual([{ line: 6, names: ["three-spaces"] }]);
   });
 
   it("reads the heading right above a block, not a `#` line inside a fence", () => {
@@ -806,7 +829,8 @@ describe("the Map", () => {
 // What the diagrams may cite from outside the repository, by source: a
 // diagram of a flow that crosses into another repository or runs an Agent
 // skill installed per machine names them. Add a name here, under its source,
-// before a diagram cites it.
+// before a diagram cites it, and remove it once none does: a test below
+// fails on a name no diagram cites.
 const external: Record<
   "workflows" | "packages" | "skills",
   Record<string, string[]>
@@ -817,39 +841,24 @@ const external: Record<
   workflows: {
     "phmilk/reforged-ts-template": ["board.yml", "claim.yml", "sync.yml"],
   },
-  packages: { "phmilk/reforged-ts-template": ["reforged-ts-template"] },
-  // The published skills of mattpocock/skills (skills/engineering and
-  // skills/productivity), read on 2026-10-22: docs/agents/development-loop.md
-  // says how they are installed.
+  packages: {},
+  // Skills of mattpocock/skills, each a folder of its skills/engineering,
+  // checked there on 2026-10-22: docs/agents/development-loop.md says how
+  // they are installed.
   skills: {
     "mattpocock/skills": [
-      "ask-matt",
       "code-review",
-      "codebase-design",
       "diagnosing-bugs",
-      "domain-modeling",
-      "grill-me",
       "grill-with-docs",
-      "grilling",
-      "handoff",
       "implement",
       "implement-spec",
-      "improve-codebase-architecture",
-      "pr",
       "prototype",
       "research",
-      "retro",
-      "setup-matt-pocock-skills",
       "tdd",
-      "teach",
-      "to-questionnaire",
       "to-spec",
       "to-tickets",
       "triage",
-      "wait-what",
       "wayfinder",
-      "wizard",
-      "writing-for-agents",
     ],
   },
 };
@@ -919,6 +928,23 @@ describe("the diagrams of the repository", () => {
     expect(workflows, "the files of .github/workflows/").toContain("ci.yml");
     expect(packages, "the workspace packages").toContain("reforged-ts");
     expect(skills, "the folders of .claude/skills/").toContain("add-wrapper");
+  });
+
+  it("cite every external name declared, so the list claims nothing no diagram needs", () => {
+    const uncited = (["workflows", "packages", "skills"] as const).flatMap(
+      (kind) => {
+        const cited = new Set(
+          diagrams.flatMap(({ citations }) => citations[kind]),
+        );
+        return externalNames(kind)
+          .filter((name) => !cited.has(name))
+          .map((name) => `${kind}: ${name}`);
+      },
+    );
+    expect(
+      uncited,
+      "the external names of test/conventions/diagrams.test.ts: remove the ones no diagram cites",
+    ).toEqual([]);
   });
 
   it("are each named, cite only what exists and show every member of the set they cover", () => {

@@ -26,10 +26,10 @@ What a pull request runs, generated from the workflows and the committed ruleset
 flowchart LR
   %% diagram: pull-request-ci
   %% Generated from the workflows a pull_request or pull_request_target event triggers, and the required checks of the committed ruleset.
-  collaborator(["Collaborator"])
+  contributor(["Contributor, a Collaborator or not"])
   renovate(["Renovate"])
   pull_request(["pull request"])
-  collaborator -->|"opens, with a changeset"| pull_request
+  contributor -->|"opens, with a changeset"| pull_request
   renovate -->|"opens a dependency upgrade, with no changeset"| pull_request
   subgraph board_yml["board.yml"]
     board_yml_reconcile["reconcile"]
@@ -42,7 +42,9 @@ flowchart LR
     subgraph claim_yml_claim["claim-check.yml, called by the job claim"]
       claim_yml_claim_check["claim / check"]
       claim_yml_claim_dispatch["claim / dispatch"]
-      claim_yml_claim_board_dispatch["claim / board-dispatch"]
+      subgraph claim_yml_claim_board_dispatch["board-dispatch.yml, called by the job claim / board-dispatch"]
+        claim_yml_claim_board_dispatch_dispatch["claim / board-dispatch / dispatch, skipped here"]
+      end
     end
   end
   pull_request -->|"pull_request_target into master: opened, reopened, closed, edited, converted_to_draft, ready_for_review"| board_yml
@@ -52,6 +54,8 @@ flowchart LR
   claim_yml_claim_check --> claim_yml_claim_board_dispatch
   classDef required stroke-width:4px
   class ci_yml_ci_ubuntu,ci_yml_ci_windows,claim_yml_claim_check required
+  classDef skipped stroke-dasharray:5 5
+  class claim_yml_claim_board_dispatch_dispatch skipped
 ```
 
 | #   | Step of `ci.yml`                | `if`                                                                                                                                                                                                                                           |
@@ -82,14 +86,14 @@ flowchart LR
 
 <!-- /diagram:pull-request-ci -->
 
-A pull request, a Collaborator's or Renovate's, triggers three workflows. `ci.yml` runs on `pull_request`, its `ci` job once per operating system: each leg is a required check. `claim.yml` runs on `pull_request_target` and calls the reusable `claim-check.yml`: its `check` job is the claim check, a required check, and its `dispatch` and `board-dispatch` jobs tell the Claim board after an assignment the check made, `dispatch` in this repository and `board-dispatch` in the Template. `board.yml` reconciles the Claim board. Renovate's pull requests run the same checks, `claim / check` skipped as on every bot's pull request (a skipped check counts as passed), and carry no changeset (see "Changesets"). The table lists a step's `if` when it has one; a step without one runs when the steps before it passed.
+A pull request, opened by a contributor (a Collaborator, or anyone else through a fork) or by Renovate, triggers three workflows. `ci.yml` runs on `pull_request`, its `ci` job once per operating system: each leg is a required check. `claim.yml` runs on `pull_request_target` and calls the reusable `claim-check.yml`: its `check` job is the claim check, a required check, and its `dispatch` and `board-dispatch` jobs tell the Claim board after an assignment the check made, `dispatch` in this repository and `board-dispatch` in the Template: here `board-dispatch` and the job it calls in `board-dispatch.yml`, the check `claim / board-dispatch / dispatch`, are always skipped, drawn dashed, since their condition holds only in the Template. `board.yml` reconciles the Claim board. Renovate's pull requests run the same checks, `claim / check` skipped as on every bot's pull request (a skipped check counts as passed), and carry no changeset (see "Changesets"). The table lists a step's `if` when it has one; a step without one runs when the steps before it passed.
 
-| Node                                                                                          | Read                                                                                                                     |
-| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `ci.yml`, `ci (ubuntu)`, `ci (windows)`                                                       | [Done means `pnpm check`](#done-means-pnpm-check), and each release check in [`docs/release.md`](docs/release.md)        |
-| `claim.yml`, `claim-check.yml`, `claim / check`, `claim / dispatch`, `claim / board-dispatch` | [Taking an issue](#taking-an-issue), and "Claim" in [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md#claim) |
-| `board.yml`, `reconcile`                                                                      | [The board](docs/release.md#the-board)                                                                                   |
-| Collaborator, Renovate                                                                        | [Changesets](#changesets)                                                                                                |
+| Node                                                                                                                           | Read                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `ci.yml`, `ci (ubuntu)`, `ci (windows)`                                                                                        | [Done means `pnpm check`](#done-means-pnpm-check), and each release check in [`docs/release.md`](docs/release.md)        |
+| `claim.yml`, `claim-check.yml`, `claim / check`, `claim / dispatch`, `board-dispatch.yml`, `claim / board-dispatch / dispatch` | [Taking an issue](#taking-an-issue), and "Claim" in [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md#claim) |
+| `board.yml`, `reconcile`                                                                                                       | [The board](docs/release.md#the-board)                                                                                   |
+| Contributor, Renovate                                                                                                          | [Changesets](#changesets)                                                                                                |
 
 ### Changesets
 

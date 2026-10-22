@@ -400,7 +400,7 @@ Fixes land only on the latest minor of the latest major. There are no maintenanc
 ```mermaid
 flowchart LR
   %% diagram: release
-  %% Generated from release.yml: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs.
+  %% Generated from release.yml: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs, then "if" and what else its condition reads, which select does not decide.
   subgraph release_yml["release.yml"]
     select["select"]
     version["version"]
@@ -423,7 +423,7 @@ flowchart LR
   select -->|"publish"| publish
   pack -->|"publish"| publish
   template_gate -->|"publish"| publish
-  publish -->|"publish"| docs_cut
+  publish -->|"publish if needs.publish.outputs.library-tag != ''"| docs_cut
   docs_cut -->|"calls"| docs_cut_yml
   select -->|"publish"| template_dispatch
   pack -->|"publish"| template_dispatch
@@ -437,7 +437,7 @@ flowchart LR
 
 <!-- /diagram:release -->
 
-The jobs of `release.yml` and their `needs:`, which `pnpm diagrams:generate` draws from the workflow. Each arrow is a `needs:` entry, labelled by the modes the job it leads to runs in, read from the jobs' conditions: the mode `select` decides, `version` or `publish`, and `(dry run)` on [the dry run](#the-dry-run); in the mode `none`, no job runs after `select`. `docs-cut` calls the reusable `docs-cut.yml`, and `template-dispatch` dispatches the release to the Template's `sync.yml`, in `phmilk/reforged-ts-template`.
+The jobs of `release.yml` and their `needs:`, which `pnpm diagrams:generate` draws from the workflow. Each arrow is a `needs:` entry, labelled by the modes the job it leads to runs in, read from the jobs' conditions: the mode `select` decides, `version` or `publish`, and `(dry run)` on [the dry run](#the-dry-run); in the mode `none`, no job runs after `select`. What else a job's condition reads, which `select` does not decide, follows its modes after `if`: `docs-cut` runs only after a publish that tags the library, when `needs.publish.outputs.library-tag` is not empty, so a publish of the other packages alone cuts no docs. `docs-cut` calls the reusable `docs-cut.yml`, and `template-dispatch` dispatches the release to the Template's `sync.yml`, in `phmilk/reforged-ts-template`.
 
 | Node                                           | Read                                                                                                                                                                                                                  |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

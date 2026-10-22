@@ -7,8 +7,14 @@
  */
 import { getPackages } from "@manypkg/get-packages";
 import type { Diagram } from "./diagrams.js";
-import { mermaidBlock, mermaidIds, mermaidLabel } from "./mermaid.js";
+import {
+  assertDistinctIds,
+  mermaidBlock,
+  mermaidId,
+  mermaidLabel,
+} from "./mermaid.js";
 import { byCodePoint } from "./order.js";
+import { TEMPLATE_REPOSITORY } from "./template-clone.js";
 import { isRecord } from "./unknown.js";
 import type { PackageManifest } from "./workspace.js";
 
@@ -33,17 +39,14 @@ async function render(root: string): Promise<string> {
     .map(({ packageJson }) => packageJson as PackageManifest)
     .map((manifest) => ({ name: manifest.name, manifest }))
     .sort((a, b) => byCodePoint(a.name, b.name));
-  const ids = mermaidIds(
-    manifests.map(({ name }) => name),
-    [PUBLISHED, PRIVATE, MAP_PROJECT, TEMPLATE],
-  );
-  const id = (name: string) => ids.get(name) ?? name;
+  const names = new Set(manifests.map(({ name }) => name));
+  assertDistinctIds(names, [PUBLISHED, PRIVATE, MAP_PROJECT, TEMPLATE]);
 
   const subgraph = (key: string, title: string, isPrivate: boolean) => [
     `subgraph ${key}[${mermaidLabel(title)}]`,
     ...manifests
       .filter(({ manifest }) => (manifest.private === true) === isPrivate)
-      .map(({ name }) => `  ${id(name)}[${mermaidLabel(name)}]`),
+      .map(({ name }) => `  ${mermaidId(name)}[${mermaidLabel(name)}]`),
     "end",
   ];
 
@@ -53,7 +56,7 @@ async function render(root: string): Promise<string> {
     const targets = [
       ...new Set([...dependencies, ...keysOf(manifest.peerDependencies)]),
     ]
-      .filter((target) => ids.has(target))
+      .filter((target) => names.has(target))
       .sort(byCodePoint);
     for (const target of targets) {
       const arrow = dependencies.has(target)
@@ -63,7 +66,7 @@ async function render(root: string): Promise<string> {
               ? "optional peer"
               : "peer",
           )}|`;
-      edges.push(`${id(name)} ${arrow} ${id(target)}`);
+      edges.push(`${mermaidId(name)} ${arrow} ${mermaidId(target)}`);
     }
   }
 
@@ -72,7 +75,7 @@ async function render(root: string): Promise<string> {
     ...subgraph(PUBLISHED, "Published packages", false),
     ...subgraph(PRIVATE, "Private packages", true),
     `${MAP_PROJECT}([${mermaidLabel("Map project")}])`,
-    `${TEMPLATE}([${mermaidLabel("Template: phmilk/reforged-ts-template")}])`,
+    `${TEMPLATE}([${mermaidLabel(`Template: ${TEMPLATE_REPOSITORY}`)}])`,
     ...edges,
     `${MAP_PROJECT} -->|${mermaidLabel("starts from")}| ${TEMPLATE}`,
     `${TEMPLATE} -->|${mermaidLabel(

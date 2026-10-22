@@ -13,7 +13,7 @@ const block = (lines: readonly string[]) =>
   "```mermaid\n" +
   "flowchart LR\n" +
   "  %% diagram: release\n" +
-  "  %% Generated from release.yml: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs.\n" +
+  '  %% Generated from release.yml: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs, then "if" and what else its condition reads, which select does not decide.\n' +
   lines.map((line) => `  ${line}\n`).join("") +
   "```\n";
 
@@ -111,7 +111,7 @@ jobs:
       'select -->|"publish"| publish',
       'pack -->|"publish"| publish',
       'template_gate -->|"publish"| publish',
-      'publish -->|"publish"| docs_cut',
+      `publish -->|"publish if needs.publish.outputs.library-tag != ''"| docs_cut`,
       'select -->|"publish"| template_dispatch',
       'publish -->|"publish"| template_dispatch',
       'template_dispatch -.->|"dispatches the release"| sync_yml',
@@ -127,7 +127,6 @@ jobs:
   select: {}
   template-dispatch:
     needs: select
-    if: github.repository == 'phmilk/reforged-ts' || needs.select.outputs.mode == 'publish'
   never:
     needs: select
     if: needs.select.outputs.mode == 'publish' && needs.select.outputs.mode == 'version'
@@ -135,6 +134,31 @@ jobs:
 
     expect(mermaid).toContain('select -->|"always"| template_dispatch\n');
     expect(mermaid).toContain('select -->|"never"| never\n');
+  });
+
+  it("adds to the modes of an edge what else its job's condition reads, which the select job does not decide", async () => {
+    const mermaid = await render(`
+jobs:
+  select: {}
+  publish:
+    needs: select
+    if: needs.select.outputs.mode == 'publish'
+  docs-cut:
+    needs: publish
+    if: needs.publish.outputs.library-tag != ''
+  template-dispatch:
+    needs: select
+    if: >-
+      github.repository == 'phmilk/reforged-ts' ||
+      (needs.select.outputs.mode == 'publish' && !contains(github.ref, 'refs/tags/'))
+`);
+
+    expect(mermaid).toContain(
+      `publish -->|"publish if needs.publish.outputs.library-tag != ''"| docs_cut\n`,
+    );
+    expect(mermaid).toContain(
+      `select -->|"another mode if github.repository == 'phmilk/reforged-ts'; publish if github.repository == 'phmilk/reforged-ts' || !contains(github.ref, 'refs/tags/')"| template_dispatch\n`,
+    );
   });
 
   it("refuses a workflow whose job needs a job it does not hold, or lacks the job that dispatches to the Template", async () => {

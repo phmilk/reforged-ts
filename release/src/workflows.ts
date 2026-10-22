@@ -40,6 +40,31 @@ export interface WorkflowStep {
   if?: string;
 }
 
+/**
+ * The repository these workflows belong to: `github.repository` when they
+ * run here.
+ */
+export const REPOSITORY = "phmilk/reforged-ts";
+
+/**
+ * The file of `.github/workflows/` a job's `uses:` calls when it is a
+ * workflow of this repository, by its path
+ * (`./.github/workflows/docs-cut.yml` is `docs-cut.yml`) or in full
+ * (`phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master`, read
+ * as the working tree holds it, whatever the ref); undefined for a
+ * workflow of another repository.
+ */
+export function localWorkflow(uses: string): string | undefined {
+  const prefixes = [
+    `./${WORKFLOW_FOLDER}/`,
+    `${REPOSITORY}/${WORKFLOW_FOLDER}/`,
+  ];
+  const prefix = prefixes.find((start) => uses.startsWith(start));
+  if (prefix === undefined) return undefined;
+  const file = uses.slice(prefix.length).replace(/@[^@/]*$/, "");
+  return file.includes("/") ? undefined : file;
+}
+
 export interface Workflow {
   /** Its `/`-separated path from the root. */
   file: string;
@@ -49,7 +74,11 @@ export interface Workflow {
   jobs: WorkflowJob[];
 }
 
-const strings = (value: unknown): string[] =>
+/**
+ * A field written as one string or a list of strings (`needs`, `branches`,
+ * `types`), as the list of its strings.
+ */
+export const stringList = (value: unknown): string[] =>
   typeof value === "string"
     ? [value]
     : Array.isArray(value)
@@ -99,7 +128,7 @@ export async function readWorkflow(
         : undefined;
       return {
         id,
-        needs: strings(fields.needs),
+        needs: stringList(fields.needs),
         ...(ifText === undefined ? {} : { if: ifText }),
         ...(typeof fields.uses === "string" ? { uses: fields.uses } : {}),
         ...(typeof fields.name === "string" ? { name: fields.name } : {}),
