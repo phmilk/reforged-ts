@@ -33,9 +33,9 @@
 //    - A package: any word holding `reforged` (`reforged-ts`,
 //      `eslint-plugin-reforged`, a scoped `@scope/reforged-x`), the name of a
 //      workspace package, or of a package of another repository declared in
-//      `external.packages` (the Template's, `reforged-ts-template`). A word
-//      right after a `/` is not read: `phmilk/reforged-ts` is a repository,
-//      `reforged/no-bj` a lint rule. Write "the Template" and "a Map project"
+//      `external.packages` (the Template's, `reforged-ts-template`, once a
+//      diagram cites it). A word right after a `/` is not read:
+//      `phmilk/reforged-ts` is a repository, `reforged/no-bj` a lint rule. Write "the Template" and "a Map project"
 //      in words: they are terms of CONTEXT.md, not identifiers.
 //    - An Agent skill: its slash command, `/tdd`, where no letter, digit,
 //      `_`, `-`, `.`, `:`, `@` or `/` comes right before the `/` (a path or
@@ -829,7 +829,8 @@ describe("the Map", () => {
 // What the diagrams may cite from outside the repository, by source: a
 // diagram of a flow that crosses into another repository or runs an Agent
 // skill installed per machine names them. Add a name here, under its source,
-// before a diagram cites it.
+// before a diagram cites it, and remove it once none does: a test below
+// fails on a name no diagram cites.
 const external: Record<
   "workflows" | "packages" | "skills",
   Record<string, string[]>
@@ -840,39 +841,24 @@ const external: Record<
   workflows: {
     "phmilk/reforged-ts-template": ["board.yml", "claim.yml", "sync.yml"],
   },
-  packages: { "phmilk/reforged-ts-template": ["reforged-ts-template"] },
-  // The published skills of mattpocock/skills (skills/engineering and
-  // skills/productivity), read on 2026-10-22: docs/agents/development-loop.md
-  // says how they are installed.
+  packages: {},
+  // Skills of mattpocock/skills, each a folder of its skills/engineering,
+  // checked there on 2026-10-22: docs/agents/development-loop.md says how
+  // they are installed.
   skills: {
     "mattpocock/skills": [
-      "ask-matt",
       "code-review",
-      "codebase-design",
       "diagnosing-bugs",
-      "domain-modeling",
-      "grill-me",
       "grill-with-docs",
-      "grilling",
-      "handoff",
       "implement",
       "implement-spec",
-      "improve-codebase-architecture",
-      "pr",
       "prototype",
       "research",
-      "retro",
-      "setup-matt-pocock-skills",
       "tdd",
-      "teach",
-      "to-questionnaire",
       "to-spec",
       "to-tickets",
       "triage",
-      "wait-what",
       "wayfinder",
-      "wizard",
-      "writing-for-agents",
     ],
   },
 };
@@ -942,6 +928,23 @@ describe("the diagrams of the repository", () => {
     expect(workflows, "the files of .github/workflows/").toContain("ci.yml");
     expect(packages, "the workspace packages").toContain("reforged-ts");
     expect(skills, "the folders of .claude/skills/").toContain("add-wrapper");
+  });
+
+  it("cite every external name declared, so the list claims nothing no diagram needs", () => {
+    const uncited = (["workflows", "packages", "skills"] as const).flatMap(
+      (kind) => {
+        const cited = new Set(
+          diagrams.flatMap(({ citations }) => citations[kind]),
+        );
+        return externalNames(kind)
+          .filter((name) => !cited.has(name))
+          .map((name) => `${kind}: ${name}`);
+      },
+    );
+    expect(
+      uncited,
+      "the external names of test/conventions/diagrams.test.ts: remove the ones no diagram cites",
+    ).toEqual([]);
   });
 
   it("are each named, cite only what exists and show every member of the set they cover", () => {
