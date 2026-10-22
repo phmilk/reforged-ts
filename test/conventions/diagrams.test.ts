@@ -169,10 +169,11 @@ function cite(text: string): Citations {
 
 // The body of each fenced code block of a Markdown file whose info string is
 // `mermaid`, with the line of its opening fence and the heading right above
-// it. Fences follow CommonMark: a block closes on a fence of the same
-// character at least as long as the opening one, so a `mermaid` block shown
-// inside a longer fence is not read, and a `#` line inside a fence is no
-// heading.
+// it. Fences follow CommonMark, as the generator's do (release/src/diagrams.ts):
+// a fence is indented by three spaces at most (four make indented code), and
+// a block closes on a fence of the same character at least as long as the
+// opening one, so a `mermaid` block shown inside a longer fence is not read,
+// and a `#` line inside a fence is no heading.
 function mermaidBlocks(
   markdown: string,
 ): { line: number; heading: string | undefined; lines: string[] }[] {
@@ -186,7 +187,7 @@ function mermaidBlocks(
   let body: string[] = [];
   markdown.split(/\r?\n/).forEach((text, index) => {
     if (open === undefined) {
-      const opening = /^\s*(`{3,}|~{3,})\s*([^\s`]*)/.exec(text);
+      const opening = /^ {0,3}(`{3,}|~{3,})\s*([^\s`]*)/.exec(text);
       if (opening) {
         const [, fence = "", info = ""] = opening;
         open = { fence, mermaid: info === "mermaid", line: index + 1 };
@@ -196,7 +197,7 @@ function mermaidBlocks(
         /^ {0,3}#{1,6}\s+(.*?)(?:\s+#+)?\s*$/.exec(text)?.[1] ?? heading;
       return;
     }
-    const closing = /^\s*(`{3,}|~{3,})\s*$/.exec(text)?.[1];
+    const closing = /^ {0,3}(`{3,}|~{3,})\s*$/.exec(text)?.[1];
     if (
       closing !== undefined &&
       closing.startsWith(open.fence.charAt(0)) &&
@@ -499,6 +500,28 @@ describe("the extraction of a diagram", () => {
     expect(readDiagrams("docs/a.md", markdown).map(({ line }) => line)).toEqual(
       [11],
     );
+  });
+
+  it("reads a fence indented by three spaces at most, as the generator does: four make indented code", () => {
+    const markdown = [
+      "    ```mermaid",
+      "    flowchart LR",
+      "      %% diagram: indented-code",
+      "    ```",
+      "",
+      "   ```mermaid",
+      "   flowchart LR",
+      "     %% diagram: three-spaces",
+      "    ```",
+      "   ```",
+      "",
+    ].join("\n");
+    expect(
+      readDiagrams("docs/a.md", markdown).map(({ line, names }) => ({
+        line,
+        names,
+      })),
+    ).toEqual([{ line: 6, names: ["three-spaces"] }]);
   });
 
   it("reads the heading right above a block, not a `#` line inside a fence", () => {
