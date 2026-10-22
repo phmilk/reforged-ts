@@ -664,6 +664,25 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["docs/agents/issue-tracker.md"]);
   });
 
+  it("include a Patch's adoption, in CONTRIBUTING.md, citing the Patch watch, the new-patch skill and the steps that need the game", () => {
+    const adoption = diagrams.filter(({ names }) =>
+      names.includes("patch-adoption"),
+    );
+    expect(adoption.map(({ file }) => file)).toEqual(["CONTRIBUTING.md"]);
+    const [{ citations } = { citations: cite("") }] = adoption;
+    expect(citations.workflows).toContain("patch-watch.yml");
+    expect(citations.skills).toContain("new-patch");
+    expect(citations.scripts).toEqual(
+      expect.arrayContaining([
+        "typings:generate",
+        "typings:check",
+        "builtins:generate",
+        "probe:run",
+      ]),
+    );
+    expect(citations.packages).toContain("reforged-types");
+  });
+
   // #683: the README's "Map" lists every diagram, and every diagram is
   // listed in it. Compare the names of `diagrams` with the Map's table here,
   // with a fixture case of a diagram missing from the Map in "the extraction
