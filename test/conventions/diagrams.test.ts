@@ -664,6 +664,33 @@ describe("the diagrams of the repository", () => {
     ).toEqual(["docs/agents/issue-tracker.md"]);
   });
 
+  it("include a Probe run, in probe/README.md, with each state of its table and that state's exit code", () => {
+    const file = "probe/README.md";
+    expect(
+      diagrams
+        .filter(({ names }) => names.includes("probe-run"))
+        .map(({ file }) => file),
+    ).toEqual([file]);
+    const readme = read(file);
+    const section = readme.slice(
+      readme.indexOf("### States of a Probe run"),
+      readme.indexOf("### Where the Result file is"),
+    );
+    // A row of the table: | `finished` | the file holds ... | 0 |
+    const states = [
+      ...section.matchAll(/^\|\s*`([\w-]+)`\s*\|.*\|\s*(\d+)\s*\|$/gm),
+    ].map(([, state = "", code = ""]) => `"${state}, exit ${code}"`);
+    expect(states, `the table of "States of a Probe run"`).toHaveLength(6);
+    const block = mermaidBlocks(readme)
+      .map(({ lines }) => lines.join("\n"))
+      .find((text) => /^\s*%%\s*diagram:\s*probe-run\s*$/m.test(text));
+    for (const state of states) {
+      expect(block, `the probe-run diagram labels a state ${state}`).toContain(
+        state,
+      );
+    }
+  });
+
   // #683: the README's "Map" lists every diagram, and every diagram is
   // listed in it. Compare the names of `diagrams` with the Map's table here,
   // with a fixture case of a diagram missing from the Map in "the extraction
