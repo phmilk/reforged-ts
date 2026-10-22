@@ -1,6 +1,6 @@
 # reforged-ts workspace
 
-The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). Its Wrappers and Systems sit over the game's Natives, typed by Typings generated for one Patch, and a Map project installs it to write its map's code in TypeScript. It targets Warcraft III 3.0.0 and later, and began as a fork ([Attribution](#attribution)).
+The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). Its Wrappers and Systems sit over the game's Natives, typed by Typings generated for one Patch, and a Map project installs it to write its map's code in TypeScript. It targets Warcraft III 3.0.1 and later, and began as a fork ([Attribution](#attribution)).
 
 ## Packages
 
@@ -20,7 +20,7 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 ## Requirements
 
-- Warcraft III 3.0.0 or later, the Game version the library targets. Only to play a map: building and testing the library runs without the game.
+- Warcraft III 3.0.1 or later, the Game version the library targets. Only to play a map: building and testing the library runs without the game.
 - Node 22.13 or later. Node 24 is the tested version (`.node-version`).
 - pnpm 12. The `packageManager` field pins the exact version, and pnpm 11 or later switches to it by itself. Install it with `npm install --global pnpm@12`: pnpm 10 cannot start pnpm 12 on Windows.
 - TypeScript 6.0.2, the version typescript-to-lua 1.37 pins. `pnpm install` brings it; see [Version policy](#version-policy).

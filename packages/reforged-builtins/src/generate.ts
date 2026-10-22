@@ -389,7 +389,11 @@ export async function generate(
   return result;
 }
 
-/** Whether `client` is a Build of `build`'s Game version, later than it. */
+/**
+ * Whether `client` is a Build of `build`'s Game version, later than it. The
+ * Probe runner's `--client-build` mirrors it (probe/src/manifest.ts): change
+ * both together.
+ */
 function isLaterBuildOfGameVersion(client: string, build: string): boolean {
   return (
     BUILD.test(client) &&

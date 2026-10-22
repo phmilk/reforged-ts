@@ -11,7 +11,7 @@ A Map project starts from the [Template](https://github.com/phmilk/reforged-ts-t
 
 | What             | Version                                                              | Why                                                                                                                         |
 | ---------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Warcraft III     | 3.0.0 or later, with a Battle.net login saved on the machine         | `pnpm test:map` starts the game on the built map. The game is online-only.                                                  |
+| Warcraft III     | 3.0.1 or later, with a Battle.net login saved on the machine         | `pnpm test:map` starts the game on the built map. The game is online-only.                                                  |
 | The World Editor | The one that ships with the game                                     | It owns the map's data (terrain, object data, placed units). The map is saved as a folder, with Lua as its script language. |
 | Node             | 24 (the Template's `.node-version`); the packages need 22.13         | The build, the tests and the tools run on it.                                                                               |
 | pnpm             | 12 (the Template's `packageManager`; `npm install --global pnpm@12`) | The package manager of the Template.                                                                                        |

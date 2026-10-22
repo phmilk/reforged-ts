@@ -260,6 +260,9 @@ catalogs:
     lua-wasm-bindings:
       specifier: ^0.5.3
       version: 0.5.3
+    mdx-m3-viewer-th:
+      specifier: 5.13.4
+      version: 5.13.4
     prettier:
       specifier: ^3.9.9
       version: 3.9.10
@@ -544,7 +547,7 @@ importers:
         specifier: 'catalog:'
         version: 2.14.1
       mdx-m3-viewer-th:
-        specifier: 5.13.4
+        specifier: 'catalog:'
         version: 5.13.4
       prettier:
         specifier: 'catalog:'

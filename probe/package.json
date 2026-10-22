@@ -21,7 +21,7 @@
   "dependencies": {
     "@typescript-to-lua/language-extensions": "catalog:",
     "lua-types": "catalog:",
-    "mdx-m3-viewer-th": "5.13.4",
+    "mdx-m3-viewer-th": "catalog:",
     "prettier": "catalog:",
     "reforged-builtins": "workspace:^",
     "reforged-types": "workspace:^",

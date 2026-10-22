@@ -2,7 +2,7 @@
 
 ## Overview
 
-reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.0 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes seven packages: the library (Wrappers and Systems), the Typings, the Lua test harness, the lint plugin (the lint layer of the Guards), the map folder reader, the Built-in objects and the Creation CLI. The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
+reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.1 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes seven packages: the library (Wrappers and Systems), the Typings, the Lua test harness, the lint plugin (the lint layer of the Guards), the map folder reader, the Built-in objects and the Creation CLI. The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
 
 ## Commands
 
