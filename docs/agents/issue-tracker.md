@@ -45,7 +45,7 @@ stateDiagram-v2
   ready_for_agent : Ready
   ready_for_human : Ready
   blocked : Blocked
-  wontfix : Done
+  wontfix : Backlog
   claimed : In progress
   draft : In progress
   stale : In progress
@@ -70,7 +70,7 @@ stateDiagram-v2
   claimed --> stale : 3 days without a commit or a comment
   draft --> stale : 3 days without a commit or a comment
   stale --> claimed : takeover
-  wontfix --> [*]
+  wontfix --> closed : /triage closes it, with a comment
   closed --> [*]
 ```
 
@@ -79,13 +79,13 @@ stateDiagram-v2
 | `needs-triage`                       | Backlog                   | [Triage labels](triage-labels.md); an issue form (`.github/ISSUE_TEMPLATE/`) sets it with its own label                                           |
 | `needs-info`                         | Backlog                   | [Triage labels](triage-labels.md)                                                                                                                 |
 | `ready-for-agent`, `ready-for-human` | Ready                     | [Triage labels](triage-labels.md); a spec or a ticket gets its labels from `to-spec` or `to-tickets`: [Kind labels](triage-labels.md#kind-labels) |
-| `wontfix`                            | Done                      | [Triage labels](triage-labels.md)                                                                                                                 |
+| `wontfix`                            | Backlog, until closed     | [Triage labels](triage-labels.md); triage closes the issue with a comment                                                                         |
 | an open blocker                      | Blocked                   | "Claimable" below; "Blocking" under [Wayfinding operations](#wayfinding-operations)                                                               |
 | claimed                              | In progress               | "First write", "Claimable" and "One login per issue" below; "Release" for the way back                                                            |
 | a draft pull request                 | In progress               | "The check" below                                                                                                                                 |
 | a pull request in review             | In review                 | "The board" below                                                                                                                                 |
 | stale                                | In progress               | "Stale" below, with the takeover                                                                                                                  |
-| closed                               | Done                      | "A pull request names what it delivers" below                                                                                                     |
+| closed                               | Done                      | "A pull request names what it delivers" below; a `wontfix` issue, closed by triage                                                                |
 
 - **First write.** Before working on an issue, assign yourself: `gh issue edit <n> --add-assignee @me`, before the branch, the first commit, any comment and the pull request. Read the issue back: if it now has two assignees, the later one withdraws (`--remove-assignee @me`) and says so in a comment.
 - **Claimable.** An open issue with no assignee that is `ready-for-agent` or `ready-for-human`, a ticket of a wayfinder map on its frontier (no open blocker), or a `ready-for-agent` spec (claimed whole, with its tickets: below). Not claimable: `needs-triage` and `needs-info` (triaged, not claimed) and a map. Triage and splitting are not claimed: their writes are the brief, the labels and the new issues; whoever implements claims. A bug you find and fix at once: open the issue and claim it in one gesture.
