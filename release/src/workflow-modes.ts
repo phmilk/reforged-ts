@@ -53,8 +53,8 @@ function conditionsOf(jobs: readonly WorkflowJob[]): Map<string, Expression> {
 }
 
 /**
- * Whether each of `jobs` runs, by id, when the properties `given` (by path,
- * `github.repository`) hold their values.
+ * {@link jobRuns}, with the `conditions` of `jobs` (by job id) read by the
+ * caller, so that {@link jobModes} reads them once for all its scenarios.
  */
 function runsOf(
   jobs: readonly WorkflowJob[],
@@ -198,10 +198,11 @@ function scenariosOf(
 }
 
 /**
- * The label of a job that runs in the modes `names` (of `total`), each
- * with the residue of its condition there (empty when none): the modes in
- * code-point order, `always` for every one, then ` if <residue>`; the
- * groups of one residue apart, joined by `; `; `never` for none.
+ * The label of a job that runs in the `modes` (of `total` modes), each a
+ * name with the residue of its condition there (empty when none): the
+ * names in code-point order, `always` for every mode, then
+ * ` if <residue>`; the groups of one residue apart, joined by `; `; `never`
+ * for none.
  */
 function modesLabel(
   modes: readonly { name: string; residue: string }[],
