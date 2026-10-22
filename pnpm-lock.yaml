@@ -179,6 +179,9 @@ catalogs:
     '@docusaurus/faster':
       specifier: 3.10.2
       version: 3.10.2
+    '@docusaurus/mdx-loader':
+      specifier: 3.10.2
+      version: 3.10.2
     '@docusaurus/module-type-aliases':
       specifier: 3.10.2
       version: 3.10.2
@@ -663,6 +666,9 @@ importers:
         specifier: 'catalog:'
         version: 4.14.1(typedoc@0.28.20(typescript@6.0.2))
     devDependencies:
+      '@docusaurus/mdx-loader':
+        specifier: 'catalog:'
+        version: 3.10.2(@swc/core@1.16.18)(@swc/html@1.16.18)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.31))(csso@5.0.5)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(svgo@3.3.5)
       '@docusaurus/module-type-aliases':
         specifier: 'catalog:'
         version: 3.10.2(@swc/core@1.16.18)(@swc/html@1.16.18)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.31))(csso@5.0.5)(html-minifier-terser@7.2.0)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(svgo@3.3.5)

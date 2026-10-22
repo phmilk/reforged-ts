@@ -125,7 +125,7 @@ describe("the Markdown copy of a page", () => {
     const outDir = join(build, "out");
     await write(
       "site/docs/contributing/guide.md",
-      `---\ntitle: Contributing guide\nformat: md\n---\n\nThe packages:\n\n${DIAGRAM}\n\nEach package has its README.\n`,
+      `---\ntitle: Contributing guide\nmdx:\n  format: md\n---\n\nThe packages:\n\n${DIAGRAM}\n\nEach package has its README.\n`,
     );
     await write("site/typings/index.md", "# reforged-types\n\nThe Typings.\n");
     const plugin = llmsFilesPlugin([]);
