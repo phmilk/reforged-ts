@@ -68,6 +68,68 @@ A Probe run takes the Game Data Set and the Game Data Version of the map folder,
 
 ### States of a Probe run
 
+A Probe run, from its build to the state `probe:read` reports with its exit code; the human step is drawn dashed:
+
+```mermaid
+stateDiagram-v2
+  %% diagram: probe-run
+  state "not-started, exit 3" as not_started
+  state "the game started" as started
+  state "the human step" as login
+  state "an Agent without the game stops" as no_game
+  state "running, exit 2" as running
+  state "incomplete, exit 2" as incomplete
+  state "crashed, exit 2" as crashed
+  state "finished, exit 0" as finished
+  state "failed, exit 1" as failed
+  not_started : no Result file, or one of another runId
+  started : no BEGIN of this run yet, read as not-started
+  login : a human logs in to Battle.net, read as not-started
+  no_game : it reports the fact unverified
+  running : ends with CHECKPOINT, and Warcraft III.exe runs
+  incomplete : ends with CHECKPOINT, read where no process is looked for
+  crashed : ends with CHECKPOINT, and no game runs
+  finished : ends with END status=ok
+  failed : ends with END status=failed, after an ERROR line
+  classDef human stroke-width: 3px, stroke-dasharray: 5 5
+  class login human
+
+  [*] --> not_started : pnpm probe:build, or pnpm probe:run, bakes a fresh runId
+  not_started --> no_game : no native Windows with the game
+  not_started --> started : pnpm probe:run starts the game on the packed map
+  started --> not_started : the game gone before BEGIN
+  started --> login : no BEGIN after the begin timeout, 60 s, the Agent notifies
+  login --> not_started : no login in 15 min, or the capture shows something else, the game ended
+  login --> running : BEGIN on disk, then a key past the screens before the map
+  started --> running : BEGIN on disk, then a key past the screens before the map
+  running --> running : records, PENDING and CHECKPOINT
+  running --> incomplete : the same file read off Windows and WSL
+  running --> finished : END status=ok, the game ended
+  running --> failed : the Probe throws, END status=failed, the game ended
+  running --> crashed : a stall of 120 s, a stop, or the game exits by itself
+  finished --> [*]
+  failed --> [*]
+  crashed --> [*]
+  no_game --> [*]
+
+  note left of not_started
+    pnpm probe:read reports each state with its exit code,
+    and pnpm probe:run exits with it.
+    Exit 4 is either command's own failure, never a state.
+  end note
+```
+
+| Node                                     | Detailed in                                                                                                                                            |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `not-started`, exit 3                    | The table below; the fresh runId: `probe:build` under [Commands](#commands)                                                                            |
+| the game started                         | [Running a Probe run](#running-a-probe-run), steps 1, "Start", and 2, "The screens before the map"                                                     |
+| the human step                           | [Running a Probe run](#running-a-probe-run), step 3, "No `BEGIN` after `--begin-timeout` seconds"; [What stays for a human](#what-stays-for-a-human)   |
+| an Agent without the game stops          | [What stays for a human](#what-stays-for-a-human)                                                                                                      |
+| `running`, exit 2                        | The table below; the records, `PENDING` and the checkpoints: [Writing a Probe](#writing-a-probe)                                                       |
+| `incomplete`, exit 2                     | The table below and the paragraph under it                                                                                                             |
+| `crashed`, exit 2                        | The table below; a stall: [Running a Probe run](#running-a-probe-run), step 4; an error the runner does not catch: [Writing a Probe](#writing-a-probe) |
+| `finished`, exit 0, and `failed`, exit 1 | The table below; the end: [Running a Probe run](#running-a-probe-run), step 5; `END` and `ERROR`: [Writing a Probe](#writing-a-probe)                  |
+
 `probe:read` compares the Result file with the runId of the Probe's last build, kept in `.probe/<probe>.json`:
 
 | State         | When                                                                                                            | Exit code |
