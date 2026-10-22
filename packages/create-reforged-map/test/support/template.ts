@@ -2,7 +2,8 @@
  * A minimal Template, shaped like phmilk/reforged-ts-template: its
  * `package.json` with a `template:detach` script, a README with a title, an
  * `AGENTS.md` with "Template maintenance" and "Your project", the manifest
- * of its maintenance files, a map folder, and a detach script that removes
+ * of its maintenance files, a map folder under `maps/` with the
+ * `reforged.config.ts` that names it, and a detach script that removes
  * what the manifest lists as the Template's own does. The tests write it as
  * a folder or a tarball, and run its detach script for a fake `pnpm`.
  */
@@ -35,6 +36,13 @@ for (const path of paths) fs.rmSync(path, { recursive: true, force: true });
 console.log("Removed the Template maintenance.");
 `;
 
+/** The fixture's map folder, under `maps/` as the Template shipped it before ADR 0020. */
+export const MAP_FOLDER = "maps/fixture.w3m";
+
+/** A `reforged.config.ts` like the Template's, its `mapFolder` set to `mapFolder`. */
+export const configWith = (mapFolder: string): string =>
+  `import type { Config } from "./scripts/config.ts";\n\nexport default {\n  mapFolder: "${mapFolder}",\n  outputFolder: "dist",\n  // \`pnpm test:map\` finds the game on its own.\n} satisfies Config;\n`;
+
 /** The fixture's files, by `/`-separated path. */
 export const TEMPLATE_FILES: Readonly<Record<string, string | Uint8Array>> = {
   "package.json": `${JSON.stringify(
@@ -61,9 +69,27 @@ export const TEMPLATE_FILES: Readonly<Record<string, string | Uint8Array>> = {
   "docs/agents/issue-tracker.md": "# Issue tracker\n",
   "scripts/detach.mjs": DETACH_SCRIPT,
   "scripts/build.mjs": 'console.log("build");\n',
-  "maps/fixture.w3m/war3map.w3i": new Uint8Array([0, 1, 2, 0xff, 0x0d, 0x0a]),
+  "reforged.config.ts": configWith(MAP_FOLDER),
+  [`${MAP_FOLDER}/war3map.w3i`]: new Uint8Array([0, 1, 2, 0xff, 0x0d, 0x0a]),
   [LONG_PATH]: "export {};\n",
 };
+
+/** The fixture with its map folder at its root, as the Template ships it after ADR 0020. */
+export const ROOT_TEMPLATE_FILES: Readonly<
+  Record<string, string | Uint8Array>
+> = Object.fromEntries(
+  Object.entries(TEMPLATE_FILES).map(([path, content]) => [
+    path.replace(/^maps\//, ""),
+    path === "reforged.config.ts" ? configWith("fixture.w3m") : content,
+  ]),
+);
+
+/**
+ * The path a project named `name` holds a file of the fixture at, either
+ * layout: the map folder's files under `<name>.w3m/`.
+ */
+export const placedPath = (path: string, name: string): string =>
+  path.replace(/^(maps\/)?fixture\.w3m\//, `${name}.w3m/`);
 
 /** A new empty folder under the system's temporary folder. */
 export function tempDir(name: string): Promise<string> {

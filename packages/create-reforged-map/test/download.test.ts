@@ -5,6 +5,7 @@ import { create, type CreateResult } from "../src/create.js";
 import { githubTemplate, TEMPLATE_REF, type Fetch } from "../src/template.js";
 import {
   MAINTENANCE_PATHS,
+  placedPath,
   TEMPLATE_FILES,
   listFiles,
   recordingRunner,
@@ -62,6 +63,7 @@ describe("githubTemplate", () => {
     expect(await listFiles(folder)).toEqual(
       Object.keys(TEMPLATE_FILES)
         .filter((path) => !MAINTENANCE_PATHS.includes(path))
+        .map((path) => placedPath(path, "my-map"))
         .sort(),
     );
   });
