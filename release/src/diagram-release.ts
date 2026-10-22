@@ -97,7 +97,7 @@ async function render(root: string): Promise<string> {
   }
 
   return mermaidBlock("release", "flowchart LR", [
-    `%% Generated from ${WORKFLOW}: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs.`,
+    `%% Generated from ${WORKFLOW}: its jobs and their needs, each edge labelled by the modes, as the select job decides them, in which the job it leads to runs, then "if" and what else its condition reads, which select does not decide.`,
     `subgraph ${WORKFLOW_ID}[${mermaidLabel(WORKFLOW)}]`,
     ...jobs.map((job) => `  ${mermaidId(job.id)}[${mermaidLabel(job.id)}]`),
     "end",
