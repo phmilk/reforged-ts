@@ -84,6 +84,10 @@ _Avoid_: template file, scaffold, boilerplate file
 The Template in its role as the Map project every library release must build, with the packed packages, before it is published.
 _Avoid_: example project, demo map, integration test
 
+**Template gate**:
+The release step in which the Template, as the Reference consumer, builds, lints and passes its tests against the packed packages; no release is published unless it passes.
+_Avoid_: integration test, smoke test, Template check
+
 **Creation CLI**:
 The package `create-reforged-map` and its command, which makes a Map project from the Template at the line the Reference consumer is gated at: the Template's files, its Seeds prepared with the project name and description, git, the install, the Template's own `template:detach` and a first commit (ADR 0018). It keeps no copy of the Template.
 _Avoid_: scaffolder, generator, starter, create command
@@ -103,6 +107,18 @@ _Avoid_: version, patch number, build number
 **Game version**:
 The first three components of a Build (3.0.0), shared by every Patch released under that number; a Map project selects its Typings by Game version.
 _Avoid_: version (alone), Patch (one Game version can span several Builds)
+
+**Patch watch**:
+The daily check that notices a new Patch: when jass-history tags a live Build newer than the one the Typings support, it opens a New Patch issue and a draft pull request with that Build's Patch files vendored and the generator run.
+_Avoid_: patch bot, patch monitor, Renovate (the dependency bot)
+
+**Drift check**:
+A check that fails when a committed generated file differs from what its generator writes from the committed sources (`typings:check`, `builtins:check`); a file a Drift check guards is never edited by hand.
+_Avoid_: diff check, consistency check, sync check
+
+**Docs version**:
+A frozen copy of the docs site, cut for one minor or major release of the library and labelled by its `major.minor` (`1.0`); the docs of `master`, served as "Next", are not a Docs version.
+_Avoid_: docs release, snapshot, versioned docs
 
 **Rawcode**:
 The four-character id of one type of object (`hfoo`, `AHbz`), which a map script holds as an integer (`FourCC("hfoo")`).
