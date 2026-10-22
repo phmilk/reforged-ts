@@ -41,14 +41,27 @@ export interface WorkflowStep {
 }
 
 /**
+ * The repository these workflows belong to: `github.repository` when they
+ * run here.
+ */
+export const REPOSITORY = "phmilk/reforged-ts";
+
+/**
  * The file of `.github/workflows/` a job's `uses:` calls when it is a
- * workflow of this repository (`./.github/workflows/docs-cut.yml` is
- * `docs-cut.yml`); undefined for a workflow of another repository.
+ * workflow of this repository, by its path
+ * (`./.github/workflows/docs-cut.yml` is `docs-cut.yml`) or in full
+ * (`phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master`, read
+ * as the working tree holds it, whatever the ref); undefined for a
+ * workflow of another repository.
  */
 export function localWorkflow(uses: string): string | undefined {
-  const prefix = `./${WORKFLOW_FOLDER}/`;
-  if (!uses.startsWith(prefix)) return undefined;
-  const file = uses.slice(prefix.length);
+  const prefixes = [
+    `./${WORKFLOW_FOLDER}/`,
+    `${REPOSITORY}/${WORKFLOW_FOLDER}/`,
+  ];
+  const prefix = prefixes.find((start) => uses.startsWith(start));
+  if (prefix === undefined) return undefined;
+  const file = uses.slice(prefix.length).replace(/@[^@/]*$/, "");
   return file.includes("/") ? undefined : file;
 }
 
