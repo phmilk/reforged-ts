@@ -61,6 +61,11 @@ jobs:
       # script does not run it, so a leg runs it once.
       - name: typings:check
         run: pnpm run typings:check
+      # The diagrams' Drift check: each generated diagram's region in its doc
+      # is what `pnpm diagrams:generate` writes from its sources. Its own
+      # stage, as in `pnpm check`.
+      - name: diagrams:check
+        run: pnpm run diagrams:check
       - name: test
         run: pnpm run test
       - id: coverage-report
