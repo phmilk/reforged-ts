@@ -4,6 +4,10 @@
  * (`diagrams.ts`), added here; the generator's core does not change.
  */
 import { packagesDiagram } from "./diagram-packages.js";
+import { pullRequestCiDiagram } from "./diagram-pull-request-ci.js";
 import type { Diagram } from "./diagrams.js";
 
-export const DIAGRAMS: readonly Diagram[] = [packagesDiagram];
+export const DIAGRAMS: readonly Diagram[] = [
+  packagesDiagram,
+  pullRequestCiDiagram,
+];
