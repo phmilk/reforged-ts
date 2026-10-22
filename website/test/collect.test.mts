@@ -96,7 +96,8 @@ describe("collect", () => {
 title: "Glossary"
 sidebar_position: 2
 custom_edit_url: ${GITHUB}/CONTEXT.md
-format: md
+mdx:
+  format: md
 ---
 
 :::note[Generated page]

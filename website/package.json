@@ -39,6 +39,7 @@
     "typedoc-plugin-markdown": "catalog:"
   },
   "devDependencies": {
+    "@docusaurus/mdx-loader": "catalog:",
     "@docusaurus/module-type-aliases": "catalog:",
     "@docusaurus/plugin-content-docs": "catalog:",
     "@docusaurus/tsconfig": "catalog:",
