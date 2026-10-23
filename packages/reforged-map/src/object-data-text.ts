@@ -188,7 +188,7 @@ function valueText(modification: Modification): string {
 }
 
 /** A 32-bit real as the shortest decimal that reads back to the same bits; its bits in hex when it is not finite. */
-function realText(value: number, bits: number | undefined): string {
+export function realText(value: number, bits: number | undefined): string {
   if (!Number.isFinite(value)) {
     return `0x${(bits ?? float32Bits(value)).toString(16).padStart(8, "0")}`;
   }

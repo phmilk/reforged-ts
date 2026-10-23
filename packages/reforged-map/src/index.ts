@@ -51,6 +51,12 @@ export {
   type ObjectDefinitionsOptions,
 } from "./definitions.js";
 export {
+  syncObjectDefinitions,
+  type ObjectSyncOptions,
+  type ObjectSyncReport,
+  type RemovedObject,
+} from "./object-sync.js";
+export {
   ObjectDefinitionsError,
   type ObjectDefinitionProblem,
   type ObjectDefinitionsErrorReason,

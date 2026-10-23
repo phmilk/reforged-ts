@@ -246,7 +246,7 @@ if (worldEditor === "open") {
 
 ## Object definitions
 
-A Map project declares objects in TypeScript as Object definitions (ADR 0015, [#700](https://github.com/phmilk/reforged-ts/issues/700)): one `define<Kind>` call per object, in files under `src/objects/`. The build merges them into the map it ships. They run in Node at build time, never in the map's Lua.
+A Map project declares objects in TypeScript as Object definitions (ADR 0015, [#700](https://github.com/phmilk/reforged-ts/issues/700)): one `define<Kind>` call per object, in files under `src/objects/`. The build merges them into the map it ships, and Object sync writes them into the map folder, recording the objects the code owns in the Object manifest. They run in Node at build time, never in the map's Lua.
 
 ```ts
 // src/objects/units.ts
@@ -301,7 +301,7 @@ Definitions need `reforged-builtins` with its field table of format 2, which giv
 
 ### The build's merge
 
-`mergeObjectDefinitions(stagedFolder, projectRoot, { definitionsFolder, generatedFolder })` edits the build's staged copy of the map folder to hold every definition: each Custom object added, then its fields set, and each change to a Built-in object made, in the Editor form of [the Object data editor](#the-object-data-editor). The objects go in Object kind then Rawcode order, an object's name field first, then its fields by field id and level, then its raw fields, so that the same definitions write the same bytes. The copy is saved with [the World Editor check](#the-world-editor-check) off; the map folder is never written. It returns the objects defined (`objects`, each with its Object kind, Rawcode, base and file), the files of the copy written (`written`) and the warnings.
+`mergeObjectDefinitions(stagedFolder, projectRoot, { definitionsFolder, generatedFolder, manifest })` edits the build's staged copy of the map folder to hold every definition: each Custom object added, then its fields set, and each change to a Built-in object made, in the Editor form of [the Object data editor](#the-object-data-editor). The objects go in Object kind then Rawcode order, an object's name field first, then its fields by field id and level, then its raw fields, so that the same definitions write the same bytes. The copy is saved with [the World Editor check](#the-world-editor-check) off; the map folder is never written. It returns the objects defined (`objects`, each with its Object kind, Rawcode, base and file), the files of the copy written (`written`) and the warnings.
 
 ```ts
 import { mergeObjectDefinitions } from "reforged-map";
@@ -309,21 +309,76 @@ import { mergeObjectDefinitions } from "reforged-map";
 const { objects, warnings } = mergeObjectDefinitions("dist/my-map.w3m", ".");
 ```
 
-Until the Object manifest records which objects the code owns ([#704](https://github.com/phmilk/reforged-ts/issues/704)), the code owns none: a definition at a Rawcode the map folder already defines (a Custom object) or changes (a Built-in object) is a collision, and the merge throws, telling the author to adopt the object into the code (`pnpm objects:adopt <rawcode>`) or to give the definition another Rawcode. The build then fails before anything is written.
+The merge reads [the Object manifest](#the-object-manifest) and never writes it. A definition replaces an object the code owns, which then holds exactly the definition's modifications, and an owned object no definition defines any more is removed from the copy (a Custom object entirely, a Built-in object's modifications), with no warning: the copy is not the author's. A definition at a Rawcode the map folder already defines (a Custom object) or changes (a Built-in object), which the code does not own, is a collision, and the merge throws, telling the author to adopt the object into the code (`pnpm objects:adopt <rawcode>`) or to give the definition another Rawcode. The build then fails before anything is written.
+
+### Object sync
+
+`syncObjectDefinitions(mapFolder, projectRoot, { definitionsFolder, generatedFolder, manifest, force, worldEditorCheck })` is Object sync, what `pnpm objects:sync` runs: it writes the definitions into the map folder itself, in the Editor form, so that the World Editor and the Studio show them and a World Editor save keeps them byte for byte. In order:
+
+1. It loads and fully checks the definitions, as the merge does, and reads the Object manifest. Any error stops it before anything is written.
+2. It opens the map folder's Object data with [the Object data editor](#the-object-data-editor).
+3. A definition at a Rawcode the map folder defines or changes in its kind, which the manifest does not own, is a collision: it throws, writing nothing. `force` never overrides a collision.
+4. It makes each defined object exactly its definition: a Custom object added, the fields the definition sets set, those it no longer sets removed, and a field that already holds its value left as it is. It removes each owned object no definition defines, a Custom object entirely, a Built-in object's modifications. A removed Custom object draws a warning: its placements on the terrain, if any, are dropped by the World Editor's next save and skipped by the game ([#482](https://github.com/phmilk/reforged-ts/issues/482)), and Object release (`pnpm objects:release`) hands an object back to the map folder with them instead. Localizable strings follow the Editor form of the Object data editor: a `STRING n` of `war3map.wts` that another owner references keeps its text, and the edited object gets a new one.
+5. It saves the map folder with [the World Editor check](#the-world-editor-check) on, `worldEditorCheck` giving its options: a World Editor showing ` *]` for the map refuses the save, with an `ObjectDataWriterError` of the reason `"modified-in-world-editor"` telling the author to save or discard the edits there first; a World Editor holding the map without unsaved edits (`"open"`) lets it write, with a warning to reload the map there by hand, since its next save would put back what it loaded before the sync.
+6. It reads the written objects back and writes the manifest.
+
+It returns a report: the objects defined (`objects`), those it added (`added`: a Custom object, or a Built-in object changed for the first time), changed (`changed`) and removed (`removed`), the files of the map folder written (`written`), whether the manifest was written (`manifestWritten`), what the World Editor showed (`worldEditor`) and the warnings. A sync that changes nothing writes no byte, the manifest included.
+
+```ts
+import { syncObjectDefinitions } from "reforged-map";
+
+const report = syncObjectDefinitions("my-map.w3m", ".");
+```
+
+A change made to an owned object outside the code (in the World Editor) since the last sync is not detected yet ([#705](https://github.com/phmilk/reforged-ts/issues/705)): the sync overwrites it with the code's version, as `force` will. Reloading the World Editor after a sync is [#706](https://github.com/phmilk/reforged-ts/issues/706)'s.
+
+### The Object manifest
+
+The Object manifest records which objects the code owns, and what the last Object sync wrote of each. It is `object-manifest.json` at the Map project's root by default, outside the map folder so that the World Editor never imports it into the map ([#475](https://github.com/phmilk/reforged-ts/issues/475)), and its path is the `manifest` option of every function. It is committed, so that every clone and CI knows what the code owns. Object sync writes it; the build's merge only reads it; **it is never edited by hand**.
+
+```json
+{
+  "format": 1,
+  "owned": [
+    {
+      "kind": "unit",
+      "rawcode": "h002",
+      "base": "hfoo",
+      "modifications": [
+        {
+          "field": "uhpm",
+          "type": "int",
+          "value": 420
+        },
+        {
+          "field": "unam",
+          "type": "string",
+          "value": "Sergeant"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`format` is 1. `owned` holds one entry per owned object, its snapshot: its Object kind, its Rawcode, a Custom object's base, and its modifications as the Object Editor shows them, base and Skin files merged, each with its field id, its level and data pointer (abilities, doodads and upgrades only), its value type and its value. A `TRIGSTR_nnn` is its text, and a real the shortest decimal that reads back to its 32 bits, as [`textconv`](#object-data-in-git-diff) shows it (its bits in hex, as a string, when it is not finite). File placement, end markers and sets are the writer's, not the snapshot's.
+
+It is written byte-stably: the entries sorted by Object kind then Rawcode, the modifications by field id then level, two-space indentation, a final newline, and only when its bytes change. Two branches that sync different objects merge without a conflict; a conflict is resolved by keeping each side's entries, then `pnpm objects:sync`. A missing manifest owns no object, and a sync that owns nothing does not create one. A manifest that does not parse, or is not one Object sync writes (another format, an unknown key, an object owned twice), is refused with the error `"manifest-unreadable"` naming the file, and nothing is written.
 
 ### The Object definitions error
 
-`ObjectDefinitionsError` is the error of loading, checking and merging definitions; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `problems` every problem found, each with its `file` (an absolute path), `rawcode`, `field` and `message`, and its `file`, `rawcode` and `field` are the first problem's. Its message lists every problem, one per line when there are several:
+`ObjectDefinitionsError` is the error of loading, checking, merging and syncing definitions; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `problems` every problem found, each with its `file` (an absolute path), `rawcode`, `field` and `message`, and its `file`, `rawcode` and `field` are the first problem's. Its message lists every problem, one per line when there are several:
 
-| `reason`               | When                                                                                                                                       | What the author does                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `"load-failed"`        | A definition file threw while loading (the message gives the exception's), could not be transpiled, or imported what a definition may not. | Fix the file, or name the object with `FourCC` instead of a generated or Built-in constant. |
-| `"invalid-definition"` | A definition's Rawcode, base or fields are not ones the World Editor could make.                                                           | Fix the definition at the file, Rawcode and field named.                                    |
-| `"defined-twice"`      | Two definitions name one Rawcode of one Object kind; the message names both files.                                                         | Keep one, or give the other another Rawcode.                                                |
-| `"collision"`          | A definition names a Rawcode the map folder defines or changes, which the code does not own.                                               | Adopt the object into the code (`pnpm objects:adopt`), or choose another Rawcode.           |
-| `"peer-missing"`       | `typescript` or `reforged-builtins` cannot be read from the Map project, or `reforged-builtins` has a field table of format 1.             | Install the peer named, or a newer `reforged-builtins`.                                     |
+| `reason`                | When                                                                                                                                       | What the author does                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `"load-failed"`         | A definition file threw while loading (the message gives the exception's), could not be transpiled, or imported what a definition may not. | Fix the file, or name the object with `FourCC` instead of a generated or Built-in constant. |
+| `"invalid-definition"`  | A definition's Rawcode, base or fields are not ones the World Editor could make.                                                           | Fix the definition at the file, Rawcode and field named.                                    |
+| `"defined-twice"`       | Two definitions name one Rawcode of one Object kind; the message names both files.                                                         | Keep one, or give the other another Rawcode.                                                |
+| `"collision"`           | A definition names a Rawcode the map folder defines or changes, which the code does not own.                                               | Adopt the object into the code (`pnpm objects:adopt`), or choose another Rawcode.           |
+| `"manifest-unreadable"` | The Object manifest does not parse, or is not one Object sync writes; the message names the file.                                          | Restore it from git, or resolve its merge conflict, then sync again; never edit it by hand. |
+| `"peer-missing"`        | `typescript` or `reforged-builtins` cannot be read from the Map project, or `reforged-builtins` has a field table of format 1.             | Install the peer named, or a newer `reforged-builtins`.                                     |
 
-An edit or a save the Object data editor refuses throws its own `ObjectDataWriterError`, and a missing staged copy a `MapFolderError`.
+An edit or a save the Object data editor refuses throws its own `ObjectDataWriterError`, a sync refused for unsaved edits in the World Editor among them, and a missing staged copy or map folder a `MapFolderError`.
 
 ## Object data in `git diff`
 

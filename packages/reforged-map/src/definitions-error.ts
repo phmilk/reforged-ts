@@ -8,15 +8,18 @@
  * `"invalid-definition"`, a definition's Rawcode, base or fields are not
  * ones the World Editor could make; `"defined-twice"`, two definitions name
  * one Rawcode of one Object kind; `"collision"`, a definition names a
- * Rawcode the map folder defines or changes; `"peer-missing"`, `typescript`
- * or `reforged-builtins` (its index, or its field table of format 2) could
- * not be read from the Map project.
+ * Rawcode the map folder defines or changes and the code does not own;
+ * `"manifest-unreadable"`, the Object manifest does not parse or is not one
+ * Object sync writes; `"peer-missing"`, `typescript` or `reforged-builtins`
+ * (its index, or its field table of format 2) could not be read from the
+ * Map project.
  */
 export type ObjectDefinitionsErrorReason =
   | "collision"
   | "defined-twice"
   | "invalid-definition"
   | "load-failed"
+  | "manifest-unreadable"
   | "peer-missing";
 
 /** One problem of an {@link ObjectDefinitionsError}: where it is, and what it is. */
@@ -32,9 +35,10 @@ export interface ObjectDefinitionProblem {
 }
 
 /**
- * Object definitions the build refuses: a definition file that cannot be
- * loaded, an invalid definition, a Rawcode defined twice, a collision with
- * the map folder, or a missing peer. Its `reason` says which, for a caller
+ * Object definitions the build or Object sync refuses: a definition file
+ * that cannot be loaded, an invalid definition, a Rawcode defined twice, a
+ * collision with the map folder, an unreadable Object manifest, or a
+ * missing peer. Its `reason` says which, for a caller
  * to switch on, and its message what the author does next. Nothing is
  * written when it is thrown.
  */
