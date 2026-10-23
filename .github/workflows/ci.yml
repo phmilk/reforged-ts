@@ -61,6 +61,11 @@ jobs:
       # script does not run it, so a leg runs it once.
       - name: typings:check
         run: pnpm run typings:check
+      # The Built-in objects' Drift check: each committed artefact is what
+      # its Game version's index emits, without the game. Its own stage, as
+      # in `pnpm check`.
+      - name: builtins:check
+        run: pnpm run builtins:check
       # The diagrams' Drift check: each generated diagram's region in its doc
       # is what `pnpm diagrams:generate` writes from its sources. Its own
       # stage, as in `pnpm check`.
