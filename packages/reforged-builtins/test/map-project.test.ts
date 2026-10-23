@@ -40,6 +40,8 @@ const NEGATIVES = [
   "src/ability-into-unit-create.ts:5 TS2345",
   // A unit's constant is not an ability's Rawcode.
   "src/constant-into-ability.ts:4 TS2345",
+  // A value outside an enumeration's raw values (reforged-builtins/fields).
+  "src/field-value-outside-enumeration.ts:3 TS2322",
   // An item's constant is neither a unit's nor an upgrade's Rawcode.
   "src/item-into-tech.ts:4 TS2345",
   // A Built-in unit's literal is a unit's Rawcode, not an ability's.
@@ -106,6 +108,7 @@ describe.each([
       "/3.0.1/buffs.d.ts",
       "/3.0.1/destructables.d.ts",
       "/3.0.1/doodads.d.ts",
+      "/3.0.1/fields.d.ts",
       "/3.0.1/items.d.ts",
       "/3.0.1/units.d.ts",
       "/3.0.1/upgrades.d.ts",

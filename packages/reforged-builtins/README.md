@@ -2,7 +2,7 @@
 
 The Built-in objects of each Warcraft III Reforged Patch, reduced to the identifiers code needs to name them: Rawcode, Object kind, race, enUS name and the Game data sets that hold the object ([ADR 0013](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0013-built-in-objects-ship-as-derived-identifiers-in-their-own-package.md)). It never holds tooltip text, numbers or icons.
 
-It holds the Built-in objects of Patch 3.0.1.24370, in the seven Object kinds and the six Game data sets: their JSON index, their `FourCC` overloads and their constants; and the field table of their Object data, for tools that write it.
+It holds the Built-in objects of Patch 3.0.1.24370, in the seven Object kinds and the six Game data sets: their JSON index, their `FourCC` overloads and their constants; and the field table of their Object data, for tools that write it, with its declarations, which type Object definitions (`reforged-builtins/fields`).
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
@@ -56,7 +56,7 @@ A map's objects follow two of its options in the World Editor: its Game Data Set
 ## What it never holds
 
 - **Custom objects and a map's changes to Built-in ones.** A Custom object's Rawcode (`h000`) is not in the package and stays an `UnknownRawcode`; a Built-in object the map renamed keeps its game name here. A map's own objects come from its map folder, through [`reforged-map`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-map).
-- **Tooltip text, numbers and icons.** The package holds identifiers only: Rawcode, kind, race, enUS name and Game data sets, and in the field table the fields' identifiers and the enUS labels the World Editor writes into `war3map.wts`. No field's value is in it: no Built-in object's stats, tooltip or icon. Tooltips and icons are the hover tool's.
+- **Tooltip text, numbers and icons.** The package holds identifiers only: Rawcode, kind, race, enUS name and Game data sets, and in the field table and its declarations the fields' identifiers, their metadata types, the raw values of the enumerations (`normal`, `pierce`) and the enUS labels the World Editor writes into `war3map.wts`. No field's value is in it: no Built-in object's stats, tooltip or icon. Tooltips and icons are the hover tool's.
 - **Other locales.** Names and constants are enUS.
 
 ## Finding a Rawcode (agents and tools)
@@ -123,29 +123,57 @@ The file is written one object per line, byte-stably: a regeneration from unchan
 
 ## The field table (tool authors)
 
-`3.0.0/fields.json`, one per Game version next to its index, holds what a writer of Object data needs to write an edit as the 3.0 World Editor saves it, with no game file at run time: `reforged-map`'s writer reads it ([#632](https://github.com/phmilk/reforged-ts/issues/632)). Abridged, it reads:
+`3.0.1/fields.json`, one per Game version next to its index, holds what a writer of Object data needs to write an edit as the 3.0 World Editor saves it, with no game file at run time: `reforged-map`'s writer reads it ([#632](https://github.com/phmilk/reforged-ts/issues/632)). Format 2 also gives each field its metadata type and its category, and each enumeration its raw values, from which the [field declarations](#the-field-declarations-object-definitions) type Object definitions ([#702](https://github.com/phmilk/reforged-ts/issues/702)). Abridged, it reads:
 
 ```json
 {
-  "format": 1,
-  "build": "3.0.0.24268",
-  "gameVersion": "3.0.0",
+  "format": 2,
+  "build": "3.0.1.24370",
+  "gameVersion": "3.0.1",
   "kinds": {
     "unit": "Units",
     "buff": "Buffs/Effects"
   },
+  "enumerations": {
+    "attackType": [
+      "unknown",
+      "normal",
+      "pierce",
+      "siege",
+      "spells",
+      "chaos",
+      "magic",
+      "hero"
+    ],
+    "teamColor": [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  },
   "fields": {
     "unit": {
-      "umdl": {
+      "ua1t": {
         "type": "string",
-        "file": "skin",
+        "metaType": "attackType",
+        "category": "enumeration",
+        "file": "base",
         "localizable": false,
         "levels": false,
-        "field": "file",
-        "label": "Art - Model File"
+        "field": "atkType1",
+        "label": "Attack 1 - Attack Type"
+      },
+      "uabi": {
+        "type": "string",
+        "metaType": "abilityList",
+        "category": "rawcodeList",
+        "of": "ability",
+        "file": "base",
+        "localizable": false,
+        "levels": false,
+        "field": "abilList",
+        "label": "Normal"
       },
       "unam": {
         "type": "string",
+        "metaType": "string",
+        "category": "text",
         "file": "skin",
         "localizable": true,
         "levels": false,
@@ -156,6 +184,8 @@ The file is written one object per line, byte-stably: a regeneration from unchan
     "ability": {
       "Hbz1": {
         "type": "int",
+        "metaType": "int",
+        "category": "number",
         "file": "base",
         "localizable": false,
         "levels": true,
@@ -169,7 +199,7 @@ The file is written one object per line, byte-stably: a regeneration from unchan
 }
 ```
 
-- `format` is the shape's version, 1 today, as the index's: a new `format` comes only with an incompatible shape, in a major of the package.
+- `format` is the shape's version. Format 2 adds `enumerations` and each field's `metaType`, `category` and `of` to format 1, which has neither; every fact of format 1 is in format 2 as it was, so a writer that reads format 1's facts reads both. **3.0.1 holds format 2; 3.0.0 keeps format 1**, generated before format 2 from an install no longer at hand: a Game version's table moves to format 2 when `pnpm builtins:generate` runs on an install of it. Format 2 came in a minor during the alphas; from 1.0.0, a new `format` comes only with an incompatible shape, in a major of the package, as the index's.
 - `kinds` gives each of the seven Object kinds, in the order above (`unit`, `item`, `ability`, `buff`, `destructable`, `doodad`, `upgrade`), its label in the editor's comments in `war3map.wts`: `// Units: h000 (Captain), Name (Name)`. They are the enUS labels of the Object Editor's tabs (`WESTRING_OBJTAB_UNITS`).
 - `fields` holds each kind's fields by id, in code-point order. Units and items share `Units/UnitMetaData.slk`: a field is a unit's when its row's `useUnit`, `useHero` or `useBuilding` is 1, an item's when its `useItem` is, and both kinds list a field both use. Each field gives:
   - `type`, the value type a modification stores: `int` for numbers, booleans and the editor's enumerations of integers (`teamColor`, the `*Flags`), `real`, `unreal`, and `string` for the rest (texts, paths, codes and lists).
@@ -178,17 +208,62 @@ The file is written one object per line, byte-stably: a regeneration from unchan
   - `levels`: whether it holds a value per level, or per variation for a doodad (`repeat` above 0). `data`, for the abilities, is the data column a modification's data pointer names (`data` in the metadata, 0 for none).
   - `field` and `label`, the two parts of the editor's comment of a string: the metadata's `field` name (`Bufftip`) and the field's enUS label (`Tooltip`), its `displayName` resolved through the editor strings.
   - `specific`, when the metadata's `useSpecific` names them: the base Rawcodes the field is specific to, each as the metadata writes it (`Blo2` of 3.0.0 names `ACbl.Afzy`, a typo of the game's that a warning reports).
+  - In format 2, `metaType`, the metadata's `type` (`attackType`, `abilityList`, `int`), and `category`, what the field holds for Object definitions, which the generator maps from the metadata type through a table of its own (`METADATA_CATEGORIES` in `src/fields.ts`):
+    - `number`: `int`, `real` and `unreal`, and the editor's flags of bits (`channelFlags`, `morphFlags`, `pickFlags`, `silenceFlags`, `stackFlags`, `interactionFlags`), whose value is the sum of the bits;
+    - `boolean`: `bool`, written as 0 or 1;
+    - `text`: texts, paths and other strings (`string`, `char`, `model`, `icon`, `orderString`, `soundLabel`);
+    - `enumeration`: one raw value of the enumeration named by the metadata type (`attackType`, `armorType`, `teamColor`, `deathType`);
+    - `rawcode`: the Rawcode of an object of the kind `of` names (`unitCode` is a unit's, `abilCode` an ability's, `upgradeCode` an upgrade's);
+    - `rawcodeList`: a list of Rawcodes of the kind `of` names, written comma-separated (`abilityList`, `heroAbilityList` and the skins' lists are abilities, `unitList` units, `itemList` items, `upgradeList` upgrades, `buffList` and `effectList` buffs);
+    - `stringList`: a list of strings (`stringList`, `modelList`, `intList`, `techList`), of an enumeration's raw values when the enumerations hold its metadata type (`targetList`, `unitClass`, `pathingListPrevent`).
+
+    A metadata type the generator does not map takes its value type's category: `number` for `int`, `real` and `unreal`, `text` for `string`. So a new Patch's type never makes a field unwritable; the generator warns of it, and `pnpm builtins:check` lists it. In 3.0.1, `destructableCategory` (`bcat`) and `doodadCategory` (`dcat`) are not mapped, so they are texts: their values are not in the editor data the enumerations come from.
+- `enumerations`, in format 2, gives each enumeration a field reads, by metadata type, its raw values in the World Editor's order: the first item of each value of its section in `UI/UnitEditorData.txt` (`01=normal,WESTRING_UE_ATTACKTYPE_NORMAL` gives `normal`), integers for a field stored as `int` (`teamColor`'s `-1` to `24`). They are what Object data stores, never the editor's display names. A section's alternative spellings (`01_Alt=aliv`) are not read.
 - **The editor's own behaviour wins.** When the World Editor's save puts a field elsewhere than its metadata says, the generator records it in a short list of overrides (`FIELD_OVERRIDES` in `src/fields.ts`), each with the fixture that shows it. The doodads' `dnam` is the first: the 3.0 editor keeps it in `war3map.w3d`, as a `TRIGSTR`, where every other kind's name goes to its Skin file (`reforged-map`'s `test/fixtures/editor-objects.w3m`, [#591](https://github.com/phmilk/reforged-ts/issues/591)).
 
 When the 3.0.0 table was generated ([#634](https://github.com/phmilk/reforged-ts/issues/634)), it held every modification of `reforged-map`'s fixtures, the World Editor's save of `editor-objects.w3m` and wc3libs' files: each of their 2,110 modifications is in the file and of the value type the table gives, and each `TRIGSTR` value is in a localizable field. The World Editor fixture of [#640](https://github.com/phmilk/reforged-ts/issues/640), a save by the 3.0.1 editor of an edit of every kind, settled the file of `unsf` and `ushr`, whose `netsafe` is 11 (the Skin file, as the table says), and the comment of a levelled field (it names no level), with no override needed. No fixture has shown the type of `damageType` and `proctargetType` yet; a difference a fixture shows becomes an override.
 
-The file is written one kind or field per line, byte-stably, as the index is.
+The file is written one kind, enumeration or field per line, byte-stably, as the index is.
+
+## The field declarations (Object definitions)
+
+A field table of format 2 is also emitted as declarations, `3.0.1/fields.d.ts`, and the `reforged-builtins/fields` entry resolves to the newest Game version's, as the kind entry points do. `reforged-map/objects` types Object definitions from it ([#700](https://github.com/phmilk/reforged-ts/issues/700)); a Game version whose table is of format 1 has none. It exports `Fields`, the interface of each kind's fields by Object kind (`Fields["unit"]` is `UnitFields`), and each kind's interface keys its fields by field id, in code-point order:
+
+```ts
+export interface UnitFields {
+  /**
+   * Attack 1 - Attack Type (`ua1t`), a field of the units of Patch 3.0.1.
+   *
+   * Metadata name `atkType1`, metadata type `attackType`, value type `string`, in the base file, war3map.w3u, one value.
+   */
+  readonly ua1t: {
+    readonly category: "enumeration";
+    readonly value:
+      | "unknown"
+      | "normal"
+      | "pierce"
+      | "siege"
+      | "spells"
+      | "chaos"
+      | "magic"
+      | "hero";
+    readonly levels: false;
+    readonly localizable: false;
+  };
+}
+```
+
+- `category` is the field's category in the table, and `value` the type of one value by it: `number`, `boolean`, `string` for a text, the union of the raw values for an enumeration, `Rawcode<kind>` for a Rawcode and a readonly array of them for a list (of `of`'s kind: `uabi`'s is `readonly Rawcode<"ability">[]`), and a readonly array of strings, or of an enumeration's raw values, for a list of strings. `Rawcode` is the Typings'. An enumeration the table does not hold is a `string`.
+- `levels` says whether it holds a value per level (a doodad's variation), `localizable` whether the World Editor writes it as a `TRIGSTR`: what a value of a levelled or localizable field may be is `reforged-map`'s.
+- The TSDoc gives the enUS label and field id (`` `dvr1`, unlabelled `` without a label), the metadata name and type, the value type, the file (base or Skin, by its name), whether it holds one value or a value per level, whether it is localizable, and the bases it is specific to.
 
 ## The artefacts
 
 Each Game version's index is emitted three ways, every file with a banner that says so: `3.0.0.d.ts`, one ambient `FourCC` overload per Rawcode with the object's TSDoc; and per Object kind, such as `3.0.0/units.d.ts`, which exports the constants, and `3.0.0/units.lua`, the module that returns them. The TSDoc gives the name and Rawcode, the Game version (never the Build) and the race, and, on the overload, the constant and its entry point. It never holds tooltip text.
 
-`pnpm builtins:check`, which `pnpm check` runs, needs no game: it emits every artefact from each committed index again and fails on any difference, on a file no index emits, on an index or a field table of the wrong shape, on a field table of another Build than its index or not written as the generator writes it, on a Game version without its provenance file, and on `exports` that do not point the kind entry points at the newest Game version.
+Each field table of format 2 is emitted once more, as its [field declarations](#the-field-declarations-object-definitions).
+
+`pnpm builtins:check`, which `pnpm check` runs, needs no game: it emits every artefact from each committed index, and the field declarations from each committed table of format 2, again and fails on any difference, on a file no index or table emits, on an index or a field table of the wrong shape (a format other than 1 or 2; in format 2, a field without its metadata type, a category other than the one the generator maps its metadata type to, an enumeration a field reads and the table lacks, or one no field reads), on a field table of another Build than its index or not written as the generator writes it, on a Game version without its provenance file, and on `exports` that do not point the kind entry points and `reforged-builtins/fields` at the newest Game version. It lists each metadata type of a table of format 2 the generator does not map to a category, with its fields, and passes. The generator's tests emit format 2 and its declarations from the committed fixture input of `test/fixtures/fields/` and compare them with the `fields.json` and `fields.d.ts` there.
 
 ## Generating it (maintainers)
 
@@ -203,7 +278,7 @@ Per Object kind and Game data set, the data file gives the Rawcodes and, where i
 - in the profile files of `_Locales/enUS.w3mod:` (`Units/*UnitStrings.txt`, `Units/ItemStrings.txt`, `Units/*AbilityStrings.txt` for abilities and buffs, `Units/*UpgradeStrings.txt`; finding none is an error), keys and sections matched without regard to case, as the game matches them (`[ANsp]` names `Ansp`);
 - or in the data file itself, as for destructables and doodads, whose names are `WESTRING_` keys of `UI/WorldEditGameStrings.txt` and `UI/WorldEditStrings.txt` (a key neither holds leaves the object unnamed, with a warning).
 
-A buff's name is its editor name, else its tooltip's title (`Bufftip`), as most buffs have no editor name. A field of one value per level (`repeat` above 0 in the metadata, as an upgrade's name) gives its first level's. A buff's editor name and an upgrade's raw list of names, quotes removed, are its `commentName` where they differ from the name. Colour codes and line breaks are removed; no tooltip, editor suffix or hero proper name is read into the model. An object with no name is a warning, its constant `Unnamed_<rawcode>`; a Rawcode two kinds share, one that is not four `[A-Za-z0-9]` characters and two constants of one kind with one name are errors, and nothing is written. The field table comes from the same run: every row of the seven kinds' `*MetaData.slk`, labelled through `UI/WorldEditGameStrings.txt` and `UI/WorldEditStrings.txt`; a metadata type the generator does not know, an editor strings file without a kind's label and an override of a field the metadata lacks are errors, and a label the strings do not hold is a warning. It writes `<Game version>/index.json`, `<Game version>/fields.json`, `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size, and the artefacts emitted from the index. All are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
+A buff's name is its editor name, else its tooltip's title (`Bufftip`), as most buffs have no editor name. A field of one value per level (`repeat` above 0 in the metadata, as an upgrade's name) gives its first level's. A buff's editor name and an upgrade's raw list of names, quotes removed, are its `commentName` where they differ from the name. Colour codes and line breaks are removed; no tooltip, editor suffix or hero proper name is read into the model. An object with no name is a warning, its constant `Unnamed_<rawcode>`; a Rawcode two kinds share, one that is not four `[A-Za-z0-9]` characters and two constants of one kind with one name are errors, and nothing is written. The field table comes from the same run, in format 2: every row of the seven kinds' `*MetaData.slk`, labelled through `UI/WorldEditGameStrings.txt` and `UI/WorldEditStrings.txt`, its enumerations read from the base layer's `UI/UnitEditorData.txt`; a metadata type whose value type the generator does not know (`INT_TYPES` and `STRING_TYPES` in `src/fields.ts`), an enumeration the editor data does not hold, an enumeration stored as `int` whose raw values are not integers, an editor strings file without a kind's label and an override of a field the metadata lacks are errors, and a label the strings do not hold and a metadata type with no category are warnings. It writes `<Game version>/index.json`, `<Game version>/fields.json`, its declarations `<Game version>/fields.d.ts`, `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size, and the artefacts emitted from the index. All are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
 
 An object named twice, in one names file or across them, takes its first name, the files read in the code-point order of their paths (`nameFileOrder` in `src/generate.ts`), with a warning. The game gives the first name, measured by a Probe on 3.0.0.24268 ([`docs/research/builtins-names.md`](../../docs/research/builtins-names.md), [#564](https://github.com/phmilk/reforged-ts/issues/564)): `Ubtr` is "Noble", the first of its two names in `CampaignUnitStrings.txt`, and `Almf` is "Death Coil", from `CampaignAbilityStrings.txt`, not "Item Lesser Mark of the Forsaken", which `ItemAbilityStrings.txt` gives it after. In 3.0.0.24268 the rule decides 14 names, `Ubtr`'s and those of 12 abilities and one buff that `ItemAbilityStrings.txt` names again. The game gives a buff's name to no Native, so the buffs' rule is the abilities', whose files they share. The World Editor's own strings files keep the later value of a key both set, a rule no Probe can settle.
 
@@ -217,7 +292,7 @@ Each run compares the new model with the committed one of the same Game version,
 - a Game data set the index no longer lists, by its id (`melee-roc`): breaking, a major, since `reforged-map` matches a map's Game data set against the ids; a renamed id is one removed set and one added set;
 - a Game data set the index adds, or a new label on a set it keeps: additive.
 
-A breaking change of an object also gets a rename entry in `migration/renames.json`, a map with the schema of the library's (`packages/reforged-ts/migration/renames.schema.json`), for the pair from the package's current major to the next. A renamed constant maps the old name to the new one (`Units.Footman_hfoo` to `Units.Militia_hfoo`), a constant moved to another kind's object maps to its new one, and a removed one has no replacement. A run keeps the entries already there: within the pair, the major not yet released, a constant renamed by two Patches chains into one entry from its released name to the newest, one renamed back loses its entry, and the pair's no-renames marker gives way to the entries. Below 1.0.0 no major has been released, so no entry is written. A removed Game data set has no entry, since no constant names it: its line in the record says so, and the migration page says which set a map of it reads now, the pair's no-renames marker standing in for the entries when no object changes. A new Game version gets its folder next to the previous one, and the run moves the kind entry points of `exports` to it and `reforged.patch` to the Build. A major of the package needs its migration page and these entries: the major-changeset gate (`docs/release.md`) checks both, and that each replacement resolves against the constants of the newest Game version.
+A breaking change of an object also gets a rename entry in `migration/renames.json`, a map with the schema of the library's (`packages/reforged-ts/migration/renames.schema.json`), for the pair from the package's current major to the next. A renamed constant maps the old name to the new one (`Units.Footman_hfoo` to `Units.Militia_hfoo`), a constant moved to another kind's object maps to its new one, and a removed one has no replacement. A run keeps the entries already there: within the pair, the major not yet released, a constant renamed by two Patches chains into one entry from its released name to the newest, one renamed back loses its entry, and the pair's no-renames marker gives way to the entries. Below 1.0.0 no major has been released, so no entry is written. A removed Game data set has no entry, since no constant names it: its line in the record says so, and the migration page says which set a map of it reads now, the pair's no-renames marker standing in for the entries when no object changes. A new Game version gets its folder next to the previous one, and the run moves the kind entry points and `reforged-builtins/fields` of `exports` to it and `reforged.patch` to the Build. A major of the package needs its migration page and these entries: the major-changeset gate (`docs/release.md`) checks both, and that each replacement resolves against the constants of the newest Game version.
 
 The generator's tests (`pnpm --filter reforged-builtins test`) run it on synthetic CASC storages they write in a temporary folder, with no byte of Blizzard's.
 

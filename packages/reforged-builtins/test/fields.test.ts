@@ -1,9 +1,10 @@
 /**
  * Seam 3 of #632: the field table `builtins:generate` writes, from the
  * committed fixture input of `test/fixtures/fields/`, a small `*MetaData.slk`
- * per kind and the editor strings. Every byte of it is the tests' own,
- * modelled on the columns of 3.0.0.24268's metadata; `fields.json` there is
- * the table it gives.
+ * per kind, the editor strings and the editor data. Every byte of it is the
+ * tests' own, modelled on the columns of 3.0.0.24268's metadata and the
+ * sections of 3.0.1.24370's editor data; `fields.json` there is the table it
+ * gives, in format 2 (#702), and `fields.d.ts` its declarations.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -11,8 +12,10 @@ import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/generate.js";
 import {
   buildFieldTable,
+  EDITOR_DATA,
   FIELD_OVERRIDES,
   serializeFields,
+  type FieldTable,
 } from "../src/fields.js";
 import { parseSlk } from "../src/slk.js";
 import {
@@ -25,6 +28,9 @@ import {
   WORLD_EDIT_STRINGS,
   writeStorage,
 } from "./support/casc.js";
+
+/** The editor data's path in the storage. */
+const EDITOR_DATA_PATH = base(EDITOR_DATA);
 
 const fixture = (name: string) =>
   readFile(new URL(`fixtures/fields/${name}`, import.meta.url), "utf8");
@@ -46,6 +52,7 @@ async function fixtureStorage(extra: Record<string, string> = {}) {
     [UNIT_DATA]: unitDataSlk([]),
     [strings("HumanUnitStrings.txt")]: "",
     [WORLD_EDIT_STRINGS]: await fixture("WorldEditStrings.txt"),
+    [EDITOR_DATA_PATH]: await fixture("UnitEditorData.txt"),
   };
   for (const [path, name] of Object.entries(META_DATA)) {
     files[base(path)] = await fixture(name);
@@ -73,22 +80,26 @@ async function run(installDir: string) {
       typingsBuild: "3.0.0.24268",
     },
   );
-  const fields = await readFile(
-    join(outDir, "3.0.0", "fields.json"),
-    "utf8",
-  ).catch(() => undefined);
-  return { status, stdout, stderr, fields };
+  const output = (name: string) =>
+    readFile(join(outDir, "3.0.0", name), "utf8").catch(() => undefined);
+  const fields = await output("fields.json");
+  const declarations = await output("fields.d.ts");
+  return { status, stdout, stderr, fields, declarations };
 }
 
 describe("builtins:generate's field table", () => {
-  it("emits the table of the fixture input, the overrides applied", async () => {
+  it("emits the table of the fixture input in format 2, the overrides applied, and its declarations", async () => {
     const storage = await fixtureStorage();
 
-    const { status, stdout, stderr, fields } = await run(storage.installDir);
+    const { status, stdout, stderr, fields, declarations } = await run(
+      storage.installDir,
+    );
 
     expect(stderr).toBe("");
     expect(status).toBe(0);
     expect(fields).toBe(await fixture("fields.json"));
+    expect(declarations).toBe(await fixture("fields.d.ts"));
+    expect(stdout).not.toContain("METADATA_CATEGORIES");
     expect(stdout).toContain(
       `- warning: ${base("Doodads/DoodadMetaData.slk")}: the doodad field dvr1 is labelled WESTRING_DEVAL_DVR1, which the editor strings do not hold: it has no label.\n`,
     );
@@ -112,6 +123,81 @@ describe("builtins:generate's field table", () => {
     expect(fields).toBeUndefined();
     expect(stderr).toContain(
       `- error: ${base("Units/UpgradeMetaData.slk")}: the upgrade field gef1 is of type "upgradeFuture", which the generator does not know: add it to INT_TYPES or STRING_TYPES in src/fields.ts.\n`,
+    );
+  });
+
+  it("gives a metadata type no category maps its value type's category, and warns of it", async () => {
+    const meta = (await fixture("DoodadMetaData.slk")).replace(
+      '"model"',
+      '"doodadCategory"',
+    );
+    const storage = await fixtureStorage({
+      [base("Doodads/DoodadMetaData.slk")]: meta,
+    });
+
+    const { status, stdout, fields } = await run(storage.installDir);
+
+    expect(status).toBe(0);
+    expect(
+      (JSON.parse(fields ?? "{}") as FieldTable).fields.doodad.dfil,
+    ).toMatchObject({
+      type: "string",
+      metaType: "doodadCategory",
+      category: "text",
+    });
+    expect(stdout).toContain(
+      `- warning: The metadata type "doodadCategory" (doodad dfil) has no category in METADATA_CATEGORIES (src/fields.ts): its fields take their value type's, text.\n`,
+    );
+  });
+
+  it("reads an enumeration's raw values from the editor data, integers for one stored as int", async () => {
+    const { fields } = await run((await fixtureStorage()).installDir);
+    const table = JSON.parse(fields ?? "{}") as FieldTable;
+
+    expect(table.enumerations).toEqual({
+      targetList: ["air", "alive", "ground"],
+      teamColor: [-1, 0, 1],
+      upgradeEffect: ["rarm", "ratt", "rhpx"],
+    });
+    expect(table.fields.unit.utco).toMatchObject({
+      type: "int",
+      metaType: "teamColor",
+      category: "enumeration",
+    });
+    expect(table.fields.unit.uabi).toMatchObject({
+      category: "rawcodeList",
+      of: "ability",
+    });
+  });
+
+  it("refuses an enumeration the editor data does not hold, writing nothing", async () => {
+    const editorData = (await fixture("UnitEditorData.txt")).replace(
+      "[teamColor]",
+      "[teamColour]",
+    );
+    const storage = await fixtureStorage({ [EDITOR_DATA_PATH]: editorData });
+
+    const { status, stderr, fields } = await run(storage.installDir);
+
+    expect(status).toBe(1);
+    expect(fields).toBeUndefined();
+    expect(stderr).toContain(
+      `- error: ${base("Units/UnitMetaData.slk")}: the unit field utco is of type teamColor, an enumeration, and the editor data (UI/UnitEditorData.txt) has no values of it.\n`,
+    );
+  });
+
+  it("refuses an enumeration stored as int whose raw values are not integers", async () => {
+    const editorData = (await fixture("UnitEditorData.txt")).replace(
+      "01=0,WESTRING_UE_TEAMCOLOR_00",
+      "01=red,WESTRING_UE_TEAMCOLOR_00",
+    );
+    const storage = await fixtureStorage({ [EDITOR_DATA_PATH]: editorData });
+
+    const { status, stderr } = await run(storage.installDir);
+
+    expect(status).toBe(1);
+    expect(stderr).toContain(
+      `- error: ${base("Units/UnitMetaData.slk")}: the unit field utco is of type teamColor, an enumeration stored as int, and the editor data gives it "red", not integers.\n`,
     );
   });
 

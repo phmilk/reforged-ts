@@ -117,7 +117,7 @@ describe("builtins:generate", () => {
     expect(status).toBe(0);
     expect(stdout).toBe(
       `Read the install at ${storage.installDir} (Build 3.0.0.24268): 5 units, 0 items, 0 abilities, 0 buffs, 0 destructables, 0 doodads and 0 upgrades.\n` +
-        "Wrote 3.0.0/index.json, 3.0.0/fields.json, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n\n" +
+        "Wrote 3.0.0/index.json, 3.0.0/fields.json, 3.0.0/fields.d.ts, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n\n" +
         "The record against no previous model: a minor.\n" +
         "- added (minor): Units.Paladin_Hpal (Hpal)\n" +
         "- added (minor): Units.Footman_hfoo (hfoo)\n" +
@@ -127,6 +127,7 @@ describe("builtins:generate", () => {
     );
     expect(await readdir(outDir)).toEqual(["3.0.0", "3.0.0.d.ts"]);
     expect(await readdir(join(outDir, "3.0.0"))).toEqual([
+      "fields.d.ts",
       "fields.json",
       "index.json",
       "provenance.json",
@@ -521,6 +522,7 @@ return {
 
     expect(status).toBe(0);
     expect(await readdir(join(outDir, "3.0.0"))).toEqual([
+      "fields.d.ts",
       "fields.json",
       "index.json",
       "provenance.json",
@@ -960,6 +962,7 @@ describe("builtins:generate on every Object kind", () => {
       "destructables.lua",
       "doodads.d.ts",
       "doodads.lua",
+      "fields.d.ts",
       "fields.json",
       "index.json",
       "items.d.ts",
@@ -1422,6 +1425,7 @@ describe("builtins:generate adopting a Build", () => {
       "./3.0.1/index.json": "./3.0.1/index.json",
       "./3.0.1/fields.json": "./3.0.1/fields.json",
       "./units": { types: "./3.0.1/units.d.ts", tstl: "./3.0.1/units" },
+      "./fields": { types: "./3.0.1/fields.d.ts" },
       "./package.json": "./package.json",
     });
   });

@@ -68,6 +68,9 @@
       "types": "./3.0.1/upgrades.d.ts",
       "tstl": "./3.0.1/upgrades"
     },
+    "./fields": {
+      "types": "./3.0.1/fields.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "files": [

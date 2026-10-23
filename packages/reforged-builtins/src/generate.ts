@@ -34,10 +34,17 @@ import {
 } from "./model.js";
 import { emit, KIND_CONSTANTS, withArticle } from "./emit.js";
 import {
+  emitFieldDeclarations,
+  fieldDeclarationsPath,
+} from "./field-declarations.js";
+import {
   buildFieldTable,
+  EDITOR_DATA,
+  enumerator,
   fieldsPath,
   labelResolver,
   serializeFields,
+  type Enumerate,
   type KindMetaData,
 } from "./fields.js";
 import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
@@ -595,11 +602,21 @@ async function extract(
       ...(source.fieldUse !== undefined && { use: source.fieldUse }),
     });
   }
+  // The enumerations of the World Editor's data, when the install has the
+  // file: a field that reads one without it is an error of the table.
+  const editorDataPath = BASE_LAYER + EDITOR_DATA;
+  let enumerate: Enumerate | undefined;
+  if (listed.has(editorDataPath.toLowerCase())) {
+    const editorData = new Profile();
+    editorData.add(await read(editorDataPath), editorDataPath);
+    enumerate = enumerator(editorData);
+  }
   const fieldTable = buildFieldTable(
     metaData,
     labelResolver(await worldEditStrings(), WORLD_EDIT_SECTION),
     build,
     gameVersion,
+    enumerate,
   );
   for (const message of fieldTable.errors) {
     diagnostics.push({ severity: "error", message });
@@ -626,6 +643,10 @@ async function extract(
     files: new Map([
       [`${gameVersion}/index.json`, serializeIndex(index)],
       [fieldsPath(gameVersion), serializeFields(fieldTable.table)],
+      [
+        fieldDeclarationsPath(gameVersion),
+        emitFieldDeclarations(fieldTable.table),
+      ],
       [
         `${gameVersion}/provenance.json`,
         serializeProvenance({

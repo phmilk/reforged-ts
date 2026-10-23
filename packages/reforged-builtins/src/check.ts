@@ -1,9 +1,10 @@
 /**
  * The check of the committed artefacts, without the game: each Game
- * version's index and field table are validated, the index's artefacts are
- * emitted again and compared byte for byte with the committed ones, its
- * provenance file must exist, and the package's `exports` must be the ones
- * the Game versions call for.
+ * version's index and field table are validated, the index's artefacts and
+ * the declarations of a field table of format 2 are emitted again and
+ * compared byte for byte with the committed ones, its provenance file must
+ * exist, and the package's `exports` must be the ones the Game versions call
+ * for. The metadata types the generator does not map are listed.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -12,12 +13,20 @@ import {
   emit,
   KIND_CONSTANTS,
   kindsOf,
+  list,
   luaModule,
   overloadsPath,
 } from "./emit.js";
 import {
+  emitFieldDeclarations,
+  fieldDeclarationsPath,
+  FIELDS_ENTRY,
+  hasDeclarations,
+} from "./field-declarations.js";
+import {
   fieldsPath,
   serializeFields,
+  unmappedTypes,
   validateFields,
   type FieldTable,
 } from "./fields.js";
@@ -49,6 +58,12 @@ export interface CheckResult {
   compared: number;
   /** One line per problem; empty when the package is in sync. */
   problems: string[];
+  /**
+   * The metadata types of each field table of format 2 that the generator
+   * does not map to a category, one line per Game version and type, with
+   * its fields: they take their value type's category.
+   */
+  unmapped: string[];
 }
 
 /** The Game version folders of the package root `root`, oldest first. */
@@ -70,6 +85,9 @@ export async function checkPackage(root: string): Promise<CheckResult> {
   let compared = 0;
   const generated = new Set<string>();
   const kindsByVersion = new Map<string, ObjectKind[]>();
+  /** The Game versions whose field table has declarations: format 2. */
+  const declared = new Set<string>();
+  const unmapped: string[] = [];
   for (const gameVersion of gameVersions) {
     const indexPath = `${gameVersion}/index.json`;
     const text = await readText(join(root, indexPath));
@@ -90,13 +108,39 @@ export async function checkPackage(root: string): Promise<CheckResult> {
       continue;
     }
     const shape = validateIndex(parsed, gameVersion);
-    problems.push(
-      ...(await checkFields(
-        root,
-        gameVersion,
-        shape.length === 0 ? (parsed as BuiltinsIndex).build : undefined,
-      )),
+    const fields = await checkFields(
+      root,
+      gameVersion,
+      shape.length === 0 ? (parsed as BuiltinsIndex).build : undefined,
     );
+    problems.push(...fields.problems);
+    if (fields.table === undefined) {
+      // A table missing or of the wrong shape emits nothing to compare: its
+      // declarations, when committed, are taken as they are.
+      const path = fieldDeclarationsPath(gameVersion);
+      if ((await readText(join(root, path))) !== undefined) {
+        declared.add(gameVersion);
+        generated.add(path);
+      }
+    } else if (hasDeclarations(fields.table)) {
+      declared.add(gameVersion);
+      for (const { metaType, fields: named } of unmappedTypes(fields.table)) {
+        unmapped.push(`${gameVersion}: ${metaType} (${list(named)})`);
+      }
+      const path = fieldDeclarationsPath(gameVersion);
+      generated.add(path);
+      compared++;
+      const committed = await readText(join(root, path));
+      if (committed === undefined) {
+        problems.push(
+          `${path}: emitted from ${fieldsPath(gameVersion)} but not committed.`,
+        );
+      } else if (committed !== emitFieldDeclarations(fields.table)) {
+        problems.push(
+          `${path}: differs from what ${fieldsPath(gameVersion)} emits.`,
+        );
+      }
+    }
     if (shape.length > 0) {
       problems.push(...shape.map((problem) => `${indexPath}: ${problem}`));
       continue;
@@ -124,8 +168,10 @@ export async function checkPackage(root: string): Promise<CheckResult> {
     gameVersions.filter((gameVersion) => !kindsByVersion.has(gameVersion)),
   );
   problems.push(...(await stale(root, gameVersions, unchecked, generated)));
-  problems.push(...(await checkExports(root, gameVersions, kindsByVersion)));
-  return { gameVersions, compared, problems };
+  problems.push(
+    ...(await checkExports(root, gameVersions, kindsByVersion, declared)),
+  );
+  return { gameVersions, compared, problems, unmapped };
 }
 
 /**
@@ -238,30 +284,38 @@ export function validateIndex(value: unknown, gameVersion: string): string[] {
 /**
  * The field table of a Game version: present, of the right shape, of the
  * Build of the index beside it when that index is valid (`build`), and
- * written as the generator writes it. Its provenance is the Game version's
- * provenance file, which the generator writes with it.
+ * written as the generator writes it, and the table when its shape is
+ * right. Its provenance is the Game version's provenance file, which the
+ * generator writes with it.
  */
 async function checkFields(
   root: string,
   gameVersion: string,
   build: string | undefined,
-): Promise<string[]> {
+): Promise<{ problems: string[]; table?: FieldTable }> {
   const path = fieldsPath(gameVersion);
   const text = await readText(join(root, path));
-  if (text === undefined) return [`${path}: missing.`];
+  if (text === undefined) return { problems: [`${path}: missing.`] };
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
   } catch (error) {
-    return [`${path}: not JSON (${(error as Error).message}).`];
+    return { problems: [`${path}: not JSON (${(error as Error).message}).`] };
   }
   const shape = validateFields(parsed, gameVersion, build);
-  if (shape.length > 0) return shape.map((problem) => `${path}: ${problem}`);
-  return serializeFields(parsed as FieldTable) === text
-    ? []
-    : [
-        `${path}: not written as the generator writes it (one field per line, in code-point order).`,
-      ];
+  if (shape.length > 0) {
+    return { problems: shape.map((problem) => `${path}: ${problem}`) };
+  }
+  const table = parsed as FieldTable;
+  return {
+    problems:
+      serializeFields(table) === text
+        ? []
+        : [
+            `${path}: not written as the generator writes it (one field per line, in code-point order).`,
+          ],
+    table,
+  };
 }
 
 /**
@@ -302,10 +356,13 @@ async function stale(
  * The `exports` the Game versions call for: each one's overloads' entry and
  * index, then the kind entry points, on the newest Game version, the
  * declarations for TypeScript and the Lua module for typescript-to-lua
- * (whose resolver adds `.lua`), then `package.json`.
+ * (whose resolver adds `.lua`), then the fields' declarations of the newest
+ * Game version when its field table has them (`declared`, the Game
+ * versions whose table is of format 2), then `package.json`.
  */
 export function expectedExports(
   kindsByVersion: ReadonlyMap<string, readonly ObjectKind[]>,
+  declared: ReadonlySet<string> = new Set(),
 ): Record<string, unknown> {
   const gameVersions = [...kindsByVersion.keys()].sort(compareVersions);
   const exports: Record<string, unknown> = {};
@@ -322,6 +379,11 @@ export function expectedExports(
         tstl: `./${luaModule(newest, kind)}`,
       };
     }
+    if (declared.has(newest)) {
+      exports[`./${FIELDS_ENTRY}`] = {
+        types: `./${fieldDeclarationsPath(newest)}`,
+      };
+    }
   }
   exports["./package.json"] = "./package.json";
   return exports;
@@ -331,12 +393,13 @@ async function checkExports(
   root: string,
   gameVersions: readonly string[],
   kindsByVersion: ReadonlyMap<string, readonly ObjectKind[]>,
+  declared: ReadonlySet<string>,
 ): Promise<string[]> {
   if (kindsByVersion.size !== gameVersions.length) return [];
   const manifest = JSON.parse(
     (await readText(join(root, "package.json"))) ?? "{}",
   ) as { exports?: unknown };
-  const expected = expectedExports(kindsByVersion);
+  const expected = expectedExports(kindsByVersion, declared);
   return JSON.stringify(manifest.exports) === JSON.stringify(expected)
     ? []
     : [

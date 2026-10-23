@@ -12,6 +12,7 @@ WESTRING_UEVAL_UHOT=Hotkey
 WESTRING_UEVAL_UNSF=Name - Editor Suffix
 WESTRING_UEVAL_UABI=Abilities - Normal
 WESTRING_UEVAL_UA1C=Attack 1 - Cooldown Time
+WESTRING_UEVAL_UA1G=Attack 1 - Targets Allowed
 WESTRING_UEVAL_USCA=Art - Scaling Value
 WESTRING_UEVAL_UTCO=Art - Team Color
 WESTRING_UEVAL_IGOL=Gold Cost

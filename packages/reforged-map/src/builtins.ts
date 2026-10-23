@@ -6,11 +6,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
-/** The index format this package reads. */
-const INDEX_FORMAT = 1;
+/** The index formats this package reads. */
+const INDEX_FORMATS: readonly number[] = [1];
 
-/** The field table format this package reads. */
-const FIELDS_FORMAT = 1;
+/**
+ * The field table formats this package reads: format 2 adds each field's
+ * metadata type and category and the enumerations to format 1's facts, which
+ * the writer reads alone.
+ */
+const FIELDS_FORMATS: readonly number[] = [1, 2];
 
 /** The field table's file, next to the index of its Game version. */
 const FIELDS_FILE = "fields.json";
@@ -69,11 +73,30 @@ export interface FieldEntry {
   readonly field: string;
   /** Its enUS label (`Tooltip - Basic`), the second part of that comment. */
   readonly label: string;
+  /** Its metadata type (`attackType`), in a field table of format 2. */
+  readonly metaType?: string;
+  /** Its category for Object definitions (`enumeration`), in a field table of format 2. */
+  readonly category?:
+    | "number"
+    | "boolean"
+    | "text"
+    | "enumeration"
+    | "rawcode"
+    | "rawcodeList"
+    | "stringList";
+  /** The Object kind of its Rawcodes, for the categories `rawcode` and `rawcodeList`. */
+  readonly of?: string;
 }
 
 /** What this package reads of reforged-builtins' field table. */
 export interface FieldTable {
+  /** Its format: 1, or 2 with each field's metadata type and category and the enumerations. */
+  readonly format: 1 | 2;
   readonly gameVersion: string;
+  /** The raw values of each enumeration a field reads, by metadata type, in a field table of format 2. */
+  readonly enumerations?: Readonly<
+    Record<string, readonly string[] | readonly number[]>
+  >;
   /** Each Object kind's label in the World Editor's comments of war3map.wts (`Units`, `Buffs/Effects`). */
   readonly kinds: Readonly<Record<string, string | undefined>>;
   /** Each Object kind's fields, by id. */
@@ -138,7 +161,7 @@ export function loadBuiltins(projectRoot: string): BuiltinsResult {
     projectRoot,
     (index) => index,
     "an index",
-    INDEX_FORMAT,
+    INDEX_FORMATS,
   );
   return "missing" in result
     ? result
@@ -148,15 +171,15 @@ export function loadBuiltins(projectRoot: string): BuiltinsResult {
 /**
  * Resolves reforged-builtins from `projectRoot`, as {@link builtinsFiles},
  * and reads the field table of the Game version its kind entry points
- * resolve to, next to its index. An installation of reforged-builtins older
- * than its field table has none.
+ * resolve to, next to its index, in format 1 or 2. An installation of
+ * reforged-builtins older than its field table has none.
  */
 export function loadFieldTable(projectRoot: string): FieldTableResult {
   const result = loadArtefact(
     projectRoot,
     (index) => path.join(path.dirname(index), FIELDS_FILE),
     "a field table",
-    FIELDS_FORMAT,
+    FIELDS_FORMATS,
   );
   return "missing" in result
     ? result
@@ -165,14 +188,14 @@ export function loadFieldTable(projectRoot: string): FieldTableResult {
 
 /**
  * Reads a JSON artefact of the Game version the kind entry points resolve
- * to, at the path `locate` gives from its index's, if it is of `format`;
- * else why not, in words after "reforged-builtins ".
+ * to, at the path `locate` gives from its index's, if it is of one of
+ * `formats`; else why not, in words after "reforged-builtins ".
  */
 function loadArtefact(
   projectRoot: string,
   locate: (index: string) => string,
   what: string,
-  format: number,
+  formats: readonly number[],
 ): { readonly artefact: unknown } | { readonly missing: string } {
   try {
     const files = builtinsFiles(projectRoot);
@@ -194,9 +217,9 @@ function loadArtefact(
     const artefact = JSON.parse(fs.readFileSync(file, "utf8")) as {
       format?: number;
     };
-    if (artefact.format !== format) {
+    if (artefact.format === undefined || !formats.includes(artefact.format)) {
       return {
-        missing: `has ${what} of format ${String(artefact.format)}, which reforged-map does not read (it reads format ${String(format)})`,
+        missing: `has ${what} of format ${String(artefact.format)}, which reforged-map does not read (it reads format ${formats.join(" or ")})`,
       };
     }
     return { artefact };

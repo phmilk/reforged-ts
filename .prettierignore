@@ -16,7 +16,8 @@ probe/.probe/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes, the Built-in objects and the
-# field table their generator's test expects, and the pnpm lockfile.
+# field table and its declarations their generator's test expects, and the pnpm
+# lockfile.
 packages/reforged-types/overlay/
 packages/reforged-types/[0-9]*/
 packages/reforged-types/[0-9]*.d.ts
@@ -25,6 +26,7 @@ packages/reforged-types/scripts/war3-types-strict.json
 packages/reforged-builtins/[0-9]*/
 packages/reforged-builtins/[0-9]*.d.ts
 packages/reforged-builtins/test/fixtures/fields/fields.json
+packages/reforged-builtins/test/fixtures/fields/fields.d.ts
 pnpm-lock.yaml
 
 # The docs versions docs:version cuts: frozen copies of the docs tree, with the

@@ -1,5 +1,5 @@
 {
-  "format": 1,
+  "format": 2,
   "build": "3.0.0.24268",
   "gameVersion": "3.0.0",
   "kinds": {
@@ -11,51 +11,57 @@
     "doodad": "Doodads",
     "upgrade": "Upgrades"
   },
+  "enumerations": {
+    "targetList": ["air","alive","ground"],
+    "teamColor": [-1,0,1],
+    "upgradeEffect": ["rarm","ratt","rhpx"]
+  },
   "fields": {
     "unit": {
-      "ua1c": {"type":"unreal","file":"base","localizable":false,"levels":false,"field":"cool1","label":"Attack 1 - Cooldown Time"},
-      "uabi": {"type":"string","file":"base","localizable":false,"levels":false,"field":"abilList","label":"Abilities - Normal"},
-      "uhot": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Hotkey","label":"Hotkey"},
-      "umdl": {"type":"string","file":"skin","localizable":false,"levels":false,"field":"file","label":"Art - Model File"},
-      "unam": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"},
-      "unsf": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"EditorSuffix","label":"Name - Editor Suffix"},
-      "usca": {"type":"real","file":"skin","localizable":false,"levels":false,"field":"modelScale","label":"Art - Scaling Value"},
-      "utco": {"type":"int","file":"skin","localizable":false,"levels":false,"field":"teamColor","label":"Art - Team Color"}
+      "ua1c": {"type":"unreal","metaType":"unreal","category":"number","file":"base","localizable":false,"levels":false,"field":"cool1","label":"Attack 1 - Cooldown Time"},
+      "ua1g": {"type":"string","metaType":"targetList","category":"stringList","file":"base","localizable":false,"levels":false,"field":"targs1","label":"Attack 1 - Targets Allowed"},
+      "uabi": {"type":"string","metaType":"abilityList","category":"rawcodeList","of":"ability","file":"base","localizable":false,"levels":false,"field":"abilList","label":"Abilities - Normal"},
+      "uhot": {"type":"string","metaType":"char","category":"text","file":"skin","localizable":true,"levels":false,"field":"Hotkey","label":"Hotkey"},
+      "umdl": {"type":"string","metaType":"model","category":"text","file":"skin","localizable":false,"levels":false,"field":"file","label":"Art - Model File"},
+      "unam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"},
+      "unsf": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"EditorSuffix","label":"Name - Editor Suffix"},
+      "usca": {"type":"real","metaType":"real","category":"number","file":"skin","localizable":false,"levels":false,"field":"modelScale","label":"Art - Scaling Value"},
+      "utco": {"type":"int","metaType":"teamColor","category":"enumeration","file":"skin","localizable":false,"levels":false,"field":"teamColor","label":"Art - Team Color"}
     },
     "item": {
-      "igol": {"type":"int","file":"base","localizable":false,"levels":false,"field":"goldcost","label":"Gold Cost"},
-      "iper": {"type":"int","file":"base","localizable":false,"levels":false,"field":"perishable","label":"Perishable"},
-      "uhot": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Hotkey","label":"Hotkey"},
-      "unam": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"},
-      "usca": {"type":"real","file":"skin","localizable":false,"levels":false,"field":"modelScale","label":"Art - Scaling Value"}
+      "igol": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":false,"field":"goldcost","label":"Gold Cost"},
+      "iper": {"type":"int","metaType":"bool","category":"boolean","file":"base","localizable":false,"levels":false,"field":"perishable","label":"Perishable"},
+      "uhot": {"type":"string","metaType":"char","category":"text","file":"skin","localizable":true,"levels":false,"field":"Hotkey","label":"Hotkey"},
+      "unam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"},
+      "usca": {"type":"real","metaType":"real","category":"number","file":"skin","localizable":false,"levels":false,"field":"modelScale","label":"Art - Scaling Value"}
     },
     "ability": {
-      "Crs": {"type":"unreal","file":"base","localizable":false,"levels":true,"data":1,"field":"Data","label":"Chance to Miss","specific":["Acrs","ACcs.Afzy"]},
-      "Hbz1": {"type":"int","file":"base","localizable":false,"levels":true,"data":1,"field":"Data","label":"Number of Waves","specific":["AHbz","ACbz"]},
-      "Hbz2": {"type":"unreal","file":"base","localizable":false,"levels":true,"data":2,"field":"Data","label":"Damage","specific":["AHbz"]},
-      "alev": {"type":"int","file":"base","localizable":false,"levels":false,"data":0,"field":"levels","label":"Levels"},
-      "amcs": {"type":"int","file":"base","localizable":false,"levels":true,"data":0,"field":"Cost","label":"Mana Cost"},
-      "anam": {"type":"string","file":"skin","localizable":true,"levels":false,"data":0,"field":"Name","label":"Name"},
-      "atp1": {"type":"string","file":"skin","localizable":true,"levels":true,"data":0,"field":"Tip","label":"Text - Tooltip - Normal"}
+      "Crs": {"type":"unreal","metaType":"unreal","category":"number","file":"base","localizable":false,"levels":true,"data":1,"field":"Data","label":"Chance to Miss","specific":["Acrs","ACcs.Afzy"]},
+      "Hbz1": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":true,"data":1,"field":"Data","label":"Number of Waves","specific":["AHbz","ACbz"]},
+      "Hbz2": {"type":"unreal","metaType":"unreal","category":"number","file":"base","localizable":false,"levels":true,"data":2,"field":"Data","label":"Damage","specific":["AHbz"]},
+      "alev": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":false,"data":0,"field":"levels","label":"Levels"},
+      "amcs": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":true,"data":0,"field":"Cost","label":"Mana Cost"},
+      "anam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"data":0,"field":"Name","label":"Name"},
+      "atp1": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":true,"data":0,"field":"Tip","label":"Text - Tooltip - Normal"}
     },
     "buff": {
-      "fart": {"type":"string","file":"skin","localizable":false,"levels":false,"field":"Buffart","label":"Icon"},
-      "fnam": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"EditorName","label":"Editor Name"},
-      "ftip": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Bufftip","label":"Tooltip"}
+      "fart": {"type":"string","metaType":"icon","category":"text","file":"skin","localizable":false,"levels":false,"field":"Buffart","label":"Icon"},
+      "fnam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"EditorName","label":"Editor Name"},
+      "ftip": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"Bufftip","label":"Tooltip"}
     },
     "destructable": {
-      "bhps": {"type":"unreal","file":"base","localizable":false,"levels":false,"field":"HP","label":"Hit Points"},
-      "bnam": {"type":"string","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"}
+      "bhps": {"type":"unreal","metaType":"unreal","category":"number","file":"base","localizable":false,"levels":false,"field":"HP","label":"Hit Points"},
+      "bnam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":false,"field":"Name","label":"Name"}
     },
     "doodad": {
-      "dfil": {"type":"string","file":"skin","localizable":false,"levels":false,"field":"file","label":"Art - Model File"},
-      "dnam": {"type":"string","file":"base","localizable":true,"levels":false,"field":"Name","label":"Name"},
-      "dvr1": {"type":"int","file":"base","localizable":false,"levels":true,"field":"vertR"}
+      "dfil": {"type":"string","metaType":"model","category":"text","file":"skin","localizable":false,"levels":false,"field":"file","label":"Art - Model File"},
+      "dnam": {"type":"string","metaType":"string","category":"text","file":"base","localizable":true,"levels":false,"field":"Name","label":"Name"},
+      "dvr1": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":true,"field":"vertR"}
     },
     "upgrade": {
-      "gef1": {"type":"string","file":"base","localizable":false,"levels":false,"field":"effect1","label":"Effect 1"},
-      "glvl": {"type":"int","file":"base","localizable":false,"levels":false,"field":"maxlevel","label":"Levels"},
-      "gnam": {"type":"string","file":"skin","localizable":true,"levels":true,"field":"Name","label":"Name"}
+      "gef1": {"type":"string","metaType":"upgradeEffect","category":"enumeration","file":"base","localizable":false,"levels":false,"field":"effect1","label":"Effect 1"},
+      "glvl": {"type":"int","metaType":"int","category":"number","file":"base","localizable":false,"levels":false,"field":"maxlevel","label":"Levels"},
+      "gnam": {"type":"string","metaType":"string","category":"text","file":"skin","localizable":true,"levels":true,"field":"Name","label":"Name"}
     }
   }
 }
