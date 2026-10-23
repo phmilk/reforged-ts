@@ -12,15 +12,21 @@
 //   folder holds `TRIGSTR_n` in any zero padding (#484);
 // - a new block is appended (its number is the highest, so a sorted file
 //   stays sorted), with the file's own line ends, its comment line, and a
-//   blank line after it, as the editor writes every block.
+//   blank line after it, as the editor writes every block;
+// - a translation goes into the locale's table, `_Locales/<locale>.w3mod/
+//   war3map.wts`, under the same number: a table replaces war3map.wts whole
+//   in its locale, so each table is kept a whole copy of it, a string the
+//   table does not translate in its default text, and a locale that
+//   translates nothing has no table (docs/research/locales.md, #711).
 //
 // Only the blocks an edit changes are touched: every other byte of
-// war3map.wts stays as read.
+// war3map.wts and of a locale table stays as read.
 
 import { Buffer } from "node:buffer";
 import fs from "node:fs";
 import path from "node:path";
 import type {
+  Locale,
   MapFolderModel,
   Modification,
   WtsBlock,
@@ -30,6 +36,7 @@ import { encodeWts } from "./object-data-writer.js";
 import { WTS_FILE } from "./war3map-wts.js";
 
 const ENCODER = new TextEncoder();
+const DECODER = new TextDecoder("utf-8", { fatal: false, ignoreBOM: true });
 const LF = 0x0a;
 const CR = 0x0d;
 
@@ -118,6 +125,9 @@ export function newNumber(
 ): number {
   const numbers = [
     ...(model.wts?.blocks ?? []).map((block) => block.number),
+    ...[...model.locales.values()].flatMap((table) =>
+      table.blocks.map((block) => block.number),
+    ),
     ...objectDataReferences(model).keys(),
     ...foreign,
   ];
@@ -134,6 +144,14 @@ export function hasString(model: MapFolderModel, number: number): boolean {
  * the last block of its number, its comment and body replaced and every
  * other byte of it kept, when `inPlace`; else into a new block appended. A
  * map folder without war3map.wts gets one, with a byte order mark and CRLF.
+ *
+ * Then into the table of each locale, which must stay a whole copy of
+ * war3map.wts (docs/research/locales.md): its translation, else the default
+ * text, into each table the map folder has, and into a new table, a copy
+ * of war3map.wts, for a locale that has a translation and no table yet.
+ * Each table written gets every string of war3map.wts it lacks, with its
+ * default text; a table that then translates nothing goes, as the editor
+ * leaves a locale without translations without a file.
  */
 export function putString(
   model: MapFolderModel,
@@ -141,16 +159,133 @@ export function putString(
   text: string,
   comment: string,
   inPlace: boolean,
+  translations: Readonly<Partial<Record<Locale, string>>> = {},
 ): void {
-  const wts: WtsFile = model.wts ?? {
-    bom: true,
-    eol: "\r\n",
-    blocks: [],
-    after: new Uint8Array(),
-  };
+  const root = putBlock(
+    model.wts ?? emptyWts(),
+    number,
+    text,
+    comment,
+    inPlace,
+  );
+  model.wts = root;
+  model.strings.set(number, text);
+  const locales = new Set([
+    ...model.locales.keys(),
+    ...(Object.keys(translations) as Locale[]),
+  ]);
+  for (const locale of locales) {
+    const wanted = translations[locale] ?? text;
+    let table = completed(
+      model.locales.get(locale) ?? {
+        ...emptyWts(),
+        bom: root.bom,
+        eol: root.eol,
+      },
+      root,
+    );
+    const held = table.blocks.findLast((block) => block.number === number);
+    if (held?.text !== wanted) {
+      table = putBlock(table, number, wanted, comment, held !== undefined);
+    }
+    setLocaleTable(model, locale, table);
+  }
+}
+
+/**
+ * Removes every block of the number from the model's war3map.wts, with the
+ * blank lines before it, and from the table of each locale; the bytes
+ * before a first block, the head of the file, are kept, and so is anything
+ * but blank lines between blocks. A locale table that then translates
+ * nothing goes.
+ */
+export function removeString(model: MapFolderModel, number: number): void {
+  if (model.wts !== undefined) model.wts = removeBlocks(model.wts, number);
+  model.strings.delete(number);
+  for (const [locale, table] of model.locales) {
+    if (!table.blocks.some((block) => block.number === number)) continue;
+    setLocaleTable(model, locale, removeBlocks(table, number));
+  }
+}
+
+/** The text of each locale whose table translates the string of a number: its last block of the number, when its text is not the default text. */
+export function translationsOf(
+  model: MapFolderModel,
+  number: number,
+): Partial<Record<Locale, string>> {
+  const text = model.strings.get(number);
+  const translations: Partial<Record<Locale, string>> = {};
+  if (text === undefined) return translations;
+  for (const locale of [...model.locales.keys()].sort()) {
+    const block = model.locales
+      .get(locale)
+      ?.blocks.findLast((other) => other.number === number);
+    if (block !== undefined && block.text !== text) {
+      translations[locale] = block.text;
+    }
+  }
+  return translations;
+}
+
+/** Puts a locale's table into the model, or drops it when it translates nothing. */
+function setLocaleTable(
+  model: MapFolderModel,
+  locale: Locale,
+  table: WtsFile,
+): void {
+  const translates = table.blocks.some(
+    (block) => model.strings.get(block.number) !== block.text,
+  );
+  if (translates) model.locales.set(locale, table);
+  else model.locales.delete(locale);
+}
+
+/** A locale table holding every string of war3map.wts: those it lacks appended in number order, with their default text and comment. */
+function completed(table: WtsFile, root: WtsFile): WtsFile {
+  const held = new Set(table.blocks.map((block) => block.number));
+  const missing = new Map<number, WtsBlock>();
+  for (const block of root.blocks) {
+    if (!held.has(block.number)) missing.set(block.number, block);
+  }
+  let result = table;
+  for (const block of [...missing.values()].sort(
+    (a, b) => a.number - b.number,
+  )) {
+    result = putBlock(
+      result,
+      block.number,
+      block.text,
+      DECODER.decode(block.comment)
+        .replace(/\r?\n$/, "")
+        .split(/\r?\n/)
+        .join(result.eol),
+      false,
+    );
+  }
+  return result;
+}
+
+/** A war3map.wts with no block, a byte order mark and CRLF, as the World Editor writes one. */
+function emptyWts(): WtsFile {
+  return { bom: true, eol: "\r\n", blocks: [], after: new Uint8Array() };
+}
+
+/**
+ * A war3map.wts with a string written, with its comment lines (none when
+ * empty): into the last block of its number, its comment and body replaced
+ * and every other byte of it kept, when `inPlace`; else into a new block
+ * appended.
+ */
+function putBlock(
+  wts: WtsFile,
+  number: number,
+  text: string,
+  comment: string,
+  inPlace: boolean,
+): WtsFile {
   const { eol } = wts;
   const lines = {
-    comment: ENCODER.encode(`${comment}${eol}`),
+    comment: ENCODER.encode(comment === "" ? "" : `${comment}${eol}`),
     body: ENCODER.encode(
       text
         .split("\n")
@@ -164,7 +299,7 @@ export function putString(
     : -1;
   if (index !== -1) {
     const block = wts.blocks[index];
-    model.wts = {
+    return {
       ...wts,
       blocks: wts.blocks.map((other, at) =>
         at === index
@@ -178,34 +313,22 @@ export function putString(
           : other,
       ),
     };
-  } else {
-    const block: WtsBlock = {
-      number,
-      before: concat(wts.after, separator(wts)),
-      header: ENCODER.encode(`STRING ${String(number)}${eol}`),
-      comment: lines.comment,
-      open: ENCODER.encode(`{${eol}`),
-      body: lines.body,
-      close: lines.close,
-      text,
-    };
-    model.wts = {
-      ...wts,
-      blocks: [...wts.blocks, block],
-      after: ENCODER.encode(eol),
-    };
   }
-  model.strings.set(number, text);
+  const block: WtsBlock = {
+    number,
+    before: concat(wts.after, separator(wts)),
+    header: ENCODER.encode(`STRING ${String(number)}${eol}`),
+    comment: lines.comment,
+    open: ENCODER.encode(`{${eol}`),
+    body: lines.body,
+    close: lines.close,
+    text,
+  };
+  return { ...wts, blocks: [...wts.blocks, block], after: ENCODER.encode(eol) };
 }
 
-/**
- * Removes every block of the number from the model's war3map.wts, with the
- * blank lines before it; the bytes before a first block, the head of the
- * file, are kept, and so is anything but blank lines between blocks.
- */
-export function removeString(model: MapFolderModel, number: number): void {
-  const wts = model.wts;
-  if (wts === undefined) return;
+/** A war3map.wts without the blocks of a number, nor the blank lines before them. */
+function removeBlocks(wts: WtsFile, number: number): WtsFile {
   const blocks = [...wts.blocks];
   let { after } = wts;
   for (let index = blocks.length - 1; index >= 0; index--) {
@@ -222,8 +345,7 @@ export function removeString(model: MapFolderModel, number: number): void {
     if (next === undefined) after = merged;
     else blocks[index] = { ...next, before: merged };
   }
-  model.wts = { ...wts, blocks, after };
-  model.strings.delete(number);
+  return { ...wts, blocks, after };
 }
 
 /**

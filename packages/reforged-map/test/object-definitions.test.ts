@@ -276,21 +276,27 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
     ]);
   });
 
-  it("warns of the translations of a localized value it does not write yet", () => {
+  it("writes the translations of a localized value into the locales' tables (#712)", () => {
     const project = mapProject({
       "src/objects/units.ts":
         IMPORT +
-        `export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: localized("Sergeant", { deDE: "Feldwebel" }) } });\n`,
+        `export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: localized("Sergeant", { deDE: "Feldwebel", ptBR: "Sergeant" }) } });\n`,
     });
 
-    const { warnings } = mergeObjectDefinitions(project.staged, project.root);
+    const { warnings, written } = mergeObjectDefinitions(
+      project.staged,
+      project.root,
+    );
 
-    expect(objectOf(project.staged, "unit", "h002")?.name).toBe("Sergeant");
-    expect(warnings).toEqual([
-      expect.stringMatching(
-        /^src\/objects\/units\.ts, unit h002, field unam: the translations of its localized value \(deDE\)/,
-      ),
-    ]);
+    const unit = objectOf(project.staged, "unit", "h002");
+    expect(unit?.name).toBe("Sergeant");
+    // A translation equal to the default text is none: ptBR gets no table.
+    expect(
+      unit?.modifications.find((m) => m.field === "unam")?.translations,
+    ).toEqual({ deDE: "Feldwebel" });
+    expect(written).toContain("_Locales/deDE.w3mod/war3map.wts");
+    expect(written).not.toContain("_Locales/ptBR.w3mod/war3map.wts");
+    expect(warnings).toEqual([]);
   });
 
   it("does nothing, and needs neither peer, without definition files", () => {

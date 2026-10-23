@@ -16,7 +16,13 @@ import {
   type ObjectDefinitionProblem,
 } from "./definitions-error.js";
 import { displayPath, type LoadedDefinition } from "./definitions-loader.js";
-import { VALUE_TYPES, type ObjectKind, type ValueType } from "./model.js";
+import {
+  LOCALES,
+  VALUE_TYPES,
+  type Locale,
+  type ObjectKind,
+  type ValueType,
+} from "./model.js";
 
 /** A definition whose identity is checked. */
 export interface CheckedDefinition {
@@ -37,6 +43,14 @@ export interface FieldEdit {
   readonly value: number | string;
   /** The value type of a field the field table does not know (the raw escape). */
   readonly type?: ValueType;
+  /** A localized value's translations, by locale, those equal to its default text left out; absent when it has none. */
+  readonly translations?: Readonly<Partial<Record<Locale, string>>>;
+}
+
+/** A value of a field checked: what a modification stores, and a localized value's translations. */
+interface Stored {
+  readonly value: number | string;
+  readonly translations?: Readonly<Partial<Record<Locale, string>>>;
 }
 
 /** The kinds whose modifications store a level and a data pointer. */
@@ -314,11 +328,10 @@ function checkDefinitionFields(
         }
         const value = (given as Record<string, unknown>)[key];
         if (value === undefined) continue;
-        const stored = storedValue(entry, table, value, warnings, at, (m) =>
+        const stored = storedValue(entry, table, value, (m) =>
           problem(`at level ${key}, ${m}`),
         );
-        if (stored !== undefined)
-          edits.push({ field: id, level, value: stored });
+        if (stored !== undefined) edits.push({ field: id, level, ...stored });
       }
       continue;
     }
@@ -328,8 +341,8 @@ function checkDefinitionFields(
       );
       continue;
     }
-    const stored = storedValue(entry, table, given, warnings, at, problem);
-    if (stored !== undefined) edits.push({ field: id, value: stored });
+    const stored = storedValue(entry, table, given, problem);
+    if (stored !== undefined) edits.push({ field: id, ...stored });
   }
   record.raw.forEach((raw, index) => {
     const id = typeof raw.field === "string" ? raw.field : undefined;
@@ -443,14 +456,82 @@ function checkInteger(
 
 /**
  * The value a modification stores for one value of a field, by the field's
- * category; undefined, with a problem, when it is not one of the category.
+ * category, with a localized value's translations; undefined, with a
+ * problem, when it is not one of the category.
  */
 function storedValue(
   entry: FieldEntry,
   table: FieldTable,
   value: unknown,
-  warnings: string[],
-  at: string,
+  problem: (message: string) => void,
+): Stored | undefined {
+  if (entry.category === "text" && entry.localizable) {
+    const localized = localizedRecord(value);
+    if (localized !== undefined) {
+      return localizedValue(localized.text, localized.translations, problem);
+    }
+  }
+  const stored = categoryValue(entry, table, value, problem);
+  return stored === undefined ? undefined : { value: stored };
+}
+
+/**
+ * A localized value checked: a default text, and one text per locale of the
+ * game; a translation equal to the default text is left out, since a
+ * locale without a translation shows the default text.
+ */
+function localizedValue(
+  text: unknown,
+  translations: unknown,
+  problem: (message: string) => void,
+): Stored | undefined {
+  if (typeof text !== "string") {
+    problem(
+      `the default text of the localized value is not a string: ${show(text)}.`,
+    );
+    return undefined;
+  }
+  if (
+    typeof translations !== "object" ||
+    translations === null ||
+    Array.isArray(translations)
+  ) {
+    problem(
+      `the translations of the localized value are not one text per locale: ${show(translations)}.`,
+    );
+    return undefined;
+  }
+  const kept: Partial<Record<Locale, string>> = {};
+  let valid = true;
+  for (const [locale, translation] of Object.entries(translations)) {
+    if (!LOCALES.includes(locale as Locale)) {
+      problem(
+        `the localized value's locale ${locale} is not one of the game's: ${LOCALES.join(", ")}.`,
+      );
+      valid = false;
+    } else if (typeof translation !== "string") {
+      problem(
+        `the localized value's ${locale} text is not a string: ${show(translation)}.`,
+      );
+      valid = false;
+    } else if (translation !== text) {
+      kept[locale as Locale] = translation;
+    }
+  }
+  if (!valid) return undefined;
+  return Object.keys(kept).length === 0
+    ? { value: text }
+    : { value: text, translations: kept };
+}
+
+/**
+ * The value a modification stores for one value of a field, by the field's
+ * category; undefined, with a problem, when it is not one of the category.
+ */
+function categoryValue(
+  entry: FieldEntry,
+  table: FieldTable,
+  value: unknown,
   problem: (message: string) => void,
 ): number | string | undefined {
   const enumeration =
@@ -539,22 +620,6 @@ function storedValue(
       return items.join(",");
     }
     case "text": {
-      const localized = entry.localizable ? localizedRecord(value) : undefined;
-      if (localized !== undefined) {
-        if (typeof localized.text !== "string") {
-          problem(
-            `the default text of the localized value is not a string: ${show(localized.text)}.`,
-          );
-          return undefined;
-        }
-        const locales = Object.keys(localized.translations);
-        if (locales.length > 0) {
-          warnings.push(
-            `${at}: the translations of its localized value (${locales.join(", ")}) are not written yet (#712): the map holds its default text in every locale.`,
-          );
-        }
-        return localized.text;
-      }
       if (typeof value !== "string") {
         problem(
           `a string${entry.localizable ? " or a localized value" : ""} is expected, not ${show(value)}.`,

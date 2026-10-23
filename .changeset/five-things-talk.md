@@ -1,0 +1,5 @@
+---
+"reforged-map": minor
+---
+
+Localized values: the build's merge and Object sync write a `localized(text, { deDE: "…" })` value's translations under its `STRING n` into each locale's table, `_Locales/<locale>.w3mod/war3map.wts`, kept a whole copy of `war3map.wts` (a locale's table replaces it whole in game), and list each table in `war3map.imp` with flag `0x15`, as the 3.0.1 World Editor does; a locale left without translations gets no table, and a map without translations has neither touched. A second sync writes no byte. Object adoption writes a localized value, and imports `localized`, where `_Locales` translates a string. The Object manifest's snapshot holds each string's text per locale (`translations`), and Object sync reports a translation changed outside the code. The Object data editor's `setField` takes `{ translations }`, and `objects()` lists each string's `translations`. `localized` takes the new `Locale` type, the game's twelve locales; an unknown locale is an `"invalid-definition"`, and the warning of unwritten translations is gone.
