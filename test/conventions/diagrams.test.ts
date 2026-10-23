@@ -1,7 +1,8 @@
 // The convention test of the Mermaid diagrams (ADR 0019). It reads every
 // `mermaid` block of the tracked Markdown files (`.md` and `.mdx`, committed
 // or new, never ignored; not the frozen Docs versions under
-// website/versioned_docs/) and fails when a diagram drifts from the
+// website/versioned_docs/, nor the Upstream skills, which are upstream's
+// text) and fails when a diagram drifts from the
 // repository. A generated diagram (`pnpm diagrams:generate`) is read too, so
 // the generator follows the same rules as a hand-written one.
 //
@@ -14,8 +15,8 @@
 //    `%% covers: packages` or `%% covers: skills`, one line each. The diagram
 //    then cites every member of that set, in the forms below: every file of
 //    .github/workflows/, every workspace package, every folder of
-//    .claude/skills/ (the project's Agent skills; the external ones are no
-//    set). Adding a member fails until the diagram shows it.
+//    .claude/skills/ but the Upstream skills (the project's Agent skills;
+//    the Upstream and the external ones are no set). Adding a member fails until the diagram shows it.
 // 3. The identifiers it cites, each of which must exist. Only these forms are
 //    read, anywhere in the block but its `%%` comment lines; any other text is
 //    free:
@@ -41,8 +42,8 @@
 //    - An Agent skill: its slash command, `/tdd`, where no letter, digit,
 //      `_`, `-`, `.`, `:`, `@` or `/` comes right before the `/` (a path or
 //      `and/or` is not one).
-//      A folder of .claude/skills/, or a skill of `external.skills`, declared
-//      with its source.
+//      A folder of .claude/skills/, an Upstream skill among them, or a
+//      skill of `external.skills`, declared with its source.
 // 4. Its node ids are read like its labels: give a node an id with
 //    underscores, which no form above reads (`reforged_ts["reforged-ts"]`),
 //    and quote every label (`a["/tdd"]`: an unquoted `[/` opens a Mermaid
@@ -63,6 +64,7 @@ import { parse } from "yaml";
 import { describe, expect, it } from "vitest";
 
 import { read, root } from "./repository.js";
+import { upstreamSkills } from "./skills.js";
 
 // What a diagram cites, by kind, each in the order it first appears.
 interface Citations {
@@ -901,6 +903,10 @@ const skills = files.flatMap(
   (file) => /^\.claude\/skills\/([^/]+)\/SKILL\.md$/.exec(file)?.[1] ?? [],
 );
 
+// The Upstream skills: a diagram may cite one, but none covers them, and their
+// Markdown is upstream's text, not the repository's.
+const upstream = new Set(upstreamSkills());
+
 const repository: Repository = {
   known: {
     workflows: new Set([...workflows, ...externalNames("workflows")]),
@@ -912,14 +918,16 @@ const repository: Repository = {
   sets: {
     workflows: new Set(workflows),
     packages: new Set(packages),
-    skills: new Set(skills),
+    skills: new Set(skills.filter((name) => !upstream.has(name))),
   },
 };
 
 const diagrams = files
   .filter(
     (file) =>
-      /\.mdx?$/.test(file) && !file.startsWith("website/versioned_docs/"),
+      /\.mdx?$/.test(file) &&
+      !file.startsWith("website/versioned_docs/") &&
+      !upstream.has(/^\.claude\/skills\/([^/]+)\//.exec(file)?.[1] ?? ""),
   )
   .sort()
   .flatMap((file) => readDiagrams(file, read(file)));

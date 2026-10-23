@@ -1,0 +1,6 @@
+{
+  "$comment": "What both repositories run, written in the library and copied into the Template (ADR 0024). lock: the Upstream skills' lock, shared with every folder .claude/skills/<name>/ it names. skills: the repository's own Agent skills that are shared, by folder name. files: any other shared file, by its path from the root. The skills conventions test checks that every name exists.",
+  "lock": "skills-lock.json",
+  "skills": [],
+  "files": []
+}

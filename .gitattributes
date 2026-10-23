@@ -20,3 +20,13 @@ packages/reforged-map/test/fixtures/wc3libs/** -text -diff
 # eslint-plugin-reforged's fixture map folder is a copy of reforged-map's
 # editor-saved one (its PROVENANCE.md): git stores it byte for byte.
 packages/eslint-plugin-reforged/test/fixture-project/maps/*.w3m/** -text -diff
+
+# The Upstream skills are the skills CLI's copies of mattpocock/skills
+# (docs/agents/development-loop.md): git stores them byte for byte, so the
+# hash skills-lock.json records for each folder holds on every checkout. The
+# repository's own Agent skills are text, as every file; the skills
+# conventions test checks each folder has the attributes of its kind.
+.claude/skills/** -text
+.claude/skills/add-lint-rule/** text=auto eol=lf
+.claude/skills/add-wrapper/** text=auto eol=lf
+.claude/skills/new-patch/** text=auto eol=lf

@@ -32,8 +32,8 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `docs/documentation.md`: the doc comment standard: tags, their order, the required-tag matrix, the style rules and the examples.
 - `release/`: the release scripts, a private workspace package.
 - `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
-- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
-- `.claude/skills/`: the Agent skills, listed under "Agent skills".
+- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file, the Agent skills and the editor settings.
+- `.claude/skills/`: the Agent skills: the repository's, listed under "Agent skills", and the Upstream skills `skills-lock.json` names. `.claude/shared.json`: what both repositories share (ADR 0024).
 - Diagrams: the README's "Map" indexes them. Read a flow's diagram before changing the flow: the packages, a pull request's CI, the release, an issue's life, the development loop, the Claim board, a Patch's adoption, a Probe run, the docs site, the Init stages.
 
 ## Rules
@@ -79,11 +79,13 @@ The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `
 
 ### Skills
 
-One line per Agent skill: its `SKILL.md`, then its trigger. When your agent does not load skills, read the `SKILL.md` whose trigger matches the task and follow its steps.
+One line per Agent skill of the repository: its `SKILL.md`, then its trigger. When your agent does not load skills, read the `SKILL.md` whose trigger matches the task and follow its steps.
 
 - [add-lint-rule](.claude/skills/add-lint-rule/SKILL.md): guard a pitfall at lint level, or add a rule to `eslint-plugin-reforged`.
 - [add-wrapper](.claude/skills/add-wrapper/SKILL.md): cover a Native, add a member to a Wrapper, or close a Native the Wrapper coverage report lists as missing.
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
+
+The Upstream skills, the other folders of `.claude/skills/`, come unmodified from [`mattpocock/skills`](https://github.com/mattpocock/skills): [`skills-lock.json`](skills-lock.json) names them, and none is edited by hand ([Installing and updating the Upstream skills](docs/agents/development-loop.md#installing-and-updating-the-upstream-skills)).
 
 ## Definition of done
 
