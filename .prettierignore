@@ -48,11 +48,14 @@ wrapper-coverage/report.md
 *.lua
 
 # Agent worktrees and local state. The Upstream skills keep upstream's bytes
-# (skills-lock.json); the repository's own Agent skills and the list of what
-# both repositories share are formatted.
+# (skills-lock.json); the repository's own Agent skills, the list of what both
+# repositories share, the shared project settings and their hooks are
+# formatted.
 .claude/*
 !.claude/skills/
 !.claude/shared.json
+!.claude/settings.json
+!.claude/hooks/
 .claude/skills/*
 !.claude/skills/add-lint-rule/
 !.claude/skills/add-wrapper/

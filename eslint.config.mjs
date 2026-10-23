@@ -150,8 +150,10 @@ export default defineConfig(
     // Lua is not linted.
     "**/*.lua",
     // Agent worktrees, local state and the Agent skills, the Upstream skills
-    // among them, which keep upstream's bytes (skills-lock.json).
-    ".claude/**",
+    // among them, which keep upstream's bytes (skills-lock.json). The hooks of
+    // the shared project settings are linted.
+    ".claude/*",
+    "!.claude/hooks/",
   ]),
   {
     linterOptions: { reportUnusedDisableDirectives: "error" },

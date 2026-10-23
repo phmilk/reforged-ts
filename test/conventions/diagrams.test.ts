@@ -830,8 +830,9 @@ describe("the Map", () => {
 });
 
 // What the diagrams may cite from outside the repository, by source: a
-// diagram of a flow that crosses into another repository or runs an Agent
-// skill installed per machine names them. Add a name here, under its source,
+// diagram of a flow that crosses into another repository, or runs an Agent
+// skill that is not a folder of .claude/skills/, names them. Add a name here,
+// under its source,
 // before a diagram cites it, and remove it once none does: a test below
 // fails on a name no diagram cites.
 const external: Record<
@@ -845,25 +846,9 @@ const external: Record<
     "phmilk/reforged-ts-template": ["board.yml", "claim.yml", "sync.yml"],
   },
   packages: {},
-  // Skills of mattpocock/skills, each a folder of its skills/engineering,
-  // checked there on 2026-10-22: docs/agents/development-loop.md says how
-  // they are installed.
-  skills: {
-    "mattpocock/skills": [
-      "code-review",
-      "diagnosing-bugs",
-      "grill-with-docs",
-      "implement",
-      "implement-spec",
-      "prototype",
-      "research",
-      "tdd",
-      "to-spec",
-      "to-tickets",
-      "triage",
-      "wayfinder",
-    ],
-  },
+  // None: every skill a diagram cites is a folder of .claude/skills/, the
+  // Upstream skills among them (docs/agents/development-loop.md).
+  skills: {},
 };
 
 function externalNames(kind: keyof typeof external): string[] {
