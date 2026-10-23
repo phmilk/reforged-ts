@@ -1,9 +1,11 @@
 // The Agent skills of the repository, as Claude Code loads them from
 // .claude/skills/: the Upstream skills, which the skills CLI installed and
-// skills-lock.json names, and the repository's own skills, every other folder.
+// skills-lock.json names, and the repository's own skills, every other folder,
+// the Skill variants among them.
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
+import { parse } from "yaml";
 
 import { read, root } from "./repository.js";
 
@@ -75,4 +77,44 @@ export function folderHash(name: string): string {
     hash.update(readFileSync(join(folder, path)));
   }
   return hash.digest("hex");
+}
+
+// The frontmatter of a SKILL.md, parsed as YAML; undefined without one.
+export function frontmatter(text: string): Record<string, unknown> | undefined {
+  const block = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1];
+  const fields: unknown = block === undefined ? undefined : parse(block);
+  return typeof fields === "object" && fields !== null
+    ? (fields as Record<string, unknown>)
+    : undefined;
+}
+
+// A Skill variant, as its SKILL.md's frontmatter declares it: its folder, its
+// `name`, and under `metadata` what it records of its source, the Upstream
+// skill's name (`upstream`) and the lock's version of it, that skill's
+// `computedHash` (`upstream-hash`); docs/agents/development-loop.md, "Skill
+// variants". The fields are as written, a string or not.
+export interface Variant {
+  folder: string;
+  name: unknown;
+  upstream: unknown;
+  upstreamHash: unknown;
+}
+
+// The Skill variants among the repository skills: those whose frontmatter
+// records `upstream` or `upstream-hash`.
+export function variants(): Variant[] {
+  return repositorySkills().flatMap((folder) => {
+    const path = join(root, skillsFolder, folder, "SKILL.md");
+    if (!existsSync(path)) return [];
+    const fields = frontmatter(readFileSync(path, "utf8"));
+    const metadata = fields?.metadata;
+    if (typeof metadata !== "object" || metadata === null) return [];
+    const { upstream, "upstream-hash": upstreamHash } = metadata as Record<
+      string,
+      unknown
+    >;
+    return upstream === undefined && upstreamHash === undefined
+      ? []
+      : [{ folder, name: fields?.name, upstream, upstreamHash }];
+  });
 }

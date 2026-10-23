@@ -6,6 +6,9 @@
 // - a folder is neither an Upstream skill the lock names, with the content
 //   the lock records, nor a repository skill with its SKILL.md;
 // - a repository skill takes an Upstream skill's name;
+// - a Skill variant takes an Upstream skill's name, or records an Upstream
+//   skill the lock does not name, or a version of it that is not the lock's
+//   current one (docs/agents/development-loop.md, "Skill variants");
 // - the "Skills" list of AGENTS.md misses a repository skill or names an
 //   Upstream one;
 // - the list of what is shared names a lock, skill or file that is not there;
@@ -25,21 +28,59 @@ import { section } from "./markdown.js";
 import { read, root } from "./repository.js";
 import {
   folderHash,
+  frontmatter,
   lock,
+  type LockEntry,
   lockPath,
   repositorySkills,
   skillFiles,
   skillFolders,
   skillsFolder,
   upstreamSkills,
+  type Variant,
+  variants,
 } from "./skills.js";
 
-// The `name` of a SKILL.md's frontmatter, unquoted; undefined without one.
+// The `name` of a SKILL.md's frontmatter; undefined without one.
 function frontmatterName(text: string): string | undefined {
-  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1];
-  return frontmatter
-    ?.match(/^name:[ \t]*(.*?)[ \t]*$/m)?.[1]
-    ?.replace(/^(["'])(.*)\1$/, "$2");
+  const name = frontmatter(text)?.name;
+  return typeof name === "string" ? name : undefined;
+}
+
+// What is wrong with the Skill variants against the lock's entries: a variant
+// that takes an Upstream skill's name, records half of its source, records an
+// Upstream skill the lock does not name, or a hash the lock has moved past.
+function variantProblems(
+  found: readonly Variant[],
+  entries: Record<string, LockEntry>,
+): string[] {
+  const review = `review the variant against the Upstream skill's steps, then record the lock's hash (docs/agents/development-loop.md, "Skill variants")`;
+  const named = (each: unknown): each is string =>
+    typeof each === "string" && Object.hasOwn(entries, each);
+  return found.flatMap(({ folder, name, upstream, upstreamHash }) => {
+    const names = [...new Set([folder, name].filter(named))];
+    if (names.length > 0) {
+      return [
+        `${folder}: a Skill variant takes the Upstream skill's name ${names.join(", ")}`,
+      ];
+    }
+    if (typeof upstream !== "string" || typeof upstreamHash !== "string") {
+      return [
+        `${folder}: a Skill variant records metadata.upstream (${String(upstream)}) and metadata.upstream-hash (${String(upstreamHash)}), both strings`,
+      ];
+    }
+    const entry = named(upstream) ? entries[upstream] : undefined;
+    if (entry === undefined) {
+      return [
+        `${folder}: built from the Upstream skill ${upstream}, which ${lockPath} does not name`,
+      ];
+    }
+    return upstreamHash === entry.computedHash
+      ? []
+      : [
+          `${folder}: built from ${upstream} at ${upstreamHash}, and ${lockPath} has it at ${entry.computedHash}: ${review}`,
+        ];
+  });
 }
 
 const upstream = upstreamSkills();
@@ -51,6 +92,10 @@ describe("the Agent skills of .claude/skills/", () => {
       "tdd",
     );
     expect(repository, "the repository's own skills").toContain("add-wrapper");
+    expect(
+      variants().map(({ folder }) => folder),
+      "the Skill variants",
+    ).toContain("write-spec");
   });
 
   it("has every Upstream skill of the lock, from mattpocock/skills, with the content the lock records", () => {
@@ -93,6 +138,15 @@ describe("the Agent skills of .claude/skills/", () => {
           ];
     });
     expect(problems, "the repository skills of .claude/skills/").toEqual([]);
+  });
+
+  // An update that moves an Upstream skill's hash turns this red for every
+  // variant built from it, until the variant is reviewed.
+  it("has every Skill variant record an Upstream skill of the lock, at the lock's current hash, under its own name", () => {
+    expect(
+      variantProblems(variants(), lock()),
+      `the Skill variants of .claude/skills/ against ${lockPath}`,
+    ).toEqual([]);
   });
 
   it("lists under Skills in AGENTS.md every repository skill and no Upstream skill", () => {
@@ -169,6 +223,60 @@ describe("the Agent skills of .claude/skills/", () => {
     expect(problems, "the attributes of the files of .claude/skills/").toEqual(
       [],
     );
+  });
+});
+
+describe("the check of the Skill variants", () => {
+  const entries: Record<string, LockEntry> = {
+    "to-spec": {
+      source: "mattpocock/skills",
+      sourceType: "github",
+      skillPath: "skills/engineering/to-spec/SKILL.md",
+      computedHash: "current",
+    },
+  };
+  const variant = (fields: Partial<Variant>): Variant => ({
+    folder: "write-spec",
+    name: "write-spec",
+    upstream: "to-spec",
+    upstreamHash: "current",
+    ...fields,
+  });
+
+  it("passes a variant recording the lock's current hash", () => {
+    expect(variantProblems([variant({})], entries)).toEqual([]);
+  });
+
+  it("fails a variant that takes an Upstream skill's name", () => {
+    expect(variantProblems([variant({ name: "to-spec" })], entries)).toEqual([
+      expect.stringContaining("takes the Upstream skill's name to-spec"),
+    ]);
+  });
+
+  it("fails a variant recording an Upstream skill the lock does not name", () => {
+    expect(
+      variantProblems([variant({ upstream: "not-in-lock" })], entries),
+    ).toEqual([
+      expect.stringContaining(
+        "not-in-lock, which skills-lock.json does not name",
+      ),
+    ]);
+  });
+
+  it("fails a variant recording a hash the lock has moved past", () => {
+    expect(
+      variantProblems([variant({ upstreamHash: "older" })], entries),
+    ).toEqual([
+      expect.stringContaining(
+        "to-spec at older, and skills-lock.json has it at current",
+      ),
+    ]);
+  });
+
+  it("fails a variant recording half of its source", () => {
+    expect(
+      variantProblems([variant({ upstreamHash: undefined })], entries),
+    ).toEqual([expect.stringContaining("metadata.upstream-hash (undefined)")]);
   });
 });
 
