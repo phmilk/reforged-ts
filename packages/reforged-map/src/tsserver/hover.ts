@@ -8,6 +8,7 @@ import type {
   RawcodeObject,
   RawcodeConstant,
 } from "../lookup.js";
+import { displayPath } from "../definitions-loader.js";
 import { UNNAMED } from "../names.js";
 import type { RawcodeLiteral } from "./literal.js";
 
@@ -18,12 +19,15 @@ import type { RawcodeLiteral } from "./literal.js";
  * @param literal - The literal, in its form.
  * @param result - What the lookup returned for it.
  * @param gameVersion - The Game version of the index the lookup read.
+ * @param projectRoot - The Map project's root, which the file of an
+ *   Object definition is shown relative to.
  * @returns Paragraphs separated by blank lines.
  */
 export function rawcodeHoverText(
   literal: RawcodeLiteral,
   result: RawcodeLookupResult,
   gameVersion: string | undefined,
+  projectRoot: string,
 ): string {
   const patch = `Patch ${gameVersion ?? "(unknown)"}`;
   const paragraphs: string[] = [];
@@ -43,13 +47,13 @@ export function rawcodeHoverText(
         );
       }
       for (const object of result.objects) {
-        paragraphs.push(objectBlock(object, patch));
+        paragraphs.push(objectBlock(object, patch, projectRoot));
       }
       break;
     }
     case "not-in-game-data-set": {
       for (const object of result.objects) {
-        paragraphs.push(objectBlock(object, patch));
+        paragraphs.push(objectBlock(object, patch, projectRoot));
       }
       for (const object of result.objects) {
         const name = object.name === undefined ? "" : ` (${object.name})`;
@@ -111,9 +115,22 @@ function numberLine(
   return `${number} is the Rawcode ${code(rawcode)}.`;
 }
 
-/** One object: its sentence, then its race, its Game data sets and its constant. */
-function objectBlock(object: RawcodeObject, patch: string): string {
+/**
+ * One object: its sentence, the Object definition that defines it, then its
+ * race, its Game data sets and its constant, in the order of the generated
+ * TSDoc.
+ */
+function objectBlock(
+  object: RawcodeObject,
+  patch: string,
+  projectRoot: string,
+): string {
   const lines = [objectSentence(object, patch)];
+  if (object.origin !== "builtin" && object.definitionFile !== undefined) {
+    lines.push(
+      `Defined in code, by the Object definition in ${code(displayPath(projectRoot, object.definitionFile))}.`,
+    );
+  }
   if (object.race !== undefined) lines.push(`Race: ${object.race}.`);
   if (object.origin !== "custom" && object.gameDataSets.length > 0) {
     const sets = object.gameDataSets.map((set) => set.label);

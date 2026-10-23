@@ -2,8 +2,9 @@
 // reforged-map's World Editor-saved one (fixture-project/maps/), through the
 // workspace's real reforged-map and reforged-builtins; and through a stub
 // lookup (support/stub-rawcode-lookup.cjs) for the unavailable and throwing
-// cases. The discovery's table of cases is shared with reforged-map's
-// TypeScript plugin's tests (#694): reforged-map's
+// cases; and on a real Map project whose Object definition throws (#708).
+// The discovery's table of cases is shared with reforged-map's TypeScript
+// plugin's tests (#694): reforged-map's
 // test/fixtures/map-folder-discovery.json.
 import {
   cpSync,
@@ -482,6 +483,69 @@ describe("a World Editor save between two lint runs", () => {
     expect(lint()).toEqual(["unknownRawcode"]);
     vi.setSystemTime(Date.now() + 1500);
     expect(lint()).toEqual([]);
+  });
+});
+
+describe("a Map project with Object definitions", () => {
+  const warnings = spyOnWarnings();
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  /**
+   * A Map project whose map folder is at its root and whose definitions are
+   * in src/objects/, over the workspace's reforged-map. Its root lies in the
+   * package, where reforged-builtins and typescript resolve.
+   */
+  function definitionsProject(files: Readonly<Record<string, string>>) {
+    const root = mkdtempSync(path.join(fixtureProjectRoot, "..", "root-"));
+    temporary.push(root);
+    cpSync(mapFolder, path.join(root, "my-map.w3m"), { recursive: true });
+    for (const [name, contents] of Object.entries(files)) {
+      const file = path.join(root, name);
+      mkdirSync(path.dirname(file), { recursive: true });
+      writeFileSync(file, contents);
+    }
+    const plugin = createPlugin({
+      projectRoot: root,
+      files: { rawcodeLookup: realLookup },
+    });
+    return { root, plugin };
+  }
+
+  const units =
+    'import { defineUnit } from "reforged-map/objects";\nexport const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: "Sergeant" } });\n';
+  const code =
+    'const a = FourCC("h002");\nconst b = FourCC("zzzz");\nconst c = FourCC("hfo");';
+
+  it("knows an object a definition defines", () => {
+    const { plugin } = definitionsProject({ "src/objects/units.ts": units });
+    expect(
+      lintWithRecommended(code, plugin).map((each) => each.messageId),
+    ).toEqual(["unknownRawcode", "malformedRawcode"]);
+    expect(warnings()).toEqual([]);
+  });
+
+  it("reports no unknown Rawcode while a definition throws, warns with the reason naming its file, and resumes once it is fixed", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const { root, plugin } = definitionsProject({
+      "src/objects/units.ts": units,
+      "src/objects/broken.ts": 'throw new Error("no tiers");\n',
+    });
+    const lint = () =>
+      lintWithRecommended(code, plugin).map((each) => each.messageId);
+    expect(lint()).toEqual(["malformedRawcode"]);
+    expect(lint()).toEqual(["malformedRawcode"]);
+    expect(warnings()).toHaveLength(1);
+    expect(warnings()[0]).toMatch(
+      /^eslint-plugin-reforged: reforged\/no-unknown-rawcodes checks only that a Rawcode is four characters: The Object definitions could not be loaded: .*src\/objects\/broken\.ts.*no tiers/,
+    );
+    writeFileSync(
+      path.join(root, "src", "objects", "broken.ts"),
+      "export {};\n",
+    );
+    vi.setSystemTime(Date.now() + 1500);
+    expect(lint()).toEqual(["unknownRawcode", "malformedRawcode"]);
   });
 });
 
