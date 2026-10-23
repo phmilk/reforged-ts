@@ -73,3 +73,7 @@ A description of the things that are out of scope for this spec.
 Any further notes about the feature.
 
 </spec-template>
+
+## Done
+
+The Spec is written when its issue exists with the `ready-for-agent` and `spec` labels and no assignee, and its number and link are reported.

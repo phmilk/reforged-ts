@@ -206,4 +206,26 @@ describe("compareDiagrams", () => {
       regions: 1,
     });
   });
+
+  it("skips the Upstream skills the lock names, and reads the repository's own skills", async () => {
+    const root = await repository({
+      "skills-lock.json": JSON.stringify({
+        version: 1,
+        skills: { tdd: { source: "mattpocock/skills" } },
+      }),
+      "README.md": `${region("one")}\n`,
+      ".claude/skills/tdd/SKILL.md": `${region("one", "upstream --> text")}\n`,
+      ".claude/skills/add-wrapper/SKILL.md": `${region("one")}\n`,
+    });
+
+    expect(
+      (await compareDiagrams(root, [diagram("one", "README.md")])).problems,
+    ).toEqual([
+      {
+        kind: "unknown",
+        message:
+          ".claude/skills/add-wrapper/SKILL.md: a region of the diagram one, which `pnpm diagrams:generate` writes in README.md only. Remove it, or move it there.",
+      },
+    ]);
+  });
 });

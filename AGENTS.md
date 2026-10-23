@@ -86,7 +86,7 @@ One line per Agent skill of the repository: its `SKILL.md`, then its trigger. Wh
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
 - [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one.
 
-The Upstream skills, the other folders of `.claude/skills/`, come unmodified from [`mattpocock/skills`](https://github.com/mattpocock/skills): [`skills-lock.json`](skills-lock.json) names them, and none is edited by hand ([Installing and updating the Upstream skills](docs/agents/development-loop.md#installing-and-updating-the-upstream-skills)).
+The other folders of `.claude/skills/` are the Upstream skills of [`mattpocock/skills`](https://github.com/mattpocock/skills), at the version [`skills-lock.json`](skills-lock.json) names.
 
 ## Definition of done
 

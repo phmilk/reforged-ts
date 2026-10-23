@@ -26,9 +26,10 @@ import { fileURLToPath, URL } from "node:url";
 // (`mattpocock-skills@claude-plugins-official`).
 const UPSTREAM_PLUGIN = "mattpocock-skills";
 
-// The repository's Agent skills: the folders of .claude/skills/, one folder up
-// from this script's, sorted.
-function repositorySkills() {
+// Every folder of .claude/skills/, the Upstream skills' and the repository's
+// own, one folder up from this script's, sorted. It mirrors skillFolders() of
+// test/conventions/skills.ts, kept apart because the hook is dependency-free.
+function skillFolders() {
   const folder = fileURLToPath(new URL("../skills/", import.meta.url));
   if (!existsSync(folder)) return [];
   return readdirSync(folder, { withFileTypes: true })
@@ -104,7 +105,7 @@ function warning(user, skills, plugins) {
     paragraphs.push(
       `Your personal skills shadow this repository's Agent skills of the same name: ${skills.join(", ")}. ` +
         `Claude Code runs a personal skill (${join(user, "skills")}) instead of the project skill, ` +
-        `so these sessions run your copies, not the repository's (.claude/skills/). ` +
+        `so the Agent runs your copies, not the repository's (.claude/skills/). ` +
         `Remove them with: npx skills remove -g ${skills.join(" ")}`,
     );
   }
@@ -121,7 +122,7 @@ try {
   const user = userFolder();
   const message = warning(
     user,
-    personalSkills(user, repositorySkills()),
+    personalSkills(user, skillFolders()),
     upstreamPlugins(user),
   );
   if (message !== undefined) {

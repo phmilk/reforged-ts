@@ -2,9 +2,9 @@
 // `mermaid` block of the tracked Markdown files (`.md` and `.mdx`, committed
 // or new, never ignored; not the frozen Docs versions under
 // website/versioned_docs/, nor the Upstream skills, which are upstream's
-// text) and fails when a diagram drifts from the
-// repository. A generated diagram (`pnpm diagrams:generate`) is read too, so
-// the generator follows the same rules as a hand-written one.
+// text) and fails when a diagram drifts from the repository. A generated
+// diagram (`pnpm diagrams:generate`) is read too, so the generator follows
+// the same rules as a hand-written one.
 //
 // The rules a diagram follows:
 //
@@ -15,8 +15,9 @@
 //    `%% covers: packages` or `%% covers: skills`, one line each. The diagram
 //    then cites every member of that set, in the forms below: every file of
 //    .github/workflows/, every workspace package, every folder of
-//    .claude/skills/ but the Upstream skills (the project's Agent skills;
-//    the Upstream and the external ones are no set). Adding a member fails until the diagram shows it.
+//    .claude/skills/ but the Upstream skills (the repository's own Agent
+//    skills; neither the Upstream skills nor the skills of `external.skills`
+//    form a set). Adding a member fails until the diagram shows it.
 // 3. The identifiers it cites, each of which must exist. Only these forms are
 //    read, anywhere in the block but its `%%` comment lines; any other text is
 //    free:
@@ -832,9 +833,8 @@ describe("the Map", () => {
 // What the diagrams may cite from outside the repository, by source: a
 // diagram of a flow that crosses into another repository, or runs an Agent
 // skill that is not a folder of .claude/skills/, names them. Add a name here,
-// under its source,
-// before a diagram cites it, and remove it once none does: a test below
-// fails on a name no diagram cites.
+// under its source, before a diagram cites it, and remove it once none does:
+// a test below fails on a name no diagram cites.
 const external: Record<
   "workflows" | "packages" | "skills",
   Record<string, string[]>
