@@ -5,6 +5,11 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { main } from "./measure/cli.js";
 import {
+  formatReload,
+  main as mainDefinitions,
+  measureReload,
+} from "./measure/definitions.js";
+import {
   customUnitRawcode,
   formatMeasurement,
   mapProjectSource,
@@ -58,5 +63,31 @@ describe("the check-time measurement of the map's overloads", () => {
     ]);
     expect(main(["--", "--runs", "1"], output, 2, [2])).toBe(0);
     expect(out.join("")).toMatch(/Custom units and without:\n- 2 calls: /);
+  }, 60_000);
+});
+
+describe("the reload cost of the Rawcode lookup over Object definitions", () => {
+  it("loads every definition file, then reloads after each edit of one", () => {
+    const result = measureReload({ files: 3, runs: 4 });
+
+    expect(result.files).toBe(3);
+    expect(result.reload).toBeGreaterThan(0);
+    expect(formatReload(result)).toMatch(
+      /^Rawcode lookup over 3 Object definition files: first load \d+ ms, reload after editing one file \d+ ms \(median\), \d+ ms at most\.\n$/,
+    );
+  }, 60_000);
+
+  it("prints the measurement of the command, and exits 2 on a bad argument", () => {
+    const out: string[] = [];
+    const err: string[] = [];
+    const output = {
+      stdout: (text: string) => out.push(text),
+      stderr: (text: string) => err.push(text),
+    };
+
+    expect(mainDefinitions(["--runs", "0"], output)).toBe(2);
+    expect(err).toEqual(["Usage: map:measure:definitions [--runs <n>]\n"]);
+    expect(mainDefinitions(["--", "--runs", "1"], output, 2)).toBe(0);
+    expect(out.join("")).toMatch(/over 2 Object definition files/);
   }, 60_000);
 });

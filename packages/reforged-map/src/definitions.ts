@@ -47,7 +47,7 @@ import {
   type ObjectManifest,
 } from "./object-manifest.js";
 
-/** Where the Object definitions and the Object manifest of a Map project are, for {@link mergeObjectDefinitions} and {@link syncObjectDefinitions}. */
+/** Where the Object definitions and the Object manifest of a Map project are, for {@link mergeObjectDefinitions}, {@link syncObjectDefinitions}, `generateObjects` and `openRawcodeLookup`. */
 export interface ObjectDefinitionsOptions {
   /**
    * The definitions folder, absolute or relative to the Map project's root:
@@ -138,7 +138,7 @@ export function projectPaths(
  * when the definitions folder holds no definition file, so that a Map project
  * without definitions needs neither peer.
  */
-function loadObjectDefinitions(
+export function loadObjectDefinitions(
   paths: DefinitionPaths,
 ): LoadedDefinitions | undefined {
   if (definitionFiles(paths.definitionsFolder).length === 0) return undefined;
