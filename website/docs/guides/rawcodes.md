@@ -606,13 +606,13 @@ Go to definition goes to the declaration of each object's constant: in `reforged
 
 ### The map folder
 
-Without an option, the plugin reads the one map folder under the project's `maps/`, a folder whose name ends in `.w3x` or `.w3m`, as the lint rule does: the Template keeps its map there. A map folder elsewhere is named by `mapFolder` in the plugin's entry, absolute or relative to the project root, the folder of the Map project's `package.json`, so `tests/lua/tsconfig.json`, which extends the same entry, reads the same folder:
+Without an option, the plugin reads the one map folder at the project's root, a folder whose name ends in `.w3x` or `.w3m`, as the lint rule does: the Template keeps its map there, and the Creation CLI names it after the project (`my-map.w3m`). With none at the root, it falls back to the one under `maps/`, where a Map project made before the move keeps its map, until 1.0.0. One at the root wins over any under `maps/`. A map folder elsewhere is named by `mapFolder` in the plugin's entry, absolute or relative to the project root, the folder of the Map project's `package.json`, so `tests/lua/tsconfig.json`, which extends the same entry, reads the same folder:
 
 ```json
-"plugins": [{ "name": "reforged-map/typescript-plugin", "mapFolder": "maps/my-map.w3x" }]
+"plugins": [{ "name": "reforged-map/typescript-plugin", "mapFolder": "game/my-map.w3x" }]
 ```
 
-With no map folder or several under `maps/`, with the map folder missing or unreadable, the hover of a Rawcode literal is one line, "Rawcode details are unavailable:", then the reason. The hover resumes on its own once the cause is fixed, with no restart.
+With no map folder, with several at the root, or none there and several under `maps/`, with the map folder missing or unreadable, the hover of a Rawcode literal is one line, "Rawcode details are unavailable:", then the reason. The hover resumes on its own once the cause is fixed, with no restart.
 
 ### The editor's TypeScript
 
@@ -638,13 +638,13 @@ A literal no overload knows still compiles: `FourCC("h00A")` returns an `Unknown
 It reads the literals the hover reads, through the same lookup, so the rule, the hover and the generated code agree, and its suggestions are the Rawcodes the hover lists one edit away. It follows a World Editor save without a build, and writes nothing. A Rawcode of the wrong Object kind is the type checker's, and a Rawcode two kinds share passes.
 
 :::note[In the Template]
-The Template has `reforged-map` and `reforged-builtins` ([phmilk/reforged-ts-template#68](https://github.com/phmilk/reforged-ts-template/issues/68), [phmilk/reforged-ts-template#87](https://github.com/phmilk/reforged-ts-template/issues/87)) and keeps its map folder under `maps/`, where the rule finds it: nothing to set. A Map project generated earlier installs both as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says. A map folder elsewhere is named by `settings.reforged.mapFolder` in `eslint.config.mjs`, absolute or relative to the project root:
+The Template has `reforged-map` and `reforged-builtins` ([phmilk/reforged-ts-template#68](https://github.com/phmilk/reforged-ts-template/issues/68), [phmilk/reforged-ts-template#87](https://github.com/phmilk/reforged-ts-template/issues/87)) and keeps its map folder at its root, where the rule finds it, as it does one under `maps/` until 1.0.0: nothing to set. A Map project generated earlier installs both as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says. A map folder elsewhere is named by `settings.reforged.mapFolder` in `eslint.config.mjs`, absolute or relative to the project root:
 
 ```js
 {
   settings: {
     reforged: {
-      mapFolder: "maps/my-map.w3x";
+      mapFolder: "game/my-map.w3x";
     }
   }
 }
