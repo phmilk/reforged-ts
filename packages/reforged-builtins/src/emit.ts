@@ -297,12 +297,12 @@ export function list(items: string[]): string {
 }
 
 /** A name as TSDoc text: TSDoc's special characters escaped, and no comment end. */
-function escape(text: string): string {
+export function escape(text: string): string {
   return text.replace(/[\\@{}<>`]/g, "\\$&").replace(/\*\//g, "*\\/");
 }
 
 /** A doc comment of `lines`, indented by `indent`. */
-function docComment(indent: string, lines: string[]): string[] {
+export function docComment(indent: string, lines: string[]): string[] {
   return [
     `${indent}/**`,
     ...lines.map((line) =>

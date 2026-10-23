@@ -2,17 +2,26 @@
  * The field table of a Game version (#634, #632): per Object kind, the label
  * the World Editor writes in `war3map.wts` comments, and per field the facts
  * a writer of Object data needs to write an edit as the editor would, with
- * no game file at run time. It is built from the kinds' `*MetaData.slk` and
- * the enUS editor strings, then the overrides below, and written
- * byte-stably like the index (`./model.ts`).
+ * no game file at run time. Format 2 (#702) adds each field's metadata type
+ * and its category for Object definitions, and the raw values of the
+ * enumerations, from the World Editor's data (`UI/UnitEditorData.txt`). It
+ * is built from the kinds' `*MetaData.slk`, the enUS editor strings and the
+ * editor data, then the overrides below, and written byte-stably like the
+ * index (`./model.ts`).
  */
-import { KIND_CONSTANTS } from "./emit.js";
+import { KIND_CONSTANTS, list } from "./emit.js";
 import { byCodePoint, type ObjectKind } from "./model.js";
 import type { Profile } from "./profile.js";
 import type { SlkTable } from "./slk.js";
 
-/** The field table's shape; it changes only with an incompatible shape, in a major. */
-export const FIELDS_FORMAT = 1;
+/**
+ * The field table's shape the generator writes: 2, which adds each field's
+ * metadata type and category and the enumerations to format 1.
+ */
+export const FIELDS_FORMAT = 2;
+
+/** The formats a committed table may have: 1 for a Game version generated before format 2 (3.0.0). */
+export const READ_FIELDS_FORMATS: readonly number[] = [1, 2];
 
 /** The type a modification of the field stores: Object data's 0 to 3. */
 export type ValueType = "int" | "real" | "unreal" | "string";
@@ -20,9 +29,40 @@ export type ValueType = "int" | "real" | "unreal" | "string";
 /** The file of a kind a field goes in: `war3map.w3u` or `war3mapSkin.w3u`. */
 export type FieldFile = "base" | "skin";
 
+/**
+ * What a field holds, for Object definitions: a number, a boolean (0 or 1),
+ * a text, one raw value of an enumeration, a Rawcode of an Object kind, a
+ * list of Rawcodes of a kind, or a list of strings.
+ */
+export type Category =
+  | "number"
+  | "boolean"
+  | "text"
+  | "enumeration"
+  | "rawcode"
+  | "rawcodeList"
+  | "stringList";
+
+/** The categories, in the order the README lists them. */
+export const CATEGORIES: readonly Category[] = [
+  "number",
+  "boolean",
+  "text",
+  "enumeration",
+  "rawcode",
+  "rawcodeList",
+  "stringList",
+];
+
 /** One field of an Object kind. */
 export interface FieldEntry {
   type: ValueType;
+  /** Its metadata type, the `type` column of its `*MetaData.slk`: `attackType`. Format 2. */
+  metaType?: string;
+  /** Its category for Object definitions. Format 2. */
+  category?: Category;
+  /** The Object kind of its Rawcodes, for the categories `rawcode` and `rawcodeList`. */
+  of?: ObjectKind;
   file: FieldFile;
   /**
    * Whether the editor writes a value of it as a `TRIGSTR` into
@@ -44,6 +84,9 @@ export interface FieldEntry {
   specific?: string[];
 }
 
+/** The raw values of an enumeration, as the editor data lists them: integers for a type stored as `int`. */
+export type EnumerationValues = string[] | number[];
+
 /** The field table of one Game version. */
 export interface FieldTable {
   format: number;
@@ -53,6 +96,11 @@ export interface FieldTable {
   gameVersion: string;
   /** Each kind's label in the editor's comments: `Units`, `Buffs/Effects`. */
   kinds: Record<ObjectKind, string>;
+  /**
+   * The raw values of each enumeration a field reads, by metadata type, in
+   * the editor data's order. Format 2.
+   */
+  enumerations?: Record<string, EnumerationValues>;
   /** Each kind's fields by id. */
   fields: Record<ObjectKind, Record<string, FieldEntry>>;
 }
@@ -191,6 +239,180 @@ const TEXT_TYPES: ReadonlySet<string> = new Set([
   "stringList",
 ]);
 
+/** A metadata type's category, and what it reads. */
+export interface MappedCategory {
+  category: Category;
+  /** The Object kind of its Rawcodes, for `rawcode` and `rawcodeList`. */
+  of?: ObjectKind;
+  /**
+   * Whether its raw values, or a list's items, are an enumeration of the
+   * editor data, a section named after the type: always for `enumeration`.
+   */
+  enumerated?: boolean;
+}
+
+const RAWCODE_OF = (of: ObjectKind): MappedCategory => ({
+  category: "rawcode",
+  of,
+});
+const RAWCODES_OF = (of: ObjectKind): MappedCategory => ({
+  category: "rawcodeList",
+  of,
+});
+const NUMBER: MappedCategory = { category: "number" };
+const TEXT: MappedCategory = { category: "text" };
+const ENUMERATION: MappedCategory = {
+  category: "enumeration",
+  enumerated: true,
+};
+const STRINGS: MappedCategory = { category: "stringList" };
+const ENUMERATED_STRINGS: MappedCategory = {
+  category: "stringList",
+  enumerated: true,
+};
+
+/**
+ * Each metadata type's category for Object definitions (#702), the
+ * generator's own table. A type it does not map takes its value type's
+ * category (`valueTypeCategory`): a number, or a text for a string; the
+ * generator warns of it and `builtins:check` lists it, so that a new
+ * Patch's type gets a decision and never makes a field unwritable.
+ *
+ * - The editor's `*Flags` of bits (`channelFlags`, `morphFlags`, ...) are
+ *   numbers: the editor data lists one value per bit, and a field holds
+ *   their sum. The other enumerations of integers (`teamColor`,
+ *   `deathType`, `attackBits`) hold one of their values.
+ * - A list of Rawcodes is of the kind its type names; the effects of
+ *   `effectList` are buffs, as the Object Editor's Buffs/Effects tab lists
+ *   them. `techList` mixes units, upgrades and the editor's `TWN` codes, so
+ *   it is a list of strings.
+ * - `destructableCategory` and `doodadCategory` are not mapped: their values
+ *   are in other files than the editor data's, and no decision is made yet.
+ */
+export const METADATA_CATEGORIES: Readonly<Record<string, MappedCategory>> = {
+  abilCode: RAWCODE_OF("ability"),
+  abilityList: RAWCODES_OF("ability"),
+  abilityModifierStats: ENUMERATION,
+  abilitySkinList: RAWCODES_OF("ability"),
+  aiBuffer: ENUMERATION,
+  armorType: ENUMERATION,
+  attackBits: ENUMERATION,
+  attackType: ENUMERATION,
+  attributeType: ENUMERATION,
+  bool: { category: "boolean" },
+  buffList: RAWCODES_OF("buff"),
+  channelFlags: NUMBER,
+  channelType: ENUMERATION,
+  char: TEXT,
+  combatSound: ENUMERATION,
+  damageType: ENUMERATION,
+  deathType: ENUMERATION,
+  defenseType: ENUMERATION,
+  defenseTypeInt: ENUMERATION,
+  detectionType: ENUMERATION,
+  effectList: RAWCODES_OF("buff"),
+  equipmentType: ENUMERATION,
+  fullFlags: ENUMERATION,
+  heroAbilityList: RAWCODES_OF("ability"),
+  icon: TEXT,
+  int: NUMBER,
+  intList: STRINGS,
+  interactionFlags: NUMBER,
+  itemClass: ENUMERATION,
+  itemList: RAWCODES_OF("item"),
+  itemTag: ENUMERATION,
+  lightningEffect: ENUMERATION,
+  lightningList: STRINGS,
+  model: TEXT,
+  modelList: STRINGS,
+  morphFlags: NUMBER,
+  moveType: ENUMERATION,
+  occlusionType: ENUMERATION,
+  occlusionType2: ENUMERATION,
+  orderString: TEXT,
+  pathingListPrevent: ENUMERATED_STRINGS,
+  pathingListRequire: ENUMERATED_STRINGS,
+  pathingTexture: TEXT,
+  pickFlags: NUMBER,
+  proctargetType: ENUMERATION,
+  real: NUMBER,
+  regenType: ENUMERATION,
+  shadowImage: ENUMERATION,
+  shadowTexture: TEXT,
+  silenceFlags: NUMBER,
+  soundLabel: TEXT,
+  spellDetail: ENUMERATION,
+  stackFlags: NUMBER,
+  string: TEXT,
+  stringList: STRINGS,
+  targetList: ENUMERATED_STRINGS,
+  teamColor: ENUMERATION,
+  techAvail: ENUMERATION,
+  techList: STRINGS,
+  texture: TEXT,
+  tilesetList: STRINGS,
+  uberSplat: TEXT,
+  unitClass: ENUMERATED_STRINGS,
+  unitCode: RAWCODE_OF("unit"),
+  unitList: RAWCODES_OF("unit"),
+  unitRace: ENUMERATION,
+  unitSkinList: RAWCODES_OF("unit"),
+  unitSound: TEXT,
+  unreal: NUMBER,
+  upgradeClass: ENUMERATION,
+  upgradeCode: RAWCODE_OF("upgrade"),
+  upgradeEffect: ENUMERATION,
+  upgradeList: RAWCODES_OF("upgrade"),
+  versionFlags: ENUMERATION,
+  weaponType: ENUMERATION,
+};
+
+/** The category of a metadata type the generator does not map: its value type's. */
+export function valueTypeCategory(type: ValueType): Category {
+  return type === "string" ? "text" : "number";
+}
+
+/**
+ * A field's category: its metadata type's in `METADATA_CATEGORIES`, else
+ * its value type's, `mapped` false.
+ */
+export function categoryOf(
+  metaType: string,
+  type: ValueType,
+): MappedCategory & { mapped: boolean } {
+  const mapped = Object.hasOwn(METADATA_CATEGORIES, metaType)
+    ? METADATA_CATEGORIES[metaType]
+    : undefined;
+  return mapped === undefined
+    ? { category: valueTypeCategory(type), mapped: false }
+    : { ...mapped, mapped: true };
+}
+
+/**
+ * The raw values of the enumeration `type` in the editor data: the first
+ * item of each value `00`, `01`, ... of its section, up to its `NumValues`;
+ * undefined when the editor data has no such section.
+ */
+export type Enumerate = (type: string) => string[] | undefined;
+
+/** The World Editor's data of the enumerations, in the base layer. */
+export const EDITOR_DATA = "UI/UnitEditorData.txt";
+
+/** An `Enumerate` over the editor data's profile. */
+export function enumerator(editorData: Profile): Enumerate {
+  return (type) => {
+    const count = editorData.get(type, "NumValues");
+    const values: string[] = [];
+    for (let i = 0; ; i++) {
+      if (count !== undefined && i >= Number(count)) break;
+      const value = editorData.first(type, String(i).padStart(2, "0"));
+      if (value === undefined) break;
+      values.push(value);
+    }
+    return values.length === 0 ? undefined : values;
+  };
+}
+
 /** A field the World Editor's save treats unlike its metadata, and the fixture that shows it. */
 export interface FieldOverride {
   kind: ObjectKind;
@@ -262,7 +484,12 @@ type Resolve = (text: string) => string | undefined;
  *   and `utip`, not `umdl` nor `uabi`;
  * - levels from `repeat` above 0, the data column from `data`;
  * - its specific base Rawcodes from `useSpecific`;
- * - its label from `displayName`.
+ * - its label from `displayName`;
+ * - its metadata type, and its category from `categoryOf`: a type
+ *   `METADATA_CATEGORIES` does not map takes its value type's, with a
+ *   warning;
+ * - the raw values of an enumeration it reads, from the editor data
+ *   (`enumerate`), integers for a field stored as `int`.
  *
  * Then `FIELD_OVERRIDES` apply.
  */
@@ -271,9 +498,13 @@ export function buildFieldTable(
   resolve: Resolve,
   build: string,
   gameVersion: string,
+  enumerate?: Enumerate,
 ): FieldTableResult {
   const errors: string[] = [];
   const warnings: string[] = [];
+  const enumerations: Record<string, EnumerationValues> = {};
+  /** The fields of each type no category maps, for one warning per type. */
+  const unmapped = new Map<string, { type: ValueType; fields: string[] }>();
   const kinds = {} as Record<ObjectKind, string>;
   for (const kind of FIELD_KINDS) {
     const label = resolve(KIND_LABEL_KEYS[kind]);
@@ -337,8 +568,34 @@ export function buildFieldTable(
           `${at} is specific to ${JSON.stringify(item)}, not a Rawcode: the table keeps it as the metadata writes it.`,
         );
       }
+      const metaTypeName = metaType ?? "";
+      const category = categoryOf(metaTypeName, type);
+      if (!category.mapped) {
+        const entry = unmapped.get(metaTypeName) ?? { type, fields: [] };
+        entry.fields.push(`${kind} ${id}`);
+        unmapped.set(metaTypeName, entry);
+      }
+      if (
+        category.enumerated === true &&
+        !Object.hasOwn(enumerations, metaTypeName)
+      ) {
+        const values = enumerationValues(
+          at,
+          metaTypeName,
+          type,
+          enumerate?.(metaTypeName),
+        );
+        if (typeof values === "string") {
+          errors.push(values);
+          continue;
+        }
+        enumerations[metaTypeName] = values;
+      }
       fields[kind][id] = {
         type,
+        metaType: metaTypeName,
+        category: category.category,
+        ...(category.of !== undefined && { of: category.of }),
         file: netsafe === undefined || Number(netsafe) === 0 ? "base" : "skin",
         localizable:
           TEXT_TYPES.has(metaType ?? "") && row.get("stringExt") === "1",
@@ -363,11 +620,47 @@ export function buildFieldTable(
       entry.localizable = override.localizable;
     }
   }
+  for (const [metaType, { type, fields: named }] of unmapped) {
+    warnings.push(
+      `The metadata type ${JSON.stringify(metaType)} (${list(named)}) has no category in METADATA_CATEGORIES (src/fields.ts): its fields take their value type's, ${valueTypeCategory(type)}.`,
+    );
+  }
   return {
-    table: { format: FIELDS_FORMAT, build, gameVersion, kinds, fields },
+    table: {
+      format: FIELDS_FORMAT,
+      build,
+      gameVersion,
+      kinds,
+      enumerations: Object.fromEntries(
+        Object.keys(enumerations)
+          .sort(byCodePoint)
+          .map((type) => [type, enumerations[type]]),
+      ),
+      fields,
+    },
     errors,
     warnings,
   };
+}
+
+/**
+ * The raw values of the enumeration `metaType`, as the editor data gives
+ * them (`raw`), integers for a field stored as `int`; else the error.
+ */
+function enumerationValues(
+  at: string,
+  metaType: string,
+  type: ValueType,
+  raw: string[] | undefined,
+): EnumerationValues | string {
+  if (raw === undefined) {
+    return `${at} is of type ${metaType}, an enumeration, and the editor data (${EDITOR_DATA}) has no values of it.`;
+  }
+  if (type !== "int") return raw;
+  const wrong = raw.filter((value) => !/^-?\d+$/.test(value));
+  return wrong.length > 0
+    ? `${at} is of type ${metaType}, an enumeration stored as int, and the editor data gives it ${wrong.map((value) => JSON.stringify(value)).join(", ")}, not integers.`
+    : raw.map(Number);
 }
 
 function valueType(type: string | undefined): ValueType | undefined {
@@ -388,12 +681,25 @@ export function labelResolver(strings: Profile, section: string): Resolve {
 export const fieldsPath = (gameVersion: string): string =>
   `${gameVersion}/fields.json`;
 
-/** The field table's text: one kind or field per line, the fields by id in code-point order. */
+/**
+ * The field table's text: one kind, enumeration or field per line, the
+ * enumerations by type and the fields by id in code-point order. A table of
+ * format 1 is written as format 1: no enumerations, metadata types or
+ * categories.
+ */
 export function serializeFields(table: FieldTable): string {
+  const format2 = table.format !== 1;
   const kinds = FIELD_KINDS.map(
     (kind) =>
       `    ${JSON.stringify(kind)}: ${JSON.stringify(table.kinds[kind])}`,
   ).join(",\n");
+  const byType = table.enumerations ?? {};
+  const enumerations = Object.keys(byType)
+    .sort(byCodePoint)
+    .map(
+      (type) => `    ${JSON.stringify(type)}: ${JSON.stringify(byType[type])}`,
+    )
+    .join(",\n");
   const fields = FIELD_KINDS.map((kind) => {
     const byId = table.fields[kind];
     const lines = Object.keys(byId)
@@ -402,6 +708,11 @@ export function serializeFields(table: FieldTable): string {
         const entry = byId[id];
         const ordered: FieldEntry = {
           type: entry.type,
+          ...(format2 && {
+            metaType: entry.metaType,
+            category: entry.category,
+            ...(entry.of !== undefined && { of: entry.of }),
+          }),
           file: entry.file,
           localizable: entry.localizable,
           levels: entry.levels,
@@ -421,6 +732,9 @@ export function serializeFields(table: FieldTable): string {
     `  "build": ${JSON.stringify(table.build)},\n` +
     `  "gameVersion": ${JSON.stringify(table.gameVersion)},\n` +
     `  "kinds": {\n${kinds}\n  },\n` +
+    (format2
+      ? `  "enumerations": ${enumerations === "" ? "{}" : `{\n${enumerations}\n  }`},\n`
+      : "") +
     `  "fields": {\n${fields}\n  }\n` +
     `}\n`
   );
@@ -440,9 +754,11 @@ const FIELD_FILES: ReadonlySet<unknown> = new Set(["base", "skin"]);
 const FIELD_ID = /^[\x21-\x7e]{3,4}$/;
 
 /**
- * The shape of a field table, as one problem per line: `format`, its Build
- * and Game version (those of the index beside it), every kind's label, and
- * each field's facts.
+ * The shape of a field table, as one problem per line: `format` (1 or 2),
+ * its Build and Game version (those of the index beside it), every kind's
+ * label, and each field's facts. In format 2, also each field's metadata
+ * type and its category, which must be the one `categoryOf` gives, and the
+ * enumerations, which must be those the fields read.
  */
 export function validateFields(
   value: unknown,
@@ -451,10 +767,36 @@ export function validateFields(
 ): string[] {
   if (!isRecord(value)) return ["not a JSON object."];
   const problems: string[] = [];
-  if (value.format !== FIELDS_FORMAT) {
+  if (!READ_FIELDS_FORMATS.includes(value.format as number)) {
     problems.push(
-      `format is ${JSON.stringify(value.format)}, not ${String(FIELDS_FORMAT)}.`,
+      `format is ${JSON.stringify(value.format)}, not ${READ_FIELDS_FORMATS.join(" or ")}.`,
     );
+  }
+  const format2 = value.format === 2;
+  /** The enumerations' raw values by type, in format 2, and the types a field reads. */
+  const enumerations = new Map<string, unknown[]>();
+  const read = new Set<string>();
+  if (format2) {
+    if (!isRecord(value.enumerations)) {
+      problems.push("enumerations is not the raw values per metadata type.");
+    } else {
+      for (const [type, values] of Object.entries(value.enumerations)) {
+        if (
+          !Array.isArray(values) ||
+          values.length === 0 ||
+          !(
+            values.every((item) => typeof item === "string") ||
+            values.every((item) => Number.isInteger(item))
+          )
+        ) {
+          problems.push(
+            `enumerations.${type} is ${JSON.stringify(values)}, not a list of raw values, all strings or all integers.`,
+          );
+        } else {
+          enumerations.set(type, values);
+        }
+      }
+    }
   }
   if (value.gameVersion !== gameVersion) {
     problems.push(
@@ -556,9 +898,97 @@ export function validateFields(
           `${at}.specific is ${JSON.stringify(entry.specific)}, not a list of the metadata's useSpecific items.`,
         );
       }
+      if (format2) {
+        problems.push(
+          ...validateCategory(at, entry, enumerations, (type) =>
+            read.add(type),
+          ),
+        );
+      }
+    }
+  }
+  for (const type of enumerations.keys()) {
+    if (!read.has(type)) {
+      problems.push(`enumerations.${type}: no field reads it.`);
     }
   }
   return problems;
+}
+
+/**
+ * The metadata type and category of a field of format 2: the category
+ * `categoryOf` gives its metadata type and value type, its kind for a
+ * Rawcode, and the enumeration it reads, integers when it is stored as
+ * `int`. `reads` is told each enumeration the field reads.
+ */
+function validateCategory(
+  at: string,
+  entry: Record<string, unknown>,
+  enumerations: ReadonlyMap<string, unknown[]>,
+  reads: (type: string) => void,
+): string[] {
+  const { metaType, category, of, type } = entry;
+  if (typeof metaType !== "string" || metaType === "") {
+    return [
+      `${at}.metaType is ${JSON.stringify(metaType)}, not a metadata type.`,
+    ];
+  }
+  if (!CATEGORIES.includes(category as Category)) {
+    return [`${at}.category is ${JSON.stringify(category)}, not a category.`];
+  }
+  if (!VALUE_TYPES.has(type)) return [];
+  const expected = categoryOf(metaType, type as ValueType);
+  if (category !== expected.category || of !== expected.of) {
+    const named = (c: unknown, kind: unknown) =>
+      JSON.stringify(c) +
+      (typeof kind === "string"
+        ? ` of ${kind}`
+        : kind === undefined
+          ? ""
+          : ` of ${JSON.stringify(kind)}`);
+    return [
+      `${at} is ${named(category, of)}, not ${named(expected.category, expected.of)}, the category src/fields.ts gives its metadata type ${metaType}.`,
+    ];
+  }
+  if (expected.enumerated !== true) return [];
+  reads(metaType);
+  const values = enumerations.get(metaType);
+  if (values === undefined) {
+    return [
+      `${at} reads the enumeration ${metaType}, which enumerations lacks.`,
+    ];
+  }
+  return (type === "int") === values.every((item) => typeof item === "number")
+    ? []
+    : [
+        `${at} is stored as ${String(type)}, and the enumeration ${metaType}'s raw values are not ${type === "int" ? "integers" : "strings"}.`,
+      ];
+}
+
+/**
+ * The metadata types of a table of format 2 that `METADATA_CATEGORIES` does
+ * not map, in code-point order, each with the fields of that type
+ * (`doodad dcat`), the kinds in the table's order.
+ */
+export function unmappedTypes(
+  table: FieldTable,
+): { metaType: string; fields: string[] }[] {
+  const byType = new Map<string, string[]>();
+  for (const kind of FIELD_KINDS) {
+    for (const id of Object.keys(table.fields[kind]).sort(byCodePoint)) {
+      const { metaType } = table.fields[kind][id];
+      if (
+        metaType === undefined ||
+        Object.hasOwn(METADATA_CATEGORIES, metaType)
+      ) {
+        continue;
+      }
+      byType.set(metaType, [...(byType.get(metaType) ?? []), `${kind} ${id}`]);
+    }
+  }
+  return [...byType.keys()]
+    .sort(byCodePoint)
+    .map((metaType) => ({ metaType, fields: byType.get(metaType) ?? [] }));
 }
 
 /** Whether an object is keyed by the Object kinds, each once. */

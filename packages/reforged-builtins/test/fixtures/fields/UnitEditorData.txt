@@ -1,0 +1,24 @@
+// The tests' own editor data, modelled on the sections of 3.0.1.24370's
+// UI/UnitEditorData.txt: one section per enumeration, value 0 of each item
+// its raw value, abridged.
+
+[teamColor]
+00=-1,WESTRING_UE_TEAMCOLOR_NONE
+01=0,WESTRING_UE_TEAMCOLOR_00
+02=1,WESTRING_UE_TEAMCOLOR_01
+NumValues=3
+
+[upgradeEffect]
+Sort=1
+00=rarm,WESTRING_GE_UPGRADEEFFECT_ARMOR
+01=ratt,WESTRING_GE_UPGRADEEFFECT_ATTACK
+02=rhpx,WESTRING_GE_UPGRADEEFFECT_HITPOINTSEX
+NumValues=3
+
+[targetList]
+Sort=1
+00=air,WESTRING_UE_TARGETTYPE_AIR
+01=alive,WESTRING_UE_TARGETTYPE_ALIVE
+01_Alt=aliv
+02=ground,WESTRING_UE_TARGETTYPE_GROUND
+NumValues=3

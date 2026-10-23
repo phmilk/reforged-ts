@@ -221,6 +221,73 @@ describe("the 3.0.0 field table", () => {
   });
 });
 
+describe("the 3.0.1 field table, of format 2", () => {
+  const table = async () =>
+    JSON.parse(await read("3.0.1/fields.json")) as FieldTable;
+
+  it("gives each field its metadata type and category, and the enumerations their raw values from the editor data", async () => {
+    const { format, build, enumerations, fields } = await table();
+
+    expect([format, build]).toEqual([2, "3.0.1.24370"]);
+    expect(enumerations?.attackType).toEqual([
+      "unknown",
+      "normal",
+      "pierce",
+      "siege",
+      "spells",
+      "chaos",
+      "magic",
+      "hero",
+    ]);
+    expect(enumerations?.teamColor).toEqual([
+      -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20, 21, 22, 23, 24,
+    ]);
+    for (const byId of Object.values(fields)) {
+      for (const entry of Object.values(byId)) {
+        expect(entry.metaType).toBeDefined();
+        expect(entry.category).toBeDefined();
+      }
+    }
+  });
+
+  it.each([
+    ["unit", "umvs", { metaType: "int", category: "number" }],
+    ["unit", "ua1t", { metaType: "attackType", category: "enumeration" }],
+    ["unit", "utco", { metaType: "teamColor", category: "enumeration" }],
+    ["unit", "ua1g", { metaType: "targetList", category: "stringList" }],
+    [
+      "unit",
+      "uabi",
+      { metaType: "abilityList", category: "rawcodeList", of: "ability" },
+    ],
+    ["unit", "unam", { metaType: "string", category: "text" }],
+    ["item", "iper", { metaType: "bool", category: "boolean" }],
+    [
+      "ability",
+      "Eme1",
+      { metaType: "unitCode", category: "rawcode", of: "unit" },
+    ],
+    ["ability", "Ncl3", { metaType: "channelFlags", category: "number" }],
+    ["upgrade", "gef1", { metaType: "upgradeEffect", category: "enumeration" }],
+    // Not mapped: the value type's category.
+    ["doodad", "dcat", { metaType: "doodadCategory", category: "text" }],
+  ] as const)("describes the %s field %s", async (kind, id, facts) => {
+    expect((await table()).fields[kind][id]).toMatchObject(facts);
+  });
+
+  it("is written as the generator writes it, from the editor data its provenance pins", async () => {
+    const text = await read("3.0.1/fields.json");
+    expect(serializeFields(JSON.parse(text) as FieldTable)).toBe(text);
+    const provenance = JSON.parse(
+      await read("3.0.1/provenance.json"),
+    ) as Provenance;
+    expect(provenance.inputs.map((input) => input.path)).toContain(
+      "War3.w3mod:UI/UnitEditorData.txt",
+    );
+  });
+});
+
 describe("the package", () => {
   const manifest = async () =>
     JSON.parse(await read("package.json")) as {

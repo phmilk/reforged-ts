@@ -801,3 +801,106 @@ describe("an edit refused", () => {
     );
   });
 });
+
+// The writer reads format 1's facts alone, so a table of format 2 (#702),
+// which adds the metadata types, categories and enumerations, edits as one
+// of format 1 does.
+describe("the field table's formats", () => {
+  /**
+   * A Map project whose reforged-builtins holds the index and field table of
+   * `gameVersion` from this package's installation, the table's format set
+   * to `format` when given.
+   */
+  function project(gameVersion: string, format?: number): string {
+    const root = makeTempDir();
+    const installed = path.join(root, "node_modules", "reforged-builtins");
+    fs.mkdirSync(path.join(installed, gameVersion), { recursive: true });
+    fs.writeFileSync(
+      path.join(installed, "package.json"),
+      JSON.stringify({
+        exports: { "./units": { types: `./${gameVersion}/units.d.ts` } },
+      }),
+    );
+    const source = path.join(
+      PACKAGE_ROOT,
+      "node_modules",
+      "reforged-builtins",
+      gameVersion,
+    );
+    fs.copyFileSync(
+      path.join(source, "index.json"),
+      path.join(installed, gameVersion, "index.json"),
+    );
+    const table = JSON.parse(
+      fs.readFileSync(path.join(source, "fields.json"), "utf8"),
+    ) as { format: number };
+    fs.writeFileSync(
+      path.join(installed, gameVersion, "fields.json"),
+      JSON.stringify({ ...table, format: format ?? table.format }),
+    );
+    return root;
+  }
+
+  /** The files a save writes after setting the Custom unit h000's umvs and unam, with the field table of `root`. */
+  function edited(root: string): Map<string, string> {
+    const folder = mapFolder({
+      "war3map.w3u": buildObjectData(captain([{ field: "umvs", value: 300 }])),
+      "war3mapSkin.w3u": buildObjectData(captain([])),
+    });
+    const editor = openObjectData(folder, { projectRoot: root });
+    editor.setField({ kind: "unit", rawcode: "h000", field: "umvs" }, 350);
+    editor.setField(
+      { kind: "unit", rawcode: "h000", field: "unam" },
+      "Captain",
+    );
+    const target = path.join(makeTempDir(), "copy.w3m");
+    editor.save(target, NO_WINDOW);
+    return snapshot(target);
+  }
+
+  it.each([
+    [1, "3.0.0"],
+    [2, "3.0.1"],
+  ])(
+    "an edit reads a table of format %i, as Game version %s holds it",
+    (format, gameVersion) => {
+      const root = project(gameVersion);
+      const table = JSON.parse(
+        fs.readFileSync(
+          path.join(
+            root,
+            "node_modules",
+            "reforged-builtins",
+            gameVersion,
+            "fields.json",
+          ),
+          "utf8",
+        ),
+      ) as { format: number };
+
+      expect(table.format).toBe(format);
+      expect(edited(root)).toEqual(edited(PACKAGE_ROOT));
+    },
+  );
+
+  it("an edit refuses a table of a format it does not read, naming those it reads", () => {
+    const folder = mapFolder({
+      "war3map.w3u": buildObjectData(captain([])),
+    });
+    let error: unknown;
+    try {
+      openObjectData(folder, { projectRoot: project("3.0.1", 3) }).setField(
+        { kind: "unit", rawcode: "h000", field: "umvs" },
+        1,
+      );
+    } catch (caught) {
+      error = caught;
+    }
+
+    expect(error).toBeInstanceOf(ObjectDataWriterError);
+    expect(error).toMatchObject({ reason: "builtins-missing" });
+    expect(String(error)).toContain(
+      "reforged-builtins has a field table of format 3, which reforged-map does not read (it reads format 1 or 2)",
+    );
+  });
+});

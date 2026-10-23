@@ -181,8 +181,9 @@ const PACKAGES: readonly Expected[] = [
   {
     dir: "reforged-builtins",
     // The overloads per Game version, and per Object kind the constants'
-    // declarations and Lua module, with the index and the field table for
-    // tools; never the provenance file or the generator.
+    // declarations and Lua module, with the index, the field table and its
+    // declarations for tools and Object definitions; never the provenance
+    // file or the generator.
     allowed: [
       /^\d+\.\d+\.\d+\.d\.ts$/,
       /^\d+\.\d+\.\d+\/[a-z]+\.(d\.ts|lua)$/,
@@ -192,6 +193,8 @@ const PACKAGES: readonly Expected[] = [
       "3.0.0.d.ts",
       "3.0.0/index.json",
       "3.0.0/fields.json",
+      "3.0.1/fields.json",
+      "3.0.1/fields.d.ts",
       "3.0.0/units.d.ts",
       "3.0.0/units.lua",
       "3.0.0/abilities.d.ts",

@@ -16,6 +16,12 @@
       "size": 296201
     },
     {
+      "path": "War3.w3mod:UI/UnitEditorData.txt",
+      "contentKey": "78fbde382b4c103af48ba81b13cc7658",
+      "sha256": "604d278747ed06358699c51884c46d56c3ba766cebb778d78b1dfef3e2a41297",
+      "size": 15528
+    },
+    {
       "path": "War3.w3mod:Units/AbilityBuffData.slk",
       "contentKey": "134ef7c646d8fd24e2d8814d83769268",
       "sha256": "f50bb4052f3c1163821ff6fd7354cfdb7e1813747611bf8e3445e9c1134686ce",

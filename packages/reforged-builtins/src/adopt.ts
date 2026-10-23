@@ -11,6 +11,8 @@ import {
   gameVersionFolders,
 } from "./check.js";
 import { kindsOf } from "./emit.js";
+import { hasDeclarations } from "./field-declarations.js";
+import { fieldsPath, type FieldTable } from "./fields.js";
 import type { BuiltinsIndex, ObjectKind } from "./model.js";
 import type { RenameEntry } from "./record.js";
 
@@ -58,7 +60,8 @@ export async function previousIndex(
 
 /**
  * Moves the manifest of the root, when it has one, to the Game versions it
- * holds: `exports` points the kind entry points at the newest, and
+ * holds: `exports` points the kind entry points at the newest, and the
+ * fields entry when its field table has declarations, and
  * `reforged.patch` names `build`. Returns whether it wrote it.
  */
 export async function updateManifest(
@@ -69,16 +72,24 @@ export async function updateManifest(
   const text = await readText(file);
   if (text === undefined) return false;
   const kindsByVersion = new Map<string, ObjectKind[]>();
+  const declared = new Set<string>();
   for (const gameVersion of await gameVersionFolders(root)) {
     const index = await readIndex(root, gameVersion);
     if (index !== undefined) kindsByVersion.set(gameVersion, kindsOf(index));
+    const fields = await readText(join(root, fieldsPath(gameVersion)));
+    if (
+      fields !== undefined &&
+      hasDeclarations(JSON.parse(fields) as FieldTable)
+    ) {
+      declared.add(gameVersion);
+    }
   }
   const manifest = JSON.parse(text) as Record<string, unknown>;
   manifest.reforged = {
     ...(manifest.reforged as Record<string, unknown> | undefined),
     patch: build,
   };
-  manifest.exports = expectedExports(kindsByVersion);
+  manifest.exports = expectedExports(kindsByVersion, declared);
   await writeFile(file, `${JSON.stringify(manifest, null, 2)}\n`);
   return true;
 }

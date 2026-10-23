@@ -1,10 +1,12 @@
 /**
  * `builtins:check [--root <folder>]`: the drift gate, run by `pnpm check`
- * without the game. Emits every artefact from each committed index again
- * and fails on any difference, on an index or a field table of the wrong
- * shape, on a field table not written as the generator writes it, on a Game
- * version without its provenance file and on `exports` that do not match
- * the Game versions (`../check.ts`). Exit codes: 0 in sync, 1 on a problem,
+ * without the game. Emits every artefact from each committed index, and the
+ * declarations from each field table of format 2, again and fails on any
+ * difference, on an index or a field table of the wrong shape, on a field
+ * table not written as the generator writes it, on a Game version without
+ * its provenance file and on `exports` that do not match the Game versions
+ * (`../check.ts`). Lists the metadata types the generator does not map to a
+ * category, first. Exit codes: 0 in sync, 1 on a problem,
  * 2 on usage. A leading `--` is skipped, as `builtins:generate` does.
  */
 import { resolve } from "node:path";
@@ -33,6 +35,11 @@ export async function main(
   }
 
   const result = await checkPackage(root);
+  if (result.unmapped.length > 0) {
+    output.stdout(
+      `Metadata types without a category in METADATA_CATEGORIES (src/fields.ts), whose fields take their value type's:\n${result.unmapped.map((line) => `- ${line}\n`).join("")}\n`,
+    );
+  }
   if (result.problems.length > 0) {
     output.stderr(
       `Built-in objects drift: ${String(result.problems.length)} ${
@@ -43,7 +50,7 @@ export async function main(
     return 1;
   }
   output.stdout(
-    `Built-in objects match: ${String(result.compared)} artefacts of Game version ${result.gameVersions.join(", ")} are exactly what the committed index emits, and its field table is as the generator writes it.\n`,
+    `Built-in objects match: ${String(result.compared)} artefacts of Game version ${result.gameVersions.join(", ")} are exactly what the committed indexes and field tables emit, and each field table is as the generator writes it.\n`,
   );
   return 0;
 }

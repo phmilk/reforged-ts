@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 import { main as check } from "../src/cli/check.js";
 import { main as generate } from "../src/cli/generate.js";
 import { emit } from "../src/emit.js";
+import { emitFieldDeclarations } from "../src/field-declarations.js";
 import { serializeFields, type FieldTable } from "../src/fields.js";
 import type { BuiltinsIndex } from "../src/model.js";
 import {
@@ -39,6 +40,7 @@ const EXPORTS = {
   "./3.0.0/index.json": "./3.0.0/index.json",
   "./3.0.0/fields.json": "./3.0.0/fields.json",
   "./units": { types: "./3.0.0/units.d.ts", tstl: "./3.0.0/units" },
+  "./fields": { types: "./3.0.0/fields.d.ts" },
   "./package.json": "./package.json",
 };
 
@@ -105,7 +107,7 @@ describe("builtins:check", () => {
 
     expect(stderr).toBe("");
     expect(stdout).toBe(
-      "Built-in objects match: 3 artefacts of Game version 3.0.0 are exactly what the committed index emits, and its field table is as the generator writes it.\n",
+      "Built-in objects match: 4 artefacts of Game version 3.0.0 are exactly what the committed indexes and field tables emit, and each field table is as the generator writes it.\n",
     );
     expect(status).toBe(0);
   });
@@ -236,7 +238,7 @@ describe("builtins:check", () => {
     table.kinds.buff = "";
     await writeFile(
       path,
-      serializeFields({ ...table, format: 2, build: "3.0.0.24000" }),
+      serializeFields({ ...table, format: 3, build: "3.0.0.24000" }),
     );
 
     const { status, stderr } = await runCheck(root);
@@ -246,7 +248,7 @@ describe("builtins:check", () => {
       "Built-in objects drift: 8 problems. " +
         DRIFT +
         [
-          "format is 2, not 1.",
+          "format is 3, not 1 or 2.",
           'build is "3.0.0.24000", not 3.0.0.24268, the index\'s.',
           'kinds.buff is "", not a label.',
           "fields.unit.toolong: not a field id of four characters.",
@@ -257,6 +259,129 @@ describe("builtins:check", () => {
         ]
           .map((problem) => `- [ ] 3.0.0/fields.json: ${problem}\n`)
           .join(""),
+    );
+  });
+
+  it("fails on a field table of format 2 whose categories or enumerations are wrong, naming each problem", async () => {
+    const root = await packageFolder();
+    const path = join(root, "3.0.0", "fields.json");
+    const table = JSON.parse(await readFile(path, "utf8")) as FieldTable;
+    const units = table.fields.unit as Record<string, unknown>;
+    // umvs is an int, a number; unam a string, a text.
+    units.umvs = { ...table.fields.unit.umvs, category: "text" };
+    units.unam = { ...table.fields.unit.unam, metaType: "" };
+    units.umov = {
+      ...table.fields.unit.umvs,
+      metaType: "teamColor",
+      category: "enumeration",
+    };
+    units.uabi = {
+      ...table.fields.unit.unam,
+      localizable: false,
+      metaType: "abilityList",
+      category: "rawcodeList",
+      of: "unit",
+    };
+    units.uarm = {
+      ...table.fields.unit.unam,
+      localizable: false,
+      metaType: "armorType",
+      category: "enumeration",
+    };
+    units.utyp = { ...table.fields.unit.umvs, category: "stuff" };
+    await writeFile(
+      path,
+      serializeFields({
+        ...table,
+        enumerations: { teamColor: ["red"], unused: [1, 2], empty: [] },
+      }),
+    );
+
+    const { status, stderr } = await runCheck(root);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      "Built-in objects drift: 8 problems. " +
+        DRIFT +
+        [
+          "enumerations.empty is [], not a list of raw values, all strings or all integers.",
+          'fields.unit.uabi is "rawcodeList" of unit, not "rawcodeList" of ability, the category src/fields.ts gives its metadata type abilityList.',
+          "fields.unit.uarm reads the enumeration armorType, which enumerations lacks.",
+          "fields.unit.umov is stored as int, and the enumeration teamColor's raw values are not integers.",
+          'fields.unit.umvs is "text", not "number", the category src/fields.ts gives its metadata type int.',
+          'fields.unit.unam.metaType is "", not a metadata type.',
+          'fields.unit.utyp.category is "stuff", not a category.',
+          "enumerations.unused: no field reads it.",
+        ]
+          .map((problem) => `- [ ] 3.0.0/fields.json: ${problem}\n`)
+          .join(""),
+    );
+  });
+
+  it("fails on hand-edited declarations of the field table, and on stale ones of a table of format 1", async () => {
+    const root = await packageFolder();
+    const declarations = join(root, "3.0.0", "fields.d.ts");
+    await appendFile(declarations, "export interface Extra {}\n");
+
+    const edited = await runCheck(root);
+
+    expect(edited.status).toBe(1);
+    expect(edited.stderr).toBe(
+      "Built-in objects drift: 1 problem. " +
+        DRIFT +
+        "- [ ] 3.0.0/fields.d.ts: differs from what 3.0.0/fields.json emits.\n",
+    );
+
+    const path = join(root, "3.0.0", "fields.json");
+    const table = JSON.parse(await readFile(path, "utf8")) as FieldTable;
+    await writeFile(path, serializeFields({ ...table, format: 1 }));
+
+    const formatOne = await runCheck(root);
+
+    expect(formatOne.status).toBe(1);
+    expect(formatOne.stderr).toContain(
+      "- [ ] 3.0.0/fields.d.ts: committed but no longer emitted.\n",
+    );
+    expect(formatOne.stderr).toContain(
+      "- [ ] package.json: exports is not what the Game versions call for: ",
+    );
+  });
+
+  it("fails on missing declarations of a table of format 2", async () => {
+    const root = await packageFolder();
+    await rm(join(root, "3.0.0", "fields.d.ts"));
+
+    const { status, stderr } = await runCheck(root);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      "Built-in objects drift: 1 problem. " +
+        DRIFT +
+        "- [ ] 3.0.0/fields.d.ts: emitted from 3.0.0/fields.json but not committed.\n",
+    );
+  });
+
+  it("lists each metadata type the generator does not map, and passes", async () => {
+    const root = await packageFolder();
+    const path = join(root, "3.0.0", "fields.json");
+    const table = JSON.parse(await readFile(path, "utf8")) as FieldTable;
+    table.fields.unit.unam = {
+      ...table.fields.unit.unam,
+      metaType: "doodadCategory",
+    };
+    await writeFile(path, serializeFields(table));
+    await writeFile(
+      join(root, "3.0.0", "fields.d.ts"),
+      emitFieldDeclarations(table),
+    );
+
+    const { status, stdout, stderr } = await runCheck(root);
+
+    expect(stderr).toBe("");
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      "Metadata types without a category in METADATA_CATEGORIES (src/fields.ts), whose fields take their value type's:\n" +
+        "- 3.0.0: doodadCategory (unit unam)\n\n",
     );
   });
 
