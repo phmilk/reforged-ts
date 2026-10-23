@@ -68,6 +68,11 @@ export {
   type ObjectAdoptionReport,
 } from "./object-adoption.js";
 export {
+  releaseObjects,
+  type ObjectReleaseOptions,
+  type ObjectReleaseReport,
+} from "./object-release.js";
+export {
   ObjectDefinitionsError,
   type ObjectDefinitionProblem,
   type ObjectDefinitionsErrorReason,
