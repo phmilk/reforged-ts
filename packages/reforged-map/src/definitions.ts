@@ -32,6 +32,7 @@ import {
   type DefinitionPaths,
 } from "./definitions-loader.js";
 import { checkMapFolder } from "./map-folder.js";
+import { findDrift, isReturned } from "./object-drift.js";
 import type { ObjectKind } from "./model.js";
 import {
   openObjectData,
@@ -210,12 +211,19 @@ export function objectsByKey(
 /**
  * Throws the collisions: each definition at a Rawcode the map folder
  * defines or changes in its kind, which the Object manifest does not own.
+ * A removed object a stale World Editor save brought back unchanged is
+ * still the code's, and a definition takes it again.
  */
 export function checkCollisions(
   prepared: PreparedDefinitions,
   present: ReadonlyMap<string, ObjectDataObject>,
 ): void {
-  const owned = new Set(prepared.manifest.owned.map(objectKey));
+  const owned = new Set([
+    ...prepared.manifest.owned.map(objectKey),
+    ...prepared.manifest.removed
+      .filter((entry) => isReturned(entry, present))
+      .map(objectKey),
+  ]);
   const { projectRoot } = prepared.paths;
   const collisions: ObjectDefinitionProblem[] = [];
   for (const { kind, rawcode, file } of prepared.definitions) {
@@ -417,7 +425,11 @@ export function definedObjects(
  * removed from the copy, a Custom object entirely, a Built-in object's
  * modifications, with no warning: the copy is not the author's. A
  * definition at a Rawcode the map folder defines or changes, which the
- * code does not own, is a collision. The copy is saved with the World
+ * code does not own, is a collision. An owned object changed in the map
+ * folder outside the code, its state there neither what the last sync
+ * wrote nor what the code writes, draws a warning per object, and the
+ * copy holds the code's version: Object sync refuses it and lists the
+ * changes. The copy is saved with the World
  * Editor check off, as a folder no World Editor opens; the map folder is
  * never written. A Map project with no definition file and no owned object
  * needs neither `typescript` nor `reforged-builtins`, and the copy is left
@@ -465,7 +477,13 @@ export function mergeObjectDefinitions(
   });
   const present = objectsByKey(editor);
   checkCollisions(prepared, present);
-  const { warnings } = applyDefinitions(editor, prepared, present);
+  const applied = applyDefinitions(editor, prepared, present);
+  const warnings = [...applied.warnings];
+  for (const object of findDrift(prepared, present, objectsByKey(editor))) {
+    warnings.push(
+      `The ${object.kind} ${object.rawcode} was changed in the map folder outside the code (${object.changes.join(", ")}): the build ships the code's version. Object sync (pnpm objects:sync) lists the changes.`,
+    );
+  }
   const { written } = editor.save(undefined, { worldEditorCheck: false });
   return {
     objects: definedObjects(prepared.definitions),

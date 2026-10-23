@@ -1,8 +1,7 @@
 // Object sync (#700, "Object sync"; ADR 0015): write a Map project's Object
 // definitions into its map folder in the Editor form, and record what the
-// code owns in the Object manifest. Steps 1 to 3 and 6 to 8 of the spec:
-// the drift check and the removed entries (#705) and the World Editor
-// reload (#706) plug in between them.
+// code owns in the Object manifest, with the objects it removed. The World
+// Editor reload (#706) plugs in after the save.
 
 import {
   applyDefinitions,
@@ -16,7 +15,8 @@ import {
 import { displayPath } from "./definitions-loader.js";
 import { checkMapFolder } from "./map-folder.js";
 import type { ObjectKind } from "./model.js";
-import { openObjectData } from "./object-data-editor.js";
+import { openObjectData, type ObjectDataObject } from "./object-data-editor.js";
+import { driftError, findDrift, removedEntries } from "./object-drift.js";
 import {
   objectKey,
   sameSnapshot,
@@ -65,6 +65,10 @@ export interface ObjectSyncReport {
   readonly changed: readonly DefinedObject[];
   /** The owned objects no definition defines any more, which the sync removed. */
   readonly removed: readonly RemovedObject[];
+  /** The objects a sync removed earlier that a stale World Editor save brought back unchanged, which the sync removed again. */
+  readonly removedAgain: readonly RemovedObject[];
+  /** The new objects of the map folder at a Rawcode a sync removed earlier, which the sync left alone; the manifest forgets the removed ones. */
+  readonly leftAlone: readonly RemovedObject[];
   /** The files of the map folder it wrote, by file name: empty when no byte changed. */
   readonly written: readonly string[];
   /** Whether it wrote the Object manifest, which it does only when its bytes change. */
@@ -87,6 +91,19 @@ export interface ObjectSyncReport {
  * folder defines or changes in its kind, which the manifest does not own,
  * is a collision.
  *
+ * Each owned object is then compared with the manifest's snapshot of it. It
+ * is clean when equal, or when equal to what the code writes (a sync
+ * interrupted after writing the map folder and before writing the
+ * manifest). Otherwise it was changed outside the code, in the World
+ * Editor, an owned object missing from the map folder included, and the
+ * sync refuses, listing each object and field with the manifest's value
+ * and the map folder's; with `force`, it overwrites them with the code's
+ * version, with a warning per object. A Rawcode the manifest records as
+ * removed that the map folder holds again is either the removed object,
+ * unchanged, which a stale World Editor save brought back, removed again
+ * with a warning, or a new object of the map folder, left alone, whose
+ * removed entry goes.
+ *
  * Each defined object is then made exactly its definition: a Custom object
  * is added, the fields the definition sets are set and those it does not
  * are removed, and a field already holding its value is left as it is. An
@@ -106,10 +123,9 @@ export interface ObjectSyncReport {
  * and Skin files merged, strings as their text, each modification as field
  * id, level, data pointer, value type and value. The manifest is written
  * byte-stably, sorted by Object kind then Rawcode, and only when its bytes
- * change: a second sync writes no byte.
- *
- * A change made to an owned object outside the code, in the World Editor,
- * is not detected yet (#705): the sync overwrites it, as `force` would.
+ * change: a second sync writes no byte. Each owned object no definition
+ * defines any more becomes a removed entry, with what it last held, until
+ * a definition takes its Rawcode again.
  *
  * @param mapFolder - The map folder, saved as a folder by the World Editor.
  * @param projectRoot - The Map project's root, from which the definitions
@@ -117,13 +133,16 @@ export interface ObjectSyncReport {
  *   found.
  * @param options - The definitions folder, the generated folder, the
  *   Object manifest, `force` and the World Editor check's options.
- * @returns The objects defined, added, changed and removed, the files
- *   written, whether the manifest was written, the World Editor's state and
- *   the warnings.
+ * @returns The objects defined, added, changed, removed and removed again,
+ *   those left alone, the files written, whether the manifest was written,
+ *   the World Editor's state and the warnings.
  * @throws {@link ObjectDefinitionsError} With the reasons
  *   {@link mergeObjectDefinitions} gives: `"load-failed"`,
  *   `"invalid-definition"`, `"defined-twice"`, `"collision"`,
- *   `"manifest-unreadable"` and `"peer-missing"`. Nothing is written.
+ *   `"manifest-unreadable"` and `"peer-missing"`; or
+ *   `"changed-outside-code"`, without `force`, when an owned object was
+ *   changed in the map folder outside the code, one problem per field.
+ *   Nothing is written.
  * @throws {@link ObjectDataWriterError} With the reason
  *   `"modified-in-world-editor"`, when the World Editor shows unsaved edits
  *   for the map folder: save or discard them there first;
@@ -144,13 +163,16 @@ export function syncObjectDefinitions(
   const objects = definedObjects(prepared.definitions);
   if (
     prepared.definitions.length === 0 &&
-    prepared.manifest.owned.length === 0
+    prepared.manifest.owned.length === 0 &&
+    prepared.manifest.removed.length === 0
   ) {
     return {
       objects,
       added: [],
       changed: [],
       removed: [],
+      removedAgain: [],
+      leftAlone: [],
       written: [],
       manifestWritten: false,
       worldEditor: undefined,
@@ -160,14 +182,30 @@ export function syncObjectDefinitions(
   const editor = openObjectData(mapFolder, { projectRoot: paths.projectRoot });
   const present = objectsByKey(editor);
   checkCollisions(prepared, present);
-  // #705: the drift check of each owned object, and the removed entries,
-  // go here, before the first edit.
+  const removedBefore = removedEntries(prepared, present);
+  for (const { kind, rawcode } of removedBefore.returned) {
+    editor.removeObject({ kind, rawcode });
+  }
   const applied = applyDefinitions(editor, prepared, present);
+  // Drift is judged against what the code writes, the edits made but not
+  // saved: nothing is written when the sync refuses.
+  const drifted = findDrift(prepared, present, objectsByKey(editor));
+  if (drifted.length > 0 && options.force !== true) throw driftError(drifted);
   const { written, worldEditor } = editor.save(undefined, {
     worldEditorCheck: options.worldEditorCheck ?? {},
   });
 
   const warnings = [...applied.warnings];
+  for (const object of drifted) {
+    warnings.push(
+      `The ${object.kind} ${object.rawcode} was changed outside the code (${object.changes.join(", ")}): force overwrote it with the code's version.`,
+    );
+  }
+  for (const { kind, rawcode } of removedBefore.returned) {
+    warnings.push(
+      `The ${kind} ${rawcode}, which an earlier Object sync removed, was brought back unchanged by a World Editor that saved the map it had loaded before that sync: it was removed again. Reload the map in the World Editor after each sync, before saving there.`,
+    );
+  }
   for (const object of applied.removed) {
     if (object.origin !== "custom") continue;
     warnings.push(
@@ -203,16 +241,30 @@ export function syncObjectDefinitions(
     if (before === undefined) added.push(object);
     else if (!sameSnapshot(snapshotOf(before), snapshot)) changed.push(object);
   }
-  const manifestWritten = writeObjectManifest(paths.manifest, { owned });
+  const defined = new Set(objects.map(objectKey));
+  const removed: ObjectSnapshot[] = [...removedBefore.kept];
+  for (const entry of prepared.manifest.owned) {
+    const key = objectKey(entry);
+    if (defined.has(key)) continue;
+    const last = present.get(key);
+    removed.push(last === undefined ? entry : snapshotOf(last));
+  }
+  const manifestWritten = writeObjectManifest(paths.manifest, {
+    owned,
+    removed,
+  });
+  const removedObject = ({
+    kind,
+    rawcode,
+    base,
+  }: ObjectDataObject): RemovedObject => ({ kind, rawcode, base });
   return {
     objects,
     added,
     changed,
-    removed: applied.removed.map(({ kind, rawcode, base }) => ({
-      kind,
-      rawcode,
-      base,
-    })),
+    removed: applied.removed.map(removedObject),
+    removedAgain: removedBefore.returned.map(removedObject),
+    leftAlone: removedBefore.leftAlone.map(removedObject),
     written,
     manifestWritten,
     worldEditor,

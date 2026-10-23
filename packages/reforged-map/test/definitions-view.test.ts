@@ -75,6 +75,7 @@ function manifest(
     {
       format: 1,
       owned: owned.map((entry) => ({ ...entry, modifications: [] })),
+      removed: [],
     },
     null,
     2,
