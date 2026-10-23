@@ -193,7 +193,7 @@ An AI coding agent a Collaborator runs; GitHub sees it as that Collaborator's lo
 _Avoid_: bot (the repositories' GitHub App and Renovate), assistant, AI, session
 
 **Spec**:
-An issue labelled `spec` that states one change whole, its decisions, its tests and its notes; the parent of its Tickets.
+An issue labelled `spec` that states one change whole, its decisions, its tests and its notes; the parent of its Tickets. A Spec is split once it has a Ticket, and only then is any of it worked.
 _Avoid_: epic, PRD, map (a wayfinder map is something else)
 
 **Ticket**:
