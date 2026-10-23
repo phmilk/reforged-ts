@@ -86,6 +86,8 @@ export interface FieldEntry {
     | "stringList";
   /** The Object kind of its Rawcodes, for the categories `rawcode` and `rawcodeList`. */
   readonly of?: string;
+  /** The base Rawcodes it is specific to, when the metadata names them (an ability's data field). */
+  readonly specific?: readonly string[];
 }
 
 /** What this package reads of reforged-builtins' field table. */

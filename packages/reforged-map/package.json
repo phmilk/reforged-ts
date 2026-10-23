@@ -41,6 +41,7 @@
     "/dist/**/*.d.ts",
     "/dist/**/*.d.cts",
     "/typescript-plugin/package.json",
+    "/objects/package.json",
     "/LICENSE",
     "/README.md"
   ],
@@ -54,10 +55,14 @@
   },
   "peerDependencies": {
     "reforged-builtins": "workspace:^",
-    "reforged-types": "workspace:^"
+    "reforged-types": "workspace:^",
+    "typescript": "^5.0.0 || ^6.0.0"
   },
   "peerDependenciesMeta": {
     "reforged-builtins": {
+      "optional": true
+    },
+    "typescript": {
       "optional": true
     }
   },

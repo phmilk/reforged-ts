@@ -1,8 +1,8 @@
 # reforged-map
 
-Reads a Warcraft III Reforged map folder at build time and returns the code a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project generates from it: the declarations of its Editor globals, and the `FourCC` overloads and constants of its objects. For a tool that reads the map, such as a lint rule or a hover, it gives a lookup from a Rawcode to its object, and for a tool that edits its Object data, an Object data editor that saves it byte for byte. Its command, `reforged-map textconv`, lets `git diff` show Object data as text. Its TypeScript plugin, `reforged-map/typescript-plugin`, shows that object on the hover of a Rawcode literal and goes to its constant. Node only: nothing of it reaches the map's Lua.
+Reads a Warcraft III Reforged map folder at build time and returns the code a [reforged-ts](https://github.com/phmilk/reforged-ts) Map project generates from it: the declarations of its Editor globals, and the `FourCC` overloads and constants of its objects. For a tool that reads the map, such as a lint rule or a hover, it gives a lookup from a Rawcode to its object, and for a tool that edits its Object data, an Object data editor that saves it byte for byte. For a Map project that declares objects in TypeScript, its entry `reforged-map/objects` writes Object definitions, and the build merges them into the map it ships. Its command, `reforged-map textconv`, lets `git diff` show Object data as text. Its TypeScript plugin, `reforged-map/typescript-plugin`, shows that object on the hover of a Rawcode literal and goes to its constant. Node only: nothing of it reaches the map's Lua.
 
-A Map project gets it through the [Template](https://github.com/phmilk/reforged-ts-template), whose build calls it on every install, build and watch. It needs `reforged-types` 1.0.0-alpha.5 or later as a peer, the first that declares the Rawcode types. [`reforged-builtins`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins) is an optional peer, resolved from the Map project's own installation: its index names a Custom object after its base and gives the lookup the Built-in objects. Without it, `generateObjects` names such an object `Unnamed`, with a warning, and the lookup is unavailable.
+A Map project gets it through the [Template](https://github.com/phmilk/reforged-ts-template), whose build calls it on every install, build and watch. It needs `reforged-types` 1.0.0-alpha.5 or later as a peer, the first that declares the Rawcode types. [`reforged-builtins`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins) is an optional peer, resolved from the Map project's own installation: its index names a Custom object after its base and gives the lookup the Built-in objects. Without it, `generateObjects` names such an object `Unnamed`, with a warning, and the lookup is unavailable. `typescript` is an optional peer too, needed only by a Map project with [Object definitions](#object-definitions), which are transpiled with it; such a project needs `reforged-builtins` as well.
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
 
@@ -243,6 +243,87 @@ if (worldEditor === "open") {
   // Reload the map in the World Editor that holds it: `-launch -loadfile`.
 }
 ```
+
+## Object definitions
+
+A Map project declares objects in TypeScript as Object definitions (ADR 0015, [#700](https://github.com/phmilk/reforged-ts/issues/700)): one `define<Kind>` call per object, in files under `src/objects/`. The build merges them into the map it ships. They run in Node at build time, never in the map's Lua.
+
+```ts
+// src/objects/units.ts
+import { defineUnit, localized } from "reforged-map/objects";
+
+export const Captain = defineUnit({
+  rawcode: "h002",
+  base: FourCC("hfoo"),
+  fields: {
+    unam: localized("Captain", { deDE: "Hauptmann" }),
+    uhpm: 640,
+    ua1t: "pierce",
+    uabi: [FourCC("AHbz")],
+  },
+});
+
+// A change to a Built-in object: no base.
+export const Knight = defineUnit({ rawcode: "hkni", fields: { uhpm: 900 } });
+```
+
+### The authoring entry
+
+`reforged-map/objects` exports `defineUnit`, `defineItem`, `defineAbility`, `defineBuff`, `defineDestructable`, `defineDoodad` and `defineUpgrade`, the localized value's constructor `localized`, and their types. Each `define<Kind>` call returns an opaque `ObjectDefinition<kind>` and checks nothing when it runs: the build checks what it holds. A definition holds:
+
+- `rawcode`, the object's Rawcode, four characters, always written out: a Rawcode never depends on the order the files run in.
+- `base`, a Custom object's only: the Built-in object of its kind it derives from, `FourCC("hfoo")`, typed `Rawcode<kind>`. A definition without one changes the Built-in object of its Rawcode.
+- `fields`, keyed by field id (`umvs`), the id the Object Editor's raw-data view and `git diff` show. Each is typed from the field declarations of `reforged-builtins` (`reforged-builtins/fields`, its README's "The field declarations"), so the hover of a field id gives its enUS label and completion lists a kind's fields. By the field's category, a value is a `number`; a `boolean`, written as 0 or 1; a `string` for a text, or a localized value for a localizable one; one of an enumeration's raw values; a `Rawcode<kind>` for a reference, given with `FourCC`; a readonly array of them for a list, written comma-separated; a readonly array of strings for a list of strings. A Rawcode and an enumeration of strings also take `""`, the empty value the game's data holds where an object has none (the second weapon sound `ucs2` of a unit with one attack). A field with levels (an ability's or an upgrade's per-level data, a doodad's variations) takes a record from level to value, `{ 1: 3, 3: 5 }`, so level 3 is set without restating level 1 or 2. The data pointer comes from the field table, never from the author. A value equal to the base's is kept as a modification: "set to the default" stays apart from "not set".
+- `raw`, the raw escape: the fields the field table does not know, each with its field id, value type (`"int"`, `"real"`, `"unreal"` or `"string"`), level and data pointer (abilities, doodads and upgrades only, 0 when left out) and value.
+
+`localized(text, translations)` makes a localized value, a default text and one text per locale (`{ deDE: "Hauptmann" }`). Until [#712](https://github.com/phmilk/reforged-ts/issues/712) writes translations into `_Locales/`, the build writes the default text and warns of each translation it leaves out.
+
+A definition names another object with `FourCC("A000")`, the Typings' global, typed by the generated overloads and those of `reforged-builtins` like any literal.
+
+### Loading definitions
+
+Every `.ts` file under the definitions folder (`src/objects/` under the Map project's root by default), a declarations file (`.d.ts`) excepted, is a definition file. A missing folder, or one without a definition file, means no definitions, with no warning, and needs neither `typescript` nor `reforged-builtins`. Every value a definition file exports that is a definition counts, once: a definition two files export (a re-export) counts once, in the file that made it.
+
+Each file is transpiled to CommonJS with the Map project's own `typescript` (`transpileModule`, with no type check: the Map project's type check does that), resolved from the Map project's root as `reforged-builtins` is, and evaluated in Node, synchronously. Its transpiled text is kept by path and modification time, so a second load transpiles only the files that changed. A definition module gets the game's `FourCC`, which returns the integer the game's does (`FourCC("hfoo")` is `0x68666f6f`), and a `require` that:
+
+- resolves a relative import to another `.ts` file of the definitions folder, with or without extension (`./tiers`, `./tiers.ts`, `./tiers.js`, a folder's `index.ts`), so that files share helpers;
+- gives `reforged-map/objects` the loader's own module;
+- resolves any other package, and Node's built-in modules, from the Map project's root;
+- refuses an import of the generated folder (`src/generated/` by default) and of the kind entries of `reforged-builtins` (`reforged-builtins/units`), whose constants exist only in the map's Lua, and of a file outside the definitions folder, with an error naming the import and the importing file.
+
+### Checking definitions
+
+The **identity** of each definition is checked whenever definitions are loaded: its Rawcode is four printable ASCII characters; a Custom object's base is a Built-in object of its kind in the index of `reforged-builtins`, and its Rawcode is no Built-in object's, of any kind; a definition without a base names a Built-in object of its kind; and no Rawcode is defined twice in one kind. A Custom buff and a Custom destructable may share a Rawcode, as the World Editor makes both `B000`.
+
+Its **fields** are checked before the build edits anything: each is a field of its kind in the field table; its value is of the field's category (an enumeration's value among its raw values, each item of a list of Rawcodes a Rawcode, no item of a list of strings holding a comma); an integer fits 32 bits; a field takes levels only when it has them, and always then; a field specific to some bases (an ability's data fields) is set only on a Custom object of one of those bases, or on one of them; and a raw field is one the field table does not know. Each problem names the definition's file, the Rawcode and the field, and every problem is reported at once. The Object data editor's own checks still apply.
+
+Definitions need `reforged-builtins` with its field table of format 2, which gives each field's category, read from the Map project's installation at its newest Game version, as the Object data editor reads it.
+
+### The build's merge
+
+`mergeObjectDefinitions(stagedFolder, projectRoot, { definitionsFolder, generatedFolder })` edits the build's staged copy of the map folder to hold every definition: each Custom object added, then its fields set, and each change to a Built-in object made, in the Editor form of [the Object data editor](#the-object-data-editor). The objects go in Object kind then Rawcode order, an object's name field first, then its fields by field id and level, then its raw fields, so that the same definitions write the same bytes. The copy is saved with [the World Editor check](#the-world-editor-check) off; the map folder is never written. It returns the objects defined (`objects`, each with its Object kind, Rawcode, base and file), the files of the copy written (`written`) and the warnings.
+
+```ts
+import { mergeObjectDefinitions } from "reforged-map";
+
+const { objects, warnings } = mergeObjectDefinitions("dist/my-map.w3m", ".");
+```
+
+Until the Object manifest records which objects the code owns ([#704](https://github.com/phmilk/reforged-ts/issues/704)), the code owns none: a definition at a Rawcode the map folder already defines (a Custom object) or changes (a Built-in object) is a collision, and the merge throws, telling the author to adopt the object into the code (`pnpm objects:adopt <rawcode>`) or to give the definition another Rawcode. The build then fails before anything is written.
+
+### The Object definitions error
+
+`ObjectDefinitionsError` is the error of loading, checking and merging definitions; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `problems` every problem found, each with its `file` (an absolute path), `rawcode`, `field` and `message`, and its `file`, `rawcode` and `field` are the first problem's. Its message lists every problem, one per line when there are several:
+
+| `reason`               | When                                                                                                                                       | What the author does                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `"load-failed"`        | A definition file threw while loading (the message gives the exception's), could not be transpiled, or imported what a definition may not. | Fix the file, or name the object with `FourCC` instead of a generated or Built-in constant. |
+| `"invalid-definition"` | A definition's Rawcode, base or fields are not ones the World Editor could make.                                                           | Fix the definition at the file, Rawcode and field named.                                    |
+| `"defined-twice"`      | Two definitions name one Rawcode of one Object kind; the message names both files.                                                         | Keep one, or give the other another Rawcode.                                                |
+| `"collision"`          | A definition names a Rawcode the map folder defines or changes, which the code does not own.                                               | Adopt the object into the code (`pnpm objects:adopt`), or choose another Rawcode.           |
+| `"peer-missing"`       | `typescript` or `reforged-builtins` cannot be read from the Map project, or `reforged-builtins` has a field table of format 1.             | Install the peer named, or a newer `reforged-builtins`.                                     |
+
+An edit or a save the Object data editor refuses throws its own `ObjectDataWriterError`, and a missing staged copy a `MapFolderError`.
 
 ## Object data in `git diff`
 
