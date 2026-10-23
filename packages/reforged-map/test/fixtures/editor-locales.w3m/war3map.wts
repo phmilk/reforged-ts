@@ -1,0 +1,22 @@
+﻿STRING 1
+{
+Player 1
+}
+
+STRING 2
+{
+Force 1
+}
+
+STRING 3
+// Units: h000 (Locale Footman), Name (Name)
+{
+Locale Footman
+}
+
+STRING 4
+// Units: h000 (Locale Footman), Tip (Tooltip - Basic)
+{
+Tooltip padrão
+}
+
