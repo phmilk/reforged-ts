@@ -1,7 +1,7 @@
 // Object sync (#700, "Object sync"; ADR 0015): write a Map project's Object
 // definitions into its map folder in the Editor form, and record what the
 // code owns in the Object manifest, with the objects it removed. The World
-// Editor reload (#706) plugs in after the save.
+// Editor reload (#706) follows the save.
 
 import {
   applyDefinitions,
@@ -28,6 +28,10 @@ import type {
   WorldEditorCheckOptions,
   WorldEditorState,
 } from "./world-editor.js";
+import {
+  reloadWorldEditor,
+  type WorldEditorReloadOptions,
+} from "./world-editor-reload.js";
 
 /** The options of {@link syncObjectDefinitions}. */
 export interface ObjectSyncOptions extends ObjectDefinitionsOptions {
@@ -43,6 +47,18 @@ export interface ObjectSyncOptions extends ObjectDefinitionsOptions {
    * always runs: injected window titles, a timeout.
    */
   worldEditorCheck?: WorldEditorCheckOptions;
+  /**
+   * The path of the World Editor's executable, `World Editor.exe` beside
+   * the game's, with which a sync reloads a World Editor that holds the map
+   * folder without unsaved edits ({@link reloadWorldEditor}). Without it,
+   * the sync warns to reload the map there by hand.
+   */
+  worldEditorExecutable?: string;
+  /**
+   * How to run the World Editor reload: an injected launcher, the system.
+   * For tests.
+   */
+  worldEditorReload?: WorldEditorReloadOptions;
 }
 
 /** An object Object sync removed: its Object kind, its Rawcode and, for a Custom object, its base. */
@@ -75,6 +91,8 @@ export interface ObjectSyncReport {
   readonly manifestWritten: boolean;
   /** What the World Editor showed of the map folder before the first write. */
   readonly worldEditor: WorldEditorState | undefined;
+  /** Whether it reloaded the map folder in the World Editor that held it, with `-launch -loadfile`. */
+  readonly worldEditorReloaded: boolean;
   /** Author-facing warnings, each one line. */
   readonly warnings: readonly string[];
 }
@@ -116,9 +134,11 @@ export interface ObjectSyncReport {
  * a `STRING n` of `war3map.wts` another owner references keeps its text.
  *
  * The map folder is saved with the World Editor check on: a World Editor
- * showing unsaved edits for it (` *]`) refuses the save, and one holding it
- * without unsaved edits draws a warning to reload the map there by hand,
- * else its next save puts back what it loaded. Then the written objects are
+ * showing unsaved edits for it (` *]`) refuses the save. One holding it
+ * without unsaved edits is reloaded after the write, given the World
+ * Editor's executable ({@link reloadWorldEditor}), else its next save puts
+ * back what it loaded: without the executable, or when the reload fails,
+ * the sync warns to reload the map there by hand. Then the written objects are
  * read back and the manifest records each defined object's snapshot: base
  * and Skin files merged, strings as their text, each modification as field
  * id, level, data pointer, value type and value. The manifest is written
@@ -132,10 +152,11 @@ export interface ObjectSyncReport {
  *   folder, the Object manifest, `typescript` and `reforged-builtins` are
  *   found.
  * @param options - The definitions folder, the generated folder, the
- *   Object manifest, `force` and the World Editor check's options.
+ *   Object manifest, `force`, the World Editor check's options and the
+ *   World Editor's executable.
  * @returns The objects defined, added, changed, removed and removed again,
  *   those left alone, the files written, whether the manifest was written,
- *   the World Editor's state and the warnings.
+ *   the World Editor's state, whether it was reloaded, and the warnings.
  * @throws {@link ObjectDefinitionsError} With the reasons
  *   {@link mergeObjectDefinitions} gives: `"load-failed"`,
  *   `"invalid-definition"`, `"defined-twice"`, `"collision"`,
@@ -176,6 +197,7 @@ export function syncObjectDefinitions(
       written: [],
       manifestWritten: false,
       worldEditor: undefined,
+      worldEditorReloaded: false,
       warnings: [],
     };
   }
@@ -212,12 +234,26 @@ export function syncObjectDefinitions(
       `The Custom ${object.kind} ${object.rawcode} was removed: no definition defines it any more. Its placements on the terrain, if any, are dropped by the World Editor's next save and skipped by the game. To hand an object back to the map folder with its placements, restore its definition and release it (pnpm objects:release ${object.rawcode}).`,
     );
   }
-  // #706: reload the World Editor here when the caller gives its
-  // executable; until then, the author reloads by hand.
+  // The World Editor reload (#706): a World Editor holding the map would
+  // put back what it loaded on its next save.
+  let worldEditorReloaded = false;
   if (worldEditor === "open" && written.length > 0) {
-    warnings.push(
-      `The World Editor has ${mapFolder} open: reload the map there (close it without saving and open it again), or its next save puts back what it loaded before this sync.`,
-    );
+    const byHand =
+      "reload the map there (close it without saving and open it again), or its next save puts back what it loaded before this sync.";
+    const executable = options.worldEditorExecutable;
+    if (executable === undefined) {
+      warnings.push(`The World Editor has ${mapFolder} open: ${byHand}`);
+    } else {
+      try {
+        reloadWorldEditor(mapFolder, executable, options.worldEditorReload);
+        worldEditorReloaded = true;
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error);
+        warnings.push(
+          `The World Editor has ${mapFolder} open and could not be reloaded (${detail}): ${byHand}`,
+        );
+      }
+    }
   }
 
   // Read back what was written, and record it.
@@ -268,6 +304,7 @@ export function syncObjectDefinitions(
     written,
     manifestWritten,
     worldEditor,
+    worldEditorReloaded,
     warnings,
   };
 }

@@ -8,7 +8,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import {
   ObjectDataWriterError,
   ObjectDefinitionsError,
@@ -87,6 +87,13 @@ function copyProject(project: MapProject): MapProject {
 function titles(folder: string, modified: boolean): ObjectSyncOptions {
   const title = `Warcraft III World Editor - [${path.resolve(folder)}${modified ? " *" : ""}]`;
   return { worldEditorCheck: { readWindowTitles: () => [title] } };
+}
+
+/** A file standing in for the World Editor's executable. */
+function editorExecutable(): string {
+  const file = path.join(makeTempDir(), "World Editor.exe");
+  fs.writeFileSync(file, "");
+  return file;
 }
 
 const NO_WINDOW: ObjectSyncOptions = {
@@ -349,17 +356,100 @@ describe("syncObjectDefinitions", () => {
     expect(snapshot(project.root)).toEqual(before);
   });
 
-  it("writes while the World Editor holds the map without unsaved edits, and warns to reload it by hand", () => {
+  it("writes while the World Editor holds the map without unsaved edits, and warns to reload it by hand without its executable", () => {
     const project = mapProject({ [UNITS]: FIRST });
 
     const report = sync(project, titles(project.mapFolder, false));
 
     expect(report.worldEditor).toBe("open");
+    expect(report.worldEditorReloaded).toBe(false);
     expect(report.written.length).toBeGreaterThan(0);
     expect(report.warnings).toEqual([
       `The World Editor has ${project.mapFolder} open: reload the map there (close it without saving and open it again), or its next save puts back what it loaded before this sync.`,
     ]);
     expect(objectOf(project.mapFolder, "unit", "h002")).toBeDefined();
+  });
+
+  it("writes, then reloads the World Editor that holds the map without unsaved edits, given its executable", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    const executable = editorExecutable();
+    const launch = vi.fn(() => {
+      // The map folder is written when the World Editor reloads it.
+      expect(objectOf(project.mapFolder, "unit", "h002")).toBeDefined();
+    });
+
+    const report = sync(project, {
+      ...titles(project.mapFolder, false),
+      worldEditorExecutable: executable,
+      worldEditorReload: { system: "windows", launch },
+    });
+
+    expect(report.worldEditor).toBe("open");
+    expect(report.worldEditorReloaded).toBe(true);
+    expect(report.warnings).toEqual([]);
+    expect(launch).toHaveBeenCalledOnce();
+    expect(launch).toHaveBeenCalledWith(executable, [
+      "-launch",
+      "-loadfile",
+      path.resolve(project.mapFolder),
+    ]);
+  });
+
+  it("warns to reload by hand, naming why, when the reload fails, and still writes the manifest", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    const launch = vi.fn();
+    const missing = path.join(makeTempDir(), "World Editor.exe");
+
+    const report = sync(project, {
+      ...titles(project.mapFolder, false),
+      worldEditorExecutable: missing,
+      worldEditorReload: { system: "windows", launch },
+    });
+
+    expect(launch).not.toHaveBeenCalled();
+    expect(report.worldEditorReloaded).toBe(false);
+    expect(report.manifestWritten).toBe(true);
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toContain(
+      `The World Editor has ${project.mapFolder} open and could not be reloaded (`,
+    );
+    expect(report.warnings[0]).toContain(missing);
+    expect(report.warnings[0]).toContain(
+      "reload the map there (close it without saving and open it again)",
+    );
+  });
+
+  it("neither reloads nor warns when the World Editor does not hold the map", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    const launch = vi.fn();
+
+    const report = sync(project, {
+      worldEditorExecutable: editorExecutable(),
+      worldEditorReload: { system: "windows", launch },
+    });
+
+    expect(report.worldEditor).toBe("no-window");
+    expect(report.written.length).toBeGreaterThan(0);
+    expect(report.worldEditorReloaded).toBe(false);
+    expect(report.warnings).toEqual([]);
+    expect(launch).not.toHaveBeenCalled();
+  });
+
+  it("neither reloads nor warns when the sync writes nothing to a map the World Editor holds", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    const launch = vi.fn();
+
+    const report = sync(project, {
+      ...titles(project.mapFolder, false),
+      worldEditorExecutable: editorExecutable(),
+      worldEditorReload: { system: "windows", launch },
+    });
+
+    expect(report.written).toEqual([]);
+    expect(report.worldEditorReloaded).toBe(false);
+    expect(report.warnings).toEqual([]);
+    expect(launch).not.toHaveBeenCalled();
   });
 
   it.each([false, true])(
@@ -442,7 +532,7 @@ describe("the Object manifest", () => {
 
     expect(merged.status).toBe(0);
     expect(merged.stdout).toBe(manifest(both));
-  });
+  }, 30_000); // Four syncs and git merge-file: near 5 s on a loaded Windows runner.
 
   it.each([
     ["does not parse", "{ not json"],

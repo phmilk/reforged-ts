@@ -175,8 +175,11 @@ function attempt<T>(mapFolder: string, step: () => T): T {
   }
 }
 
-/** Where the windows' titles are read: on Windows, on WSL, or nowhere. */
-function windowSystem(): "windows" | "wsl" | undefined {
+/** The system a World Editor runs on: Windows, or WSL, where Windows programs run with their paths converted by `wslpath -w`. */
+export type WindowSystem = "windows" | "wsl";
+
+/** Where a World Editor can run: on Windows, on WSL, or nowhere. */
+export function windowSystem(): WindowSystem | undefined {
   if (process.platform === "win32") return "windows";
   if (process.platform !== "linux") return undefined;
   if (process.env.WSL_DISTRO_NAME !== undefined) return "wsl";
@@ -189,7 +192,7 @@ function windowSystem(): "windows" | "wsl" | undefined {
 }
 
 /** A WSL path as Windows names it, through `wslpath -w`. */
-function windowsPath(folder: string, timeout: number): string {
+export function windowsPath(folder: string, timeout: number): string {
   return run("wslpath", ["-w", folder], timeout).replace(/\r?\n$/, "");
 }
 

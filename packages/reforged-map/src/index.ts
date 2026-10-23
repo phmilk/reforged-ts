@@ -42,6 +42,10 @@ export {
   type WorldEditorState,
 } from "./world-editor.js";
 export {
+  reloadWorldEditor,
+  type WorldEditorReloadOptions,
+} from "./world-editor-reload.js";
+export {
   ObjectDataWriterError,
   type ObjectDataWriterErrorReason,
 } from "./writer-error.js";
