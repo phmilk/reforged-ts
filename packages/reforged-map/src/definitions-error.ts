@@ -9,12 +9,15 @@
  * ones the World Editor could make; `"defined-twice"`, two definitions name
  * one Rawcode of one Object kind; `"collision"`, a definition names a
  * Rawcode the map folder defines or changes and the code does not own;
+ * `"changed-outside-code"`, an object the code owns was changed in the map
+ * folder outside the code since the last Object sync;
  * `"manifest-unreadable"`, the Object manifest does not parse or is not one
  * Object sync writes; `"peer-missing"`, `typescript` or `reforged-builtins`
  * (its index, or its field table of format 2) could not be read from the
  * Map project.
  */
 export type ObjectDefinitionsErrorReason =
+  | "changed-outside-code"
   | "collision"
   | "defined-twice"
   | "invalid-definition"
@@ -37,10 +40,10 @@ export interface ObjectDefinitionProblem {
 /**
  * Object definitions the build or Object sync refuses: a definition file
  * that cannot be loaded, an invalid definition, a Rawcode defined twice, a
- * collision with the map folder, an unreadable Object manifest, or a
- * missing peer. Its `reason` says which, for a caller
- * to switch on, and its message what the author does next. Nothing is
- * written when it is thrown.
+ * collision with the map folder, an object the code owns changed outside
+ * the code, an unreadable Object manifest, or a missing peer. Its `reason`
+ * says which, for a caller to switch on, and its message what the author
+ * does next. Nothing is written when it is thrown.
  */
 export class ObjectDefinitionsError extends Error {
   /** `"ObjectDefinitionsError"`, the error's name in a stack trace and in `String(error)`. */
@@ -56,14 +59,28 @@ export class ObjectDefinitionsError extends Error {
   /** The field id of the first problem, when it is about one. */
   readonly field: string | undefined;
 
+  /**
+   * Makes the error of a reason and its problems.
+   *
+   * @param reason - Why the definitions were refused.
+   * @param problems - Every problem found, at least one.
+   * @param header - The message's first line, what the problems share and
+   *   what the author does next, each problem then listed on its own line;
+   *   when left out, a single problem is the whole message and several are
+   *   counted.
+   */
   constructor(
     reason: ObjectDefinitionsErrorReason,
     problems: readonly ObjectDefinitionProblem[],
+    header?: string,
   ) {
+    const list = problems.map((problem) => `- ${problem.message}`).join("\n");
     super(
-      problems.length === 1
-        ? (problems[0]?.message ?? "")
-        : `${String(problems.length)} problems in the Object definitions:\n${problems.map((problem) => `- ${problem.message}`).join("\n")}`,
+      header !== undefined
+        ? `${header}\n${list}`
+        : problems.length === 1
+          ? (problems[0]?.message ?? "")
+          : `${String(problems.length)} problems in the Object definitions:\n${list}`,
     );
     this.reason = reason;
     this.problems = problems;

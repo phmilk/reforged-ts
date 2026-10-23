@@ -173,7 +173,7 @@ Writing a Map project's Object definitions into its map folder's Object data, so
 _Avoid_: inject, export, object generation
 
 **Object manifest**:
-The Map project's record of which Rawcodes belong to its Object definitions and what an Object sync last wrote for each, so a later one can replace, remove or detect a change made outside the code.
+The Map project's record of which Rawcodes belong to its Object definitions and what an Object sync last wrote for each, and of the objects a sync removed, so a later one can replace, remove or detect a change made outside the code, and tell a removed object a stale World Editor save brought back from a new one.
 _Avoid_: lock file, provenance field
 
 **Object adoption**:

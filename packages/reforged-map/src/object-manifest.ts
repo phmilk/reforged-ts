@@ -1,7 +1,8 @@
 // The Object manifest (#700, "The Object manifest"; ADR 0015 and its
 // amendment #475): a JSON file at the Map project's root, outside the map
 // folder, recording each object the code owns and its snapshot, what the
-// last Object sync wrote. Object sync writes it; the build's merge, and
+// last Object sync wrote, and each object a sync removed with what it last
+// held. Object sync writes it; the build's merge, and
 // every other reader, only reads it. It is written byte-stably, so that two
 // branches syncing different objects merge without a conflict.
 
@@ -47,9 +48,12 @@ export interface ObjectSnapshot {
   readonly modifications: readonly SnapshotModification[];
 }
 
-/** The Object manifest as read: the objects the code owns, by Object kind then Rawcode. */
+/** The Object manifest as read: the objects the code owns, and those a sync removed, each by Object kind then Rawcode. */
 export interface ObjectManifest {
+  /** The objects the code owns, each with what the last sync wrote. */
   readonly owned: readonly ObjectSnapshot[];
+  /** The objects a sync removed because no definition defined them any more, each with what it last held. */
+  readonly removed: readonly ObjectSnapshot[];
 }
 
 /** The key of an object of one kind: its kind and Rawcode. */
@@ -114,14 +118,9 @@ export function snapshotOf(object: ObjectDataObject): ObjectSnapshot {
   };
 }
 
-/** Whether two snapshots hold the same object. */
-export function sameSnapshot(a: ObjectSnapshot, b: ObjectSnapshot): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
-/** The manifest's text: format, then the owned entries by Object kind then Rawcode, two-space indentation, a final newline. */
-export function manifestText(manifest: ObjectManifest): string {
-  const owned = [...manifest.owned].sort(byKindThenRawcode).map((entry) => ({
+/** A snapshot with its keys in the manifest's order, whatever order it was built or read in. */
+function canonical(entry: ObjectSnapshot): ObjectSnapshot {
+  return {
     kind: entry.kind,
     rawcode: entry.rawcode,
     ...(entry.base !== undefined && { base: entry.base }),
@@ -134,8 +133,19 @@ export function manifestText(manifest: ObjectManifest): string {
       type: modification.type,
       value: modification.value,
     })),
-  }));
-  return `${JSON.stringify({ format: MANIFEST_FORMAT, owned }, null, 2)}\n`;
+  };
+}
+
+/** Whether two snapshots hold the same object. */
+export function sameSnapshot(a: ObjectSnapshot, b: ObjectSnapshot): boolean {
+  return JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
+}
+
+/** The manifest's text: format, then the owned entries and the removed ones, each by Object kind then Rawcode, two-space indentation, a final newline. */
+export function manifestText(manifest: ObjectManifest): string {
+  const owned = [...manifest.owned].sort(byKindThenRawcode).map(canonical);
+  const removed = [...manifest.removed].sort(byKindThenRawcode).map(canonical);
+  return `${JSON.stringify({ format: MANIFEST_FORMAT, owned, removed }, null, 2)}\n`;
 }
 
 /**
@@ -151,7 +161,7 @@ export function readObjectManifest(
     text = fs.readFileSync(file, "utf8");
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT")
-      return { owned: [] };
+      return { owned: [], removed: [] };
     throw unreadable(file, projectRoot, (error as Error).message);
   }
   let json: unknown;
@@ -167,7 +177,7 @@ export function readObjectManifest(
 
 /**
  * Writes the Object manifest when its bytes change, and says whether it
- * did. A manifest that owns nothing is not created.
+ * did. A manifest that neither owns nor removed anything is not created.
  */
 export function writeObjectManifest(
   file: string,
@@ -181,7 +191,13 @@ export function writeObjectManifest(
     current = undefined;
   }
   if (current === text) return false;
-  if (current === undefined && manifest.owned.length === 0) return false;
+  if (
+    current === undefined &&
+    manifest.owned.length === 0 &&
+    manifest.removed.length === 0
+  ) {
+    return false;
+  }
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, text);
   return true;
@@ -219,15 +235,33 @@ function hasOnly(
 /** What is wrong with a parsed manifest, in a few words; undefined when nothing is. */
 function manifestProblem(json: unknown): string | undefined {
   if (!isRecord(json)) return "it is not a JSON object";
-  const extra = hasOnly(json, ["format", "owned"]);
+  const extra = hasOnly(json, ["format", "owned", "removed"]);
   if (extra !== undefined) return `unknown key ${JSON.stringify(extra)}`;
   if (json.format !== MANIFEST_FORMAT) {
     return `its format is ${JSON.stringify(json.format)}, not ${String(MANIFEST_FORMAT)}`;
   }
-  if (!Array.isArray(json.owned)) return `"owned" is not a list`;
-  const seen = new Set<string>();
-  for (const [index, entry] of (json.owned as unknown[]).entries()) {
-    const at = `owned[${String(index)}]`;
+  const owned = new Set<string>();
+  return (
+    entriesProblem(json, "owned", owned, new Set()) ??
+    entriesProblem(json, "removed", new Set(), owned)
+  );
+}
+
+/**
+ * What is wrong with a list of entries of a parsed manifest: `seen`
+ * collects their keys, and a key of `others`, the owned entries', is
+ * refused in the removed ones.
+ */
+function entriesProblem(
+  json: Record<string, unknown>,
+  list: "owned" | "removed",
+  seen: Set<string>,
+  others: ReadonlySet<string>,
+): string | undefined {
+  const listed: unknown = json[list];
+  if (!Array.isArray(listed)) return `"${list}" is not a list`;
+  for (const [index, entry] of (listed as unknown[]).entries()) {
+    const at = `${list}[${String(index)}]`;
     if (!isRecord(entry)) return `${at} is not an object`;
     const key = hasOnly(entry, ["kind", "rawcode", "base", "modifications"]);
     if (key !== undefined)
@@ -245,7 +279,8 @@ function manifestProblem(json: unknown): string | undefined {
       return `${at} has a base that is not a Rawcode`;
     }
     const id = objectKey(entry as { kind: ObjectKind; rawcode: string });
-    if (seen.has(id)) return `the ${id} is owned twice`;
+    if (others.has(id)) return `the ${id} is both owned and removed`;
+    if (seen.has(id)) return `the ${id} is ${list} twice`;
     seen.add(id);
     if (!Array.isArray(entry.modifications)) {
       return `${at} has no list of modifications`;

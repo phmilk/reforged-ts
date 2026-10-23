@@ -246,7 +246,8 @@ describe("syncObjectDefinitions", () => {
         }
       ]
     }
-  ]
+  ],
+  "removed": []
 }
 `);
   });
@@ -445,11 +446,19 @@ describe("the Object manifest", () => {
 
   it.each([
     ["does not parse", "{ not json"],
-    ["is of another format", '{ "format": 2, "owned": [] }\n'],
-    ["has an unknown key", '{ "format": 1, "owned": [], "extra": 1 }\n'],
+    ["is of another format", '{ "format": 2, "owned": [], "removed": [] }\n'],
+    [
+      "has an unknown key",
+      '{ "format": 1, "owned": [], "removed": [], "extra": 1 }\n',
+    ],
+    ["has no removed entries", '{ "format": 1, "owned": [] }\n'],
     [
       "owns an object twice",
-      '{ "format": 1, "owned": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }, { "kind": "unit", "rawcode": "h002", "modifications": [] }] }\n',
+      '{ "format": 1, "owned": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }, { "kind": "unit", "rawcode": "h002", "modifications": [] }], "removed": [] }\n',
+    ],
+    [
+      "both owns and removed an object",
+      '{ "format": 1, "owned": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }], "removed": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }] }\n',
     ],
   ])("is refused, naming the file, when it %s", (_, text) => {
     const project = mapProject({ [UNITS]: FIRST, [MANIFEST]: text });
@@ -521,5 +530,307 @@ describe("the build's merge with the Object manifest", () => {
 
     expect(objectOf(staged, "unit", "h002")).toBeUndefined();
     expect(objectOf(staged, "unit", "hkni")).toBeUndefined();
+  });
+});
+
+/** Edits a Map project's map folder outside the code, as the World Editor would, and saves it. */
+function editMapFolder(
+  project: MapProject,
+  edit: (editor: ReturnType<typeof openObjectData>) => void,
+): void {
+  const editor = openObjectData(project.mapFolder, {
+    projectRoot: PACKAGE_ROOT,
+  });
+  edit(editor);
+  editor.save(undefined, { worldEditorCheck: false });
+}
+
+/** The Object data files of a map folder, by file name, with their bytes. */
+function objectFiles(folder: string): Map<string, Buffer> {
+  return new Map(
+    fs
+      .readdirSync(folder)
+      .filter((name) => /^war3map(Skin)?\.(w3[a-z]|wts)$/.test(name))
+      .map((name) => [name, fs.readFileSync(path.join(folder, name))]),
+  );
+}
+
+/** Writes Object data files back, as a World Editor that loaded them saves them again. */
+function restoreObjectFiles(
+  folder: string,
+  files: ReadonlyMap<string, Buffer>,
+): void {
+  for (const name of fs.readdirSync(folder)) {
+    if (/^war3map(Skin)?\.(w3[a-z]|wts)$/.test(name) && !files.has(name)) {
+      fs.rmSync(path.join(folder, name));
+    }
+  }
+  for (const [name, bytes] of files) {
+    fs.writeFileSync(path.join(folder, name), bytes);
+  }
+}
+
+/** The manifest's entries of a list, as `kind rawcode`. */
+function entries(project: MapProject, list: "owned" | "removed"): string[] {
+  const json = JSON.parse(manifest(project)) as Record<
+    string,
+    { kind: string; rawcode: string }[]
+  >;
+  return listed(json[list] ?? []);
+}
+
+const DRIFT_HEADER =
+  "Objects the code owns were changed in the map folder outside the code since the last Object sync: nothing was written. Copy each change into its definition, or sync with force (pnpm objects:sync --force) to overwrite them with the code's version.";
+
+describe("Object sync and changes made outside the code", () => {
+  it("refuses an owned object changed in the map folder, listing each object and field with both values, and writes nothing", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    editMapFolder(project, (editor) => {
+      editor.setField({ kind: "unit", rawcode: "h002", field: "uhpm" }, 500);
+      editor.removeField({ kind: "unit", rawcode: "h002", field: "usca" });
+      editor.setField({ kind: "unit", rawcode: "hkni", field: "umvs" }, 300);
+    });
+    const before = snapshot(project.root);
+
+    const error = thrown(() => sync(project));
+
+    expect(error).toBeInstanceOf(ObjectDefinitionsError);
+    expect((error as ObjectDefinitionsError).reason).toBe(
+      "changed-outside-code",
+    );
+    expect((error as Error).message).toBe(
+      [
+        DRIFT_HEADER,
+        "- The unit h002's uhpm is 420 in the Object manifest and 500 in the map folder.",
+        "- The unit h002's usca is 1.1 in the Object manifest and not set in the map folder.",
+        "- The unit hkni's umvs is not set in the Object manifest and 300 in the map folder.",
+      ].join("\n"),
+    );
+    const problems = (error as ObjectDefinitionsError).problems;
+    expect(
+      problems.map(
+        ({ rawcode, field }) => `${String(rawcode)} ${String(field)}`,
+      ),
+    ).toEqual(["h002 uhpm", "h002 usca", "hkni umvs"]);
+    expect(problems[0]?.file).toBe(path.join(project.root, UNITS));
+    expect(snapshot(project.root)).toEqual(before);
+  });
+
+  it("overwrites the changes with the code's version under force, with a warning per object", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    const synced = manifest(project);
+    editMapFolder(project, (editor) => {
+      editor.setField({ kind: "unit", rawcode: "h002", field: "uhpm" }, 500);
+    });
+
+    const report = sync(project, { force: true });
+
+    expect(listed(report.changed)).toEqual(["unit h002"]);
+    expect(report.warnings).toEqual([
+      "The unit h002 was changed outside the code (uhpm): force overwrote it with the code's version.",
+    ]);
+    expect(modifications(objectOf(project.mapFolder, "unit", "h002"))).toEqual([
+      "uhpm = 420",
+      'unam = "Sergeant"',
+      "usca = 1.1",
+    ]);
+    expect(manifest(project)).toBe(synced);
+  });
+
+  it("reports an owned object deleted in the map folder as changed outside the code", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    editMapFolder(project, (editor) => {
+      editor.removeObject({ kind: "unit", rawcode: "h003" });
+      editor.removeObject({ kind: "unit", rawcode: "hkni" });
+    });
+
+    const error = thrown(() => sync(project));
+
+    expect((error as ObjectDefinitionsError).reason).toBe(
+      "changed-outside-code",
+    );
+    expect((error as Error).message).toBe(
+      [
+        DRIFT_HEADER,
+        "- The Custom unit h003 is in the Object manifest and was deleted from the map folder.",
+        "- The unit hkni's uhpm is 900 in the Object manifest and not set in the map folder.",
+      ].join("\n"),
+    );
+  });
+
+  it("refuses a change to an owned object the code dropped, rather than removing it in silence", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    editMapFolder(project, (editor) => {
+      editor.setField({ kind: "unit", rawcode: "h003", field: "uhpm" }, 250);
+    });
+    write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
+
+    const error = thrown(() => sync(project));
+
+    expect((error as Error).message).toBe(
+      [
+        DRIFT_HEADER,
+        "- The unit h003's uhpm is not set in the Object manifest and 250 in the map folder.",
+      ].join("\n"),
+    );
+    expect((error as ObjectDefinitionsError).file).toBeUndefined();
+  });
+
+  it("recovers a sync interrupted before its manifest write without a drift report", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    const stale = manifest(project);
+    write(project, {
+      [UNITS]: FIRST.replace("uhpm: 420", "uhpm: 500").replace(
+        /^export const Knight.*\n/m,
+        "",
+      ),
+    });
+    sync(project);
+    const complete = manifest(project);
+    // The sync wrote the map folder, then stopped before the manifest.
+    fs.writeFileSync(path.join(project.root, MANIFEST), stale);
+
+    const report = sync(project);
+
+    expect(report.written).toEqual([]);
+    expect(report.manifestWritten).toBe(true);
+    expect(report.warnings).toEqual([]);
+    expect(manifest(project)).toBe(complete);
+  });
+});
+
+describe("Object sync and the objects it removed", () => {
+  it("records each removed object in the manifest, sorted with the owned ones, and drops the entry when a definition takes its Rawcode again", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    write(project, {
+      [UNITS]: `${IMPORT}export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: "Sergeant", uhpm: 420, usca: 1.1 } });\n`,
+    });
+
+    sync(project);
+
+    expect(entries(project, "owned")).toEqual(["unit h002"]);
+    expect(entries(project, "removed")).toEqual(["unit h003", "unit hkni"]);
+    expect(manifest(project)).toContain(`  "removed": [
+    {
+      "kind": "unit",
+      "rawcode": "h003",
+      "base": "hfoo",
+      "modifications": [
+        {
+          "field": "unam",
+          "type": "string",
+          "value": "Squire"
+        }
+      ]
+    },`);
+
+    write(project, { [UNITS]: FIRST });
+    const report = sync(project);
+
+    expect(listed(report.added)).toEqual(["unit h003", "unit hkni"]);
+    expect(entries(project, "owned")).toEqual([
+      "unit h002",
+      "unit h003",
+      "unit hkni",
+    ]);
+    expect(entries(project, "removed")).toEqual([]);
+  });
+
+  it("removes again, with a warning, a removed object a stale World Editor save brought back", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    // The World Editor loads the map, the code drops Squire, and the World
+    // Editor saves what it loaded.
+    const loaded = objectFiles(project.mapFolder);
+    write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
+    sync(project);
+    restoreObjectFiles(project.mapFolder, loaded);
+    expect(objectOf(project.mapFolder, "unit", "h003")).toBeDefined();
+
+    const report = sync(project);
+
+    expect(report.removedAgain).toEqual([
+      { kind: "unit", rawcode: "h003", base: "hfoo" },
+    ]);
+    expect(report.leftAlone).toEqual([]);
+    expect(report.warnings).toEqual([
+      "The unit h003, which an earlier Object sync removed, was brought back unchanged by a World Editor that saved the map it had loaded before that sync: it was removed again. Reload the map in the World Editor after each sync, before saving there.",
+    ]);
+    expect(objectOf(project.mapFolder, "unit", "h003")).toBeUndefined();
+    expect(entries(project, "removed")).toEqual(["unit h003"]);
+  });
+
+  it("leaves alone a new object of the map folder at a removed Rawcode, and forgets the removed one", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
+    sync(project);
+    editMapFolder(project, (editor) => {
+      editor.addObject({ kind: "unit", rawcode: "h003", base: "hkni" });
+    });
+
+    const report = sync(project);
+
+    expect(report.removedAgain).toEqual([]);
+    expect(report.leftAlone).toEqual([
+      { kind: "unit", rawcode: "h003", base: "hkni" },
+    ]);
+    expect(report.written).toEqual([]);
+    expect(objectOf(project.mapFolder, "unit", "h003")?.base).toBe("hkni");
+    expect(entries(project, "removed")).toEqual([]);
+  });
+
+  it("lets a definition take back its removed object a stale save brought back, without a collision", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    const loaded = objectFiles(project.mapFolder);
+    write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
+    sync(project);
+    restoreObjectFiles(project.mapFolder, loaded);
+    write(project, { [UNITS]: FIRST });
+
+    const report = sync(project);
+
+    expect(report.removedAgain).toEqual([]);
+    expect(entries(project, "owned")).toEqual([
+      "unit h002",
+      "unit h003",
+      "unit hkni",
+    ]);
+    expect(entries(project, "removed")).toEqual([]);
+  });
+});
+
+describe("the build's merge and changes made outside the code", () => {
+  it("warns per object changed outside the code and ships the code's version", () => {
+    const project = mapProject({ [UNITS]: FIRST });
+    sync(project);
+    editMapFolder(project, (editor) => {
+      editor.setField({ kind: "unit", rawcode: "h002", field: "uhpm" }, 500);
+      editor.removeObject({ kind: "unit", rawcode: "h003" });
+    });
+    const staged = path.join(project.root, "dist", "test.w3m");
+    fs.cpSync(project.mapFolder, staged, { recursive: true });
+    const before = manifest(project);
+
+    const result = mergeObjectDefinitions(staged, project.root);
+
+    expect(result.warnings).toEqual([
+      "The unit h002 was changed in the map folder outside the code (uhpm): the build ships the code's version. Object sync (pnpm objects:sync) lists the changes.",
+      "The unit h003 was changed in the map folder outside the code (deleted): the build ships the code's version. Object sync (pnpm objects:sync) lists the changes.",
+    ]);
+    expect(modifications(objectOf(staged, "unit", "h002"))).toEqual([
+      "uhpm = 420",
+      'unam = "Sergeant"',
+      "usca = 1.1",
+    ]);
+    expect(objectOf(staged, "unit", "h003")?.base).toBe("hfoo");
+    expect(manifest(project)).toBe(before);
   });
 });
