@@ -76,4 +76,4 @@ Any further notes about the feature.
 
 ## Done
 
-The Spec is written when it uses only the glossary's terms and its own, respects the ADRs of its area, is tested at the seams the user agreed to, and is published as step 3 says.
+The Spec is written when it uses only the glossary's terms and its own, respects the ADRs of its area, names the seams the user agreed to, and is published as step 3 says.
