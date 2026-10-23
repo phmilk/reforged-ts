@@ -33,7 +33,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `release/`: the release scripts, a private workspace package.
 - `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file, the Agent skills and the editor settings.
-- `.claude/skills/`: the Agent skills: the repository's, listed under "Agent skills", and the Upstream skills `skills-lock.json` names. `.claude/shared.json`: what both repositories share (ADR 0024).
+- `.claude/skills/`: the Agent skills, listed under "Agent skills". `.claude/shared.json`: what both repositories share (ADR 0024).
 - Diagrams: the README's "Map" indexes them. Read a flow's diagram before changing the flow: the packages, a pull request's CI, the release, an issue's life, the development loop, the Claim board, a Patch's adoption, a Probe run, the docs site, the Init stages.
 
 ## Rules

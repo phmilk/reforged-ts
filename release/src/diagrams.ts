@@ -203,6 +203,9 @@ function readRegions(
 /** The skills CLI's lock, from the root: it names the Upstream skills. */
 const SKILLS_LOCK = "skills-lock.json";
 
+/** A path in a skill's folder of `.claude/skills/`; its group is the skill. */
+const SKILL_PATH = /^\.claude\/skills\/([^/]+)\//;
+
 /**
  * The names of the Upstream skills, the keys of the lock's `skills`; none
  * when the repository has no lock.
@@ -235,9 +238,7 @@ async function markdownFiles(root: string): Promise<string[]> {
   return listed
     .split("\0")
     .filter(
-      (path) =>
-        path !== "" &&
-        !upstream.has(/^\.claude\/skills\/([^/]+)\//.exec(path)?.[1] ?? ""),
+      (path) => path !== "" && !upstream.has(SKILL_PATH.exec(path)?.[1] ?? ""),
     );
 }
 

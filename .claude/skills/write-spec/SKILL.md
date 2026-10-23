@@ -76,4 +76,4 @@ Any further notes about the feature.
 
 ## Done
 
-The Spec is written when its issue exists with the `ready-for-agent` and `spec` labels and no assignee, and its number and link are reported.
+The Spec is written when it uses only the glossary's terms and its own, respects the ADRs of its area, is tested at the seams the user agreed to, and is published as step 3 says.

@@ -13,7 +13,7 @@ npx skills remove -g <name>...
 claude plugin uninstall mattpocock-skills@claude-plugins-official
 ```
 
-A session started in the repository warns you when a personal skill or the plugin still shadows the repository's, naming each one and the command for it; the warning never blocks the session. In [`docs/agents/development-loop.md`](docs/agents/development-loop.md): [Removing the global copies](docs/agents/development-loop.md#removing-the-global-copies), and the command that installs and updates the Upstream skills, in [Installing and updating the Upstream skills](docs/agents/development-loop.md#installing-and-updating-the-upstream-skills).
+A session started in the repository warns you when a personal skill or the plugin still shadows the repository's, naming each one and the command for it; the warning never blocks the session. See [Removing the global copies](docs/agents/development-loop.md#removing-the-global-copies) and [Installing and updating the Upstream skills](docs/agents/development-loop.md#installing-and-updating-the-upstream-skills) in `docs/agents/development-loop.md`.
 
 ## Pull requests
 
