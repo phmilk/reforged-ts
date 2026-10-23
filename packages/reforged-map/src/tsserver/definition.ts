@@ -1,6 +1,7 @@
 // Go to definition on a Rawcode literal: the declaration of each object's
 // constant, resolved as the project resolves an import of its module, else
-// the object's FourCC overload.
+// the object's FourCC overload; then, for an object an Object definition
+// defines, the definition's Rawcode literal in its file, else its start.
 
 import path from "node:path";
 import type * as ts from "typescript";
@@ -10,8 +11,9 @@ import { isGlobalFourCCDeclaration } from "./literal.js";
 
 /**
  * The definitions of the objects a lookup result names, in its order: each
- * object's constant, else its `FourCC` overload; empty for a result that
- * names no object, or whose objects have neither.
+ * object's constant, else its `FourCC` overload, then its Object
+ * definition when one defines it; empty for a result that names no object,
+ * or whose objects have none of these.
  */
 export function rawcodeDefinitions(
   typescript: typeof ts,
@@ -37,24 +39,121 @@ export function rawcodeDefinitions(
           );
     if (constant !== undefined) {
       definitions.push(constant);
-      continue;
+    } else {
+      const overload = overloads.find(
+        (declaration) =>
+          overloadRawcode(typescript, declaration) === object.rawcode,
+      );
+      if (overload?.name !== undefined) {
+        definitions.push({
+          fileName: overload.getSourceFile().fileName,
+          textSpan: spanOf(overload.name),
+          kind: typescript.ScriptElementKind.functionElement,
+          name: "FourCC",
+          containerKind: typescript.ScriptElementKind.unknown,
+          containerName: "",
+        });
+      }
     }
-    const overload = overloads.find(
-      (declaration) =>
-        overloadRawcode(typescript, declaration) === object.rawcode,
-    );
-    if (overload?.name !== undefined) {
-      definitions.push({
-        fileName: overload.getSourceFile().fileName,
-        textSpan: spanOf(overload.name),
-        kind: typescript.ScriptElementKind.functionElement,
-        name: "FourCC",
-        containerKind: typescript.ScriptElementKind.unknown,
-        containerName: "",
-      });
+    if (object.origin !== "builtin" && object.definitionFile !== undefined) {
+      const definition = objectDefinition(
+        typescript,
+        program,
+        object.definitionFile,
+        object.kind,
+        object.rawcode,
+      );
+      if (definition !== undefined) definitions.push(definition);
     }
   }
   return definitions;
+}
+
+/**
+ * The Object definition of an object, in the file that defines it: its
+ * Rawcode literal when the file holds one, else the file's start; undefined
+ * when the file cannot be read.
+ */
+function objectDefinition(
+  typescript: typeof ts,
+  program: ts.Program,
+  file: string,
+  kind: string,
+  rawcode: string,
+): ts.DefinitionInfo | undefined {
+  const fileName = file.split(path.sep).join("/");
+  const sourceFile =
+    program.getSourceFile(fileName) ?? parse(typescript, fileName);
+  if (sourceFile === undefined) return undefined;
+  const literal = rawcodeLiteralIn(typescript, sourceFile, kind, rawcode);
+  return {
+    fileName: sourceFile.fileName,
+    textSpan: literal === undefined ? { start: 0, length: 0 } : spanOf(literal),
+    kind: typescript.ScriptElementKind.string,
+    name: rawcode,
+    containerKind: typescript.ScriptElementKind.moduleElement,
+    containerName: path.basename(fileName),
+  };
+}
+
+/**
+ * The literal of a Rawcode in a definition file, the first of the best
+ * place: the `rawcode` of the define function of its Object kind
+ * (`defineUnit({ rawcode: "h002" })`), else any `rawcode` property, else any
+ * string or template literal without substitutions holding it.
+ */
+function rawcodeLiteralIn(
+  typescript: typeof ts,
+  sourceFile: ts.SourceFile,
+  kind: string,
+  rawcode: string,
+): ts.Node | undefined {
+  const defineName = `define${kind.charAt(0).toUpperCase()}${kind.slice(1)}`;
+  let best: { node: ts.Node; score: number } | undefined;
+  const score = (literal: ts.Node): number => {
+    const property = literal.parent;
+    if (
+      !typescript.isPropertyAssignment(property) ||
+      property.initializer !== literal ||
+      propertyName(typescript, property.name) !== "rawcode"
+    ) {
+      return 0;
+    }
+    const call = property.parent.parent;
+    if (!typescript.isCallExpression(call)) return 1;
+    const callee = call.expression;
+    const name = typescript.isIdentifier(callee)
+      ? callee.text
+      : typescript.isPropertyAccessExpression(callee)
+        ? callee.name.text
+        : undefined;
+    return name === defineName ? 2 : 1;
+  };
+  const visit = (node: ts.Node): void => {
+    if (
+      (typescript.isStringLiteral(node) ||
+        typescript.isNoSubstitutionTemplateLiteral(node)) &&
+      node.text === rawcode
+    ) {
+      const found = score(node);
+      if (best === undefined || found > best.score) {
+        best = { node, score: found };
+      }
+    }
+    typescript.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return best?.node;
+}
+
+/** The text of a property's name, when it is an identifier or a string. */
+function propertyName(
+  typescript: typeof ts,
+  name: ts.PropertyName,
+): string | undefined {
+  return typescript.isIdentifier(name) || typescript.isStringLiteral(name)
+    ? name.text
+    : undefined;
 }
 
 /** The declarations of the global `FourCC` in the program's declaration files. */

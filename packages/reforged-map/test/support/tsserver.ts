@@ -60,6 +60,8 @@ export interface PluginProjectOptions {
   maps?: Readonly<Record<string, string>>;
   /** The map folder the generated code is generated from: the first at the root, or else under `maps/`, by default. */
   generateFrom?: string;
+  /** Whether the code is generated with the Map project's Object definitions, its `src/objects/`, after its files are written; false by default. */
+  withDefinitions?: boolean;
   /** The plugin's tsconfig entry beyond its name. */
   plugin?: Readonly<Record<string, unknown>>;
   /** Whether reforged-builtins is installed; true by default. */
@@ -68,14 +70,14 @@ export interface PluginProjectOptions {
   files: Readonly<Record<string, string>>;
 }
 
-/** What the Map project installs, linked from this package's installation. */
-const LINKED_PACKAGES = ["reforged-types"];
+/** What the Map project installs, linked from this package's installation: typescript transpiles its Object definitions. */
+const LINKED_PACKAGES = ["reforged-types", "typescript"];
 
 /**
  * A Map project in a new temporary directory, in the Template's shape: a
  * package.json, a tsconfig.base.json holding the plugin's entry, which
  * tsconfig.json extends, the map folders at its root and under `maps/`, the code generated
- * from one of them in `src/generated/`, and reforged-types and
+ * from one of them in `src/generated/`, and reforged-types, typescript and
  * reforged-builtins installed. Returns its folder.
  */
 export function createPluginProject(options: PluginProjectOptions): string {
@@ -105,19 +107,19 @@ export function createPluginProject(options: PluginProjectOptions): string {
     options.generateFrom ??
     Object.values(options.atRoot ?? {}).at(0) ??
     Object.values(options.maps ?? {}).at(0);
-  if (generateFrom !== undefined) {
-    const generated = path.join(dir, "src", "generated");
-    fs.mkdirSync(generated, { recursive: true });
-    for (const file of generateObjects(generateFrom, {
-      projectRoot: PACKAGE_ROOT,
-    }).files) {
-      fs.writeFileSync(path.join(generated, file.name), file.contents);
-    }
-  }
   for (const [name, contents] of Object.entries(options.files)) {
     const file = path.join(dir, name);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, contents);
+  }
+  if (generateFrom !== undefined) {
+    const generated = path.join(dir, "src", "generated");
+    fs.mkdirSync(generated, { recursive: true });
+    for (const file of generateObjects(generateFrom, {
+      projectRoot: options.withDefinitions === true ? dir : PACKAGE_ROOT,
+    }).files) {
+      fs.writeFileSync(path.join(generated, file.name), file.contents);
+    }
   }
   const base = {
     compilerOptions: {

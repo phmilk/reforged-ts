@@ -19,14 +19,14 @@ It reports three cases:
 - `` `Asa2` (Pillage) is a Built-in ability of Patch 3.0.0 but not of this map's Game data set (Melee (Forsaken Kingdom)) ``: the game finds no such object in this map;
 - `` `hfo` is not a Rawcode: a Rawcode is exactly four ASCII characters ``, or a cast number whose four bytes are not (`` `1` (bytes 00 00 00 01) ``).
 
-The lists come from the Rawcode lookup of the Map project's own `reforged-map`, the one the TypeScript plugin and the generated code read: the Built-in objects of `reforged-builtins`' index, and the map's objects read from its map folder. The lookup reads the map folder once, keeps it in memory, and reads it again when one of its files changes, checked at most once a second: an object saved in the World Editor is known at the next lint, without `pnpm dev` or a build. The rule writes nothing, and there is nothing to regenerate for it.
+The lists come from the Rawcode lookup of the Map project's own `reforged-map`, the one the TypeScript plugin and the generated code read: the Built-in objects of `reforged-builtins`' index, and the map's objects: those of its map folder and those its Object definitions (`src/objects/`) define, the objects the build ships. The lookup reads them once, keeps them in memory, and reads them again when one of their files changes, checked at most once a second: an object saved in the World Editor or defined in code is known at the next lint, without `pnpm dev` or a build. The rule writes nothing, and there is nothing to regenerate for it.
 
 The rule sees only what reaches the lint:
 
 - the editor's ESLint server lints a file again only when the file changes or is opened, so a diagnostic can lag a World Editor save until the file is linted again;
 - `eslint --cache` reuses a file's result while the file and the config are unchanged, whatever the map folder holds.
 
-**When the lists are not there.** Without `reforged-map` installed, or with one that predates the lookup, the plugin warns once at load. Without `reforged-builtins`, without a map folder it can find, while the map folder cannot be read, or while loading the map's objects fails, the rule warns once per reason. In each case it reports no unknown Rawcode, never reports against a partial list, and keeps the four-character check. It resumes on its own once the lookup loads again, without a restart of the ESLint server. The warnings go to stderr in the CLI and to the ESLint output in the editor, and they never count toward `--max-warnings`.
+**When the lists are not there.** Without `reforged-map` installed, or with one that predates the lookup, the plugin warns once at load. Without `reforged-builtins`, without a map folder it can find, while the map folder cannot be read, while loading the map's objects fails, or while the Object definitions cannot be loaded ("The Object definitions could not be loaded: ", then the file of a definition that throws or is invalid, or the missing peer), the rule warns once per reason. In each case it reports no unknown Rawcode, never reports against a partial list, and keeps the four-character check. It resumes on its own once the lookup loads again, without a restart of the ESLint server. The warnings go to stderr in the CLI and to the ESLint output in the editor, and they never count toward `--max-warnings`.
 
 ## Incorrect
 

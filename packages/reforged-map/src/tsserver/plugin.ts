@@ -1,5 +1,6 @@
 // The plugin's language service: hover and go to definition on a Rawcode
-// literal (#595), from the Rawcode lookup the lint rule calls too (#579).
+// literal (#595), from the Rawcode lookup the lint rule calls too (#579),
+// which follows the Object definitions (#708).
 // Every other request, and every request the plugin fails on, is the
 // language service's own.
 
@@ -133,6 +134,7 @@ export function create(
         found.literal,
         found.result,
         found.lookup?.gameVersion(),
+        root,
       );
       return withText(typescript, own, found.literal.node, text);
     } catch (error) {
