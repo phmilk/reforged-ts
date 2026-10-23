@@ -18,7 +18,10 @@
  * an object the code owns or defines, of a Built-in object the map folder
  * does not change, of no object of the map folder, of two kinds without
  * its kind, or of an object holding a value no definition can hold; `"target-exists"`, a definition file Object adoption would
- * write exists.
+ * write exists; `"not-releasable"`, Object release was given a Rawcode of
+ * an object the code does not own, does not define, or defines in a file
+ * holding other definitions, of no object of the code, or of two kinds
+ * without its kind.
  */
 export type ObjectDefinitionsErrorReason =
   | "changed-outside-code"
@@ -28,6 +31,7 @@ export type ObjectDefinitionsErrorReason =
   | "load-failed"
   | "manifest-unreadable"
   | "not-adoptable"
+  | "not-releasable"
   | "peer-missing"
   | "target-exists";
 
@@ -44,11 +48,13 @@ export interface ObjectDefinitionProblem {
 }
 
 /**
- * Object definitions the build, Object sync or Object adoption refuses: a
+ * Object definitions the build, Object sync, Object adoption or Object
+ * release refuses: a
  * definition file that cannot be loaded, an invalid definition, a Rawcode
  * defined twice, a collision with the map folder, an object the code owns
  * changed outside the code, an unreadable Object manifest, a missing peer,
- * an object that cannot be adopted, or an adoption's file that exists. Its `reason`
+ * an object that cannot be adopted, an adoption's file that exists, or an
+ * object that cannot be released. Its `reason`
  * says which, for a caller to switch on, and its message what the author
  * does next. Nothing is written when it is thrown.
  */

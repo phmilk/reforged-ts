@@ -236,25 +236,10 @@ export function syncObjectDefinitions(
   }
   // The World Editor reload (#706): a World Editor holding the map would
   // put back what it loaded on its next save.
-  let worldEditorReloaded = false;
-  if (worldEditor === "open" && written.length > 0) {
-    const byHand =
-      "reload the map there (close it without saving and open it again), or its next save puts back what it loaded before this sync.";
-    const executable = options.worldEditorExecutable;
-    if (executable === undefined) {
-      warnings.push(`The World Editor has ${mapFolder} open: ${byHand}`);
-    } else {
-      try {
-        reloadWorldEditor(mapFolder, executable, options.worldEditorReload);
-        worldEditorReloaded = true;
-      } catch (error) {
-        const detail = error instanceof Error ? error.message : String(error);
-        warnings.push(
-          `The World Editor has ${mapFolder} open and could not be reloaded (${detail}): ${byHand}`,
-        );
-      }
-    }
-  }
+  const worldEditorReloaded =
+    worldEditor === "open" &&
+    written.length > 0 &&
+    reloadOrWarn(mapFolder, options, warnings, "sync");
 
   // Read back what was written, and record it.
   const after = objectsByKey(
@@ -307,4 +292,36 @@ export function syncObjectDefinitions(
     worldEditorReloaded,
     warnings,
   };
+}
+
+/**
+ * Reloads a World Editor holding the map folder after a write, given its
+ * executable; otherwise, or when the reload throws, warns to reload the
+ * map there by hand. Says whether it reloaded.
+ */
+export function reloadOrWarn(
+  mapFolder: string,
+  options: Pick<
+    ObjectSyncOptions,
+    "worldEditorExecutable" | "worldEditorReload"
+  >,
+  warnings: string[],
+  action: string,
+): boolean {
+  const byHand = `reload the map there (close it without saving and open it again), or its next save puts back what it loaded before this ${action}.`;
+  const executable = options.worldEditorExecutable;
+  if (executable === undefined) {
+    warnings.push(`The World Editor has ${mapFolder} open: ${byHand}`);
+    return false;
+  }
+  try {
+    reloadWorldEditor(mapFolder, executable, options.worldEditorReload);
+    return true;
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    warnings.push(
+      `The World Editor has ${mapFolder} open and could not be reloaded (${detail}): ${byHand}`,
+    );
+    return false;
+  }
 }
