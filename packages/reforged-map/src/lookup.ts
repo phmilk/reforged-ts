@@ -14,6 +14,9 @@ import {
   type BuiltinsIndex,
   type GameDataSet,
 } from "./builtins.js";
+import { ObjectDefinitionsError } from "./definitions-error.js";
+import type { ObjectDefinitionsOptions } from "./definitions.js";
+import { definitionsView, definitionsViewFiles } from "./definitions-view.js";
 import { MapFolderError, checkMapFolder } from "./map-folder.js";
 import { OBJECT_KINDS, createModel, type ObjectKind } from "./model.js";
 import { objectDataFileNames, readObjectData } from "./object-data.js";
@@ -28,13 +31,19 @@ import { WTS_FILE, readWar3mapWts } from "./war3map-wts.js";
 /** The default of {@link RawcodeLookupOptions.minInterval}, in milliseconds: one second. */
 export const DEFAULT_MIN_INTERVAL = 1000;
 
-/** The options of {@link openRawcodeLookup}. */
-export interface RawcodeLookupOptions {
+/**
+ * The options of {@link openRawcodeLookup}: the map folder, the Map
+ * project's root and, under it, its definitions folder, generated folder
+ * and Object manifest, as `generateObjects` takes them, and the interval
+ * between two checks.
+ */
+export interface RawcodeLookupOptions extends ObjectDefinitionsOptions {
   /** The path of the map folder, saved as a folder by the World Editor. */
   mapFolder: string;
   /**
-   * A folder of the Map project, from which `reforged-builtins` is resolved
-   * as Node resolves a package.
+   * The Map project's root, from which `reforged-builtins` and `typescript`
+   * are resolved as Node resolves a package, and under which the
+   * definitions folder and the Object manifest are found.
    */
   projectRoot: string;
   /**
@@ -86,7 +95,7 @@ export interface BuiltinRawcodeObject {
   readonly constant: RawcodeConstant | undefined;
 }
 
-/** A Built-in object the map's Object data modifies. */
+/** A Built-in object the map modifies, through its Object data or an Object definition. */
 export interface ModifiedRawcodeObject {
   /** `"modified"`: the game ships it, and the map modifies it. */
   readonly origin: "modified";
@@ -106,9 +115,11 @@ export interface ModifiedRawcodeObject {
   readonly gameDataSets: readonly GameDataSet[];
   /** Its constant in `reforged-builtins`, undefined when the index gives it none. */
   readonly constant: RawcodeConstant | undefined;
+  /** The file of the Object definition that changes it, an absolute path; undefined when the map folder's Object data does. */
+  readonly definitionFile: string | undefined;
 }
 
-/** A Custom object of the map. */
+/** A Custom object of the map, of its Object data or of an Object definition. */
 export interface CustomRawcodeObject {
   /** `"custom"`: the map's Object data adds it. */
   readonly origin: "custom";
@@ -127,6 +138,8 @@ export interface CustomRawcodeObject {
   };
   /** Its constant in the generated constants module, undefined when its Rawcode cannot end an identifier. */
   readonly constant: RawcodeConstant | undefined;
+  /** The file of the Object definition that defines it, an absolute path; undefined when the map folder's Object data adds it. */
+  readonly definitionFile: string | undefined;
 }
 
 /** One object a Rawcode names, told apart by its `origin`. */
@@ -186,7 +199,11 @@ export interface MalformedRawcode {
   readonly rawcode: string;
 }
 
-/** The lookup cannot answer: the map folder cannot be read, or `reforged-builtins` is not installed. */
+/**
+ * The lookup cannot answer: the map folder cannot be read, `reforged-builtins`
+ * is not installed, or the Object definitions cannot be loaded (a module
+ * that throws, an invalid identity, a missing peer).
+ */
 export interface UnavailableLookup {
   /** `"unavailable"`. */
   readonly status: "unavailable";
@@ -254,13 +271,23 @@ export interface RawcodeLookup {
  * `reforged-builtins`, makes every lookup but a malformed one unavailable,
  * with the reason, until a later check finds the files changed; after a read
  * that fails, each later check reads them again. The objects and their names
- * are the ones `generateObjects` writes. The map's Game data set is read
+ * are the ones `generateObjects` writes: the map folder's, minus each object
+ * the Object manifest owns that no Object definition defines, plus every
+ * definition, which carries its file. The files checked include every
+ * definition file under the definitions folder and the manifest, so a new,
+ * edited or deleted definition is known at the next check; a definition
+ * file whose modification time did not change is not transpiled again. A
+ * definition that cannot be loaded, an invalid identity or a missing peer
+ * (`typescript`, `reforged-builtins`) makes the lookup unavailable with a
+ * reason naming the file or the peer, never a view without those objects,
+ * and each later check loads them again. The map's Game data set is read
  * from `war3map.w3i`; when it cannot be, a warning says so and no Rawcode is
  * reported as outside it. Loaded by `require` from a
  * CommonJS host such as tsserver: the package has no top-level await.
  *
- * @param options - The map folder, the Map project folder, and the minimum
- *   interval between two checks of modification times.
+ * @param options - The map folder, the Map project's root, its definitions
+ *   folder, generated folder and Object manifest, and the minimum interval
+ *   between two checks of modification times.
  * @returns The lookup.
  */
 export function openRawcodeLookup(
@@ -285,10 +312,10 @@ export function openRawcodeLookup(
     }
     checkedAt = now;
     try {
-      const current = filesFingerprint(mapFolder, projectRoot);
+      const current = filesFingerprint(options);
       if (loaded !== undefined && current === fingerprint) return loaded;
       fingerprint = current;
-      loaded = loadLookup(mapFolder, projectRoot);
+      loaded = loadLookup(options);
     } catch (error) {
       fingerprint = undefined;
       loaded = unavailable(error);
@@ -348,15 +375,18 @@ function isMalformed(rawcode: string): boolean {
  * Fingerprints every file the lookup reads, in one string that changes when
  * one of them does: whether the map folder exists, then each file's
  * modification time, change time (which a change of permissions moves) and
- * size, or `-` when it is missing.
+ * size, or `-` when it is missing. The definition files are listed, so one
+ * that appears or disappears changes it too.
  */
-function filesFingerprint(mapFolder: string, projectRoot: string): string {
+function filesFingerprint(options: RawcodeLookupOptions): string {
+  const { mapFolder, projectRoot } = options;
   const files = [...objectDataFileNames(), WTS_FILE, W3I_FILE].map((name) =>
     path.join(mapFolder, name),
   );
   const builtins = builtinsFiles(projectRoot);
   if (builtins !== undefined) files.push(builtins.manifest);
   if (builtins?.index !== undefined) files.push(builtins.index);
+  files.push(...definitionsViewFiles(projectRoot, options));
   const folder = fs.statSync(mapFolder, { throwIfNoEntry: false });
   return [
     String(folder?.isDirectory() === true),
@@ -369,10 +399,9 @@ function filesFingerprint(mapFolder: string, projectRoot: string): string {
   ].join("\n");
 }
 
-function loadLookup(
-  mapFolder: string,
-  projectRoot: string,
-): Loaded | UnavailableLookup {
+/** Reads the map folder, the index and the Object definitions; throws what makes the lookup unavailable until a later check reads them again. */
+function loadLookup(options: RawcodeLookupOptions): Loaded | UnavailableLookup {
+  const { mapFolder, projectRoot } = options;
   checkMapFolder(mapFolder);
   const builtins = loadBuiltins(projectRoot);
   if ("missing" in builtins) {
@@ -382,12 +411,16 @@ function loadLookup(
     };
   }
   const { index } = builtins;
+  const definitions = definitionsView(projectRoot, options);
 
   const model = createModel();
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
   readWar3mapW3i(mapFolder, model);
-  const { objects: mapObjects } = mapFolderObjects(model, { builtins: index });
+  const { objects: mapObjects } = mapFolderObjects(model, {
+    builtins: index,
+    definitions,
+  });
 
   const objects = new Map<string, RawcodeObject[]>();
   const add = (object: RawcodeObject): void => {
@@ -466,6 +499,7 @@ function fromMapObject(
               module: KIND_CONSTANTS[kind].file,
               generated: true,
             },
+      definitionFile: object.definition?.file,
     };
   }
   const builtin = ownBuiltin(builtins, rawcode);
@@ -480,6 +514,7 @@ function fromMapObject(
     gameDataSets: builtin === undefined ? [] : gameDataSets(index, builtin),
     constant:
       builtin === undefined ? undefined : builtinConstant(kind, builtin),
+    definitionFile: object.definition?.file,
   };
 }
 
@@ -596,6 +631,8 @@ function unavailable(error: unknown): UnavailableLookup {
     reason:
       error instanceof MapFolderError
         ? error.message
-        : `The map folder could not be read: ${error instanceof Error ? error.message : String(error)}`,
+        : error instanceof ObjectDefinitionsError
+          ? `The Object definitions could not be loaded: ${error.message}`
+          : `The map folder could not be read: ${error instanceof Error ? error.message : String(error)}`,
   };
 }

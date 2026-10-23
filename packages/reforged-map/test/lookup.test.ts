@@ -134,6 +134,7 @@ describe("openRawcodeLookup", () => {
             module: "custom-units.ts",
             generated: true,
           },
+          definitionFile: undefined,
         },
       ],
     } satisfies RawcodeLookupResult);
@@ -172,6 +173,7 @@ describe("openRawcodeLookup", () => {
             module: "reforged-builtins/units",
             generated: false,
           },
+          definitionFile: undefined,
         },
       ],
     } satisfies RawcodeLookupResult);

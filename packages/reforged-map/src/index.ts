@@ -4,6 +4,8 @@
 // only reads the rest of the map folder (ADR 0015).
 
 import { loadBuiltins } from "./builtins.js";
+import type { ObjectDefinitionsOptions } from "./definitions.js";
+import { definitionsView } from "./definitions-view.js";
 import { checkMapFolder, readMapFile, readMapScript } from "./map-folder.js";
 import { OBJECT_KINDS, createModel, type ObjectKind } from "./model.js";
 import { readObjectData } from "./object-data.js";
@@ -141,11 +143,16 @@ export interface ObjectsOutput {
   warnings: string[];
 }
 
-/** The options of {@link generateObjects}. */
-export interface ObjectsOptions {
+/**
+ * The options of {@link generateObjects}: the Map project's root, and, under
+ * it, its definitions folder, its generated folder and its Object manifest.
+ */
+export interface ObjectsOptions extends ObjectDefinitionsOptions {
   /**
-   * A folder of the Map project, from which `reforged-builtins` is
-   * resolved as Node resolves a package. The map folder when left out.
+   * The Map project's root, from which `reforged-builtins` and `typescript`
+   * are resolved as Node resolves a package, and under which the
+   * definitions folder and the Object manifest are found. The map folder
+   * when left out.
    */
   projectRoot?: string;
 }
@@ -178,23 +185,46 @@ export interface ObjectsOptions {
  * the reader cannot read is left out with a warning; a missing one holds no
  * object.
  *
+ * The objects are the ones the build ships: the map folder's, minus each
+ * object the Object manifest owns that no Object definition defines, plus
+ * every definition, which replaces the map folder's object at its Rawcode.
+ * An object a definition defines gets the overload and the constant of one
+ * of the map folder, named from the name field it sets, and its TSDoc says
+ * that it is defined in code and names the definition's file. Definitions
+ * are loaded as the build loads them, and only their identity (Rawcode,
+ * base, no Rawcode defined twice in one kind) is checked: their fields are
+ * the build's to check. A Map project without a definition file needs
+ * neither `typescript` nor `reforged-builtins` for them.
+ *
  * @param mapFolder - The path of the map folder, saved as a folder by the
  *   World Editor. It need not hold `war3map.lua`.
- * @param options - Where `reforged-builtins` is resolved from.
+ * @param options - The Map project's root, and its definitions folder,
+ *   generated folder and Object manifest.
  * @returns The generated files and the warnings.
  * @throws {@link MapFolderError} When the map folder is missing.
+ * @throws {@link ObjectDefinitionsError} With the reason `"load-failed"`,
+ *   when a definition file throws while loading, cannot be transpiled or
+ *   imports what a definition may not; `"invalid-definition"`, when a
+ *   definition's Rawcode or base is invalid; `"defined-twice"`, when two
+ *   definitions name one Rawcode of one Object kind;
+ *   `"manifest-unreadable"`, when the Object manifest does not parse;
+ *   `"peer-missing"`, when the Map project has definitions and
+ *   `typescript` or `reforged-builtins` cannot be read from it.
  */
 export function generateObjects(
   mapFolder: string,
   options: ObjectsOptions = {},
 ): ObjectsOutput {
   checkMapFolder(mapFolder);
+  const projectRoot = options.projectRoot ?? mapFolder;
+  const definitions = definitionsView(projectRoot, options);
   const model = createModel();
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
-  const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
+  const builtins = loadBuiltins(projectRoot);
   const { objects, keptBaseName } = mapFolderObjects(model, {
     builtins: "index" in builtins ? builtins.index : undefined,
+    definitions,
   });
   if (keptBaseName && "missing" in builtins) {
     model.warnings.push(

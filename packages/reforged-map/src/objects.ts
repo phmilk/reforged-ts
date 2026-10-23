@@ -3,6 +3,7 @@
 // constants modules, one per Object kind.
 
 import type { BuiltinsIndex } from "./builtins.js";
+import { localizedRecord } from "./definition-registry.js";
 import {
   OBJECT_KINDS,
   type MapFolderModel,
@@ -99,6 +100,16 @@ export interface CustomObject {
   readonly constant: string | undefined;
   /** Whether an object of another kind has its Rawcode. */
   readonly shared: boolean;
+  /** The Object definition that defines it; undefined for an object of the map folder. */
+  readonly definition: DefinitionFile | undefined;
+}
+
+/** The file of the Object definition that defines an object. */
+export interface DefinitionFile {
+  /** Its absolute path. */
+  readonly file: string;
+  /** Its path relative to the Map project's root, with `/` separators. */
+  readonly path: string;
 }
 
 /** One Built-in object the map modifies. */
@@ -118,6 +129,8 @@ export interface ModifiedObject {
     | undefined;
   /** Whether an object of another kind has its Rawcode. */
   readonly shared: boolean;
+  /** The Object definition that defines it; undefined for an object of the map folder. */
+  readonly definition: DefinitionFile | undefined;
 }
 
 /** One object of the map folder: a Custom object, or a Built-in object the map modifies. */
@@ -126,9 +139,34 @@ export type MapFolderObject = CustomObject | ModifiedObject;
 /** An object before the kinds that share its Rawcode are known. */
 type Unshared = Omit<CustomObject, "shared"> | Omit<ModifiedObject, "shared">;
 
-/** What `mapFolderObjects` needs of reforged-builtins: its index, or nothing. */
+/** One Object definition as the view takes it: its identity checked, its fields as the author gave them. */
+export interface DefinitionInView extends DefinitionFile {
+  readonly kind: ObjectKind;
+  readonly rawcode: string;
+  /** A Custom object's base; undefined for a change to a Built-in object. */
+  readonly base: string | undefined;
+  readonly fields: Readonly<Record<string, unknown>>;
+}
+
+/**
+ * What the Object definitions change in the view of the map's objects:
+ * every definition, which replaces the map folder's object at its Rawcode,
+ * and each object the Object manifest owns that no definition defines,
+ * which is gone.
+ */
+export interface DefinitionsInView {
+  readonly defined: readonly DefinitionInView[];
+  readonly dropped: readonly {
+    readonly kind: ObjectKind;
+    readonly rawcode: string;
+  }[];
+}
+
+/** What `mapFolderObjects` needs: reforged-builtins' index, or nothing, and the Object definitions' part of the view. */
 export interface MapFolderObjectsOptions {
   readonly builtins: BuiltinsIndex | undefined;
+  /** No definition when left out. */
+  readonly definitions?: DefinitionsInView;
 }
 
 /** A modification and the file it was read from. */
@@ -148,15 +186,17 @@ interface MergedEntry {
 
 /**
  * The objects of each kind, sorted by Rawcode: the Custom objects and the
- * Built-in objects the map modifies. A Custom object wins over a modified
- * Built-in object of its Rawcode and kind. A base file's and a Skin file's
+ * Built-in objects the map modifies, as the build ships them. A Custom
+ * object wins over a modified Built-in object of its Rawcode and kind. An
+ * object the Object manifest owns that no definition defines is gone, and
+ * an Object definition replaces the map folder's object at its Rawcode. A base file's and a Skin file's
  * modifications of one object merge, the Skin file winning a field both
  * set; a Skin entry with no modification is ignored. Warnings go to the
  * model.
  */
 export function mapFolderObjects(
   model: MapFolderModel,
-  { builtins }: MapFolderObjectsOptions,
+  { builtins, definitions }: MapFolderObjectsOptions,
 ): { objects: MapFolderObject[]; keptBaseName: boolean } {
   const objects: Unshared[] = [];
   let keptBaseName = false;
@@ -165,6 +205,18 @@ export function mapFolderObjects(
     const custom = mergeTable(files, "custom", kind, model);
     const modified = mergeTable(files, "original", kind, model);
     for (const rawcode of custom.keys()) modified.delete(rawcode);
+    for (const object of definitions?.dropped ?? []) {
+      if (object.kind !== kind) continue;
+      custom.delete(object.rawcode);
+      modified.delete(object.rawcode);
+    }
+    const defined = (definitions?.defined ?? []).filter(
+      (definition) => definition.kind === kind,
+    );
+    for (const { rawcode } of defined) {
+      custom.delete(rawcode);
+      modified.delete(rawcode);
+    }
 
     const kindObjects: Unshared[] = [];
     for (const [rawcode, { base, file, fields }] of custom) {
@@ -190,25 +242,36 @@ export function mapFolderObjects(
         name,
         baseName,
         constant: constantName(name, rawcode),
+        definition: undefined,
+      });
+    }
+    for (const definition of defined) {
+      const { rawcode, base } = definition;
+      const name = definedName(kind, definition.fields);
+      const at = { file: definition.file, path: definition.path };
+      if (base === undefined) {
+        kindObjects.push({
+          ...modifiedObject(kind, rawcode, name, builtins),
+          definition: at,
+        });
+        continue;
+      }
+      const baseName = builtins?.objects[base]?.name;
+      if (name === undefined && builtins === undefined) keptBaseName = true;
+      kindObjects.push({
+        origin: "custom",
+        kind,
+        rawcode,
+        base,
+        name: name ?? baseName,
+        baseName,
+        constant: constantName(name ?? baseName, rawcode),
+        definition: at,
       });
     }
     for (const [rawcode, { fields }] of modified) {
-      const builtin = builtins?.objects[rawcode];
       const name = nameOf(kind, rawcode, fields, model);
-      kindObjects.push({
-        origin: "modified",
-        kind,
-        rawcode,
-        name: name === builtin?.name ? undefined : name,
-        builtin:
-          builtins === undefined || builtin === undefined
-            ? undefined
-            : {
-                gameVersion: builtins.gameVersion,
-                name: builtin.name,
-                constant: builtin.constant,
-              },
-      });
+      kindObjects.push(modifiedObject(kind, rawcode, name, builtins));
     }
     objects.push(
       ...kindObjects.sort((a, b) => byCodePoint(a.rawcode, b.rawcode)),
@@ -226,6 +289,67 @@ export function mapFolderObjects(
     })),
     keptBaseName,
   };
+}
+
+/** A Built-in object the map modifies, named `name` by the map (undefined when it sets none). */
+function modifiedObject(
+  kind: ObjectKind,
+  rawcode: string,
+  name: string | undefined,
+  builtins: BuiltinsIndex | undefined,
+): Omit<ModifiedObject, "shared"> {
+  const builtin = builtins?.objects[rawcode];
+  return {
+    origin: "modified",
+    kind,
+    rawcode,
+    name: name === builtin?.name ? undefined : name,
+    builtin:
+      builtins === undefined || builtin === undefined
+        ? undefined
+        : {
+            gameVersion: builtins.gameVersion,
+            name: builtin.name,
+            constant: builtin.constant,
+          },
+    definition: undefined,
+  };
+}
+
+/**
+ * The name an Object definition gives its object, from the first name
+ * field it sets: a text, a localized value's default text, or a levelled
+ * value's lowest level. Undefined when it sets none, an empty one, or one
+ * of another type, which the build's check reports.
+ */
+function definedName(
+  kind: ObjectKind,
+  fields: Readonly<Record<string, unknown>>,
+): string | undefined {
+  for (const field of NAME_FIELDS[kind]) {
+    if (!Object.hasOwn(fields, field)) continue;
+    const text = nameText(fields[field]);
+    if (text === undefined) return undefined;
+    const name = displayName(text);
+    return name === "" ? undefined : name;
+  }
+  return undefined;
+}
+
+/** The text of a name field's value, as {@link definedName} reads it. */
+function nameText(value: unknown): string | undefined {
+  if (typeof value === "string") return value;
+  const localized = localizedRecord(value);
+  if (localized !== undefined) {
+    return typeof localized.text === "string" ? localized.text : undefined;
+  }
+  if (typeof value !== "object" || value === null) return undefined;
+  const levels = Object.keys(value)
+    .filter((key) => /^\d+$/.test(key))
+    .sort((a, b) => Number(a) - Number(b));
+  return levels.length === 0
+    ? undefined
+    : nameText((value as Record<string, unknown>)[levels[0]]);
 }
 
 /**
@@ -339,14 +463,14 @@ export function renderOverloads(objects: readonly MapFolderObject[]): string {
   return ["/** @noSelfInFile */", ...BANNER, "", ...body].join("\n");
 }
 
-/** An overload's TSDoc: the object, then where its constant comes from. */
+/** An overload's TSDoc: the object, the Object definition that defines it, then where its constant comes from. */
 function overloadDoc(object: MapFolderObject): string[] {
   const kindConstants = KIND_CONSTANTS[object.kind];
   if (object.origin === "custom") {
     return object.constant === undefined
-      ? [describe(object)]
+      ? describe(object)
       : [
-          describe(object),
+          ...describe(object),
           "",
           `Its constant is \`${kindConstants.object}.${object.constant}\`, from the generated \`${kindConstants.file}\`.`,
         ];
@@ -360,10 +484,11 @@ function overloadDoc(object: MapFolderObject): string[] {
     object.name === undefined
       ? "which this map modifies"
       : `named ${object.name} in this map`;
+  const described = [`${game}, ${map}.`, ...definedIn(object)];
   return builtin?.constant === undefined
-    ? [`${game}, ${map}.`]
+    ? described
     : [
-        `${game}, ${map}.`,
+        ...described,
         "",
         `Its constant is \`${kindConstants.builtins}.${builtin.constant}\`, from \`reforged-builtins/${kindConstants.plural}\`.`,
       ];
@@ -378,7 +503,7 @@ export function renderConstants(
   const members = customOnly(objects)
     .filter((object) => object.kind === kind && object.constant !== undefined)
     .flatMap((object) => [
-      ...docComment([describe(object)], "  "),
+      ...docComment(describe(object), "  "),
       `  ${String(object.constant)}: ${String(rawcodeValue(object.rawcode))} as Rawcode<${JSON.stringify(kind)}>,`,
     ]);
   return [
@@ -415,13 +540,26 @@ function customOnly(objects: readonly MapFolderObject[]): CustomObject[] {
   );
 }
 
-/** A Custom object's TSDoc's first paragraph: name, Rawcode, origin and base. */
-function describe(object: CustomObject): string {
+/** A Custom object's TSDoc's first paragraphs: name, Rawcode, origin and base, then the Object definition that defines it. */
+function describe(object: CustomObject): string[] {
   const base =
     object.baseName === undefined
       ? `\`${object.base}\``
       : `${object.baseName} (\`${object.base}\`)`;
-  return `${object.name ?? UNNAMED} (\`${object.rawcode}\`), a Custom ${object.kind} of this map, derived from ${base}.`;
+  return [
+    `${object.name ?? UNNAMED} (\`${object.rawcode}\`), a Custom ${object.kind} of this map, derived from ${base}.`,
+    ...definedIn(object),
+  ];
+}
+
+/** The paragraph naming the Object definition that defines an object, none for an object of the map folder. */
+function definedIn(object: MapFolderObject): string[] {
+  return object.definition === undefined
+    ? []
+    : [
+        "",
+        `Defined in code, by the Object definition in \`${object.definition.path}\`.`,
+      ];
 }
 
 function docComment(lines: readonly string[], indent: string): string[] {
