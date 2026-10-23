@@ -9,6 +9,8 @@ The Probe runner copies the parts of the Template's pipeline a Probe run needs, 
 
 `maps/reforged-ts-template.w3m/` is copied to `probe.w3m/`, byte for byte: each file's git blob hash is the Template's. `.gitattributes` keeps git from changing them (`-text -diff`), as the Template's does. The map runs as the Template's with one exception, made by the runner and not in these files, so they stay the Template's: `MeleeInitVictoryDefeat` is a no-op during a Probe run (`game/runner.ts`, #348). A build may also set the Game Data Set and the Game Data Version of the staged `war3map.w3i`, never this one ([Game data](README.md#game-data), #575).
 
+The Template has since moved its map folder to its root, as `reforged-ts-template.w3m/` ([ADR 0020](../docs/adr/0020-a-map-project-has-one-map-folder-at-its-root-named-after-its-package.md), phmilk/reforged-ts-template#107). Its files did not change: at [`004c848`](https://github.com/phmilk/reforged-ts-template/tree/004c848af3a8ff4516b49eb6cc9e7e787a70aedd) each one's git blob hash is still the copy's. The paths below are the source commit's. `probe.w3m/` already sits at this package's root and keeps its name, since the Probe runner is not a Map project.
+
 | Template file                                     | Copy                          |
 | ------------------------------------------------- | ----------------------------- |
 | `maps/reforged-ts-template.w3m/conversation.json` | `probe.w3m/conversation.json` |
