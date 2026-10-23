@@ -45,7 +45,7 @@ The other way in is GitHub's **Use this template**, on the Template's page: in a
 The documentation site, https://phmilk.github.io/reforged-ts/, serves `master` as "Next" and one docs version per minor of the library: `docs.yml` deploys it on every push to `master`, and the release cuts a docs version on each minor (`docs-cut.yml`) ([docs/release.md, "The docs workflow"](docs/release.md#the-docs-workflow)). Besides it:
 
 - `pnpm docs:start` serves the site locally after `pnpm build`; [`website/README.md`](website/README.md) lists the site's commands.
-- [`CONTEXT.md`](CONTEXT.md) defines the project's terms.
+- [`GLOSSARY.md`](GLOSSARY.md) defines the project's terms.
 - Each package's README says what the package does and how to use it.
 - The library's doc comments document each Wrapper and System, and the editor shows them on hover, the code of their examples included.
 - The ADRs under [`docs/adr`](docs/adr) record the decisions, and [`docs/release.md`](docs/release.md) the release process.
@@ -187,7 +187,7 @@ The library's tests import the harness by its package name: the runner from `ref
 
 ## For agents
 
-[`AGENTS.md`](AGENTS.md) is the one document an agent reads first: how to build, test and change the repository, and when a task is done. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
+[`AGENTS.md`](AGENTS.md) is the one document an agent reads first: how to build, test and change the repository, and when a task is done. [`GLOSSARY.md`](GLOSSARY.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
 
 ## Contributing
 

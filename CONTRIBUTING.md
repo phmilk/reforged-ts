@@ -1,6 +1,6 @@
 # Contributing to reforged-ts
 
-Thanks for helping. This guide is for people; AI coding agents follow [`AGENTS.md`](AGENTS.md), which points at the same rules. The project's words (Native, Handle, Wrapper, System, Typings, Overlay, Patch, Build) are defined in [`CONTEXT.md`](CONTEXT.md), and the decisions behind the rules below are the ADRs in [`docs/adr/`](docs/adr/).
+Thanks for helping. This guide is for people; AI coding agents follow [`AGENTS.md`](AGENTS.md), which points at the same rules. The project's words (Native, Handle, Wrapper, System, Typings, Overlay, Patch, Build) are defined in [`GLOSSARY.md`](GLOSSARY.md), and the decisions behind the rules below are the ADRs in [`docs/adr/`](docs/adr/).
 
 The [README](README.md) has the requirements (Node, pnpm 12), every root command and the version policy, which says when pnpm refuses a dependency. After `pnpm install`, `pnpm check` should pass on a fresh clone.
 

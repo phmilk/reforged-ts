@@ -31,7 +31,11 @@ export interface ReleasePayload {
   tag: string;
   /** The version on npm of each of the six packages, after the release. */
   versions: Record<ReleasedPackage, string>;
-  /** The raw URL of `CONTEXT.md` at the tag. */
+  /**
+   * The raw URL of the glossary, `GLOSSARY.md`, at the tag. The field keeps
+   * its name across the glossary's rename: the Template's term sync reads it,
+   * whatever the Template names its own copy.
+   */
   contextUrl: string;
   /** The raw URL of the compatibility-matrix fragment at the tag. */
   matrixUrl: string;
@@ -121,7 +125,7 @@ export async function templateDispatch(
     client_payload: {
       tag,
       versions,
-      contextUrl: `${RAW_BASE_URL}/${tag}/CONTEXT.md`,
+      contextUrl: `${RAW_BASE_URL}/${tag}/GLOSSARY.md`,
       matrixUrl: `${RAW_BASE_URL}/${tag}/${FRAGMENT_FILE}`,
       llmsUrl: `${DOCS_BASE_URL}/${label}/llms.txt`,
     },

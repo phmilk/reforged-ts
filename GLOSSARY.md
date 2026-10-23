@@ -77,7 +77,7 @@ The starter repository a Map project is generated from.
 _Avoid_: boilerplate, starter kit, example map
 
 **Seed**:
-A file the Template ships that becomes the Map project author's own after generation (`AGENTS.md`, `CONTEXT.md`, the Agent skills); the Template refreshes its copy on each library release, a generated Map project never does.
+A file the Template ships that becomes the Map project author's own after generation (`AGENTS.md`, `GLOSSARY.md`, the Agent skills); the Template refreshes its copy on each library release, a generated Map project never does.
 _Avoid_: template file, scaffold, boilerplate file
 
 **Reference consumer**:

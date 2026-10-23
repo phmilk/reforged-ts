@@ -105,7 +105,7 @@ Three ideas carry every Map project:
 - `my-map.w3m/`: the map folder, named after the project. The World Editor owns it; the build copies it, adds the code and packs the archive into `dist/`.
 - `reforged.config.ts`: the build's configuration (the map folder, the output folder, the mode). It is committed, so it holds only what every machine shares.
 - `tests/lua/` and `tests/stubs/`: the map's tests on the Lua harness and the Native stubs they need.
-- `AGENTS.md` and `CONTEXT.md`: the instructions and the glossary a coding agent reads. They are Seeds: yours after generation. Add your map's own terms to `CONTEXT.md`.
+- `AGENTS.md` and `GLOSSARY.md`: the instructions and the glossary a coding agent reads. They are Seeds: yours after generation. Add your map's own terms to `GLOSSARY.md`.
 
 ## Next
 

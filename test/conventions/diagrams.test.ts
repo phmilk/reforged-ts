@@ -38,7 +38,7 @@
 //      diagram cites it). A word right after a `/` is not read:
 //      `phmilk/reforged-ts` is a repository, `reforged/no-bj` a lint rule.
 //      Write "the Template" and "a Map project" in words: they are terms of
-//      CONTEXT.md, not identifiers.
+//      GLOSSARY.md, not identifiers.
 //    - An Agent skill: its slash command, `/tdd`, where no letter, digit,
 //      `_`, `-`, `.`, `:`, `@` or `/` comes right before the `/` (a path or
 //      `and/or` is not one).
