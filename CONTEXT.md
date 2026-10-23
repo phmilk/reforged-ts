@@ -192,6 +192,22 @@ _Avoid_: contributor (anyone who opens a pull request, push access or not), memb
 An AI coding agent a Collaborator runs; GitHub sees it as that Collaborator's login, so everything it writes, a Claim included, is the Collaborator's.
 _Avoid_: bot (the repositories' GitHub App and Renovate), assistant, AI, session
 
+**Spec**:
+An issue labelled `spec` that states one change whole, its decisions, its tests and its notes; the parent of its Tickets.
+_Avoid_: epic, PRD, map (a wayfinder map is something else)
+
+**Ticket**:
+An issue labelled `ticket`, a sub-issue of one Spec, delivered by one pull request.
+_Avoid_: task, story, sub-issue (the GitHub link, which a map's children use too)
+
+**Frontier**:
+The open Tickets of a Spec with no open blocker.
+_Avoid_: queue, next, backlog
+
+**Coverage table**:
+The section of a Spec's body naming, for each item of its decisions, its tests and its notes, the Ticket and the criterion that carry it.
+_Avoid_: coverage (alone, which is test coverage), checklist
+
 **Claim**:
 The mark that an issue is taken by one login, held while that login is among the issue's assignees; a spec is claimed with its tickets.
 _Avoid_: assignment (the GitHub act; a Claim is what it means), reservation, lock, ownership
@@ -207,6 +223,14 @@ _Avoid_: member repository (a member is an item on the board), tracked repositor
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook
+
+**Upstream skill**:
+An Agent skill installed unmodified from `mattpocock/skills`, at the version its lock names.
+_Avoid_: global skill, vendored skill, external skill
+
+**Skill variant**:
+An Agent skill of this repository built from an Upstream skill's steps, under its own name, recording the Upstream skill's version it was built from.
+_Avoid_: wrapper (a library class over a Handle), fork, override
 
 **Probe**:
 A TypeScript file of the Probe runner (`probe/probes/<probe>.ts`, named in kebab-case) that runs in the real game to measure what only the game can tell (whether a Native returns nothing, what a `Preload` line survives), and writes what it measures as records of its Result file. It exports `run(p)` and may import the library.
