@@ -247,7 +247,7 @@ if (worldEditor === "open") {
 
 ## Object definitions
 
-A Map project declares objects in TypeScript as Object definitions (ADR 0015, [#700](https://github.com/phmilk/reforged-ts/issues/700)): one `define<Kind>` call per object, in files under `src/objects/`. The build merges them into the map it ships, and Object sync writes them into the map folder, recording the objects the code owns in the Object manifest. They run in Node at build time, never in the map's Lua.
+A Map project declares objects in TypeScript as Object definitions (ADR 0015, [#700](https://github.com/phmilk/reforged-ts/issues/700)): one `define<Kind>` call per object, in files under `src/objects/`. The build merges them into the map it ships, and Object sync writes them into the map folder, recording the objects the code owns in the Object manifest. Object adoption hands objects made in the World Editor to the code. They run in Node at build time, never in the map's Lua.
 
 ```ts
 // src/objects/units.ts
@@ -403,19 +403,57 @@ The Object manifest records which objects the code owns, and what the last Objec
 
 It is written byte-stably: the owned entries, then the removed ones, each sorted by Object kind then Rawcode, the modifications by field id then level, two-space indentation, a final newline, and only when its bytes change. Two branches that sync different objects merge without a conflict; a conflict is resolved by keeping each side's entries, then `pnpm objects:sync`. A missing manifest owns no object, and a sync that neither owns nor removed anything does not create one. A manifest that does not parse, or is not one Object sync writes (another format, an unknown key, a missing list, an object owned or removed twice, or both owned and removed), is refused with the error `"manifest-unreadable"` naming the file, and nothing is written.
 
+### Object adoption
+
+`adoptObjects(mapFolder, projectRoot, rawcodes, { definitionsFolder, generatedFolder, manifest, force, worldEditorCheck })` is Object adoption, what `pnpm objects:adopt <rawcode...>` and `pnpm objects:adopt --all` run ([#484](https://github.com/phmilk/reforged-ts/issues/484)): it hands objects of the map folder to the code. Each one gets a definition file and an owned entry in [the Object manifest](#the-object-manifest), and the map folder is left byte for byte as it was, its placements included, so that the World Editor needs no reload.
+
+```ts
+import { adoptObjects } from "reforged-map";
+
+const { files } = adoptObjects("my-map.w3m", ".", ["h000", "buff:B000"]);
+const all = adoptObjects("my-map.w3m", ".", "all");
+```
+
+- **What it adopts.** A Custom object, or a Built-in object the map folder changes, that the code neither owns (the manifest has it) nor defines (a definition names its Rawcode in its kind). A Rawcode adopts the object of the map folder at it; one two kinds share, such as a Custom buff and a Custom destructable at `B000`, names its kind, `buff:B000`. `"all"` adopts every adoptable object, and nothing, writing no byte, when none is.
+- **The file.** Each object is written to `src/objects/<kind>/<Name>_<rawcode>.ts` under the definitions folder (`src/objects/unit/Captain_h000.ts`), named by the rule of the generated constants from the name the map folder gives it, so that a renamed Built-in object is named by its new name (`Militia_hfoo.ts`), and it exports one `define<Kind>` call of that name. It holds the explicit Rawcode, a Custom object's base as `FourCC("hfoo")`, and every modification the map folder holds, a value equal to the base's included: the name field first, then the fields by field id, a levelled field as a record from level to value.
+
+  ```ts
+  import { defineUnit } from "reforged-map/objects";
+
+  export const Captain_h000 = defineUnit({
+    rawcode: "h000",
+    base: FourCC("hfoo"),
+    fields: {
+      unam: "Captain",
+      uabi: [FourCC("A000")],
+    },
+    raw: [
+      // Xfoo is not in the field table of reforged-builtins (Game version 3.0.1): adopted through the raw escape.
+      { field: "Xfoo", type: "int", value: 7 },
+    ],
+  });
+  ```
+
+- **The values.** A string is its text, a `TRIGSTR` resolved through `war3map.wts`; a flag is a boolean; a reference to an object is `FourCC("A000")`, whoever owns it, since adoption does not follow references (adopting `h000` does not adopt the `A000` it names); a list of references is an array of them. A field the field table of `reforged-builtins` does not know goes through the raw escape with its value type, a comment and a warning. The translations of a localizable text in `_Locales/` are not adopted yet ([#712](https://github.com/phmilk/reforged-ts/issues/712)): the definition holds its default text.
+- **The manifest.** Each adopted object is recorded with its current snapshot, as Object sync records what it wrote, so that the next sync finds it clean and writes no byte, the manifest included. A removed entry at its Rawcode goes.
+- **The files written** come back in `files`, absolute paths, valid TypeScript in a stable layout but not formatted: the caller formats them with the Map project's Prettier. The report also gives the objects adopted (`adopted`, each with its kind, Rawcode, base and file), whether the manifest was written (`manifestWritten`), what the World Editor showed (`worldEditor`) and the warnings.
+- **The refusals.** It writes nothing when it refuses. An `ObjectDefinitionsError` of the reason `"not-adoptable"` lists each Rawcode of an object the code owns or defines, of a Built-in object the map folder does not change, of no object of the map folder, or of two kinds without its kind, and each field holding a value no definition can hold (a flag that is not 0 or 1, a value outside its enumeration, a field held twice); one of the reason `"target-exists"` names each file to write that exists, since adoption never overwrites code. A World Editor showing ` *]` for the map refuses with an `ObjectDataWriterError` of the reason `"modified-in-world-editor"`, as Object sync does, unless `force`, which adopts what the map folder holds on disk without the World Editor check.
+
 ### The Object definitions error
 
-`ObjectDefinitionsError` is the error of loading, checking, merging and syncing definitions; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `problems` every problem found, each with its `file` (an absolute path), `rawcode`, `field` and `message`, and its `file`, `rawcode` and `field` are the first problem's. Its message lists every problem, one per line when there are several, under a first line that says what they share for `"changed-outside-code"`:
+`ObjectDefinitionsError` is the error of loading, checking, merging and syncing definitions, and of adopting objects; nothing is written when it is thrown. Its `reason` is one a caller switches on, its `problems` every problem found, each with its `file` (an absolute path), `rawcode`, `field` and `message`, and its `file`, `rawcode` and `field` are the first problem's. Its message lists every problem, one per line when there are several, under a first line that says what they share for `"changed-outside-code"`:
 
-| `reason`                 | When                                                                                                                                       | What the author does                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `"load-failed"`          | A definition file threw while loading (the message gives the exception's), could not be transpiled, or imported what a definition may not. | Fix the file, or name the object with `FourCC` instead of a generated or Built-in constant.         |
-| `"invalid-definition"`   | A definition's Rawcode, base or fields are not ones the World Editor could make.                                                           | Fix the definition at the file, Rawcode and field named.                                            |
-| `"defined-twice"`        | Two definitions name one Rawcode of one Object kind; the message names both files.                                                         | Keep one, or give the other another Rawcode.                                                        |
-| `"collision"`            | A definition names a Rawcode the map folder defines or changes, which the code does not own.                                               | Adopt the object into the code (`pnpm objects:adopt`), or choose another Rawcode.                   |
-| `"changed-outside-code"` | Object sync found an owned object changed in the map folder outside the code since the last sync; one problem per object and field.        | Copy each change into its definition, or sync with `force` to overwrite it with the code's version. |
-| `"manifest-unreadable"`  | The Object manifest does not parse, or is not one Object sync writes; the message names the file.                                          | Restore it from git, or resolve its merge conflict, then sync again; never edit it by hand.         |
-| `"peer-missing"`         | `typescript` or `reforged-builtins` cannot be read from the Map project, or `reforged-builtins` has a field table of format 1.             | Install the peer named, or a newer `reforged-builtins`.                                             |
+| `reason`                 | When                                                                                                                                                                                                    | What the author does                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `"load-failed"`          | A definition file threw while loading (the message gives the exception's), could not be transpiled, or imported what a definition may not.                                                              | Fix the file, or name the object with `FourCC` instead of a generated or Built-in constant.         |
+| `"invalid-definition"`   | A definition's Rawcode, base or fields are not ones the World Editor could make.                                                                                                                        | Fix the definition at the file, Rawcode and field named.                                            |
+| `"defined-twice"`        | Two definitions name one Rawcode of one Object kind; the message names both files.                                                                                                                      | Keep one, or give the other another Rawcode.                                                        |
+| `"collision"`            | A definition names a Rawcode the map folder defines or changes, which the code does not own.                                                                                                            | Adopt the object into the code (`pnpm objects:adopt`), or choose another Rawcode.                   |
+| `"changed-outside-code"` | Object sync found an owned object changed in the map folder outside the code since the last sync; one problem per object and field.                                                                     | Copy each change into its definition, or sync with `force` to overwrite it with the code's version. |
+| `"manifest-unreadable"`  | The Object manifest does not parse, or is not one Object sync writes; the message names the file.                                                                                                       | Restore it from git, or resolve its merge conflict, then sync again; never edit it by hand.         |
+| `"peer-missing"`         | `typescript` or `reforged-builtins` cannot be read from the Map project, or `reforged-builtins` has a field table of format 1.                                                                          | Install the peer named, or a newer `reforged-builtins`.                                             |
+| `"not-adoptable"`        | Object adoption was given an object the code owns or defines, an unchanged Built-in object, no object, a Rawcode two kinds share without its kind, or an object holding a value no definition can hold. | Adopt another object, name the kind (`buff:B000`), or fix the value in the World Editor.            |
+| `"target-exists"`        | A definition file Object adoption would write exists.                                                                                                                                                   | Move or rename the file, then adopt again.                                                          |
 
 An edit or a save the Object data editor refuses throws its own `ObjectDataWriterError`, a sync refused for unsaved edits in the World Editor among them, and a missing staged copy or map folder a `MapFolderError`.
 

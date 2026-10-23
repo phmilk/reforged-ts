@@ -217,7 +217,7 @@ export interface CheckedFields {
 }
 
 /** The name field of each kind, set first so that a string's comment in war3map.wts names the object by the name the definition gives it. */
-const NAME_FIELDS: ReadonlySet<string> = new Set([
+export const NAME_FIELDS: ReadonlySet<string> = new Set([
   "unam",
   "anam",
   "fnam",
