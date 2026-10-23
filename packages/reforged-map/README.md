@@ -233,17 +233,30 @@ It lists the top-level windows whose title has the form `Warcraft III World Edit
 A save runs it on the folder it saves to, after comparing the bytes on disk and before its first write:
 
 - `"modified"` refuses the save, with the reason `"modified-in-world-editor"`, when a file would be written; a save that writes nothing returns it;
-- `"open"` writes, and the result carries it: the caller then reloads the map in the World Editor with `-launch -loadfile`, which the Object data editor never sends;
+- `"open"` writes, and the result carries it: the caller then reloads the map in the World Editor with [the World Editor reload](#the-world-editor-reload), which the Object data editor never runs;
 - a failed check refuses the save always.
 
 The check is on by default. `save(folder, { worldEditorCheck: false })` turns it off, for a folder no World Editor opens, such as the build's staged copy in `dist/`; the result's `worldEditor` is then `undefined`. `worldEditorCheck` also takes the check's options.
 
 ```ts
-const { worldEditor } = editor.save();
-if (worldEditor === "open") {
-  // Reload the map in the World Editor that holds it: `-launch -loadfile`.
+const { written, worldEditor } = editor.save();
+if (worldEditor === "open" && written.length > 0) {
+  reloadWorldEditor(mapFolder, worldEditorExecutable);
 }
 ```
+
+### The World Editor reload
+
+A World Editor that holds the map folder without unsaved edits when a tool writes it still has the old objects loaded, and its next save puts them back. `reloadWorldEditor(mapFolder, executable)` reloads the map there: it starts the World Editor's executable with `-launch -loadfile <map folder>` and returns at once, never waiting for the editor. Run it only after [the World Editor check](#the-world-editor-check) said `"open"` and the save wrote a file: on `"modified"` it would ask the World Editor to drop the author's edits.
+
+- The caller finds the executable, `World Editor.exe` beside the game's: the Template from the game discovery of `pnpm test:map`, the Studio from its own. Under WSL it is the WSL path of that file (`/mnt/c/...`).
+- The map folder is passed by its Windows path: on Windows its resolved path, under WSL the one `wslpath -w` gives.
+- The executable is started detached, with no standard input or output; an error it meets after starting is not reported.
+- It throws an `Error`, starting nothing, when the map folder is not a folder, the executable is not a file, the system is neither Windows nor WSL, or `wslpath -w` fails.
+
+Its options replace the system, for tests: `launch(executable, args)` starts the program, `system` is `"windows"` or `"wsl"`, and `windowsPath(folder)` converts a WSL path.
+
+Whether the World Editor of Patch 3.0.1 still loads a map folder given to `-loadfile` is not settled in game: the game itself no longer does ([reforged-ts-template#99](https://github.com/phmilk/reforged-ts-template/issues/99)).
 
 ## Object definitions
 
@@ -324,7 +337,7 @@ An owned object changed in the map folder outside the code, its state there neit
 
 ### Object sync
 
-`syncObjectDefinitions(mapFolder, projectRoot, { definitionsFolder, generatedFolder, manifest, force, worldEditorCheck })` is Object sync, what `pnpm objects:sync` runs: it writes the definitions into the map folder itself, in the Editor form, so that the World Editor and the Studio show them and a World Editor save keeps them byte for byte. In order:
+`syncObjectDefinitions(mapFolder, projectRoot, { definitionsFolder, generatedFolder, manifest, force, worldEditorCheck, worldEditorExecutable })` is Object sync, what `pnpm objects:sync` runs: it writes the definitions into the map folder itself, in the Editor form, so that the World Editor and the Studio show them and a World Editor save keeps them byte for byte. In order:
 
 1. It loads and fully checks the definitions, as the merge does, and reads the Object manifest. Any error stops it before anything is written.
 2. It opens the map folder's Object data with [the Object data editor](#the-object-data-editor).
@@ -341,18 +354,19 @@ An owned object changed in the map folder outside the code, its state there neit
 
 5. For each Rawcode the manifest records as removed that the map folder holds again, no definition taking it: an object equal to the removed one is the removed object a stale World Editor save brought back (a World Editor that loaded the map before the sync that removed it, then saved), so it is removed again, with a warning (`removedAgain`); any other object is a new object of the map folder, left alone (`leftAlone`), and the manifest forgets the removed one.
 6. It makes each defined object exactly its definition: a Custom object added, the fields the definition sets set, those it no longer sets removed, and a field that already holds its value left as it is. It removes each owned object no definition defines, a Custom object entirely, a Built-in object's modifications. A removed Custom object draws a warning: its placements on the terrain, if any, are dropped by the World Editor's next save and skipped by the game ([#482](https://github.com/phmilk/reforged-ts/issues/482)), and Object release (`pnpm objects:release`) hands an object back to the map folder with them instead. Localizable strings follow the Editor form of the Object data editor: a `STRING n` of `war3map.wts` that another owner references keeps its text, and the edited object gets a new one.
-7. It saves the map folder with [the World Editor check](#the-world-editor-check) on, `worldEditorCheck` giving its options: a World Editor showing ` *]` for the map refuses the save, with an `ObjectDataWriterError` of the reason `"modified-in-world-editor"` telling the author to save or discard the edits there first; a World Editor holding the map without unsaved edits (`"open"`) lets it write, with a warning to reload the map there by hand, since its next save would put back what it loaded before the sync.
+7. It saves the map folder with [the World Editor check](#the-world-editor-check) on, `worldEditorCheck` giving its options: a World Editor showing ` *]` for the map refuses the save, with an `ObjectDataWriterError` of the reason `"modified-in-world-editor"` telling the author to save or discard the edits there first; a World Editor holding the map without unsaved edits (`"open"`) lets it write, then is reloaded with [the World Editor reload](#the-world-editor-reload) when `worldEditorExecutable` gives its executable, since its next save would put back what it loaded before the sync. Without the executable, or when the reload throws, the sync warns to reload the map there by hand, naming why. A sync that writes no file, or finds no World Editor holding the map, neither reloads nor warns.
 8. It reads the written objects back and writes the manifest: the defined objects' snapshots, and the removed entries.
 
-It returns a report: the objects defined (`objects`), those it added (`added`: a Custom object, or a Built-in object changed for the first time), changed (`changed`), removed (`removed`) and removed again (`removedAgain`), the new objects at a removed Rawcode it left alone (`leftAlone`), the files of the map folder written (`written`), whether the manifest was written (`manifestWritten`), what the World Editor showed (`worldEditor`) and the warnings. A sync that changes nothing writes no byte, the manifest included.
+It returns a report: the objects defined (`objects`), those it added (`added`: a Custom object, or a Built-in object changed for the first time), changed (`changed`), removed (`removed`) and removed again (`removedAgain`), the new objects at a removed Rawcode it left alone (`leftAlone`), the files of the map folder written (`written`), whether the manifest was written (`manifestWritten`), what the World Editor showed (`worldEditor`), whether it reloaded the World Editor (`worldEditorReloaded`) and the warnings. A sync that changes nothing writes no byte, the manifest included.
 
 ```ts
 import { syncObjectDefinitions } from "reforged-map";
 
-const report = syncObjectDefinitions("my-map.w3m", ".");
+const report = syncObjectDefinitions("my-map.w3m", ".", {
+  worldEditorExecutable:
+    "C:/Program Files (x86)/Warcraft III/_retail_/x86_64/World Editor.exe",
+});
 ```
-
-Reloading the World Editor after a sync is [#706](https://github.com/phmilk/reforged-ts/issues/706)'s.
 
 ### The Object manifest
 
