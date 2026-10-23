@@ -44,6 +44,17 @@ export {
   type ObjectDataWriterErrorReason,
 } from "./writer-error.js";
 export { objectDataText } from "./object-data-text.js";
+export {
+  mergeObjectDefinitions,
+  type DefinedObject,
+  type ObjectDefinitionsMergeResult,
+  type ObjectDefinitionsOptions,
+} from "./definitions.js";
+export {
+  ObjectDefinitionsError,
+  type ObjectDefinitionProblem,
+  type ObjectDefinitionsErrorReason,
+} from "./definitions-error.js";
 export type { GameDataSet } from "./builtins.js";
 export type { ObjectKind } from "./model.js";
 

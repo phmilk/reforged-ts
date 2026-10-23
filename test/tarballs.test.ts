@@ -158,11 +158,13 @@ const PACKAGES: readonly Expected[] = [
   {
     dir: "reforged-map",
     // The entry, and the TypeScript plugin: its CommonJS file and the
-    // package.json through which tsserver resolves its subpath (#595).
+    // package.json through which tsserver resolves its subpath (#595); the
+    // authoring entry of Object definitions and its package.json (#703).
     allowed: [
       /^dist\/.+\.(js|d\.ts)$/,
       /^dist\/typescript-plugin\.(cjs|d\.cts)$/,
       /^typescript-plugin\/package\.json$/,
+      /^objects\/package\.json$/,
     ],
     required: [
       "dist/index.js",
@@ -171,6 +173,8 @@ const PACKAGES: readonly Expected[] = [
       "dist/typescript-plugin.cjs",
       "dist/tsserver/plugin.js",
       "typescript-plugin/package.json",
+      "dist/object-definitions.js",
+      "objects/package.json",
     ],
     sideEffectsFree: true,
     // Required: the generated declarations name the Typings' types.

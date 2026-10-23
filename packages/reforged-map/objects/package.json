@@ -1,0 +1,4 @@
+{
+  "main": "../dist/object-definitions.js",
+  "types": "../dist/object-definitions.d.ts"
+}
