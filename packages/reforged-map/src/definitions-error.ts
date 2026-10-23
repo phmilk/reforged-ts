@@ -14,7 +14,11 @@
  * `"manifest-unreadable"`, the Object manifest does not parse or is not one
  * Object sync writes; `"peer-missing"`, `typescript` or `reforged-builtins`
  * (its index, or its field table of format 2) could not be read from the
- * Map project.
+ * Map project; `"not-adoptable"`, Object adoption was given a Rawcode of
+ * an object the code owns or defines, of a Built-in object the map folder
+ * does not change, of no object of the map folder, of two kinds without
+ * its kind, or of an object holding a value no definition can hold; `"target-exists"`, a definition file Object adoption would
+ * write exists.
  */
 export type ObjectDefinitionsErrorReason =
   | "changed-outside-code"
@@ -23,7 +27,9 @@ export type ObjectDefinitionsErrorReason =
   | "invalid-definition"
   | "load-failed"
   | "manifest-unreadable"
-  | "peer-missing";
+  | "not-adoptable"
+  | "peer-missing"
+  | "target-exists";
 
 /** One problem of an {@link ObjectDefinitionsError}: where it is, and what it is. */
 export interface ObjectDefinitionProblem {
@@ -38,10 +44,11 @@ export interface ObjectDefinitionProblem {
 }
 
 /**
- * Object definitions the build or Object sync refuses: a definition file
- * that cannot be loaded, an invalid definition, a Rawcode defined twice, a
- * collision with the map folder, an object the code owns changed outside
- * the code, an unreadable Object manifest, or a missing peer. Its `reason`
+ * Object definitions the build, Object sync or Object adoption refuses: a
+ * definition file that cannot be loaded, an invalid definition, a Rawcode
+ * defined twice, a collision with the map folder, an object the code owns
+ * changed outside the code, an unreadable Object manifest, a missing peer,
+ * an object that cannot be adopted, or an adoption's file that exists. Its `reason`
  * says which, for a caller to switch on, and its message what the author
  * does next. Nothing is written when it is thrown.
  */

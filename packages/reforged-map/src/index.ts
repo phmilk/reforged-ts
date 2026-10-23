@@ -59,6 +59,11 @@ export {
   type RemovedObject,
 } from "./object-sync.js";
 export {
+  adoptObjects,
+  type ObjectAdoptionOptions,
+  type ObjectAdoptionReport,
+} from "./object-adoption.js";
+export {
   ObjectDefinitionsError,
   type ObjectDefinitionProblem,
   type ObjectDefinitionsErrorReason,
