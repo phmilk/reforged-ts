@@ -200,7 +200,30 @@ function readRegions(
   return { regions, seen, problems };
 }
 
-/** The Markdown files git tracks or would track, `/`-separated. */
+/** The skills CLI's lock, from the root: it names the Upstream skills. */
+const SKILLS_LOCK = "skills-lock.json";
+
+/** A path in a skill's folder of `.claude/skills/`; its group is the skill. */
+const SKILL_PATH = /^\.claude\/skills\/([^/]+)\//;
+
+/**
+ * The names of the Upstream skills, the keys of the lock's `skills`; none
+ * when the repository has no lock.
+ */
+async function upstreamSkills(root: string): Promise<Set<string>> {
+  const text = await readFile(join(root, SKILLS_LOCK), "utf8").catch(
+    () => undefined,
+  );
+  if (text === undefined) return new Set();
+  const { skills } = JSON.parse(text) as { skills?: Record<string, unknown> };
+  return new Set(Object.keys(skills ?? {}));
+}
+
+/**
+ * The Markdown files git tracks or would track, `/`-separated, but those of
+ * the Upstream skills' folders of `.claude/skills/`: their Markdown is
+ * upstream's text, never the repository's.
+ */
 async function markdownFiles(root: string): Promise<string[]> {
   const listed = await gitIn(root)([
     "ls-files",
@@ -211,7 +234,12 @@ async function markdownFiles(root: string): Promise<string[]> {
     "--",
     "*.md",
   ]);
-  return listed.split("\0").filter((path) => path !== "");
+  const upstream = await upstreamSkills(root);
+  return listed
+    .split("\0")
+    .filter(
+      (path) => path !== "" && !upstream.has(SKILL_PATH.exec(path)?.[1] ?? ""),
+    );
 }
 
 /**

@@ -60,7 +60,7 @@ It follows [ADR 0001](0001-typings-generated.md#context), the [release docs](../
 [not a link either](../release.md)
 \`\`\`
 
-[words]: ../../CONTEXT.md
+[words]: ../../GLOSSARY.md
 `;
 
 export const CHANGELOG = `# reforged-ts
@@ -248,7 +248,7 @@ export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
   [`${PLUGIN}/src/rules/index.ts`]: RULE_REGISTRY,
   [`${PLUGIN}/docs/no-sleep.md`]: NO_SLEEP_PAGE,
   [`${PLUGIN}/docs/prefer-timer.md`]: PREFER_TIMER_PAGE,
-  "CONTEXT.md": GLOSSARY,
+  "GLOSSARY.md": GLOSSARY,
   "docs/adr/0001-typings-generated.md": ADR_1,
   "docs/adr/0002-site-links.md": ADR_2,
   "docs/adr/README.txt": "Not an ADR.\n",
@@ -258,7 +258,7 @@ export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
   "docs/agents/development-loop.md":
     "# The development loop\n\nClaim, then implement.\n",
   "packages/eslint-plugin-reforged/AGENTS.md":
-    "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../CONTEXT.md) and [a bad escape](%zz.md).\n",
+    "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../GLOSSARY.md) and [a bad escape](%zz.md).\n",
   "packages/reforged-types/AGENTS.md":
     "# reforged-types\n\n## New Patch loop\n\nVendor, then generate.\n",
   "packages/reforged-types/package.json": TYPINGS_MANIFEST,

@@ -71,7 +71,7 @@ export const SOURCES: readonly Source[] = [
   }),
   markdownFile({
     name: "the glossary",
-    from: "CONTEXT.md",
+    from: "GLOSSARY.md",
     to: "contributing/glossary.md",
     title: "Glossary",
     position: 2,

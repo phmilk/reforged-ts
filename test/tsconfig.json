@@ -1,7 +1,9 @@
 {
   // The workspace-level Node tests (the tarballs of the publishable
   // packages, and the repository's conventions under conventions/),
-  // type-checked only; vitest runs them from source. skipLibCheck:
+  // type-checked only; vitest runs them from source. The hooks of the shared
+  // project settings too (../.claude/hooks/), dependency-free JavaScript with
+  // JSDoc types, which their conventions test runs. skipLibCheck:
   // vitest's declarations pull in tinybench's, which name DOM types a Node
   // program does not have.
   "compilerOptions": {
@@ -17,7 +19,9 @@
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "newLine": "lf",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true
   },
-  "include": ["*.ts", "conventions/*.ts"]
+  "include": ["*.ts", "conventions/*.ts", "../.claude/hooks/*.mjs"]
 }

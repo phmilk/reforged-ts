@@ -55,7 +55,7 @@ describe("templateDispatch", () => {
           "reforged-map": "1.0.0-alpha.0",
           "reforged-builtins": "1.0.0-alpha.0",
         },
-        contextUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/CONTEXT.md`,
+        contextUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/GLOSSARY.md`,
         matrixUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/release/compatibility/matrix.md`,
         llmsUrl: "https://phmilk.github.io/reforged-ts/docs/next/llms.txt",
       },
@@ -86,7 +86,7 @@ describe("templateDispatch", () => {
         "reforged-map": "1.0.2",
         "reforged-builtins": "1.0.1",
       },
-      contextUrl: `${RAW}/reforged-types@1.3.0/CONTEXT.md`,
+      contextUrl: `${RAW}/reforged-types@1.3.0/GLOSSARY.md`,
       matrixUrl: `${RAW}/reforged-types@1.3.0/release/compatibility/matrix.md`,
       llmsUrl: "https://phmilk.github.io/reforged-ts/docs/1.2/llms.txt",
     });

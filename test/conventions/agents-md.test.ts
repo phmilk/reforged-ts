@@ -2,42 +2,8 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 
+import { headings, lines, section } from "./markdown.js";
 import { read, root } from "./repository.js";
-
-function lines(text: string): string[] {
-  const all = text.split(/\r?\n/);
-  return all.at(-1) === "" ? all.slice(0, -1) : all;
-}
-
-// The lines of a Markdown file outside fenced code blocks, where a `#` starts
-// a heading.
-function proseLines(text: string): string[] {
-  let fenced = false;
-  return lines(text).filter((line) => {
-    if (line.startsWith("```")) fenced = !fenced;
-    return !fenced;
-  });
-}
-
-function headings(text: string, level: "##" | "###"): string[] {
-  const prefix = `${level} `;
-  return proseLines(text)
-    .filter((line) => line.startsWith(prefix))
-    .map((line) => line.slice(prefix.length));
-}
-
-// The lines under a heading, up to the next heading of the same or a higher
-// level; undefined when the heading is missing.
-function section(text: string, heading: string): string[] | undefined {
-  const all = proseLines(text);
-  const start = all.indexOf(heading);
-  if (start === -1) return undefined;
-  const level = heading.indexOf(" ");
-  const end = all.findIndex(
-    (line, i) => i > start && /^#+ /.test(line) && line.indexOf(" ") <= level,
-  );
-  return all.slice(start + 1, end === -1 ? undefined : end);
-}
 
 const agents = read("AGENTS.md");
 

@@ -1,8 +1,19 @@
 # Contributing to reforged-ts
 
-Thanks for helping. This guide is for people; AI coding agents follow [`AGENTS.md`](AGENTS.md), which points at the same rules. The project's words (Native, Handle, Wrapper, System, Typings, Overlay, Patch, Build) are defined in [`CONTEXT.md`](CONTEXT.md), and the decisions behind the rules below are the ADRs in [`docs/adr/`](docs/adr/).
+Thanks for helping. This guide is for people; AI coding agents follow [`AGENTS.md`](AGENTS.md), which points at the same rules. The project's words (Native, Handle, Wrapper, System, Typings, Overlay, Patch, Build) are defined in [`GLOSSARY.md`](GLOSSARY.md), and the decisions behind the rules below are the ADRs in [`docs/adr/`](docs/adr/).
 
 The [README](README.md) has the requirements (Node, pnpm 12), every root command and the version policy, which says when pnpm refuses a dependency. After `pnpm install`, `pnpm check` should pass on a fresh clone.
+
+## Agent skills
+
+The Agent skills an AI coding agent follows here come with the clone, in `.claude/skills/`: the Upstream skills of [`mattpocock/skills`](https://github.com/mattpocock/skills) at the version [`skills-lock.json`](skills-lock.json) names, and the repository's own. Install none of them yourself. In Claude Code a personal skill wins over a project skill of the same name, so if you installed the Upstream skills globally or enabled upstream's plugin before, remove them once:
+
+```sh
+npx skills remove -g <name>...
+claude plugin uninstall mattpocock-skills@claude-plugins-official
+```
+
+A session started in the repository warns you when a personal skill or the plugin still shadows the repository's, naming each one and the command for it; the warning never blocks the session. See [Removing the global copies](docs/agents/development-loop.md#removing-the-global-copies) and [Installing and updating the Upstream skills](docs/agents/development-loop.md#installing-and-updating-the-upstream-skills) in `docs/agents/development-loop.md`.
 
 ## Pull requests
 

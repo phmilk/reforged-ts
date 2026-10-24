@@ -149,8 +149,11 @@ export default defineConfig(
     "packages/reforged-map/test/fixtures/*-map-project/map-objects.d.ts",
     // Lua is not linted.
     "**/*.lua",
-    // Agent worktrees and local state.
-    ".claude/**",
+    // Agent worktrees, local state and the Agent skills, the Upstream skills
+    // among them, which keep upstream's bytes (skills-lock.json). The hooks of
+    // the shared project settings are linted.
+    ".claude/*",
+    "!.claude/hooks/",
   ]),
   {
     linterOptions: { reportUnusedDisableDirectives: "error" },

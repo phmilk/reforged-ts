@@ -2,7 +2,7 @@
 
 ## Overview
 
-reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.1 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes seven packages: the library (Wrappers and Systems), the Typings, the Lua test harness, the lint plugin (the lint layer of the Guards), the map folder reader, the Built-in objects and the Creation CLI. The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
+reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.1 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes seven packages: the library (Wrappers and Systems), the Typings, the Lua test harness, the lint plugin (the lint layer of the Guards), the map folder reader, the Built-in objects and the Creation CLI. The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `GLOSSARY.md` is the vocabulary: use its terms.
 
 ## Commands
 
@@ -32,8 +32,8 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `docs/documentation.md`: the doc comment standard: tags, their order, the required-tag matrix, the style rules and the examples.
 - `release/`: the release scripts, a private workspace package.
 - `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
-- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
-- `.claude/skills/`: the Agent skills, listed under "Agent skills".
+- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file, the Agent skills and the editor settings.
+- `.claude/skills/`: the Agent skills, listed under "Agent skills". `.claude/shared.json`: what both repositories share (ADR 0024).
 - Diagrams: the README's "Map" indexes them. Read a flow's diagram before changing the flow: the packages, a pull request's CI, the release, an issue's life, the development loop, the Claim board, a Patch's adoption, a Probe run, the docs site, the Init stages.
 
 ## Rules
@@ -67,7 +67,7 @@ The game's Lua, as measured by the probe map (`docs/research/probe-map.lua`, res
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` at the repo root and ADRs under `docs/adr/`. See `docs/agents/domain.md`.
+Single-context: `GLOSSARY.md` at the repo root and ADRs under `docs/adr/`. See `docs/agents/domain.md`.
 
 ### Issue tracker
 
@@ -75,15 +75,18 @@ Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The w
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec`, `ticket` on one created with `to-tickets`. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec` or `write-spec`, `ticket` on one created with `to-tickets`. See `docs/agents/triage-labels.md`.
 
 ### Skills
 
-One line per Agent skill: its `SKILL.md`, then its trigger. When your agent does not load skills, read the `SKILL.md` whose trigger matches the task and follow its steps.
+One line per Agent skill of the repository: its `SKILL.md`, then its trigger. When your agent does not load skills, read the `SKILL.md` whose trigger matches the task and follow its steps.
 
 - [add-lint-rule](.claude/skills/add-lint-rule/SKILL.md): guard a pitfall at lint level, or add a rule to `eslint-plugin-reforged`.
 - [add-wrapper](.claude/skills/add-wrapper/SKILL.md): cover a Native, add a member to a Wrapper, or close a Native the Wrapper coverage report lists as missing.
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
+- [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one.
+
+The other folders of `.claude/skills/` are the Upstream skills of [`mattpocock/skills`](https://github.com/mattpocock/skills), at the version [`skills-lock.json`](skills-lock.json) names.
 
 ## Definition of done
 

@@ -16,8 +16,8 @@ probe/.probe/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes, the Built-in objects and the
-# field table and its declarations their generator's test expects, and the pnpm
-# lockfile.
+# field table and its declarations their generator's test expects, the pnpm
+# lockfile and the skills CLI's lock.
 packages/reforged-types/overlay/
 packages/reforged-types/[0-9]*/
 packages/reforged-types/[0-9]*.d.ts
@@ -28,6 +28,7 @@ packages/reforged-builtins/[0-9]*.d.ts
 packages/reforged-builtins/test/fixtures/fields/fields.json
 packages/reforged-builtins/test/fixtures/fields/fields.d.ts
 pnpm-lock.yaml
+skills-lock.json
 
 # The docs versions docs:version cuts: frozen copies of the docs tree, with the
 # generated pages, and the files Docusaurus writes for them.
@@ -46,9 +47,20 @@ wrapper-coverage/report.md
 # Lua is not formatted.
 *.lua
 
-# Agent worktrees and local state; the Agent skills are formatted.
+# Agent worktrees and local state. The Upstream skills keep upstream's bytes
+# (skills-lock.json); the repository's own Agent skills, the list of what both
+# repositories share, the shared project settings and their hooks are
+# formatted.
 .claude/*
 !.claude/skills/
+!.claude/shared.json
+!.claude/settings.json
+!.claude/hooks/
+.claude/skills/*
+!.claude/skills/add-lint-rule/
+!.claude/skills/add-wrapper/
+!.claude/skills/new-patch/
+!.claude/skills/write-spec/
 
 # The Probe runner's map folder, a copy of the Template's editor-saved files.
 probe/probe.w3m/
