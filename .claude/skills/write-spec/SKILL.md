@@ -3,7 +3,7 @@ name: write-spec
 description: Write a Spec from the conversation and publish it as an issue. Use when explicitly asked to write a Spec, or when another skill asks for one.
 metadata:
   upstream: to-spec
-  upstream-hash: 0ee8caf20fc7df94db53e76f42588fb01eee88c6f8dc97e7a3a0565be8978e74
+  upstream-hash: 3fa1a0695d4ea242fae9e569e4d22aa1788623197abb33bfadafae7315789bbf
 ---
 
 # Write a Spec
