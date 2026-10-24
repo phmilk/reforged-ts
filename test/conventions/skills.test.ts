@@ -5,6 +5,7 @@
 //
 // - a folder is neither an Upstream skill the lock names, with the content
 //   the lock records, nor a repository skill with its SKILL.md;
+// - an Upstream skill's file has CRLF line ends, which upstream never writes;
 // - a repository skill takes an Upstream skill's name;
 // - a Skill variant takes an Upstream skill's name, or records an Upstream
 //   skill the lock does not name, or a version of it that is not the lock's
@@ -19,7 +20,7 @@
 // with the command of docs/agents/development-loop.md, "Installing and
 // updating the Upstream skills".
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, posix } from "node:path";
 import { getFileInfo } from "prettier";
 import { describe, expect, it } from "vitest";
@@ -114,6 +115,23 @@ describe("the Agent skills of .claude/skills/", () => {
           ];
     });
     expect(problems, `the Upstream skills of ${lockPath}`).toEqual([]);
+  });
+
+  // Upstream writes LF. An install on Windows without core.autocrlf=false
+  // copies CRLF and hashes it, which the lock check above accepts; the next
+  // update on Linux would then rewrite every folder.
+  it("has every Upstream skill with upstream's LF line ends", () => {
+    const crlf = Object.keys(lock()).flatMap((name) =>
+      skillFiles(name)
+        .filter((path) =>
+          readFileSync(join(root, skillsFolder, name, path)).includes("\r\n"),
+        )
+        .map((path) => `${skillsFolder}/${name}/${path}`),
+    );
+    expect(
+      crlf,
+      `the Upstream skill files with CRLF: reinstall them with core.autocrlf=false (docs/agents/development-loop.md, "Installing and updating the Upstream skills")`,
+    ).toEqual([]);
   });
 
   // A folder the lock names is an Upstream skill, so a repository skill's
