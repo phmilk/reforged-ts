@@ -20,11 +20,17 @@ import {
   type EditTables,
   type StringSources,
 } from "./object-data-edit.js";
-import { foreignReferences } from "./object-data-strings.js";
+import {
+  foreignReferences,
+  referencedNumber,
+  translationsOf,
+} from "./object-data-strings.js";
 import { checkMapFolder, readMapFile } from "./map-folder.js";
 import {
+  LOCALES,
   OBJECT_KINDS,
   createModel,
+  type Locale,
   type MapFolderModel,
   type ObjectKind,
   type ValueType,
@@ -36,7 +42,14 @@ import {
 } from "./object-data.js";
 import { encodeObjectDataFile, encodeWts } from "./object-data-writer.js";
 import { mapFolderObjects, type MapFolderObject } from "./objects.js";
-import { WTS_FILE, readWar3mapWts, resolveString } from "./war3map-wts.js";
+import { IMP_FILE, importListWith } from "./war3map-imp.js";
+import {
+  WTS_FILE,
+  localeTablePath,
+  readLocaleTables,
+  readWar3mapWts,
+  resolveString,
+} from "./war3map-wts.js";
 import {
   checkWorldEditor,
   type WorldEditorCheckOptions,
@@ -61,6 +74,12 @@ export interface ObjectDataModification {
   readonly value: number | string;
   /** Its value as the file stores it, a `TRIGSTR_nnn` as is. */
   readonly stored: number | string;
+  /**
+   * The text per locale of a `TRIGSTR_nnn`, for each locale whose table
+   * (`_Locales/<locale>.w3mod/war3map.wts`) holds a text other than `value`
+   * under its number, by locale; absent when no locale translates it.
+   */
+  readonly translations?: Readonly<Partial<Record<Locale, string>>>;
   /** The file it is in: the kind's base file (`war3map.w3u`) or its Skin file (`war3mapSkin.w3u`). */
   readonly file: string;
 }
@@ -83,7 +102,12 @@ export interface ObjectDataObject {
 
 /** What {@link ObjectDataEditor.save} returns. */
 export interface ObjectDataSaveResult {
-  /** The files it wrote, by file name, each kind's base file then its Skin file, then `war3map.wts`: empty when no file's bytes changed. */
+  /**
+   * The files it wrote or deleted, by path in the folder with `/`: each
+   * kind's base file then its Skin file, then `war3map.wts`, then each
+   * locale's table (`_Locales/deDE.w3mod/war3map.wts`) by locale, then
+   * `war3map.imp`. Empty when no file's bytes changed.
+   */
   readonly written: string[];
   /**
    * What the World Editor showed of the folder saved to, before the first
@@ -157,6 +181,14 @@ export interface ObjectDataSetFieldOptions {
    * is refused.
    */
   readonly type?: ObjectDataValueType;
+  /**
+   * The translations of a localizable string, one text per locale of the
+   * game (`{ deDE: "Hauptmann" }`), each written under the string's number
+   * into the locale's table, `_Locales/<locale>.w3mod/war3map.wts`. A
+   * locale left out shows the default text, and so does a translation
+   * equal to it. None when left out.
+   */
+  readonly translations?: Readonly<Partial<Record<Locale, string>>>;
 }
 
 /** A map folder's Object data and `war3map.wts`, opened by {@link openObjectData}. */
@@ -207,6 +239,16 @@ export interface ObjectDataEditor {
    * removed when nothing else references it. Nothing is written until
    * {@link ObjectDataEditor.save}.
    *
+   * A localizable string's translations go under its number into the
+   * table of each locale, `_Locales/<locale>.w3mod/war3map.wts`, which the
+   * game reads in that locale instead of `war3map.wts`, whole: so each
+   * locale's table is kept a whole copy of `war3map.wts`, every string in
+   * its translation or its default text. A locale with a translation and no
+   * table gets one, a copy of `war3map.wts`; each table an edit writes gets
+   * the strings of `war3map.wts` it lacks, with their default text; and a
+   * table that then translates nothing goes, so that the locale reads
+   * `war3map.wts`. A map folder without translations has no table written.
+   *
    * @param field - The object and field to set: Object kind, Rawcode,
    *   field id, and level and data pointer where the kind has them.
    * @param value - Its value: an integer, a real or a string, as its type
@@ -221,7 +263,9 @@ export interface ObjectDataEditor {
    *   field table does not know the field and no type was given;
    *   `"field-held-twice"`, when a file holds the field twice for the
    *   object; `"invalid-value"`, when the value, its type, the level or the
-   *   data pointer is not one the file can hold. Nothing is changed.
+   *   data pointer is not one the file can hold, or a translation is given
+   *   to a field that is not localizable, for a locale the game does not
+   *   have, or is not a localizable string. Nothing is changed.
    */
   setField(
     field: ObjectDataField,
@@ -312,7 +356,12 @@ export interface ObjectDataEditor {
    * ({@link checkWorldEditor}) on the folder saved to, unless it is off: a
    * World Editor showing unsaved edits for that folder refuses the save
    * when a file would be written, and a failed check refuses it always.
-   * Then it writes only the files whose bytes change. A file the readers
+   * Then it writes only the files whose bytes change, and deletes a
+   * locale's table an edit dropped. When the edits add or drop a locale's
+   * table, `war3map.imp` lists the tables as the World Editor does, one
+   * entry of flag `0x15` each, its other entries kept; a list left empty is
+   * deleted, and a map folder whose tables did not change keeps its
+   * `war3map.imp` as it was. A file the readers
    * left out (truncated, of an unknown format version, an object with more
    * than one set) is never rewritten: a save to another folder copies its
    * bytes. Reloading the map in a World Editor that holds it
@@ -327,7 +376,9 @@ export interface ObjectDataEditor {
    *   changed since it was read; `"modified-in-world-editor"`, when a World
    *   Editor shows unsaved edits for the folder and a file would be
    *   written; `"world-editor-check-failed"`, when the World Editor check
-   *   could not read the windows' titles. Nothing is written.
+   *   could not read the windows' titles; `"file-not-read"`, when the
+   *   locales' tables changed and `war3map.imp` is not an import list of
+   *   format 1. Nothing is written.
    */
   save(folder?: string, options?: ObjectDataSaveOptions): ObjectDataSaveResult;
 }
@@ -361,6 +412,9 @@ export function openObjectData(
   const model = createModel();
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
+  readLocaleTables(mapFolder, model);
+  const imp = readMapFile(mapFolder, IMP_FILE);
+  if (imp !== undefined) model.files.set(IMP_FILE, imp);
   const projectRoot = options.projectRoot ?? mapFolder;
   const builtins = loadBuiltins(projectRoot);
   const fields = loadFieldTable(projectRoot);
@@ -419,6 +473,7 @@ class Editor implements ObjectDataEditor {
       field,
       value,
       options.type,
+      options.translations,
     );
   }
 
@@ -455,6 +510,9 @@ class Editor implements ObjectDataEditor {
           (set) => set.modifications,
         )) {
           const { field, type, level, dataPointer, value } = modification;
+          const number = referencedNumber(modification);
+          const translations =
+            number === undefined ? {} : translationsOf(this.#model, number);
           modifications.push({
             field,
             type,
@@ -465,6 +523,7 @@ class Editor implements ObjectDataEditor {
                 ? (resolveString(value, this.#model) ?? value)
                 : value,
             stored: value,
+            ...(Object.keys(translations).length > 0 && { translations }),
             file: file.name,
           });
         }
@@ -489,7 +548,7 @@ class Editor implements ObjectDataEditor {
   ): ObjectDataSaveResult {
     // Each kind's base file then its Skin file, then war3map.wts: those
     // read, and those an edit created.
-    const files = [...objectDataFileNames(), WTS_FILE]
+    const files: MapFileWrite[] = [...objectDataFileNames(), WTS_FILE]
       .filter(
         (name) =>
           this.#model.files.has(name) ||
@@ -500,6 +559,7 @@ class Editor implements ObjectDataEditor {
         const read = this.#model.files.get(name);
         return { name, read, encoded: this.#encode(name, read) };
       });
+    files.push(...this.#localeFiles());
     const { worldEditorCheck = true } = options;
     return writeMapFiles(
       this.mapFolder,
@@ -507,6 +567,46 @@ class Editor implements ObjectDataEditor {
       files,
       worldEditorCheck === true ? {} : worldEditorCheck || undefined,
     );
+  }
+
+  /**
+   * The locales' tables, each read or written, by locale, and war3map.imp
+   * when the set of tables changed: a table an edit dropped, and an import
+   * list left empty, deleted. None in a map folder without tables.
+   */
+  #localeFiles(): MapFileWrite[] {
+    const files: MapFileWrite[] = [];
+    const read = new Set<Locale>();
+    for (const locale of LOCALES) {
+      const name = localeTablePath(locale);
+      const bytes = this.#model.files.get(name);
+      if (bytes !== undefined) read.add(locale);
+      const table = this.#model.locales.get(locale);
+      if (bytes === undefined && table === undefined) continue;
+      files.push({
+        name,
+        read: bytes,
+        encoded: table === undefined ? undefined : encodeWts(table),
+      });
+    }
+    const now = new Set(this.#model.locales.keys());
+    if (
+      now.size === read.size &&
+      [...now].every((locale) => read.has(locale))
+    ) {
+      return files;
+    }
+    const imp = this.#model.files.get(IMP_FILE);
+    const encoded = importListWith(imp, now);
+    if (encoded === "unreadable") {
+      throw new ObjectDataWriterError(
+        "file-not-read",
+        `${IMP_FILE} is not an import list of format 1, so the locales' string tables cannot be listed in it: nothing was written. Save the map with the World Editor of 3.0, then sync again.`,
+        IMP_FILE,
+      );
+    }
+    files.push({ name: IMP_FILE, read: imp, encoded });
+    return files;
   }
 
   /** The bytes of a file the editor read: encoded from the model, or as read when the readers left it out. */
@@ -521,11 +621,11 @@ class Editor implements ObjectDataEditor {
   }
 }
 
-/** One file a save covers: its name, the bytes read (undefined when the map folder had none) and the bytes encoded. */
+/** One file a save covers: its path in the folder, with `/`, the bytes read (undefined when the map folder had none) and the bytes encoded (undefined to delete it). */
 export interface MapFileWrite {
   readonly name: string;
   readonly read: Uint8Array | undefined;
-  readonly encoded: Uint8Array;
+  readonly encoded: Uint8Array | undefined;
 }
 
 /**
@@ -546,7 +646,9 @@ export function writeMapFiles(
   const own = sameFolder(mapFolder, target);
   const changed = files.filter(({ name, read, encoded }) => {
     const baseline = own ? read : readMapFile(target, name);
-    return baseline === undefined || !sameBytes(baseline, encoded);
+    return baseline === undefined || encoded === undefined
+      ? baseline !== encoded
+      : !sameBytes(baseline, encoded);
   });
   if (own) {
     for (const { name, read } of changed) {
@@ -577,7 +679,13 @@ export function writeMapFiles(
   }
   if (changed.length > 0) fs.mkdirSync(target, { recursive: true });
   for (const { name, encoded } of changed) {
-    fs.writeFileSync(path.join(target, name), encoded);
+    const file = path.join(target, name);
+    if (encoded === undefined) {
+      fs.rmSync(file, { force: true });
+      continue;
+    }
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, encoded);
   }
   return { written: changed.map(({ name }) => name), worldEditor };
 }

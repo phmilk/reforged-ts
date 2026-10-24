@@ -97,8 +97,7 @@ const KIND_AND_RAWCODE = new RegExp(`^(${OBJECT_KINDS.join("|")}):(.{4})$`);
 
 /**
  * A text an adopted definition sets: the default text, and, where the map's
- * `_Locales` translate it, its translations. Reading the translations is
- * #712's: until then adoption gives none, and a text is a string.
+ * `_Locales` translate it, its translations.
  */
 interface AdoptedText {
   readonly text: string;
@@ -140,8 +139,10 @@ interface Adoption {
  * since adoption does not follow references; a list of references is an
  * array of them. A field the field table of `reforged-builtins` does not
  * know goes through the raw escape, with its value type, a comment and a
- * warning. The translations of a localizable text in `_Locales` are not
- * adopted yet ([#712](https://github.com/phmilk/reforged-ts/issues/712)).
+ * warning. A localizable text that a locale's table in `_Locales/`
+ * translates is a localized value, `localized("Captain", { deDE:
+ * "Hauptmann" })`, with the text of each locale whose table holds another
+ * text than the default under its number.
  *
  * The Object manifest records each adopted object with its current
  * snapshot, as Object sync records what it wrote, so that the next sync
@@ -493,6 +494,9 @@ function renderDefinition(
     }
     const value = valueSource(entry, table, modification, {
       text: String(modification.value),
+      ...(modification.translations !== undefined && {
+        translations: modification.translations,
+      }),
     });
     if (typeof value !== "string") {
       problem(value.problem);
@@ -509,8 +513,11 @@ function renderDefinition(
     const name = Number(NAME_FIELDS.has(b)) - Number(NAME_FIELDS.has(a));
     return name !== 0 ? name : compare(a, b);
   });
+  const usesLocalized = [...known.values()].some(({ values }) =>
+    values.some(([, each]) => each.startsWith("localized(")),
+  );
   const lines = [
-    `import { ${DEFINE[kind]} } from "reforged-map/objects";`,
+    `import { ${DEFINE[kind]}${usesLocalized ? ", localized" : ""} } from "reforged-map/objects";`,
     "",
     `export const ${path.basename(file, ".ts")} = ${DEFINE[kind]}({`,
     `  rawcode: ${JSON.stringify(rawcode)},`,
@@ -550,7 +557,7 @@ function literal(value: number | string): string {
   return typeof value === "string" ? JSON.stringify(value) : String(value);
 }
 
-/** A text as TypeScript source: a string, or, with translations, a localized value (#712). */
+/** A text as TypeScript source: a string, or, with translations, a localized value. */
 function textSource(text: AdoptedText): string {
   const translations = Object.entries(text.translations ?? {});
   if (translations.length === 0) return JSON.stringify(text.text);

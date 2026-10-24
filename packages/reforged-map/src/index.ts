@@ -78,7 +78,7 @@ export {
   type ObjectDefinitionsErrorReason,
 } from "./definitions-error.js";
 export type { GameDataSet } from "./builtins.js";
-export type { ObjectKind } from "./model.js";
+export type { Locale, ObjectKind } from "./model.js";
 
 /** The name of the generated TypeScript declarations of the Editor globals. */
 export const DECLARATIONS_FILE = "editor-globals.d.ts";

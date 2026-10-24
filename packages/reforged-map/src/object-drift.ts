@@ -55,10 +55,15 @@ function shown(
 ): string {
   if (held.length === 0) return "not set";
   return held
-    .map(({ type, value }) => {
+    .map(({ type, value, translations }) => {
       const text =
         typeof value === "string" ? JSON.stringify(value) : String(value);
-      return withType ? `${text} (${type})` : text;
+      const locales = Object.entries(translations ?? {});
+      const translated =
+        locales.length === 0
+          ? text
+          : `${text} (${locales.map(([locale, each]) => `${locale} ${JSON.stringify(each)}`).join(", ")})`;
+      return withType ? `${translated} (${type})` : translated;
     })
     .join(" and ");
 }
@@ -129,7 +134,12 @@ function differences(
     const before = was.get(address) ?? [];
     const after = is.get(address) ?? [];
     const values = (held: readonly SnapshotModification[]) =>
-      held.map(({ type, value }) => `${type} ${JSON.stringify(value)}`).join();
+      held
+        .map(
+          ({ type, value, translations }) =>
+            `${type} ${JSON.stringify(value)} ${JSON.stringify(translations ?? {})}`,
+        )
+        .join();
     if (values(before) === values(after)) continue;
     const plain = shown(before, false) === shown(after, false);
     if (!changes.includes(first.field)) changes.push(first.field);

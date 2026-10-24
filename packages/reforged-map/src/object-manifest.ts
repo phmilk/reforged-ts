@@ -11,8 +11,10 @@ import path from "node:path";
 import { definitionsError } from "./definitions-error.js";
 import { displayPath } from "./definitions-loader.js";
 import {
+  LOCALES,
   OBJECT_KINDS,
   VALUE_TYPES,
+  type Locale,
   type ObjectKind,
   type ValueType,
 } from "./model.js";
@@ -33,6 +35,8 @@ export interface SnapshotModification {
   readonly type: ValueType;
   /** An integer, a real as the shortest decimal that reads back to its 32 bits (its bits in hex, a string, when not finite), or a string, a `TRIGSTR` resolved to its text. */
   readonly value: number | string;
+  /** A `TRIGSTR`'s text per locale whose table translates it, by locale in order; absent when no locale does. */
+  readonly translations?: Readonly<Partial<Record<Locale, string>>>;
 }
 
 /**
@@ -90,17 +94,38 @@ function snapshotValue(
   return Number.isFinite(value) ? Number(text) : text;
 }
 
+/** Translations with their locales in order; undefined when there is none. */
+function sortedTranslations(
+  translations: Readonly<Partial<Record<Locale, string>>> | undefined,
+): Partial<Record<Locale, string>> | undefined {
+  const entries = Object.entries(translations ?? {}).sort(([a], [b]) =>
+    compare(a, b),
+  );
+  return entries.length === 0 ? undefined : Object.fromEntries(entries);
+}
+
 /** The snapshot of an object of the Object data editor. */
 export function snapshotOf(object: ObjectDataObject): ObjectSnapshot {
   const modifications = object.modifications
     .map(
-      ({ field, level, dataPointer, type, value }): SnapshotModification => ({
+      ({
         field,
-        ...(level !== undefined && { level }),
-        ...(dataPointer !== undefined && { dataPointer }),
+        level,
+        dataPointer,
         type,
-        value: snapshotValue(type, value),
-      }),
+        value,
+        translations,
+      }): SnapshotModification => {
+        const sorted = sortedTranslations(translations);
+        return {
+          field,
+          ...(level !== undefined && { level }),
+          ...(dataPointer !== undefined && { dataPointer }),
+          type,
+          value: snapshotValue(type, value),
+          ...(sorted !== undefined && { translations: sorted }),
+        };
+      },
     )
     .sort(
       (a, b) =>
@@ -108,7 +133,11 @@ export function snapshotOf(object: ObjectDataObject): ObjectSnapshot {
         (a.level ?? 0) - (b.level ?? 0) ||
         (a.dataPointer ?? 0) - (b.dataPointer ?? 0) ||
         compare(a.type, b.type) ||
-        compare(JSON.stringify(a.value), JSON.stringify(b.value)),
+        compare(JSON.stringify(a.value), JSON.stringify(b.value)) ||
+        compare(
+          JSON.stringify(a.translations ?? {}),
+          JSON.stringify(b.translations ?? {}),
+        ),
     );
   return {
     kind: object.kind,
@@ -132,6 +161,9 @@ function canonical(entry: ObjectSnapshot): ObjectSnapshot {
       }),
       type: modification.type,
       value: modification.value,
+      ...(modification.translations !== undefined && {
+        translations: sortedTranslations(modification.translations),
+      }),
     })),
   };
 }
@@ -301,11 +333,12 @@ function modificationProblem(modification: unknown): string | undefined {
     "dataPointer",
     "type",
     "value",
+    "translations",
   ]);
   if (key !== undefined) {
     return `a modification has an unknown key ${JSON.stringify(key)}`;
   }
-  const { field, level, dataPointer, type, value } = modification;
+  const { field, level, dataPointer, type, value, translations } = modification;
   if (typeof field !== "string" || field.length === 0) {
     return "a modification has no field id";
   }
@@ -325,7 +358,33 @@ function modificationProblem(modification: unknown): string | undefined {
         ? typeof value === "number" && Number.isInteger(value)
         : typeof value === "number" ||
           (typeof value === "string" && /^0x[0-9a-f]{8}$/.test(value));
-  return valid
+  if (!valid) return `the value of ${field} is not one of type ${String(type)}`;
+  return translations === undefined
     ? undefined
-    : `the value of ${field} is not one of type ${String(type)}`;
+    : translationsProblem(field, type, translations);
+}
+
+/** What is wrong with a modification's text per locale: one text per locale of the game, of a string, at least one. */
+function translationsProblem(
+  field: string,
+  type: unknown,
+  translations: unknown,
+): string | undefined {
+  if (type !== "string") {
+    return `${field} has translations, and its value is not a string`;
+  }
+  if (!isRecord(translations)) {
+    return `the translations of ${field} are not an object`;
+  }
+  const locales = Object.keys(translations);
+  if (locales.length === 0) return `the translations of ${field} are empty`;
+  for (const locale of locales) {
+    if (!LOCALES.includes(locale as Locale)) {
+      return `the translations of ${field} name ${JSON.stringify(locale)}, not a locale of the game`;
+    }
+    if (typeof translations[locale] !== "string") {
+      return `the ${locale} translation of ${field} is not a string`;
+    }
+  }
+  return undefined;
 }

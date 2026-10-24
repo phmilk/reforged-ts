@@ -626,7 +626,11 @@ export const Captain_h000 = defineUnit({
   });
 
   describe("then Object sync writes no byte and leaves the manifest unchanged", () => {
-    for (const fixture of ["editor-objects.w3m", "editor-contract.w3m"]) {
+    for (const fixture of [
+      "editor-objects.w3m",
+      "editor-contract.w3m",
+      "editor-locales.w3m",
+    ]) {
       it(`on ${fixture}`, () => {
         const project = mapProject(fixture);
         adopt(project, "all");

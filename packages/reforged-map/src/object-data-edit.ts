@@ -23,7 +23,8 @@
 // - A localizable string is a `TRIGSTR_nnn` and its `STRING n` block in
 //   war3map.wts (#638, src/object-data-strings.ts): the string it
 //   referenced when nothing else does, else a new one; a string the edit
-//   leaves unreferenced is removed under the same condition.
+//   leaves unreferenced is removed under the same condition. Its
+//   translations go under the same number into the locales' tables (#712).
 // - A Custom object is added to the Custom table of both files of its kind,
 //   holding no modification, with a Rawcode its kind does not hold and no
 //   Built-in object of the index has (but a Custom object of another kind
@@ -36,7 +37,9 @@
 
 import type { BuiltinsIndex, FieldEntry, FieldTable } from "./builtins.js";
 import {
+  LOCALES,
   OBJECT_KINDS,
+  type Locale,
   type MapFolderModel,
   type Modification,
   type ModificationSet,
@@ -118,6 +121,7 @@ export function setField(
   address: FieldAddress,
   value: unknown,
   type: ValueType | undefined,
+  translations?: unknown,
 ): void {
   const { fields, builtins } = requireTables(tables);
   const { kind } = address;
@@ -136,6 +140,11 @@ export function setField(
     );
   }
   const localizable = entry?.localizable === true;
+  if (translations !== undefined && !localizable) {
+    invalid(
+      `The ${kind} field ${printable(address.field)} is not localizable${entry === undefined ? " in the field table" : ""}: give it no translations.`,
+    );
+  }
   const { level, dataPointer } = levelOf(address, entry);
   const places = files.map((file) =>
     file === undefined
@@ -157,7 +166,13 @@ export function setField(
     place === undefined ? [] : [place.modification],
   );
   let string:
-    | { number: number; text: string; inPlace: boolean; entry: FieldEntry }
+    | {
+        number: number;
+        text: string;
+        translations: Partial<Record<Locale, string>>;
+        inPlace: boolean;
+        entry: FieldEntry;
+      }
     | undefined;
   let stored: number | string;
   const references = objectDataReferences(model, replaced);
@@ -168,6 +183,7 @@ export function setField(
     !references.has(number) && !foreign.has(number);
   if (entry?.localizable === true) {
     const text = checkLocalizable(address, value);
+    const checked = checkTranslations(address, text, translations);
     const own = replaced
       .map(referencedNumber)
       .find(
@@ -175,7 +191,13 @@ export function setField(
           number !== undefined && hasString(model, number) && free(number),
       );
     const number = own ?? newNumber(model, foreign);
-    string = { number, text, inPlace: own !== undefined, entry };
+    string = {
+      number,
+      text,
+      translations: checked,
+      inPlace: own !== undefined,
+      entry,
+    };
     stored = reference(number);
   } else {
     stored = checkValue(address, valueType, value);
@@ -218,6 +240,7 @@ export function setField(
       string.text,
       comment(model, fields, builtins, target, kind, string.entry),
       string.inPlace,
+      string.translations,
     );
   }
   releaseStrings(model, replaced, string?.number, free);
@@ -653,6 +676,39 @@ function checkLocalizable(
     );
   }
   return value;
+}
+
+/**
+ * The translations of a localizable string checked: one text per locale of
+ * the game, each one a localizable string; a translation equal to the
+ * default text left out, since a locale without one shows the default text.
+ */
+function checkTranslations(
+  address: FieldAddress,
+  text: string,
+  translations: unknown,
+): Partial<Record<Locale, string>> {
+  if (translations === undefined) return {};
+  if (
+    typeof translations !== "object" ||
+    translations === null ||
+    Array.isArray(translations)
+  ) {
+    invalid(
+      `The translations of the ${address.kind} field ${address.field} are not one text per locale: ${describe(translations)}.`,
+    );
+  }
+  const checked: Partial<Record<Locale, string>> = {};
+  for (const [locale, translation] of Object.entries(translations)) {
+    if (!LOCALES.includes(locale as Locale)) {
+      invalid(
+        `${JSON.stringify(locale)} is not a locale of the game (${LOCALES.join(", ")}): the ${address.kind} field ${address.field} has no translation into it.`,
+      );
+    }
+    const each = checkLocalizable(address, translation);
+    if (each !== text) checked[locale as Locale] = each;
+  }
+  return checked;
 }
 
 /** A file the kind did not have, empty, in format version 3. */

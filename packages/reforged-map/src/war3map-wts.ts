@@ -11,12 +11,31 @@
 // lines are joined with LF. The file is kept as read, losslessly, for the
 // writer of ADR 0015 (src/object-data-writer.ts): its blocks as their raw
 // lines, the bytes between them, its byte order mark and its line ends.
+//
+// A locale's translation of the strings is a war3map.wts of its own,
+// `_Locales/<locale>.w3mod/war3map.wts`, read the same way: a whole copy of
+// the root table under the same numbers, which replaces it in that locale
+// (docs/research/locales.md, #711).
 
 import { readMapFile } from "./map-folder.js";
-import type { MapFolderModel, WtsBlock, WtsFile } from "./model.js";
+import {
+  LOCALES,
+  type Locale,
+  type MapFolderModel,
+  type WtsBlock,
+  type WtsFile,
+} from "./model.js";
 
 /** The strings file of a map folder. */
 export const WTS_FILE = "war3map.wts";
+
+/** The folder of a map folder that holds a folder per locale. */
+export const LOCALES_FOLDER = "_Locales";
+
+/** The path of a locale's string table in the map folder, with `/`: `_Locales/ptBR.w3mod/war3map.wts`. */
+export function localeTablePath(locale: Locale): string {
+  return `${LOCALES_FOLDER}/${locale}.w3mod/${WTS_FILE}`;
+}
 
 const UTF8 = new TextDecoder("utf-8", { fatal: false, ignoreBOM: true });
 const LF = 0x0a;
@@ -36,6 +55,24 @@ export function readWar3mapWts(mapFolder: string, model: MapFolderModel): void {
   }
 }
 
+/**
+ * Reads the string table of each locale that has one into the model: the
+ * table, and its bytes into the model's files by its path. A folder of
+ * another name than a locale's is not read.
+ */
+export function readLocaleTables(
+  mapFolder: string,
+  model: MapFolderModel,
+): void {
+  for (const locale of LOCALES) {
+    const name = localeTablePath(locale);
+    const bytes = readMapFile(mapFolder, name);
+    if (bytes === undefined) continue;
+    model.files.set(name, bytes);
+    model.locales.set(locale, parseWts(bytes));
+  }
+}
+
 /** One line of war3map.wts: where it starts and ends, its line end included, and its text without it. */
 interface Line {
   readonly start: number;
@@ -44,7 +81,7 @@ interface Line {
 }
 
 /** war3map.wts as its blocks and the bytes between them; every byte is in exactly one part. */
-function parseWts(bytes: Uint8Array): WtsFile {
+export function parseWts(bytes: Uint8Array): WtsFile {
   const bom = bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf;
   const start = bom ? 3 : 0;
   const firstLf = bytes.indexOf(LF, start);

@@ -9,6 +9,9 @@
 
 import type { Fields } from "reforged-builtins/fields";
 import { recordDefinition, recordLocalized } from "./definition-registry.js";
+import type { Locale } from "./model.js";
+
+export type { Locale };
 
 /** The Object kinds an Object definition can be of: `"unit"`, `"item"`, `"ability"`, `"buff"`, `"destructable"`, `"doodad"` and `"upgrade"`. */
 export type ObjectDefinitionKind = keyof Fields & ObjectKind;
@@ -41,7 +44,7 @@ export interface LocalizedValue {
   /** The default text, the one a locale without a translation shows. */
   readonly text: string;
   /** One text per locale, by the game's locale code (`deDE`, `frFR`). */
-  readonly translations: Readonly<Record<string, string>>;
+  readonly translations: Readonly<Partial<Record<Locale, string>>>;
 }
 
 /** What the field declarations of `reforged-builtins` give of one field. */
@@ -288,19 +291,22 @@ export function defineUpgrade(
  * localizable text field such as a name or a tooltip.
  *
  * @remarks
- * Until the layout of a translation in `_Locales/` is settled
- * ([#712](https://github.com/phmilk/reforged-ts/issues/712)), the build
- * writes the default text only, and warns of each translation it leaves
- * out.
+ * The build and Object sync write the default text into the map folder's
+ * `war3map.wts`, as a field without translations, and each translation
+ * under the same `STRING n` into its locale's table,
+ * `_Locales/<locale>.w3mod/war3map.wts`, which the game reads instead of
+ * `war3map.wts` in that locale. A locale left out shows the default text,
+ * and so does a translation equal to it. It checks nothing when it runs:
+ * the build checks each locale is one of the game's.
  *
  * @param text - The default text.
  * @param translations - One text per locale, by the game's locale code
- *   (`deDE`, `frFR`).
+ *   (`deDE`, `ptBR`).
  * @returns The localized value.
  */
 export function localized(
   text: string,
-  translations: Readonly<Record<string, string>> = {},
+  translations: Readonly<Partial<Record<Locale, string>>> = {},
 ): LocalizedValue {
   const value = Object.freeze({
     text,

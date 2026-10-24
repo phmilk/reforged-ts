@@ -131,7 +131,10 @@ export interface ObjectSyncReport {
  * terrain and the game skips them, and release (`pnpm objects:release`)
  * hands an object back with them instead. A localizable string is written
  * as the Object data editor writes it ({@link ObjectDataEditor.setField}):
- * a `STRING n` of `war3map.wts` another owner references keeps its text.
+ * a `STRING n` of `war3map.wts` another owner references keeps its text,
+ * and a localized value's translations go under its number into the
+ * locales' tables, `_Locales/<locale>.w3mod/war3map.wts`, listed in
+ * `war3map.imp`. A map folder without translations has neither touched.
  *
  * The map folder is saved with the World Editor check on: a World Editor
  * showing unsaved edits for it (` *]`) refuses the save. One holding it
@@ -140,8 +143,8 @@ export interface ObjectSyncReport {
  * back what it loaded: without the executable, or when the reload fails,
  * the sync warns to reload the map there by hand. Then the written objects are
  * read back and the manifest records each defined object's snapshot: base
- * and Skin files merged, strings as their text, each modification as field
- * id, level, data pointer, value type and value. The manifest is written
+ * and Skin files merged, strings as their text and their text per locale,
+ * each modification as field id, level, data pointer, value type and value. The manifest is written
  * byte-stably, sorted by Object kind then Rawcode, and only when its bytes
  * change: a second sync writes no byte. Each owned object no definition
  * defines any more becomes a removed entry, with what it last held, until

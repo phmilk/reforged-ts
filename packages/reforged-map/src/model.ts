@@ -35,6 +35,29 @@ export const OBJECT_KINDS = [
 ] as const;
 export type ObjectKind = (typeof OBJECT_KINDS)[number];
 
+/**
+ * The game's locales, as `BlzGetLocale` gives them and `_Locales/<locale>.w3mod/`
+ * names them: the twelve folders the 3.0 World Editor creates on a save
+ * (docs/research/locales.md).
+ */
+export const LOCALES = [
+  "deDE",
+  "enUS",
+  "esES",
+  "esMX",
+  "frFR",
+  "itIT",
+  "koKR",
+  "plPL",
+  "ptBR",
+  "ruRU",
+  "zhCN",
+  "zhTW",
+] as const;
+
+/** A locale of the game, by its code (`deDE`, `ptBR`): one of `"deDE"`, `"enUS"`, `"esES"`, `"esMX"`, `"frFR"`, `"itIT"`, `"koKR"`, `"plPL"`, `"ptBR"`, `"ruRU"`, `"zhCN"` and `"zhTW"`. */
+export type Locale = (typeof LOCALES)[number];
+
 /** The type of a modification's value, by the index the file stores. */
 export const VALUE_TYPES = ["int", "real", "unreal", "string"] as const;
 export type ValueType = (typeof VALUE_TYPES)[number];
@@ -145,8 +168,17 @@ export interface MapFolderModel {
   /** war3map.wts as read; undefined when the map folder has none. */
   wts: WtsFile | undefined;
   /**
-   * The bytes of each Object data file and war3map.wts the readers read, by
-   * file name, in the order read: a file they left out with a warning too.
+   * The string table of each locale that has one, `_Locales/<locale>.w3mod/war3map.wts`,
+   * by locale: a whole copy of war3map.wts, each string in its translation
+   * or its default text (docs/research/locales.md). An edit keeps it so; a
+   * locale without one reads war3map.wts.
+   */
+  readonly locales: Map<Locale, WtsFile>;
+  /**
+   * The bytes of each Object data file, war3map.wts, locale table (by its
+   * path, `_Locales/ptBR.w3mod/war3map.wts`) and war3map.imp the readers
+   * read, by file name, in the order read: a file they left out with a
+   * warning too.
    */
   readonly files: Map<string, Uint8Array>;
   /** The Game data set of war3map.w3i, as the id of reforged-builtins' index (`melee-fk`); undefined when unknown. */
@@ -161,6 +193,7 @@ export function createModel(): MapFolderModel {
     objectData: [],
     strings: new Map(),
     wts: undefined,
+    locales: new Map(),
     files: new Map(),
     gameDataSet: undefined,
     warnings: [],

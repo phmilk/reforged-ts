@@ -17,6 +17,7 @@ import {
   checkIdentity,
   type CheckedDefinition,
   type CheckedFields,
+  type FieldEdit,
 } from "./definitions-check.js";
 import {
   definitionsError,
@@ -257,20 +258,36 @@ const LEVELLED_KINDS: ReadonlySet<ObjectKind> = new Set([
   "upgrade",
 ]);
 
+/** Translations as text to compare, by locale in order. */
+function translationsKey(
+  translations: Readonly<Record<string, string>> | undefined,
+): string {
+  return JSON.stringify(
+    Object.entries(translations ?? {}).sort(([a], [b]) =>
+      a < b ? -1 : a > b ? 1 : 0,
+    ),
+  );
+}
+
 /**
  * Whether a modification the object holds already stores an edit's value,
  * so that setting it again would change no byte: a localizable string must
- * be a `TRIGSTR` of the same text, a real the same 32-bit value.
+ * be a `TRIGSTR` of the same text and the same text per locale, a real the
+ * same 32-bit value.
  */
 function holds(
   held: ObjectDataModification,
-  value: number | string,
+  edit: FieldEdit,
   localizable: boolean,
 ): boolean {
+  const { value } = edit;
   if (typeof value === "string") {
     if (typeof held.stored !== "string") return false;
     return localizable
-      ? held.stored.startsWith("TRIGSTR_") && held.value === value
+      ? held.stored.startsWith("TRIGSTR_") &&
+          held.value === value &&
+          translationsKey(held.translations) ===
+            translationsKey(edit.translations)
       : held.stored === value;
   }
   if (typeof held.value !== "number") return false;
@@ -353,7 +370,7 @@ export function applyDefinitions(
       const [only] = same;
       if (
         same.length === 1 &&
-        holds(only, edit.value, entry?.localizable === true) &&
+        holds(only, edit, entry?.localizable === true) &&
         (entry === undefined ||
           only.file.startsWith("war3mapSkin.") === (entry.file === "skin"))
       ) {
@@ -370,7 +387,12 @@ export function applyDefinitions(
           }),
         },
         edit.value,
-        edit.type === undefined ? {} : { type: edit.type },
+        {
+          ...(edit.type !== undefined && { type: edit.type }),
+          ...(edit.translations !== undefined && {
+            translations: edit.translations,
+          }),
+        },
       );
     }
     warnings.push(...(checked?.warnings ?? []));
