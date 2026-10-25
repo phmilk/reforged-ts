@@ -1,0 +1,243 @@
+# The skills update: every week, the Upstream skills brought to upstream's
+# current files, then the Template's copy of what the library shares brought
+# to the library's default branch (ADRs 0022 and 0024). Each step opens a
+# pull request when something moved, under the repositories' GitHub App, so
+# its CI runs; a run while its pull request is open updates that one. It
+# never merges. docs/agents/development-loop.md, "The weekly update",
+# describes it; `gh workflow run skills-update.yml` runs it by hand.
+name: skills-update
+
+on:
+  schedule:
+    # Weekly, on Monday, off the hour.
+    - cron: "41 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One update at a time; a newer run waits.
+concurrency:
+  group: skills-update
+  cancel-in-progress: false
+
+env:
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  # The install, with no token and no secret: the skills CLI is code from
+  # npm, so the update leaves this job as a patch, which the next job
+  # commits without running any of it.
+  update:
+    name: update
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      moved: ${{ steps.update.outputs.moved }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+        with:
+          ignore-scripts: true
+      # Upstream moved when the install changes the lock; the Skill variants
+      # it leaves to review are in the report, for the pull request.
+      - id: update
+        name: skills:update
+        run: |
+          mkdir -p "$RUNNER_TEMP/update"
+          pnpm --silent skills:update --report "$RUNNER_TEMP/update/report.json" --run-url "$RUN_URL"
+          others=$(git status --porcelain --untracked-files=all -- . ':(exclude)skills-lock.json' ':(exclude).claude/skills')
+          if [ -n "$others" ]; then
+            printf '%s\n' "$others"
+            echo "::error title=Unexpected files::The install wrote outside skills-lock.json and .claude/skills/ (above). Nothing was opened."
+            exit 1
+          fi
+          moved=$(jq -r .moved "$RUNNER_TEMP/update/report.json")
+          if [ "$moved" = true ]; then
+            # The empty changeset, under a name no earlier update used.
+            printf -- '---\n---\n' > ".changeset/skills-update-$GITHUB_RUN_ID.md"
+            git add --all -- skills-lock.json .claude/skills ".changeset/skills-update-$GITHUB_RUN_ID.md"
+            git diff --cached --stat
+            git diff --cached --binary > "$RUNNER_TEMP/update/update.patch"
+          fi
+          echo "moved=$moved" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Upstream skills"
+            echo
+            if [ "$moved" = true ]; then
+              jq -r '.changes[] | "- `\(.name)`: \(.change)"' "$RUNNER_TEMP/update/report.json"
+            else
+              echo "Upstream has not moved: skills-lock.json is unchanged."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - id: upload
+        if: steps.update.outputs.moved == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: skills-update
+          path: ${{ runner.temp }}/update
+          if-no-files-found: error
+          retention-days: 7
+
+  # The library's pull request, on the fixed branch skills-update. When it
+  # is open and already holds this lock, nothing is pushed, so a review of a
+  # Skill variant pushed to it stays; else the branch is replaced from
+  # master and the pull request's body rewritten.
+  pull-request:
+    name: pull-request
+    needs: update
+    if: needs.update.outputs.moved == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The App's key's home, whose deployment branch policy admits master
+    # alone (docs/release.md, "Repository variables and secrets").
+    environment: app
+    permissions:
+      contents: read
+    env:
+      BRANCH: skills-update
+    steps:
+      # Checked out first: the App token step is a local action.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.update.outputs.artifact-id }}
+          path: ${{ runner.temp }}/update
+      - name: Push and open or update the pull request
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          git apply --index "$RUNNER_TEMP/update/update.patch"
+          bot="${APP_SLUG}[bot]"
+          id=$(gh api "users/$bot" --jq .id)
+          git config user.name "$bot"
+          git config user.email "$id+$bot@users.noreply.github.com"
+          title=$(jq -r .pullRequest.title "$RUNNER_TEMP/update/report.json")
+          jq -j .pullRequest.body "$RUNNER_TEMP/update/report.json" > "$RUNNER_TEMP/body.md"
+          # No hooks: a hook planted by the checkout's code would receive the
+          # token in this environment.
+          git -c core.hooksPath=/dev/null commit -m "$title"
+          number=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number // ""')
+          if [ -n "$number" ]; then
+            git fetch --no-tags origin "$BRANCH"
+            if git diff --quiet FETCH_HEAD HEAD -- skills-lock.json; then
+              echo "#$number already holds this update: nothing pushed."
+              echo "#$number already holds this update: nothing pushed." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
+          header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
+          echo "::add-mask::$header"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
+            push --force origin "HEAD:refs/heads/$BRANCH"
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --repo "$GITHUB_REPOSITORY" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            echo "Updated #$number." >> "$GITHUB_STEP_SUMMARY"
+          else
+            url=$(gh pr create --repo "$GITHUB_REPOSITORY" --base master --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/body.md")
+            echo "Opened $url." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # The Template's copy, against this run's commit of master, whether or not
+  # the library's update opened a pull request: that one reaches the
+  # Template on the run after its merge. On the fixed branch
+  # sync/shared-skills of the Template, replaced on every run that finds a
+  # difference: the copy is never edited there.
+  template:
+    name: template
+    needs: [update, pull-request]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: app
+    permissions:
+      contents: read
+    env:
+      # The Template, a repository of this one's owner.
+      TEMPLATE: reforged-ts-template
+      BRANCH: sync/shared-skills
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Minted before any code of the checkout runs, scoped to the Template.
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repository: ${{ env.TEMPLATE }}
+          permission-contents: write
+          permission-pull-requests: write
+      # The Template is public: its default branch, read without a token.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ github.repository_owner }}/reforged-ts-template
+          path: template
+          persist-credentials: false
+      # No dependency cache: this job holds the App token.
+      - uses: ./.github/actions/setup-workspace
+        with:
+          ignore-scripts: true
+      - id: copy
+        name: skills:copy
+        run: |
+          pnpm --silent skills:copy --template "$GITHUB_WORKSPACE/template" --commit "$GITHUB_SHA" \
+            --report "$RUNNER_TEMP/copy.json" --run-url "$RUN_URL"
+          changed=$(jq -r .changed "$RUNNER_TEMP/copy.json")
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          {
+            echo "## The Template's copy"
+            echo
+            if [ "$changed" = true ]; then
+              jq -r '.difference | to_entries[] | {kind: .key, path: .value[]} | "- \(.kind): `\(.path)`"' "$RUNNER_TEMP/copy.json"
+            else
+              echo "The copy is the library's already."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Push and open or update the Template's pull request
+        if: steps.copy.outputs.changed == 'true'
+        working-directory: template
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          bot="${APP_SLUG}[bot]"
+          id=$(gh api "users/$bot" --jq .id)
+          git config user.name "$bot"
+          git config user.email "$id+$bot@users.noreply.github.com"
+          title=$(jq -r .pullRequest.title "$RUNNER_TEMP/copy.json")
+          jq -j .pullRequest.body "$RUNNER_TEMP/copy.json" > "$RUNNER_TEMP/template-body.md"
+          git switch --create "$BRANCH"
+          git add --all
+          git -c core.hooksPath=/dev/null commit -m "$title"
+          header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
+          echo "::add-mask::$header"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
+            push --force origin "HEAD:refs/heads/$BRANCH"
+          number=$(gh pr list --repo "$OWNER/$TEMPLATE" --head "$BRANCH" --state open --json number --jq '.[0].number // ""')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --repo "$OWNER/$TEMPLATE" --title "$title" --body-file "$RUNNER_TEMP/template-body.md"
+            echo "Updated $OWNER/$TEMPLATE#$number." >> "$GITHUB_STEP_SUMMARY"
+          else
+            url=$(gh pr create --repo "$OWNER/$TEMPLATE" --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/template-body.md")
+            echo "Opened $url." >> "$GITHUB_STEP_SUMMARY"
+          fi
