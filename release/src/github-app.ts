@@ -12,7 +12,7 @@ import { isRecord } from "./unknown.js";
  * The repository permissions of the App, as the API names them: the union
  * of what the workflows request (the version, publish and
  * template-dispatch jobs of `release.yml`, the Patch watch, the docs version
- * cut), plus `metadata`,
+ * cut, the skills update), plus `metadata`,
  * which every App holds.
  */
 export const APP_PERMISSIONS: Readonly<Record<string, "read" | "write">> = {
@@ -45,7 +45,7 @@ export function registrationUrl(repository: string): string {
   const name = repository.slice(repository.indexOf("/") + 1);
   const query = new URLSearchParams({
     name: `${name}-bot`,
-    description: `Opens the release, docs and Patch-watch pull requests and issues of ${repository}.`,
+    description: `Opens the release, docs and Patch-watch pull requests and issues of ${repository}, and the skills update pull requests there and in its Template.`,
     url: `https://github.com/${repository}`,
     public: "false",
     webhook_active: "false",
