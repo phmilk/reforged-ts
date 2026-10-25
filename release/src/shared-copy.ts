@@ -19,6 +19,7 @@ import {
 } from "node:fs/promises";
 import { dirname, join, posix } from "node:path";
 import { byCodePoint } from "./order.js";
+import type { Report } from "./patch-watch-report.js";
 import { LIBRARY_REPOSITORY } from "./template-clone.js";
 import { isRecord, isStringList } from "./unknown.js";
 
@@ -277,7 +278,7 @@ export function copyPullRequest(
   difference: CopyDifference,
   commit: string,
   runUrl?: string,
-): { title: string; body: string } {
+): Report {
   const short = commit.slice(0, 8);
   const commitUrl = `https://github.com/${LIBRARY_REPOSITORY}/commit/${commit}`;
   const section = (heading: string, paths: readonly string[]): string[] =>

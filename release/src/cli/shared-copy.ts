@@ -12,6 +12,7 @@
  * already the same, 1 a checkout cannot be read, 2 usage.
  */
 import { writeFile } from "node:fs/promises";
+import type { Report } from "../patch-watch-report.js";
 import {
   copyPullRequest,
   isSame,
@@ -35,7 +36,7 @@ export interface CopyReport {
   /** Whether the copy changed: the Template needs a pull request. */
   changed: boolean;
   difference: CopyDifference;
-  pullRequest: { title: string; body: string };
+  pullRequest: Report;
 }
 
 export async function main(

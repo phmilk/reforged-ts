@@ -92,7 +92,10 @@ export function frontmatter(text: string): Record<string, unknown> | undefined {
 // `name`, and under `metadata` what it records of its source, the Upstream
 // skill's name (`upstream`) and the lock's version of it, that skill's
 // `computedHash` (`upstream-hash`); docs/agents/development-loop.md, "Skill
-// variants". The fields are as written, a string or not.
+// variants". The fields are as written, a string or not. The weekly skills
+// update reads the same keys to list the variants its pull request must
+// review (`staleVariants` in release/src/skills-update.ts): a change to them
+// changes both.
 export interface Variant {
   folder: string;
   name: unknown;

@@ -4,13 +4,21 @@ import { describe, expect, it } from "vitest";
 import { main, type UpdateReport } from "../src/cli/skills-update.js";
 import type { Command } from "../src/process.js";
 import {
-  INSTALL_COMMAND,
+  docSkillNames,
+  fetchPluginSkills,
   INSTALL_ENV,
+  installArgs,
+  installCommand,
   lockChanges,
+  PLUGIN_URL,
+  pluginSkills,
   readLock,
+  removeArgs,
+  SETUP_DOC,
+  SETUP_SECTION,
   staleVariants,
   updatePullRequest,
-  UPSTREAM_SKILLS,
+  withDocCommand,
   type LockSkill,
 } from "../src/skills-update.js";
 import { repositoryRoot } from "../src/workspace.js";
@@ -31,48 +39,127 @@ const lockText = (skills: Record<string, LockSkill>) =>
 const variantText = (upstream: string, hash: string) =>
   `---\nname: write-spec\ndescription: A variant.\nmetadata:\n  upstream: ${upstream}\n  upstream-hash: ${hash}\n---\n\n# Write a Spec\n`;
 
-describe("the install command", () => {
-  it("is the one the setup doc writes", async () => {
-    const doc = await readFile(
-      join(repositoryRoot, "docs/agents/development-loop.md"),
-      "utf8",
-    );
-    const section = doc.slice(
-      doc.indexOf("## Installing and updating the Upstream skills"),
-    );
-    const block = /```sh\n([\s\S]*?)\n```/.exec(section)?.[1];
-    expect(block).toBe(INSTALL_COMMAND);
-  });
+/** A setup doc whose section writes the install of `names`. */
+const docText = (names: readonly string[]) =>
+  `# The development loop\n\n${SETUP_SECTION}\n\nOne command:\n\n\`\`\`sh\n${installCommand(names)}\n\`\`\`\n\n- **The skill names.** Upstream's.\n\n## Removing the global copies\n\n\`\`\`sh\nnpx skills remove -g <name>...\n\`\`\`\n`;
 
-  it("installs every skill the lock names, copied, for Claude Code alone, keeping LF", async () => {
+/** A fetch answering upstream's plugin manifest with `skills`. */
+const plugin =
+  (skills: string[], requests: string[] = []): typeof fetch =>
+  (input) => {
+    requests.push(input instanceof Request ? input.url : input.toString());
+    return Promise.resolve(
+      new Response(JSON.stringify({ name: "mattpocock-skills", skills })),
+    );
+  };
+
+describe("the setup doc's install command", () => {
+  it("names exactly the skills of the lock, as the update writes it", async () => {
+    const doc = await readFile(join(repositoryRoot, SETUP_DOC), "utf8");
+    const names = docSkillNames(doc);
     const lock = readLock(
       await readFile(join(repositoryRoot, "skills-lock.json"), "utf8"),
     );
-    expect(UPSTREAM_SKILLS.toSorted()).toEqual(Object.keys(lock).sort());
-    expect(INSTALL_COMMAND).toContain(" -a claude-code --copy -y -s ");
+    expect(names?.toSorted()).toEqual(Object.keys(lock).sort());
+    // What the update would write for these names is the doc as it is.
+    expect(withDocCommand(doc, names ?? [])).toBe(doc);
+  });
+
+  it("installs copied files for Claude Code alone, keeping LF", () => {
+    expect(installCommand(["tdd", "pr"])).toBe(
+      "npx skills@1.7.4 add mattpocock/skills -a claude-code --copy -y -s tdd pr",
+    );
+    expect(removeArgs(["teach"])).toEqual(["remove", "-y", "teach"]);
     expect(INSTALL_ENV).toMatchObject({
       GIT_CONFIG_KEY_0: "core.autocrlf",
       GIT_CONFIG_VALUE_0: "false",
     });
   });
+
+  it("is rewritten in place, the rest of the doc kept", () => {
+    const doc = docText(["tdd", "pr"]);
+    const rewritten = withDocCommand(doc, ["tdd", "wizard"]);
+    expect(docSkillNames(rewritten)).toEqual(["tdd", "wizard"]);
+    expect(rewritten.replace("wizard", "pr")).toBe(doc);
+  });
+
+  it("is not read from a section without one", () => {
+    expect(
+      docSkillNames("# A doc\n\n```sh\nnpx skills@1.7.4 add x\n```\n"),
+    ).toBe(undefined);
+    expect(() => withDocCommand("# A doc\n", ["tdd"])).toThrow(
+      `${SETUP_DOC} has no sh block`,
+    );
+  });
+});
+
+describe("pluginSkills", () => {
+  it("names the skills of upstream's engineering and productivity folders, and leaves out the rest", () => {
+    expect(
+      pluginSkills({
+        skills: [
+          "./skills/engineering/tdd",
+          "./skills/productivity/grill-me/",
+          "./skills/deprecated/old",
+          "./skills/misc/other",
+        ],
+      }),
+    ).toEqual({
+      names: ["tdd", "grill-me"],
+      ignored: ["./skills/deprecated/old", "./skills/misc/other"],
+    });
+  });
+
+  it("refuses a manifest without skills", () => {
+    expect(() => pluginSkills({ name: "x" })).toThrow(
+      `${PLUGIN_URL} has no skills list.`,
+    );
+  });
+
+  it("fetches the manifest of upstream's default branch", async () => {
+    const requests: string[] = [];
+    expect(
+      await fetchPluginSkills(plugin(["./skills/engineering/tdd"], requests)),
+    ).toEqual({ names: ["tdd"], ignored: [] });
+    expect(requests).toEqual([
+      "https://raw.githubusercontent.com/mattpocock/skills/main/.claude-plugin/plugin.json",
+    ]);
+  });
+
+  it("fails on an answer that is not 200", async () => {
+    const missing: typeof fetch = () =>
+      Promise.resolve(
+        new Response("", { status: 404, statusText: "Not Found" }),
+      );
+    await expect(fetchPluginSkills(missing)).rejects.toThrow(
+      `GET ${PLUGIN_URL} answered 404 Not Found.`,
+    );
+  });
 });
 
 describe("lockChanges", () => {
-  it("names each skill added, updated or removed, in code-point order", () => {
+  it("names each skill added, updated, relocated or removed, in code-point order", () => {
     expect(
       lockChanges(
         {
           tdd: skill("a"),
           pr: skill("b", "engineering/pr"),
           teach: skill("c"),
+          wizard: skill("d", "engineering/wizard"),
         },
         {
           tdd: skill("a2"),
           pr: skill("b", "engineering/pr"),
-          wizard: skill("d", "productivity/wizard"),
+          wizard: skill("d", "deprecated/wizard"),
+          grill: skill("e", "productivity/grill"),
         },
       ),
     ).toEqual([
+      {
+        name: "grill",
+        change: "added",
+        skillPath: "skills/productivity/grill/SKILL.md",
+      },
       {
         name: "tdd",
         change: "updated",
@@ -85,8 +172,8 @@ describe("lockChanges", () => {
       },
       {
         name: "wizard",
-        change: "added",
-        skillPath: "skills/productivity/wizard/SKILL.md",
+        change: "relocated",
+        skillPath: "skills/deprecated/wizard/SKILL.md",
       },
     ]);
   });
@@ -174,14 +261,29 @@ describe("updatePullRequest", () => {
 });
 
 describe("skills:update", () => {
-  /** A repository whose install, when run, writes `after` as the lock. */
-  async function repository(after?: Record<string, LockSkill>) {
+  const PLUGIN = ["./skills/engineering/to-spec", "./skills/engineering/tdd"];
+
+  /**
+   * A repository locking to-spec and teach, whose install, when run, writes
+   * `after` as the lock; the remove takes the skills it names out of the lock.
+   */
+  async function repository(
+    after: Record<string, LockSkill> = {
+      "to-spec": skill("old", "engineering/to-spec"),
+      tdd: skill("t"),
+    },
+    documented = ["to-spec", "tdd"],
+  ) {
     const root = await tempDir("skills-update");
     await writeText(
       root,
       "skills-lock.json",
-      lockText({ "to-spec": skill("old") }),
+      lockText({
+        "to-spec": skill("old", "engineering/to-spec"),
+        tdd: skill("t"),
+      }),
     );
+    await writeText(root, SETUP_DOC, docText(documented));
     await writeText(root, ".claude/skills/to-spec/SKILL.md", "upstream\n");
     await writeText(
       root,
@@ -191,8 +293,9 @@ describe("skills:update", () => {
     const commands: Command[] = [];
     const run = async (command: Command) => {
       commands.push(command);
-      if (after !== undefined)
+      if (command.args.includes("add")) {
         await writeText(root, "skills-lock.json", lockText(after));
+      }
       return 0;
     };
     return { root, commands, run };
@@ -200,7 +303,11 @@ describe("skills:update", () => {
 
   async function cli(
     args: string[],
-    context: { root: string; run: (command: Command) => Promise<number> },
+    context: {
+      root: string;
+      run: (command: Command) => Promise<number>;
+      fetcher?: typeof fetch;
+    },
   ) {
     let stdout = "";
     let stderr = "";
@@ -210,25 +317,25 @@ describe("skills:update", () => {
         stdout: (text) => (stdout += text),
         stderr: (text) => (stderr += text),
       },
-      context,
+      { fetcher: plugin(PLUGIN), ...context },
     );
     return { status, stdout, stderr };
   }
 
-  it("runs the install from the root with npx, keeping LF", async () => {
+  it("installs the plugin's skills from the root with npx, keeping LF", async () => {
     const repo = await repository();
     await cli([], repo);
     expect(repo.commands).toEqual([
       {
         command: "npx",
-        args: ["--yes", ...INSTALL_COMMAND.split(" ").slice(1)],
+        args: ["--yes", "skills@1.7.4", ...installArgs(["to-spec", "tdd"])],
         cwd: repo.root,
         env: INSTALL_ENV,
       },
     ]);
   });
 
-  it("reports nothing moved when the lock is unchanged", async () => {
+  it("reports nothing moved when the lock is unchanged, and leaves the doc", async () => {
     const repo = await repository();
     const report = join(await tempDir("report"), "update.json");
     expect(await cli(["--report", report], repo)).toEqual({
@@ -237,12 +344,52 @@ describe("skills:update", () => {
       stderr: "",
     });
     const written = JSON.parse(await readFile(report, "utf8")) as UpdateReport;
-    expect(written).toMatchObject({ moved: false, changes: [], stale: [] });
+    expect(written).toMatchObject({
+      moved: false,
+      changes: [],
+      stale: [],
+      docUpdated: false,
+    });
+    expect(await readFile(join(repo.root, SETUP_DOC), "utf8")).toBe(
+      docText(["to-spec", "tdd"]),
+    );
+  });
+
+  it("removes a skill the plugin no longer ships, installs a new one and rewrites the doc's command", async () => {
+    const repo = await repository({
+      "to-spec": skill("old", "engineering/to-spec"),
+      wizard: skill("w", "productivity/wizard"),
+    });
+    const result = await cli([], {
+      ...repo,
+      fetcher: plugin([
+        "./skills/engineering/to-spec",
+        "./skills/productivity/wizard",
+        "./skills/deprecated/tdd",
+      ]),
+    });
+
+    expect(repo.commands.map(({ args }) => args)).toEqual([
+      ["--yes", "skills@1.7.4", "remove", "-y", "tdd"],
+      ["--yes", "skills@1.7.4", ...installArgs(["to-spec", "wizard"])],
+    ]);
+    expect(result).toEqual({
+      status: 0,
+      stdout:
+        "Upstream moved:\n  tdd: removed\n  wizard: added\n" +
+        `The install command of ${SETUP_DOC} was rewritten.\n` +
+        "Left out: ./skills/deprecated/tdd, which upstream's plugin ships from outside its engineering and productivity folders.\n",
+      stderr: "",
+    });
+    expect(await readFile(join(repo.root, SETUP_DOC), "utf8")).toBe(
+      docText(["to-spec", "wizard"]),
+    );
   });
 
   it("reports what moved and the variant to review", async () => {
     const repo = await repository({
       "to-spec": skill("new", "engineering/to-spec"),
+      tdd: skill("t"),
     });
     const report = join(await tempDir("report"), "update.json");
     const result = await cli(
@@ -276,6 +423,17 @@ describe("skills:update", () => {
       stdout: "",
       stderr: "npx skills@1.7.4 add exited with 1.\n",
     });
+  });
+
+  it("fails before any install when the plugin cannot be read", async () => {
+    const repo = await repository();
+    const result = await cli([], {
+      ...repo,
+      fetcher: () => Promise.resolve(new Response("{}")),
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toBe(`${PLUGIN_URL} has no skills list.\n`);
+    expect(repo.commands).toEqual([]);
   });
 
   it("rejects an unknown option", async () => {
@@ -317,11 +475,37 @@ describe("skills-update.yml", () => {
     }
   });
 
+  // The patch comes from the job that ran code from npm: the job holding
+  // the token checks what it touches before anything is committed.
+  it("checks, where the token is, that the patch touches only the update's files", async () => {
+    const { workflow } = await readWorkflow("skills-update.yml");
+    const steps = workflow.jobs["pull-request"]?.steps ?? [];
+    const apply = steps.findIndex((step) =>
+      step.run?.includes("git apply --index"),
+    );
+    const push = steps.findIndex(
+      (step) => step.run?.includes("push --force") ?? false,
+    );
+    expect(apply).toBeGreaterThan(-1);
+    expect(apply).toBeLessThan(push);
+    const guard = steps[apply]?.run ?? "";
+    expect(guard.indexOf("git apply --index")).toBeLessThan(
+      guard.indexOf("git diff --cached --name-only"),
+    );
+    expect(guard).toContain(
+      'skills-lock.json | docs/agents/development-loop.md | ".changeset/skills-update-$GITHUB_RUN_ID.md") ;;',
+    );
+    expect(guard).toContain(".claude/skills/*/*)");
+    expect(guard).toContain("exit 1");
+    expect(steps[apply]?.env).toBeUndefined();
+  });
+
   it("opens the Template's pull request with a token scoped to the Template", async () => {
     const { workflow } = await readWorkflow("skills-update.yml");
     const { template } = workflow.jobs;
     expect(template?.environment).toBe("app");
-    const tokens = (template?.steps ?? []).filter(
+    const steps = template?.steps ?? [];
+    const tokens = steps.filter(
       (step) => step.uses === "./.github/actions/app-token",
     );
     expect(tokens.map((step) => step.with)).toEqual([
@@ -330,6 +514,13 @@ describe("skills-update.yml", () => {
         "permission-contents": "write",
         "permission-pull-requests": "write",
       }),
+    ]);
+    const checkouts = steps.filter((step) =>
+      step.uses?.startsWith("actions/checkout@"),
+    );
+    expect(checkouts.map((step) => step.with?.repository)).toEqual([
+      undefined,
+      "${{ github.repository_owner }}/${{ env.TEMPLATE }}",
     ]);
   });
 });

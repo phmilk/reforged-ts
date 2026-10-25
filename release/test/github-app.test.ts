@@ -57,7 +57,7 @@ describe("registrationUrl", () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({
       name: "reforged-ts-bot",
       description:
-        "Opens the release, docs and Patch-watch pull requests and issues of phmilk/reforged-ts.",
+        "Opens the release, docs and Patch-watch pull requests and issues of phmilk/reforged-ts, and the skills update pull requests there and in its Template.",
       url: "https://github.com/phmilk/reforged-ts",
       public: "false",
       webhook_active: "false",

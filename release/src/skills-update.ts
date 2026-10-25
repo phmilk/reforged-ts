@@ -1,11 +1,18 @@
 /**
- * The update of the Upstream skills (ADR 0022): the command that installs
- * them and, run again, updates them to upstream's current files, what an
- * update moved in the lock, the Skill variants it leaves to review, and the
- * pull request the weekly skills workflow (`skills-update.yml`) opens with
- * it. docs/agents/development-loop.md, "Installing and updating the Upstream
- * skills", writes the same command for a person; a test holds the two
- * equal.
+ * The update of the Upstream skills (ADR 0022): which skills they are, the
+ * commands that install, update and remove them, what an update moved in
+ * the lock, the Skill variants it leaves to review, and the pull request the
+ * weekly skills workflow (`skills-update.yml`) opens with it.
+ *
+ * The Upstream skills are the set upstream's plugin ships, the `skills` of
+ * its `.claude-plugin/plugin.json`, read at each update: the folders of
+ * upstream's `engineering` and `productivity` folders. The skills CLI skips
+ * a `-s` name that matches nothing without a word, and still matches a name
+ * upstream moved to `deprecated`, so no list of names is kept here: the
+ * install takes the plugin's, a lock entry the plugin no longer ships is
+ * removed, and the setup doc's command (`SETUP_DOC`, "Installing and
+ * updating the Upstream skills") is rewritten when the set changes. A test
+ * holds that command to the lock.
  *
  * `skills check` is not run: in skills@1.7.4 `check` is another name of
  * `update`, which reinstalls each skill without `--copy` (a symlink, which
@@ -16,57 +23,77 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, posix } from "node:path";
 import { parse } from "yaml";
 import { byCodePoint } from "./order.js";
+import type { Report } from "./patch-watch-report.js";
+import { SKILLS_FOLDER } from "./shared-copy.js";
 import { LIBRARY_REPOSITORY } from "./template-clone.js";
-import { isRecord } from "./unknown.js";
+import { isRecord, isStringList } from "./unknown.js";
 
 /** The skills CLI, at the version the lock was written with. */
 export const SKILLS_CLI = "skills@1.7.4";
 /** The Upstream skills' repository. */
 export const UPSTREAM_REPOSITORY = "mattpocock/skills";
+/**
+ * Upstream's plugin manifest on its default branch: its `skills` are the
+ * Upstream skills.
+ */
+export const PLUGIN_URL = `https://raw.githubusercontent.com/${UPSTREAM_REPOSITORY}/main/.claude-plugin/plugin.json`;
+/** The folders of upstream the Upstream skills come from. */
+export const UPSTREAM_FOLDERS: readonly string[] = [
+  "skills/engineering",
+  "skills/productivity",
+];
 /** The Upstream skills' lock, from the repository root. */
 export const LOCK_FILE = "skills-lock.json";
-/** The folder of the Agent skills, from the repository root. */
-export const SKILLS_FOLDER = ".claude/skills";
+/** The doc that writes the install command for a person, from the root. */
+export const SETUP_DOC = "docs/agents/development-loop.md";
+/** The heading of the section of `SETUP_DOC` whose `sh` block is the command. */
+export const SETUP_SECTION = "## Installing and updating the Upstream skills";
+
+/** The skills upstream's plugin ships. */
+export interface PluginSkills {
+  /** The Upstream skills, by name (their folder's), in the plugin's order. */
+  names: string[];
+  /** The plugin's paths outside `UPSTREAM_FOLDERS`, left out. */
+  ignored: string[];
+}
+
+/** The skills of upstream's plugin manifest, parsed. */
+export function pluginSkills(manifest: unknown): PluginSkills {
+  const paths = isRecord(manifest) ? manifest.skills : undefined;
+  if (!isStringList(paths) || paths.length === 0) {
+    throw new Error(`${PLUGIN_URL} has no skills list.`);
+  }
+  const names: string[] = [];
+  const ignored: string[] = [];
+  for (const path of paths) {
+    const folder = posix.normalize(path).replace(/\/$/, "");
+    if (UPSTREAM_FOLDERS.includes(posix.dirname(folder))) {
+      names.push(posix.basename(folder));
+    } else {
+      ignored.push(path);
+    }
+  }
+  return { names, ignored };
+}
+
+/** The skills upstream's plugin ships today, fetched with `fetcher`. */
+export async function fetchPluginSkills(
+  fetcher: typeof fetch,
+): Promise<PluginSkills> {
+  const response = await fetcher(PLUGIN_URL);
+  if (!response.ok) {
+    throw new Error(
+      `GET ${PLUGIN_URL} answered ${String(response.status)} ${response.statusText}.`,
+    );
+  }
+  return pluginSkills(await response.json());
+}
 
 /**
- * The Upstream skills, the folders of upstream's `engineering` and
- * `productivity` folders, in the order the setup doc's command names them.
+ * The arguments of the skills CLI that install the Upstream skills `names`,
+ * or update them: project scope, Claude Code alone, copied files.
  */
-export const UPSTREAM_SKILLS: readonly string[] = [
-  "ask-matt",
-  "code-review",
-  "codebase-design",
-  "diagnosing-bugs",
-  "domain-modeling",
-  "grill-with-docs",
-  "implement",
-  "implement-spec",
-  "improve-codebase-architecture",
-  "pr",
-  "prototype",
-  "research",
-  "retro",
-  "setup-matt-pocock-skills",
-  "tdd",
-  "to-spec",
-  "to-tickets",
-  "triage",
-  "wayfinder",
-  "wizard",
-  "grill-me",
-  "grilling",
-  "handoff",
-  "teach",
-  "to-questionnaire",
-  "wait-what",
-  "writing-for-agents",
-];
-
-/**
- * The arguments of the skills CLI that install the Upstream skills, or
- * update them: project scope, Claude Code alone, copied files.
- */
-export const INSTALL_ARGS: readonly string[] = [
+export const installArgs = (names: readonly string[]): string[] => [
   "add",
   UPSTREAM_REPOSITORY,
   "-a",
@@ -74,11 +101,58 @@ export const INSTALL_ARGS: readonly string[] = [
   "--copy",
   "-y",
   "-s",
-  ...UPSTREAM_SKILLS,
+  ...names,
 ];
 
-/** The install as the setup doc writes it, one line. */
-export const INSTALL_COMMAND = `npx ${SKILLS_CLI} ${INSTALL_ARGS.join(" ")}`;
+/**
+ * The arguments of the skills CLI that remove the skills `names`, their
+ * folders and their lock entries.
+ */
+export const removeArgs = (names: readonly string[]): string[] => [
+  "remove",
+  "-y",
+  ...names,
+];
+
+/** The install of `names` as the setup doc writes it, one line. */
+export const installCommand = (names: readonly string[]): string =>
+  `npx ${SKILLS_CLI} ${installArgs(names).join(" ")}`;
+
+/** Where the `sh` block of the setup doc's section holds its one line. */
+function commandLine(
+  doc: string,
+): { start: number; end: number; text: string } | undefined {
+  const section = doc.indexOf(SETUP_SECTION);
+  if (section === -1) return undefined;
+  const fence = "```sh\n";
+  const match = new RegExp(`${fence}([^\\n]*)\\n\`\`\``).exec(
+    doc.slice(section),
+  );
+  if (match === null) return undefined;
+  const start = section + match.index + fence.length;
+  const [, text] = match;
+  return { start, end: start + text.length, text };
+}
+
+/**
+ * The skill names of the setup doc's install command, in its order;
+ * `undefined` when its section has no `sh` block of one install command.
+ */
+export function docSkillNames(doc: string): string[] | undefined {
+  const text = commandLine(doc)?.text;
+  const prefix = `${installCommand([])} `;
+  if (text?.startsWith(prefix) !== true) return undefined;
+  return text.slice(prefix.length).split(" ");
+}
+
+/** The setup doc with its install command naming `names`. */
+export function withDocCommand(doc: string, names: readonly string[]): string {
+  const line = commandLine(doc);
+  if (line === undefined) {
+    throw new Error(`${SETUP_DOC} has no sh block under "${SETUP_SECTION}".`);
+  }
+  return doc.slice(0, line.start) + installCommand(names) + doc.slice(line.end);
+}
 
 /**
  * What the install adds to the environment: upstream's LF kept on a
@@ -119,12 +193,16 @@ export function readLock(text: string): Record<string, LockSkill> {
 /** What an update did to a skill of the lock. */
 export interface LockChange {
   name: string;
-  change: "added" | "updated" | "removed";
+  /** `relocated`: its folder in upstream moved, its files changed or not. */
+  change: "added" | "updated" | "relocated" | "removed";
   /** Its `SKILL.md` in upstream, as the lock names it after the update or before. */
   skillPath: string;
 }
 
-/** The skills whose lock entry an update added, changed or removed, by name. */
+/**
+ * The skills whose lock entry an update added, changed (its folder's hash or
+ * its path in upstream) or removed, by name.
+ */
 export function lockChanges(
   before: Readonly<Partial<Record<string, LockSkill>>>,
   after: Readonly<Partial<Record<string, LockSkill>>>,
@@ -134,9 +212,20 @@ export function lockChanges(
   ].sort(byCodePoint);
   return names.flatMap((name): LockChange[] => {
     const [was, is] = [before[name], after[name]];
-    if (was?.computedHash === is?.computedHash) return [];
+    if (
+      was?.computedHash === is?.computedHash &&
+      was?.skillPath === is?.skillPath
+    ) {
+      return [];
+    }
     const change =
-      was === undefined ? "added" : is === undefined ? "removed" : "updated";
+      was === undefined
+        ? "added"
+        : is === undefined
+          ? "removed"
+          : was.skillPath === is.skillPath
+            ? "updated"
+            : "relocated";
     const skillPath = (is ?? was)?.skillPath ?? "";
     return [{ name, change, skillPath }];
   });
@@ -154,6 +243,10 @@ export interface StaleVariant {
  * The Skill variants of `root` built from an Upstream skill at another hash
  * than `lock`'s (or one the lock no longer names): the variants the update's
  * pull request must review, which the skills conventions test fails on.
+ * It reads a variant as `variants()` of `test/conventions/skills.ts` does,
+ * which the release scripts cannot import: the frontmatter of its
+ * `SKILL.md`, `metadata.upstream` and `metadata.upstream-hash`. A change to
+ * those keys changes both.
  */
 export async function staleVariants(
   root: string,
@@ -191,14 +284,14 @@ export async function staleVariants(
 
 /** The setup doc's section on `master`, by its anchor. */
 const setupDoc = (anchor: string): string =>
-  `https://github.com/${LIBRARY_REPOSITORY}/blob/master/docs/agents/development-loop.md#${anchor}`;
+  `https://github.com/${LIBRARY_REPOSITORY}/blob/master/${SETUP_DOC}#${anchor}`;
 
 /** The library's pull request, from the changes an update made to the lock. */
 export function updatePullRequest(
   changes: readonly LockChange[],
   stale: readonly StaleVariant[],
   runUrl?: string,
-): { title: string; body: string } {
+): Report {
   const upstream = `https://github.com/${UPSTREAM_REPOSITORY}`;
   const lines = changes.map(({ name, change, skillPath }) => {
     const folder = posix.dirname(skillPath);

@@ -45,23 +45,25 @@ jobs:
         with:
           ignore-scripts: true
       # Upstream moved when the install changes the lock; the Skill variants
-      # it leaves to review are in the report, for the pull request.
+      # it leaves to review are in the report, for the pull request. The
+      # skills are the ones upstream's plugin ships, so the setup doc's
+      # command is rewritten when their set changes.
       - id: update
         name: skills:update
         run: |
           mkdir -p "$RUNNER_TEMP/update"
           pnpm --silent skills:update --report "$RUNNER_TEMP/update/report.json" --run-url "$RUN_URL"
-          others=$(git status --porcelain --untracked-files=all -- . ':(exclude)skills-lock.json' ':(exclude).claude/skills')
+          others=$(git status --porcelain --untracked-files=all -- . ':(exclude)skills-lock.json' ':(exclude).claude/skills' ':(exclude)docs/agents/development-loop.md')
           if [ -n "$others" ]; then
             printf '%s\n' "$others"
-            echo "::error title=Unexpected files::The install wrote outside skills-lock.json and .claude/skills/ (above). Nothing was opened."
+            echo "::error title=Unexpected files::The install wrote outside skills-lock.json, .claude/skills/ and docs/agents/development-loop.md (above). Nothing was opened."
             exit 1
           fi
           moved=$(jq -r .moved "$RUNNER_TEMP/update/report.json")
           if [ "$moved" = true ]; then
             # The empty changeset, under a name no earlier update used.
             printf -- '---\n---\n' > ".changeset/skills-update-$GITHUB_RUN_ID.md"
-            git add --all -- skills-lock.json .claude/skills ".changeset/skills-update-$GITHUB_RUN_ID.md"
+            git add --all -- skills-lock.json .claude/skills docs/agents/development-loop.md ".changeset/skills-update-$GITHUB_RUN_ID.md"
             git diff --cached --stat
             git diff --cached --binary > "$RUNNER_TEMP/update/update.patch"
           fi
@@ -117,13 +119,40 @@ jobs:
         with:
           artifact-ids: ${{ needs.update.outputs.artifact-id }}
           path: ${{ runner.temp }}/update
+      # The patch comes from a job that ran code from npm: checked here, in
+      # the job that holds the token, it may only touch the lock, the
+      # Upstream skills' folders (none of master's repository skills), the
+      # setup doc and this run's changeset.
+      - name: Apply the update
+        run: |
+          git apply --index "$RUNNER_TEMP/update/update.patch"
+          repository_skills=$(comm -23 \
+            <(git ls-tree --name-only HEAD .claude/skills/ | sed 's|.*/||' | sort) \
+            <(git show HEAD:skills-lock.json | jq -r '.skills | keys[]' | sort))
+          unexpected=()
+          while IFS= read -r path; do
+            case "$path" in
+              skills-lock.json | docs/agents/development-loop.md | ".changeset/skills-update-$GITHUB_RUN_ID.md") ;;
+              .claude/skills/*/*)
+                name=${path#.claude/skills/}
+                name=${name%%/*}
+                if printf '%s\n' "$repository_skills" | grep -qxF -- "$name"; then unexpected+=("$path"); fi
+                ;;
+              *) unexpected+=("$path") ;;
+            esac
+          done < <(git diff --cached --name-only)
+          if [ "${#unexpected[@]}" -gt 0 ]; then
+            printf '%s\n' "${unexpected[@]}"
+            echo "::error title=Unexpected files::The update's patch touches files outside the lock, the Upstream skills, the setup doc and its changeset (above). Nothing was pushed."
+            exit 1
+          fi
+          git diff --cached --name-only
       - name: Push and open or update the pull request
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           APP_TOKEN: ${{ steps.app.outputs.token }}
           APP_SLUG: ${{ steps.app.outputs.app-slug }}
         run: |
-          git apply --index "$RUNNER_TEMP/update/update.patch"
           bot="${APP_SLUG}[bot]"
           id=$(gh api "users/$bot" --jq .id)
           git config user.name "$bot"
@@ -188,7 +217,7 @@ jobs:
       # The Template is public: its default branch, read without a token.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: ${{ github.repository_owner }}/reforged-ts-template
+          repository: ${{ github.repository_owner }}/${{ env.TEMPLATE }}
           path: template
           persist-credentials: false
       # No dependency cache: this job holds the App token.
