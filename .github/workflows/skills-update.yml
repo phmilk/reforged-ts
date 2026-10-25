@@ -143,6 +143,10 @@ jobs:
               .claude/skills/*/*)
                 name=${path#.claude/skills/}
                 name=${name%%/*}
+                # An Upstream skill's name (SKILL_NAME in release/src/skills-update.ts):
+                # a folder differing from a repository skill only in case, or by a
+                # trailing dot or space, is that skill's folder on Windows and macOS.
+                if [[ ! $name =~ ^[a-z0-9][a-z0-9-]*$ ]]; then unexpected+=("$path"); continue; fi
                 if printf '%s\n' "$repository_skills" | grep -qxF -- "$name"; then unexpected+=("$path"); fi
                 ;;
               *) unexpected+=("$path") ;;

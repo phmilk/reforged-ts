@@ -702,6 +702,33 @@ describe("the patch check of skills-update.yml", () => {
   );
 
   it.skipIf(bash === undefined)(
+    "refuses a folder that is a repository skill's on a case-insensitive file system",
+    async () => {
+      const paths = [
+        ".claude/skills/Write-Spec/SKILL.md",
+        ".claude/skills/write-spec./SKILL.md",
+        ".claude/skills/write-spec /SKILL.md",
+      ];
+      const result = await guard((git) => {
+        const blob = git("hash-object", "-w", "skills-lock.json").trim();
+        for (const path of paths) {
+          git(
+            "-c",
+            "core.protectNTFS=false",
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            `100644,${blob},${path}`,
+          );
+        }
+        return Promise.resolve();
+      });
+      expect(result.status).toBe(1);
+      for (const path of paths) expect(result.stdout).toContain(`${path}\n`);
+    },
+  );
+
+  it.skipIf(bash === undefined)(
     "refuses a symlink, a gitlink and a regular file turned into a symlink, on allowed paths",
     async () => {
       const result = await guard((git) => {
