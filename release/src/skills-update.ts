@@ -57,7 +57,25 @@ export interface PluginSkills {
   ignored: string[];
 }
 
-/** The skills of upstream's plugin manifest, parsed. */
+/**
+ * A skill's name as the install passes it to the skills CLI (through a
+ * shell on Windows) and the setup doc writes it in its `sh` line: lower-case
+ * letters, digits and hyphens.
+ */
+export const SKILL_NAME = /^[a-z0-9][a-z0-9-]*$/;
+
+/**
+ * A skill's folder in upstream, as its plugin manifest names it:
+ * `./skills/<folder>/<name>`, the `./` and a trailing `/` optional.
+ */
+const PLUGIN_PATH = /^(?:\.\/)?skills\/([a-z0-9][a-z0-9-]*)\/([^/]*)\/?$/;
+
+/**
+ * The skills of upstream's plugin manifest, parsed. A path of another
+ * folder of upstream (`in-progress`, `misc`, `deprecated`) is left out; one
+ * of another shape, or a name of other characters than `SKILL_NAME`'s, is
+ * refused, and so is every update while upstream ships it.
+ */
 export function pluginSkills(manifest: unknown): PluginSkills {
   const paths = isRecord(manifest) ? manifest.skills : undefined;
   if (!isStringList(paths) || paths.length === 0) {
@@ -66,14 +84,38 @@ export function pluginSkills(manifest: unknown): PluginSkills {
   const names: string[] = [];
   const ignored: string[] = [];
   for (const path of paths) {
-    const folder = posix.normalize(path).replace(/\/$/, "");
-    if (UPSTREAM_FOLDERS.includes(posix.dirname(folder))) {
-      names.push(posix.basename(folder));
+    const match = PLUGIN_PATH.exec(path);
+    const [, folder = "", name = ""] = match ?? [];
+    if (match === null || !SKILL_NAME.test(name)) {
+      throw new Error(
+        `${PLUGIN_URL} ships ${JSON.stringify(path)}, not ./skills/<folder>/<name> with a name of lower-case letters, digits and hyphens: nothing was installed.`,
+      );
+    }
+    if (UPSTREAM_FOLDERS.includes(`skills/${folder}`)) {
+      names.push(name);
     } else {
       ignored.push(path);
     }
   }
   return { names, ignored };
+}
+
+/**
+ * The lock's skills whose `skillPath` is not `SKILL.md` in their own folder
+ * of upstream's `engineering` or `productivity` folders, each with it.
+ */
+export function misplacedSkills(
+  lock: Readonly<Record<string, LockSkill>>,
+): string[] {
+  return Object.entries(lock)
+    .filter(
+      ([name, { skillPath }]) =>
+        !UPSTREAM_FOLDERS.some(
+          (folder) => skillPath === `${folder}/${name}/SKILL.md`,
+        ),
+    )
+    .map(([name, { skillPath }]) => `${name} (${skillPath})`)
+    .sort(byCodePoint);
 }
 
 /** The skills upstream's plugin ships today, fetched with `fetcher`. */

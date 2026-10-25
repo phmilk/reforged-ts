@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main, type UpdateReport } from "../src/cli/skills-update.js";
@@ -10,6 +12,7 @@ import {
   installArgs,
   installCommand,
   lockChanges,
+  misplacedSkills,
   PLUGIN_URL,
   pluginSkills,
   readLock,
@@ -110,6 +113,26 @@ describe("pluginSkills", () => {
     });
   });
 
+  it.each([
+    "./skills/engineering/tdd; rm -rf ~",
+    "./skills/engineering/$(curl evil)",
+    "./skills/engineering/Tdd",
+    "./skills/engineering/-s",
+    "./skills/engineering/tdd/nested",
+    "../skills/engineering/tdd",
+    "/skills/engineering/tdd",
+    "skills/../engineering/tdd",
+  ])(
+    "refuses the path %s, which the install and the doc would carry",
+    (path) => {
+      expect(() =>
+        pluginSkills({ skills: ["./skills/engineering/pr", path] }),
+      ).toThrow(
+        `${PLUGIN_URL} ships ${JSON.stringify(path)}, not ./skills/<folder>/<name>`,
+      );
+    },
+  );
+
   it("refuses a manifest without skills", () => {
     expect(() => pluginSkills({ name: "x" })).toThrow(
       `${PLUGIN_URL} has no skills list.`,
@@ -180,6 +203,29 @@ describe("lockChanges", () => {
 
   it("is empty when nothing moved", () => {
     expect(lockChanges({ tdd: skill("a") }, { tdd: skill("a") })).toEqual([]);
+  });
+});
+
+describe("misplacedSkills", () => {
+  it("names a skill of the lock outside its own folder of engineering or productivity", () => {
+    expect(
+      misplacedSkills({
+        tdd: skill("a"),
+        "grill-me": skill("b", "productivity/grill-me"),
+        wizard: skill("c", "deprecated/wizard"),
+        pr: skill("d", "engineering/other"),
+      }),
+    ).toEqual([
+      "pr (skills/engineering/other/SKILL.md)",
+      "wizard (skills/deprecated/wizard/SKILL.md)",
+    ]);
+  });
+
+  it("names none in this repository's lock", async () => {
+    const lock = readLock(
+      await readFile(join(repositoryRoot, "skills-lock.json"), "utf8"),
+    );
+    expect(misplacedSkills(lock)).toEqual([]);
   });
 });
 
@@ -436,6 +482,29 @@ describe("skills:update", () => {
     expect(repo.commands).toEqual([]);
   });
 
+  it("fails when the install locks a skill outside engineering and productivity", async () => {
+    const repo = await repository({
+      "to-spec": skill("old", "engineering/to-spec"),
+      tdd: skill("t", "deprecated/tdd"),
+    });
+    const result = await cli([], repo);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "skills-lock.json names skills outside upstream's engineering and productivity folders after the install: tdd (skills/deprecated/tdd/SKILL.md).",
+    );
+  });
+
+  it("fails before any install on a name the shell would read", async () => {
+    const repo = await repository();
+    const result = await cli([], {
+      ...repo,
+      fetcher: plugin(["./skills/engineering/tdd&calc"]),
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('ships "./skills/engineering/tdd&calc"');
+    expect(repo.commands).toEqual([]);
+  });
+
   it("rejects an unknown option", async () => {
     const repo = await repository();
     expect((await cli(["--dry-run"], repo)).status).toBe(2);
@@ -490,7 +559,7 @@ describe("skills-update.yml", () => {
     expect(apply).toBeLessThan(push);
     const guard = steps[apply]?.run ?? "";
     expect(guard.indexOf("git apply --index")).toBeLessThan(
-      guard.indexOf("git diff --cached --name-only"),
+      guard.indexOf("git diff --cached --raw --no-renames"),
     );
     expect(guard).toContain(
       'skills-lock.json | docs/agents/development-loop.md | ".changeset/skills-update-$GITHUB_RUN_ID.md") ;;',
@@ -523,4 +592,148 @@ describe("skills-update.yml", () => {
       "${{ github.repository_owner }}/${{ env.TEMPLATE }}",
     ]);
   });
+});
+
+/**
+ * Git Bash's bash on Windows, beside git (`bash` there may be WSL's); bash
+ * elsewhere. Undefined when Git for Windows keeps none.
+ */
+function gitBash(): string | undefined {
+  if (process.platform !== "win32") return "bash";
+  const execPath = execFileSync("git", ["--exec-path"], {
+    encoding: "utf8",
+  }).trim();
+  const bash = join(execPath, "..", "..", "..", "bin", "bash.exe");
+  return existsSync(bash) ? bash : undefined;
+}
+
+// The step's own script, run against a repository holding a lock naming tdd,
+// tdd's folder, the repository skill write-spec and a workflow, with what a
+// patch could stage.
+describe("the patch check of skills-update.yml", () => {
+  const bash = gitBash();
+
+  async function guard(
+    stage: (git: (...args: string[]) => string, root: string) => Promise<void>,
+  ) {
+    const { workflow } = await readWorkflow("skills-update.yml");
+    const step = workflow.jobs["pull-request"]?.steps?.find((each) =>
+      each.run?.includes("git apply --index"),
+    );
+    const script = (step?.run ?? "")
+      .split("\n")
+      .filter((line) => !line.startsWith("git apply --index"))
+      .join("\n");
+    const root = await tempDir("patch-check");
+    const git = (...args: string[]) =>
+      execFileSync("git", ["-c", "core.autocrlf=false", ...args], {
+        cwd: root,
+        encoding: "utf8",
+      });
+    git("init", "-q");
+    await writeText(root, "skills-lock.json", '{"skills":{"tdd":{}}}\n');
+    await writeText(root, ".claude/skills/tdd/SKILL.md", "tdd\n");
+    await writeText(root, ".claude/skills/write-spec/SKILL.md", "spec\n");
+    await writeText(root, ".github/workflows/ci.yml", "name: ci\n");
+    await writeText(root, "docs/agents/development-loop.md", "# Loop\n");
+    git("add", "-A");
+    git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "master");
+    await stage(git, root);
+    await writeText(root, "check.sh", script);
+    const result = spawnSync(
+      bash ?? "bash",
+      ["--noprofile", "--norc", "-eo", "pipefail", "check.sh"],
+      {
+        cwd: root,
+        encoding: "utf8",
+        env: { ...process.env, GITHUB_RUN_ID: "42" },
+      },
+    );
+    return { status: result.status, stdout: result.stdout };
+  }
+
+  it.skipIf(bash === undefined)("passes the update's own files", async () => {
+    const result = await guard(async (git, root) => {
+      await writeText(
+        root,
+        "skills-lock.json",
+        '{"skills":{"tdd":{},"new":{}}}\n',
+      );
+      await writeText(root, ".claude/skills/tdd/SKILL.md", "tdd 2\n");
+      await writeText(root, ".claude/skills/new/SKILL.md", "new\n");
+      await writeText(root, ".changeset/skills-update-42.md", "---\n---\n");
+      await writeText(root, "docs/agents/development-loop.md", "# Loop 2\n");
+      git("add", "-A");
+    });
+    expect(result.status).toBe(0);
+  });
+
+  it.skipIf(bash === undefined)(
+    "refuses a rename out of another path, which shows as its deletion",
+    async () => {
+      const result = await guard(async (git, root) => {
+        await mkdir(join(root, ".claude/skills/evil"), { recursive: true });
+        git("mv", ".github/workflows/ci.yml", ".claude/skills/evil/ci.yml");
+        // git would show it as one rename, to the allowed path alone.
+        expect(git("diff", "--cached", "--name-only", "-M")).toBe(
+          ".claude/skills/evil/ci.yml\n",
+        );
+      });
+      expect(result.status).toBe(1);
+      expect(result.stdout).toContain(".github/workflows/ci.yml\n");
+      expect(result.stdout).not.toContain("evil");
+    },
+  );
+
+  it.skipIf(bash === undefined)(
+    "refuses a repository skill, another changeset and any other file",
+    async () => {
+      const result = await guard(async (git, root) => {
+        await writeText(root, ".claude/skills/write-spec/SKILL.md", "edited\n");
+        await writeText(root, ".changeset/other.md", "---\n---\n");
+        await writeText(root, "package.json", "{}\n");
+        git("add", "-A");
+      });
+      expect(result.status).toBe(1);
+      expect(result.stdout).toContain(".claude/skills/write-spec/SKILL.md\n");
+      expect(result.stdout).toContain(".changeset/other.md\n");
+      expect(result.stdout).toContain("package.json\n");
+    },
+  );
+
+  it.skipIf(bash === undefined)(
+    "refuses a symlink, a gitlink and a regular file turned into a symlink, on allowed paths",
+    async () => {
+      const result = await guard((git) => {
+        const blob = git("hash-object", "-w", "skills-lock.json").trim();
+        const commit = git("rev-parse", "HEAD").trim();
+        git(
+          "update-index",
+          "--add",
+          "--cacheinfo",
+          `120000,${blob},.claude/skills/new/link`,
+        );
+        git(
+          "update-index",
+          "--add",
+          "--cacheinfo",
+          `160000,${commit},.claude/skills/new/module`,
+        );
+        git(
+          "update-index",
+          "--cacheinfo",
+          `120000,${blob},.claude/skills/tdd/SKILL.md`,
+        );
+        return Promise.resolve();
+      });
+      expect(result.status).toBe(1);
+      expect(result.stdout).toContain(".claude/skills/new/link (mode 120000)");
+      expect(result.stdout).toContain(
+        ".claude/skills/new/module (mode 160000)",
+      );
+      expect(result.stdout).toContain(
+        ".claude/skills/tdd/SKILL.md (mode 120000)",
+      );
+    },
+  );
 });

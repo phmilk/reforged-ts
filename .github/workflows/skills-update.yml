@@ -122,15 +122,22 @@ jobs:
       # The patch comes from a job that ran code from npm: checked here, in
       # the job that holds the token, it may only touch the lock, the
       # Upstream skills' folders (none of master's repository skills), the
-      # setup doc and this run's changeset.
+      # setup doc and this run's changeset, as regular files. Without
+      # renames, a file moved out of another path shows as its deletion.
+      # release/test/skills-update.test.ts runs this step's script.
       - name: Apply the update
         run: |
           git apply --index "$RUNNER_TEMP/update/update.patch"
           repository_skills=$(comm -23 \
             <(git ls-tree --name-only HEAD .claude/skills/ | sed 's|.*/||' | sort) \
-            <(git show HEAD:skills-lock.json | jq -r '.skills | keys[]' | sort))
+            <(git show HEAD:skills-lock.json | node -e 'console.log(Object.keys(JSON.parse(require("fs").readFileSync(0, "utf8")).skills).join("\n"))' | sort))
           unexpected=()
-          while IFS= read -r path; do
+          while IFS=$'\t' read -r meta path; do
+            read -r _ mode _ _ status <<< "$meta"
+            if [ "$status" != D ] && [ "$mode" != 100644 ] && [ "$mode" != 100755 ]; then
+              unexpected+=("$path (mode $mode)")
+              continue
+            fi
             case "$path" in
               skills-lock.json | docs/agents/development-loop.md | ".changeset/skills-update-$GITHUB_RUN_ID.md") ;;
               .claude/skills/*/*)
@@ -140,13 +147,13 @@ jobs:
                 ;;
               *) unexpected+=("$path") ;;
             esac
-          done < <(git diff --cached --name-only)
+          done < <(git diff --cached --raw --no-renames)
           if [ "${#unexpected[@]}" -gt 0 ]; then
             printf '%s\n' "${unexpected[@]}"
-            echo "::error title=Unexpected files::The update's patch touches files outside the lock, the Upstream skills, the setup doc and its changeset (above). Nothing was pushed."
+            echo "::error title=Unexpected files::The update's patch touches files outside the lock, the Upstream skills, the setup doc and its changeset, or one that is not a regular file (above). Nothing was pushed."
             exit 1
           fi
-          git diff --cached --name-only
+          git diff --cached --name-status --no-renames
       - name: Push and open or update the pull request
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}

@@ -9,8 +9,9 @@
  * `--report <file>` writes it as JSON for the weekly skills workflow, with
  * the pull request to open; `--run-url <url>` names the run in that pull
  * request. Commit the folders with the lock and the doc. Exit codes: 0
- * updated or nothing moved, 1 the plugin, a skills CLI run or the lock
- * failed, 2 usage.
+ * updated or nothing moved, 1 the plugin (a path or a name of another
+ * shape), a skills CLI run or the lock (a skill outside upstream's
+ * engineering and productivity folders) failed, 2 usage.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -24,6 +25,7 @@ import {
   installArgs,
   lockChanges,
   LOCK_FILE,
+  misplacedSkills,
   readLock,
   removeArgs,
   SETUP_DOC,
@@ -110,6 +112,12 @@ export async function main(
     if (dropped.length > 0) await skillsCli(removeArgs(dropped));
     await skillsCli(installArgs(names));
     const after = readLock(await readFile(lockPath, "utf8"));
+    const misplaced = misplacedSkills(after);
+    if (misplaced.length > 0) {
+      throw new Error(
+        `${LOCK_FILE} names skills outside upstream's engineering and productivity folders after the install: ${misplaced.join(", ")}. Nothing is opened; see ${SETUP_DOC}, "Installing and updating the Upstream skills".`,
+      );
+    }
 
     const docPath = join(context.root, SETUP_DOC);
     const doc = await readFile(docPath, "utf8");
