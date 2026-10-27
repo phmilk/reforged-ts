@@ -697,6 +697,7 @@ const TEXT_UNSPLIT_CLAIM =
   '**Premature Claim.** #12 is a Spec with no Ticket yet (`needs-split`), and it is assigned: an unsplit Spec is not worked, whole or in part. Split it first; each Ticket is then claimed with its Spec, `gh issue edit <ticket> 12 --add-assignee @me`. Nothing was unassigned. See `docs/agents/issue-tracker.md`, "Claim".';
 const TEXT_BLOCKED_CLAIM =
   '**Premature Claim.** #12 is claimed, but it is blocked by #9 and owner/other#5, still open: an issue is worked once its blockers are closed, or delivered with them in one pull request, as `implement-spec`\'s is. Nothing was unassigned. See `docs/agents/issue-tracker.md`, "Claim".';
+const TEXT_PREMATURE_SETTLED = "**Premature Claim** settled.";
 const BLOCKERS = [
   { repository: REPOSITORY, number: 9 },
   { repository: "owner/other", number: 5 },
@@ -759,8 +760,19 @@ describe("planIssue", () => {
 
     expect(plan.verdict).toBe("clear");
     expect(plan.comments).toEqual([
-      { number: 12, id: 3, body: body("**Premature Claim** settled.") },
+      { number: 12, id: 3, body: body(TEXT_PREMATURE_SETTLED) },
     ]);
+  });
+
+  it("settles a comment that held a conflict and a premature Claim to text 6", () => {
+    const plan = planIssue({
+      ...assigned("bob", "bob", ["alice"], { openBlockers: BLOCKERS }),
+      action: "unassigned",
+      openBlockers: [],
+      comment: { id: 3, body: body(TEXT_4, TEXT_BLOCKED_CLAIM) },
+    });
+
+    expect(plan.comments).toEqual([{ number: 12, id: 3, body: body(TEXT_6) }]);
   });
 
   it("draws nothing on pairing: the first assignee added the second", () => {

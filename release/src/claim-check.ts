@@ -51,6 +51,9 @@ export const SPEC_MARKER = "<!-- claim-check: spec -->";
  */
 export const CHECK_LOGIN = "github-actions";
 
+/** The head of texts 4, 5 and 6: a sticky comment holding it holds, or held, a conflict. */
+const CONFLICT_HEAD = "**Claim conflict";
+
 /** The head of text 2: a sticky comment holding it holds a failure. */
 const FAILED_HEAD = "**Claim check failed.**";
 
@@ -79,7 +82,9 @@ const andList = (items: readonly string[]): string =>
  * is the line of the assignment cap (`MAX_ASSIGNMENTS`); nor are
  * `specJoined`, `joinSpec` and `joinedSpec`, the lines of a Ticket's Spec
  * (ADR 0023), nor `specClosed`, `blocked`, `unsplitClaim` and
- * `blockedClaim`, the lines of a Spec and of a blocker (ADR 0025).
+ * `blockedClaim`, the lines of a Spec and of a blocker (ADR 0025), nor
+ * `prematureSettled`, which settles a comment that held premature Claims
+ * only, as text 6 settles a conflict.
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -93,7 +98,7 @@ export const TEXTS = {
     `**Claim check.** #${String(issue)} could not be assigned to @${author}: GitHub assigns only a login with push access or a comment on the issue. Comment on #${String(issue)} and re-run this check, or a maintainer assigns it.`,
   /** 4. Conflict: a second assignee not added by the first or by the owner. */
   secondAssignee: (issue: number, newcomer: string, first: string): string =>
-    `**Claim conflict.** @${newcomer} was added to #${String(issue)}, which is claimed by @${first}: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit ${String(issue)} --remove-assignee ${first}\`. Otherwise withdraw: \`gh issue edit ${String(issue)} --remove-assignee @me\`.`,
+    `${CONFLICT_HEAD}.** @${newcomer} was added to #${String(issue)}, which is claimed by @${first}: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit ${String(issue)} --remove-assignee ${first}\`. Otherwise withdraw: \`gh issue edit ${String(issue)} --remove-assignee @me\`.`,
   /** 5. Conflict: an open pull request by a login outside the assignees. */
   openPullRequest: (
     issue: number,
@@ -101,9 +106,9 @@ export const TEXTS = {
     pullRequest: number,
     author: string,
   ): string =>
-    `**Claim conflict.** @${assignee} claimed #${String(issue)}, but the open pull request #${String(pullRequest)} by @${author} closes it. One login per issue: coordinate, and leave one Claim and one pull request. A stale pull request (3 days without a commit and without a comment) may be taken over: comment on #${String(issue)} first.`,
+    `${CONFLICT_HEAD}.** @${assignee} claimed #${String(issue)}, but the open pull request #${String(pullRequest)} by @${author} closes it. One login per issue: coordinate, and leave one Claim and one pull request. A stale pull request (3 days without a commit and without a comment) may be taken over: comment on #${String(issue)} first.`,
   /** 6. The issue's conflict is gone. */
-  resolved: "**Claim conflict** resolved.",
+  resolved: `${CONFLICT_HEAD}** resolved.`,
   /** A comment that held premature Claims only, once none is left (ADR 0025). */
   prematureSettled: "**Premature Claim** settled.",
   /** 7. The pull request passes after a failure. */
@@ -287,7 +292,8 @@ const sameBody = (a: string, b: string): boolean =>
 /**
  * The sticky comment to write on `number`: `lines` under `marker`, one
  * per issue. With nothing to say, none is created, and an earlier comment
- * is rewritten to `settled` (a conflict gone, a pass after a failure) when
+ * is rewritten to `settled` (a conflict gone, a premature Claim gone, a
+ * pass after a failure) when
  * that is a text, else left as it is. Nothing when the comment already
  * reads so.
  */
@@ -592,7 +598,7 @@ export function planIssue(input: IssueInput): Plan {
   }
   // A Spec's assignees are no conflict once each holds or delivered a
   // Ticket, or was added by the owner in this event.
-  const settled =
+  const noConflict =
     assignees.length <= 1 ||
     (ticketAssignees !== null &&
       assignees.every(
@@ -600,6 +606,13 @@ export function planIssue(input: IssueInput): Plan {
           ticketAssignees.includes(login) ||
           (action === "assigned" && login === assignee && sender === owner),
       ));
+  // An earlier comment that held a conflict settles as one; one that held
+  // only premature Claims, as those.
+  const settleText = !noConflict
+    ? null
+    : comment?.body.includes(CONFLICT_HEAD) === true
+      ? TEXTS.resolved
+      : TEXTS.prematureSettled;
   return {
     verdict:
       lines.length > 0
@@ -608,16 +621,7 @@ export function planIssue(input: IssueInput): Plan {
           ? "premature"
           : "clear",
     assignments: [],
-    comments: upsert(
-      issue,
-      [...lines, ...premature],
-      comment,
-      !settled
-        ? null
-        : comment === null || comment.body.includes("**Claim conflict")
-          ? TEXTS.resolved
-          : TEXTS.prematureSettled,
-    ),
+    comments: upsert(issue, [...lines, ...premature], comment, settleText),
     summary,
     exitCode: 0,
   };
