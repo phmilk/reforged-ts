@@ -192,6 +192,10 @@ _Avoid_: contributor (anyone who opens a pull request, push access or not), memb
 An AI coding agent a Collaborator runs; GitHub sees it as that Collaborator's login, so everything it writes, a Claim included, is the Collaborator's.
 _Avoid_: bot (the repositories' GitHub App and Renovate), assistant, AI, session
 
+**Subagent**:
+An Agent started by another Agent to carry one bounded task and hand back one report.
+_Avoid_: teammate (an agent addressed by name, which keeps talking back), worker, child
+
 **Spec**:
 An issue labelled `spec` that states one change whole, its decisions, its tests and its notes; the parent of its Tickets. A Spec is split once it has a Ticket, and only then is any of it worked.
 _Avoid_: epic, PRD, map (a wayfinder map is something else)

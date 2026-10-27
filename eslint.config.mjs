@@ -151,7 +151,10 @@ export default defineConfig(
     "**/*.lua",
     // Agent worktrees, local state and the Agent skills, the Upstream skills
     // among them, which keep upstream's bytes (skills-lock.json). The hooks of
-    // the shared project settings are linted.
+    // the shared project settings are linted. The project mods under
+    // .claude/mods/ are not: they are typed against the declarations Claude
+    // Code lays beside a mod it loads, which CI does not have, and are checked
+    // by `claude plugin validate` and `claude plugin test` (their README).
     ".claude/*",
     "!.claude/hooks/",
   ]),

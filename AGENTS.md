@@ -34,6 +34,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file, the Agent skills and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills". `.claude/shared.json`: what both repositories share (ADR 0024).
+- `.claude/mods/`: the project mods, which `.claude-plugin/marketplace.json` lists and the shared settings enable; each one's README says how to test it by hand.
 - Diagrams: the README's "Map" indexes them. Read a flow's diagram before changing the flow: the packages, a pull request's CI, the release, an issue's life, the development loop, the Claim board, a Patch's adoption, a Probe run, the docs site, the Init stages.
 
 ## Rules
@@ -47,6 +48,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
 - A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
 - Before working on an issue, claim it: `gh issue edit <n> --add-assignee @me`, your first write, before the branch, the first commit, any comment and the pull request; a Ticket or an issue assigned to another login is theirs. A Ticket is claimed together with its Spec, and the stale rule and the takeover are in `docs/agents/issue-tracker.md`, "Claim".
+- Before running Subagents, read `docs/agents/development-loop.md`, "Subagents".
 
 ## Runtime constraints
 

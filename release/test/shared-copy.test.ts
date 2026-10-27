@@ -84,7 +84,7 @@ describe("sharedFiles", () => {
     ]);
   });
 
-  it("lists, in this repository, the lock, every Upstream skill, write-spec, the hook and its registration", async () => {
+  it("lists, in this repository, the lock, every Upstream skill, write-spec, the hooks and their registration", async () => {
     const files = await sharedFiles(repositoryRoot);
     const lock = JSON.parse(
       await readFile(join(repositoryRoot, "skills-lock.json"), "utf8"),
@@ -92,6 +92,7 @@ describe("sharedFiles", () => {
     expect(files).toEqual(
       expect.arrayContaining([
         "skills-lock.json",
+        ".claude/hooks/background-wait.mjs",
         ".claude/hooks/shadowed-skills.mjs",
         ".claude/settings.json",
         ".claude/skills/write-spec/SKILL.md",
