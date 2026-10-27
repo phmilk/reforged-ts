@@ -181,13 +181,45 @@ describe("planRepositorySettings", () => {
     });
   });
 
+  it("updates spec, ticket and needs-split to their committed description, the skills' text", () => {
+    const plan = planRepositorySettings(REPOSITORY, RULESET, {
+      ...CONFIGURED,
+      labels: CONFIGURED.labels.map((label) =>
+        label.name === "ticket"
+          ? {
+              ...label,
+              description:
+                "A ticket of a spec, written with the to-tickets skill",
+            }
+          : label,
+      ),
+    });
+
+    expect(plan.requests).toContainEqual({
+      method: "PATCH",
+      endpoint: "/repos/owner/fork/labels/ticket",
+      body: {
+        new_name: "ticket",
+        color: "c5def5",
+        description: "A ticket of a spec, written with the split-spec skill",
+      },
+      summary: "Update the label ticket.",
+    });
+    expect(LABELS.filter(({ owned }) => owned).map(({ name }) => name)).toEqual(
+      ["game-patch", "spec", "ticket", "needs-split"],
+    );
+  });
+
   it("keeps the colour and description of the other existing labels", () => {
+    const owned = new Set(
+      LABELS.filter(({ owned }) => owned).map(({ name }) => name),
+    );
     const plan = planRepositorySettings(REPOSITORY, RULESET, {
       ...CONFIGURED,
       labels: CONFIGURED.labels.map((label) => ({
         ...label,
-        color: label.name === "game-patch" ? label.color : "000000",
-        description: label.name === "game-patch" ? label.description : null,
+        color: owned.has(label.name) ? label.color : "000000",
+        description: owned.has(label.name) ? label.description : null,
       })),
     });
 
@@ -195,12 +227,14 @@ describe("planRepositorySettings", () => {
   });
 
   it("matches label names regardless of case, colours too", () => {
+    const owned = new Set(
+      LABELS.filter(({ owned }) => owned).map(({ name }) => name),
+    );
     const plan = planRepositorySettings(REPOSITORY, RULESET, {
       ...CONFIGURED,
       labels: CONFIGURED.labels.map((label) => ({
         ...label,
-        name:
-          label.name === "game-patch" ? label.name : label.name.toUpperCase(),
+        name: owned.has(label.name) ? label.name : label.name.toUpperCase(),
         color: label.color.toUpperCase(),
       })),
     });
