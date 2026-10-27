@@ -22,6 +22,16 @@ const TSSERVER = path.join(
 );
 
 /**
+ * The tar that unpacks the tarball: on Windows the system's bsdtar, as
+ * release/src/actionlint.ts picks it (Git Bash's GNU tar, first on its PATH,
+ * reads the `C:` of an archive path as a remote host).
+ */
+const TAR =
+  process.platform === "win32"
+    ? path.join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe")
+    : "tar";
+
+/**
  * Packs reforged-map with `pnpm pack`, its lifecycle scripts skipped as the
  * tarball test does, and unpacks it as `<folder>/node_modules/reforged-map`.
  * Returns the folder, a plugin probe location.
@@ -42,7 +52,7 @@ export function packPlugin(): string {
   const probe = path.join(dir, "probe");
   const target = path.join(probe, "node_modules", "reforged-map");
   fs.mkdirSync(target, { recursive: true });
-  execFileSync("tar", [
+  execFileSync(TAR, [
     "-xzf",
     path.join(destination, tarball),
     "-C",
