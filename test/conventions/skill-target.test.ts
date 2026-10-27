@@ -184,7 +184,7 @@ describe("verdict", () => {
       );
 
       expect(result.verdict === "block" && result.reason).toBe(
-        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec #737 first.",
+        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec 737 first.",
       );
     },
   );
@@ -245,6 +245,19 @@ describe("verdict", () => {
       );
     },
   );
+
+  it("stops /implement on a closed Spec too", () => {
+    const result = verdict(
+      { event: "UserPromptSubmit", skill: "implement", args: "737" },
+      facts({ number: 737, isSpec: true, open: false, closedBy: "alice" }),
+      null,
+      LIBRARY,
+    );
+
+    expect(result.verdict === "block" && result.reason).toBe(
+      "#737 is closed, by @alice: there is nothing left to work on it (ADR 0025, .claude/hooks/skill-target.mjs).",
+    );
+  });
 
   it("stops /implement on a closed Ticket, and says so when its closer is unknown", () => {
     const result = verdict(
@@ -486,23 +499,16 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("stops an unsplit Spec on both events, a Template one named in full", () => {
-    const answers = {
-      repo: LIBRARY,
+  it("denies a Skill call of implement-spec on an unsplit Spec of the Template, named in full, without asking for the clone's repository", () => {
+    const result = runHook(skillCall("implement-spec", `${TEMPLATE}#90`), {
       issue: issueData({
         labels: { nodes: [{ name: "spec" }, { name: "needs-split" }] },
       }),
-    };
-
-    const call = runHook(
-      skillCall("implement-spec", `${TEMPLATE}#90`),
-      answers,
-    );
-    const prompt = runHook(typed("/implement 737"), answers);
+    });
 
     const reason =
       "phmilk/reforged-ts-template#90 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec phmilk/reforged-ts-template#90 first.";
-    expect(call).toEqual({
+    expect(result).toEqual({
       code: 0,
       output: {
         hookSpecificOutput: {
@@ -511,13 +517,22 @@ describe("the skill-target script", () => {
           permissionDecisionReason: reason,
         },
       },
-      // Named in full: no need to ask which repository the clone is.
       calls: ["api graphql --input -"],
     });
-    expect(prompt.output).toEqual({
+  });
+
+  it("stops a typed /implement on an unsplit Spec of the clone's repository, named #n", () => {
+    const result = runHook(typed("/implement 737"), {
+      repo: LIBRARY,
+      issue: issueData({
+        labels: { nodes: [{ name: "spec" }, { name: "needs-split" }] },
+      }),
+    });
+
+    expect(result.output).toEqual({
       decision: "block",
       reason:
-        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec #737 first.",
+        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec 737 first.",
     });
   });
 

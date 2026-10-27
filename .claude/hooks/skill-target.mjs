@@ -70,16 +70,19 @@ import { fileURLToPath, pathToFileURL, URL } from "node:url";
  * @typedef {{ verdict: "pass" } | { verdict: "block", reason: string, output: object }} Verdict
  */
 
-/** @type {readonly Skill[]} */
+/**
+ * The skills the check holds, by the name a prompt or the Skill tool gives.
+ *
+ * @type {readonly Skill[]}
+ */
 const SKILLS = ["implement", "implement-spec", "ship-spec", "split-spec"];
 
-/** The skills that work a Spec, or one of its Tickets, rather than split it. */
-/** @type {readonly Skill[]} */
+/**
+ * The skills that work a Spec, or one of its Tickets, rather than split it.
+ *
+ * @type {readonly Skill[]}
+ */
 const WORKING = ["implement", "implement-spec", "ship-spec"];
-
-/** The skills that act on a Spec as a whole. */
-/** @type {readonly Skill[]} */
-const ON_A_SPEC = ["implement-spec", "ship-spec", "split-spec"];
 
 const SOURCE = "ADR 0025, .claude/hooks/skill-target.mjs";
 
@@ -137,10 +140,13 @@ export function requestOf(input) {
 /**
  * The first issue `args` names, in `repository` unless it says another:
  * an issue URL, `owner/repo#n`, `#n` or a bare number. `null` when none.
+ * With `repository` `null`, a `#n` or a bare number comes back with no
+ * repository: the clone's, which the caller asks for.
  *
+ * @template {string | null} R
  * @param {string} args
- * @param {string} repository
- * @returns {IssueRef | null}
+ * @param {R} repository
+ * @returns {{ repository: string | R, number: number } | null}
  */
 export function issueRefOf(args, repository) {
   const match =
@@ -246,9 +252,10 @@ export function verdict(request, issue, takeable, home) {
   const { skill } = request;
   const name = refName(issue, home);
   if (!issue.open) {
+    // A closed Spec, whatever skill names it; a closed Ticket, for the
+    // skill that implements one.
     const closedTarget =
-      (ON_A_SPEC.includes(skill) && issue.isSpec) ||
-      (skill === "implement" && issue.spec !== null);
+      issue.isSpec || (skill === "implement" && issue.spec !== null);
     if (!closedTarget) return { verdict: "pass" };
     const by = issue.closedBy === null ? "" : `, by @${issue.closedBy}`;
     return block(
@@ -268,7 +275,7 @@ export function verdict(request, issue, takeable, home) {
   if (WORKING.includes(skill) && issue.isSpec && issue.subIssues === 0) {
     return block(
       request.event,
-      `${name} is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (${SOURCE}). Run /split-spec ${name} first.`,
+      `${name} is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (${SOURCE}). Run /split-spec ${issue.repository === home ? String(issue.number) : name} first.`,
     );
   }
   if (
@@ -382,7 +389,7 @@ function hasSpecLabel(labels) {
  * since spec-check.ts is not self-contained), save that a heading inside
  * fenced code counts here.
  */
-const COVERAGE_TABLE = /^##\s+coverage table\s*#*\s*$/im;
+const COVERAGE_TABLE = /^##[ \t]+coverage table[ \t]*#*[ \t]*$/im;
 
 /**
  * The facts of issue `ref`, read from GitHub.
@@ -498,13 +505,14 @@ export async function run(input, projectDir) {
   if (request === null) return null;
   // A bare number or #n names an issue of this clone's repository; an
   // issue named in full is named in full again.
-  const named = issueRefOf(request.args, "");
+  const named = issueRefOf(request.args, null);
   if (named === null) return null;
   try {
-    const home = named.repository === "" ? currentRepository() : null;
-    const issue = readIssue(
-      home === null ? named : { repository: home, number: named.number },
-    );
+    const home = named.repository === null ? currentRepository() : null;
+    const issue = readIssue({
+      repository: named.repository ?? home ?? "",
+      number: named.number,
+    });
     const takeable =
       request.skill === "implement" &&
       issue.open &&
