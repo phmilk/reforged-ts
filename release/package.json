@@ -38,6 +38,7 @@
     "board:setup": "tsc -p tsconfig.json && node build/cli/board-setup.js",
     "board:reconcile": "tsc -p tsconfig.json && node build/cli/board-reconcile.js",
     "board:labels": "tsc -p tsconfig.json && node build/cli/board-labels.js",
+    "spec:check": "tsc -p tsconfig.json && node build/cli/spec-check.js",
     "github-app": "tsc -p tsconfig.json && node build/cli/github-app.js",
     "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js",
     "skills:update": "tsc -p tsconfig.json && node build/cli/skills-update.js",
