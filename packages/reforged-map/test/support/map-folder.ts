@@ -47,6 +47,29 @@ export function mapFolder(
   return folder;
 }
 
+/**
+ * Every file and folder under a folder, by relative path, as
+ * `fs.readdirSync(folder, { recursive: true })` names them, without entering
+ * a `node_modules`. The recursive `readdirSync` follows a Map project's
+ * linked typescript and reforged-builtins on Windows, into the workspace's
+ * packages: 20,000 names and near 1 s a walk (#754).
+ */
+export function listTree(folder: string): string[] {
+  return fs
+    .readdirSync(folder, { withFileTypes: true })
+    .filter((entry) => entry.name !== "node_modules")
+    .flatMap((entry) =>
+      entry.isDirectory()
+        ? [
+            entry.name,
+            ...listTree(path.join(folder, entry.name)).map((name) =>
+              path.join(entry.name, name),
+            ),
+          ]
+        : [entry.name],
+    );
+}
+
 /** Removes every temporary directory the tests made. */
 export function removeTemporary(): void {
   for (const dir of temporary.splice(0)) {

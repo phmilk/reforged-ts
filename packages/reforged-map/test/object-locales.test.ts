@@ -23,6 +23,7 @@ import { importListWith } from "../src/war3map-imp.js";
 import {
   PACKAGE_ROOT,
   fixtureMap,
+  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
@@ -116,8 +117,7 @@ function sync(project: MapProject, options: ObjectSyncOptions = {}) {
 /** Every file and folder under a folder, by relative path with `/`, with the SHA-256 of a file's bytes. */
 function hashes(folder: string): Map<string, string> {
   return new Map(
-    (fs.readdirSync(folder, { recursive: true }) as string[])
-      .filter((name) => !name.startsWith("node_modules"))
+    listTree(folder)
       .map((name) => name.split(path.sep).join("/"))
       .sort()
       .map((name) => {
