@@ -1,8 +1,8 @@
 name: Mint the repository's GitHub App token
 description: >
   A short-lived installation token of the repository's GitHub App, scoped to
-  this repository (or to others of its owner the App is installed on, one
-  or several) and to the permissions given. Fails naming the repository
+  this repository (or to one or more other repositories of its owner the
+  App is installed on) and to the permissions given. Fails naming the repository
   variable or the secret that is missing before trying. The calling job runs
   in the environment app, the secret's home.
 inputs:

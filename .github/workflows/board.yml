@@ -1,6 +1,6 @@
 # The board: the Claim board, a Projects board on the owner's account over
 # phmilk/reforged-ts and phmilk/reforged-ts-template, kept true to GitHub by
-# `pnpm board:reconcile`, its single writer: every open issue of both
+# `pnpm board:reconcile`, its single writer of Status: every open issue of both
 # repositories gets a Status derived from its assignees, pull requests,
 # blockers, sub-issues and labels, and only the differences are written. On
 # this repository's issue and pull-request events, on a repository_dispatch

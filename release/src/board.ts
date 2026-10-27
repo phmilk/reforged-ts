@@ -353,7 +353,11 @@ const BOARD_ISSUE_FRAGMENT = `fragment BoardIssue on Issue {
   subIssues(first: 100) { nodes { id number state repository { nameWithOwner } } }
 }`;
 
-/** The queries that read the state; a connection is paged with `$first` and `$cursor`. */
+/**
+ * The queries that read the state; a connection is paged with `$first` and
+ * `$cursor`. The labels' query, `LABELS_QUERY`, sits with the label names
+ * it is built from.
+ */
 const QUERIES = {
   owner: `query Owner($owner: String!) {
   viewer { login }
