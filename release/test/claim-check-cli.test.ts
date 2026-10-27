@@ -677,10 +677,10 @@ describe("claim-check issue", () => {
     expect(result).toEqual({
       code: 0,
       stdout:
-        "- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.\n",
+        "- #12, a Spec: @bob, who holds or delivered one of its Tickets, added by @bob; no conflict.\n",
       stderr: "",
       summary:
-        "## Claim check\n\n- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.\n",
+        "## Claim check\n\n- #12, a Spec: @bob, who holds or delivered one of its Tickets, added by @bob; no conflict.\n",
       output: "",
     });
     expect(sent()).toEqual([
@@ -701,6 +701,70 @@ describe("claim-check issue", () => {
         }) as unknown,
       ],
       [`GET ${ISSUES}/12/comments?per_page=100&page=1`, undefined],
+    ]);
+  });
+
+  it("reads a Spec's Tickets and comments text 4 on a login that holds none of them", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: {
+        number: 12,
+        labels: [{ name: "spec" }],
+        assignees: [{ login: "alice" }, { login: "bob" }],
+      },
+    };
+    answers.graphql.subIssues = {
+      repository: {
+        issue: {
+          subIssues: {
+            nodes: [
+              { assignees: { nodes: [{ login: "alice" }] } },
+              { assignees: { nodes: [{ login: "carol" }] } },
+            ],
+          },
+        },
+      },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: { issue: { closedByPullRequestsReferences: { nodes: [] } } },
+    };
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/12/comments`] = {
+      status: 201,
+      body: { id: 8 },
+    };
+
+    const result = await run(["issue"], ISSUE_EVENT);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12: @bob added by @bob to an issue claimed by @alice; conflict.\n" +
+        "Commented on #12.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n- #12: @bob added by @bob to an issue claimed by @alice; conflict.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([
+      [`GET ${ISSUES}/12`, undefined],
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining("subIssues") as unknown,
+        }) as unknown,
+      ],
+      ["POST /graphql", expect.anything() as unknown],
+      [`GET ${ISSUES}/12/comments?per_page=100&page=1`, undefined],
+      [
+        `POST ${ISSUES}/12/comments`,
+        {
+          body: `${MARKER}\n\n**Claim conflict.** @bob was added to #12, which is claimed by @alice: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit 12 --remove-assignee alice\`. Otherwise withdraw: \`gh issue edit 12 --remove-assignee @me\`.`,
+        },
+      ],
     ]);
   });
 

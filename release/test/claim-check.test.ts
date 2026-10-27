@@ -5,6 +5,7 @@ import {
   MAX_ASSIGNMENTS,
   planIssue,
   planPullRequest,
+  SPEC_LABEL,
   SPEC_MARKER,
   type ClosingIssue,
   type ClosingPullRequest,
@@ -12,6 +13,7 @@ import {
   type ParentSpec,
   type PullRequestInput,
 } from "../src/claim-check.js";
+import { LABELS } from "../src/repo-settings.js";
 import { readWorkflow } from "./support/workflows.js";
 
 const REPOSITORY = "owner/fork";
@@ -51,7 +53,6 @@ function issue(
     assignees,
     authorAssignable: true,
     spec: null,
-    joinComment: null,
     ...more,
   };
 }
@@ -67,6 +68,7 @@ function spec(
     url: `https://github.com/${REPOSITORY}/issues/10`,
     assignees,
     authorAssignable: true,
+    joinComment: null,
     ...more,
   };
 }
@@ -380,11 +382,56 @@ describe("planPullRequest", () => {
       planPullRequest(
         pullRequest([
           issue(12, ["alice"], {
-            spec: other,
-            joinComment: { id: 9, body: text },
+            spec: { ...other, joinComment: { id: 9, body: text } },
           }),
         ]),
       ).comments,
+    ).toEqual([]);
+  });
+
+  it("rewrites the comment on the Ticket once the author is on the Spec of the other repository", () => {
+    const other = spec(["bob", "alice"], {
+      repository: "owner/other",
+      url: "https://github.com/owner/other/issues/10",
+    });
+    const joined = `${SPEC_MARKER}\n\n**Claim check.** @alice is among the assignees of owner/other#10, the Spec of #12: nothing left to join.`;
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], {
+          spec: {
+            ...other,
+            joinComment: {
+              id: 9,
+              body: `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#10.`,
+            },
+          },
+        }),
+      ]),
+    );
+
+    expect(plan).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [{ number: 12, id: 9, body: joined }],
+      summary: [
+        "- #12: claimed by @alice, the author; passed.",
+        "- owner/other#10, the Spec of #12: the author @alice among its assignees.",
+      ],
+      exitCode: 0,
+    });
+    // Settled once; and no comment when there was none to settle.
+    expect(
+      planPullRequest(
+        pullRequest([
+          issue(12, ["alice"], {
+            spec: { ...other, joinComment: { id: 9, body: joined } },
+          }),
+        ]),
+      ).comments,
+    ).toEqual([]);
+    expect(
+      planPullRequest(pullRequest([issue(12, ["alice"], { spec: other })]))
+        .comments,
     ).toEqual([]);
   });
 
@@ -678,7 +725,7 @@ describe("planIssue", () => {
     expect(plan.comments).toEqual([{ number: 12, id: 7, body: body(TEXT_4) }]);
   });
 
-  it("draws nothing on a login added to a Spec who holds or held one of its Tickets", () => {
+  it("draws nothing on a login added to a Spec who holds or delivered one of its Tickets", () => {
     // bob holds an open Ticket of #12, alice delivered a closed one.
     const plan = planIssue(
       assigned("bob", "bob", ["alice", "bob"], {
@@ -691,16 +738,18 @@ describe("planIssue", () => {
       assignments: [],
       comments: [],
       summary: [
-        "- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.",
+        "- #12, a Spec: @bob, who holds or delivered one of its Tickets, added by @bob; no conflict.",
       ],
       exitCode: 0,
     });
   });
 
   it("comments text 4 on a login added to a Spec who holds none of its Tickets, unless the owner added them", () => {
-    const spec = { ticketAssignees: ["alice", "carol"] };
+    const heldTickets = { ticketAssignees: ["alice", "carol"] };
 
-    expect(planIssue(assigned("bob", "bob", ["alice", "bob"], spec))).toEqual({
+    expect(
+      planIssue(assigned("bob", "bob", ["alice", "bob"], heldTickets)),
+    ).toEqual({
       verdict: "conflict",
       assignments: [],
       comments: [{ number: 12, id: null, body: body(TEXT_4) }],
@@ -716,11 +765,11 @@ describe("planIssue", () => {
       ).verdict,
     ).toBe("conflict");
     expect(
-      planIssue(assigned("bob", "owner", ["alice", "bob"], spec)),
+      planIssue(assigned("bob", "owner", ["alice", "bob"], heldTickets)),
     ).toMatchObject({ verdict: "clear", comments: [] });
   });
 
-  it("rewrites a Spec's conflict comment to text 6 once each of its assignees holds or held a Ticket", () => {
+  it("rewrites a Spec's conflict comment to text 6 once each of its assignees holds or delivered a Ticket", () => {
     const comment = { id: 7, body: body(TEXT_4) };
     // bob, the conflict of the comment, has since claimed a Ticket.
     const plan = planIssue(
@@ -742,6 +791,30 @@ describe("planIssue", () => {
     ).toEqual([]);
   });
 
+  it("rewrites a Spec's conflict comment to text 6 when the owner adds a login that holds no Ticket", () => {
+    const comment = { id: 7, body: body(TEXT_4) };
+
+    expect(
+      planIssue(
+        assigned("carol", "owner", ["alice", "carol"], {
+          ticketAssignees: ["alice"],
+          comment,
+        }),
+      ).comments,
+    ).toEqual([{ number: 12, id: 7, body: body(TEXT_6) }]);
+    // Added by another login, the conflict stands.
+    expect(
+      planIssue(
+        assigned("carol", "carol", ["alice", "carol"], {
+          ticketAssignees: ["alice"],
+          comment,
+        }),
+      ).comments,
+    ).toEqual([
+      { number: 12, id: 7, body: body(TEXT_4.replaceAll("@bob", "@carol")) },
+    ]);
+  });
+
   it("leaves a comment that already reads as it should", () => {
     const resolved = assigned("alice", "alice", ["alice"], {
       comment: { id: 7, body: body(TEXT_6) },
@@ -757,6 +830,12 @@ describe("planIssue", () => {
 
 /** The parsed workflow `file` of this repository. */
 const workflow = async (file: string) => (await readWorkflow(file)).workflow;
+
+describe("SPEC_LABEL", () => {
+  it("is the Spec label repo:settings declares", () => {
+    expect(LABELS.map(({ name }) => name)).toContain(SPEC_LABEL);
+  });
+});
 
 describe("claim-check.yml", () => {
   it("runs trusted code only: master of the library, no event value inline, the job's own token", async () => {

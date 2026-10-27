@@ -6,8 +6,8 @@
  * Ticket among them (ADR 0023): assigned to a Spec of this repository, or
  * shown the command on the Ticket for a Spec of the other Board repository,
  * where the job's token cannot write. On an assignment, a conflict draws a
- * comment on the issue; a login added to a Spec that holds or held one of
- * its Tickets is none. The protocol is `docs/agents/issue-tracker.md`,
+ * comment on the issue; adding to a Spec a login that holds or delivered
+ * one of its Tickets is none. The protocol is `docs/agents/issue-tracker.md`,
  * "Claim"; the texts are the spec's (#529), the logins filled at run time,
  * and those of a Ticket's Spec follow ADR 0023.
  * `planPullRequest` and `planIssue` are pure: the event and the fetched
@@ -60,7 +60,8 @@ export const MAX_ASSIGNMENTS = 20;
  * The check's comment texts (#529, "The check's comment texts"), numbered as
  * there; the tests pin them word for word. `tooMany` is not the spec's: it
  * is the line of the assignment cap (`MAX_ASSIGNMENTS`); nor are
- * `specJoined` and `joinSpec`, the lines of a Ticket's Spec (ADR 0023).
+ * `specJoined`, `joinSpec` and `joinedSpec`, the lines of a Ticket's Spec
+ * (ADR 0023).
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -98,6 +99,9 @@ export const TEXTS = {
     author: string,
   ): string =>
     `**Claim check.** @${author} is not among the assignees of ${spec}, the Spec of #${String(ticket)}, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit ${url} --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`,
+  /** On the Ticket, once the author is on its Spec in the other repository: `joinSpec` settled. */
+  joinedSpec: (spec: string, ticket: number, author: string): string =>
+    `**Claim check.** @${author} is among the assignees of ${spec}, the Spec of #${String(ticket)}: nothing left to join.`,
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
@@ -114,9 +118,14 @@ export interface ParentSpec {
   assignees: readonly string[];
   /**
    * Whether GitHub lets the pull request's author be assigned to it; asked
-   * only of a Spec of this repository that the author is missing from.
+   * only of a Spec of this repository, the one the token writes in.
    */
   authorAssignable: boolean;
+  /**
+   * The check's comment on the Ticket that names the command joining this
+   * Spec (`SPEC_MARKER`); read only for a Spec of another repository.
+   */
+  joinComment: StickyComment | null;
 }
 
 /** An issue a pull request closes, as the check read it. */
@@ -133,12 +142,6 @@ export interface ClosingIssue {
   authorAssignable: boolean;
   /** Its parent when that is a Spec (labelled `spec`): the issue is a Ticket. */
   spec: ParentSpec | null;
-  /**
-   * The check's comment on the Ticket that names the command joining its
-   * Spec; read only when the Spec is of another repository and the author
-   * is missing from it.
-   */
-  joinComment: StickyComment | null;
 }
 
 /** A pull request that references an issue as closed by it, with its own state. */
@@ -271,7 +274,8 @@ function upsert(
  * assigned to them with a line in the comment (text 3 when GitHub will not
  * assign them); one of another repository, which the token cannot write,
  * gets the command that joins it in a comment on the Ticket, under
- * `SPEC_MARKER`. An issue of another repository is ignored with a
+ * `SPEC_MARKER`, rewritten to `joinedSpec` once the author is on the
+ * Spec. An issue of another repository is ignored with a
  * summary line; a pull request that closes no issue passes with one. The
  * worst verdict wins: exit 1 when any issue fails. With nothing to say, an
  * earlier comment is left alone unless it holds a failure, which a pass
@@ -293,7 +297,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
   let failed = false;
   let seen = 0;
   /** Adds the author to the Spec of `ticket`, a Ticket the author now holds. */
-  const joinSpec = (ticket: ClosingIssue, spec: ParentSpec): void => {
+  const addToSpec = (ticket: ClosingIssue, spec: ParentSpec): void => {
     const key = `${spec.repository}#${String(spec.number)}`;
     if (specs.has(key)) return;
     specs.add(key);
@@ -301,13 +305,25 @@ export function planPullRequest(input: PullRequestInput): Plan {
     const head = `- ${elsewhere ? key : `#${String(spec.number)}`}, the Spec of #${String(ticket.number)}: the author @${author}`;
     if (spec.assignees.includes(author)) {
       summary.push(`${head} among its assignees.`);
+      // An earlier command to join it is settled.
+      if (elsewhere) {
+        ticketComments.push(
+          ...upsert(
+            ticket.number,
+            [],
+            spec.joinComment,
+            TEXTS.joinedSpec(key, ticket.number, author),
+            SPEC_MARKER,
+          ),
+        );
+      }
     } else if (elsewhere) {
       // The token writes in this repository only: the author joins it.
       ticketComments.push(
         ...upsert(
           ticket.number,
           [TEXTS.joinSpec(key, spec.url, ticket.number, author)],
-          ticket.joinComment,
+          spec.joinComment,
           null,
           SPEC_MARKER,
         ),
@@ -341,7 +357,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
           ? `- #${n}: claimed by @${author}, the author; passed.`
           : `- #${n}: claimed by ${names(issue.assignees)}, the author among them; passed.`,
       );
-      if (issue.spec !== null) joinSpec(issue, issue.spec);
+      if (issue.spec !== null) addToSpec(issue, issue.spec);
     } else if (issue.assignees.length > 0) {
       failed = true;
       lines.push(TEXTS.failed(issue.number, issue.assignees[0]));
@@ -358,7 +374,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
       assignments.push({ issue: issue.number, login: author });
       lines.push(TEXTS.assigned(issue.number, author));
       summary.push(`- #${n}: no assignee; assigned to the author @${author}.`);
-      if (issue.spec !== null) joinSpec(issue, issue.spec);
+      if (issue.spec !== null) addToSpec(issue, issue.spec);
     } else {
       capped.push(issue.number);
       summary.push(
@@ -392,13 +408,15 @@ export function planPullRequest(input: PullRequestInput): Plan {
  * event. On `assigned` with two or more assignees (re-read, so that the
  * interface's add-then-remove draws nothing): the sender already an
  * assignee, pairing, nothing; the sender the repository owner, nothing; on
- * a Spec, a login that holds or held one of its Tickets, nothing; otherwise
- * text 4. An open pull request of the same repository by a login outside
- * the assignees draws text 5, read from its own state. With no conflict
- * left (at most one assignee, or on a Spec each holding or having held a
- * Ticket, and no such pull request), an earlier comment becomes text 6; a
- * second assignee the event did not add keeps it, since their conflict
- * stands. Comments only, never a reversal: always exit 0.
+ * a Spec, a login that holds or delivered one of its Tickets, nothing;
+ * otherwise text 4. An open pull request of the same repository by a login
+ * outside the assignees draws text 5, read from its own state. With no
+ * conflict left (at most one assignee, or on a Spec each one holding or
+ * having delivered a Ticket, or added by the owner in this event, and no
+ * such pull request), an earlier comment becomes text 6; a second assignee
+ * the event did not add keeps it, since their conflict stands: the state
+ * read names who added the event's login only. Comments only, never a
+ * reversal: always exit 0.
  */
 export function planIssue(input: IssueInput): Plan {
   const { repository, action, issue, assignee, sender, owner } = input;
@@ -416,7 +434,7 @@ export function planIssue(input: IssueInput): Plan {
     const others = assignees.filter((login) => login !== assignee);
     if (ticketAssignees?.includes(assignee) === true) {
       summary.push(
-        `- #${n}, a Spec: @${assignee} added by @${sender}, who holds or held one of its Tickets; no conflict.`,
+        `- #${n}, a Spec: @${assignee}, who holds or delivered one of its Tickets, added by @${sender}; no conflict.`,
       );
     } else if (sender === owner) {
       summary.push(
@@ -466,11 +484,16 @@ export function planIssue(input: IssueInput): Plan {
         : `- #${n}: claimed by ${names(assignees)}; no conflict.`,
     );
   }
-  // A Spec's assignees are no conflict once each holds or held a Ticket.
+  // A Spec's assignees are no conflict once each holds or delivered a
+  // Ticket, or was added by the owner in this event.
   const settled =
     assignees.length <= 1 ||
     (ticketAssignees !== null &&
-      assignees.every((login) => ticketAssignees.includes(login)));
+      assignees.every(
+        (login) =>
+          ticketAssignees.includes(login) ||
+          (action === "assigned" && login === assignee && sender === owner),
+      ));
   return {
     verdict: lines.length > 0 ? "conflict" : "clear",
     assignments: [],
@@ -831,37 +854,39 @@ async function readClosingIssues(
     const ours = nameWithOwner === repository;
     const authorAssignable =
       ours && (await assignable(api, repository, number, pullRequest.author));
-    const spec = ours
-      ? await readParentSpec(api, repository, at(node, "parent"), pullRequest)
-      : null;
     issues.push({
       repository: nameWithOwner,
       number,
       assignees: loginsOf(nodesOf(at(node, "assignees"))),
       authorAssignable,
-      spec,
-      joinComment:
-        spec !== null &&
-        spec.repository !== repository &&
-        !spec.assignees.includes(pullRequest.author)
-          ? await findComment(api, repository, number, SPEC_MARKER)
-          : null,
+      spec: ours
+        ? await readParentSpec(
+            api,
+            repository,
+            number,
+            at(node, "parent"),
+            pullRequest.author,
+          )
+        : null,
     });
   }
   return issues;
 }
 
 /**
- * The Spec of a closed issue from its `parent` node, or `null` when it has
- * no parent or its parent is not labelled `spec` (a wayfinder map). Whether
- * the author may be assigned is asked only of a Spec of this repository the
- * author is missing from: the token writes nowhere else.
+ * The Spec of Ticket `ticket` from its `parent` node, or `null` when it
+ * has no parent or its parent is not labelled `spec` (a wayfinder map).
+ * What the plan may need is read whatever it decides: of a Spec of this
+ * repository, whether `author` may be assigned to it; of one of another
+ * repository, which the token cannot write, the check's comment on the
+ * Ticket that names the command joining it.
  */
 async function readParentSpec(
   api: Api,
   repository: string,
+  ticket: number,
   parent: unknown,
-  pullRequest: { number: number; author: string },
+  author: string,
 ): Promise<ParentSpec | null> {
   if (!isRecord(parent) || !nodesOf(parent.labels).some(isSpecLabel)) {
     return null;
@@ -877,16 +902,17 @@ async function readParentSpec(
       "closingIssuesReferences answered a parent Spec without a number, an address and a repository.",
     );
   }
-  const assignees = loginsOf(nodesOf(parent.assignees));
+  const ours = nameWithOwner === repository;
   return {
     repository: nameWithOwner,
     number,
     url,
-    assignees,
+    assignees: loginsOf(nodesOf(parent.assignees)),
     authorAssignable:
-      nameWithOwner === repository &&
-      !assignees.includes(pullRequest.author) &&
-      (await assignable(api, repository, number, pullRequest.author)),
+      ours && (await assignable(api, repository, number, author)),
+    joinComment: ours
+      ? null
+      : await findComment(api, repository, ticket, SPEC_MARKER),
   };
 }
 
@@ -933,7 +959,7 @@ async function readClosingPullRequests(
  * The assignees of issue `number`, read now rather than from the event, and
  * whether it is a Spec (labelled `spec`).
  */
-async function readAssignees(
+async function readAssigneesAndSpec(
   api: Api,
   repository: string,
   number: number,
@@ -949,8 +975,12 @@ async function readAssignees(
   };
 }
 
-/** The label of a Spec, as `to-spec` and `write-spec` set it. */
-const SPEC_LABEL = "spec";
+/**
+ * The label of a Spec, as `to-spec` and `write-spec` set it. A copy of the
+ * one `repo-settings.ts` declares, since this script imports nothing; a
+ * test holds the two equal.
+ */
+export const SPEC_LABEL = "spec";
 
 /** Whether a label object, REST's or GraphQL's, is the Spec label. */
 function isSpecLabel(label: unknown): boolean {
@@ -1198,7 +1228,11 @@ async function checkIssue(
 ): Promise<Plan> {
   const { action, issue, assignee, sender } = issueEventOf(event);
   const { repository, owner } = settings;
-  const { assignees, spec } = await readAssignees(api, repository, issue);
+  const { assignees, spec } = await readAssigneesAndSpec(
+    api,
+    repository,
+    issue,
+  );
   return planIssue({
     repository,
     action,

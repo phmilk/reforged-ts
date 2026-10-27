@@ -5,8 +5,8 @@
 # author joins each Ticket's Spec (assigned in the caller's repository; in
 # the other Board repository, which github.token cannot write, a comment on
 # the Ticket names the command); on an assignment, a conflict draws a
-# comment on the issue, a login that holds one of a Spec's Tickets none
-# when added to that Spec. After an assignment
+# comment on the issue. Adding to a Spec a login that holds or delivered one
+# of its Tickets is not a conflict. After an assignment
 # it made, it tells the Claim board, from the library or from another Board
 # repository (the jobs dispatch and board-dispatch). It never reverts
 # anything. The library's claim.yml and the Template's call it, so that the
