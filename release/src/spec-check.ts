@@ -236,8 +236,11 @@ function cellsOf(line: string): string[] {
 
 /** The rows of the first table in `lines`, by its header; `null` when it holds no table. */
 function tableOf(lines: readonly string[]): Row[] | null {
-  const table = lines.filter((line) => line.trim().startsWith("|"));
-  if (table.length === 0) return null;
+  const isRow = (line: string) => line.trim().startsWith("|");
+  const start = lines.findIndex(isRow);
+  if (start === -1) return null;
+  const end = lines.findIndex((line, index) => index > start && !isRow(line));
+  const table = lines.slice(start, end === -1 ? undefined : end);
   const [header, ...body] = table.map(cellsOf);
   const column = (name: string, fallback: number) => {
     const found = header.findIndex((cell) => cell.toLowerCase() === name);

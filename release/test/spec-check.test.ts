@@ -181,6 +181,27 @@ describe("coverageVerdict", () => {
     expect(twice(["It reads the body.", "#11", "It reads"]).gaps).toEqual([]);
   });
 
+  it("reads the first table of the section only", () => {
+    const verdict = coverageVerdict(
+      spec(
+        [
+          DECISIONS,
+          TESTING,
+          NOTES,
+          table(...ROWS.filter(([item]) => item !== "It counts the rows.")) +
+            "\nAn older table, kept for the record:\n\n" +
+            "| Item | Ticket | Criterion |\n| --- | --- | --- |\n" +
+            "| It counts the rows. | #11 | It counts the rows |\n",
+        ],
+        [TICKET_11, TICKET_12],
+      ),
+    );
+
+    expect(verdict.gaps).toEqual([
+      { kind: "no-row", item: "It counts the rows." },
+    ]);
+  });
+
   it("says a Spec with no Coverage table has none, instead of naming each item", () => {
     const verdict = coverageVerdict(
       spec([DECISIONS, TESTING, NOTES], [TICKET_11, TICKET_12]),
