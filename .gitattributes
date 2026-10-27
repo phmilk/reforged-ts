@@ -30,4 +30,5 @@ packages/eslint-plugin-reforged/test/fixture-project/maps/*.w3m/** -text -diff
 .claude/skills/add-lint-rule/** text=auto eol=lf
 .claude/skills/add-wrapper/** text=auto eol=lf
 .claude/skills/new-patch/** text=auto eol=lf
+.claude/skills/split-spec/** text=auto eol=lf
 .claude/skills/write-spec/** text=auto eol=lf

@@ -63,6 +63,7 @@ wrapper-coverage/report.md
 !.claude/skills/add-lint-rule/
 !.claude/skills/add-wrapper/
 !.claude/skills/new-patch/
+!.claude/skills/split-spec/
 !.claude/skills/write-spec/
 
 # The Probe runner's map folder, a copy of the Template's editor-saved files.

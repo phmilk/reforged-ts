@@ -94,9 +94,16 @@ describe("the Agent skills of .claude/skills/", () => {
     );
     expect(repository, "the repository's own skills").toContain("add-wrapper");
     expect(
-      variants().map(({ folder }) => folder),
-      "the Skill variants",
-    ).toContain("write-spec");
+      variants().map(
+        ({ folder, upstream }) => `${folder} from ${String(upstream)}`,
+      ),
+      "the Skill variants, each from its Upstream skill",
+    ).toEqual(
+      expect.arrayContaining([
+        "split-spec from to-tickets",
+        "write-spec from to-spec",
+      ]),
+    );
   });
 
   it("has every Upstream skill of the lock, from mattpocock/skills, with the content the lock records", () => {
