@@ -106,7 +106,7 @@ export const LABELS: readonly (Label & { owned: boolean })[] = [
   {
     name: "ticket",
     color: "c5def5",
-    description: "A ticket of a spec, written with the to-tickets skill",
+    description: "A ticket of a spec, written with the split-spec skill",
     owned: false,
   },
   {
