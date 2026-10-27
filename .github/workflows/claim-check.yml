@@ -1,10 +1,12 @@
 # The claim check, reusable (`on: workflow_call`): on a pull request, the
 # issues of the caller's repository that it closes are claimed for its
 # author (an unclaimed one is assigned, with a reminder) or fail the check
-# (one claimed by another login, the takeover path in the comment), and the
-# author joins each Ticket's Spec (assigned in the caller's repository; in
-# the other Board repository, which github.token cannot write, a comment on
-# the Ticket names the command); on an assignment, a conflict draws a
+# (one claimed by another login, the takeover path in the comment; a Spec,
+# or an issue with an open blocker the pull request does not close too, ADR
+# 0025), and the author joins each Ticket's Spec (assigned in the caller's
+# repository; in the other Board repository, which github.token cannot
+# write, a comment on the Ticket names the command); on an assignment, a
+# conflict, or a Claim of an unsplit Spec or a blocked issue, draws a
 # comment on the issue. Adding to a Spec a login that holds or delivered one
 # of its Tickets is not a conflict, nor is a login the maintainer adds. After
 # an assignment it made, it tells the Claim board, from the library or from

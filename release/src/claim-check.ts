@@ -5,12 +5,16 @@
  * when another login holds them, and the author joins the Spec of each
  * Ticket among them (ADR 0023): assigned to a Spec of this repository, or
  * shown the command on the Ticket for a Spec of the other Board repository,
- * where the job's token cannot write. On an assignment, a conflict draws a
- * comment on the issue; adding to a Spec a login that holds or delivered
- * one of its Tickets is none, nor is a login the maintainer adds. The
- * protocol is `docs/agents/issue-tracker.md`,
- * "Claim"; the texts are the spec's (#529), the logins filled at run time,
- * and those of a Ticket's Spec follow ADR 0023.
+ * where the job's token cannot write. It also fails a pull request that
+ * would close a Spec, or a Ticket with an open blocker it does not close
+ * too (ADR 0025). On an assignment, a conflict draws a comment on the
+ * issue; adding to a Spec a login that holds or delivered one of its
+ * Tickets is none, nor is a login the maintainer adds. A Claim of an
+ * unsplit Spec or of an issue with an open blocker draws a comment too,
+ * and is never undone (ADR 0025). The protocol is
+ * `docs/agents/issue-tracker.md`, "Claim"; the texts are the spec's (#529),
+ * the logins filled at run time, those of a Ticket's Spec follow ADR 0023,
+ * and those of a Spec and of a blocker carry the rules of ADR 0025.
  * `planPullRequest` and `planIssue` are pure: the event and the fetched
  * state in; the verdict, the assignments, the comment upserts, the summary
  * lines and the exit code out. `main` reads the state through the GitHub
@@ -47,6 +51,9 @@ export const SPEC_MARKER = "<!-- claim-check: spec -->";
  */
 export const CHECK_LOGIN = "github-actions";
 
+/** The head of texts 4, 5 and 6: a sticky comment holding it holds, or held, a conflict. */
+const CONFLICT_HEAD = "**Claim conflict";
+
 /** The head of text 2: a sticky comment holding it holds a failure. */
 const FAILED_HEAD = "**Claim check failed.**";
 
@@ -57,12 +64,27 @@ const FAILED_HEAD = "**Claim check failed.**";
  */
 export const MAX_ASSIGNMENTS = 20;
 
+/** `ref` as the comments name it from `repository`: `#n` there, `owner/name#n` elsewhere. */
+const refName = (ref: IssueRef, repository: string): string =>
+  ref.repository === repository
+    ? `#${String(ref.number)}`
+    : `${ref.repository}#${String(ref.number)}`;
+
+/** `a`, `a and b`, `a, b and c`. */
+const andList = (items: readonly string[]): string =>
+  items.length <= 1
+    ? items.join("")
+    : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+
 /**
  * The check's comment texts (#529, "The check's comment texts"), numbered as
  * there; the tests pin them word for word. `tooMany` is not the spec's: it
  * is the line of the assignment cap (`MAX_ASSIGNMENTS`); nor are
  * `specJoined`, `joinSpec` and `joinedSpec`, the lines of a Ticket's Spec
- * (ADR 0023).
+ * (ADR 0023), nor `specClosed`, `blocked`, `unsplitClaim` and
+ * `blockedClaim`, the lines of a Spec and of a blocker (ADR 0025), nor
+ * `prematureSettled`, which settles a comment that held premature Claims
+ * only, as text 6 settles a conflict.
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -76,7 +98,7 @@ export const TEXTS = {
     `**Claim check.** #${String(issue)} could not be assigned to @${author}: GitHub assigns only a login with push access or a comment on the issue. Comment on #${String(issue)} and re-run this check, or a maintainer assigns it.`,
   /** 4. Conflict: a second assignee not added by the first or by the owner. */
   secondAssignee: (issue: number, newcomer: string, first: string): string =>
-    `**Claim conflict.** @${newcomer} was added to #${String(issue)}, which is claimed by @${first}: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit ${String(issue)} --remove-assignee ${first}\`. Otherwise withdraw: \`gh issue edit ${String(issue)} --remove-assignee @me\`.`,
+    `${CONFLICT_HEAD}.** @${newcomer} was added to #${String(issue)}, which is claimed by @${first}: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit ${String(issue)} --remove-assignee ${first}\`. Otherwise withdraw: \`gh issue edit ${String(issue)} --remove-assignee @me\`.`,
   /** 5. Conflict: an open pull request by a login outside the assignees. */
   openPullRequest: (
     issue: number,
@@ -84,9 +106,11 @@ export const TEXTS = {
     pullRequest: number,
     author: string,
   ): string =>
-    `**Claim conflict.** @${assignee} claimed #${String(issue)}, but the open pull request #${String(pullRequest)} by @${author} closes it. One login per issue: coordinate, and leave one Claim and one pull request. A stale pull request (3 days without a commit and without a comment) may be taken over: comment on #${String(issue)} first.`,
+    `${CONFLICT_HEAD}.** @${assignee} claimed #${String(issue)}, but the open pull request #${String(pullRequest)} by @${author} closes it. One login per issue: coordinate, and leave one Claim and one pull request. A stale pull request (3 days without a commit and without a comment) may be taken over: comment on #${String(issue)} first.`,
   /** 6. The issue's conflict is gone. */
-  resolved: "**Claim conflict** resolved.",
+  resolved: `${CONFLICT_HEAD}** resolved.`,
+  /** A comment that held premature Claims only, once none is left (ADR 0025). */
+  prematureSettled: "**Premature Claim** settled.",
   /** 7. The pull request passes after a failure. */
   passed: "**Claim check** passed.",
   /** The author, missing from a Ticket's Spec, added to it. */
@@ -103,6 +127,20 @@ export const TEXTS = {
   /** On the Ticket, once the author is on its Spec in the other repository: `joinSpec` settled. */
   joinedSpec: (spec: string, ticket: number, author: string): string =>
     `**Claim check.** @${author} is among the assignees of ${spec}, the Spec of #${String(ticket)}: nothing left to join.`,
+  /** A pull request that would close a Spec (ADR 0025). */
+  specClosed: (spec: number): string =>
+    `${FAILED_HEAD} #${String(spec)} is a Spec, and this pull request would close it. A Spec is never closed by a pull request: name the Tickets this one delivers instead (\`Closes #<ticket>\`), and whoever merges the last of them closes the Spec after its coverage check. See \`docs/agents/issue-tracker.md\`, "Closing a Spec".`,
+  /** A pull request that would close a Ticket ahead of its open blockers, named as `blockers` (ADR 0025). */
+  blocked: (ticket: number, blockers: readonly string[]): string => {
+    const them = blockers.length === 1 ? "it" : "them";
+    return `${FAILED_HEAD} #${String(ticket)} is blocked by ${andList(blockers)}, still open, and this pull request would close it without ${them}. Deliver ${them} first, or in this pull request too (name ${them} among the issues it closes), then re-run this check. See \`docs/agents/issue-tracker.md\`, "Claim".`;
+  },
+  /** On an assignment: a Claim of a Spec with no Ticket (ADR 0025). */
+  unsplitClaim: (spec: number): string =>
+    `**Premature Claim.** #${String(spec)} is a Spec with no Ticket yet (\`needs-split\`), and it is assigned: an unsplit Spec is not worked, whole or in part. Split it first; each Ticket is then claimed with its Spec, \`gh issue edit <ticket> ${String(spec)} --add-assignee @me\`. Nothing was unassigned. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+  /** On an assignment: a Claim of an issue with open blockers, named as `blockers` (ADR 0025). */
+  blockedClaim: (issue: number, blockers: readonly string[]): string =>
+    `**Premature Claim.** #${String(issue)} is claimed, but it is blocked by ${andList(blockers)}, still open: an issue is worked once its blockers are closed, or delivered with them in one pull request, as \`implement-spec\`'s is. Nothing was unassigned. See \`docs/agents/issue-tracker.md\`, "Claim".`,
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
@@ -143,6 +181,16 @@ export interface ClosingIssue {
   authorAssignable: boolean;
   /** Its parent when that is a Spec (labelled `spec`): the issue is a Ticket. */
   spec: ParentSpec | null;
+  /** Whether it is itself a Spec (labelled `spec`). */
+  isSpec: boolean;
+  /** The issues it is blocked by that are open, of any repository. */
+  openBlockers: readonly IssueRef[];
+}
+
+/** An issue named by its repository (`owner/name`) and number. */
+export interface IssueRef {
+  repository: string;
+  number: number;
 }
 
 /** A pull request that references an issue as closed by it, with its own state. */
@@ -191,6 +239,10 @@ export interface IssueInput {
    * closed: those that hold or delivered one; `null` on any other issue.
    */
   ticketAssignees: readonly string[] | null;
+  /** Whether it is an open Spec with no sub-issue, an unsplit Spec. */
+  unsplit: boolean;
+  /** The issues it is blocked by that are open, of any repository. */
+  openBlockers: readonly IssueRef[];
   pullRequests: readonly ClosingPullRequest[];
   comment: StickyComment | null;
 }
@@ -209,7 +261,7 @@ export interface CommentUpsert {
   body: string;
 }
 
-export type Verdict = "passed" | "failed" | "conflict" | "clear";
+export type Verdict = "passed" | "failed" | "conflict" | "premature" | "clear";
 
 /** What one run of the check decided. */
 export interface Plan {
@@ -240,7 +292,8 @@ const sameBody = (a: string, b: string): boolean =>
 /**
  * The sticky comment to write on `number`: `lines` under `marker`, one
  * per issue. With nothing to say, none is created, and an earlier comment
- * is rewritten to `settled` (a conflict gone, a pass after a failure) when
+ * is rewritten to `settled` (a conflict gone, a premature Claim gone, a
+ * pass after a failure) when
  * that is a text, else left as it is. Nothing when the comment already
  * reads so.
  */
@@ -270,7 +323,11 @@ function upsert(
  * pass (pairing included); assignees that exclude the author, fail with
  * text 2. At most `MAX_ASSIGNMENTS` issues are assigned in one run: the
  * unclaimed ones past the cap stay so, with a summary line each and one
- * line in the comment. A Ticket the author holds or is assigned joins them
+ * line in the comment. Before any of that, an issue that is a Spec fails
+ * (a pull request names the Tickets it delivers, never their Spec), and so
+ * does one with an open blocker, of any repository, that the pull request
+ * does not close too, naming each (ADR 0025); neither is assigned. A
+ * Ticket the author holds or is assigned joins them
  * to its Spec, once per Spec and outside the cap: one of this repository is
  * assigned to them with a line in the comment (text 3 when GitHub will not
  * assign them); one of another repository, which the token cannot write,
@@ -305,7 +362,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
     // A Spec of another repository: each Ticket carries its own comment.
     if (!elsewhere && specs.has(key)) return;
     specs.add(key);
-    const head = `- ${elsewhere ? key : `#${String(spec.number)}`}, the Spec of #${String(ticket.number)}: the author @${author}`;
+    const head = `- ${refName(spec, repository)}, the Spec of #${String(ticket.number)}: the author @${author}`;
     const command = TEXTS.joinSpec(key, spec.url, ticket.number, author);
     if (spec.assignees.includes(author)) {
       summary.push(`${head} among its assignees.`);
@@ -356,6 +413,8 @@ ${command}`,
       summary.push(`${head} is not among its assignees; assigned to them.`);
     }
   };
+  const name = (ref: IssueRef): string => refName(ref, repository);
+  const closes = new Set(closing.map(name));
   for (const issue of closing) {
     const n = String(issue.number);
     if (issue.repository !== repository) {
@@ -365,7 +424,23 @@ ${command}`,
       continue;
     }
     seen++;
-    if (issue.assignees.includes(author)) {
+    // The open blockers this pull request does not deliver with the issue.
+    const unclosedBlockers = issue.openBlockers
+      .map(name)
+      .filter((ref) => !closes.has(ref));
+    if (issue.isSpec) {
+      failed = true;
+      lines.push(TEXTS.specClosed(issue.number));
+      summary.push(
+        `- #${n}: a Spec; failed: a pull request names the Tickets it delivers, never their Spec.`,
+      );
+    } else if (unclosedBlockers.length > 0) {
+      failed = true;
+      lines.push(TEXTS.blocked(issue.number, unclosedBlockers));
+      summary.push(
+        `- #${n}: blocked by ${andList(unclosedBlockers)}, open and not closed by this pull request; failed.`,
+      );
+    } else if (issue.assignees.includes(author)) {
       summary.push(
         issue.assignees.length === 1
           ? `- #${n}: claimed by @${author}, the author; passed.`
@@ -425,7 +500,10 @@ ${command}`,
  * a Spec, a login that holds or delivered one of its Tickets, nothing;
  * otherwise, a Spec's login that holds or delivered none included, text 4.
  * An open pull request of the same repository by a login outside the
- * assignees draws text 5, read from its own state. With no
+ * assignees draws text 5, read from its own state. A Claim made too
+ * early draws a line too, whoever made it (ADR 0025): any assignee on an
+ * unsplit Spec, or on an issue with an open blocker, named; its verdict is
+ * `premature` when no conflict stands. With no
  * conflict left (at most one assignee, or on a Spec each one holding or
  * having delivered a Ticket, or added by the owner in this event, and no
  * such pull request), an earlier comment becomes text 6; a second assignee
@@ -436,6 +514,7 @@ ${command}`,
 export function planIssue(input: IssueInput): Plan {
   const { repository, action, issue, assignee, sender, owner } = input;
   const { assignees, ticketAssignees, pullRequests, comment } = input;
+  const { unsplit, openBlockers } = input;
   const n = String(issue);
   const lines: string[] = [];
   const summary: string[] = [];
@@ -492,6 +571,24 @@ export function planIssue(input: IssueInput): Plan {
     }
   }
 
+  // A Claim made too early, whoever made it (ADR 0025): said, never undone.
+  const premature: string[] = [];
+  if (assignees.length > 0) {
+    if (unsplit) {
+      premature.push(TEXTS.unsplitClaim(issue));
+      summary.push(
+        `- #${n}: a Spec with no Ticket, assigned to ${names(assignees)}; premature.`,
+      );
+    }
+    if (openBlockers.length > 0) {
+      const blockers = openBlockers.map((ref) => refName(ref, repository));
+      premature.push(TEXTS.blockedClaim(issue, blockers));
+      summary.push(
+        `- #${n}: claimed by ${names(assignees)}, blocked by ${andList(blockers)}; premature.`,
+      );
+    }
+  }
+
   if (summary.length === 0) {
     summary.push(
       assignees.length === 0
@@ -501,7 +598,7 @@ export function planIssue(input: IssueInput): Plan {
   }
   // A Spec's assignees are no conflict once each holds or delivered a
   // Ticket, or was added by the owner in this event.
-  const settled =
+  const noConflict =
     assignees.length <= 1 ||
     (ticketAssignees !== null &&
       assignees.every(
@@ -509,10 +606,22 @@ export function planIssue(input: IssueInput): Plan {
           ticketAssignees.includes(login) ||
           (action === "assigned" && login === assignee && sender === owner),
       ));
+  // An earlier comment that held a conflict settles as one; one that held
+  // only premature Claims, as those.
+  const settleText = !noConflict
+    ? null
+    : comment?.body.includes(CONFLICT_HEAD) === true
+      ? TEXTS.resolved
+      : TEXTS.prematureSettled;
   return {
-    verdict: lines.length > 0 ? "conflict" : "clear",
+    verdict:
+      lines.length > 0
+        ? "conflict"
+        : premature.length > 0
+          ? "premature"
+          : "clear",
     assignments: [],
-    comments: upsert(issue, lines, comment, settled ? TEXTS.resolved : null),
+    comments: upsert(issue, [...lines, ...premature], comment, settleText),
     summary,
     exitCode: 0,
   };
@@ -775,8 +884,18 @@ async function assignable(
  */
 const CLOSING_PAGE = 50;
 
+/** More blockers than an issue has: they are read in one page, with their count. */
+const BLOCKER_PAGE = 50;
+
+/** An issue's blockers, open or closed, of any repository, with their count. */
+const BLOCKED_BY = `blockedBy(first: ${String(BLOCKER_PAGE)}) {
+            totalCount
+            nodes { number state repository { nameWithOwner } }
+          }`;
+
 // An issue holds at most ten assignees: that connection is read whole. The
-// parent is read with its labels, to tell a Spec from a wayfinder map.
+// parent is read with its labels, to tell a Spec from a wayfinder map, and
+// each issue with its own labels and blockers (ADR 0025).
 const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $first: Int!) {
   repository(owner: $owner, name: $name) {
     pullRequest(number: $number) {
@@ -786,6 +905,8 @@ const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $f
           number
           repository { nameWithOwner }
           assignees(first: 20) { nodes { login } }
+          labels(first: 50) { nodes { name } }
+          ${BLOCKED_BY}
           parent {
             number
             url
@@ -810,9 +931,41 @@ const CLOSED_BY = `query($owner: String!, $name: String!, $number: Int!) {
           author { __typename login }
         }
       }
+      ${BLOCKED_BY}
     }
   }
 }`;
+
+/**
+ * The open issues among the blockers of the issue `node`, named `name` in
+ * the error; none when the answer holds no `blockedBy`. Stops on an issue
+ * with more blockers than one page reads: the check never passes on a
+ * blocker it has not read.
+ */
+function openBlockersOf(node: unknown, name: string): IssueRef[] {
+  const connection = at(node, "blockedBy");
+  if (connection === undefined || connection === null) return [];
+  const nodes = nodesOf(connection);
+  const totalCount = at(connection, "totalCount");
+  if (typeof totalCount !== "number") {
+    throw new ClaimCheckError(`blockedBy answered no totalCount for ${name}.`);
+  }
+  if (totalCount > nodes.length) {
+    throw new ClaimCheckError(
+      `${name} is blocked by ${String(totalCount)} issues, more than the ${String(nodes.length)} the check read: it cannot pass on a blocker it has not read.`,
+    );
+  }
+  return nodes.flatMap((blocker) => {
+    const repository = at(blocker, "repository", "nameWithOwner");
+    const number = at(blocker, "number");
+    if (typeof repository !== "string" || typeof number !== "number") {
+      throw new ClaimCheckError(
+        `blockedBy answered a blocker of ${name} without a number and a repository.`,
+      );
+    }
+    return at(blocker, "state") === "OPEN" ? [{ repository, number }] : [];
+  });
+}
 
 /** The `owner` and `name` of a repository named `owner/name`. */
 function ownerAndName(repository: string): { owner: string; name: string } {
@@ -867,6 +1020,10 @@ async function readClosingIssues(
       );
     }
     const ours = nameWithOwner === repository;
+    const openBlockers = openBlockersOf(
+      node,
+      refName({ repository: nameWithOwner, number }, repository),
+    );
     const authorAssignable =
       ours && (await assignable(api, repository, number, pullRequest.author));
     issues.push({
@@ -874,6 +1031,8 @@ async function readClosingIssues(
       number,
       assignees: loginsOf(nodesOf(at(node, "assignees"))),
       authorAssignable,
+      isSpec: nodesOf(at(node, "labels")).some(isSpecLabel),
+      openBlockers,
       spec: ours
         ? await readParentSpec(
             api,
@@ -931,12 +1090,18 @@ async function readParentSpec(
   };
 }
 
-/** The pull requests that reference issue `number` as closed by them. */
-async function readClosingPullRequests(
+/**
+ * The pull requests that reference issue `number` as closed by them, and
+ * its open blockers, read in one query.
+ */
+async function readClosingPullRequestsAndBlockers(
   api: Api,
   repository: string,
   number: number,
-): Promise<ClosingPullRequest[]> {
+): Promise<{
+  pullRequests: ClosingPullRequest[];
+  openBlockers: IssueRef[];
+}> {
   const data = await graphql(api, CLOSED_BY, {
     ...ownerAndName(repository),
     number,
@@ -967,18 +1132,24 @@ async function readClosingPullRequests(
       state,
     });
   }
-  return pullRequests;
+  return {
+    pullRequests,
+    openBlockers: openBlockersOf(
+      at(data, "repository", "issue"),
+      `#${String(number)}`,
+    ),
+  };
 }
 
 /**
- * The assignees of issue `number`, read now rather than from the event, and
- * whether it is a Spec (labelled `spec`).
+ * The assignees of issue `number`, read now rather than from the event,
+ * whether it is a Spec (labelled `spec`) and whether it is open.
  */
-async function readAssigneesAndSpec(
+async function readIssueState(
   api: Api,
   repository: string,
   number: number,
-): Promise<{ assignees: string[]; spec: boolean }> {
+): Promise<{ assignees: string[]; isSpec: boolean; open: boolean }> {
   const path = `/repos/${repository}/issues/${String(number)}`;
   const { body } = await rest(api, "GET", path, undefined, [200]);
   if (!isRecord(body) || !isList(body.assignees)) {
@@ -986,7 +1157,8 @@ async function readAssigneesAndSpec(
   }
   return {
     assignees: loginsOf(body.assignees),
-    spec: isList(body.labels) && body.labels.some(isSpecLabel),
+    isSpec: isList(body.labels) && body.labels.some(isSpecLabel),
+    open: body.state === "open",
   };
 }
 
@@ -1018,23 +1190,27 @@ const TICKETS = `query($owner: String!, $name: String!, $number: Int!) {
 
 /**
  * The logins assigned to the Tickets of Spec `number`, open or closed, in
- * either Board repository: those that hold or delivered one.
+ * either Board repository: those that hold or delivered one; and how many
+ * Tickets it has, none for an unsplit Spec.
  */
-async function readTicketAssignees(
+async function readTickets(
   api: Api,
   repository: string,
   number: number,
-): Promise<string[]> {
+): Promise<{ assignees: string[]; count: number }> {
   const data = await graphql(api, TICKETS, {
     ...ownerAndName(repository),
     number,
   });
   const tickets = nodesOf(at(data, "repository", "issue", "subIssues"));
-  return [
-    ...new Set(
-      tickets.flatMap((ticket) => loginsOf(nodesOf(at(ticket, "assignees")))),
-    ),
-  ];
+  return {
+    assignees: [
+      ...new Set(
+        tickets.flatMap((ticket) => loginsOf(nodesOf(at(ticket, "assignees")))),
+      ),
+    ],
+    count: tickets.length,
+  };
 }
 
 /** Sends the plan's assignments, then its comment, saying what it did. */
@@ -1243,11 +1419,14 @@ async function checkIssue(
 ): Promise<Plan> {
   const { action, issue, assignee, sender } = issueEventOf(event);
   const { repository, owner } = settings;
-  const { assignees, spec } = await readAssigneesAndSpec(
+  const { assignees, isSpec, open } = await readIssueState(
     api,
     repository,
     issue,
   );
+  const tickets = isSpec ? await readTickets(api, repository, issue) : null;
+  const { pullRequests, openBlockers } =
+    await readClosingPullRequestsAndBlockers(api, repository, issue);
   return planIssue({
     repository,
     action,
@@ -1256,10 +1435,11 @@ async function checkIssue(
     sender,
     owner,
     assignees,
-    ticketAssignees: spec
-      ? await readTicketAssignees(api, repository, issue)
-      : null,
-    pullRequests: await readClosingPullRequests(api, repository, issue),
+    ticketAssignees: tickets?.assignees ?? null,
+    unsplit: open && tickets?.count === 0,
+    // A closed issue is no Claim to warn about.
+    openBlockers: open ? openBlockers : [],
+    pullRequests,
     comment: await findComment(api, repository, issue),
   });
 }
@@ -1310,7 +1490,7 @@ export async function main(
     );
     if (plan.verdict === "failed") {
       output.stdout(
-        "::error title=Claim check failed::An issue this pull request closes is claimed by another login; the comment on the pull request names the way out.\n",
+        "::error title=Claim check failed::An issue this pull request closes is claimed by another login, is a Spec, or has an open blocker the pull request does not close; the comment on the pull request names the way out.\n",
       );
     }
     return plan.exitCode;
