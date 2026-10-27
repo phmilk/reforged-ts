@@ -1,6 +1,6 @@
 # The board: the Claim board, a Projects board on the owner's account over
 # phmilk/reforged-ts and phmilk/reforged-ts-template, kept true to GitHub by
-# `pnpm board:reconcile`, its single writer: every open issue of both
+# `pnpm board:reconcile`, its single writer of Status: every open issue of both
 # repositories gets a Status derived from its assignees, pull requests,
 # blockers, sub-issues and labels, and only the differences are written. On
 # this repository's issue and pull-request events, on a repository_dispatch
@@ -12,6 +12,15 @@
 # beyond the schedule's; it runs on master, in the same group and the same
 # environment. docs/release.md, "The board", describes the rules, this
 # workflow and its failure modes.
+#
+# Before the reconcile, `pnpm board:labels` gives every open Spec its pair
+# of labels (ADR 0025): `needs-split` with no sub-issue, `ready-for-agent`
+# with one or more, only the differences. PROJECT_TOKEN writes no label, so
+# the labels job mints the repositories' App token over both repositories,
+# issues write, in the environment `app`, the App key's home, whose policy
+# also admits master alone. Its writes raise labeled events, so one more run
+# follows and finds nothing to write. The reconcile runs after it even when
+# it fails: a Status never waits on a label.
 #
 # The writes need the maintainer's classic token, the secret PROJECT_TOKEN,
 # since neither GITHUB_TOKEN nor the App reaches a user-owned project. Two
@@ -70,8 +79,42 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  labels:
+    name: labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The App key's home: its deployment branch policy admits master alone.
+    environment: app
+    permissions:
+      contents: read
+    steps:
+      # master, never a pull request's merge commit: the token runs only the
+      # code master holds.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          persist-credentials: false
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Both Board repositories, which BOARD_REPOSITORIES lists.
+          repository: reforged-ts,reforged-ts-template
+          permission-contents: read
+          permission-issues: write
+      # No dependency cache: this job holds the App token, and never restores
+      # a cache another workflow could have written.
+      - uses: ./.github/actions/setup-workspace
+      - name: board:labels
+        env:
+          LABELS_TOKEN: ${{ steps.app.outputs.token }}
+        run: pnpm board:labels
   reconcile:
     name: reconcile
+    needs: labels
+    # After the labels, whatever they did: a Status never waits on a label.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The secret's home: its deployment branch policy admits master alone.

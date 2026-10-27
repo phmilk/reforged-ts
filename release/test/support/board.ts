@@ -132,6 +132,23 @@ export const STATE: BoardState = {
 /** The library and the Template, as `owner/name`. */
 export const [LIBRARY, TEMPLATE] = BOARD_REPOSITORIES;
 
+/**
+ * The ids of the two labels `board:labels` writes, in each Board
+ * repository: what the `Labels` query answers by default.
+ */
+export const LABEL_IDS: Readonly<
+  Record<string, Readonly<Record<string, string>>>
+> = {
+  [LIBRARY]: {
+    "needs-split": "LA_split",
+    "ready-for-agent": "LA_ready",
+  },
+  [TEMPLATE]: {
+    "needs-split": "LA_t_split",
+    "ready-for-agent": "LA_t_ready",
+  },
+};
+
 /** A third repository of the owner, whose issues are not members. */
 export const OTHER = `${BOARD_OWNER}/other`;
 
@@ -287,7 +304,8 @@ const page = (nodes: unknown[]) => ({
  * id, the project `created`; the project's items are `items` and the open
  * issues of both repositories `issues` (none by default), each by its
  * author in `authors` under its key (`owner/name#number`) when there, by
- * `issueNode`'s default otherwise; every mutation
+ * `issueNode`'s default otherwise; the labels of `board:labels` are
+ * `labelIds` (`LABEL_IDS` by default); every mutation
  * succeeds but `failing`, refused with an error, and an add answers the id
  * `PVTI_<the content id>`.
  */
@@ -299,6 +317,7 @@ export function reading(
     items?: readonly ProjectItem[];
     issues?: readonly BoardIssue[];
     authors?: Readonly<Record<string, unknown>>;
+    labelIds?: Readonly<Record<string, Readonly<Record<string, string>>>>;
   } = {},
 ): Answers {
   const projects = [state.project, options.created ?? null];
@@ -455,6 +474,22 @@ export function reading(
                 number: created.number,
                 url: created.url,
               },
+            },
+          },
+        };
+      }
+      case "Labels": {
+        const ids =
+          (options.labelIds ?? LABEL_IDS)[
+            `${text(variables.owner)}/${text(variables.name)}`
+          ] ?? {};
+        const label = (name: string) =>
+          name in ids ? { id: ids[name] } : null;
+        return {
+          data: {
+            repository: {
+              needsSplit: label("needs-split"),
+              readyForAgent: label("ready-for-agent"),
             },
           },
         };

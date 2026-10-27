@@ -43,6 +43,7 @@ flowchart LR
   contributor -->|"opens, with a changeset"| pull_request
   renovate -->|"opens a dependency upgrade, with no changeset"| pull_request
   subgraph board_yml["board.yml"]
+    board_yml_labels["labels"]
     board_yml_reconcile["reconcile"]
   end
   subgraph ci_yml["ci.yml"]
@@ -61,6 +62,7 @@ flowchart LR
   pull_request -->|"pull_request_target into master: opened, reopened, closed, edited, converted_to_draft, ready_for_review"| board_yml
   pull_request -->|"pull_request"| ci_yml
   pull_request -->|"pull_request_target: opened, reopened, synchronize, edited"| claim_yml
+  board_yml_labels --> board_yml_reconcile
   claim_yml_claim_check --> claim_yml_claim_dispatch
   claim_yml_claim_check --> claim_yml_claim_board_dispatch
   classDef required stroke-width:4px
@@ -98,13 +100,13 @@ flowchart LR
 
 <!-- /diagram:pull-request-ci -->
 
-A pull request, opened by a contributor (a Collaborator, or anyone else through a fork) or by Renovate, triggers three workflows. `ci.yml` runs on `pull_request`, its `ci` job once per operating system: each leg is a required check. `claim.yml` runs on `pull_request_target` and calls the reusable `claim-check.yml`: its `check` job is the claim check, a required check, and its `dispatch` and `board-dispatch` jobs tell the Claim board after an assignment the check made, `dispatch` in this repository and `board-dispatch` in the Template: here `board-dispatch` and the job it calls in `board-dispatch.yml`, the check `claim / board-dispatch / dispatch`, are always skipped, drawn dashed, since their condition holds only in the Template. `board.yml` reconciles the Claim board. Renovate's pull requests run the same checks, `claim / check` skipped as on every bot's pull request (a skipped check counts as passed), and carry no changeset (see "Changesets"). The table lists a step's `if` when it has one; a step without one runs when the steps before it passed.
+A pull request, opened by a contributor (a Collaborator, or anyone else through a fork) or by Renovate, triggers three workflows. `ci.yml` runs on `pull_request`, its `ci` job once per operating system: each leg is a required check. `claim.yml` runs on `pull_request_target` and calls the reusable `claim-check.yml`: its `check` job is the claim check, a required check, and its `dispatch` and `board-dispatch` jobs tell the Claim board after an assignment the check made, `dispatch` in this repository and `board-dispatch` in the Template: here `board-dispatch` and the job it calls in `board-dispatch.yml`, the check `claim / board-dispatch / dispatch`, are always skipped, drawn dashed, since their condition holds only in the Template. `board.yml` gives each open Spec its labels, then reconciles the Claim board. Renovate's pull requests run the same checks, `claim / check` skipped as on every bot's pull request (a skipped check counts as passed), and carry no changeset (see "Changesets"). The table lists a step's `if` when it has one; a step without one runs when the steps before it passed.
 
 | Node                                                                                                                           | Read                                                                                                                     |
 | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
 | `ci.yml`, `ci (ubuntu)`, `ci (windows)`                                                                                        | [Done means `pnpm check`](#done-means-pnpm-check), and each release check in [`docs/release.md`](docs/release.md)        |
 | `claim.yml`, `claim-check.yml`, `claim / check`, `claim / dispatch`, `board-dispatch.yml`, `claim / board-dispatch / dispatch` | [Taking an issue](#taking-an-issue), and "Claim" in [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md#claim) |
-| `board.yml`, `reconcile`                                                                                                       | [The board](docs/release.md#the-board)                                                                                   |
+| `board.yml`, `labels`, `reconcile`                                                                                             | [The board](docs/release.md#the-board)                                                                                   |
 | Contributor, Renovate                                                                                                          | [Changesets](#changesets)                                                                                                |
 
 ### Changesets

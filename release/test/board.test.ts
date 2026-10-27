@@ -14,14 +14,19 @@ import {
   CLAIM_DOC_URL,
   issueLookup,
   MAX_DELETES,
+  applyBoardLabels,
+  planBoardLabels,
   planBoardReconcile,
   planBoardSetup,
   readBoardState,
+  readLabelState,
   readReconcileState,
+  specLabelsOf,
   STATUS_OPTIONS,
   statusOf,
   type BoardIssue,
   type BoardPullRequest,
+  type LabelState,
   type BoardSetupPlan,
   type ProjectItem,
   type ProjectState,
@@ -37,6 +42,7 @@ import {
   graphQlApi,
   issue,
   item,
+  LABEL_IDS,
   LIBRARY,
   mutations,
   NOW,
@@ -756,6 +762,29 @@ describe("statusOf", () => {
       { blockedBy: 1, labels: ["ticket"], parent: MAP },
       "Blocked",
     ],
+    [
+      "Blocked: an open blocker, before needs-split",
+      { blockedBy: 1, labels: ["spec", "needs-split"] },
+      "Blocked",
+    ],
+    [
+      "Backlog: needs-split, an unsplit Spec, before the triage labels",
+      { labels: ["spec", "needs-split", "ready-for-human"] },
+      "Backlog",
+    ],
+    [
+      "Backlog: an unsplit Spec still ready-for-agent, read as the board derives its labels",
+      { labels: ["spec", "ready-for-agent"] },
+      "Backlog",
+    ],
+    [
+      "Ready: a Spec split into closed Tickets still needs-split, read as the board derives its labels",
+      {
+        labels: ["spec", "needs-split"],
+        subIssues: [{ ...sub(11), state: "CLOSED" }],
+      },
+      "Ready",
+    ],
     ["Ready: ready-for-agent", { labels: ["ready-for-agent"] }, "Ready"],
     ["Ready: ready-for-human", { labels: ["bug", "ready-for-human"] }, "Ready"],
     [
@@ -773,7 +802,7 @@ describe("statusOf", () => {
     ["Backlog: no label", {}, "Backlog"],
     [
       "Backlog: a parent with no open child",
-      { labels: ["spec"], subIssues: [{ ...sub(11), state: "CLOSED" }] },
+      { subIssues: [{ ...sub(11), state: "CLOSED" }] },
       "Backlog",
     ],
   ] as const)("%s", (_row, more, expected) => {
@@ -852,7 +881,9 @@ describe("statusOf", () => {
     expect(statusOf(spec, issueLookup([templateTicket, libraryIssue]))).toBe(
       "In progress",
     );
-    expect(statusOf(spec, issueLookup([libraryIssue]))).toBe("Backlog");
+    // Its own labels instead, as the board derives them: a split Spec is
+    // ready-for-agent (ADR 0025).
+    expect(statusOf(spec, issueLookup([libraryIssue]))).toBe("Ready");
   });
 
   it("leaves out a closed sub-issue and one the lookup does not know", () => {
@@ -871,6 +902,172 @@ describe("statusOf", () => {
     const b = issue(2, { subIssues: [sub(1)], blockedBy: 1 });
 
     expect(statusOf(a, issueLookup([a, b]))).toBe("Blocked");
+  });
+});
+
+describe("specLabelsOf", () => {
+  it.each([
+    [
+      "an unsplit Spec: needs-split in, ready-for-agent out",
+      { labels: ["enhancement", "spec", "ready-for-agent"] },
+      { add: ["needs-split"], remove: ["ready-for-agent"] },
+    ],
+    [
+      "an unsplit Spec with no triage label: needs-split in",
+      { labels: ["spec"] },
+      { add: ["needs-split"], remove: [] },
+    ],
+    [
+      "a split Spec still needs-split: needs-split out, ready-for-agent in",
+      { labels: ["spec", "needs-split"], subIssues: [sub(11)] },
+      { add: ["ready-for-agent"], remove: ["needs-split"] },
+    ],
+    [
+      "a Spec split into closed Tickets only is split",
+      {
+        labels: ["spec", "needs-split"],
+        subIssues: [{ ...sub(11), state: "CLOSED" }],
+      },
+      { add: ["ready-for-agent"], remove: ["needs-split"] },
+    ],
+    [
+      "a split Spec with a Ticket in the Template",
+      { labels: ["spec", "needs-split"], subIssues: [sub(117, TEMPLATE)] },
+      { add: ["ready-for-agent"], remove: ["needs-split"] },
+    ],
+    [
+      "a ready-for-human unsplit Spec keeps it and gets needs-split",
+      { labels: ["spec", "ready-for-human"] },
+      { add: ["needs-split"], remove: [] },
+    ],
+    [
+      "a ready-for-human split Spec keeps it and loses needs-split",
+      {
+        labels: ["spec", "ready-for-human", "needs-split"],
+        subIssues: [sub(11)],
+      },
+      { add: [], remove: ["needs-split"] },
+    ],
+    [
+      "a split Spec in triage keeps its triage label, ready-for-agent not added",
+      { labels: ["spec", "needs-info", "needs-split"], subIssues: [sub(11)] },
+      { add: [], remove: ["needs-split"] },
+    ],
+    [
+      "an unsplit Spec already right: nothing",
+      { labels: ["spec", "needs-split"] },
+      { add: [], remove: [] },
+    ],
+    [
+      "a split Spec already right: nothing",
+      { labels: ["spec", "ready-for-agent"], subIssues: [sub(11)] },
+      { add: [], remove: [] },
+    ],
+    [
+      "a closed Spec is left alone",
+      { state: "CLOSED", labels: ["spec", "ready-for-agent"] },
+      null,
+    ],
+    [
+      "an issue that is not a Spec is left alone",
+      { labels: ["ready-for-agent"] },
+      null,
+    ],
+  ] as const)("%s", (_row, more, expected) => {
+    expect(specLabelsOf(issue(10, more))).toEqual(expected);
+  });
+});
+
+const labelWrite = (
+  operation: "AddLabels" | "RemoveLabels",
+  labelableId: string,
+  labelIds: string[],
+) => ({
+  query:
+    operation === "AddLabels"
+      ? BOARD_MUTATIONS.addLabels
+      : BOARD_MUTATIONS.removeLabels,
+  variables: { labelableId, labelIds },
+});
+
+describe("planBoardLabels", () => {
+  it("swaps the pair on each Spec that differs, in the labels of its own repository, and sends nothing for the rest", () => {
+    const unsplit = issue(10, { labels: ["spec", "ready-for-agent"] });
+    const split = issue(20, {
+      labels: ["spec", "needs-split"],
+      subIssues: [sub(21)],
+    });
+    const templateUnsplit = issue(30, {
+      repository: TEMPLATE,
+      labels: ["spec", "ready-for-human"],
+    });
+    const right = issue(40, { labels: ["spec", "needs-split"] });
+    const state: LabelState = {
+      issues: [
+        unsplit,
+        issue(1, { labels: ["ready-for-agent"] }),
+        split,
+        templateUnsplit,
+        right,
+      ],
+      labelIds: LABEL_IDS,
+    };
+
+    expect(planBoardLabels(state)).toEqual({
+      requests: [
+        {
+          ...labelWrite("AddLabels", unsplit.id, ["LA_split"]),
+          summary: `Add needs-split to ${LIBRARY}#10: a Spec with no sub-issue.`,
+        },
+        {
+          ...labelWrite("RemoveLabels", unsplit.id, ["LA_ready"]),
+          summary: `Remove ready-for-agent from ${LIBRARY}#10: a Spec with no sub-issue.`,
+        },
+        {
+          ...labelWrite("AddLabels", split.id, ["LA_ready"]),
+          summary: `Add ready-for-agent to ${LIBRARY}#20: a Spec with sub-issues.`,
+        },
+        {
+          ...labelWrite("RemoveLabels", split.id, ["LA_split"]),
+          summary: `Remove needs-split from ${LIBRARY}#20: a Spec with sub-issues.`,
+        },
+        {
+          ...labelWrite("AddLabels", templateUnsplit.id, ["LA_t_split"]),
+          summary: `Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.`,
+        },
+      ],
+      specs: 4,
+      kept: 1,
+    });
+  });
+
+  it("leaves an issue of another repository alone", () => {
+    const state: LabelState = {
+      issues: [issue(10, { repository: OTHER, labels: ["spec"] })],
+      labelIds: LABEL_IDS,
+    };
+
+    expect(planBoardLabels(state)).toEqual({
+      requests: [],
+      specs: 0,
+      kept: 0,
+    });
+  });
+
+  it("stops when a label it must write is missing from the repository, naming it", () => {
+    const state: LabelState = {
+      issues: [issue(30, { repository: TEMPLATE, labels: ["spec"] })],
+      labelIds: {
+        ...LABEL_IDS,
+        [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
+      },
+    };
+
+    expect(() => planBoardLabels(state)).toThrow(
+      new BoardError(
+        `The label needs-split does not exist in ${TEMPLATE}: create it there (pnpm repo:settings creates the library's), then run board:labels again.`,
+      ),
+    );
   });
 });
 
@@ -1403,6 +1600,89 @@ describe("applyBoardReconcile", () => {
   });
 });
 
+describe("readLabelState", () => {
+  it("reads the open issues of both repositories and the ids of the two labels in each; a missing label is absent", async () => {
+    const issues = [
+      issue(10, { labels: ["spec"] }),
+      issue(30, { repository: TEMPLATE, labels: ["spec"] }),
+      issue(11, { state: "CLOSED" }),
+    ];
+    const sent: Sent[] = [];
+
+    const state = await readLabelState(
+      graphQlApi(
+        reading(STATE, {
+          issues,
+          labelIds: {
+            ...LABEL_IDS,
+            [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
+          },
+        }),
+        sent,
+      ),
+    );
+
+    expect(state).toEqual({
+      issues: [issues[0], issues[1]],
+      labelIds: {
+        [LIBRARY]: LABEL_IDS[LIBRARY],
+        [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
+      },
+    });
+    expect(sent.map(({ operation }) => operation)).toEqual([
+      "OpenIssues",
+      "Labels",
+      "OpenIssues",
+      "Labels",
+    ]);
+  });
+});
+
+describe("applyBoardLabels", () => {
+  const plan = planBoardLabels({
+    issues: [
+      issue(10, { labels: ["spec", "ready-for-agent"] }),
+      issue(20, { labels: ["spec"] }),
+    ],
+    labelIds: LABEL_IDS,
+  });
+
+  it("sends the requests in order", async () => {
+    const sent: Sent[] = [];
+    const done: string[] = [];
+
+    await applyBoardLabels(
+      graphQlApi(reading(STATE), sent),
+      plan,
+      ({ summary }) => done.push(summary),
+    );
+
+    expect(mutations(sent)).toEqual([
+      ["AddLabels", { labelableId: "I_10", labelIds: ["LA_split"] }],
+      ["RemoveLabels", { labelableId: "I_10", labelIds: ["LA_ready"] }],
+      ["AddLabels", { labelableId: "I_20", labelIds: ["LA_split"] }],
+    ]);
+    expect(done).toEqual(plan.requests.map(({ summary }) => summary));
+  });
+
+  it("stops at the first refused request, naming it", async () => {
+    const sent: Sent[] = [];
+
+    await expect(
+      applyBoardLabels(
+        graphQlApi(reading(STATE, { failing: "RemoveLabels" }), sent),
+        plan,
+      ),
+    ).rejects.toThrow(
+      `Not done: Remove ready-for-agent from ${LIBRARY}#10: a Spec with no sub-issue.`,
+    );
+    expect(mutations(sent).map(([operation]) => operation)).toEqual([
+      "AddLabels",
+      "RemoveLabels",
+    ]);
+  });
+});
+
 describe("board.yml", () => {
   it("runs on the issue and pull_request_target events, another Board repository's dispatch, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
     const {
@@ -1458,11 +1738,13 @@ describe("board.yml", () => {
       group: "board",
       "cancel-in-progress": false,
     });
-    expect(Object.keys(jobs)).toEqual(["reconcile"]);
+    expect(Object.keys(jobs)).toEqual(["labels", "reconcile"]);
     const job = jobs.reconcile;
     // No fork skip: master's code runs whatever the head, and the
-    // environment's branch policy, master only, guards the secret.
-    expect(job?.if).toBeUndefined();
+    // environment's branch policy, master only, guards the secret. After
+    // the labels, whatever they did: a Status never waits on a label.
+    expect(job?.needs).toBe("labels");
+    expect(job?.if).toBe("${{ !cancelled() }}");
     expect(job?.environment).toBe("board");
     expect(job?.permissions).toEqual({ contents: "read" });
     const steps = job?.steps ?? [];
@@ -1481,6 +1763,42 @@ describe("board.yml", () => {
     expect(run.map((step) => step.run)).toEqual(["pnpm board:reconcile"]);
     expect(run[0]?.env).toEqual({
       PROJECT_TOKEN: "${{ secrets.PROJECT_TOKEN }}",
+    });
+  });
+
+  it("gives the labels to a job in the app environment, with the App's token over both repositories, issues write, master checked out", async () => {
+    const {
+      workflow: { jobs },
+    } = await readWorkflow("board.yml");
+    const job = jobs.labels;
+
+    expect(job?.if).toBeUndefined();
+    expect(job?.environment).toBe("app");
+    expect(job?.permissions).toEqual({ contents: "read" });
+    const steps = job?.steps ?? [];
+    expect(steps.map((step) => step.uses ?? step.run)).toEqual([
+      expect.stringMatching(/^actions\/checkout@[0-9a-f]{40}$/) as unknown,
+      "./.github/actions/app-token",
+      "./.github/actions/setup-workspace",
+      "pnpm board:labels",
+    ]);
+    expect(steps[0]?.with).toMatchObject({
+      ref: "master",
+      "persist-credentials": false,
+    });
+    // The repositories the reconcile reads, by name under the owner.
+    expect(steps[1]?.id).toBe("app");
+    expect(steps[1]?.with).toEqual({
+      "client-id": "${{ vars.APP_CLIENT_ID }}",
+      "private-key": "${{ secrets.APP_PRIVATE_KEY }}",
+      repository: BOARD_REPOSITORIES.map((repository) =>
+        repository.replace(`${BOARD_OWNER}/`, ""),
+      ).join(","),
+      "permission-contents": "read",
+      "permission-issues": "write",
+    });
+    expect(steps[3]?.env).toEqual({
+      LABELS_TOKEN: "${{ steps.app.outputs.token }}",
     });
   });
 });

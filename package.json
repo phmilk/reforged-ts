@@ -58,6 +58,7 @@
     "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
     "board:setup": "pnpm --filter reforged-ts-release board:setup",
     "board:reconcile": "pnpm --filter reforged-ts-release board:reconcile",
+    "board:labels": "pnpm --filter reforged-ts-release board:labels",
     "spec:frontier": "node release/src/spec-frontier.ts",
     "github-app": "pnpm --filter reforged-ts-release github-app",
     "renovate:check": "pnpm --package=renovate@44.171.1 dlx renovate-config-validator --strict",
