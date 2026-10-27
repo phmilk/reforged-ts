@@ -6,12 +6,12 @@
 # the other Board repository, which github.token cannot write, a comment on
 # the Ticket names the command); on an assignment, a conflict draws a
 # comment on the issue. Adding to a Spec a login that holds or delivered one
-# of its Tickets is not a conflict. After an assignment
-# it made, it tells the Claim board, from the library or from another Board
-# repository (the jobs dispatch and board-dispatch). It never reverts
-# anything. The library's claim.yml and the Template's call it, so that the
-# check reports as `claim / check` in both; the logic and the texts are
-# release/src/claim-check.ts, the protocol docs/agents/issue-tracker.md,
+# of its Tickets is not a conflict, nor is a login the maintainer adds. After
+# an assignment it made, it tells the Claim board, from the library or from
+# another Board repository (the jobs dispatch and board-dispatch). It never
+# reverts anything. The library's claim.yml and the Template's call it, so
+# that the check reports as `claim / check` in both; the logic and the texts
+# are release/src/claim-check.ts, the protocol docs/agents/issue-tracker.md,
 # "Claim".
 #
 # The callers run it on pull_request_target, which holds a write token for

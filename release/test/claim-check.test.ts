@@ -38,6 +38,9 @@ const TEXT_7 = "**Claim check** passed.";
 const TEXT_SPEC_JOINED =
   '**Claim check.** Added @alice to #10, the Spec of #12: a Spec carries every login on its Tickets. Join it in the command that claims a Ticket: `gh issue edit 12 10 --add-assignee @me`. See `docs/agents/issue-tracker.md`, "Claim".';
 
+/** The comment on Ticket #12 that names the command joining alice to owner/other#10. */
+const JOIN_COMMAND = `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#10, the Spec of #12, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit https://github.com/owner/other/issues/10 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`;
+
 /** A sticky comment's body: the marker, then one text per issue. */
 const body = (...texts: string[]) => [MARKER, ...texts].join("\n\n");
 
@@ -362,7 +365,7 @@ describe("planPullRequest", () => {
       repository: "owner/other",
       url: "https://github.com/owner/other/issues/10",
     });
-    const text = `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#10, the Spec of #12, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit https://github.com/owner/other/issues/10 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`;
+    const text = JOIN_COMMAND;
     const plan = planPullRequest(
       pullRequest([issue(12, ["alice"], { spec: other })]),
     );
@@ -400,10 +403,7 @@ describe("planPullRequest", () => {
         issue(12, ["alice"], {
           spec: {
             ...other,
-            joinComment: {
-              id: 9,
-              body: `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#10.`,
-            },
+            joinComment: { id: 9, body: JOIN_COMMAND },
           },
         }),
       ]),
@@ -433,6 +433,74 @@ describe("planPullRequest", () => {
       planPullRequest(pullRequest([issue(12, ["alice"], { spec: other })]))
         .comments,
     ).toEqual([]);
+  });
+
+  it("leaves another author's pending command on the Ticket when the author is on the Spec of the other repository", () => {
+    // bob's pull request left the command; alice's finds her on the Spec.
+    const bobs = JOIN_COMMAND.replace("@alice", "@bob");
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, ["alice", "bob"], {
+          spec: spec(["alice"], {
+            repository: "owner/other",
+            url: "https://github.com/owner/other/issues/10",
+            joinComment: { id: 9, body: bobs },
+          }),
+        }),
+      ]),
+    );
+
+    expect(plan.comments).toEqual([]);
+    expect(plan.summary).toContain(
+      "- owner/other#10, the Spec of #12: the author @alice among its assignees.",
+    );
+  });
+
+  it("handles the comment of each Ticket of one Spec of the other repository", () => {
+    const other = {
+      repository: "owner/other",
+      url: "https://github.com/owner/other/issues/10",
+    };
+    const on13 = JOIN_COMMAND.replaceAll("#12", "#13");
+    const missing = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], { spec: spec(["bob"], other) }),
+        issue(13, ["alice"], { spec: spec(["bob"], other) }),
+      ]),
+    );
+    const joined = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], {
+          spec: spec(["alice"], {
+            ...other,
+            joinComment: { id: 8, body: JOIN_COMMAND },
+          }),
+        }),
+        issue(13, ["alice"], {
+          spec: spec(["alice"], {
+            ...other,
+            joinComment: { id: 9, body: on13 },
+          }),
+        }),
+      ]),
+    );
+
+    expect(missing.comments).toEqual([
+      { number: 12, id: null, body: JOIN_COMMAND },
+      { number: 13, id: null, body: on13 },
+    ]);
+    expect(joined.comments).toEqual([
+      {
+        number: 12,
+        id: 8,
+        body: `${SPEC_MARKER}\n\n**Claim check.** @alice is among the assignees of owner/other#10, the Spec of #12: nothing left to join.`,
+      },
+      {
+        number: 13,
+        id: 9,
+        body: `${SPEC_MARKER}\n\n**Claim check.** @alice is among the assignees of owner/other#10, the Spec of #13: nothing left to join.`,
+      },
+    ]);
   });
 
   it("does not count the Specs it joins against the cap of 20", () => {
@@ -744,7 +812,7 @@ describe("planIssue", () => {
     });
   });
 
-  it("comments text 4 on a login added to a Spec who holds none of its Tickets, unless the owner added them", () => {
+  it("comments text 4 on a login added to a Spec who holds or delivered none of its Tickets, unless the owner added them", () => {
     const heldTickets = { ticketAssignees: ["alice", "carol"] };
 
     expect(

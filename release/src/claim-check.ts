@@ -7,7 +7,8 @@
  * shown the command on the Ticket for a Spec of the other Board repository,
  * where the job's token cannot write. On an assignment, a conflict draws a
  * comment on the issue; adding to a Spec a login that holds or delivered
- * one of its Tickets is none. The protocol is `docs/agents/issue-tracker.md`,
+ * one of its Tickets is none, nor is a login the maintainer adds. The
+ * protocol is `docs/agents/issue-tracker.md`,
  * "Claim"; the texts are the spec's (#529), the logins filled at run time,
  * and those of a Ticket's Spec follow ADR 0023.
  * `planPullRequest` and `planIssue` are pure: the event and the fetched
@@ -274,8 +275,9 @@ function upsert(
  * assigned to them with a line in the comment (text 3 when GitHub will not
  * assign them); one of another repository, which the token cannot write,
  * gets the command that joins it in a comment on the Ticket, under
- * `SPEC_MARKER`, rewritten to `joinedSpec` once the author is on the
- * Spec. An issue of another repository is ignored with a
+ * `SPEC_MARKER`, on each Ticket, rewritten to `joinedSpec` once the author
+ * is on the Spec when the command still pending is theirs. An issue of
+ * another repository is ignored with a
  * summary line; a pull request that closes no issue passes with one. The
  * worst verdict wins: exit 1 when any issue fails. With nothing to say, an
  * earlier comment is left alone unless it holds a failure, which a pass
@@ -288,7 +290,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
   const lines: string[] = [];
   const summary: string[] = [];
   const capped: number[] = [];
-  /** The Specs already handled, `owner/name#n`: one join per Spec. */
+  /** The Specs already handled, `owner/name#n`: one assignment per Spec. */
   const specs = new Set<string>();
   /** The comments on Tickets whose Spec the check cannot write. */
   const ticketComments: CommentUpsert[] = [];
@@ -299,14 +301,26 @@ export function planPullRequest(input: PullRequestInput): Plan {
   /** Adds the author to the Spec of `ticket`, a Ticket the author now holds. */
   const addToSpec = (ticket: ClosingIssue, spec: ParentSpec): void => {
     const key = `${spec.repository}#${String(spec.number)}`;
-    if (specs.has(key)) return;
-    specs.add(key);
     const elsewhere = spec.repository !== repository;
+    // A Spec of another repository: each Ticket carries its own comment.
+    if (!elsewhere && specs.has(key)) return;
+    specs.add(key);
     const head = `- ${elsewhere ? key : `#${String(spec.number)}`}, the Spec of #${String(ticket.number)}: the author @${author}`;
+    const command = TEXTS.joinSpec(key, spec.url, ticket.number, author);
     if (spec.assignees.includes(author)) {
       summary.push(`${head} among its assignees.`);
-      // An earlier command to join it is settled.
-      if (elsewhere) {
+      // The author's own command, still pending on the Ticket, is settled;
+      // another author's is left to them.
+      if (
+        elsewhere &&
+        spec.joinComment !== null &&
+        sameBody(
+          spec.joinComment.body,
+          `${SPEC_MARKER}
+
+${command}`,
+        )
+      ) {
         ticketComments.push(
           ...upsert(
             ticket.number,
@@ -322,7 +336,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
       ticketComments.push(
         ...upsert(
           ticket.number,
-          [TEXTS.joinSpec(key, spec.url, ticket.number, author)],
+          [command],
           spec.joinComment,
           null,
           SPEC_MARKER,
@@ -409,8 +423,9 @@ export function planPullRequest(input: PullRequestInput): Plan {
  * interface's add-then-remove draws nothing): the sender already an
  * assignee, pairing, nothing; the sender the repository owner, nothing; on
  * a Spec, a login that holds or delivered one of its Tickets, nothing;
- * otherwise text 4. An open pull request of the same repository by a login
- * outside the assignees draws text 5, read from its own state. With no
+ * otherwise, a Spec's login that holds or delivered none included, text 4.
+ * An open pull request of the same repository by a login outside the
+ * assignees draws text 5, read from its own state. With no
  * conflict left (at most one assignee, or on a Spec each one holding or
  * having delivered a Ticket, or added by the owner in this event, and no
  * such pull request), an earlier comment becomes text 6; a second assignee
@@ -978,7 +993,7 @@ async function readAssigneesAndSpec(
 /**
  * The label of a Spec, as `to-spec` and `write-spec` set it. A copy of the
  * one `repo-settings.ts` declares, since this script imports nothing; a
- * test holds the two equal.
+ * test checks that its labels include this one.
  */
 export const SPEC_LABEL = "spec";
 

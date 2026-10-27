@@ -402,6 +402,65 @@ describe("claim-check pull-request", () => {
     ]);
   });
 
+  it("reads the Ticket's comment and rewrites the author's command once they are on the Spec of the other repository", async () => {
+    answers.graphql.closingIssuesReferences = closing(["alice"], 2, {
+      number: 726,
+      url: "https://github.com/owner/other/issues/726",
+      repository: { nameWithOwner: "owner/other" },
+      labels: { nodes: [{ name: "spec" }] },
+      assignees: { nodes: [{ login: "bob" }, { login: "alice" }] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [
+        {
+          id: 9,
+          user: CHECK,
+          body: `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#726, the Spec of #12, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit https://github.com/owner/other/issues/726 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`,
+        },
+      ],
+    };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`PATCH /repos/${REPOSITORY}/issues/comments/9`] = {
+      status: 200,
+      body: { id: 9 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- owner/other#726, the Spec of #12: the author @alice among its assignees.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n" +
+        "Edited the comment on #12.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n" +
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- owner/other#726, the Spec of #12: the author @alice among its assignees.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([
+      ["POST /graphql", expect.anything() as unknown],
+      [`GET ${ISSUES}/12/assignees/alice`, undefined],
+      [`GET ${ISSUES}/12/comments?per_page=100&page=1`, undefined],
+      [`GET ${ISSUES}/34/comments?per_page=100&page=1`, undefined],
+      [
+        `PATCH /repos/${REPOSITORY}/issues/comments/9`,
+        {
+          body: `${SPEC_MARKER}\n\n**Claim check.** @alice is among the assignees of owner/other#726, the Spec of #12: nothing left to join.`,
+        },
+      ],
+    ]);
+  });
+
   it("ignores a parent that is not a Spec", async () => {
     answers.graphql.closingIssuesReferences = closing(["alice"], 2, {
       number: 1,
@@ -704,7 +763,7 @@ describe("claim-check issue", () => {
     ]);
   });
 
-  it("reads a Spec's Tickets and comments text 4 on a login that holds none of them", async () => {
+  it("reads a Spec's Tickets and comments text 4 on a login that holds or delivered none of them", async () => {
     answers.rest[`GET ${ISSUES}/12`] = {
       status: 200,
       body: {
