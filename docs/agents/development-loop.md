@@ -111,7 +111,7 @@ flowchart TD
   write_spec --> to_tickets
   to_tickets --> claim
   claim -->|"a ticket or an issue"| implement
-  claim -->|"a spec with its tickets"| implement_spec
+  claim -->|"every free ticket of a spec, with the spec"| implement_spec
   claim -->|"a Native to cover"| add_wrapper
   claim -->|"a pitfall to guard at lint level"| add_lint_rule
   claim -->|"a new Patch"| new_patch
@@ -147,6 +147,6 @@ flowchart TD
 | a pull request     | [Pull requests](../../CONTRIBUTING.md#pull-requests) and [Changesets](../../CONTRIBUTING.md#changesets) in the contributing guide                                     |
 | the merge          | [Pull requests](../../CONTRIBUTING.md#pull-requests): the required checks                                                                                             |
 
-- **The Claim is the first write**: `gh issue edit <n> --add-assignee @me` before the branch, the first commit, any comment and the pull request. `/implement` and `/implement-spec` do not claim by themselves: claim the ticket, the issue, or the spec with its tickets, then invoke one. A spec you will split and implement yourself is claimed before `/to-tickets`, then the tickets the split creates; the on-ramps, triage and the split write without a Claim.
+- **The Claim is the first write**: `gh issue edit <n> --add-assignee @me` before the branch, the first commit, any comment and the pull request. `/implement` and `/implement-spec` do not claim by themselves: claim the ticket with its spec, the issue, or every free ticket of a spec with the spec, then invoke one. A spec is never claimed on its own, nor before its tickets; the on-ramps, triage and the split write without a Claim.
 - **A project skill replaces `/implement`** for its task: `/add-wrapper` covers a Native, `/add-lint-rule` guards a pitfall at lint level, `/new-patch` adopts a Patch. Each carries its own steps to the pull request and its changeset.
-- **`/implement` works one ticket or issue** on the current branch: `/tdd` at agreed seams, then `/code-review`. **`/implement-spec` works a whole spec** on one branch and one draft pull request closing the spec and its tickets: an implementer per ticket on the frontier of the task graph, each in its own worktree driving `/tdd`, a merger after each, then `/code-review` on the whole.
+- **`/implement` works one ticket or issue** on the current branch: `/tdd` at agreed seams, then `/code-review`. **`/implement-spec` works a whole spec** on one branch and one draft pull request closing its tickets, never the spec, which whoever merges closes after the coverage check ([Closing a Spec](issue-tracker.md#claim)): an implementer per ticket on the frontier of the task graph, each in its own worktree driving `/tdd`, a merger after each, then `/code-review` on the whole.
