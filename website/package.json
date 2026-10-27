@@ -48,6 +48,7 @@
     "@types/react": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
     "reforged-builtins": "workspace:^",
+    "reforged-map": "workspace:^",
     "reforged-test": "workspace:^",
     "typescript": "catalog:"
   },

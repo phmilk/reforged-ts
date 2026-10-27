@@ -359,7 +359,7 @@ export interface ObjectDataEditor {
    * Then it writes only the files whose bytes change, and deletes a
    * locale's table an edit dropped. When the edits add or drop a locale's
    * table, `war3map.imp` lists the tables as the World Editor does, one
-   * entry of flag `0x15` each, its other entries kept; a list left empty is
+   * entry of flag `0x1d` each, its other entries kept; a list left empty is
    * deleted, and a map folder whose tables did not change keeps its
    * `war3map.imp` as it was. A file the readers
    * left out (truncated, of an unknown format version, an object with more

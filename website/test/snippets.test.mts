@@ -62,6 +62,14 @@ describe("extractSnippets", () => {
     expect(extractSnippets(page, PAGE)).toEqual([]);
   });
 
+  it("marks a fence whose meta holds objects", () => {
+    const page = ["```ts objects", "const a = 1;", "```"].join("\n");
+
+    expect(extractSnippets(page, PAGE)).toEqual([
+      { ...snippet(2, "const a = 1;\n"), objects: true },
+    ]);
+  });
+
   it("marks a fence whose meta holds builtins", () => {
     const page = ["```ts builtins", "const a = 1;", "```"].join("\n");
 
@@ -127,6 +135,23 @@ describe("checkSnippets", () => {
     ].join("\n");
 
     expect(check({ ...snippet(4, code), builtins: true })).toEqual([]);
+  });
+
+  it("checks an objects snippet as an Object definition, with reforged-map/objects", () => {
+    const code = [
+      'import { defineUnit } from "reforged-map/objects";',
+      "export const Sergeant = defineUnit({",
+      '  rawcode: "h002",',
+      '  base: FourCC("hfoo"),',
+      "  // @ts-expect-error: a number field given a string",
+      '  fields: { uhpm: "many" },',
+      "});",
+      "",
+    ].join("\n");
+
+    expect(
+      check({ ...snippet(4, code, "src/objects/units.ts"), objects: true }),
+    ).toEqual([]);
   });
 
   it("checks every other snippet without them", () => {

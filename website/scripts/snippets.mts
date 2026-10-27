@@ -5,7 +5,11 @@
 // partial statement, the old API of a migration page) and is not checked. A
 // fence whose meta holds `builtins` is checked with `reforged-builtins` too,
 // its overloads' entry in `types` as a Map project lists it (#515); those
-// fences of a page form a Map project of their own.
+// fences of a page form a Map project of their own. A fence whose meta holds
+// `objects` is an Object definition (#713): a Node module of the Map
+// project's `src/objects/`, checked as the Template checks that folder, with
+// the Typings' ambient declarations and `reforged-map/objects`; those fences
+// of a page form a Map project of their own too.
 //
 // Each page is a Map project of its own: a fence with a `title` is the file
 // at that path (```ts title="src/main.ts"), so the fences of one page can
@@ -28,6 +32,8 @@ export interface Snippet {
   readonly code: string;
   /** Whether it is checked with the Built-in objects (`builtins`). */
   readonly builtins?: boolean;
+  /** Whether it is an Object definition (`objects`). */
+  readonly objects?: boolean;
 }
 
 /** A compiler diagnostic, located on its page. */
@@ -46,6 +52,9 @@ export const FRAGMENT = "fragment";
 
 /** The meta word of a fence checked with the Built-in objects. */
 export const BUILTINS = "builtins";
+
+/** The meta word of a fence that is an Object definition. */
+export const OBJECTS = "objects";
 
 const OPENING = /^(\s*)(`{3,}|~{3,})\s*([^\s`]*)(.*)$/;
 const TITLE = /\btitle=(["'])(.*?)\1/;
@@ -84,6 +93,7 @@ export function extractSnippets(markdown: string, page: string): Snippet[] {
         ...(title === undefined ? {} : { title }),
         code: `${code}\n`,
         ...(words.includes(BUILTINS) ? { builtins: true } : {}),
+        ...(words.includes(OBJECTS) ? { objects: true } : {}),
       });
     }
     index = end;
@@ -112,6 +122,24 @@ export const MAP_PROJECT_OPTIONS: ts.CompilerOptions = {
 export const BUILTINS_OPTIONS: ts.CompilerOptions = {
   ...MAP_PROJECT_OPTIONS,
   types: [...(MAP_PROJECT_OPTIONS.types ?? []), "reforged-builtins/3.0.0"],
+};
+
+/**
+ * The compiler options of a Map project's `src/objects/`, a Node program
+ * apart from the map's Lua: the Typings' ambient declarations give the
+ * global `FourCC`, and `reforged-map/objects` types each definition from the
+ * field declarations of `reforged-builtins`.
+ */
+export const OBJECTS_OPTIONS: ts.CompilerOptions = {
+  target: ts.ScriptTarget.ES2023,
+  lib: ["lib.es2023.d.ts"],
+  module: ts.ModuleKind.ESNext,
+  moduleResolution: ts.ModuleResolutionKind.Bundler,
+  moduleDetection: ts.ModuleDetectionKind.Force,
+  strict: true,
+  skipLibCheck: true,
+  noEmit: true,
+  types: ["reforged-types/3.0.1"],
 };
 
 /**
@@ -147,11 +175,15 @@ const PROJECTS = ".snippets";
 /** The folder of the Map projects of the snippets checked with `builtins`. */
 const BUILTINS_PROJECTS = ".snippets-builtins";
 
+/** The folder of the Map projects of the Object definition snippets. */
+const OBJECTS_PROJECTS = ".snippets-objects";
+
 export interface CheckOptions {
   /**
    * The folder the snippets' packages resolve from, through its
    * `node_modules` (`reforged-ts`, `reforged-types`, `reforged-test`, the
-   * typescript-to-lua language extensions): the website package.
+   * typescript-to-lua language extensions, `reforged-map`): the website
+   * package.
    */
   readonly base: string;
 }
@@ -166,13 +198,21 @@ export function checkSnippets(
   snippets: readonly Snippet[],
   options: CheckOptions,
 ): SnippetProblem[] {
-  const builtins = snippets.filter((snippet) => snippet.builtins === true);
-  const others = snippets.filter((snippet) => snippet.builtins !== true);
+  const objects = snippets.filter((snippet) => snippet.objects === true);
+  const builtins = snippets.filter(
+    (snippet) => snippet.objects !== true && snippet.builtins === true,
+  );
+  const others = snippets.filter(
+    (snippet) => snippet.objects !== true && snippet.builtins !== true,
+  );
   return [
     ...checkProgram(others, options, MAP_PROJECT_OPTIONS, PROJECTS),
     ...(builtins.length === 0
       ? []
       : checkProgram(builtins, options, BUILTINS_OPTIONS, BUILTINS_PROJECTS)),
+    ...(objects.length === 0
+      ? []
+      : checkProgram(objects, options, OBJECTS_OPTIONS, OBJECTS_PROJECTS)),
   ].sort((a, b) =>
     a.page < b.page ? -1 : a.page > b.page ? 1 : a.line - b.line,
   );

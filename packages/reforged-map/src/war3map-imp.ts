@@ -7,8 +7,10 @@
 // Format 1, little-endian: the format (uint32, 1), the count of entries
 // (uint32), then per entry a flag byte and the path, NUL-terminated. The
 // editor's save of test/fixtures/editor-locales.w3m lists the locale tables
-// with flag 0x15, sorted by path. Only format 1 is read; every entry and
-// any trailing byte is kept as read.
+// with flag 0x15, sorted by path; its next save sets bit 0x08, and flag 0x1d
+// is its fixed point, which the World Editor contract of Object sync
+// (test/fixtures/editor-sync.w3m, #713) holds. Only format 1 is read; every
+// entry and any trailing byte is kept as read.
 
 import { Buffer } from "node:buffer";
 import type { Locale } from "./model.js";
@@ -17,8 +19,8 @@ import { localeTablePath } from "./war3map-wts.js";
 /** The import list of a map folder. */
 export const IMP_FILE = "war3map.imp";
 
-/** The flag the 3.0.1 World Editor gives a locale table's entry. */
-const LOCALE_TABLE_FLAG = 0x15;
+/** The flag the 3.0.1 World Editor keeps for a locale table's entry from its second save on. */
+const LOCALE_TABLE_FLAG = 0x1d;
 
 /** The only format of war3map.imp this package reads. */
 const IMP_FORMAT = 1;
@@ -87,7 +89,7 @@ function localeOf(entry: ImportEntry): string | undefined {
  * The bytes of war3map.imp listing exactly the given locale tables, the way
  * the World Editor lists them: each other entry kept where it is, a locale
  * table's entry dropped when its locale has no table, and a new one, flag
- * 0x15, inserted in path order among the locale tables' entries (appended
+ * 0x1d, inserted in path order among the locale tables' entries (appended
  * when there are none). Undefined when the list ends empty, since the editor
  * writes no war3map.imp for a map without imports; `"unreadable"` when the
  * bytes read are not an import list of format 1.
