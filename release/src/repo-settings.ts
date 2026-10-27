@@ -41,10 +41,11 @@ export interface Label {
 
 /**
  * The labels the issue forms, the triage skills and the board apply.
- * `game-patch` is this repository's own and kept as committed; the others
- * are GitHub's defaults, the skills' or the board's (`needs-split`, which
- * `board:labels` derives, ADR 0025) and are only created when missing, so
- * an existing one keeps its colour and description.
+ * `game-patch` is this repository's own, and `spec`, `ticket` and
+ * `needs-split` carry the skills' and the board's text (`needs-split`,
+ * which `board:labels` derives, ADR 0025): those are kept as committed. The
+ * others are GitHub's defaults and the triage skills', only created when
+ * missing, so an existing one keeps its colour and description.
  */
 export const LABELS: readonly (Label & { owned: boolean })[] = [
   {
@@ -100,21 +101,21 @@ export const LABELS: readonly (Label & { owned: boolean })[] = [
     name: "spec",
     color: "5319e7",
     description:
-      "A spec, written with the to-spec skill; its tickets are sub-issues",
-    owned: false,
+      "A spec, written with the to-spec or write-spec skill; its tickets are sub-issues",
+    owned: true,
   },
   {
     name: "ticket",
     color: "c5def5",
     description: "A ticket of a spec, written with the split-spec skill",
-    owned: false,
+    owned: true,
   },
   {
     name: "needs-split",
     color: "fef2c0",
     description:
       "A spec with no ticket yet: split it first; the board derives it",
-    owned: false,
+    owned: true,
   },
 ];
 
