@@ -113,6 +113,7 @@ function facts(more: Record<string, unknown> = {}) {
     repository: LIBRARY,
     number: 742,
     open: true,
+    closedBy: null,
     isSpec: false,
     subIssues: 0,
     coverageTable: false,
@@ -127,41 +128,35 @@ const BLOCKERS = [
   { repository: TEMPLATE, number: 5 },
 ];
 
+const SPEC_737 = { repository: LIBRARY, number: 737 };
+
 describe("verdict", () => {
   it("stops /implement on a Ticket with open blockers, naming them and the Tickets its Spec offers now", () => {
     const result = verdict(
       { event: "UserPromptSubmit", skill: "implement", args: "742" },
-      facts({
-        openBlockers: BLOCKERS,
-        spec: { repository: LIBRARY, number: 737 },
-      }),
+      facts({ openBlockers: BLOCKERS, spec: SPEC_737 }),
       ["#740 needs-split", `${TEMPLATE}#118 a Template Ticket`],
+      LIBRARY,
     );
 
+    const reason =
+      "#742 is blocked by #9 and phmilk/reforged-ts-template#5, still open: a Ticket is implemented once its blockers are closed (ADR 0025, .claude/hooks/skill-target.mjs). Takeable now in its Spec #737: #740 needs-split; phmilk/reforged-ts-template#118 a Template Ticket. Run /implement on one of them instead, or deliver the blockers first.";
     expect(result).toEqual({
       verdict: "block",
-      reason:
-        "#742 is blocked by #9 and phmilk/reforged-ts-template#5, still open: a Ticket is implemented once its blockers are closed (ADR 0025, .claude/hooks/skill-target.mjs). Takeable now in its Spec #737: #740 needs-split; phmilk/reforged-ts-template#118 a Template Ticket. Run /implement on one of them instead, or deliver the blockers first.",
-      output: {
-        decision: "block",
-        reason:
-          "#742 is blocked by #9 and phmilk/reforged-ts-template#5, still open: a Ticket is implemented once its blockers are closed (ADR 0025, .claude/hooks/skill-target.mjs). Takeable now in its Spec #737: #740 needs-split; phmilk/reforged-ts-template#118 a Template Ticket. Run /implement on one of them instead, or deliver the blockers first.",
-      },
+      reason,
+      output: { decision: "block", reason },
     });
   });
 
   it("names spec:frontier when the Frontier cannot be read here, and says when none is takeable", () => {
-    const blocked = facts({
-      openBlockers: [BLOCKERS[0]],
-      spec: { repository: LIBRARY, number: 737 },
-    });
+    const blocked = facts({ openBlockers: [BLOCKERS[0]], spec: SPEC_737 });
     const request = {
       event: "PreToolUse",
       skill: "implement",
       args: "742",
     } as const;
 
-    const unread = verdict(request, blocked, null);
+    const unread = verdict(request, blocked, null, LIBRARY);
     expect(unread.verdict === "block" && unread.reason).toContain(
       "Run pnpm spec:frontier 737 in a clone of the library for the Tickets to take instead, or deliver the blockers first.",
     );
@@ -172,23 +167,24 @@ describe("verdict", () => {
         permissionDecisionReason: unread.verdict === "block" && unread.reason,
       },
     });
-    const none = verdict(request, blocked, []);
+    const none = verdict(request, blocked, [], LIBRARY);
     expect(none.verdict === "block" && none.reason).toContain(
       "No Ticket of its Spec #737 is takeable now: deliver the blockers first.",
     );
   });
 
-  it.each(["implement", "implement-spec", "ship-spec"])(
+  it.each(["implement", "implement-spec", "ship-spec"] as const)(
     "stops /%s on a Spec with no sub-issue, naming /split-spec",
     (skill) => {
       const result = verdict(
         { event: "UserPromptSubmit", skill, args: "737" },
         facts({ number: 737, isSpec: true }),
         null,
+        LIBRARY,
       );
 
       expect(result.verdict === "block" && result.reason).toBe(
-        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec 737 first.",
+        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec #737 first.",
       );
     },
   );
@@ -198,6 +194,7 @@ describe("verdict", () => {
       { event: "PreToolUse", skill: "split-spec", args: "737" },
       facts({ number: 737, isSpec: true, subIssues: 6, coverageTable: true }),
       null,
+      LIBRARY,
     );
 
     expect(result.verdict === "block" && result.reason).toBe(
@@ -205,12 +202,65 @@ describe("verdict", () => {
     );
   });
 
+  it("names an issue of another repository in full, in the reason and in the commands", () => {
+    const split = verdict(
+      { event: "PreToolUse", skill: "split-spec", args: `${TEMPLATE}#90` },
+      facts({
+        repository: TEMPLATE,
+        number: 90,
+        isSpec: true,
+        subIssues: 2,
+        coverageTable: true,
+      }),
+      null,
+      LIBRARY,
+    );
+    const unsplit = verdict(
+      { event: "PreToolUse", skill: "implement-spec", args: "90" },
+      facts({ repository: TEMPLATE, number: 90, isSpec: true }),
+      null,
+      null,
+    );
+
+    expect(split.verdict === "block" && split.reason).toBe(
+      "phmilk/reforged-ts-template#90 is already split: it has Tickets and a Coverage table, so there is nothing to split (ADR 0025, .claude/hooks/skill-target.mjs). Take a Ticket of its Frontier (pnpm spec:frontier 90 phmilk/reforged-ts-template) with /implement, or check its coverage with pnpm spec:check 90 phmilk/reforged-ts-template.",
+    );
+    expect(unsplit.verdict === "block" && unsplit.reason).toContain(
+      "Run /split-spec phmilk/reforged-ts-template#90 first.",
+    );
+  });
+
+  it.each(["split-spec", "implement-spec", "ship-spec"] as const)(
+    "stops /%s on a closed Spec, saying who closed it",
+    (skill) => {
+      const result = verdict(
+        { event: "UserPromptSubmit", skill, args: "737" },
+        facts({ number: 737, isSpec: true, open: false, closedBy: "alice" }),
+        null,
+        LIBRARY,
+      );
+
+      expect(result.verdict === "block" && result.reason).toBe(
+        `#737 is closed, by @alice: there is nothing left to ${skill === "split-spec" ? "split" : "work"} on it (ADR 0025, .claude/hooks/skill-target.mjs).`,
+      );
+    },
+  );
+
+  it("stops /implement on a closed Ticket, and says so when its closer is unknown", () => {
+    const result = verdict(
+      { event: "PreToolUse", skill: "implement", args: "742" },
+      facts({ open: false, spec: SPEC_737 }),
+      null,
+      LIBRARY,
+    );
+
+    expect(result.verdict === "block" && result.reason).toBe(
+      "#742 is closed: there is nothing left to work on it (ADR 0025, .claude/hooks/skill-target.mjs).",
+    );
+  });
+
   it.each([
-    [
-      "/implement on a takeable Ticket",
-      "implement",
-      facts({ spec: { repository: LIBRARY, number: 737 } }),
-    ],
+    ["/implement on a takeable Ticket", "implement", facts({ spec: SPEC_737 })],
     [
       "/implement-spec on a split Spec",
       "implement-spec",
@@ -232,13 +282,23 @@ describe("verdict", () => {
       facts({ openBlockers: BLOCKERS }),
     ],
     [
-      "/implement on a closed issue",
+      "/implement on a closed issue that is no Ticket",
       "implement",
       facts({ open: false, openBlockers: BLOCKERS }),
     ],
-  ])("passes %s", (_name, skill, issue) => {
+    [
+      "/implement-spec on a closed Ticket: the rule is /implement's",
+      "implement-spec",
+      facts({ open: false, spec: SPEC_737 }),
+    ],
+  ] as const)("passes %s", (_name, skill, issue) => {
     expect(
-      verdict({ event: "UserPromptSubmit", skill, args: "742" }, issue, null),
+      verdict(
+        { event: "UserPromptSubmit", skill, args: "742" },
+        issue,
+        null,
+        LIBRARY,
+      ),
     ).toEqual({ verdict: "pass" });
   });
 });
@@ -426,16 +486,23 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("denies a Skill call of implement-spec on an unsplit Spec of the Template, named in full", () => {
-    const result = runHook(skillCall("implement-spec", `${TEMPLATE}#90`), {
+  it("stops an unsplit Spec on both events, a Template one named in full", () => {
+    const answers = {
+      repo: LIBRARY,
       issue: issueData({
         labels: { nodes: [{ name: "spec" }, { name: "needs-split" }] },
       }),
-    });
+    };
+
+    const call = runHook(
+      skillCall("implement-spec", `${TEMPLATE}#90`),
+      answers,
+    );
+    const prompt = runHook(typed("/implement 737"), answers);
 
     const reason =
-      "#90 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec 90 first.";
-    expect(result).toEqual({
+      "phmilk/reforged-ts-template#90 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec phmilk/reforged-ts-template#90 first.";
+    expect(call).toEqual({
       code: 0,
       output: {
         hookSpecificOutput: {
@@ -444,8 +511,72 @@ describe("the skill-target script", () => {
           permissionDecisionReason: reason,
         },
       },
+      // Named in full: no need to ask which repository the clone is.
       calls: ["api graphql --input -"],
     });
+    expect(prompt.output).toEqual({
+      decision: "block",
+      reason:
+        "#737 is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (ADR 0025, .claude/hooks/skill-target.mjs). Run /split-spec #737 first.",
+    });
+  });
+
+  it("denies a Skill call of implement on a blocked Ticket too", () => {
+    const result = runHook(skillCall("implement", "742"), {
+      repo: LIBRARY,
+      issue: issueData({
+        blockedBy: {
+          nodes: [
+            {
+              number: 9,
+              state: "OPEN",
+              repository: { nameWithOwner: LIBRARY },
+            },
+          ],
+        },
+        parent: SPEC_PARENT,
+      }),
+      spec: SPEC_DATA,
+    });
+
+    expect(result.output).toMatchObject({
+      hookSpecificOutput: {
+        permissionDecision: "deny",
+        permissionDecisionReason: expect.stringContaining(
+          "Takeable now in its Spec #737: #740 Ticket 740.",
+        ) as unknown,
+      },
+    });
+  });
+
+  it("stops a closed Spec and a closed Ticket on both events, naming who closed them", () => {
+    const closed = (more: Record<string, unknown>) => ({
+      repo: LIBRARY,
+      issue: issueData({
+        state: "CLOSED",
+        timelineItems: { nodes: [{ actor: { login: "alice" } }] },
+        ...more,
+      }),
+    });
+    const spec = closed({ labels: { nodes: [{ name: "spec" }] } });
+    const ticket = closed({ parent: SPEC_PARENT });
+
+    expect(runHook(typed("/split-spec 737"), spec).output).toEqual({
+      decision: "block",
+      reason:
+        "#737 is closed, by @alice: there is nothing left to split on it (ADR 0025, .claude/hooks/skill-target.mjs).",
+    });
+    expect(runHook(skillCall("ship-spec", "737"), spec).output).toMatchObject({
+      hookSpecificOutput: { permissionDecision: "deny" },
+    });
+    expect(runHook(typed("/implement 742"), ticket).output).toEqual({
+      decision: "block",
+      reason:
+        "#742 is closed, by @alice: there is nothing left to work on it (ADR 0025, .claude/hooks/skill-target.mjs).",
+    });
+    expect(runHook(skillCall("implement", "742"), ticket).output).toMatchObject(
+      { hookSpecificOutput: { permissionDecision: "deny" } },
+    );
   });
 
   it("stops split-spec on a Spec with Tickets and a Coverage table, on both events", () => {

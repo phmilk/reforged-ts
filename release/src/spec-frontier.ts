@@ -303,10 +303,10 @@ const TICKET_PAGE = 100;
 /** More blockers than a Ticket has: the query reads them in one page. */
 const BLOCKER_PAGE = 50;
 
-// An issue holds at most ten assignees, and a Ticket a few pull requests.
 /**
  * The Frontier query's one GraphQL query: the token's login and Spec
- * `$number` of `$owner/$name` with its Tickets. The skill hook sends it
+ * `$number` of `$owner/$name` with its Tickets (an issue holds at most ten
+ * assignees, and a Ticket a few pull requests). The skill hook sends it
  * through `gh` and reads the answer with `specOf`, so that both agree.
  */
 export const SPEC_QUERY = `query($owner: String!, $name: String!, $number: Int!) {

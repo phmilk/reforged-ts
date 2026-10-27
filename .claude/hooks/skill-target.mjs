@@ -12,22 +12,27 @@
 // instead, when:
 //
 // - /implement names an open issue with an open blocker: the blockers, and
-//   the Tickets its Spec offers now, as `pnpm spec:frontier` reads them;
+//   the Tickets its Spec offers now, read with spec:frontier's own query and
+//   rules;
 // - /implement, /implement-spec or /ship-spec names an open Spec with no
 //   sub-issue: /split-spec first;
 // - /split-spec names a Spec with Tickets and a Coverage table: nothing to
-//   split. A split Spec with no table is split-spec's existing-split path.
+//   split. A split Spec with no table is split-spec's existing-split path;
+// - /split-spec, /implement-spec or /ship-spec names a closed Spec, or
+//   /implement a closed Ticket: closed, and by whom; nothing to run.
 //
-// With no issue reference it is silent; when `gh` or the network fails it
-// lets the skill run with a one-line warning, since the claim check still
-// holds the rule on the pull request. requestOf, issueRefOf and verdict are
-// pure; the rest reads GitHub through `gh` and prints the event's output.
-// It always exits 0.
+// An issue of the clone's repository is named #n, any other in full, in
+// the reason and in the commands it gives. With no issue reference it is
+// silent; when `gh` or the network fails it lets the skill run with a
+// one-line warning, since the claim check still holds the rule on the pull
+// request. requestOf, issueRefOf and verdict are pure; the rest reads
+// GitHub through `gh` and prints the event's output. It always exits 0.
 //
 // Dependency-free: it runs on the Node that runs the session, before any
 // `pnpm install`. Both repositories run it (.claude/shared.json, ADR 0024).
 // The takeable Tickets come from the library's release/src/spec-frontier.ts,
-// imported when the project holds it; the Template's run names the command.
+// imported when the project holds it (a Node that strips types, as the
+// session's does); the Template's run names the command to run instead.
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { join } from "node:path";
@@ -39,7 +44,7 @@ import { fileURLToPath, pathToFileURL, URL } from "node:url";
 /**
  * What the check looks at: the event, the skill and its arguments.
  *
- * @typedef {{ event: "UserPromptSubmit" | "PreToolUse", skill: string, args: string }} Request
+ * @typedef {{ event: "UserPromptSubmit" | "PreToolUse", skill: Skill, args: string }} Request
  */
 
 /** @typedef {{ repository: string, number: number }} IssueRef */
@@ -51,11 +56,12 @@ import { fileURLToPath, pathToFileURL, URL } from "node:url";
  * @property {string} repository `owner/name`
  * @property {number} number
  * @property {boolean} open
+ * @property {string | null} closedBy The login that closed it, when closed and known.
  * @property {boolean} isSpec Labelled `spec`.
  * @property {number} subIssues How many sub-issues it has, open or closed.
  * @property {boolean} coverageTable Whether its body holds a `## Coverage table` section.
  * @property {readonly IssueRef[]} openBlockers
- * @property {IssueRef | null} spec Its parent, when that is a Spec.
+ * @property {IssueRef | null} spec Its parent, when that is a Spec: it is a Ticket.
  */
 
 /**
@@ -64,10 +70,28 @@ import { fileURLToPath, pathToFileURL, URL } from "node:url";
  * @typedef {{ verdict: "pass" } | { verdict: "block", reason: string, output: object }} Verdict
  */
 
-/** The skills the check holds, by the name a prompt or the Skill tool gives. */
+/** @type {readonly Skill[]} */
 const SKILLS = ["implement", "implement-spec", "ship-spec", "split-spec"];
 
+/** The skills that work a Spec, or one of its Tickets, rather than split it. */
+/** @type {readonly Skill[]} */
+const WORKING = ["implement", "implement-spec", "ship-spec"];
+
+/** The skills that act on a Spec as a whole. */
+/** @type {readonly Skill[]} */
+const ON_A_SPEC = ["implement-spec", "ship-spec", "split-spec"];
+
 const SOURCE = "ADR 0025, .claude/hooks/skill-target.mjs";
+
+/**
+ * `name` as one of the check's skills, or `null`.
+ *
+ * @param {string} name
+ * @returns {Skill | null}
+ */
+function skillOf(name) {
+  return SKILLS.find((skill) => skill === name) ?? null;
+}
 
 /**
  * The skill and its arguments of a hook input, or `null` when it is none
@@ -83,8 +107,8 @@ export function requestOf(input) {
     typeof input.prompt === "string"
   ) {
     const match = /^\s*\/([\w-]+)(?:\s+([\s\S]*))?$/.exec(input.prompt);
-    const skill = match?.[1] ?? "";
-    if (!SKILLS.includes(skill)) return null;
+    const skill = skillOf(match?.[1] ?? "");
+    if (skill === null) return null;
     return {
       event: "UserPromptSubmit",
       skill,
@@ -95,14 +119,15 @@ export function requestOf(input) {
     const toolInput = /** @type {Record<string, unknown>} */ (
       input.tool_input ?? {}
     );
-    const name =
+    const skill = skillOf(
       typeof toolInput.skill === "string"
         ? toolInput.skill.slice(toolInput.skill.indexOf(":") + 1)
-        : "";
-    if (!SKILLS.includes(name)) return null;
+        : "",
+    );
+    if (skill === null) return null;
     return {
       event: "PreToolUse",
-      skill: name,
+      skill,
       args: typeof toolInput.args === "string" ? toolInput.args.trim() : "",
     };
   }
@@ -123,21 +148,32 @@ export function issueRefOf(args, repository) {
       args,
     );
   if (match === null) return null;
-  const owned = match[1] ?? match[3];
+  const named = match[1] ?? match[3];
   const number = match[2] ?? match[4] ?? match[5] ?? match[6];
-  return { repository: owned ?? repository, number: Number(number) };
+  return { repository: named ?? repository, number: Number(number) };
 }
 
 /**
- * `ref` as said from `home`: `#n` there, `owner/name#n` elsewhere.
+ * `ref` as said from the clone's repository `home`: `#n` there,
+ * `owner/name#n` elsewhere, or always when `home` is unknown.
  *
  * @param {IssueRef} ref
- * @param {string} home
+ * @param {string | null} home
  */
 function refName(ref, home) {
   return ref.repository === home
     ? `#${String(ref.number)}`
     : `${ref.repository}#${String(ref.number)}`;
+}
+
+/**
+ * The repository argument a command takes for `ref`: none in `home`.
+ *
+ * @param {IssueRef} ref
+ * @param {string | null} home
+ */
+function repositoryArg(ref, home) {
+  return ref.repository === home ? "" : ` ${ref.repository}`;
 }
 
 /**
@@ -176,49 +212,63 @@ function block(event, reason) {
 }
 
 /**
- * The check's verdict on `request` for the issue `issue`. `takeable` lists
- * the Tickets of the issue's Spec takeable now, each as a line, or is
- * `null` when the Frontier could not be read here.
+ * What to run instead of implementing a blocked issue: a takeable Ticket of
+ * its Spec, the command that lists them, or its blockers first.
+ *
+ * @param {IssueRef | null} spec
+ * @param {readonly string[] | null} takeable
+ * @param {string | null} home
+ */
+function insteadOfBlocked(spec, takeable, home) {
+  if (spec === null) return "Deliver the blockers first.";
+  if (takeable === null) {
+    return `Run pnpm spec:frontier ${String(spec.number)}${repositoryArg(spec, home)} in a clone of the library for the Tickets to take instead, or deliver the blockers first.`;
+  }
+  if (takeable.length === 0) {
+    return `No Ticket of its Spec ${refName(spec, home)} is takeable now: deliver the blockers first.`;
+  }
+  return `Takeable now in its Spec ${refName(spec, home)}: ${takeable.join("; ")}. Run /implement on one of them instead, or deliver the blockers first.`;
+}
+
+/**
+ * The check's verdict on `request` for the issue `issue`, named from the
+ * clone's repository `home` (`null`: always in full). `takeable` lists the
+ * Tickets of the issue's Spec takeable now, each as a line, or is `null`
+ * when the Frontier could not be read here.
  *
  * @param {Request} request
  * @param {IssueFacts} issue
  * @param {readonly string[] | null} takeable
+ * @param {string | null} home
  * @returns {Verdict}
  */
-export function verdict(request, issue, takeable) {
+export function verdict(request, issue, takeable, home) {
   const { skill } = request;
-  const home = issue.repository;
-  const n = String(issue.number);
-  if (!issue.open) return { verdict: "pass" };
+  const name = refName(issue, home);
+  if (!issue.open) {
+    const closedTarget =
+      (ON_A_SPEC.includes(skill) && issue.isSpec) ||
+      (skill === "implement" && issue.spec !== null);
+    if (!closedTarget) return { verdict: "pass" };
+    const by = issue.closedBy === null ? "" : `, by @${issue.closedBy}`;
+    return block(
+      request.event,
+      `${name} is closed${by}: there is nothing left to ${skill === "split-spec" ? "split" : "work"} on it (${SOURCE}).`,
+    );
+  }
   if (skill === "implement" && issue.openBlockers.length > 0) {
     const blockers = andList(
       issue.openBlockers.map((ref) => refName(ref, home)),
     );
-    const spec = issue.spec === null ? null : refName(issue.spec, home);
-    const specNumber = issue.spec === null ? "" : String(issue.spec.number);
-    const next =
-      spec === null
-        ? "Deliver the blockers first."
-        : takeable === null
-          ? `Run pnpm spec:frontier ${specNumber}${issue.spec?.repository === home ? "" : ` ${issue.spec?.repository ?? ""}`} in a clone of the library for the Tickets to take instead, or deliver the blockers first.`
-          : takeable.length === 0
-            ? `No Ticket of its Spec ${spec} is takeable now: deliver the blockers first.`
-            : `Takeable now in its Spec ${spec}: ${takeable.join("; ")}. Run /implement on one of them instead, or deliver the blockers first.`;
     return block(
       request.event,
-      `#${n} is blocked by ${blockers}, still open: a Ticket is implemented once its blockers are closed (${SOURCE}). ${next}`,
+      `${name} is blocked by ${blockers}, still open: a Ticket is implemented once its blockers are closed (${SOURCE}). ${insteadOfBlocked(issue.spec, takeable, home)}`,
     );
   }
-  if (
-    (skill === "implement" ||
-      skill === "implement-spec" ||
-      skill === "ship-spec") &&
-    issue.isSpec &&
-    issue.subIssues === 0
-  ) {
+  if (WORKING.includes(skill) && issue.isSpec && issue.subIssues === 0) {
     return block(
       request.event,
-      `#${n} is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (${SOURCE}). Run /split-spec ${n} first.`,
+      `${name} is a Spec with no Ticket yet (needs-split): an unsplit Spec is not worked, whole or in part (${SOURCE}). Run /split-spec ${name} first.`,
     );
   }
   if (
@@ -227,9 +277,10 @@ export function verdict(request, issue, takeable) {
     issue.subIssues > 0 &&
     issue.coverageTable
   ) {
+    const number = `${String(issue.number)}${repositoryArg(issue, home)}`;
     return block(
       request.event,
-      `#${n} is already split: it has Tickets and a Coverage table, so there is nothing to split (${SOURCE}). Take a Ticket of its Frontier (pnpm spec:frontier ${n}) with /implement, or check its coverage with pnpm spec:check ${n}.`,
+      `${name} is already split: it has Tickets and a Coverage table, so there is nothing to split (${SOURCE}). Take a Ticket of its Frontier (pnpm spec:frontier ${number}) with /implement, or check its coverage with pnpm spec:check ${number}.`,
     );
   }
   return { verdict: "pass" };
@@ -304,11 +355,16 @@ const ISSUE = `query($owner: String!, $name: String!, $number: Int!) {
       subIssues(first: 1) { totalCount }
       blockedBy(first: 50) { nodes { number state repository { nameWithOwner } } }
       parent { number repository { nameWithOwner } labels(first: 50) { nodes { name } } }
+      timelineItems(itemTypes: [CLOSED_EVENT], last: 1) { nodes { ... on ClosedEvent { actor { login } } } }
     }
   }
 }`;
 
 /**
+ * Whether a `labels` connection holds the Spec label, `spec`: a copy of
+ * `SPEC_LABEL` of release/src/spec-frontier.ts, since the Template has no
+ * release package.
+ *
  * @param {unknown} labels
  * @returns {boolean}
  */
@@ -319,6 +375,14 @@ function hasSpecLabel(labels) {
     (/** @type {any} */ label) => label?.name === "spec",
   );
 }
+
+/**
+ * A Spec's Coverage table, the section `split-spec` writes: its level-two
+ * heading, read as release/src/spec-check.ts reads `TABLE_SECTION` (a copy,
+ * since spec-check.ts is not self-contained), save that a heading inside
+ * fenced code counts here.
+ */
+const COVERAGE_TABLE = /^##\s+coverage table\s*#*\s*$/im;
 
 /**
  * The facts of issue `ref`, read from GitHub.
@@ -337,13 +401,15 @@ function readIssue(ref) {
     );
   }
   const parent = issue.parent;
+  const closer = issue.timelineItems?.nodes?.at(-1)?.actor?.login;
   return {
     repository: ref.repository,
     number: ref.number,
     open: issue.state === "OPEN",
+    closedBy: typeof closer === "string" ? closer : null,
     isSpec: hasSpecLabel(issue.labels),
     subIssues: Number(issue.subIssues?.totalCount ?? 0),
-    coverageTable: /^## Coverage table[ \t]*$/m.test(String(issue.body ?? "")),
+    coverageTable: COVERAGE_TABLE.test(String(issue.body ?? "")),
     openBlockers: (issue.blockedBy?.nodes ?? [])
       .filter((/** @type {any} */ node) => node?.state === "OPEN")
       .map((/** @type {any} */ node) => ({
@@ -361,15 +427,17 @@ function readIssue(ref) {
 }
 
 /**
- * The takeable Tickets of Spec `spec`, one line each, as the library's
- * Frontier query reads them for the `gh` login; `null` when the project
- * holds no release/src/spec-frontier.ts (the Template) or it fails.
+ * The takeable Tickets of Spec `spec`, one line each named from `home`, as
+ * the library's Frontier query reads them for the `gh` login; `null` when
+ * the project holds no release/src/spec-frontier.ts (the Template) or it
+ * fails.
  *
  * @param {string} projectDir
  * @param {IssueRef} spec
+ * @param {string | null} home
  * @returns {Promise<string[] | null>}
  */
-async function takeableOf(projectDir, spec) {
+async function takeableOf(projectDir, spec, home) {
   const module = join(projectDir, "release", "src", "spec-frontier.ts");
   if (!existsSync(module)) return null;
   try {
@@ -384,7 +452,7 @@ async function takeableOf(projectDir, spec) {
     const answer = frontier.frontierQuery(read.spec, read.login);
     return answer.takeable.map(
       (/** @type {any} */ ticket) =>
-        `${refName(ticket, spec.repository)} ${String(ticket.title)}`,
+        `${refName(ticket, home)} ${String(ticket.title)}`,
     );
   } catch {
     return null;
@@ -428,23 +496,23 @@ function warning(message) {
 export async function run(input, projectDir) {
   const request = requestOf(input);
   if (request === null) return null;
-  // A bare number or #n names an issue of this clone's repository.
+  // A bare number or #n names an issue of this clone's repository; an
+  // issue named in full is named in full again.
   const named = issueRefOf(request.args, "");
   if (named === null) return null;
   try {
-    const ref =
-      named.repository === ""
-        ? { repository: currentRepository(), number: named.number }
-        : named;
-    const issue = readIssue(ref);
+    const home = named.repository === "" ? currentRepository() : null;
+    const issue = readIssue(
+      home === null ? named : { repository: home, number: named.number },
+    );
     const takeable =
       request.skill === "implement" &&
       issue.open &&
       issue.openBlockers.length > 0 &&
       issue.spec !== null
-        ? await takeableOf(projectDir, issue.spec)
+        ? await takeableOf(projectDir, issue.spec, home)
         : null;
-    const result = verdict(request, issue, takeable);
+    const result = verdict(request, issue, takeable, home);
     return result.verdict === "block" ? result.output : null;
   } catch (error) {
     return warning(error instanceof Error ? error.message : String(error));
