@@ -123,11 +123,14 @@ export function frontierQuery(
   };
 }
 
-/** `ref` as printed from repository `home`: `#n` there, else `owner/name#n`. */
+/** `ref` in full, `owner/name#n`. */
+function fullRef(ref: IssueRef): string {
+  return `${ref.repository}#${String(ref.number)}`;
+}
+
+/** `ref` as printed from repository `home`: `#n` there, else in full. */
 function displayRef(home: string, ref: IssueRef): string {
-  return ref.repository === home
-    ? `#${String(ref.number)}`
-    : `${ref.repository}#${String(ref.number)}`;
+  return ref.repository === home ? `#${String(ref.number)}` : fullRef(ref);
 }
 
 /** The lines of one list: one per Ticket, or `- none`. */
@@ -348,8 +351,8 @@ function readRef(node: unknown, what: string): IssueRef {
 
 /** A Ticket from its sub-issue node; an error when it has more blockers than were read. */
 function ticketOf(node: unknown, home: string): FetchedTicket {
-  const { repository, number } = readRef(node, "a Ticket");
-  const name = displayRef(home, { repository, number });
+  const ref = readRef(node, "a Ticket");
+  const name = displayRef(home, ref);
   const title = at(node, "title");
   const blockedBy = at(node, "blockedBy");
   const blockers = nodesOf(blockedBy).map((blocker) => ({
@@ -363,8 +366,7 @@ function ticketOf(node: unknown, home: string): FetchedTicket {
     );
   }
   return {
-    repository,
-    number,
+    ...ref,
     title: typeof title === "string" ? title : "",
     state: issueState(at(node, "state"), name),
     assignees: nodesOf(at(node, "assignees")).flatMap((user) =>
@@ -397,7 +399,7 @@ async function readSpec(
   const issue = at(data, "repository", "issue");
   if (typeof login !== "string" || !isRecord(issue)) {
     throw new SpecFrontierError(
-      `The query answered no login or no issue ${repository}#${String(number)}.`,
+      `The query answered no login or no issue ${fullRef({ repository, number })}.`,
     );
   }
   const subIssues = at(issue, "subIssues");
@@ -405,7 +407,7 @@ async function readSpec(
   const total = at(subIssues, "totalCount");
   if (typeof total !== "number" || total > nodes.length) {
     throw new SpecFrontierError(
-      `#${String(number)} has ${String(total)} sub-issues, more than the ${String(nodes.length)} read.`,
+      `${fullRef({ repository, number })} has ${String(total)} sub-issues, more than the ${String(nodes.length)} read.`,
     );
   }
   return {
@@ -513,11 +515,12 @@ function argumentsOf(
 }
 
 /**
- * Prints the Frontier query's answer on Spec `args[0]` (`737` or `#737`) of repository
- * `args[1]` (`owner/name`, the library when absent) for the login of the
- * token: `GH_TOKEN`, else `GITHUB_TOKEN`, else `gh auth token`, through the
- * API at `GITHUB_API_URL`. Exit codes: 0 an answer, 1 a state it cannot
- * read (no token, GitHub's error, an issue that is not a Spec), 2 usage.
+ * Prints the Frontier query's answer on Spec `args[0]` (`737` or `#737`)
+ * of repository `args[1]` (`owner/name`, the library when absent) for
+ * the login of the token: `GH_TOKEN`, else `GITHUB_TOKEN`, else `gh auth
+ * token`, through the API at `GITHUB_API_URL`. Exit codes: 0 an answer, 1
+ * a state it cannot read (no token, GitHub's error, an issue that is not a
+ * Spec), 2 usage.
  */
 export async function main(
   args: readonly string[],
@@ -544,7 +547,7 @@ export async function main(
     );
     if (!spec.spec) {
       throw new SpecFrontierError(
-        `${spec.repository}#${String(spec.number)} is not a Spec: it is not labelled ${SPEC_LABEL}.`,
+        `${fullRef(spec)} is not a Spec: it is not labelled ${SPEC_LABEL}.`,
       );
     }
     output.stdout(renderAnswer(spec, frontierQuery(spec, login)));

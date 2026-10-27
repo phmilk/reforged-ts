@@ -39,7 +39,7 @@ function spec(tickets: FetchedTicket[]): FetchedSpec {
 
 describe("frontierQuery", () => {
   it("offers an open Ticket with no blocker, and not one blocked by an open issue", () => {
-    const frontier = frontierQuery(
+    const answer = frontierQuery(
       spec([
         ticket(11),
         ticket(12, {
@@ -55,20 +55,20 @@ describe("frontierQuery", () => {
       "alice",
     );
 
-    expect(frontier.takeable.map(({ number }) => number)).toEqual([11, 13]);
-    expect(frontier.held).toEqual([]);
-    expect(frontier.heldByOthers).toEqual([]);
+    expect(answer.takeable.map(({ number }) => number)).toEqual([11, 13]);
+    expect(answer.held).toEqual([]);
+    expect(answer.heldByOthers).toEqual([]);
   });
 
   it("lists a Ticket held by another login as theirs, not takeable", () => {
-    const frontier = frontierQuery(
+    const answer = frontierQuery(
       spec([ticket(11, { assignees: ["bob"] }), ticket(12)]),
       "alice",
     );
 
-    expect(frontier.takeable.map(({ number }) => number)).toEqual([12]);
-    expect(frontier.held).toEqual([]);
-    expect(frontier.heldByOthers.map(({ number }) => number)).toEqual([11]);
+    expect(answer.takeable.map(({ number }) => number)).toEqual([12]);
+    expect(answer.held).toEqual([]);
+    expect(answer.heldByOthers.map(({ number }) => number)).toEqual([11]);
   });
 
   it("lists a Ticket the login holds with its open pull request, still takeable by it", () => {
@@ -78,17 +78,17 @@ describe("frontierQuery", () => {
     });
     const paired = ticket(12, { assignees: ["bob", "alice"] });
 
-    const frontier = frontierQuery(spec([held, paired, ticket(13)]), "alice");
+    const answer = frontierQuery(spec([held, paired, ticket(13)]), "alice");
 
     // "No assignee other than itself": its own Ticket stays takeable, a
     // paired one does not.
-    expect(frontier.takeable.map(({ number }) => number)).toEqual([11, 13]);
-    expect(frontier.held).toEqual([held, paired]);
-    expect(frontier.heldByOthers).toEqual([]);
+    expect(answer.takeable.map(({ number }) => number)).toEqual([11, 13]);
+    expect(answer.held).toEqual([held, paired]);
+    expect(answer.heldByOthers).toEqual([]);
   });
 
   it("offers a Ticket in the Template, and ignores a sub-issue outside the Board repositories", () => {
-    const frontier = frontierQuery(
+    const answer = frontierQuery(
       spec([
         ticket(117, { repository: TEMPLATE }),
         ticket(118, {
@@ -101,12 +101,12 @@ describe("frontierQuery", () => {
       "alice",
     );
 
-    expect(frontier.takeable).toEqual([ticket(117, { repository: TEMPLATE })]);
-    expect(frontier.heldByOthers).toEqual([]);
+    expect(answer.takeable).toEqual([ticket(117, { repository: TEMPLATE })]);
+    expect(answer.heldByOthers).toEqual([]);
   });
 
   it("leaves a closed Ticket out of every list", () => {
-    const frontier = frontierQuery(
+    const answer = frontierQuery(
       spec([
         ticket(11, { state: "CLOSED" }),
         ticket(12, { state: "CLOSED", assignees: ["alice"] }),
@@ -115,7 +115,7 @@ describe("frontierQuery", () => {
       "alice",
     );
 
-    expect(frontier).toEqual({
+    expect(answer).toEqual({
       login: "alice",
       takeable: [],
       held: [],
@@ -124,7 +124,7 @@ describe("frontierQuery", () => {
   });
 
   it("offers nothing on a Spec whose open Tickets are all other logins'", () => {
-    const frontier = frontierQuery(
+    const answer = frontierQuery(
       spec([
         ticket(11, { assignees: ["bob"] }),
         ticket(12, { repository: TEMPLATE, assignees: ["carol"] }),
@@ -133,9 +133,9 @@ describe("frontierQuery", () => {
       "alice",
     );
 
-    expect(frontier.takeable).toEqual([]);
-    expect(frontier.held).toEqual([]);
-    expect(frontier.heldByOthers.map(({ number }) => number)).toEqual([11, 12]);
+    expect(answer.takeable).toEqual([]);
+    expect(answer.held).toEqual([]);
+    expect(answer.heldByOthers.map(({ number }) => number)).toEqual([11, 12]);
   });
 });
 
