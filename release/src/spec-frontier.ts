@@ -304,7 +304,12 @@ const TICKET_PAGE = 100;
 const BLOCKER_PAGE = 50;
 
 // An issue holds at most ten assignees, and a Ticket a few pull requests.
-const SPEC = `query($owner: String!, $name: String!, $number: Int!) {
+/**
+ * The Frontier query's one GraphQL query: the token's login and Spec
+ * `$number` of `$owner/$name` with its Tickets. The skill hook sends it
+ * through `gh` and reads the answer with `specOf`, so that both agree.
+ */
+export const SPEC_QUERY = `query($owner: String!, $name: String!, $number: Int!) {
   viewer { login }
   repository(owner: $owner, name: $name) {
     issue(number: $number) {
@@ -390,11 +395,23 @@ async function readSpec(
   number: number,
 ): Promise<{ login: string; spec: FetchedSpec }> {
   const slash = repository.indexOf("/");
-  const data = await graphql(settings, SPEC, {
+  const data = await graphql(settings, SPEC_QUERY, {
     owner: repository.slice(0, slash),
     name: repository.slice(slash + 1),
     number,
   });
+  return specOf(data, repository, number);
+}
+
+/**
+ * The login and Spec `number` of `repository` from the `data` that
+ * `SPEC_QUERY` answered; a `SpecFrontierError` on an answer it cannot read.
+ */
+export function specOf(
+  data: unknown,
+  repository: string,
+  number: number,
+): { login: string; spec: FetchedSpec } {
   const login = at(data, "viewer", "login");
   const issue = at(data, "repository", "issue");
   if (typeof login !== "string" || !isRecord(issue)) {
