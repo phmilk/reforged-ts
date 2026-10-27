@@ -40,7 +40,7 @@ stateDiagram-v2
   state "a draft pull request" as draft
   state "a pull request in review" as review
   state "stale" as stale
-  state "a Spec, not split" as spec_unsplit
+  state "a Spec, not split: needs-split" as spec_unsplit
   state "a Spec, its Tickets worked" as spec
   state "a Spec, its Tickets closed" as spec_delivered
   state "closed" as closed
@@ -54,7 +54,7 @@ stateDiagram-v2
   draft : In progress
   stale : In progress
   review : In review
-  spec_unsplit : Ready
+  spec_unsplit : Backlog
   spec : In progress at an assignee, else its open Tickets' highest
   spec_delivered : In progress, at the logins of its Tickets
   closed : Done
@@ -78,7 +78,7 @@ stateDiagram-v2
   claimed --> stale : 3 days without a commit or a comment
   draft --> stale : 3 days without a commit or a comment
   stale --> claimed : takeover
-  spec_unsplit --> spec : /to-tickets splits it
+  spec_unsplit --> spec : its first Ticket, by /to-tickets or by hand; the board swaps needs-split for ready-for-agent
   spec --> spec : a Ticket claimed, its login joins the Spec
   spec --> spec_delivered : its last open Ticket merged
   spec_delivered --> spec_delivered : the coverage check red, the gaps commented
@@ -98,13 +98,13 @@ stateDiagram-v2
 | a draft pull request                 | In progress                                                | "The check" below                                                                                                                                               |
 | a pull request in review             | In review                                                  | "The board" below                                                                                                                                               |
 | stale                                | In progress                                                | "Stale" below, with the takeover                                                                                                                                |
-| a Spec, not split                    | Ready                                                      | [Kind labels](triage-labels.md#kind-labels); "Claimable" below: not claimed                                                                                     |
+| a Spec, not split: `needs-split`     | Backlog                                                    | [State labels](triage-labels.md#state-labels); "Claimable" below: not claimable                                                                                 |
 | a Spec, its Tickets worked           | In progress at an assignee, else its open Tickets' highest | "A Spec's assignees" below; "The board" for the Status                                                                                                          |
 | a Spec, its Tickets closed           | In progress, at the logins of its Tickets                  | "Closing a Spec" below; [A Spec's coverage](#a-specs-coverage) for the check                                                                                    |
 | closed                               | Done                                                       | "A pull request names the Tickets it delivers" and "Closing a Spec" below; a `wontfix` issue, closed by triage                                                  |
 
 - **First write.** Before working on an issue, assign yourself: `gh issue edit <n> --add-assignee @me`, before the branch, the first commit, any comment and the pull request; a Ticket, with its Spec in the same command ("A Spec's assignees" below). Read the issue back: if a Ticket or an issue outside a Spec now has two assignees, the later one withdraws (`--remove-assignee @me`) and says so in a comment.
-- **Claimable.** An open issue with no assignee that is `ready-for-agent` or `ready-for-human`, a Ticket on its Spec's Frontier, or a ticket of a wayfinder map on its frontier (no open blocker). Not claimable: `needs-triage` and `needs-info` (triaged, not claimed), a map, and a Spec, which has no Claim of its own. Triage and splitting are not claimed: their writes are the brief, the labels and the new issues; whoever implements claims. A bug you find and fix at once: open the issue and claim it in one gesture.
+- **Claimable.** An open issue with no assignee that is `ready-for-agent` or `ready-for-human`, a Ticket on its Spec's Frontier, or a ticket of a wayfinder map on its frontier (no open blocker). Not claimable: `needs-triage` and `needs-info` (triaged, not claimed), a map, and a Spec, which has no Claim of its own. An unsplit Spec (`needs-split`, no Ticket yet) is not worked at all, whole or in part: it is split first, and its Tickets are claimed once they exist (ADR 0025). Triage and splitting are not claimed: their writes are the brief, the labels and the new issues; whoever implements claims. A bug you find and fix at once: open the issue and claim it in one gesture.
 - **One login per issue**, for a Ticket and for an issue outside a Spec. One assigned to another login is theirs: do not add yourself, do not post a brief on it, do not open a pull request that closes it. A second assignee is added only by the first, for pairing; any other two assignees are a conflict to resolve, not work in pair. A Spec is the exception: it carries every login on its Tickets.
 - **One Claim at a time**: one issue, or Tickets of one Spec. A Claim means working now, not a reservation: say what you will take next in a comment, and let the native blocked-by order the Tickets. A Ticket is claimed when its work starts, Frontier by Frontier, never ahead; whoever runs `implement-spec` claims every free Ticket of the Spec at once, since its one pull request delivers them: `gh issue edit <ticket>... <spec> --add-assignee @me`. A Ticket already assigned to another login stays theirs.
 - **A Spec's assignees.** A Spec's assignees are every login that holds or delivered one of its Tickets, and nothing more: an assignee on a Spec claims none of it. Claiming a Ticket is one command over the Ticket and its Spec, `gh issue edit <ticket> <spec> --add-assignee @me`; the Spec is joined only with a Ticket. `gh issue edit` takes the issues of one repository only ("multiple issues must be in same repo"), so for a Ticket and its Spec in different Board repositories, the two commands go on one line, by their URLs: `gh issue edit <ticket-url> --add-assignee @me && gh issue edit <spec-url> --add-assignee @me`. A login that delivered a Ticket stays on the Spec until it closes; a login leaves the Spec only when it releases a Ticket without having delivered any, and holds no other Ticket of it.

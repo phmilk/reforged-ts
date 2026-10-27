@@ -17,7 +17,8 @@ inputs:
   repository:
     description: >
       The name of another repository of this one's owner to scope the token
-      to, instead of this one (reforged-ts-template); empty for this one.
+      to, instead of this one (reforged-ts-template), or several,
+      comma-separated (reforged-ts,reforged-ts-template); empty for this one.
     required: false
     default: ""
   permission-contents:
