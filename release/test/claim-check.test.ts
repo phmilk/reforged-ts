@@ -5,9 +5,11 @@ import {
   MAX_ASSIGNMENTS,
   planIssue,
   planPullRequest,
+  SPEC_MARKER,
   type ClosingIssue,
   type ClosingPullRequest,
   type IssueInput,
+  type ParentSpec,
   type PullRequestInput,
 } from "../src/claim-check.js";
 import { readWorkflow } from "./support/workflows.js";
@@ -30,10 +32,14 @@ const TEXT_5 =
 const TEXT_6 = "**Claim conflict** resolved.";
 const TEXT_7 = "**Claim check** passed.";
 
+// The texts on a Ticket's Spec: #10 is the Spec of #12.
+const TEXT_SPEC_JOINED =
+  '**Claim check.** Added @alice to #10, the Spec of #12: a Spec carries every login on its Tickets. Join it in the command that claims a Ticket: `gh issue edit 12 10 --add-assignee @me`. See `docs/agents/issue-tracker.md`, "Claim".';
+
 /** A sticky comment's body: the marker, then one text per issue. */
 const body = (...texts: string[]) => [MARKER, ...texts].join("\n\n");
 
-/** An issue of this repository, assignable to the author. */
+/** An issue of this repository, assignable to the author, outside a Spec. */
 function issue(
   number: number,
   assignees: string[] = [],
@@ -42,6 +48,23 @@ function issue(
   return {
     repository: REPOSITORY,
     number,
+    assignees,
+    authorAssignable: true,
+    spec: null,
+    joinComment: null,
+    ...more,
+  };
+}
+
+/** The Spec #10 of this repository, the parent of a Ticket, assignable to the author. */
+function spec(
+  assignees: string[] = [],
+  more: Partial<ParentSpec> = {},
+): ParentSpec {
+  return {
+    repository: REPOSITORY,
+    number: 10,
+    url: `https://github.com/${REPOSITORY}/issues/10`,
     assignees,
     authorAssignable: true,
     ...more,
@@ -239,6 +262,144 @@ describe("planPullRequest", () => {
     expect(plan.comments[0]?.body).toContain("and #14 was not.");
   });
 
+  it("adds the author to the parent Spec of a Ticket it closes when they are missing, and says so", () => {
+    const plan = planPullRequest(
+      pullRequest([issue(12, [], { spec: spec(["bob"]) })]),
+    );
+
+    expect(plan).toEqual({
+      verdict: "passed",
+      assignments: [
+        { issue: 12, login: "alice" },
+        { issue: 10, login: "alice" },
+      ],
+      comments: [
+        { number: 34, id: null, body: body(TEXT_1, TEXT_SPEC_JOINED) },
+      ],
+      summary: [
+        "- #12: no assignee; assigned to the author @alice.",
+        "- #10, the Spec of #12: the author @alice is not among its assignees; assigned to them.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("leaves the parent Spec alone when the author is on it, or holds none of the Tickets it closes", () => {
+    const onSpec = planPullRequest(
+      pullRequest([issue(12, ["alice"], { spec: spec(["bob", "alice"]) })]),
+    );
+    const notHeld = planPullRequest(
+      pullRequest([issue(12, ["bob"], { spec: spec(["bob"]) })]),
+    );
+
+    expect(onSpec).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [],
+      summary: [
+        "- #12: claimed by @alice, the author; passed.",
+        "- #10, the Spec of #12: the author @alice among its assignees.",
+      ],
+      exitCode: 0,
+    });
+    // The Ticket is another login's: the author joins nothing.
+    expect(notHeld).toMatchObject({
+      verdict: "failed",
+      assignments: [],
+      comments: [{ number: 34, id: null, body: body(TEXT_2) }],
+    });
+  });
+
+  it("adds the author to a Spec once for two of its Tickets", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, [], { spec: spec() }),
+        issue(13, ["alice"], { spec: spec() }),
+      ]),
+    );
+
+    expect(plan.assignments).toEqual([
+      { issue: 12, login: "alice" },
+      { issue: 10, login: "alice" },
+    ]);
+    expect(plan.comments[0]?.body).toBe(body(TEXT_1, TEXT_SPEC_JOINED));
+    expect(plan.summary).toEqual([
+      "- #12: no assignee; assigned to the author @alice.",
+      "- #10, the Spec of #12: the author @alice is not among its assignees; assigned to them.",
+      "- #13: claimed by @alice, the author; passed.",
+    ]);
+  });
+
+  it("passes an author GitHub cannot assign to the Spec, with text 3 for the Spec", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], { spec: spec([], { authorAssignable: false }) }),
+      ]),
+    );
+
+    expect(plan).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [
+        {
+          number: 34,
+          id: null,
+          body: body(TEXT_3.replaceAll("#12", "#10")),
+        },
+      ],
+      summary: [
+        "- #12: claimed by @alice, the author; passed.",
+        "- #10, the Spec of #12: the author @alice is not among its assignees, and cannot be assigned; passed, with a comment.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("comments on the Ticket the command that joins a Spec of the other repository, which the check cannot write", () => {
+    const other = spec(["bob"], {
+      repository: "owner/other",
+      url: "https://github.com/owner/other/issues/10",
+    });
+    const text = `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#10, the Spec of #12, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit https://github.com/owner/other/issues/10 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`;
+    const plan = planPullRequest(
+      pullRequest([issue(12, ["alice"], { spec: other })]),
+    );
+
+    expect(plan).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [{ number: 12, id: null, body: text }],
+      summary: [
+        "- #12: claimed by @alice, the author; passed.",
+        "- owner/other#10, the Spec of #12: the author @alice is not among its assignees, in another repository; the command that joins it commented on #12.",
+      ],
+      exitCode: 0,
+    });
+    // Once said, not again on the next push.
+    expect(
+      planPullRequest(
+        pullRequest([
+          issue(12, ["alice"], {
+            spec: other,
+            joinComment: { id: 9, body: text },
+          }),
+        ]),
+      ).comments,
+    ).toEqual([]);
+  });
+
+  it("does not count the Specs it joins against the cap of 20", () => {
+    const tickets = Array.from({ length: 20 }, (_, i) =>
+      issue(100 + i, [], {
+        spec: spec([], { number: 200 + i, url: `u${String(i)}` }),
+      }),
+    );
+    const plan = planPullRequest(pullRequest(tickets));
+
+    expect(plan.assignments).toHaveLength(40);
+    expect(plan.comments[0]?.body).not.toContain("too many issues");
+  });
+
   it("rewrites a failure to text 7 once the pull request passes", () => {
     const plan = planPullRequest(
       pullRequest([issue(12, ["alice"])], { id: 7, body: body(TEXT_2) }),
@@ -318,6 +479,7 @@ function assigned(
     sender,
     owner: "owner",
     assignees,
+    ticketAssignees: null,
     pullRequests: [],
     comment: null,
     ...more,
@@ -514,6 +676,70 @@ describe("planIssue", () => {
     );
 
     expect(plan.comments).toEqual([{ number: 12, id: 7, body: body(TEXT_4) }]);
+  });
+
+  it("draws nothing on a login added to a Spec who holds or held one of its Tickets", () => {
+    // bob holds an open Ticket of #12, alice delivered a closed one.
+    const plan = planIssue(
+      assigned("bob", "bob", ["alice", "bob"], {
+        ticketAssignees: ["alice", "bob"],
+      }),
+    );
+
+    expect(plan).toEqual({
+      verdict: "clear",
+      assignments: [],
+      comments: [],
+      summary: [
+        "- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("comments text 4 on a login added to a Spec who holds none of its Tickets, unless the owner added them", () => {
+    const spec = { ticketAssignees: ["alice", "carol"] };
+
+    expect(planIssue(assigned("bob", "bob", ["alice", "bob"], spec))).toEqual({
+      verdict: "conflict",
+      assignments: [],
+      comments: [{ number: 12, id: null, body: body(TEXT_4) }],
+      summary: [
+        "- #12: @bob added by @bob to an issue claimed by @alice; conflict.",
+      ],
+      exitCode: 0,
+    });
+    // A Spec with no Ticket yet holds nobody either.
+    expect(
+      planIssue(
+        assigned("bob", "bob", ["alice", "bob"], { ticketAssignees: [] }),
+      ).verdict,
+    ).toBe("conflict");
+    expect(
+      planIssue(assigned("bob", "owner", ["alice", "bob"], spec)),
+    ).toMatchObject({ verdict: "clear", comments: [] });
+  });
+
+  it("rewrites a Spec's conflict comment to text 6 once each of its assignees holds or held a Ticket", () => {
+    const comment = { id: 7, body: body(TEXT_4) };
+    // bob, the conflict of the comment, has since claimed a Ticket.
+    const plan = planIssue(
+      assigned("carol", "carol", ["alice", "bob", "carol"], {
+        ticketAssignees: ["alice", "bob", "carol"],
+        comment,
+      }),
+    );
+
+    expect(plan.comments).toEqual([{ number: 12, id: 7, body: body(TEXT_6) }]);
+    // One assignee still holds no Ticket: the comment stays.
+    expect(
+      planIssue(
+        assigned("carol", "carol", ["alice", "bob", "carol"], {
+          ticketAssignees: ["alice", "carol"],
+          comment,
+        }),
+      ).comments,
+    ).toEqual([]);
   });
 
   it("leaves a comment that already reads as it should", () => {

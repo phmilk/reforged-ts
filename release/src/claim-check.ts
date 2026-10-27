@@ -2,9 +2,14 @@
  * The claim check (`claim / check`), the logic behind
  * `.github/workflows/claim-check.yml`: on a pull request, the issues of its
  * repository that it closes are claimed for its author, or fail the check
- * when another login holds them; on an assignment, a conflict draws a
- * comment on the issue. The protocol is `docs/agents/issue-tracker.md`,
- * "Claim"; the texts are the spec's (#529), the logins filled at run time.
+ * when another login holds them, and the author joins the Spec of each
+ * Ticket among them (ADR 0023): assigned to a Spec of this repository, or
+ * shown the command on the Ticket for a Spec of the other Board repository,
+ * where the job's token cannot write. On an assignment, a conflict draws a
+ * comment on the issue; a login added to a Spec that holds or held one of
+ * its Tickets is none. The protocol is `docs/agents/issue-tracker.md`,
+ * "Claim"; the texts are the spec's (#529), the logins filled at run time,
+ * and those of a Ticket's Spec follow ADR 0023.
  * `planPullRequest` and `planIssue` are pure: the event and the fetched
  * state in; the verdict, the assignments, the comment upserts, the summary
  * lines and the exit code out. `main` reads the state through the GitHub
@@ -28,6 +33,13 @@ const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
 export const MARKER = "<!-- claim-check -->";
 
 /**
+ * The hidden marker of the check's comment on a Ticket whose Spec is of the
+ * other Board repository; apart from `MARKER`, so that the issue branch's
+ * comment on the same Ticket never overwrites it.
+ */
+export const SPEC_MARKER = "<!-- claim-check: spec -->";
+
+/**
  * The login the check writes as: `GITHUB_TOKEN` comments as GitHub Actions.
  * REST spells it with the `[bot]` suffix; the suffix-less spelling counts
  * only on a user of the `Bot` type.
@@ -47,7 +59,8 @@ export const MAX_ASSIGNMENTS = 20;
 /**
  * The check's comment texts (#529, "The check's comment texts"), numbered as
  * there; the tests pin them word for word. `tooMany` is not the spec's: it
- * is the line of the assignment cap (`MAX_ASSIGNMENTS`).
+ * is the line of the assignment cap (`MAX_ASSIGNMENTS`); nor are
+ * `specJoined` and `joinSpec`, the lines of a Ticket's Spec (ADR 0023).
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -74,10 +87,37 @@ export const TEXTS = {
   resolved: "**Claim conflict** resolved.",
   /** 7. The pull request passes after a failure. */
   passed: "**Claim check** passed.",
+  /** The author, missing from a Ticket's Spec, added to it. */
+  specJoined: (spec: number, ticket: number, author: string): string =>
+    `**Claim check.** Added @${author} to #${String(spec)}, the Spec of #${String(ticket)}: a Spec carries every login on its Tickets. Join it in the command that claims a Ticket: \`gh issue edit ${String(ticket)} ${String(spec)} --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+  /** On the Ticket: the author, missing from its Spec in the other repository, joins it. */
+  joinSpec: (
+    spec: string,
+    url: string,
+    ticket: number,
+    author: string,
+  ): string =>
+    `**Claim check.** @${author} is not among the assignees of ${spec}, the Spec of #${String(ticket)}, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit ${url} --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`,
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
 } as const;
+
+/** The Spec a Ticket is a sub-issue of, as the check read it. */
+export interface ParentSpec {
+  /** `owner/name`: this repository, or another Board repository. */
+  repository: string;
+  number: number;
+  /** Its address on GitHub, for the command that joins it from elsewhere. */
+  url: string;
+  /** The logins assigned to it, in GitHub's order. */
+  assignees: readonly string[];
+  /**
+   * Whether GitHub lets the pull request's author be assigned to it; asked
+   * only of a Spec of this repository that the author is missing from.
+   */
+  authorAssignable: boolean;
+}
 
 /** An issue a pull request closes, as the check read it. */
 export interface ClosingIssue {
@@ -91,6 +131,14 @@ export interface ClosingIssue {
    * access, or a comment on the issue), asked before any assignment.
    */
   authorAssignable: boolean;
+  /** Its parent when that is a Spec (labelled `spec`): the issue is a Ticket. */
+  spec: ParentSpec | null;
+  /**
+   * The check's comment on the Ticket that names the command joining its
+   * Spec; read only when the Spec is of another repository and the author
+   * is missing from it.
+   */
+  joinComment: StickyComment | null;
 }
 
 /** A pull request that references an issue as closed by it, with its own state. */
@@ -134,6 +182,11 @@ export interface IssueInput {
   owner: string;
   /** The issue's assignees, re-read after the event. */
   assignees: readonly string[];
+  /**
+   * On an issue labelled `spec`, the logins assigned to its Tickets, open or
+   * closed: those that hold or delivered one; `null` on any other issue.
+   */
+  ticketAssignees: readonly string[] | null;
   pullRequests: readonly ClosingPullRequest[];
   comment: StickyComment | null;
 }
@@ -159,7 +212,10 @@ export interface Plan {
   /** The run's verdict: for a pull request, the worst of its issues'. */
   verdict: Verdict;
   assignments: Assignment[];
-  /** At most one: the sticky comment of the pull request or the issue. */
+  /**
+   * The sticky comment of the pull request or the issue, and on a pull
+   * request, the comment on each Ticket whose Spec is of another repository.
+   */
   comments: CommentUpsert[];
   /** One Markdown line per issue the run looked at, for the job summary. */
   summary: string[];
@@ -178,7 +234,7 @@ const sameBody = (a: string, b: string): boolean =>
   a.replaceAll("\r\n", "\n").trim() === b.replaceAll("\r\n", "\n").trim();
 
 /**
- * The sticky comment to write on `number`: `lines` under the marker, one
+ * The sticky comment to write on `number`: `lines` under `marker`, one
  * per issue. With nothing to say, none is created, and an earlier comment
  * is rewritten to `settled` (a conflict gone, a pass after a failure) when
  * that is a text, else left as it is. Nothing when the comment already
@@ -189,13 +245,14 @@ function upsert(
   lines: readonly string[],
   existing: StickyComment | null,
   settled: string | null,
+  marker: string = MARKER,
 ): CommentUpsert[] {
   const body =
     lines.length > 0
-      ? [MARKER, ...lines].join("\n\n")
+      ? [marker, ...lines].join("\n\n")
       : existing === null || settled === null
         ? null
-        : `${MARKER}\n\n${settled}`;
+        : `${marker}\n\n${settled}`;
   if (body === null || (existing !== null && sameBody(existing.body, body))) {
     return [];
   }
@@ -209,7 +266,12 @@ function upsert(
  * pass (pairing included); assignees that exclude the author, fail with
  * text 2. At most `MAX_ASSIGNMENTS` issues are assigned in one run: the
  * unclaimed ones past the cap stay so, with a summary line each and one
- * line in the comment. An issue of another repository is ignored with a
+ * line in the comment. A Ticket the author holds or is assigned joins them
+ * to its Spec, once per Spec and outside the cap: one of this repository is
+ * assigned to them with a line in the comment (text 3 when GitHub will not
+ * assign them); one of another repository, which the token cannot write,
+ * gets the command that joins it in a comment on the Ticket, under
+ * `SPEC_MARKER`. An issue of another repository is ignored with a
  * summary line; a pull request that closes no issue passes with one. The
  * worst verdict wins: exit 1 when any issue fails. With nothing to say, an
  * earlier comment is left alone unless it holds a failure, which a pass
@@ -222,8 +284,48 @@ export function planPullRequest(input: PullRequestInput): Plan {
   const lines: string[] = [];
   const summary: string[] = [];
   const capped: number[] = [];
+  /** The Specs already handled, `owner/name#n`: one join per Spec. */
+  const specs = new Set<string>();
+  /** The comments on Tickets whose Spec the check cannot write. */
+  const ticketComments: CommentUpsert[] = [];
+  /** The closed issues assigned so far: the cap counts these, not the Specs. */
+  let claimed = 0;
   let failed = false;
   let seen = 0;
+  /** Adds the author to the Spec of `ticket`, a Ticket the author now holds. */
+  const joinSpec = (ticket: ClosingIssue, spec: ParentSpec): void => {
+    const key = `${spec.repository}#${String(spec.number)}`;
+    if (specs.has(key)) return;
+    specs.add(key);
+    const elsewhere = spec.repository !== repository;
+    const head = `- ${elsewhere ? key : `#${String(spec.number)}`}, the Spec of #${String(ticket.number)}: the author @${author}`;
+    if (spec.assignees.includes(author)) {
+      summary.push(`${head} among its assignees.`);
+    } else if (elsewhere) {
+      // The token writes in this repository only: the author joins it.
+      ticketComments.push(
+        ...upsert(
+          ticket.number,
+          [TEXTS.joinSpec(key, spec.url, ticket.number, author)],
+          ticket.joinComment,
+          null,
+          SPEC_MARKER,
+        ),
+      );
+      summary.push(
+        `${head} is not among its assignees, in another repository; the command that joins it commented on #${String(ticket.number)}.`,
+      );
+    } else if (!spec.authorAssignable) {
+      lines.push(TEXTS.notAssignable(spec.number, author));
+      summary.push(
+        `${head} is not among its assignees, and cannot be assigned; passed, with a comment.`,
+      );
+    } else {
+      assignments.push({ issue: spec.number, login: author });
+      lines.push(TEXTS.specJoined(spec.number, ticket.number, author));
+      summary.push(`${head} is not among its assignees; assigned to them.`);
+    }
+  };
   for (const issue of closing) {
     const n = String(issue.number);
     if (issue.repository !== repository) {
@@ -239,6 +341,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
           ? `- #${n}: claimed by @${author}, the author; passed.`
           : `- #${n}: claimed by ${names(issue.assignees)}, the author among them; passed.`,
       );
+      if (issue.spec !== null) joinSpec(issue, issue.spec);
     } else if (issue.assignees.length > 0) {
       failed = true;
       lines.push(TEXTS.failed(issue.number, issue.assignees[0]));
@@ -250,10 +353,12 @@ export function planPullRequest(input: PullRequestInput): Plan {
       summary.push(
         `- #${n}: no assignee, and the author @${author} cannot be assigned; passed, with a comment.`,
       );
-    } else if (assignments.length < MAX_ASSIGNMENTS) {
+    } else if (claimed < MAX_ASSIGNMENTS) {
+      claimed++;
       assignments.push({ issue: issue.number, login: author });
       lines.push(TEXTS.assigned(issue.number, author));
       summary.push(`- #${n}: no assignee; assigned to the author @${author}.`);
+      if (issue.spec !== null) joinSpec(issue, issue.spec);
     } else {
       capped.push(issue.number);
       summary.push(
@@ -273,7 +378,10 @@ export function planPullRequest(input: PullRequestInput): Plan {
   return {
     verdict: failed ? "failed" : "passed",
     assignments,
-    comments: upsert(pullRequest.number, lines, comment, settled),
+    comments: [
+      ...upsert(pullRequest.number, lines, comment, settled),
+      ...ticketComments,
+    ],
     summary,
     exitCode: failed ? 1 : 0,
   };
@@ -283,17 +391,18 @@ export function planPullRequest(input: PullRequestInput): Plan {
  * The issue branch, on `assigned` and `unassigned`, recomputed on every
  * event. On `assigned` with two or more assignees (re-read, so that the
  * interface's add-then-remove draws nothing): the sender already an
- * assignee, pairing, nothing; the sender the repository owner, nothing;
- * otherwise text 4. An open pull request of the same repository by a login
- * outside the assignees draws text 5, read from its own state. With no
- * conflict left (at most one assignee, and no such pull request), an
- * earlier comment becomes text 6; a second assignee the event did not add
- * keeps it, since their conflict stands. Comments only, never a reversal:
- * always exit 0.
+ * assignee, pairing, nothing; the sender the repository owner, nothing; on
+ * a Spec, a login that holds or held one of its Tickets, nothing; otherwise
+ * text 4. An open pull request of the same repository by a login outside
+ * the assignees draws text 5, read from its own state. With no conflict
+ * left (at most one assignee, or on a Spec each holding or having held a
+ * Ticket, and no such pull request), an earlier comment becomes text 6; a
+ * second assignee the event did not add keeps it, since their conflict
+ * stands. Comments only, never a reversal: always exit 0.
  */
 export function planIssue(input: IssueInput): Plan {
   const { repository, action, issue, assignee, sender, owner } = input;
-  const { assignees, pullRequests, comment } = input;
+  const { assignees, ticketAssignees, pullRequests, comment } = input;
   const n = String(issue);
   const lines: string[] = [];
   const summary: string[] = [];
@@ -305,7 +414,11 @@ export function planIssue(input: IssueInput): Plan {
     assignees.includes(assignee)
   ) {
     const others = assignees.filter((login) => login !== assignee);
-    if (sender === owner) {
+    if (ticketAssignees?.includes(assignee) === true) {
+      summary.push(
+        `- #${n}, a Spec: @${assignee} added by @${sender}, who holds or held one of its Tickets; no conflict.`,
+      );
+    } else if (sender === owner) {
       summary.push(
         `- #${n}: @${assignee} added by @${sender}, the repository owner; no conflict.`,
       );
@@ -353,15 +466,15 @@ export function planIssue(input: IssueInput): Plan {
         : `- #${n}: claimed by ${names(assignees)}; no conflict.`,
     );
   }
+  // A Spec's assignees are no conflict once each holds or held a Ticket.
+  const settled =
+    assignees.length <= 1 ||
+    (ticketAssignees !== null &&
+      assignees.every((login) => ticketAssignees.includes(login)));
   return {
     verdict: lines.length > 0 ? "conflict" : "clear",
     assignments: [],
-    comments: upsert(
-      issue,
-      lines,
-      comment,
-      assignees.length <= 1 ? TEXTS.resolved : null,
-    ),
+    comments: upsert(issue, lines, comment, settled ? TEXTS.resolved : null),
     summary,
     exitCode: 0,
   };
@@ -556,7 +669,7 @@ function byCheck(user: unknown): boolean {
 
 /**
  * The check's sticky comment on issue or pull request `number`: the first
- * comment by the check whose body opens with the marker. A marked comment
+ * comment by the check whose body opens with `marker`. A marked comment
  * by another login is passed over, so that nobody can plant the check's
  * comment.
  */
@@ -564,6 +677,7 @@ async function findComment(
   api: Api,
   repository: string,
   number: number,
+  marker: string = MARKER,
 ): Promise<StickyComment | null> {
   const path = `/repos/${repository}/issues/${String(number)}/comments`;
   for (let page = 1; page <= MAX_PAGES; page++) {
@@ -582,7 +696,7 @@ async function findComment(
         isRecord(item) &&
         typeof item.id === "number" &&
         typeof item.body === "string" &&
-        item.body.startsWith(MARKER) &&
+        item.body.startsWith(marker) &&
         byCheck(item.user)
       ) {
         return { id: item.id, body: item.body };
@@ -623,7 +737,8 @@ async function assignable(
  */
 const CLOSING_PAGE = 50;
 
-// An issue holds at most ten assignees: that connection is read whole.
+// An issue holds at most ten assignees: that connection is read whole. The
+// parent is read with its labels, to tell a Spec from a wayfinder map.
 const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $first: Int!) {
   repository(owner: $owner, name: $name) {
     pullRequest(number: $number) {
@@ -633,6 +748,13 @@ const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $f
           number
           repository { nameWithOwner }
           assignees(first: 20) { nodes { login } }
+          parent {
+            number
+            url
+            repository { nameWithOwner }
+            labels(first: 50) { nodes { name } }
+            assignees(first: 20) { nodes { login } }
+          }
         }
       }
     }
@@ -706,16 +828,66 @@ async function readClosingIssues(
         "closingIssuesReferences answered an issue without a number and a repository.",
       );
     }
+    const ours = nameWithOwner === repository;
+    const authorAssignable =
+      ours && (await assignable(api, repository, number, pullRequest.author));
+    const spec = ours
+      ? await readParentSpec(api, repository, at(node, "parent"), pullRequest)
+      : null;
     issues.push({
       repository: nameWithOwner,
       number,
       assignees: loginsOf(nodesOf(at(node, "assignees"))),
-      authorAssignable:
-        nameWithOwner === repository &&
-        (await assignable(api, repository, number, pullRequest.author)),
+      authorAssignable,
+      spec,
+      joinComment:
+        spec !== null &&
+        spec.repository !== repository &&
+        !spec.assignees.includes(pullRequest.author)
+          ? await findComment(api, repository, number, SPEC_MARKER)
+          : null,
     });
   }
   return issues;
+}
+
+/**
+ * The Spec of a closed issue from its `parent` node, or `null` when it has
+ * no parent or its parent is not labelled `spec` (a wayfinder map). Whether
+ * the author may be assigned is asked only of a Spec of this repository the
+ * author is missing from: the token writes nowhere else.
+ */
+async function readParentSpec(
+  api: Api,
+  repository: string,
+  parent: unknown,
+  pullRequest: { number: number; author: string },
+): Promise<ParentSpec | null> {
+  if (!isRecord(parent) || !nodesOf(parent.labels).some(isSpecLabel)) {
+    return null;
+  }
+  const nameWithOwner = at(parent, "repository", "nameWithOwner");
+  const { number, url } = parent;
+  if (
+    typeof nameWithOwner !== "string" ||
+    typeof number !== "number" ||
+    typeof url !== "string"
+  ) {
+    throw new ClaimCheckError(
+      "closingIssuesReferences answered a parent Spec without a number, an address and a repository.",
+    );
+  }
+  const assignees = loginsOf(nodesOf(parent.assignees));
+  return {
+    repository: nameWithOwner,
+    number,
+    url,
+    assignees,
+    authorAssignable:
+      nameWithOwner === repository &&
+      !assignees.includes(pullRequest.author) &&
+      (await assignable(api, repository, number, pullRequest.author)),
+  };
 }
 
 /** The pull requests that reference issue `number` as closed by them. */
@@ -757,18 +929,67 @@ async function readClosingPullRequests(
   return pullRequests;
 }
 
-/** The assignees of issue `number`, read now rather than from the event. */
+/**
+ * The assignees of issue `number`, read now rather than from the event, and
+ * whether it is a Spec (labelled `spec`).
+ */
 async function readAssignees(
   api: Api,
   repository: string,
   number: number,
-): Promise<string[]> {
+): Promise<{ assignees: string[]; spec: boolean }> {
   const path = `/repos/${repository}/issues/${String(number)}`;
   const { body } = await rest(api, "GET", path, undefined, [200]);
   if (!isRecord(body) || !isList(body.assignees)) {
     throw new ClaimCheckError(`GET ${path} answered no assignees.`);
   }
-  return loginsOf(body.assignees);
+  return {
+    assignees: loginsOf(body.assignees),
+    spec: isList(body.labels) && body.labels.some(isSpecLabel),
+  };
+}
+
+/** The label of a Spec, as `to-spec` and `write-spec` set it. */
+const SPEC_LABEL = "spec";
+
+/** Whether a label object, REST's or GraphQL's, is the Spec label. */
+function isSpecLabel(label: unknown): boolean {
+  return isRecord(label) && label.name === SPEC_LABEL;
+}
+
+// A Spec splits into far fewer Tickets than a page, each with at most ten
+// assignees.
+const TICKETS = `query($owner: String!, $name: String!, $number: Int!) {
+  repository(owner: $owner, name: $name) {
+    issue(number: $number) {
+      subIssues(first: 100) {
+        nodes {
+          assignees(first: 20) { nodes { login } }
+        }
+      }
+    }
+  }
+}`;
+
+/**
+ * The logins assigned to the Tickets of Spec `number`, open or closed, in
+ * either Board repository: those that hold or delivered one.
+ */
+async function readTicketAssignees(
+  api: Api,
+  repository: string,
+  number: number,
+): Promise<string[]> {
+  const data = await graphql(api, TICKETS, {
+    ...ownerAndName(repository),
+    number,
+  });
+  const tickets = nodesOf(at(data, "repository", "issue", "subIssues"));
+  return [
+    ...new Set(
+      tickets.flatMap((ticket) => loginsOf(nodesOf(at(ticket, "assignees")))),
+    ),
+  ];
 }
 
 /** Sends the plan's assignments, then its comment, saying what it did. */
@@ -977,6 +1198,7 @@ async function checkIssue(
 ): Promise<Plan> {
   const { action, issue, assignee, sender } = issueEventOf(event);
   const { repository, owner } = settings;
+  const { assignees, spec } = await readAssignees(api, repository, issue);
   return planIssue({
     repository,
     action,
@@ -984,7 +1206,10 @@ async function checkIssue(
     assignee,
     sender,
     owner,
-    assignees: await readAssignees(api, repository, issue),
+    assignees,
+    ticketAssignees: spec
+      ? await readTicketAssignees(api, repository, issue)
+      : null,
     pullRequests: await readClosingPullRequests(api, repository, issue),
     comment: await findComment(api, repository, issue),
   });

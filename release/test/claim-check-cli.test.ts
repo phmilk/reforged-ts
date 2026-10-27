@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import { join } from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { MARKER } from "../src/claim-check.js";
+import { MARKER, SPEC_MARKER } from "../src/claim-check.js";
 import { repositoryRoot } from "../src/workspace.js";
 import { tempDir, writeText } from "./support/workspace.js";
 
@@ -191,8 +191,16 @@ const PULL_REQUEST_EVENT = {
   },
 };
 
-/** The closing references of #34: #12 of this repository, #5 of the other; `totalCount` as GitHub counts them. */
-function closing(assignees: string[], totalCount = 2): unknown {
+/**
+ * The closing references of #34: #12 of this repository, with `parent` as
+ * its parent issue when given, #5 of the other; `totalCount` as GitHub
+ * counts them.
+ */
+function closing(
+  assignees: string[],
+  totalCount = 2,
+  parent: unknown = null,
+): unknown {
   return {
     repository: {
       pullRequest: {
@@ -203,6 +211,7 @@ function closing(assignees: string[], totalCount = 2): unknown {
               number: 12,
               repository: { nameWithOwner: REPOSITORY },
               assignees: { nodes: assignees.map((login) => ({ login })) },
+              parent,
             },
             {
               number: 5,
@@ -270,6 +279,152 @@ describe("claim-check pull-request", () => {
     expect(received[0]?.authorization).toBe("Bearer t0k");
     // The count travels with the page: a pull request past it is not passed.
     expect(JSON.stringify(received[0]?.body)).toContain("totalCount");
+  });
+
+  it("adds the author to the parent Spec of the Ticket, and puts the Spec in the assigned output", async () => {
+    answers.graphql.closingIssuesReferences = closing(["alice"], 2, {
+      number: 10,
+      url: `https://github.com/${REPOSITORY}/issues/10`,
+      repository: { nameWithOwner: REPOSITORY },
+      labels: { nodes: [{ name: "spec" }, { name: "ready-for-agent" }] },
+      assignees: { nodes: [{ login: "bob" }] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/10/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/10/assignees`] = {
+      status: 201,
+      body: { assignees: [{ login: "bob" }, { login: "alice" }] },
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- #10, the Spec of #12: the author @alice is not among its assignees; assigned to them.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n" +
+        "Assigned #10 to @alice.\n" +
+        "Commented on #34.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n" +
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- #10, the Spec of #12: the author @alice is not among its assignees; assigned to them.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n",
+      output: "assigned=10\n",
+    });
+    expect(sent()).toEqual([
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining("parent") as unknown,
+        }) as unknown,
+      ],
+      [`GET ${ISSUES}/12/assignees/alice`, undefined],
+      [`GET ${ISSUES}/10/assignees/alice`, undefined],
+      [`GET ${ISSUES}/34/comments?per_page=100&page=1`, undefined],
+      [`POST ${ISSUES}/10/assignees`, { assignees: ["alice"] }],
+      [
+        `POST ${ISSUES}/34/comments`,
+        {
+          body: `${MARKER}\n\n**Claim check.** Added @alice to #10, the Spec of #12: a Spec carries every login on its Tickets. Join it in the command that claims a Ticket: \`gh issue edit 12 10 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+        },
+      ],
+    ]);
+  });
+
+  it("comments on the Ticket the command that joins a Spec of the other repository, assigning nothing there", async () => {
+    answers.graphql.closingIssuesReferences = closing(["alice"], 2, {
+      number: 726,
+      url: "https://github.com/owner/other/issues/726",
+      repository: { nameWithOwner: "owner/other" },
+      labels: { nodes: [{ name: "spec" }] },
+      assignees: { nodes: [{ login: "bob" }] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    // The issue branch's comment on the Ticket is not this one.
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [
+        {
+          id: 4,
+          user: CHECK,
+          body: `${MARKER}\n\n**Claim conflict** resolved.`,
+        },
+      ],
+    };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/12/comments`] = {
+      status: 201,
+      body: { id: 9 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- owner/other#726, the Spec of #12: the author @alice is not among its assignees, in another repository; the command that joins it commented on #12.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n" +
+        "Commented on #12.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n" +
+        "- #12: claimed by @alice, the author; passed.\n" +
+        "- owner/other#726, the Spec of #12: the author @alice is not among its assignees, in another repository; the command that joins it commented on #12.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([
+      ["POST /graphql", expect.anything() as unknown],
+      [`GET ${ISSUES}/12/assignees/alice`, undefined],
+      [`GET ${ISSUES}/12/comments?per_page=100&page=1`, undefined],
+      [`GET ${ISSUES}/34/comments?per_page=100&page=1`, undefined],
+      [
+        `POST ${ISSUES}/12/comments`,
+        {
+          body: `${SPEC_MARKER}\n\n**Claim check.** @alice is not among the assignees of owner/other#726, the Spec of #12, and the check cannot add them there: its token writes in this repository only. Join it: \`gh issue edit https://github.com/owner/other/issues/726 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim", "A Spec's assignees".`,
+        },
+      ],
+    ]);
+  });
+
+  it("ignores a parent that is not a Spec", async () => {
+    answers.graphql.closingIssuesReferences = closing(["alice"], 2, {
+      number: 1,
+      url: `https://github.com/${REPOSITORY}/issues/1`,
+      repository: { nameWithOwner: REPOSITORY },
+      labels: { nodes: [{ name: "map" }] },
+      assignees: { nodes: [] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(0);
+    expect(result.output).toBe("");
+    expect(sent().map(([request]) => request)).toEqual([
+      "POST /graphql",
+      `GET ${ISSUES}/12/assignees/alice`,
+      `GET ${ISSUES}/34/comments?per_page=100&page=1`,
+    ]);
   });
 
   it("fails on an issue claimed by another login, with text 2 and an annotation", async () => {
@@ -483,6 +638,69 @@ describe("claim-check issue", () => {
           body: `${MARKER}\n\n**Claim conflict.** @bob was added to #12, which is claimed by @alice: one login per issue, and a second assignee is added only by the first, for pairing. If the Claim is stale (3 days without a commit on its pull request and without a comment), take it over: comment, then \`gh issue edit 12 --remove-assignee alice\`. Otherwise withdraw: \`gh issue edit 12 --remove-assignee @me\`.`,
         },
       ],
+    ]);
+  });
+
+  it("reads a Spec's Tickets and draws nothing on a login that holds one", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: {
+        number: 12,
+        labels: [{ name: "enhancement" }, { name: "spec" }],
+        assignees: [{ login: "alice" }, { login: "bob" }],
+      },
+    };
+    answers.graphql.subIssues = {
+      repository: {
+        issue: {
+          subIssues: {
+            nodes: [
+              { assignees: { nodes: [{ login: "alice" }] } },
+              // A Ticket of the other Board repository counts the same.
+              { assignees: { nodes: [{ login: "bob" }] } },
+              { assignees: { nodes: [] } },
+            ],
+          },
+        },
+      },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: { issue: { closedByPullRequestsReferences: { nodes: [] } } },
+    };
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+
+    const result = await run(["issue"], ISSUE_EVENT);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n- #12, a Spec: @bob added by @bob, who holds or held one of its Tickets; no conflict.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([
+      [`GET ${ISSUES}/12`, undefined],
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining("subIssues") as unknown,
+          variables: { owner: "owner", name: "fork", number: 12 },
+        }) as unknown,
+      ],
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining(
+            "closedByPullRequestsReferences",
+          ) as unknown,
+        }) as unknown,
+      ],
+      [`GET ${ISSUES}/12/comments?per_page=100&page=1`, undefined],
     ]);
   });
 
