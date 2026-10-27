@@ -915,11 +915,15 @@ describe("the nullability report", () => {
 
   it("knows every family the Typings' Overlay names, and no other", async () => {
     const folder = join(TYPINGS_OVERLAY_FOLDER, "common.j", "functions");
+    // In parallel: one by one, the folder's 1700-odd files outlast the
+    // timeout under the whole suite's load on Windows.
     const named = new Set<string>();
-    for (const file of await readdir(folder)) {
-      const { returns } = JSON.parse(
-        await readFile(join(folder, file), "utf8"),
-      ) as { returns?: { family?: string } };
+    const files = await readdir(folder);
+    const texts = await Promise.all(
+      files.map((file) => readFile(join(folder, file), "utf8")),
+    );
+    for (const text of texts) {
+      const { returns } = JSON.parse(text) as { returns?: { family?: string } };
       if (returns?.family !== undefined) named.add(returns.family);
     }
     expect([...named].sort()).toEqual(Object.keys(FAMILIES).sort());
