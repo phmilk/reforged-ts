@@ -11,8 +11,9 @@
 // - Stop: a turn whose last reply says it waits on background work, while the
 //   input lists no background task and no session cron, is blocked once and
 //   the Agent told to verify; an input whose stop hook is already active
-//   passes, and so does a reply that only quotes a wait. A named agent left idle (a teammate) is listed among the
-//   background tasks as running, so a wait on it passes (#768).
+//   passes, and so does a reply that only quotes a wait. A named agent left
+//   idle (a teammate) is listed among the background tasks as running, so a
+//   wait on it passes (#768).
 //
 // The decision is verdict(), a pure function from the hook input to a
 // verdict; a verdict that blocks carries the output its event takes, which
@@ -66,10 +67,13 @@ const WAITING = new RegExp(
   "i",
 );
 
-// What a reply quotes rather than says: a fenced block, a code span, a `>`
-// line, and text between straight, curly or angle quotes. A reply that only
-// quotes a wait (a retrospective, the report of a stall) waits on nothing.
-const QUOTED = /```[\s\S]*?```|`[^`\n]*`|^>.*$|"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/gm;
+// What a reply quotes rather than says: a fenced block, a code span, and
+// text between curly quotes, guillemets, or straight quotes that open and
+// close at a word's edge (so an inch mark pairs with nothing). A reply that
+// only quotes a wait (a retrospective, the report of a stall) waits on
+// nothing. A `>` line still counts: an Agent writes its own status in one.
+const QUOTED =
+  /```[\s\S]*?```|`[^`\n]*`|“[^”\n]*”|«[^»\n]*»|(?<=^|[\s([{])"[^"\n]*"(?=$|[\s.,;:!?)\]}])/gm;
 
 const NOTHING_IN_FLIGHT =
   "Your reply says you are waiting on background work, but nothing is in flight (.claude/hooks/background-wait.mjs): no background task and no scheduled wakeup, so nothing will wake this session. Verify with ListAgents and the process list, then either resume the work yourself (send a message to an idle agent, run the command again in the foreground) or tell the user plainly that nothing is running.";

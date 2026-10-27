@@ -195,20 +195,21 @@ describe("the background-wait check, at the end of a turn", () => {
     'O implementador do #763 escreveu "I\'ll pick up when it finishes" e nunca voltou.',
     "O stall foi um “ainda está rodando” que ninguém conferiu.",
     "A Subagent ended its turn on `still running in the background`.",
-    "The stall:\n\n> pnpm check is still running in the background. I'll pick up when it finishes.\n\nNothing runs now.",
     "The reply was:\n\n```text\nVou esperar o implementador; ele me avisa quando terminar.\n```\n\nNothing runs now.",
   ])("passes %j, which only quotes a wait, with nothing in flight", (reply) => {
     expect(verdict(stop(reply))).toEqual({ verdict: "pass" });
   });
 
-  it("blocks a reply that waits outside the quote it carries, with nothing in flight", () => {
-    blocked(
-      verdict(
-        stop(
-          'Vou esperar o implementador; ele me avisa quando terminar o "pnpm check".',
-        ),
-      ),
-    );
+  // A wait the reply says itself, beside a quote, an inch mark or a stray
+  // quote, or in a `>` callout of its own status.
+  it.each([
+    'Vou esperar o implementador; ele me avisa quando terminar o "pnpm check".',
+    'Set the frame 5" wide. I\'ll pick up when it finishes and post "done".',
+    'O build de 2" ainda está rodando; resultado em "out/".',
+    'O “impl-763" ainda está rodando, me avisa quando terminar".',
+    "> Status: pnpm check is still running in the background.",
+  ])("blocks %j, which waits itself, with nothing in flight", (reply) => {
+    blocked(verdict(stop(reply)));
   });
 });
 
