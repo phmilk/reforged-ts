@@ -11,7 +11,7 @@
 // - Stop: a turn whose last reply says it waits on background work, while the
 //   input lists no background task and no session cron, is blocked once and
 //   the Agent told to verify; an input whose stop hook is already active
-//   passes. A named agent left idle (a teammate) is listed among the
+//   passes, and so does a reply that only quotes a wait. A named agent left idle (a teammate) is listed among the
 //   background tasks as running, so a wait on it passes (#768).
 //
 // The decision is verdict(), a pure function from the hook input to a
@@ -66,6 +66,11 @@ const WAITING = new RegExp(
   "i",
 );
 
+// What a reply quotes rather than says: a fenced block, a code span, a `>`
+// line, and text between straight, curly or angle quotes. A reply that only
+// quotes a wait (a retrospective, the report of a stall) waits on nothing.
+const QUOTED = /```[\s\S]*?```|`[^`\n]*`|^>.*$|"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/gm;
+
 const NOTHING_IN_FLIGHT =
   "Your reply says you are waiting on background work, but nothing is in flight (.claude/hooks/background-wait.mjs): no background task and no scheduled wakeup, so nothing will wake this session. Verify with ListAgents and the process list, then either resume the work yourself (send a message to an idle agent, run the command again in the foreground) or tell the user plainly that nothing is running.";
 
@@ -100,7 +105,7 @@ export function verdict(input) {
     input.stop_hook_active !== true &&
     (input.background_tasks ?? []).length === 0 &&
     (input.session_crons ?? []).length === 0 &&
-    WAITING.test(input.last_assistant_message ?? "")
+    WAITING.test((input.last_assistant_message ?? "").replace(QUOTED, ""))
   ) {
     return {
       verdict: "block",

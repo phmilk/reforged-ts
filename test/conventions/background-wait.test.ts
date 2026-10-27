@@ -188,6 +188,28 @@ describe("the background-wait check, at the end of a turn", () => {
   ])("passes %j with nothing in flight", (reply) => {
     expect(verdict(stop(reply))).toEqual({ verdict: "pass" });
   });
+
+  // A reply that quotes a wait (a retrospective, a review, the report of a
+  // stall) waits on nothing itself: the false alarm of #767's retrospective.
+  it.each([
+    'O implementador do #763 escreveu "I\'ll pick up when it finishes" e nunca voltou.',
+    "O stall foi um “ainda está rodando” que ninguém conferiu.",
+    "A Subagent ended its turn on `still running in the background`.",
+    "The stall:\n\n> pnpm check is still running in the background. I'll pick up when it finishes.\n\nNothing runs now.",
+    "The reply was:\n\n```text\nVou esperar o implementador; ele me avisa quando terminar.\n```\n\nNothing runs now.",
+  ])("passes %j, which only quotes a wait, with nothing in flight", (reply) => {
+    expect(verdict(stop(reply))).toEqual({ verdict: "pass" });
+  });
+
+  it("blocks a reply that waits outside the quote it carries, with nothing in flight", () => {
+    blocked(
+      verdict(
+        stop(
+          'Vou esperar o implementador; ele me avisa quando terminar o "pnpm check".',
+        ),
+      ),
+    );
+  });
 });
 
 // Runs the script as Claude Code runs it, `node <script>` with the hook input
