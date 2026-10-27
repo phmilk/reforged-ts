@@ -27,4 +27,4 @@ Two more labels say what an issue is, next to its triage label. Apply them when 
 
 Both repos (`phmilk/reforged-ts` and `phmilk/reforged-ts-template`) have them. Issues of the wayfinder map, bugs and follow-ups carry neither.
 
-An issue carrying `wayfinder:*`, `ticket` or `spec` is not triaged: its body is its brief, and the map or the split gave it its labels. An assigned issue is taken, whatever its labels: see "Claim" in `docs/agents/issue-tracker.md`.
+An issue carrying `wayfinder:*`, `ticket` or `spec` is not triaged: its body is its brief, and the map or the split gave it its labels. An assigned Ticket or issue is taken, whatever its labels, and a Spec carries the logins of its Tickets: see "Claim" in `docs/agents/issue-tracker.md`.

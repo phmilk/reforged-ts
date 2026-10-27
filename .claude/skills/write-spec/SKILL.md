@@ -10,7 +10,7 @@ metadata:
 
 A Skill variant of the Upstream skill `to-spec`, with its steps, that an Agent may invoke ([Skill variants](../../../docs/agents/development-loop.md#skill-variants)). It turns what the conversation and the codebase already hold into a Spec: synthesis, no interview. It runs on an explicit request for a Spec or on another skill's call for one; when neither asked, ask the user whether they want a Spec before writing one.
 
-The Spec speaks the glossary's vocabulary and respects the ADRs, both named under "Domain docs" in [`AGENTS.md`](../../../AGENTS.md#domain-docs). It goes to the tracker of [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md), with the labels of [`docs/agents/triage-labels.md`](../../../docs/agents/triage-labels.md), and with no assignee: whoever works it claims it then ([Claim](../../../docs/agents/issue-tracker.md#claim)).
+The Spec speaks the glossary's vocabulary and respects the ADRs, both named under "Domain docs" in [`AGENTS.md`](../../../AGENTS.md#domain-docs). It goes to the tracker of [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md), with the labels of [`docs/agents/triage-labels.md`](../../../docs/agents/triage-labels.md), and with no assignee: a Spec has no Claim of its own, and it gets its assignees from its Tickets as they are claimed ([Claim](../../../docs/agents/issue-tracker.md#claim)).
 
 ## Steps
 

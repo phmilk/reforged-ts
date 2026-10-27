@@ -209,7 +209,7 @@ The section of a Spec's body naming, for each item of its decisions, its tests a
 _Avoid_: coverage (alone, which is test coverage), checklist
 
 **Claim**:
-The mark that an issue is taken by one login, held while that login is among the issue's assignees; a spec is claimed with its tickets.
+The mark that an issue is taken by one login, held while that login is among the issue's assignees. A Spec has no Claim of its own: its assignees are every login that holds or delivered one of its Tickets.
 _Avoid_: assignment (the GitHub act; a Claim is what it means), reservation, lock, ownership
 
 **Claim board**:
