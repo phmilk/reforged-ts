@@ -249,6 +249,23 @@ export default defineConfig(
       },
     },
   },
+  // reforged-map's tests link packages into Map projects' node_modules; a
+  // recursive readdirSync follows those links on Windows, near 1 s a walk
+  // (#754).
+  {
+    files: ["packages/reforged-map/test/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            'CallExpression:matches([callee.name="readdirSync"], [callee.property.name="readdirSync"]) > ObjectExpression > Property[key.name="recursive"][value.value=true]',
+          message:
+            "Walk a folder with listTree (test/support/map-folder.ts): a recursive readdirSync enters the linked node_modules on Windows (#754).",
+        },
+      ],
+    },
+  },
   // reforged-builtins' Map project fixtures import `reforged-ts` and the
   // package's own entry points as a Map project does, through the same kind
   // of mapping.
