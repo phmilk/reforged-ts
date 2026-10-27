@@ -7,14 +7,20 @@ export type Shell = {
   agentId?: string;
 };
 
-// A Subagent as the last poll saw it: its status and since when it holds it.
-export type Seen = { id: string; label: string; status: string; since: number };
+// A Subagent as the last poll of the session's agents saw it: its label, its
+// status and since when it holds it.
+export type PolledAgent = {
+  id: string;
+  label: string;
+  status: string;
+  since: number;
+};
 
 declare module "claude-code" {
   interface PluginState {
     "background-band": {
       shells: Shell[];
-      agents: Seen[];
+      agents: PolledAgent[];
       warned: string[];
       now: number;
     };

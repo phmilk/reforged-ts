@@ -1,9 +1,9 @@
 // The band of background work (#769), a project mod kept under .claude/mods/
 // and listed by the repository's marketplace (.claude-plugin/marketplace.json):
 // the shared project settings declare that marketplace by its GitHub source,
-// at its default branch, and enable the mod, so the Template, which carries a
-// copy of those settings (ADR 0024), runs the library's copy of the mod with
-// no file of it copied. The mod's own tests run under `claude plugin test`
+// at its default branch, and enable the mod. The Template carries a copy of
+// those settings (ADR 0024) but no file of the mod, by the decision of #767:
+// it runs the library's copy. The mod's own tests run under `claude plugin test`
 // (.claude/mods/background-band/README.md).
 import { existsSync } from "node:fs";
 import { join } from "node:path";
