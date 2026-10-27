@@ -181,6 +181,37 @@ describe("coverageVerdict", () => {
     expect(twice(["It reads the body.", "#11", "It reads"]).gaps).toEqual([]);
   });
 
+  it("names a row whose Ticket is a sub-issue outside the Board repositories as such", () => {
+    const rows = ROWS.map((row) =>
+      row[0] === "The board is unchanged."
+        ? [row[0], "phmilk/other#7", row[2]]
+        : row,
+    );
+    const verdict = coverageVerdict(
+      spec(
+        [DECISIONS, TESTING, NOTES, table(...rows)],
+        [
+          TICKET_11,
+          TICKET_12,
+          ticket(7, TICKET_11.body, {
+            repository: "phmilk/other",
+            state: "OPEN",
+            stateReason: null,
+          }),
+        ],
+      ),
+    );
+
+    expect(verdict.gaps).toEqual([
+      {
+        kind: "outside-board",
+        item: "The board is unchanged.",
+        ticket: { repository: "phmilk/other", number: 7 },
+      },
+    ]);
+    expect(verdict.tickets).toBe(2);
+  });
+
   it("reads the first table of the section only", () => {
     const verdict = coverageVerdict(
       spec(

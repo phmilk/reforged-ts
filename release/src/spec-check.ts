@@ -58,7 +58,8 @@ export interface FetchedSpec extends IssueRef {
  * One thing still missing before the Spec may close: no Coverage table; an
  * item with no row; a row whose quote is found in no item, or in items of
  * different texts; a row that names no Ticket, or one that is not a
- * sub-issue of the Spec, or a criterion its Ticket does not hold; a Ticket
+ * sub-issue of the Spec, or a sub-issue outside the Board repositories, or
+ * a criterion its Ticket does not hold; a Ticket
  * still open, with its assignees, or closed otherwise than as completed; a
  * criterion unchecked; a "check whether…" without its `Outcome:` line.
  */
@@ -74,6 +75,12 @@ export type Gap =
     }
   | { kind: "no-ticket"; item: string }
   | { kind: "not-sub-issue"; item: string; ticket: IssueRef }
+  | {
+      /** A sub-issue of the Spec, in a repository outside the Claim board. */
+      kind: "outside-board";
+      item: string;
+      ticket: IssueRef;
+    }
   | {
       kind: "open";
       ticket: IssueRef;
@@ -407,18 +414,31 @@ function itemGaps(items: readonly string[], rows: readonly Row[]): Gap[] {
   ];
 }
 
-/** The gaps of the rows: a Ticket they do not name, is no sub-issue or lacks the criterion. */
+/**
+ * The gaps of the rows: a Ticket they do not name, that is no sub-issue,
+ * that is a sub-issue outside the Board repositories (`outside`), and so
+ * no Ticket, or that lacks the criterion.
+ */
 function rowGaps(
   rows: readonly Row[],
   home: string,
   tickets: readonly FetchedTicket[],
+  outside: readonly FetchedTicket[],
 ): Gap[] {
   return rows.flatMap((row): Gap[] => {
     const ref = ticketNamedBy(row.ticket, home);
     if (ref === null) return [{ kind: "no-ticket", item: row.item }];
     const ticket = tickets.find((candidate) => sameIssue(candidate, ref));
     if (ticket === undefined) {
-      return [{ kind: "not-sub-issue", item: row.item, ticket: ref }];
+      return [
+        {
+          kind: outside.some((candidate) => sameIssue(candidate, ref))
+            ? "outside-board"
+            : "not-sub-issue",
+          item: row.item,
+          ticket: ref,
+        },
+      ];
     }
     const quote = normalize(row.criterion);
     return criteriaOf(ticket.body).some((criterion) =>
@@ -472,16 +492,20 @@ function ticketGaps(ticket: FetchedTicket): Gap[] {
 
 /** The verdict on `spec`. */
 export function coverageVerdict(spec: FetchedSpec): Verdict {
-  const tickets = spec.tickets.filter((ticket) =>
-    BOARD_REPOSITORIES.includes(ticket.repository),
-  );
+  const onBoard = (ticket: FetchedTicket) =>
+    BOARD_REPOSITORIES.includes(ticket.repository);
+  const tickets = spec.tickets.filter(onBoard);
+  const outside = spec.tickets.filter((ticket) => !onBoard(ticket));
   const parts = sections(spec.body);
   const items = ITEM_SECTIONS.flatMap((name) => itemsOf(parts.get(name) ?? []));
   const rows = tableOf(parts.get(TABLE_SECTION) ?? []);
   const gaps: Gap[] = [
     ...(rows === null
       ? [{ kind: "no-table" } as const]
-      : [...itemGaps(items, rows), ...rowGaps(rows, spec.repository, tickets)]),
+      : [
+          ...itemGaps(items, rows),
+          ...rowGaps(rows, spec.repository, tickets, outside),
+        ]),
     ...tickets.flatMap(ticketGaps),
   ];
   return {

@@ -49,6 +49,8 @@ function describeGap(home: string, gap: Gap): string {
       return `The row of "${gap.item}" names no Ticket.`;
     case "not-sub-issue":
       return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, which is not a sub-issue of the Spec.`;
+    case "outside-board":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, a sub-issue of the Spec outside the Board repositories (${BOARD_REPOSITORIES.join(", ")}), so no Ticket.`;
     case "no-criterion":
       return `The row of "${gap.item}" quotes the criterion "${gap.criterion}", which ${displayRef(home, gap.ticket)} does not hold.`;
     case "open":
