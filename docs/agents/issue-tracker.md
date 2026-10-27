@@ -132,8 +132,9 @@ Every item of a Spec reaches a Ticket, and a Spec closes on evidence that each w
 
 A split writes the Spec's Coverage table into the Spec's body, as a `## Coverage table` section at its end, after the Tickets are published, so that every row names a Ticket that exists; `split-spec` writes it, and the coverage check, `pnpm spec:check <spec>`, reads it, by this rule and this format.
 
+- **One table**: the first table of the section is the Coverage table, and any later one is read as prose.
 - **One row per item**, in three columns:
-  - **Item**: the item, quoted from the Spec word for word, short enough to find;
+  - **Item**: the item, quoted from the Spec word for word, short enough to find and long enough to name one item: a quote found in items of different texts covers none of them, and an item written twice, word for word in two sections, takes a row each;
   - **Ticket**: the Ticket that carries it, `#761`, or in full form when it lives in the other repository, `phmilk/reforged-ts-template#121`;
   - **Criterion**: the criterion, quoted from the Ticket word for word.
 - **The outcome of a "check whether…"** is written in its Ticket after its criterion, as an `Outcome:` line, when the Ticket is delivered. The line is indented under the criterion's checkbox, so that it stays in the same list item:

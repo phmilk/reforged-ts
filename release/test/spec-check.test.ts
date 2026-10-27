@@ -349,6 +349,23 @@ describe("coverageVerdict", () => {
     ]);
   });
 
+  it("keeps a close reason GitHub adds later as GitHub writes it", () => {
+    const verdict = coverageVerdict(
+      spec(
+        [DECISIONS, TESTING, NOTES, table(...ROWS)],
+        [{ ...TICKET_11, stateReason: "SUPERSEDED" }, TICKET_12],
+      ),
+    );
+
+    expect(verdict.gaps).toEqual([
+      {
+        kind: "not-completed",
+        ticket: { repository: LIBRARY, number: 11 },
+        reason: "SUPERSEDED",
+      },
+    ]);
+  });
+
   it("names a criterion left unchecked in its Ticket", () => {
     const verdict = coverageVerdict(
       spec(

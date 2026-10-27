@@ -64,7 +64,7 @@ function describeGap(home: string, gap: Gap): string {
           : `with ${plural(gap.unchecked, "criterion", "criteria")} unchecked`
       }.`;
     case "not-completed":
-      return `${displayRef(home, gap.ticket)} closed as ${gap.reason ?? "no reason GitHub gives"}, not as completed.`;
+      return `${displayRef(home, gap.ticket)} closed ${gap.reason === null ? "with no reason given" : `as ${gap.reason}`}, not as completed.`;
     case "unchecked":
       return `${displayRef(home, gap.ticket)} leaves a criterion unchecked: "${gap.criterion}".`;
     case "no-outcome":

@@ -8,38 +8,26 @@
  *
  * What an item is, what the Coverage table holds and where the outcome of
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
- * "A Spec's coverage"; this module reads by them. A quoted cell is found
- * in a text that contains it, once both are read without bold markers,
- * with straight quotes and single spaces. A row covers the one item its
- * quote identifies: a quote found in items of different texts covers none
- * of them (`itemGaps` has the rule), so "quoted short enough to find"
- * means short enough, and long enough to name one item.
+ * "A Spec's coverage", with which items a row's quote covers and which
+ * table of the section is the Coverage table; this module reads by them
+ * and restates none. A quoted cell is found in a text that contains it,
+ * once both are read without bold markers, with straight quotes and
+ * single spaces.
  */
 import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
 import type { GitHubApi } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
 
-/** GitHub's `IssueStateReason`: why an issue closed, or that it was reopened. */
-export type StateReason =
-  "COMPLETED" | "NOT_PLANNED" | "DUPLICATE" | "REOPENED";
-
-const STATE_REASONS: readonly string[] = [
-  "COMPLETED",
-  "NOT_PLANNED",
-  "DUPLICATE",
-  "REOPENED",
-] satisfies StateReason[];
-
-/** Whether `value` is one of GitHub's `IssueStateReason`. */
-const isStateReason = (value: unknown): value is StateReason =>
-  typeof value === "string" && STATE_REASONS.includes(value);
-
 /** A sub-issue of the Spec, as GitHub returns it. */
 export interface FetchedTicket extends IssueRef {
   state: "OPEN" | "CLOSED";
-  /** Why it closed; `null` when GitHub gives no reason (an issue never closed). */
-  stateReason: StateReason | null;
+  /**
+   * Why it closed, GitHub's `IssueStateReason` as written (`COMPLETED`,
+   * `NOT_PLANNED`, `DUPLICATE`, `REOPENED` today), so that a value GitHub
+   * adds later still shows; `null` when GitHub gives none.
+   */
+  stateReason: string | null;
   /** The logins assigned to it, in GitHub's order. */
   assignees: readonly string[];
   /** Its body, Markdown. */
@@ -94,7 +82,7 @@ export type Gap =
       ticket: IssueRef;
       criterion: string;
     }
-  | { kind: "not-completed"; ticket: IssueRef; reason: StateReason | null }
+  | { kind: "not-completed"; ticket: IssueRef; reason: string | null }
   | { kind: "unchecked"; ticket: IssueRef; criterion: string }
   | { kind: "no-outcome"; ticket: IssueRef; criterion: string };
 
@@ -165,8 +153,8 @@ const BOLD_LABEL = /^\*\*[^*]+\*\*$/;
 function normalize(text: string): string {
   return text
     .replaceAll("**", "")
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -364,11 +352,15 @@ function ticketNamedBy(cell: string, home: string): IssueRef | null {
   return { repository: ref.at(1) ?? home, number: Number(ref[2]) };
 }
 
-/** The repository and number of `issue`, and nothing else. */
-const refOfIssue = ({ repository, number }: IssueRef): IssueRef => ({
+/** `issue` stripped to its repository and number. */
+const bareRef = ({ repository, number }: IssueRef): IssueRef => ({
   repository,
   number,
 });
+
+/** Whether a sub-issue lives in a Board repository, and so is a Ticket. */
+const onBoard = (subIssue: FetchedTicket): boolean =>
+  BOARD_REPOSITORIES.includes(subIssue.repository);
 
 /** Whether `a` and `b` are the same issue. */
 const sameIssue = (a: IssueRef, b: IssueRef): boolean =>
@@ -377,12 +369,10 @@ const sameIssue = (a: IssueRef, b: IssueRef): boolean =>
 
 /**
  * The gaps of the items: each item no row covers, then each row whose
- * quote identifies no item. A row covers the one item its Item cell is
- * found in. A quote found in items of different texts identifies none of
- * them and covers nothing, so a short, generic quote cannot cover what it
- * was not written for; a quote found in several items of the same text
- * (the same words in two sections) covers the first of them no earlier
- * row covered. A quote found in no item covers nothing.
+ * quote is found in no item or in items of different texts. Which items a
+ * quote covers is the issue tracker doc's ("The Coverage table", the Item
+ * column); of items written twice, a row covers the first no earlier row
+ * covered.
  */
 function itemGaps(items: readonly string[], rows: readonly Row[]): Gap[] {
   const texts = items.map(normalize);
@@ -415,16 +405,17 @@ function itemGaps(items: readonly string[], rows: readonly Row[]): Gap[] {
 }
 
 /**
- * The gaps of the rows: a Ticket they do not name, that is no sub-issue,
- * that is a sub-issue outside the Board repositories (`outside`), and so
+ * The gaps of the rows: a Ticket they do not name, that is no sub-issue of
+ * `subIssues`, that is a sub-issue outside the Board repositories, and so
  * no Ticket, or that lacks the criterion.
  */
 function rowGaps(
   rows: readonly Row[],
   home: string,
-  tickets: readonly FetchedTicket[],
-  outside: readonly FetchedTicket[],
+  subIssues: readonly FetchedTicket[],
 ): Gap[] {
+  const tickets = subIssues.filter(onBoard);
+  const outside = subIssues.filter((ticket) => !onBoard(ticket));
   return rows.flatMap((row): Gap[] => {
     const ref = ticketNamedBy(row.ticket, home);
     if (ref === null) return [{ kind: "no-ticket", item: row.item }];
@@ -449,7 +440,7 @@ function rowGaps(
           {
             kind: "no-criterion",
             item: row.item,
-            ticket: refOfIssue(ticket),
+            ticket: bareRef(ticket),
             criterion: row.criterion,
           },
         ];
@@ -463,7 +454,7 @@ function rowGaps(
  * outcome.
  */
 function ticketGaps(ticket: FetchedTicket): Gap[] {
-  const ref = refOfIssue(ticket);
+  const ref = bareRef(ticket);
   const criteria = criteriaOf(ticket.body);
   if (ticket.state === "OPEN") {
     return [
@@ -492,10 +483,7 @@ function ticketGaps(ticket: FetchedTicket): Gap[] {
 
 /** The verdict on `spec`. */
 export function coverageVerdict(spec: FetchedSpec): Verdict {
-  const onBoard = (ticket: FetchedTicket) =>
-    BOARD_REPOSITORIES.includes(ticket.repository);
   const tickets = spec.tickets.filter(onBoard);
-  const outside = spec.tickets.filter((ticket) => !onBoard(ticket));
   const parts = sections(spec.body);
   const items = ITEM_SECTIONS.flatMap((name) => itemsOf(parts.get(name) ?? []));
   const rows = tableOf(parts.get(TABLE_SECTION) ?? []);
@@ -504,7 +492,7 @@ export function coverageVerdict(spec: FetchedSpec): Verdict {
       ? [{ kind: "no-table" } as const]
       : [
           ...itemGaps(items, rows),
-          ...rowGaps(rows, spec.repository, tickets, outside),
+          ...rowGaps(rows, spec.repository, spec.tickets),
         ]),
     ...tickets.flatMap(ticketGaps),
   ];
@@ -578,7 +566,7 @@ function ticketOf(node: unknown, spec: string): FetchedTicket {
     repository,
     number: node.number,
     state: node.state,
-    stateReason: isStateReason(node.stateReason) ? node.stateReason : null,
+    stateReason: typeof node.stateReason === "string" ? node.stateReason : null,
     assignees: nodesOf(node.assignees).flatMap((user) =>
       isRecord(user) && typeof user.login === "string" ? [user.login] : [],
     ),
