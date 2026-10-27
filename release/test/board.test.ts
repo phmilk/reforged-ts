@@ -772,6 +772,19 @@ describe("statusOf", () => {
       { labels: ["spec", "needs-split", "ready-for-human"] },
       "Backlog",
     ],
+    [
+      "Backlog: an unsplit Spec still ready-for-agent, read as the board derives its labels",
+      { labels: ["spec", "ready-for-agent"] },
+      "Backlog",
+    ],
+    [
+      "Ready: a Spec split into closed Tickets still needs-split, read as the board derives its labels",
+      {
+        labels: ["spec", "needs-split"],
+        subIssues: [{ ...sub(11), state: "CLOSED" }],
+      },
+      "Ready",
+    ],
     ["Ready: ready-for-agent", { labels: ["ready-for-agent"] }, "Ready"],
     ["Ready: ready-for-human", { labels: ["bug", "ready-for-human"] }, "Ready"],
     [
@@ -789,7 +802,7 @@ describe("statusOf", () => {
     ["Backlog: no label", {}, "Backlog"],
     [
       "Backlog: a parent with no open child",
-      { labels: ["spec"], subIssues: [{ ...sub(11), state: "CLOSED" }] },
+      { subIssues: [{ ...sub(11), state: "CLOSED" }] },
       "Backlog",
     ],
   ] as const)("%s", (_row, more, expected) => {
@@ -868,7 +881,9 @@ describe("statusOf", () => {
     expect(statusOf(spec, issueLookup([templateTicket, libraryIssue]))).toBe(
       "In progress",
     );
-    expect(statusOf(spec, issueLookup([libraryIssue]))).toBe("Backlog");
+    // Its own labels instead, as the board derives them: a split Spec is
+    // ready-for-agent (ADR 0025).
+    expect(statusOf(spec, issueLookup([libraryIssue]))).toBe("Ready");
   });
 
   it("leaves out a closed sub-issue and one the lookup does not know", () => {
@@ -951,12 +966,12 @@ describe("specLabelsOf", () => {
     [
       "a closed Spec is left alone",
       { state: "CLOSED", labels: ["spec", "ready-for-agent"] },
-      { add: [], remove: [] },
+      null,
     ],
     [
       "an issue that is not a Spec is left alone",
       { labels: ["ready-for-agent"] },
-      { add: [], remove: [] },
+      null,
     ],
   ] as const)("%s", (_row, more, expected) => {
     expect(specLabelsOf(issue(10, more))).toEqual(expected);
@@ -1021,6 +1036,7 @@ describe("planBoardLabels", () => {
           summary: `Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.`,
         },
       ],
+      specs: 4,
       kept: 1,
     });
   });
@@ -1031,7 +1047,11 @@ describe("planBoardLabels", () => {
       labelIds: LABEL_IDS,
     };
 
-    expect(planBoardLabels(state)).toEqual({ requests: [], kept: 0 });
+    expect(planBoardLabels(state)).toEqual({
+      requests: [],
+      specs: 0,
+      kept: 0,
+    });
   });
 
   it("stops when a label it must write is missing from the repository, naming it", () => {

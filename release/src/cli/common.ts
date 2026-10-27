@@ -206,6 +206,29 @@ export async function ghOutput(
   }
 }
 
+/**
+ * The token in the environment variable `variable`, else the `gh`
+ * login's, and where it came from, for the CLI to say.
+ */
+export async function tokenFrom(
+  env: Readonly<Record<string, string | undefined>>,
+  gh: Gh,
+  variable: string,
+): Promise<{ token: string; source: string }> {
+  const fromEnv = env[variable];
+  if (fromEnv !== undefined && fromEnv !== "") {
+    return { token: fromEnv, source: variable };
+  }
+  return {
+    token: await ghOutput(
+      gh,
+      ["auth", "token"],
+      `the token of the gh authentication, since ${variable} is not set; run gh auth login`,
+    ),
+    source: `the gh login (${variable} is not set)`,
+  };
+}
+
 const API_ROOT = "https://api.github.com";
 
 /**

@@ -139,11 +139,11 @@ export const [LIBRARY, TEMPLATE] = BOARD_REPOSITORIES;
 export const LABEL_IDS: Readonly<
   Record<string, Readonly<Record<string, string>>>
 > = {
-  [BOARD_REPOSITORIES[0]]: {
+  [LIBRARY]: {
     "needs-split": "LA_split",
     "ready-for-agent": "LA_ready",
   },
-  [BOARD_REPOSITORIES[1]]: {
+  [TEMPLATE]: {
     "needs-split": "LA_t_split",
     "ready-for-agent": "LA_t_ready",
   },

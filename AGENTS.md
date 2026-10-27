@@ -75,7 +75,7 @@ Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The w
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec` or `write-spec`, `ticket` on one created with `to-tickets`. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec` or `write-spec`, `ticket` on one created with `to-tickets`. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
 
 ### Skills
 

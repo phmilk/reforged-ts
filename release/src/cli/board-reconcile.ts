@@ -28,7 +28,6 @@ import {
 import {
   appendSummary,
   errorMessage,
-  ghOutput,
   gitHubApi,
   invokedDirectly,
   parseRunArgs,
@@ -36,6 +35,7 @@ import {
   printPlan,
   PROCESS_OUTPUT,
   runGh,
+  tokenFrom,
   type Gh,
   type Output,
 } from "./common.js";
@@ -71,24 +71,6 @@ function parseArgs(args: readonly string[]): Options | undefined {
   return {
     dryRun: parsed.dryRun,
     maxDeletes: maxDeletes === undefined ? undefined : Number(maxDeletes),
-  };
-}
-
-/** The token and where it came from. */
-async function tokenOf(
-  context: Context,
-): Promise<{ token: string; source: string }> {
-  const fromEnv = context.env[TOKEN_VARIABLE];
-  if (fromEnv !== undefined && fromEnv !== "") {
-    return { token: fromEnv, source: TOKEN_VARIABLE };
-  }
-  return {
-    token: await ghOutput(
-      context.gh,
-      ["auth", "token"],
-      `the token of the gh authentication, since ${TOKEN_VARIABLE} is not set; run gh auth login`,
-    ),
-    source: `the gh login (${TOKEN_VARIABLE} is not set)`,
   };
 }
 
@@ -136,7 +118,11 @@ export async function main(
   }
 
   try {
-    const { token, source } = await tokenOf(context);
+    const { token, source } = await tokenFrom(
+      context.env,
+      context.gh,
+      TOKEN_VARIABLE,
+    );
     const api = gitHubApi(
       context.fetcher,
       token,

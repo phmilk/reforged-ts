@@ -25,3 +25,9 @@ We amend ADR 0016 and ADR 0023. A Spec is split once it has a Ticket, and an uns
 - An Agent outside Claude Code meets the rule at the claim check only.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/737
+
+## Amendment (2026-10-27)
+
+The pair of labels has its own writer inside the board, not the reconcile itself (#740). The reconcile writes with `PROJECT_TOKEN`, the maintainer's classic token with the `project` scope alone, which writes no label in a public repository. So `board.yml` runs `pnpm board:labels` first, in a job of the environment `app` with the repositories' App token over both Board repositories (`issues: write`, which the App already holds), then the reconcile, whatever the labels did. The board, its one workflow, stays the single writer of both, and the rule is one pure function, `specLabelsOf`, which the Status rules read too: a Status never waits on a label write. Widening `PROJECT_TOKEN` to `public_repo` was turned down (a long-lived token would write in every public repository of the owner), and so was copying the App's key into the environment `board` (a second copy of the key to rotate, and a maintainer step before the merge). A Spec that carries another triage label than `ready-for-agent` (`ready-for-human`, `needs-triage`, `needs-info`, `wontfix`) keeps it and gets or loses `needs-split` alone, so that a split never skips triage.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/740

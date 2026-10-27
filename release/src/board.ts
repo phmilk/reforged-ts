@@ -66,7 +66,7 @@ export const STATUS_OPTIONS = [
     name: "Backlog",
     color: "GRAY",
     description:
-      "Everything else: needs-split, needs-triage, needs-info, no label, a parent with no open child.",
+      "An unsplit spec (needs-split), or everything else: needs-triage, needs-info, no label, a parent with no open child.",
   },
   {
     name: "Ready",
@@ -443,14 +443,6 @@ ${BOARD_ISSUE_FRAGMENT}`,
   }
 }
 ${BOARD_ISSUE_FRAGMENT}`,
-  // The two labels of an open Spec, by alias: GraphQL names no label in a
-  // variable list.
-  labels: `query Labels($owner: String!, $name: String!) {
-  repository(owner: $owner, name: $name) {
-    needsSplit: label(name: "needs-split") { id }
-    readyForAgent: label(name: "ready-for-agent") { id }
-  }
-}`,
 } as const;
 
 const sameName = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -1013,12 +1005,6 @@ export function issueLookup(issues: readonly BoardIssue[]): IssueLookup {
   return (ref) => index.get(issueKey(ref));
 }
 
-/** The labels that make an open issue Ready on their own. */
-const READY_LABELS: readonly string[] = ["ready-for-agent", "ready-for-human"];
-
-/** The label of a wayfinder map, whose open children are its frontier: Ready. */
-const MAP_LABEL = "wayfinder:map";
-
 /**
  * The label of an open Spec with no Ticket, an unsplit Spec (ADR 0025):
  * Backlog, whatever its other labels. `board:labels` derives it.
@@ -1030,6 +1016,12 @@ export const SPEC_LABEL = "spec";
 
 /** The triage label of a split Spec, swapped with `NEEDS_SPLIT_LABEL`. */
 const READY_FOR_AGENT = "ready-for-agent";
+
+/** The labels that make an open issue Ready on their own. */
+const READY_LABELS: readonly string[] = [READY_FOR_AGENT, "ready-for-human"];
+
+/** The label of a wayfinder map, whose open children are its frontier: Ready. */
+const MAP_LABEL = "wayfinder:map";
 
 /**
  * The triage labels a Spec keeps, split or not: one carrying any of them
@@ -1050,16 +1042,16 @@ export interface LabelChange {
 
 /**
  * The labels an open Spec (labelled `spec`) lacks or carries wrongly by
- * ADR 0025: with no sub-issue, open or closed, it is unsplit, so
- * `needs-split` in and `ready-for-agent` out; with one or more, the
- * reverse. A Spec carrying another triage label (`KEPT_TRIAGE_LABELS`)
- * keeps it and gets or loses `needs-split` alone. Nothing for a Spec
- * already right, a closed one or an issue that is no Spec.
+ * ADR 0025, empty when it is right: with no sub-issue, open or closed, it
+ * is unsplit, so `needs-split` in and `ready-for-agent` out; with one or
+ * more, the reverse. A Spec carrying another triage label
+ * (`KEPT_TRIAGE_LABELS`) keeps it and gets or loses `needs-split` alone.
+ * `null` for a closed Spec and an issue that is no Spec.
  */
-export function specLabelsOf(issue: BoardIssue): LabelChange {
-  const change: LabelChange = { add: [], remove: [] };
+export function specLabelsOf(issue: BoardIssue): LabelChange | null {
   const has = (label: string) => issue.labels.includes(label);
-  if (issue.state !== "OPEN" || !has(SPEC_LABEL)) return change;
+  if (issue.state !== "OPEN" || !has(SPEC_LABEL)) return null;
+  const change: LabelChange = { add: [], remove: [] };
   const triaged = issue.labels.some((label) =>
     KEPT_TRIAGE_LABELS.includes(label),
   );
@@ -1071,6 +1063,20 @@ export function specLabelsOf(issue: BoardIssue): LabelChange {
     if (has(NEEDS_SPLIT_LABEL)) change.remove.push(NEEDS_SPLIT_LABEL);
   }
   return change;
+}
+
+/**
+ * The labels of `issue` once `specLabelsOf` is applied: what the Status
+ * rules read, so that a Status never waits on a label write.
+ */
+function derivedLabels(issue: BoardIssue): readonly string[] {
+  const change = specLabelsOf(issue);
+  return change === null
+    ? issue.labels
+    : [
+        ...issue.labels.filter((label) => !change.remove.includes(label)),
+        ...change.add,
+      ];
 }
 
 /**
@@ -1097,7 +1103,8 @@ export const PARENT_RULE_ORDER: readonly Status[] = [
  * it has an open blocker, whatever its labels; Backlog, `needs-split`, an
  * unsplit Spec, whatever its other labels; Ready, `ready-for-agent`,
  * `ready-for-human`, or a child of a `wayfinder:map`; Backlog, everything
- * else.
+ * else. An open Spec's labels are read as `specLabelsOf` derives them
+ * (ADR 0025), whether or not `board:labels` has written them yet.
  */
 export function statusOf(issue: BoardIssue, lookup: IssueLookup): Status {
   return highestStatus(issue, lookup, new Set());
@@ -1129,9 +1136,10 @@ function highestStatus(
   }
   if (highest >= 0) return PARENT_RULE_ORDER[highest];
   if (issue.blockedBy > 0) return "Blocked";
-  if (issue.labels.includes(NEEDS_SPLIT_LABEL)) return "Backlog";
+  const labels = derivedLabels(issue);
+  if (labels.includes(NEEDS_SPLIT_LABEL)) return "Backlog";
   if (
-    issue.labels.some((label) => READY_LABELS.includes(label)) ||
+    labels.some((label) => READY_LABELS.includes(label)) ||
     issue.parent?.labels.includes(MAP_LABEL) === true
   ) {
     return "Ready";
@@ -1400,10 +1408,13 @@ export interface LabelState {
   >;
 }
 
+/** What `board:labels` will write, and what it found. */
 export interface BoardLabelPlan {
   /** The requests to send, in order. */
   requests: BoardRequest[];
-  /** How many Specs already carry the right pair. */
+  /** How many open Specs of both repositories it read. */
+  specs: number;
+  /** How many of them already carry the right pair. */
   kept: number;
 }
 
@@ -1416,11 +1427,14 @@ export interface BoardLabelPlan {
  */
 export function planBoardLabels(state: LabelState): BoardLabelPlan {
   const requests: BoardRequest[] = [];
+  let specs = 0;
   let kept = 0;
   for (const issue of state.issues) {
     if (!BOARD_REPOSITORIES.includes(issue.repository)) continue;
-    if (issue.state !== "OPEN" || !issue.labels.includes(SPEC_LABEL)) continue;
-    const { add, remove } = specLabelsOf(issue);
+    const change = specLabelsOf(issue);
+    if (change === null) continue;
+    specs++;
+    const { add, remove } = change;
     if (add.length === 0 && remove.length === 0) {
       kept++;
       continue;
@@ -1455,7 +1469,7 @@ export function planBoardLabels(state: LabelState): BoardLabelPlan {
       });
     }
   }
-  return { requests, kept };
+  return { requests, specs, kept };
 }
 
 /** The `nodes` of a connection, or none. */
@@ -1664,6 +1678,18 @@ const LABEL_ALIASES: Readonly<Record<string, string>> = {
   [READY_FOR_AGENT]: "readyForAgent",
 };
 
+/** The two labels of an open Spec in one repository, one alias each. */
+const LABELS_QUERY = `query Labels($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+${Object.entries(LABEL_ALIASES)
+  .map(
+    ([name, alias]) =>
+      `    ${alias}: label(name: ${JSON.stringify(name)}) { id }`,
+  )
+  .join("\n")}
+  }
+}`;
+
 /**
  * What `board:labels` reads through `api`: the open issues of both
  * repositories and, in each, the ids of the two labels of an open Spec.
@@ -1673,7 +1699,7 @@ export async function readLabelState(api: GitHubApi): Promise<LabelState> {
   const labelIds: Record<string, Record<string, string>> = {};
   for (const repository of BOARD_REPOSITORIES) {
     issues.push(...(await readOpenIssues(api, repository)));
-    const data = await graphql(api, QUERIES.labels, ownerAndName(repository));
+    const data = await graphql(api, LABELS_QUERY, ownerAndName(repository));
     const found = isRecord(data.repository) ? data.repository : {};
     labelIds[repository] = Object.fromEntries(
       Object.entries(LABEL_ALIASES).flatMap(([name, alias]) => {

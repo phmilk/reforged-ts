@@ -16,13 +16,11 @@ import {
   describeRequest,
   planBoardLabels,
   readLabelState,
-  SPEC_LABEL,
   type BoardLabelPlan,
 } from "../board.js";
 import {
   appendSummary,
   errorMessage,
-  ghOutput,
   gitHubApi,
   invokedDirectly,
   parseRunArgs,
@@ -30,6 +28,7 @@ import {
   printPlan,
   PROCESS_OUTPUT,
   runGh,
+  tokenFrom,
   type Gh,
   type Output,
 } from "./common.js";
@@ -47,24 +46,6 @@ export interface Context {
   fetcher: typeof fetch;
 }
 
-/** The token and where it came from. */
-async function tokenOf(
-  context: Context,
-): Promise<{ token: string; source: string }> {
-  const fromEnv = context.env[TOKEN_VARIABLE];
-  if (fromEnv !== undefined && fromEnv !== "") {
-    return { token: fromEnv, source: TOKEN_VARIABLE };
-  }
-  return {
-    token: await ghOutput(
-      context.gh,
-      ["auth", "token"],
-      `the token of the gh authentication, since ${TOKEN_VARIABLE} is not set; run gh auth login`,
-    ),
-    source: `the gh login (${TOKEN_VARIABLE} is not set)`,
-  };
-}
-
 export async function main(
   args: readonly string[],
   output: Output,
@@ -77,7 +58,11 @@ export async function main(
   }
 
   try {
-    const { token, source } = await tokenOf(context);
+    const { token, source } = await tokenFrom(
+      context.env,
+      context.gh,
+      TOKEN_VARIABLE,
+    );
     const api = gitHubApi(context.fetcher, token, "reforged-ts-board-labels");
     output.stdout(`Token: ${source}.\n`);
     const state = await readLabelState(api);
@@ -92,12 +77,8 @@ export async function main(
       );
       throw error;
     }
-    const specs = state.issues.filter(
-      ({ repository, labels }) =>
-        BOARD_REPOSITORIES.includes(repository) && labels.includes(SPEC_LABEL),
-    ).length;
     output.stdout(
-      `${plural(specs, "open Spec", "open Specs")} of ${BOARD_REPOSITORIES.join(" and ")}.\n` +
+      `${plural(plan.specs, "open Spec", "open Specs")} of ${BOARD_REPOSITORIES.join(" and ")}.\n` +
         `As they should be: ${plural(plan.kept, "Spec", "Specs")}.\n`,
     );
     printPlan(output, plan, describeRequest, parsed.dryRun);
