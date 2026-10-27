@@ -1,7 +1,7 @@
 ---
 title: Rawcodes
 sidebar_position: 14
-description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map, hover and go to definition on a Rawcode literal, the lint rule on unknown Rawcodes, and the codes that are not Rawcodes.
+description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map and those defined in code, hover and go to definition on a Rawcode literal, the lint rule on unknown Rawcodes, and the codes that are not Rawcodes.
 ---
 
 # Rawcodes
@@ -386,6 +386,8 @@ The overloads cost type-check time for each literal `FourCC` call, and nothing a
 ## Custom objects of the map
 
 A Custom object is one the map adds in the World Editor's Object Editor: a unit Captain, `h000`, derived from the Footman, or an ability Arctic Blizzard, `A000`, derived from Blizzard. It exists only in the map folder's Object data, so `reforged-builtins` does not know it. `reforged-map` reads that Object data at build time and writes two things into `src/generated/`: a constant per Custom object, and a `FourCC` overload per Custom object and per Built-in object the map modifies.
+
+Objects defined in code, the [Object definitions](object-definitions.md) of `src/objects/`, get constants and overloads like the map folder's, whose TSDoc names the definition's file.
 
 :::note[In the Template]
 The Template writes them once its build calls `reforged-map` for the map's objects ([phmilk/reforged-ts-template#87](https://github.com/phmilk/reforged-ts-template/issues/87)). A Map project generated before that turns them on as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says.

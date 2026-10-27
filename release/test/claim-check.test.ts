@@ -56,6 +56,8 @@ function issue(
     assignees,
     authorAssignable: true,
     spec: null,
+    isSpec: false,
+    openBlockers: [],
     ...more,
   };
 }
@@ -89,7 +91,93 @@ function pullRequest(
   };
 }
 
+// The texts of ADR 0025's rules, word for word: a pull request closing Spec #12,
+// one closing Ticket #12 with an open blocker.
+const TEXT_SPEC_CLOSED =
+  '**Claim check failed.** #12 is a Spec, and this pull request would close it. A Spec is never closed by a pull request: name the Tickets this one delivers instead (`Closes #<ticket>`), and whoever merges the last of them closes the Spec after its coverage check. See `docs/agents/issue-tracker.md`, "Closing a Spec".';
+const TEXT_BLOCKED =
+  '**Claim check failed.** #12 is blocked by #9 and owner/other#5, still open, and this pull request would close it without them. Deliver them first, or in this pull request too (name them among the issues it closes), then re-run this check. See `docs/agents/issue-tracker.md`, "Claim".';
+
 describe("planPullRequest", () => {
+  it("fails a pull request that would close a Spec, and assigns nothing", () => {
+    expect(
+      planPullRequest(pullRequest([issue(12, [], { isSpec: true })])),
+    ).toEqual({
+      verdict: "failed",
+      assignments: [],
+      comments: [{ number: 34, id: null, body: body(TEXT_SPEC_CLOSED) }],
+      summary: [
+        "- #12: a Spec; failed: a pull request names the Tickets it delivers, never their Spec.",
+      ],
+      exitCode: 1,
+    });
+  });
+
+  it("fails a pull request that would close a Ticket with open blockers it does not close, naming each, and claims nothing", () => {
+    const blocked = issue(12, [], {
+      openBlockers: [
+        { repository: REPOSITORY, number: 9 },
+        { repository: "owner/other", number: 5 },
+      ],
+    });
+
+    expect(planPullRequest(pullRequest([blocked]))).toEqual({
+      verdict: "failed",
+      assignments: [],
+      comments: [{ number: 34, id: null, body: body(TEXT_BLOCKED) }],
+      summary: [
+        "- #12: blocked by #9 and owner/other#5, open and not closed by this pull request; failed.",
+      ],
+      exitCode: 1,
+    });
+  });
+
+  it("passes a pull request that closes a Ticket together with its open blockers, in either repository", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, [], {
+          openBlockers: [
+            { repository: REPOSITORY, number: 9 },
+            { repository: "owner/other", number: 5 },
+          ],
+        }),
+        issue(9),
+        issue(5, [], { repository: "owner/other" }),
+      ]),
+    );
+
+    expect(plan.verdict).toBe("passed");
+    expect(plan.assignments).toEqual([
+      { issue: 12, login: "alice" },
+      { issue: 9, login: "alice" },
+    ]);
+  });
+
+  it("names the one open blocker it does not close, once", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], {
+          openBlockers: [
+            { repository: REPOSITORY, number: 9 },
+            { repository: REPOSITORY, number: 11 },
+          ],
+        }),
+        issue(11, ["alice"]),
+      ]),
+    );
+
+    expect(plan.verdict).toBe("failed");
+    expect(plan.comments).toEqual([
+      {
+        number: 34,
+        id: null,
+        body: body(
+          '**Claim check failed.** #12 is blocked by #9, still open, and this pull request would close it without it. Deliver it first, or in this pull request too (name it among the issues it closes), then re-run this check. See `docs/agents/issue-tracker.md`, "Claim".',
+        ),
+      },
+    ]);
+  });
+
   it("assigns the author to an unclaimed issue and says so (text 1)", () => {
     expect(planPullRequest(pullRequest([issue(12)]))).toEqual({
       verdict: "passed",
@@ -595,13 +683,98 @@ function assigned(
     owner: "owner",
     assignees,
     ticketAssignees: null,
+    unsplit: false,
+    openBlockers: [],
     pullRequests: [],
     comment: null,
     ...more,
   };
 }
 
+// The premature Claims of ADR 0025, word for word: #12 an unsplit Spec, or
+// an issue blocked by #9 and owner/other#5.
+const TEXT_UNSPLIT_CLAIM =
+  '**Premature Claim.** #12 is a Spec with no Ticket yet (`needs-split`), and it is assigned: an unsplit Spec is not worked, whole or in part. Split it first; each Ticket is then claimed with its Spec, `gh issue edit <ticket> 12 --add-assignee @me`. Nothing was unassigned. See `docs/agents/issue-tracker.md`, "Claim".';
+const TEXT_BLOCKED_CLAIM =
+  '**Premature Claim.** #12 is claimed, but it is blocked by #9 and owner/other#5, still open: an issue is worked once its blockers are closed, or delivered with them in one pull request, as `implement-spec`\'s is. Nothing was unassigned. See `docs/agents/issue-tracker.md`, "Claim".';
+const TEXT_PREMATURE_SETTLED = "**Premature Claim** settled.";
+const BLOCKERS = [
+  { repository: REPOSITORY, number: 9 },
+  { repository: "owner/other", number: 5 },
+];
+
 describe("planIssue", () => {
+  it("comments on a Claim of an unsplit Spec, and unassigns nothing", () => {
+    expect(
+      planIssue(
+        assigned("alice", "alice", ["alice"], {
+          ticketAssignees: [],
+          unsplit: true,
+        }),
+      ),
+    ).toEqual({
+      verdict: "premature",
+      assignments: [],
+      comments: [{ number: 12, id: null, body: body(TEXT_UNSPLIT_CLAIM) }],
+      summary: ["- #12: a Spec with no Ticket, assigned to @alice; premature."],
+      exitCode: 0,
+    });
+  });
+
+  it("comments on a Claim of an issue with open blockers, naming each, and unassigns nothing", () => {
+    expect(
+      planIssue(
+        assigned("alice", "alice", ["alice"], { openBlockers: BLOCKERS }),
+      ),
+    ).toEqual({
+      verdict: "premature",
+      assignments: [],
+      comments: [{ number: 12, id: null, body: body(TEXT_BLOCKED_CLAIM) }],
+      summary: [
+        "- #12: claimed by @alice, blocked by #9 and owner/other#5; premature.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("puts a premature Claim and a conflict in the one comment", () => {
+    const plan = planIssue(
+      assigned("bob", "bob", ["alice", "bob"], { openBlockers: BLOCKERS }),
+    );
+
+    expect(plan.verdict).toBe("conflict");
+    expect(plan.comments).toEqual([
+      { number: 12, id: null, body: body(TEXT_4, TEXT_BLOCKED_CLAIM) },
+    ]);
+  });
+
+  it("draws nothing on an unassigned issue, blocked or an unsplit Spec, and settles an earlier comment that held premature Claims only", () => {
+    const plan = planIssue({
+      ...assigned("alice", "alice", [], {
+        unsplit: true,
+        openBlockers: BLOCKERS,
+      }),
+      action: "unassigned",
+      comment: { id: 3, body: body(TEXT_BLOCKED_CLAIM) },
+    });
+
+    expect(plan.verdict).toBe("clear");
+    expect(plan.comments).toEqual([
+      { number: 12, id: 3, body: body(TEXT_PREMATURE_SETTLED) },
+    ]);
+  });
+
+  it("settles a comment that held a conflict and a premature Claim to text 6", () => {
+    const plan = planIssue({
+      ...assigned("bob", "bob", ["alice"], { openBlockers: BLOCKERS }),
+      action: "unassigned",
+      openBlockers: [],
+      comment: { id: 3, body: body(TEXT_4, TEXT_BLOCKED_CLAIM) },
+    });
+
+    expect(plan.comments).toEqual([{ number: 12, id: 3, body: body(TEXT_6) }]);
+  });
+
   it("draws nothing on pairing: the first assignee added the second", () => {
     expect(planIssue(assigned("bob", "alice", ["alice", "bob"]))).toEqual({
       verdict: "clear",

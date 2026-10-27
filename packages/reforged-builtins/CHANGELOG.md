@@ -1,5 +1,11 @@
 # reforged-builtins
 
+## 1.0.0-alpha.7
+
+### Patch Changes
+
+- [#780](https://github.com/phmilk/reforged-ts/pull/780) [`86e6534`](https://github.com/phmilk/reforged-ts/commit/86e65345e46984dbd08332215ad4b741132d343f) Thanks [@wyller](https://github.com/wyller)! - Object sync, the Object data editor and the build's merge list a locale table in `war3map.imp` with flag `0x1d`, the 3.0.1 World Editor's fixed point (its first save keeps `0x15`, its next one sets `0x1d`), so a World Editor save after a sync leaves the map folder byte for byte: the World Editor contract of Object sync ([#713](https://github.com/phmilk/reforged-ts/issues/713)), a map folder synced from definitions of every kind and saved twice by the editor, holds it. A table listed earlier keeps its flag. The READMEs of `reforged-map` and `reforged-builtins` link the new Object definitions guide of the docs site.
+
 ## 1.0.0-alpha.6
 
 ### Minor Changes

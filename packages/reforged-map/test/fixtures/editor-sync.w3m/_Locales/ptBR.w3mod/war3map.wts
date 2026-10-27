@@ -1,0 +1,144 @@
+﻿STRING 1
+{
+Player 1
+}
+
+STRING 2
+{
+Force 1
+}
+
+STRING 3
+{
+reforged-ts-templante
+}
+
+STRING 4
+{
+Any
+}
+
+STRING 5
+{
+Nondescript
+}
+
+STRING 6
+{
+Unknown
+}
+
+STRING 7
+// Units: hfoo (Militia), Name (Name)
+{
+Militia
+}
+
+STRING 8
+// Units: h000 (Captain), Name (Name)
+{
+Captain
+}
+
+STRING 9
+// Units: h001 (Chevalier Élu), Name (Name)
+{
+Chevalier Élu
+}
+
+STRING 10
+// Items: I000 (Captain's Claws), Name (Name)
+{
+Captain's Claws
+}
+
+STRING 11
+// Destructibles: B000 (Gate), Name (Name)
+{
+Gate
+}
+
+STRING 12
+// Doodads: AObr (Skull Brazier), Name (Name)
+{
+Skull Brazier
+}
+
+STRING 13
+// Doodads: D000 (Statue of the Captain), Name (Name)
+{
+Statue of the Captain
+}
+
+STRING 14
+// Abilities: A000 (Arctic Blizzard), Name (Name)
+{
+Arctic Blizzard
+}
+
+STRING 15
+// Buffs/Effects: Binf (), Bufftip (Tooltip)
+{
+Burning Fire
+}
+
+STRING 16
+// Buffs/Effects: B000 (), Bufftip (Tooltip)
+{
+Holy Fire
+}
+
+STRING 17
+// Upgrades: R000 (Sharper Swords), Name (Name)
+{
+Sharper Swords
+}
+
+STRING 18
+// Units: h002 (Sergeant), Name (Name)
+{
+Sargento
+}
+
+STRING 19
+// Units: h002 (Sergeant), Tip (Tooltip - Basic)
+{
+Train a Sergeant
+}
+
+STRING 21
+// Abilities: A001 (Frost Rain), Name (Name)
+{
+Frost Rain
+}
+
+STRING 22
+// Abilities: A001 (Frost Rain), Tip (Tooltip - Normal)
+{
+Frost Rain - [Level 1]
+}
+
+STRING 23
+// Abilities: A001 (Frost Rain), Tip (Tooltip - Normal)
+{
+Frost Rain - [Level 2]
+}
+
+STRING 24
+// Abilities: A001 (Frost Rain), Tip (Tooltip - Normal)
+{
+Frost Rain - [Level 3]
+}
+
+STRING 25
+// Buffs/Effects: B001 (Frozen), EditorName (Name (Editor Only))
+{
+Frozen
+}
+
+STRING 26
+// Buffs/Effects: B001 (Frozen), Bufftip (Tooltip)
+{
+Frozen
+}
+

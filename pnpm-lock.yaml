@@ -693,6 +693,9 @@ importers:
       reforged-builtins:
         specifier: workspace:^
         version: link:../packages/reforged-builtins
+      reforged-map:
+        specifier: workspace:^
+        version: link:../packages/reforged-map
       reforged-test:
         specifier: workspace:^
         version: link:../packages/reforged-test

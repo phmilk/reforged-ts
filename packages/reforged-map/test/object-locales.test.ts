@@ -1,7 +1,7 @@
 // Localized values (#712): a translation is `_Locales/<locale>.w3mod/
 // war3map.wts`, a whole copy of the root war3map.wts in the Editor form
-// under the same `STRING n`, listed in war3map.imp with flag 0x15
-// (docs/research/locales.md, #711). Temporary Map projects copy the World
+// under the same `STRING n`, listed in war3map.imp with flag 0x1d, the
+// World Editor's fixed point (docs/research/locales.md, #711, #713). Temporary Map projects copy the World
 // Editor's fixtures; editor-locales.w3m holds a unit translated by hand into
 // ptBR and deDE, as the 3.0.1 editor kept it.
 
@@ -263,8 +263,8 @@ describe("Object sync of a localized value", () => {
       );
     }
     expect(importList(project.mapFolder)).toEqual([
-      [0x15, table("deDE")],
-      [0x15, table("ptBR")],
+      [0x1d, table("deDE")],
+      [0x1d, table("ptBR")],
     ]);
     // The other locales' folders stay empty.
     expect(
@@ -309,7 +309,7 @@ export const Squire = defineUnit({ rawcode: "h003", base: FourCC("hfoo"), fields
     expect(fs.existsSync(path.join(project.mapFolder, table("ptBR")))).toBe(
       false,
     );
-    expect(importList(project.mapFolder)).toEqual([[0x15, table("deDE")]]);
+    expect(importList(project.mapFolder)).toEqual([[0x1d, table("deDE")]]);
     const root = blocks(text(project.mapFolder, "war3map.wts"));
     expect(root.some((block) => block.endsWith(": Squire"))).toBe(true);
     expect(blocks(text(project.mapFolder, table("deDE")))).toEqual(
@@ -576,7 +576,7 @@ describe("war3map.imp and the locale tables", () => {
     );
   }
 
-  it("keeps every other entry where it is, and lists the tables in path order among theirs", () => {
+  it("keeps every other entry where it is, an existing table's flag included, and lists the tables in path order among theirs", () => {
     const read = imp([
       [0x0d, "war3mapImported/hero.mdx"],
       [0x15, table("ptBR")],
@@ -588,9 +588,9 @@ describe("war3map.imp and the locale tables", () => {
     ).toEqual(
       imp([
         [0x0d, "war3mapImported/hero.mdx"],
-        [0x15, table("deDE")],
+        [0x1d, table("deDE")],
         [0x15, table("ptBR")],
-        [0x15, table("zhTW")],
+        [0x1d, table("zhTW")],
         [0x0d, "war3mapImported/icon.blp"],
       ]),
     );
