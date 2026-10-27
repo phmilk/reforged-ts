@@ -170,6 +170,27 @@ describe("spec:check", () => {
     );
   });
 
+  it("names a row whose quote names no single item, and one that quotes none", async () => {
+    const result = await run(
+      ["10"],
+      specAnswer([subIssue(LIBRARY, 11), subIssue(TEMPLATE, 5)], {
+        body: BODY.replace(
+          "| It reads the body. | #11 |",
+          "| It | #11 |",
+        ).replace("| It prints the verdict. |", "| It sings. |"),
+      }),
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain(
+      "Not delivered, 4 gaps:\n" +
+        '- No row for the item "It reads the body.".\n' +
+        '- No row for the item "It prints the verdict.".\n' +
+        '- The row of "It" quotes words found in 2 items of different texts, so it covers none: quote enough to name one.\n' +
+        '- The row of "It sings." quotes no item of the Spec.\n',
+    );
+  });
+
   it("reads a Spec of the Template when the repository is named", async () => {
     const sent: Sent[] = [];
     const result = await run(

@@ -8,9 +8,12 @@
  *
  * What an item is, what the Coverage table holds and where the outcome of
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
- * "A Spec's coverage"; this module reads by them. A quoted cell matches
- * when the text it quotes contains it, once both are read without bold
- * markers, with straight quotes and single spaces.
+ * "A Spec's coverage"; this module reads by them. A quoted cell is found
+ * in a text that contains it, once both are read without bold markers,
+ * with straight quotes and single spaces. A row covers the one item its
+ * quote identifies: a quote found in items of different texts covers none
+ * of them (`itemGaps` has the rule), so "quoted short enough to find"
+ * means short enough, and long enough to name one item.
  */
 import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
@@ -53,7 +56,8 @@ export interface FetchedSpec extends IssueRef {
 
 /**
  * One thing still missing before the Spec may close: no Coverage table; an
- * item with no row; a row that names no Ticket, or one that is not a
+ * item with no row; a row whose quote is found in no item, or in items of
+ * different texts; a row that names no Ticket, or one that is not a
  * sub-issue of the Spec, or a criterion its Ticket does not hold; a Ticket
  * still open, with its assignees, or closed otherwise than as completed; a
  * criterion unchecked; a "check whether…" without its `Outcome:` line.
@@ -61,6 +65,13 @@ export interface FetchedSpec extends IssueRef {
 export type Gap =
   | { kind: "no-table" }
   | { kind: "no-row"; item: string }
+  | { kind: "no-item"; item: string }
+  | {
+      kind: "ambiguous-row";
+      item: string;
+      /** How many items of different texts its quote is found in. */
+      items: number;
+    }
   | { kind: "no-ticket"; item: string }
   | { kind: "not-sub-issue"; item: string; ticket: IssueRef }
   | {
@@ -354,17 +365,43 @@ const sameIssue = (a: IssueRef, b: IssueRef): boolean =>
   a.repository.toLowerCase() === b.repository.toLowerCase() &&
   a.number === b.number;
 
-/** The gaps of the items: each item with no row in `rows`. */
+/**
+ * The gaps of the items: each item no row covers, then each row whose
+ * quote identifies no item. A row covers the one item its Item cell is
+ * found in. A quote found in items of different texts identifies none of
+ * them and covers nothing, so a short, generic quote cannot cover what it
+ * was not written for; a quote found in several items of the same text
+ * (the same words in two sections) covers the first of them no earlier
+ * row covered. A quote found in no item covers nothing.
+ */
 function itemGaps(items: readonly string[], rows: readonly Row[]): Gap[] {
-  const quotes = rows
-    .map((row) => normalize(row.item))
-    .filter((quote) => quote !== "");
-  return items.flatMap((item): Gap[] => {
-    const text = normalize(item);
-    return quotes.some((quote) => text.includes(quote))
-      ? []
-      : [{ kind: "no-row", item }];
-  });
+  const texts = items.map(normalize);
+  const covered = new Set<number>();
+  const quoteGaps: Gap[] = [];
+  for (const row of rows) {
+    const quote = normalize(row.item);
+    const found = texts.flatMap((text, index) =>
+      quote !== "" && text.includes(quote) ? [index] : [],
+    );
+    if (found.length === 0) {
+      quoteGaps.push({ kind: "no-item", item: row.item });
+    } else if (new Set(found.map((index) => texts[index])).size > 1) {
+      quoteGaps.push({
+        kind: "ambiguous-row",
+        item: row.item,
+        items: found.length,
+      });
+    } else {
+      const free = found.find((index) => !covered.has(index));
+      if (free !== undefined) covered.add(free);
+    }
+  }
+  return [
+    ...items.flatMap((item, index): Gap[] =>
+      covered.has(index) ? [] : [{ kind: "no-row", item }],
+    ),
+    ...quoteGaps,
+  ];
 }
 
 /** The gaps of the rows: a Ticket they do not name, is no sub-issue or lacks the criterion. */

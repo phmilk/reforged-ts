@@ -138,6 +138,49 @@ describe("coverageVerdict", () => {
     ]);
   });
 
+  it("takes a quote found in several items for none of them, and names a quote found in no item", () => {
+    const rows = ROWS.map((row) =>
+      row[0] === "It counts the rows."
+        ? ["the", row[1], row[2]]
+        : row[0] === "The board is unchanged."
+          ? ["The board is gone.", row[1], row[2]]
+          : row,
+    );
+    const verdict = coverageVerdict(
+      spec([DECISIONS, TESTING, NOTES, table(...rows)], [TICKET_11, TICKET_12]),
+    );
+
+    expect(verdict.gaps).toEqual([
+      { kind: "no-row", item: "It counts the rows." },
+      { kind: "no-row", item: "The board is unchanged." },
+      { kind: "ambiguous-row", item: "the", items: 2 },
+      { kind: "no-item", item: "The board is gone." },
+    ]);
+  });
+
+  it("covers an item written twice, in two sections, once per row that quotes it", () => {
+    const twice = (...rows: string[][]) =>
+      coverageVerdict(
+        spec(
+          [
+            DECISIONS,
+            TESTING.replace(
+              "  - a fully delivered Spec;\n",
+              "  - a fully delivered Spec;\n  - It reads the body.\n",
+            ),
+            NOTES,
+            table(...ROWS, ...rows),
+          ],
+          [TICKET_11, TICKET_12],
+        ),
+      );
+
+    expect(twice().gaps).toEqual([
+      { kind: "no-row", item: "It reads the body." },
+    ]);
+    expect(twice(["It reads the body.", "#11", "It reads"]).gaps).toEqual([]);
+  });
+
   it("says a Spec with no Coverage table has none, instead of naming each item", () => {
     const verdict = coverageVerdict(
       spec([DECISIONS, TESTING, NOTES], [TICKET_11, TICKET_12]),

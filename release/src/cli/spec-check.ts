@@ -41,6 +41,10 @@ function describeGap(home: string, gap: Gap): string {
       return "No Coverage table: the Spec's body has no ## Coverage table section with a table.";
     case "no-row":
       return `No row for the item "${gap.item}".`;
+    case "no-item":
+      return `The row of "${gap.item}" quotes no item of the Spec.`;
+    case "ambiguous-row":
+      return `The row of "${gap.item}" quotes words found in ${plural(gap.items, "item", "items")} of different texts, so it covers none: quote enough to name one.`;
     case "no-ticket":
       return `The row of "${gap.item}" names no Ticket.`;
     case "not-sub-issue":
