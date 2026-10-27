@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { BOARD_REPOSITORIES as BOARD } from "../src/board.js";
+import { LABELS } from "../src/repo-settings.js";
 import {
   BOARD_REPOSITORIES,
-  frontierOf,
+  frontierQuery,
+  SPEC_LABEL,
   type FetchedSpec,
   type FetchedTicket,
 } from "../src/spec-frontier.js";
@@ -30,15 +32,14 @@ function spec(tickets: FetchedTicket[]): FetchedSpec {
     repository: LIBRARY,
     number: 10,
     title: "The Spec",
-    state: "OPEN",
     spec: true,
     tickets,
   };
 }
 
-describe("frontierOf", () => {
+describe("frontierQuery", () => {
   it("offers an open Ticket with no blocker, and not one blocked by an open issue", () => {
-    const frontier = frontierOf(
+    const frontier = frontierQuery(
       spec([
         ticket(11),
         ticket(12, {
@@ -60,7 +61,7 @@ describe("frontierOf", () => {
   });
 
   it("lists a Ticket held by another login as theirs, not takeable", () => {
-    const frontier = frontierOf(
+    const frontier = frontierQuery(
       spec([ticket(11, { assignees: ["bob"] }), ticket(12)]),
       "alice",
     );
@@ -77,7 +78,7 @@ describe("frontierOf", () => {
     });
     const paired = ticket(12, { assignees: ["bob", "alice"] });
 
-    const frontier = frontierOf(spec([held, paired, ticket(13)]), "alice");
+    const frontier = frontierQuery(spec([held, paired, ticket(13)]), "alice");
 
     // "No assignee other than itself": its own Ticket stays takeable, a
     // paired one does not.
@@ -87,7 +88,7 @@ describe("frontierOf", () => {
   });
 
   it("offers a Ticket in the Template, and ignores a sub-issue outside the Board repositories", () => {
-    const frontier = frontierOf(
+    const frontier = frontierQuery(
       spec([
         ticket(117, { repository: TEMPLATE }),
         ticket(118, {
@@ -105,7 +106,7 @@ describe("frontierOf", () => {
   });
 
   it("leaves a closed Ticket out of every list", () => {
-    const frontier = frontierOf(
+    const frontier = frontierQuery(
       spec([
         ticket(11, { state: "CLOSED" }),
         ticket(12, { state: "CLOSED", assignees: ["alice"] }),
@@ -123,7 +124,7 @@ describe("frontierOf", () => {
   });
 
   it("offers nothing on a Spec whose open Tickets are all other logins'", () => {
-    const frontier = frontierOf(
+    const frontier = frontierQuery(
       spec([
         ticket(11, { assignees: ["bob"] }),
         ticket(12, { repository: TEMPLATE, assignees: ["carol"] }),
@@ -141,5 +142,11 @@ describe("frontierOf", () => {
 describe("BOARD_REPOSITORIES", () => {
   it("is the board's own list, which the script copies since it imports nothing", () => {
     expect(BOARD_REPOSITORIES).toEqual(BOARD);
+  });
+});
+
+describe("SPEC_LABEL", () => {
+  it("is among the labels repo-settings applies, which the script copies since it imports nothing", () => {
+    expect(LABELS.map(({ name }) => name)).toContain(SPEC_LABEL);
   });
 });

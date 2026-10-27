@@ -1,13 +1,14 @@
 /**
- * The Frontier query, `pnpm spec:frontier <spec> [owner/name]`: what the
- * `gh` login can do on a Spec now (#737, "The Frontier query"). It prints
- * three lists of the Spec's open Tickets, in either Board repository: those
- * the login may take (no open blocker, no assignee other than itself), those
- * it holds, with their open pull requests, and those other logins hold. The
+ * The Frontier query, `pnpm spec:frontier <spec> [owner/name]`: what a
+ * login can do on a Spec now (#737, "The Frontier query"). It prints three
+ * lists of the Spec's open Tickets, in either Board repository: those the
+ * login may take (on the Frontier, no assignee other than itself), those it
+ * holds, with their open pull requests, and those other logins hold. The
  * skill hook, `next-step` and `ship-spec` ask it, so that they agree on the
- * Frontier. `frontierOf` is pure: the fetched Spec and the login in, the
+ * Frontier. `frontierQuery` is pure: the fetched Spec and the login in, the
  * three lists out. `main` reads the Spec through the GitHub GraphQL API, the
- * login being the token's, and prints them.
+ * login being the token's (the `gh` login's unless the environment sets
+ * one), and prints them.
  *
  * Self-contained on purpose, as the claim check: Node built-ins only and
  * erasable syntax only (no enum, no namespace, no parameter property), so
@@ -24,54 +25,50 @@ import { promisify } from "node:util";
 
 const USAGE = "Usage: node release/src/spec-frontier.ts <spec> [owner/name]\n";
 
-/** An issue a Ticket is blocked by, as the query read it. */
-export interface Blocker {
-  /** `owner/name`: a blocker may be of any repository. */
+/** An issue or a pull request, in any repository. */
+export interface IssueRef {
+  /** `owner/name`. */
   repository: string;
   number: number;
+}
+
+/** An issue a Ticket is blocked by, as the query read it. */
+export interface Blocker extends IssueRef {
   state: "OPEN" | "CLOSED";
 }
 
-/** A pull request that closes a Ticket. */
-export interface PullRequestRef {
-  /** `owner/name`. */
-  repository: string;
-  number: number;
-}
-
 /** A Ticket of the Spec, one of its sub-issues, as the query read it. */
-export interface FetchedTicket {
-  /** `owner/name`. */
-  repository: string;
-  number: number;
+export interface FetchedTicket extends IssueRef {
   title: string;
   state: "OPEN" | "CLOSED";
   /** The logins assigned to it, in GitHub's order. */
   assignees: readonly string[];
   /** The issues it is blocked by, open or closed. */
   blockers: readonly Blocker[];
-  /** The open pull requests that close it. */
-  pullRequests: readonly PullRequestRef[];
+  /**
+   * The open pull requests that close it, by a closing keyword or a link;
+   * one that only mentions it is not among them.
+   */
+  pullRequests: readonly IssueRef[];
 }
 
 /** The Spec as the query read it, with its Tickets in GitHub's order. */
-export interface FetchedSpec {
-  /** `owner/name`. */
-  repository: string;
-  number: number;
+export interface FetchedSpec extends IssueRef {
   title: string;
-  state: "OPEN" | "CLOSED";
   /** Whether it is labelled `spec`. */
   spec: boolean;
   tickets: readonly FetchedTicket[];
 }
 
-/** What a login can do on a Spec now: three lists of its open Tickets, in GitHub's order. */
-export interface Frontier {
+/**
+ * The answer of the Frontier query for one login: three lists of a Spec's
+ * open Tickets, in GitHub's order.
+ */
+export interface FrontierAnswer {
   login: string;
   /**
-   * The Tickets the login may take: no open blocker and no assignee other
-   * than the login, so one it holds alone is among them.
+   * The Tickets the login may take: on the Frontier (no open blocker) with
+   * no assignee other than the login, so one it holds alone is among them.
    */
   takeable: FetchedTicket[];
   /** The Tickets the login holds, alone or paired, blocked or not. */
@@ -91,15 +88,22 @@ export const BOARD_REPOSITORIES: readonly string[] = [
   "phmilk/reforged-ts-template",
 ];
 
-/** The label of a Spec, as `to-spec` and `write-spec` set it. */
+/**
+ * The label of a Spec, as `to-spec` and `write-spec` set it. A copy of the
+ * one `repo-settings.ts` declares, since this script imports nothing; a
+ * test checks that its labels include this one.
+ */
 export const SPEC_LABEL = "spec";
 
 /**
- * The three lists of the Frontier query for `login` on `spec`, over its
- * open Tickets in the Board repositories; a closed Ticket is in none. A
- * Ticket blocked by an open issue, of any repository, is not takeable.
+ * The Frontier query's answer for `login` on `spec`, over its open Tickets
+ * in the Board repositories; a closed Ticket is in no list. A Ticket blocked
+ * by an open issue, of any repository, is not takeable.
  */
-export function frontierOf(spec: FetchedSpec, login: string): Frontier {
+export function frontierQuery(
+  spec: FetchedSpec,
+  login: string,
+): FrontierAnswer {
   const open = spec.tickets.filter(
     (ticket) =>
       ticket.state === "OPEN" && BOARD_REPOSITORIES.includes(ticket.repository),
@@ -119,15 +123,15 @@ export function frontierOf(spec: FetchedSpec, login: string): Frontier {
   };
 }
 
-/** `#n` in the Spec's repository `home`, else `owner/name#n`. */
-function reference(home: string, repository: string, number: number): string {
-  return repository === home
-    ? `#${String(number)}`
-    : `${repository}#${String(number)}`;
+/** `ref` as printed from repository `home`: `#n` there, else `owner/name#n`. */
+function displayRef(home: string, ref: IssueRef): string {
+  return ref.repository === home
+    ? `#${String(ref.number)}`
+    : `${ref.repository}#${String(ref.number)}`;
 }
 
 /** The lines of one list: one per Ticket, or `- none`. */
-function list(
+function renderList(
   tickets: readonly FetchedTicket[],
   line: (ticket: FetchedTicket) => string,
 ): string {
@@ -136,13 +140,14 @@ function list(
     : tickets.map((ticket) => `- ${line(ticket)}\n`).join("");
 }
 
-/** The Frontier of `spec` for its login, as `main` prints it. */
-export function renderFrontier(spec: FetchedSpec, frontier: Frontier): string {
-  const { login } = frontier;
-  const ref = (ticket: { repository: string; number: number }): string =>
-    reference(spec.repository, ticket.repository, ticket.number);
+/** The answer on `spec`, as `main` prints it. */
+export function renderAnswer(
+  spec: FetchedSpec,
+  answer: FrontierAnswer,
+): string {
+  const { login } = answer;
   const head = (ticket: FetchedTicket): string =>
-    `${ref(ticket)} ${ticket.title}`;
+    `${displayRef(spec.repository, ticket)} ${ticket.title}`;
   const unsplit =
     spec.tickets.length === 0
       ? `#${String(spec.number)} has no Ticket: it is not split yet.\n`
@@ -151,20 +156,20 @@ export function renderFrontier(spec: FetchedSpec, frontier: Frontier): string {
     `Spec #${String(spec.number)} of ${spec.repository}, "${spec.title}", for @${login}.\n` +
     unsplit +
     `\nTakeable now (open, no open blocker, no assignee but @${login}):\n` +
-    list(frontier.takeable, (ticket) =>
+    renderList(answer.takeable, (ticket) =>
       ticket.assignees.includes(login)
         ? `${head(ticket)} (held by @${login})`
         : head(ticket),
     ) +
     `\nHeld by @${login}:\n` +
-    list(frontier.held, (ticket) =>
+    renderList(answer.held, (ticket) =>
       ticket.pullRequests.length === 0
         ? `${head(ticket)}: no open pull request`
-        : `${head(ticket)}: ${ticket.pullRequests.map((pullRequest) => `pull request ${ref(pullRequest)}`).join(", ")}`,
+        : `${head(ticket)}: ${ticket.pullRequests.map((pullRequest) => `pull request ${displayRef(spec.repository, pullRequest)}`).join(", ")}`,
     ) +
     "\nHeld by other logins:\n" +
-    list(
-      frontier.heldByOthers,
+    renderList(
+      answer.heldByOthers,
       (ticket) =>
         `${head(ticket)}: ${ticket.assignees.map((assignee) => `@${assignee}`).join(", ")}`,
     )
@@ -242,9 +247,7 @@ const TIMEOUT_MS = 30_000;
 
 /** The `data` of a GraphQL query; GitHub answers errors with a 200 too. */
 async function graphql(
-  base: string,
-  token: string,
-  fetcher: typeof fetch,
+  { base, token, fetcher }: Settings,
   query: string,
   variables: Readonly<Record<string, unknown>>,
 ): Promise<Record<string, unknown>> {
@@ -302,7 +305,7 @@ const SPEC = `query($owner: String!, $name: String!, $number: Int!) {
   viewer { login }
   repository(owner: $owner, name: $name) {
     issue(number: $number) {
-      number title state
+      title
       labels(first: 50) { nodes { name } }
       subIssues(first: ${String(TICKET_PAGE)}) {
         totalCount
@@ -332,10 +335,7 @@ function issueState(value: unknown, what: string): "OPEN" | "CLOSED" {
 }
 
 /** The repository and number of an issue or pull request node, or an error naming `what`. */
-function refOf(
-  node: unknown,
-  what: string,
-): { repository: string; number: number } {
+function readRef(node: unknown, what: string): IssueRef {
   const repository = at(node, "repository", "nameWithOwner");
   const number = at(node, "number");
   if (typeof repository !== "string" || typeof number !== "number") {
@@ -348,12 +348,12 @@ function refOf(
 
 /** A Ticket from its sub-issue node; an error when it has more blockers than were read. */
 function ticketOf(node: unknown, home: string): FetchedTicket {
-  const { repository, number } = refOf(node, "a Ticket");
-  const name = reference(home, repository, number);
+  const { repository, number } = readRef(node, "a Ticket");
+  const name = displayRef(home, { repository, number });
   const title = at(node, "title");
   const blockedBy = at(node, "blockedBy");
   const blockers = nodesOf(blockedBy).map((blocker) => ({
-    ...refOf(blocker, `a blocker of ${name}`),
+    ...readRef(blocker, `a blocker of ${name}`),
     state: issueState(at(blocker, "state"), `a blocker of ${name}`),
   }));
   const total = at(blockedBy, "totalCount");
@@ -375,7 +375,7 @@ function ticketOf(node: unknown, home: string): FetchedTicket {
     pullRequests: nodesOf(at(node, "closedByPullRequestsReferences")).flatMap(
       (pullRequest) =>
         at(pullRequest, "state") === "OPEN"
-          ? [refOf(pullRequest, `a pull request of ${name}`)]
+          ? [readRef(pullRequest, `a pull request of ${name}`)]
           : [],
     ),
   };
@@ -388,17 +388,11 @@ async function readSpec(
   number: number,
 ): Promise<{ login: string; spec: FetchedSpec }> {
   const slash = repository.indexOf("/");
-  const data = await graphql(
-    settings.base,
-    settings.token,
-    settings.fetcher,
-    SPEC,
-    {
-      owner: repository.slice(0, slash),
-      name: repository.slice(slash + 1),
-      number,
-    },
-  );
+  const data = await graphql(settings, SPEC, {
+    owner: repository.slice(0, slash),
+    name: repository.slice(slash + 1),
+    number,
+  });
   const login = at(data, "viewer", "login");
   const issue = at(data, "repository", "issue");
   if (typeof login !== "string" || !isRecord(issue)) {
@@ -420,7 +414,6 @@ async function readSpec(
       repository,
       number,
       title: typeof issue.title === "string" ? issue.title : "",
-      state: issueState(issue.state, `${repository}#${String(number)}`),
       spec: nodesOf(issue.labels).some(
         (label) => isRecord(label) && label.name === SPEC_LABEL,
       ),
@@ -442,9 +435,7 @@ export const PROCESS_OUTPUT: Output = {
 };
 
 /** Runs `gh` with `args` and resolves with its standard output. */
-export type Gh = (args: readonly string[]) => Promise<string>;
-
-const runGh: Gh = async (args) =>
+const runGh = async (args: readonly string[]): Promise<string> =>
   (
     await promisify(execFile)("gh", args, {
       encoding: "utf8",
@@ -455,7 +446,6 @@ const runGh: Gh = async (args) =>
 export interface Context {
   env: Readonly<Record<string, string | undefined>>;
   fetcher: typeof fetch;
-  gh: Gh;
 }
 
 /** What the run needs to reach GitHub. */
@@ -486,7 +476,7 @@ async function tokenOf(context: Context): Promise<string> {
   const what =
     "gh auth token (the token of the gh login, since GH_TOKEN and GITHUB_TOKEN are not set)";
   try {
-    const token = (await context.gh(["auth", "token"])).trim();
+    const token = (await runGh(["auth", "token"])).trim();
     if (token === "") throw new Error("it printed no token; run gh auth login");
     return token;
   } catch (error) {
@@ -523,7 +513,7 @@ function argumentsOf(
 }
 
 /**
- * Prints the Frontier of Spec `args[0]` (`737` or `#737`) of repository
+ * Prints the Frontier query's answer on Spec `args[0]` (`737` or `#737`) of repository
  * `args[1]` (`owner/name`, the library when absent) for the login of the
  * token: `GH_TOKEN`, else `GITHUB_TOKEN`, else `gh auth token`, through the
  * API at `GITHUB_API_URL`. Exit codes: 0 an answer, 1 a state it cannot
@@ -532,7 +522,7 @@ function argumentsOf(
 export async function main(
   args: readonly string[],
   output: Output,
-  context: Context = { env: process.env, fetcher: fetch, gh: runGh },
+  context: Context = { env: process.env, fetcher: fetch },
 ): Promise<number> {
   const target = argumentsOf(args);
   if (target === null) {
@@ -557,7 +547,7 @@ export async function main(
         `${spec.repository}#${String(spec.number)} is not a Spec: it is not labelled ${SPEC_LABEL}.`,
       );
     }
-    output.stdout(renderFrontier(spec, frontierOf(spec, login)));
+    output.stdout(renderAnswer(spec, frontierQuery(spec, login)));
     return 0;
   } catch (error) {
     output.stderr(`${errorMessage(error)}\n`);
