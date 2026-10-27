@@ -1,0 +1,14 @@
+{
+  "name": "reforged-ts",
+  "owner": { "name": "Paulo H. A. Leite" },
+  "metadata": {
+    "description": "The project mods both Board repositories enable from their shared settings (ADR 0024)."
+  },
+  "plugins": [
+    {
+      "name": "background-band",
+      "source": "./.claude/mods/background-band",
+      "description": "A band above the prompt listing the session's background commands and Subagents, with their age, flagging any past 15 minutes"
+    }
+  ]
+}
