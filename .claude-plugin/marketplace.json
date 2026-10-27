@@ -2,7 +2,7 @@
   "name": "reforged-ts",
   "owner": { "name": "Paulo H. A. Leite" },
   "metadata": {
-    "description": "The project mods both Board repositories enable from their shared settings, which run this repository's copy: no file of a mod is copied into the Template (#767)."
+    "description": "The project mods both Board repositories enable from their shared settings; both run this repository's copy, and no file of a mod is copied into the Template (#767)."
   },
   "plugins": [
     {

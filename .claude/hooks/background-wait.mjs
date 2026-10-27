@@ -16,8 +16,8 @@
 //
 // The decision is verdict(), a pure function from the hook input to a
 // verdict; a verdict that blocks carries the output its event takes, which
-// the rest prints after reading stdin. The hook never fails a call or a stop on its own error and
-// always exits 0.
+// the rest prints after reading stdin. The hook never fails a call or a stop
+// on its own error and always exits 0.
 //
 // Dependency-free: it runs on the Node that runs the session, before any
 // `pnpm install`. Both repositories run it (.claude/shared.json, ADR 0024).
