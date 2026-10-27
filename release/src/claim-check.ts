@@ -14,7 +14,7 @@
  * and is never undone (ADR 0025). The protocol is
  * `docs/agents/issue-tracker.md`, "Claim"; the texts are the spec's (#529),
  * the logins filled at run time, those of a Ticket's Spec follow ADR 0023,
- * and those of a Spec and of a blocker ADR 0025.
+ * and those of a Spec and of a blocker carry the rules of ADR 0025.
  * `planPullRequest` and `planIssue` are pure: the event and the fetched
  * state in; the verdict, the assignments, the comment upserts, the summary
  * lines and the exit code out. `main` reads the state through the GitHub
@@ -104,6 +104,8 @@ export const TEXTS = {
     `**Claim conflict.** @${assignee} claimed #${String(issue)}, but the open pull request #${String(pullRequest)} by @${author} closes it. One login per issue: coordinate, and leave one Claim and one pull request. A stale pull request (3 days without a commit and without a comment) may be taken over: comment on #${String(issue)} first.`,
   /** 6. The issue's conflict is gone. */
   resolved: "**Claim conflict** resolved.",
+  /** A comment that held premature Claims only, once none is left (ADR 0025). */
+  prematureSettled: "**Premature Claim** settled.",
   /** 7. The pull request passes after a failure. */
   passed: "**Claim check** passed.",
   /** The author, missing from a Ticket's Spec, added to it. */
@@ -354,7 +356,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
     // A Spec of another repository: each Ticket carries its own comment.
     if (!elsewhere && specs.has(key)) return;
     specs.add(key);
-    const head = `- ${elsewhere ? key : `#${String(spec.number)}`}, the Spec of #${String(ticket.number)}: the author @${author}`;
+    const head = `- ${refName(spec, repository)}, the Spec of #${String(ticket.number)}: the author @${author}`;
     const command = TEXTS.joinSpec(key, spec.url, ticket.number, author);
     if (spec.assignees.includes(author)) {
       summary.push(`${head} among its assignees.`);
@@ -409,10 +411,6 @@ ${command}`,
   const closes = new Set(closing.map(name));
   for (const issue of closing) {
     const n = String(issue.number);
-    // The open blockers this pull request does not deliver with the issue.
-    const ahead = issue.openBlockers
-      .map(name)
-      .filter((ref) => !closes.has(ref));
     if (issue.repository !== repository) {
       summary.push(
         `- ${issue.repository}#${n}: an issue of another repository; ignored.`,
@@ -420,17 +418,21 @@ ${command}`,
       continue;
     }
     seen++;
+    // The open blockers this pull request does not deliver with the issue.
+    const unclosedBlockers = issue.openBlockers
+      .map(name)
+      .filter((ref) => !closes.has(ref));
     if (issue.isSpec) {
       failed = true;
       lines.push(TEXTS.specClosed(issue.number));
       summary.push(
         `- #${n}: a Spec; failed: a pull request names the Tickets it delivers, never their Spec.`,
       );
-    } else if (ahead.length > 0) {
+    } else if (unclosedBlockers.length > 0) {
       failed = true;
-      lines.push(TEXTS.blocked(issue.number, ahead));
+      lines.push(TEXTS.blocked(issue.number, unclosedBlockers));
       summary.push(
-        `- #${n}: blocked by ${andList(ahead)}, open and not closed by this pull request; failed.`,
+        `- #${n}: blocked by ${andList(unclosedBlockers)}, open and not closed by this pull request; failed.`,
       );
     } else if (issue.assignees.includes(author)) {
       summary.push(
@@ -565,18 +567,20 @@ export function planIssue(input: IssueInput): Plan {
 
   // A Claim made too early, whoever made it (ADR 0025): said, never undone.
   const premature: string[] = [];
-  if (assignees.length > 0 && unsplit) {
-    premature.push(TEXTS.unsplitClaim(issue));
-    summary.push(
-      `- #${n}: a Spec with no Ticket, assigned to ${names(assignees)}; premature.`,
-    );
-  }
-  if (assignees.length > 0 && openBlockers.length > 0) {
-    const blockers = openBlockers.map((ref) => refName(ref, repository));
-    premature.push(TEXTS.blockedClaim(issue, blockers));
-    summary.push(
-      `- #${n}: claimed by ${names(assignees)}, blocked by ${andList(blockers)}; premature.`,
-    );
+  if (assignees.length > 0) {
+    if (unsplit) {
+      premature.push(TEXTS.unsplitClaim(issue));
+      summary.push(
+        `- #${n}: a Spec with no Ticket, assigned to ${names(assignees)}; premature.`,
+      );
+    }
+    if (openBlockers.length > 0) {
+      const blockers = openBlockers.map((ref) => refName(ref, repository));
+      premature.push(TEXTS.blockedClaim(issue, blockers));
+      summary.push(
+        `- #${n}: claimed by ${names(assignees)}, blocked by ${andList(blockers)}; premature.`,
+      );
+    }
   }
 
   if (summary.length === 0) {
@@ -608,7 +612,11 @@ export function planIssue(input: IssueInput): Plan {
       issue,
       [...lines, ...premature],
       comment,
-      settled ? TEXTS.resolved : null,
+      !settled
+        ? null
+        : comment === null || comment.body.includes("**Claim conflict")
+          ? TEXTS.resolved
+          : TEXTS.prematureSettled,
     ),
     summary,
     exitCode: 0,
@@ -935,7 +943,10 @@ function openBlockersOf(node: unknown, name: string): IssueRef[] {
   if (connection === undefined || connection === null) return [];
   const nodes = nodesOf(connection);
   const totalCount = at(connection, "totalCount");
-  if (typeof totalCount !== "number" || totalCount > nodes.length) {
+  if (typeof totalCount !== "number") {
+    throw new ClaimCheckError(`blockedBy answered no totalCount for ${name}.`);
+  }
+  if (totalCount > nodes.length) {
     throw new ClaimCheckError(
       `${name} is blocked by ${String(totalCount)} issues, more than the ${String(nodes.length)} the check read: it cannot pass on a blocker it has not read.`,
     );
@@ -1007,7 +1018,7 @@ async function readClosingIssues(
     const ours = nameWithOwner === repository;
     const openBlockers = openBlockersOf(
       node,
-      ours ? `#${String(number)}` : `${nameWithOwner}#${String(number)}`,
+      refName({ repository: nameWithOwner, number }, repository),
     );
     const authorAssignable =
       ours && (await assignable(api, repository, number, pullRequest.author));
@@ -1130,11 +1141,11 @@ async function readClosingPullRequestsAndBlockers(
  * The assignees of issue `number`, read now rather than from the event,
  * whether it is a Spec (labelled `spec`) and whether it is open.
  */
-async function readAssigneesAndSpec(
+async function readIssueState(
   api: Api,
   repository: string,
   number: number,
-): Promise<{ assignees: string[]; spec: boolean; open: boolean }> {
+): Promise<{ assignees: string[]; isSpec: boolean; open: boolean }> {
   const path = `/repos/${repository}/issues/${String(number)}`;
   const { body } = await rest(api, "GET", path, undefined, [200]);
   if (!isRecord(body) || !isList(body.assignees)) {
@@ -1142,7 +1153,7 @@ async function readAssigneesAndSpec(
   }
   return {
     assignees: loginsOf(body.assignees),
-    spec: isList(body.labels) && body.labels.some(isSpecLabel),
+    isSpec: isList(body.labels) && body.labels.some(isSpecLabel),
     open: body.state === "open",
   };
 }
@@ -1404,12 +1415,12 @@ async function checkIssue(
 ): Promise<Plan> {
   const { action, issue, assignee, sender } = issueEventOf(event);
   const { repository, owner } = settings;
-  const { assignees, spec, open } = await readAssigneesAndSpec(
+  const { assignees, isSpec, open } = await readIssueState(
     api,
     repository,
     issue,
   );
-  const tickets = spec ? await readTickets(api, repository, issue) : null;
+  const tickets = isSpec ? await readTickets(api, repository, issue) : null;
   const { pullRequests, openBlockers } =
     await readClosingPullRequestsAndBlockers(api, repository, issue);
   return planIssue({
@@ -1422,7 +1433,8 @@ async function checkIssue(
     assignees,
     ticketAssignees: tickets?.assignees ?? null,
     unsplit: open && tickets?.count === 0,
-    openBlockers,
+    // A closed issue is no Claim to warn about.
+    openBlockers: open ? openBlockers : [],
     pullRequests,
     comment: await findComment(api, repository, issue),
   });

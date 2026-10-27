@@ -927,20 +927,26 @@ const blockedBy = (
   })),
 });
 
+/** Answers that issue or pull request `number` has no comment yet, and takes a new one. */
+function answerNewComment(number: number): void {
+  answers.rest[`GET ${ISSUES}/${String(number)}/comments?per_page=100&page=1`] =
+    {
+      status: 200,
+      body: [],
+    };
+  answers.rest[`POST ${ISSUES}/${String(number)}/comments`] = {
+    status: 201,
+    body: { id: 1 },
+  };
+}
+
 describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
   it("fails a pull request that would close a Spec, read from its labels", async () => {
     answers.graphql.closingIssuesReferences = closingOne({
       labels: { nodes: [{ name: "spec" }] },
     });
     answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
-    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
-      status: 200,
-      body: [],
-    };
-    answers.rest[`POST ${ISSUES}/34/comments`] = {
-      status: 201,
-      body: { id: 1 },
-    };
+    answerNewComment(34);
 
     const result = await run(["pull-request"], PULL_REQUEST_EVENT);
 
@@ -965,14 +971,7 @@ describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
       ),
     });
     answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
-    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
-      status: 200,
-      body: [],
-    };
-    answers.rest[`POST ${ISSUES}/34/comments`] = {
-      status: 201,
-      body: { id: 1 },
-    };
+    answerNewComment(34);
 
     const result = await run(["pull-request"], PULL_REQUEST_EVENT);
 
@@ -1014,14 +1013,7 @@ describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
     answers.graphql.closedByPullRequestsReferences = {
       repository: { issue: { closedByPullRequestsReferences: { nodes: [] } } },
     };
-    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
-      status: 200,
-      body: [],
-    };
-    answers.rest[`POST ${ISSUES}/12/comments`] = {
-      status: 201,
-      body: { id: 1 },
-    };
+    answerNewComment(12);
 
     const result = await run(["issue"], {
       ...ISSUE_EVENT,
@@ -1052,14 +1044,7 @@ describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
         },
       },
     };
-    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
-      status: 200,
-      body: [],
-    };
-    answers.rest[`POST ${ISSUES}/12/comments`] = {
-      status: 201,
-      body: { id: 1 },
-    };
+    answerNewComment(12);
 
     const result = await run(["issue"], {
       ...ISSUE_EVENT,

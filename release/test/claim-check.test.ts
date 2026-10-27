@@ -91,7 +91,7 @@ function pullRequest(
   };
 }
 
-// The texts of ADR 0025, word for word: a pull request closing Spec #12,
+// The texts of ADR 0025's rules, word for word: a pull request closing Spec #12,
 // one closing Ticket #12 with an open blocker.
 const TEXT_SPEC_CLOSED =
   '**Claim check failed.** #12 is a Spec, and this pull request would close it. A Spec is never closed by a pull request: name the Tickets this one delivers instead (`Closes #<ticket>`), and whoever merges the last of them closes the Spec after its coverage check. See `docs/agents/issue-tracker.md`, "Closing a Spec".';
@@ -747,7 +747,7 @@ describe("planIssue", () => {
     ]);
   });
 
-  it("draws nothing on an unassigned issue, blocked or an unsplit Spec, and settles an earlier comment", () => {
+  it("draws nothing on an unassigned issue, blocked or an unsplit Spec, and settles an earlier comment that held premature Claims only", () => {
     const plan = planIssue({
       ...assigned("alice", "alice", [], {
         unsplit: true,
@@ -758,7 +758,9 @@ describe("planIssue", () => {
     });
 
     expect(plan.verdict).toBe("clear");
-    expect(plan.comments).toEqual([{ number: 12, id: 3, body: body(TEXT_6) }]);
+    expect(plan.comments).toEqual([
+      { number: 12, id: 3, body: body("**Premature Claim** settled.") },
+    ]);
   });
 
   it("draws nothing on pairing: the first assignee added the second", () => {
