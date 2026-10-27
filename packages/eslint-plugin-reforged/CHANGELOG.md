@@ -1,5 +1,13 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.9
+
+### Patch Changes
+
+- [#723](https://github.com/phmilk/reforged-ts/pull/723) [`1f37912`](https://github.com/phmilk/reforged-ts/commit/1f3791266430bcd74c32afe9dc4da86625c2e8cd) Thanks [@wyller](https://github.com/wyller)! - The `no-unknown-rawcodes` docs page says the rule knows the objects Object definitions define, and names the reason it warns while the Object definitions cannot be loaded ("The Object definitions could not be loaded: ", then the file or the missing peer).
+- Updated dependencies [[`86e6534`](https://github.com/phmilk/reforged-ts/commit/86e65345e46984dbd08332215ad4b741132d343f), [`25f782f`](https://github.com/phmilk/reforged-ts/commit/25f782f429a8fdfe1730ab4a116bab30204ede9f), [`08b5ace`](https://github.com/phmilk/reforged-ts/commit/08b5aceb36907a3b4a97144c2dae1cb685bf1e9d), [`da66e14`](https://github.com/phmilk/reforged-ts/commit/da66e143922620725bee3f3665c36c3e49646e4f), [`59fa278`](https://github.com/phmilk/reforged-ts/commit/59fa2789a9c552a66d6d7a3db44bd5889fbf111b), [`ba39f03`](https://github.com/phmilk/reforged-ts/commit/ba39f03a03f6c34ac8267268cd2db304771a974d), [`f01996f`](https://github.com/phmilk/reforged-ts/commit/f01996fddf056ebf4e043f5f828ae78025627305), [`1f37912`](https://github.com/phmilk/reforged-ts/commit/1f3791266430bcd74c32afe9dc4da86625c2e8cd), [`e5412f1`](https://github.com/phmilk/reforged-ts/commit/e5412f1c4a208e3e14653d0d9a4cc547df5846f6), [`5345e29`](https://github.com/phmilk/reforged-ts/commit/5345e292792d6bb521a2bd57e1daf5fcb076b245)]:
+  - reforged-map@1.0.0-alpha.7
+
 ## 1.0.0-alpha.8
 
 ### Minor Changes
