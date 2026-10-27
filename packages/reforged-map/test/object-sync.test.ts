@@ -21,6 +21,7 @@ import {
 import {
   PACKAGE_ROOT,
   fixtureMap,
+  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
@@ -76,10 +77,16 @@ function write(
   }
 }
 
-/** A copy of a Map project in a new temporary folder. */
+/** A copy of a Map project in a new temporary folder, typescript and reforged-builtins linked again: `cpSync` would copy their folders on Windows (#754). */
 function copyProject(project: MapProject): MapProject {
   const root = makeTempDir();
-  fs.cpSync(project.root, root, { recursive: true, verbatimSymlinks: true });
+  const modules = path.join(project.root, "node_modules");
+  fs.cpSync(project.root, root, {
+    recursive: true,
+    filter: (source) => source !== modules,
+  });
+  link(root, "typescript");
+  link(root, "reforged-builtins");
   return { root, mapFolder: path.join(root, "test.w3m") };
 }
 
@@ -111,11 +118,8 @@ function sync(project: MapProject, options: ObjectSyncOptions = {}) {
 /** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
 function snapshot(folder: string): Map<string, string> {
   return new Map(
-    (fs.readdirSync(folder, { recursive: true }) as string[])
-      .filter((name) => {
-        const file = path.join(folder, name);
-        return !name.startsWith("node_modules") && fs.statSync(file).isFile();
-      })
+    listTree(folder)
+      .filter((name) => fs.statSync(path.join(folder, name)).isFile())
       .sort()
       .map((name) => [
         name,
@@ -532,7 +536,7 @@ describe("the Object manifest", () => {
 
     expect(merged.status).toBe(0);
     expect(merged.stdout).toBe(manifest(both));
-  }, 30_000); // Four syncs and git merge-file: near 5 s on a loaded Windows runner.
+  });
 
   it.each([
     ["does not parse", "{ not json"],

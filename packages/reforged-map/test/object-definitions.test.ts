@@ -17,6 +17,7 @@ import {
 import {
   PACKAGE_ROOT,
   fixtureMap,
+  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
@@ -89,7 +90,7 @@ function mapProject(
 /** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
 function snapshot(folder: string): Map<string, string> {
   return new Map(
-    (fs.readdirSync(folder, { recursive: true }) as string[])
+    listTree(folder)
       .filter((name) => fs.statSync(path.join(folder, name)).isFile())
       .sort()
       .map((name) => [
