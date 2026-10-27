@@ -8,13 +8,20 @@
  * is the `gh` login's. Exit codes: 0 delivered, 1 gaps or a state it cannot
  * read (no token, GitHub's error, an issue that is not a Spec), 2 usage.
  */
-import { BOARD_REPOSITORIES } from "../board.js";
-import { coverageVerdict, readSpec, renderVerdict } from "../spec-check.js";
+import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "../board.js";
+import {
+  coverageVerdict,
+  readSpec,
+  type FetchedSpec,
+  type Gap,
+  type Verdict,
+} from "../spec-check.js";
 import {
   errorMessage,
   ghOutput,
   gitHubApi,
   invokedDirectly,
+  plural,
   PROCESS_OUTPUT,
   runGh,
   type Gh,
@@ -22,6 +29,65 @@ import {
 } from "./common.js";
 
 const USAGE = "Usage: spec:check <spec> [owner/name]\n";
+
+/** `ref` as printed for a Spec of repository `home`: `#n` there, else in full. */
+const displayRef = (home: string, ref: IssueRef): string =>
+  ref.repository === home ? `#${String(ref.number)}` : issueKey(ref);
+
+/** One gap as a line of the verdict, its Tickets named from repository `home`. */
+function describeGap(home: string, gap: Gap): string {
+  switch (gap.kind) {
+    case "no-table":
+      return "No Coverage table: the Spec's body has no ## Coverage table section with a table.";
+    case "no-row":
+      return `No row for the item "${gap.item}".`;
+    case "no-ticket":
+      return `The row of "${gap.item}" names no Ticket.`;
+    case "not-sub-issue":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, which is not a sub-issue of the Spec.`;
+    case "no-criterion":
+      return `The row of "${gap.item}" quotes the criterion "${gap.criterion}", which ${displayRef(home, gap.ticket)} does not hold.`;
+    case "open":
+      return `${displayRef(home, gap.ticket)} is open, held by ${
+        gap.assignees.length === 0
+          ? "nobody"
+          : gap.assignees.map((login) => `@${login}`).join(", ")
+      }, ${
+        gap.unchecked === 0
+          ? "with every criterion checked"
+          : `with ${plural(gap.unchecked, "criterion", "criteria")} unchecked`
+      }.`;
+    case "not-completed":
+      return `${displayRef(home, gap.ticket)} closed as ${gap.reason ?? "no reason GitHub gives"}, not as completed.`;
+    case "unchecked":
+      return `${displayRef(home, gap.ticket)} leaves a criterion unchecked: "${gap.criterion}".`;
+    case "no-outcome":
+      return `${displayRef(home, gap.ticket)} has a "check whether…" without its Outcome: line: "${gap.criterion}".`;
+  }
+}
+
+/** The verdict on `spec`, as the CLI prints it. */
+function renderVerdict(spec: FetchedSpec, verdict: Verdict): string {
+  const head =
+    `Spec #${String(spec.number)} of ${spec.repository}, "${spec.title}": ` +
+    `${plural(verdict.items, "item", "items")}, ${plural(verdict.rows, "row", "rows")}, ` +
+    `${plural(verdict.tickets, "Ticket", "Tickets")}.\n`;
+  if (verdict.gaps.length === 0) {
+    return (
+      head +
+      "Delivered: every item has a row, every Ticket closed as completed, " +
+      'every criterion is checked and every "check whether…" carries its Outcome. ' +
+      "The Spec may close.\n"
+    );
+  }
+  return (
+    head +
+    `Not delivered, ${plural(verdict.gaps.length, "gap", "gaps")}:\n` +
+    verdict.gaps
+      .map((gap) => `- ${describeGap(spec.repository, gap)}\n`)
+      .join("")
+  );
+}
 
 export interface Context {
   gh: Gh;

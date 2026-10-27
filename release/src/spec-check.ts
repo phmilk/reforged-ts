@@ -4,7 +4,7 @@
  * board's shape: `readSpec` reads the Spec's body and every sub-issue
  * (state and close reason, assignees, body) through the GitHub GraphQL
  * API, `coverageVerdict` computes the verdict from them as a pure function,
- * and `renderVerdict` gives the text `cli/spec-check.ts` prints.
+ * and `cli/spec-check.ts` prints it.
  *
  * What an item is, what the Coverage table holds and where the outcome of
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
@@ -12,23 +12,31 @@
  * when the text it quotes contains it, once both are read without bold
  * markers, with straight quotes and single spaces.
  */
-import { BOARD_REPOSITORIES } from "./board.js";
+import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
 import type { GitHubApi } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
 
-/** An issue, in any repository. */
-export interface IssueRef {
-  /** `owner/name`. */
-  repository: string;
-  number: number;
-}
+/** GitHub's `IssueStateReason`: why an issue closed, or that it was reopened. */
+export type StateReason =
+  "COMPLETED" | "NOT_PLANNED" | "DUPLICATE" | "REOPENED";
+
+const STATE_REASONS: readonly string[] = [
+  "COMPLETED",
+  "NOT_PLANNED",
+  "DUPLICATE",
+  "REOPENED",
+] satisfies StateReason[];
+
+/** Whether `value` is one of GitHub's `IssueStateReason`. */
+const isStateReason = (value: unknown): value is StateReason =>
+  typeof value === "string" && STATE_REASONS.includes(value);
 
 /** A sub-issue of the Spec, as GitHub returns it. */
 export interface FetchedTicket extends IssueRef {
   state: "OPEN" | "CLOSED";
-  /** Why it closed: `COMPLETED`, `NOT_PLANNED`, `DUPLICATE`; `null` while open. */
-  stateReason: string | null;
+  /** Why it closed; `null` when GitHub gives no reason (an issue never closed). */
+  stateReason: StateReason | null;
   /** The logins assigned to it, in GitHub's order. */
   assignees: readonly string[];
   /** Its body, Markdown. */
@@ -68,7 +76,7 @@ export type Gap =
       ticket: IssueRef;
       criterion: string;
     }
-  | { kind: "not-completed"; ticket: IssueRef; reason: string }
+  | { kind: "not-completed"; ticket: IssueRef; reason: StateReason | null }
   | { kind: "unchecked"; ticket: IssueRef; criterion: string }
   | { kind: "no-outcome"; ticket: IssueRef; criterion: string };
 
@@ -84,6 +92,8 @@ export interface Verdict {
   tickets: number;
 }
 
+// Reading Markdown.
+
 /** The sections of a Spec whose list items are its items (the coverage rule). */
 const ITEM_SECTIONS = [
   "implementation decisions",
@@ -94,14 +104,24 @@ const ITEM_SECTIONS = [
 /** The heading of the Coverage table's section. */
 const TABLE_SECTION = "coverage table";
 
+/** Whether `line` opens or closes a fenced code block. */
+const isFence = (line: string): boolean => /^\s*(?:```|~~~)/.test(line);
+
+/** The lines of `text`. */
+const linesOf = (text: string): string[] => text.split(/\r?\n/);
+
+/** `parts` joined on one line, single spaces between words. */
+const oneLine = (parts: readonly string[]): string =>
+  parts.join(" ").replace(/\s+/g, " ").trim();
+
 /** The sections of `body`, by their level-two heading in lower case; text before the first is under `""`. */
 function sections(body: string): Map<string, string[]> {
   const found = new Map<string, string[]>();
   let lines: string[] = [];
   found.set("", lines);
   let fence = false;
-  for (const line of body.split(/\r?\n/)) {
-    if (/^\s*(?:```|~~~)/.test(line)) fence = !fence;
+  for (const line of linesOf(body)) {
+    if (isFence(line)) fence = !fence;
     const heading = fence ? null : /^##\s+(.*?)\s*#*\s*$/.exec(line);
     if (heading === null) {
       lines.push(line);
@@ -127,8 +147,8 @@ const BOLD_LABEL = /^\*\*[^*]+\*\*$/;
 function normalize(text: string): string {
   return text
     .replaceAll("**", "")
-    .replace(/[\u201C\u201D]/g, '"')
-    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -136,7 +156,7 @@ function normalize(text: string): string {
 /**
  * The items of `lines` by the coverage rule: every list item and every
  * paragraph inside a list item, except a list item that is only a bold
- * label; each with its lines joined by single spaces.
+ * label; each on one line.
  */
 function itemsOf(lines: readonly string[]): string[] {
   const items: string[] = [];
@@ -147,7 +167,7 @@ function itemsOf(lines: readonly string[]): string[] {
   let fence = false;
   const flush = () => {
     if (current !== null) {
-      const text = current.join(" ").replace(/\s+/g, " ").trim();
+      const text = oneLine(current);
       if (text !== "" && !BOLD_LABEL.test(text)) items.push(text);
     }
     current = null;
@@ -156,7 +176,7 @@ function itemsOf(lines: readonly string[]): string[] {
     while (open.length > 0 && (open.at(-1) ?? 0) > indent) open.pop();
   };
   for (const line of lines) {
-    if (/^\s*(?:```|~~~)/.test(line)) {
+    if (isFence(line)) {
       flush();
       fence = !fence;
       continue;
@@ -249,8 +269,7 @@ interface Criterion {
  * criteria, or of the whole body when it has no such section.
  */
 function criteriaOf(body: string): Criterion[] {
-  const parts = sections(body);
-  const lines = parts.get(CRITERIA_SECTION) ?? body.split(/\r?\n/);
+  const lines = sections(body).get(CRITERIA_SECTION) ?? linesOf(body);
   const found: {
     indent: number;
     checked: boolean;
@@ -262,7 +281,7 @@ function criteriaOf(body: string): Criterion[] {
   let inOutcome = false;
   let fence = false;
   for (const line of lines) {
-    if (/^\s*(?:```|~~~)/.test(line)) fence = !fence;
+    if (isFence(line)) fence = !fence;
     if (fence) continue;
     const box = CHECKBOX.exec(line);
     if (box !== null) {
@@ -298,7 +317,7 @@ function criteriaOf(body: string): Criterion[] {
     blank = false;
   }
   return found.map(({ checked, text, outcome }) => ({
-    text: text.join(" ").replace(/\s+/g, " ").trim(),
+    text: oneLine(text),
     checked,
     outcome,
   }));
@@ -311,11 +330,13 @@ function criteriaOf(body: string): Criterion[] {
 const isCheckWhether = (criterion: Criterion): boolean =>
   /^check whether\b/i.test(normalize(criterion.text));
 
+// The verdict.
+
 /**
  * The issue a Ticket cell names: `#761` in the Spec's repository `home`,
  * `owner/name#121`, or an issue's address; `null` when it names none.
  */
-function refOf(cell: string, home: string): IssueRef | null {
+function ticketNamedBy(cell: string, home: string): IssueRef | null {
   const address = /github\.com\/([\w.-]+\/[\w.-]+)\/issues\/(\d+)/.exec(cell);
   const ref = address ?? /(?:([\w.-]+\/[\w.-]+))?#(\d+)/.exec(cell);
   if (ref === null) return null;
@@ -323,7 +344,7 @@ function refOf(cell: string, home: string): IssueRef | null {
 }
 
 /** The repository and number of `issue`, and nothing else. */
-const refTo = ({ repository, number }: IssueRef): IssueRef => ({
+const refOfIssue = ({ repository, number }: IssueRef): IssueRef => ({
   repository,
   number,
 });
@@ -333,164 +354,102 @@ const sameIssue = (a: IssueRef, b: IssueRef): boolean =>
   a.repository.toLowerCase() === b.repository.toLowerCase() &&
   a.number === b.number;
 
+/** The gaps of the items: each item with no row in `rows`. */
+function itemGaps(items: readonly string[], rows: readonly Row[]): Gap[] {
+  const quotes = rows
+    .map((row) => normalize(row.item))
+    .filter((quote) => quote !== "");
+  return items.flatMap((item): Gap[] => {
+    const text = normalize(item);
+    return quotes.some((quote) => text.includes(quote))
+      ? []
+      : [{ kind: "no-row", item }];
+  });
+}
+
+/** The gaps of the rows: a Ticket they do not name, is no sub-issue or lacks the criterion. */
+function rowGaps(
+  rows: readonly Row[],
+  home: string,
+  tickets: readonly FetchedTicket[],
+): Gap[] {
+  return rows.flatMap((row): Gap[] => {
+    const ref = ticketNamedBy(row.ticket, home);
+    if (ref === null) return [{ kind: "no-ticket", item: row.item }];
+    const ticket = tickets.find((candidate) => sameIssue(candidate, ref));
+    if (ticket === undefined) {
+      return [{ kind: "not-sub-issue", item: row.item, ticket: ref }];
+    }
+    const quote = normalize(row.criterion);
+    return criteriaOf(ticket.body).some((criterion) =>
+      normalize(criterion.text).includes(quote),
+    )
+      ? []
+      : [
+          {
+            kind: "no-criterion",
+            item: row.item,
+            ticket: refOfIssue(ticket),
+            criterion: row.criterion,
+          },
+        ];
+  });
+}
+
+/**
+ * The gaps of one Ticket: open (its unchecked criteria counted, since they
+ * are written as it is delivered), or closed otherwise than as completed,
+ * with each criterion unchecked and each "check whether…" without its
+ * outcome.
+ */
+function ticketGaps(ticket: FetchedTicket): Gap[] {
+  const ref = refOfIssue(ticket);
+  const criteria = criteriaOf(ticket.body);
+  if (ticket.state === "OPEN") {
+    return [
+      {
+        kind: "open",
+        ticket: ref,
+        assignees: [...ticket.assignees],
+        unchecked: criteria.filter((criterion) => !criterion.checked).length,
+      },
+    ];
+  }
+  const gaps: Gap[] =
+    ticket.stateReason === "COMPLETED"
+      ? []
+      : [{ kind: "not-completed", ticket: ref, reason: ticket.stateReason }];
+  for (const criterion of criteria) {
+    if (!criterion.checked) {
+      gaps.push({ kind: "unchecked", ticket: ref, criterion: criterion.text });
+    }
+    if (isCheckWhether(criterion) && !criterion.outcome) {
+      gaps.push({ kind: "no-outcome", ticket: ref, criterion: criterion.text });
+    }
+  }
+  return gaps;
+}
+
 /** The verdict on `spec`. */
 export function coverageVerdict(spec: FetchedSpec): Verdict {
-  const gaps: Gap[] = [];
   const tickets = spec.tickets.filter((ticket) =>
     BOARD_REPOSITORIES.includes(ticket.repository),
   );
   const parts = sections(spec.body);
   const items = ITEM_SECTIONS.flatMap((name) => itemsOf(parts.get(name) ?? []));
   const rows = tableOf(parts.get(TABLE_SECTION) ?? []);
-  if (rows === null) {
-    gaps.push({ kind: "no-table" });
-  } else {
-    const quotes = rows
-      .map((row) => normalize(row.item))
-      .filter((quote) => quote !== "");
-    for (const item of items) {
-      const text = normalize(item);
-      if (!quotes.some((quote) => text.includes(quote))) {
-        gaps.push({ kind: "no-row", item });
-      }
-    }
-    for (const row of rows) {
-      const ref = refOf(row.ticket, spec.repository);
-      if (ref === null) {
-        gaps.push({ kind: "no-ticket", item: row.item });
-        continue;
-      }
-      const ticket = tickets.find((candidate) => sameIssue(candidate, ref));
-      if (ticket === undefined) {
-        gaps.push({ kind: "not-sub-issue", item: row.item, ticket: ref });
-        continue;
-      }
-      const quote = normalize(row.criterion);
-      if (
-        !criteriaOf(ticket.body).some((criterion) =>
-          normalize(criterion.text).includes(quote),
-        )
-      ) {
-        gaps.push({
-          kind: "no-criterion",
-          item: row.item,
-          ticket: refTo(ticket),
-          criterion: row.criterion,
-        });
-      }
-    }
-  }
-  for (const ticket of tickets) {
-    const ref = refTo(ticket);
-    const criteria = criteriaOf(ticket.body);
-    if (ticket.state === "OPEN") {
-      // Its criteria and outcomes are written as it is delivered: an open
-      // Ticket is one gap, its unchecked criteria counted.
-      gaps.push({
-        kind: "open",
-        ticket: ref,
-        assignees: [...ticket.assignees],
-        unchecked: criteria.filter((criterion) => !criterion.checked).length,
-      });
-      continue;
-    }
-    if (ticket.stateReason !== "COMPLETED") {
-      gaps.push({
-        kind: "not-completed",
-        ticket: ref,
-        reason: ticket.stateReason ?? "unknown",
-      });
-    }
-    for (const criterion of criteria) {
-      if (!criterion.checked) {
-        gaps.push({
-          kind: "unchecked",
-          ticket: ref,
-          criterion: criterion.text,
-        });
-      }
-      if (isCheckWhether(criterion) && !criterion.outcome) {
-        gaps.push({
-          kind: "no-outcome",
-          ticket: ref,
-          criterion: criterion.text,
-        });
-      }
-    }
-  }
+  const gaps: Gap[] = [
+    ...(rows === null
+      ? [{ kind: "no-table" } as const]
+      : [...itemGaps(items, rows), ...rowGaps(rows, spec.repository, tickets)]),
+    ...tickets.flatMap(ticketGaps),
+  ];
   return {
     gaps,
     items: items.length,
     rows: rows?.length ?? 0,
     tickets: tickets.length,
   };
-}
-
-/** `ref` in full, `owner/name#n`. */
-const fullRef = (ref: IssueRef): string =>
-  `${ref.repository}#${String(ref.number)}`;
-
-/** `ref` as printed for a Spec of repository `home`: `#n` there, else in full. */
-const displayRef = (home: string, ref: IssueRef): string =>
-  ref.repository === home ? `#${String(ref.number)}` : fullRef(ref);
-
-/** `count` with `one` or `many`: "1 gap", "3 gaps". */
-const plural = (count: number, one: string, many: string): string =>
-  `${String(count)} ${count === 1 ? one : many}`;
-
-/** One gap as a line of the verdict, its Tickets named from repository `home`. */
-function describeGap(home: string, gap: Gap): string {
-  switch (gap.kind) {
-    case "no-table":
-      return "No Coverage table: the Spec's body has no ## Coverage table section with a table.";
-    case "no-row":
-      return `No row for the item "${gap.item}".`;
-    case "no-ticket":
-      return `The row of "${gap.item}" names no Ticket.`;
-    case "not-sub-issue":
-      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, which is not a sub-issue of the Spec.`;
-    case "no-criterion":
-      return `The row of "${gap.item}" quotes the criterion "${gap.criterion}", which ${displayRef(home, gap.ticket)} does not hold.`;
-    case "open":
-      return `${displayRef(home, gap.ticket)} is open, held by ${
-        gap.assignees.length === 0
-          ? "nobody"
-          : gap.assignees.map((login) => `@${login}`).join(", ")
-      }, ${
-        gap.unchecked === 0
-          ? "with every criterion checked"
-          : `with ${plural(gap.unchecked, "criterion", "criteria")} unchecked`
-      }.`;
-    case "not-completed":
-      return `${displayRef(home, gap.ticket)} closed as ${gap.reason}, not as completed.`;
-    case "unchecked":
-      return `${displayRef(home, gap.ticket)} leaves a criterion unchecked: "${gap.criterion}".`;
-    case "no-outcome":
-      return `${displayRef(home, gap.ticket)} has a "check whether…" without its Outcome: line: "${gap.criterion}".`;
-  }
-}
-
-/** The verdict on `spec`, as the CLI prints it. */
-export function renderVerdict(spec: FetchedSpec, verdict: Verdict): string {
-  const head =
-    `Spec #${String(spec.number)} of ${spec.repository}, "${spec.title}": ` +
-    `${plural(verdict.items, "item", "items")}, ${plural(verdict.rows, "row", "rows")}, ` +
-    `${plural(verdict.tickets, "Ticket", "Tickets")}.\n`;
-  if (verdict.gaps.length === 0) {
-    return (
-      head +
-      "Delivered: every item has a row, every Ticket closed as completed, " +
-      'every criterion is checked and every "check whether…" carries its Outcome. ' +
-      "The Spec may close.\n"
-    );
-  }
-  return (
-    head +
-    `Not delivered, ${plural(verdict.gaps.length, "gap", "gaps")}:\n` +
-    verdict.gaps
-      .map((gap) => `- ${describeGap(spec.repository, gap)}\n`)
-      .join("")
-  );
 }
 
 // Reading the Spec from GitHub.
@@ -509,7 +468,7 @@ export class SpecCheckError extends Error {
 /** More sub-issues than a Spec splits into: the query reads them in one page. */
 const TICKET_PAGE = 100;
 
-// An issue holds at most ten assignees.
+// An issue holds at most ten assignees: one page of ten reads them all.
 const SPEC_COVERAGE = `query SpecCoverage($owner: String!, $name: String!, $number: Int!) {
   repository(owner: $owner, name: $name) {
     issue(number: $number) {
@@ -521,7 +480,7 @@ const SPEC_COVERAGE = `query SpecCoverage($owner: String!, $name: String!, $numb
         nodes {
           number state stateReason body
           repository { nameWithOwner }
-          assignees(first: 20) { nodes { login } }
+          assignees(first: 10) { nodes { login } }
         }
       }
     }
@@ -555,7 +514,7 @@ function ticketOf(node: unknown, spec: string): FetchedTicket {
     repository,
     number: node.number,
     state: node.state,
-    stateReason: typeof node.stateReason === "string" ? node.stateReason : null,
+    stateReason: isStateReason(node.stateReason) ? node.stateReason : null,
     assignees: nodesOf(node.assignees).flatMap((user) =>
       isRecord(user) && typeof user.login === "string" ? [user.login] : [],
     ),
@@ -576,7 +535,7 @@ export async function readSpec(
 ): Promise<FetchedSpec> {
   const [owner, name] = repository.split("/");
   const data = await graphql(api, SPEC_COVERAGE, { owner, name, number });
-  const where = fullRef({ repository, number });
+  const where = issueKey({ repository, number });
   const repo = data.repository;
   const issue = isRecord(repo) ? repo.issue : undefined;
   if (!isRecord(issue)) {
