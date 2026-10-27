@@ -15,8 +15,8 @@
 //   background tasks as running, so a wait on it passes (#768).
 //
 // The decision is verdict(), a pure function from the hook input to a
-// verdict; the rest reads stdin and prints the verdict in the output each
-// event takes. The hook never fails a call or a stop on its own error and
+// verdict; a verdict that blocks carries the output its event takes, which
+// the rest prints after reading stdin. The hook never fails a call or a stop on its own error and
 // always exits 0.
 //
 // Dependency-free: it runs on the Node that runs the session, before any
@@ -40,7 +40,10 @@ import { fileURLToPath } from "node:url";
  */
 
 /**
- * @typedef {{ verdict: "pass" } | { verdict: "block", reason: string }} Verdict
+ * A pass, or a block with the reason the Agent reads and the hook output
+ * that says it to Claude Code: a PreToolUse deny, a Stop block.
+ *
+ * @typedef {{ verdict: "pass" } | { verdict: "block", reason: string, output: object }} Verdict
  */
 
 const FOREGROUND =
@@ -68,7 +71,7 @@ const NOTHING_IN_FLIGHT =
 
 /**
  * The check's verdict on a hook input: `block` with the reason the Agent
- * reads, or `pass`.
+ * reads and the hook output, or `pass`.
  *
  * @param {HookInput} input
  * @returns {Verdict}
@@ -80,7 +83,17 @@ export function verdict(input) {
     (input.tool_name === "Bash" || input.tool_name === "PowerShell") &&
     input.tool_input?.run_in_background === true
   ) {
-    return { verdict: "block", reason: FOREGROUND };
+    return {
+      verdict: "block",
+      reason: FOREGROUND,
+      output: {
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          permissionDecision: "deny",
+          permissionDecisionReason: FOREGROUND,
+        },
+      },
+    };
   }
   if (
     input.hook_event_name === "Stop" &&
@@ -89,30 +102,13 @@ export function verdict(input) {
     (input.session_crons ?? []).length === 0 &&
     WAITING.test(input.last_assistant_message ?? "")
   ) {
-    return { verdict: "block", reason: NOTHING_IN_FLIGHT };
+    return {
+      verdict: "block",
+      reason: NOTHING_IN_FLIGHT,
+      output: { decision: "block", reason: NOTHING_IN_FLIGHT },
+    };
   }
   return { verdict: "pass" };
-}
-
-/**
- * The hook's output for `verdict` on `event`: a PreToolUse deny, a Stop
- * block; `undefined` on a pass, which prints nothing.
- *
- * @param {string | undefined} event
- * @param {Verdict} result
- * @returns {object | undefined}
- */
-function output(event, result) {
-  if (result.verdict === "pass") return undefined;
-  return event === "PreToolUse"
-    ? {
-        hookSpecificOutput: {
-          hookEventName: "PreToolUse",
-          permissionDecision: "deny",
-          permissionDecisionReason: result.reason,
-        },
-      }
-    : { decision: "block", reason: result.reason };
 }
 
 // Whether this file is the script node runs, not a module a test imports.
@@ -133,9 +129,9 @@ if (isMain()) {
   try {
     /** @type {HookInput} */
     const input = JSON.parse(readFileSync(0, "utf8"));
-    const printed = output(input.hook_event_name, verdict(input));
-    if (printed !== undefined) {
-      process.stdout.write(`${JSON.stringify(printed)}\n`);
+    const result = verdict(input);
+    if (result.verdict === "block") {
+      process.stdout.write(`${JSON.stringify(result.output)}\n`);
     }
   } catch {
     // A check is never worth a failed call or stop.
