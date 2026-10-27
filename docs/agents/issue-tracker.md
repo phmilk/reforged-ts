@@ -78,7 +78,7 @@ stateDiagram-v2
   claimed --> stale : 3 days without a commit or a comment
   draft --> stale : 3 days without a commit or a comment
   stale --> claimed : takeover
-  spec_unsplit --> spec : its first Ticket, by /split-spec, which swaps needs-split for ready-for-agent, as the board does
+  spec_unsplit --> spec : its first Ticket, by /split-spec or by hand; /split-spec or the board swaps needs-split for ready-for-agent
   spec --> spec : a Ticket claimed, its login joins the Spec
   spec --> spec_delivered : its last open Ticket merged
   spec_delivered --> spec_delivered : the coverage check red, the gaps commented
