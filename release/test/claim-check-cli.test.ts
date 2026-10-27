@@ -892,3 +892,186 @@ describe("claim-check", () => {
     expect(received).toEqual([]);
   });
 });
+
+/** The closing references of #34: #12 of this repository alone, with `more` fields. */
+function closingOne(more: Record<string, unknown>): unknown {
+  return {
+    repository: {
+      pullRequest: {
+        closingIssuesReferences: {
+          totalCount: 1,
+          nodes: [
+            {
+              number: 12,
+              repository: { nameWithOwner: REPOSITORY },
+              assignees: { nodes: [{ login: "alice" }] },
+              parent: null,
+              ...more,
+            },
+          ],
+        },
+      },
+    },
+  };
+}
+
+/** A `blockedBy` connection holding `blockers`, all read. */
+const blockedBy = (
+  ...blockers: { number: number; state: string; repository: string }[]
+) => ({
+  totalCount: blockers.length,
+  nodes: blockers.map(({ number, state, repository }) => ({
+    number,
+    state,
+    repository: { nameWithOwner: repository },
+  })),
+});
+
+describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
+  it("fails a pull request that would close a Spec, read from its labels", async () => {
+    answers.graphql.closingIssuesReferences = closingOne({
+      labels: { nodes: [{ name: "spec" }] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain(
+      "- #12: a Spec; failed: a pull request names the Tickets it delivers, never their Spec.\n",
+    );
+    expect(result.stdout).toContain("::error title=Claim check failed::");
+    expect(sent().at(-1)).toEqual([
+      `POST ${ISSUES}/34/comments`,
+      {
+        body: `${MARKER}\n\n**Claim check failed.** #12 is a Spec, and this pull request would close it. A Spec is never closed by a pull request: name the Tickets this one delivers instead (\`Closes #<ticket>\`), and whoever merges the last of them closes the Spec after its coverage check. See \`docs/agents/issue-tracker.md\`, "Closing a Spec".`,
+      },
+    ]);
+  });
+
+  it("fails a pull request closing a Ticket whose blocker in the other repository is open; a closed blocker does not count", async () => {
+    answers.graphql.closingIssuesReferences = closingOne({
+      blockedBy: blockedBy(
+        { number: 5, state: "OPEN", repository: "owner/other" },
+        { number: 9, state: "CLOSED", repository: REPOSITORY },
+      ),
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain(
+      "- #12: blocked by owner/other#5, open and not closed by this pull request; failed.\n",
+    );
+    // The page carries each closing issue's labels and blockers.
+    expect(JSON.stringify(received[0]?.body)).toContain("blockedBy");
+  });
+
+  it("stops on a Ticket with more blockers than one page reads", async () => {
+    answers.graphql.closingIssuesReferences = closingOne({
+      blockedBy: { totalCount: 51, nodes: [] },
+    });
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toBe(
+      "#12 is blocked by 51 issues, more than the 0 the check read: it cannot pass on a blocker it has not read.\n",
+    );
+  });
+
+  it("comments on the Claim of an unsplit Spec, read from its labels, its state and its sub-issues", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: {
+        number: 12,
+        state: "open",
+        labels: [{ name: "spec" }],
+        assignees: [{ login: "alice" }],
+      },
+    };
+    answers.graphql.subIssues = {
+      repository: { issue: { subIssues: { nodes: [] } } },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: { issue: { closedByPullRequestsReferences: { nodes: [] } } },
+    };
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/12/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["issue"], {
+      ...ISSUE_EVENT,
+      assignee: { login: "alice" },
+      sender: { login: "alice" },
+    });
+
+    expect(result.code).toBe(0);
+    expect(result.stdout).toBe(
+      "- #12: a Spec with no Ticket, assigned to @alice; premature.\n" +
+        "Commented on #12.\n",
+    );
+  });
+
+  it("comments on the Claim of an issue with an open blocker, read with its pull requests", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: { number: 12, state: "open", assignees: [{ login: "alice" }] },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: {
+        issue: {
+          closedByPullRequestsReferences: { nodes: [] },
+          blockedBy: blockedBy(
+            { number: 9, state: "OPEN", repository: REPOSITORY },
+            { number: 8, state: "CLOSED", repository: REPOSITORY },
+          ),
+        },
+      },
+    };
+    answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/12/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["issue"], {
+      ...ISSUE_EVENT,
+      assignee: { login: "alice" },
+      sender: { login: "alice" },
+    });
+
+    expect(result.code).toBe(0);
+    expect(result.stdout).toBe(
+      "- #12: claimed by @alice, blocked by #9; premature.\n" +
+        "Commented on #12.\n",
+    );
+    expect(JSON.stringify(received[1]?.body)).toContain("blockedBy");
+  });
+});
