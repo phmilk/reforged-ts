@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BOARD_REPOSITORIES as BOARD } from "../src/board.js";
 import {
-  BOARD_REPOSITORIES,
   coverageVerdict,
   type FetchedSpec,
   type FetchedTicket,
@@ -26,7 +24,6 @@ function ticket(
     number,
     state: "CLOSED",
     stateReason: "COMPLETED",
-    closedAt: "2026-10-28T15:49:00Z",
     assignees: [],
     body,
     ...fields,
@@ -488,11 +485,5 @@ describe("coverageVerdict", () => {
           "**Check whether** the token can write the Spec. If it can, it does; if not, it comments.",
       },
     ]);
-  });
-});
-
-describe("BOARD_REPOSITORIES", () => {
-  it("is the board's list, which this self-contained script copies", () => {
-    expect(BOARD_REPOSITORIES).toEqual(BOARD);
   });
 });

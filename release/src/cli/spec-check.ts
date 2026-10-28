@@ -8,13 +8,8 @@
  * is the `gh` login's. Exit codes: 0 delivered, 1 gaps or a state it cannot
  * read (no token, GitHub's error, an issue that is not a Spec), 2 usage.
  */
-import { graphql } from "../github-graphql.js";
-import {
-  BOARD_REPOSITORIES,
-  coverageVerdict,
-  readSpec,
-  renderVerdict,
-} from "../spec-check.js";
+import { BOARD_REPOSITORIES } from "../board.js";
+import { coverageVerdict, readSpec, renderVerdict } from "../spec-check.js";
 import {
   errorMessage,
   ghOutput,
@@ -69,11 +64,7 @@ export async function main(
       "the token of the gh login; run gh auth login",
     );
     const api = gitHubApi(context.fetcher, token, "reforged-ts-spec-check");
-    const spec = await readSpec(
-      (query, variables) => graphql(api, query, variables),
-      target.repository,
-      target.number,
-    );
+    const spec = await readSpec(api, target.repository, target.number);
     const verdict = coverageVerdict(spec);
     output.stdout(renderVerdict(spec, verdict));
     return verdict.gaps.length === 0 ? 0 : 1;

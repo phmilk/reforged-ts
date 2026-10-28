@@ -14,47 +14,33 @@
  * and is never undone (ADR 0025). A Ticket the pull request closes with
  * criteria still unchecked, or a "check whether…" without its `Outcome:`
  * line, draws a comment on the pull request under `CRITERIA_MARKER` that
- * never weighs on the verdict (#792). On a close, once a Spec has no open
- * Ticket left, the coverage check's verdict is commented under
- * `COVERAGE_MARKER`, and the Spec is never closed (#796). The protocol is
+ * never weighs on the verdict (#792). The protocol is
  * `docs/agents/issue-tracker.md`, "Claim"; the texts are the spec's (#529),
  * the logins filled at run time, those of a Ticket's Spec follow ADR 0023,
  * and those of a Spec and of a blocker carry the rules of ADR 0025.
- * `planPullRequest`, `planIssue` and `planClosed` are pure: the event and
- * the fetched state in; the verdict, the assignments, the comment upserts,
- * the summary lines and the exit code out. `main` reads the state through
- * the GitHub API with the token of the environment and applies the plan.
+ * `planPullRequest` and `planIssue` are pure: the event and the fetched
+ * state in; the verdict, the assignments, the comment upserts, the summary
+ * lines and the exit code out. `main` reads the state through the GitHub
+ * API with the token of the environment and applies the plan.
  *
  * Self-contained on purpose: Node built-ins only and erasable syntax only
  * (no enum, no namespace, no parameter property), so that Node 24 runs it
  * from a checkout with no install and no build, as the workflow does:
- * `node release/src/claim-check.ts <pull-request|issue|closed>`. Of the
- * other release scripts it imports `issue-markdown.ts` and `spec-check.ts`
- * alone, self-contained in the same way and named by their `.ts` files,
- * which Node runs and the build rewrites
- * (`rewriteRelativeImportExtensions`), so that a Ticket's criteria, their
- * gaps and a Spec's verdict are read as `pnpm spec:check` reads them;
- * `isRecord`, `errorMessage`, the job summary and the "started directly"
- * test are copied from the others.
+ * `node release/src/claim-check.ts <pull-request|issue>`. Of the other
+ * release scripts it imports `issue-markdown.ts` alone, self-contained in
+ * the same way and named by its `.ts` file, which Node runs and the build
+ * rewrites (`rewriteRelativeImportExtensions`), so that a Ticket's criteria
+ * and their gaps are read as `pnpm spec:check` reads them; `isRecord`, `errorMessage`,
+ * the job summary and the "started directly" test are copied from the
+ * others.
  */
 import { appendFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { criteriaOf, gapsOf } from "./issue-markdown.ts";
-import {
-  BOARD_REPOSITORIES,
-  coverageVerdict,
-  describeGap,
-  verdictCounts,
-  type FetchedSpec,
-  type FetchedTicket,
-  readSpec,
-  type Verdict as CoverageVerdict,
-} from "./spec-check.ts";
 
-const USAGE =
-  "Usage: node release/src/claim-check.ts <pull-request|issue|closed>\n";
+const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
 
 /** The hidden marker that opens the check's sticky comment. */
 export const MARKER = "<!-- claim-check -->";
@@ -72,13 +58,6 @@ export const SPEC_MARKER = "<!-- claim-check: spec -->";
  * settled on its own and never weighs on the verdict.
  */
 export const CRITERIA_MARKER = "<!-- claim-check: criteria -->";
-
-/**
- * The hidden marker of the check's comment of a Spec's coverage verdict,
- * once its last Ticket closes: on the Spec, or on that Ticket when the
- * Spec is of the other Board repository.
- */
-export const COVERAGE_MARKER = "<!-- claim-check: coverage -->";
 
 /**
  * The login the check writes as: `GITHUB_TOKEN` comments as GitHub Actions.
@@ -105,24 +84,6 @@ const refName = (ref: IssueRef, repository: string): string =>
   ref.repository === repository
     ? `#${String(ref.number)}`
     : `${ref.repository}#${String(ref.number)}`;
-
-/** The command that runs the coverage check of `spec`, its repository named off the library. */
-const specCheckCommand = (spec: IssueRef): string =>
-  `pnpm spec:check ${String(spec.number)}${spec.repository === BOARD_REPOSITORIES[0] ? "" : ` ${spec.repository}`}`;
-
-/** How `gh issue close` names `spec` from `repository`: its number there, its address elsewhere. */
-const closeTarget = (spec: ClosedSpec, repository: string): string =>
-  spec.repository === repository ? String(spec.number) : spec.url;
-
-/**
- * Where the coverage verdict of `spec` goes, from `repository`: on the
- * Spec when it is of that repository, else on Ticket `ticket`.
- */
-const coverageTarget = (
-  spec: IssueRef,
-  repository: string,
-  ticket: number,
-): number => (spec.repository === repository ? spec.number : ticket);
 
 /** `a`, `a and b`, `a, b and c`. */
 const andList = (items: readonly string[]): string =>
@@ -207,23 +168,6 @@ export const TEXTS = {
   gapNames: { unchecked: "unchecked", "no-outcome": "no `Outcome:` line" },
   /** The criteria comment once no Ticket lacks any. */
   criteriaSettled: "**Criteria left:** none.",
-  /** The coverage check green once the last Ticket of `spec` closed, the comment written from `repository`. */
-  coverageGreen: (
-    spec: ClosedSpec,
-    repository: string,
-    verdict: CoverageVerdict,
-  ): string => {
-    const counts = verdictCounts(verdict);
-    return `**Spec check.** Every Ticket of ${refName(spec, repository)} is closed, and its coverage check, \`${specCheckCommand(spec)}\`, is green: ${counts}. Close the Spec, which this check never does: \`gh issue close ${closeTarget(spec, repository)} --comment "The coverage check is green: ${counts}."\`. Whoever merged its last Ticket, an assignee of the Spec or the maintainer may. See \`docs/agents/issue-tracker.md\`, "Closing a Spec".`;
-  },
-  /** The coverage check red once the last Ticket of `spec` closed, one line per gap in `gaps`. */
-  coverageRed: (
-    spec: ClosedSpec,
-    repository: string,
-    verdict: CoverageVerdict,
-    gaps: readonly string[],
-  ): string =>
-    `**Spec check.** Every Ticket of ${refName(spec, repository)} is closed, but its coverage check, \`${specCheckCommand(spec)}\`, is red: ${verdictCounts(verdict)}, and ${String(gaps.length)} ${gaps.length === 1 ? "gap" : "gaps"}:\n\n${gaps.join("\n")}\n\nLeave the Spec open. Whoever fills a gap runs the check again, and the Spec closes on a green check. See \`docs/agents/issue-tracker.md\`, "Closing a Spec".`,
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
@@ -331,26 +275,6 @@ export interface IssueInput {
   /** The issues it is blocked by that are open, of any repository. */
   openBlockers: readonly IssueRef[];
   pullRequests: readonly ClosingPullRequest[];
-  comment: StickyComment | null;
-}
-
-/** The Spec of a closed Ticket, its parent labelled `spec`, as the check read it. */
-export interface ClosedSpec extends IssueRef {
-  /** Its address on GitHub, for the command that closes it from elsewhere. */
-  url: string;
-  open: boolean;
-}
-
-/** The closed branch's input: the Ticket that closed and what was fetched. */
-export interface ClosedInput {
-  repository: string;
-  /** The issue that closed, of `repository`. */
-  ticket: number;
-  /** Its Spec; `null` when it has no parent labelled `spec`. */
-  spec: ClosedSpec | null;
-  /** The Spec with its Tickets, read for an open Spec alone; else `null`. */
-  coverage: FetchedSpec | null;
-  /** The check's comment under `COVERAGE_MARKER` where the verdict goes. */
   comment: StickyComment | null;
 }
 
@@ -761,92 +685,6 @@ export function planIssue(input: IssueInput): Plan {
     summary,
     exitCode: 0,
   };
-}
-
-/**
- * The closed branch, on a Ticket's close (#796): once its Spec, still open,
- * has no open Ticket left, the coverage check's verdict is commented under
- * `COVERAGE_MARKER`, green with the command that closes the Spec, or red
- * with each gap. The comment goes on the Spec when it is of this
- * repository, else on the Ticket, since the token writes in this one
- * alone. A Spec whose Tickets close together draws one comment: only the
- * run of the Ticket that closed last writes it, by `closedAt`, then by
- * repository and number. The check never closes the Spec (ADR 0023).
- * Comments only: always exit 0.
- */
-export function planClosed(input: ClosedInput): Plan {
-  const { repository, ticket, spec, coverage, comment } = input;
-  const plan = (summary: string, comments: CommentUpsert[] = []): Plan => ({
-    verdict: "clear",
-    assignments: [],
-    comments,
-    summary: [summary],
-    exitCode: 0,
-  });
-  const n = String(ticket);
-  if (spec === null) return plan(`- #${n}: no Spec; nothing to check.`);
-  const head = `- #${n}, a Ticket of ${refName(spec, repository)}`;
-  if (!spec.open || coverage === null) {
-    return plan(`${head}: the Spec is closed; nothing to check.`);
-  }
-  const tickets = coverage.tickets.filter((candidate) =>
-    BOARD_REPOSITORIES.includes(candidate.repository),
-  );
-  const open = tickets.filter((candidate) => candidate.state === "OPEN");
-  if (open.length > 0) {
-    return plan(
-      `${head}: ${andList(open.map((candidate) => refName(candidate, repository)))} still open; nothing to check yet.`,
-    );
-  }
-  const last = tickets.reduce<FetchedTicket | undefined>(
-    (latest, candidate) =>
-      latest === undefined || closedLater(candidate, latest)
-        ? candidate
-        : latest,
-    undefined,
-  );
-  // A sub-issue outside the Board repositories, a fork's, is no Ticket.
-  if (last === undefined) {
-    return plan(`${head}: no Ticket on the Claim board; nothing to check.`);
-  }
-  if (last.repository !== repository || last.number !== ticket) {
-    return plan(
-      `${head}: ${refName(last, repository)} closed after it, and its run comments the coverage check.`,
-    );
-  }
-  const verdict = coverageVerdict(coverage);
-  const { gaps } = verdict;
-  const text =
-    gaps.length === 0
-      ? TEXTS.coverageGreen(spec, repository, verdict)
-      : TEXTS.coverageRed(
-          spec,
-          repository,
-          verdict,
-          gaps.map((gap) => `- ${describeGap(spec.repository, gap)}`),
-        );
-  const target = coverageTarget(spec, repository, ticket);
-  const comments = upsert(target, [text], comment, null, COVERAGE_MARKER);
-  const result =
-    gaps.length === 0
-      ? "green"
-      : `red, ${String(gaps.length)} ${gaps.length === 1 ? "gap" : "gaps"}`;
-  return plan(
-    `- #${n}, the last Ticket of ${refName(spec, repository)} to close: the coverage check is ${result}; ${
-      comments.length === 0
-        ? `the comment on #${String(target)} already says so.`
-        : `commented on #${String(target)}.`
-    }`,
-    comments,
-  );
-}
-
-/** Whether `a` closed after `b`: by `closedAt`, then by repository and number. */
-function closedLater(a: FetchedTicket, b: FetchedTicket): boolean {
-  const [at, bt] = [a.closedAt ?? "", b.closedAt ?? ""];
-  if (at !== bt) return at > bt;
-  if (a.repository !== b.repository) return a.repository > b.repository;
-  return a.number > b.number;
 }
 
 // The GitHub API: reading the state and applying the plan.
@@ -1460,54 +1298,6 @@ async function readTickets(
   };
 }
 
-// The parent is read with its labels, to tell a Spec from a wayfinder map.
-const CLOSED_TICKET = `query ClosedTicket($owner: String!, $name: String!, $number: Int!) {
-  repository(owner: $owner, name: $name) {
-    issue(number: $number) {
-      parent {
-        number
-        url
-        state
-        repository { nameWithOwner }
-        labels(first: 50) { nodes { name } }
-      }
-    }
-  }
-}`;
-
-/** The Spec of issue `number`: its parent when that is labelled `spec`, else `null`. */
-async function readClosedSpec(
-  api: Api,
-  repository: string,
-  number: number,
-): Promise<ClosedSpec | null> {
-  const data = await graphql(api, CLOSED_TICKET, {
-    ...ownerAndName(repository),
-    number,
-  });
-  const parent = at(data, "repository", "issue", "parent");
-  if (!isRecord(parent) || !nodesOf(parent.labels).some(isSpecLabel)) {
-    return null;
-  }
-  const nameWithOwner = at(parent, "repository", "nameWithOwner");
-  const { number: spec, url, state } = parent;
-  if (
-    typeof nameWithOwner !== "string" ||
-    typeof spec !== "number" ||
-    typeof url !== "string"
-  ) {
-    throw new ClaimCheckError(
-      `The parent of #${String(number)} answered without a number, an address and a repository.`,
-    );
-  }
-  return {
-    repository: nameWithOwner,
-    number: spec,
-    url,
-    open: state === "OPEN",
-  };
-}
-
 /** Sends the plan's assignments, then its comment, saying what it did. */
 async function apply(
   api: Api,
@@ -1745,57 +1535,9 @@ async function checkIssue(
   });
 }
 
-/** The issue of an `issues` event that closed it. */
-function closedEventOf(event: unknown): number {
-  const issue = at(event, "issue", "number");
-  if (at(event, "action") !== "closed" || typeof issue !== "number") {
-    throw new ClaimCheckError(
-      "The event is not a close with an issue: the closed mode runs on issues (closed).",
-    );
-  }
-  return issue;
-}
-
-/** The closed branch's plan, the state read through `api`. */
-async function checkClosed(
-  api: Api,
-  settings: Settings,
-  event: unknown,
-): Promise<Plan> {
-  const ticket = closedEventOf(event);
-  const { repository } = settings;
-  const spec = await readClosedSpec(api, repository, ticket);
-  if (spec?.open !== true) {
-    return planClosed({
-      repository,
-      ticket,
-      spec,
-      coverage: null,
-      comment: null,
-    });
-  }
-  const coverage = await readSpec(
-    (query, variables) => graphql(api, query, variables),
-    spec.repository,
-    spec.number,
-  );
-  return planClosed({
-    repository,
-    ticket,
-    spec,
-    coverage,
-    comment: await findComment(
-      api,
-      repository,
-      coverageTarget(spec, repository, ticket),
-      COVERAGE_MARKER,
-    ),
-  });
-}
-
 /**
- * Runs the mode `args[0]` names (`pull-request`, `issue` or `closed`) on
- * the event of `GITHUB_EVENT_PATH`, in `GITHUB_REPOSITORY`, with `GITHUB_TOKEN`,
+ * Runs the mode `args[0]` names (`pull-request` or `issue`) on the event
+ * of `GITHUB_EVENT_PATH`, in `GITHUB_REPOSITORY`, with `GITHUB_TOKEN`,
  * through the API at `GITHUB_API_URL`; writes a line per issue, or the
  * error that stopped it, to the job summary when `GITHUB_STEP_SUMMARY`
  * names one, and the issues it assigned to the step output `assigned` when
@@ -1808,15 +1550,7 @@ export async function main(
   context: Context = { env: process.env, fetcher: fetch },
 ): Promise<number> {
   const mode = args.at(0);
-  const checks = {
-    "pull-request": checkPullRequest,
-    issue: checkIssue,
-    closed: checkClosed,
-  };
-  if (
-    args.length !== 1 ||
-    !(mode === "pull-request" || mode === "issue" || mode === "closed")
-  ) {
+  if (args.length !== 1 || (mode !== "pull-request" && mode !== "issue")) {
     output.stderr(USAGE);
     return 2;
   }
@@ -1826,7 +1560,10 @@ export async function main(
       await readFile(settings.eventPath, "utf8"),
     );
     const api = gitHubApi(settings.base, settings.token, context.fetcher);
-    const plan = await checks[mode](api, settings, event);
+    const plan =
+      mode === "pull-request"
+        ? await checkPullRequest(api, settings, event)
+        : await checkIssue(api, settings, event);
     for (const line of plan.summary) output.stdout(`${line}\n`);
     await apply(api, settings.repository, plan, output);
     // An assignment made with GITHUB_TOKEN raises no issues event: the
