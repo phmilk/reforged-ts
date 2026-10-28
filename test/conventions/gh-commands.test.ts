@@ -12,7 +12,9 @@ function parentFieldCalls(text: string): string[] {
   return text
     .split(/\r?\n/)
     .filter((line) =>
-      /gh issue view\b.*?--json[ =]["']?[\w, ]*\bparent\b/.test(line),
+      /gh issue view\b.*?--json[ =](?:"[\w, ]*|'[\w, ]*|[\w,]*)\bparent\b/.test(
+        line,
+      ),
     );
 }
 
@@ -44,6 +46,7 @@ describe("a parent JSON field of gh issue view", () => {
     "gh issue view <n> --json number,state,title,labels",
     "`gh issue view` has no parent field",
     "gh pr view --json number,state",
+    "gh issue view 5 --json title and then read its parent with gh api",
   ])("is not found in %s", (line) => {
     expect(parentFieldCalls(line)).toEqual([]);
   });

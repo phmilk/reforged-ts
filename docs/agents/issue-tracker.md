@@ -7,7 +7,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 - **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
 - **A command in an issue or its brief**: run it once before writing it in, and quote what it printed. #754's brief named `vitest run --repeat 10`, an option vitest 5 does not have.
 - **Read an issue**: `gh issue view <number> --comments`, filtering comments by `jq` and also fetching labels.
-- **Read an issue's parent** (a Ticket's Spec, a ticket's map): `gh api repos/<owner>/<repo>/issues/<n>/parent --jq .number` (for #745 it printed `737`), a 404 ("No parent issue found") when it has none. `gh issue view` has no such field (`Unknown JSON field: "parent"`).
+- **Read an issue's parent** (a Ticket's Spec, a ticket's map): `gh api repos/<owner>/<repo>/issues/<n>/parent --jq .number` (for #745 it printed `737`), a 404 ("No parent issue found") when it has none. `gh issue view` has no such field (gh 2.89: `Unknown JSON field: "parent"`).
 - **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
 - **Comment on an issue**: `gh issue comment <number> --body "..."`
 - **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`

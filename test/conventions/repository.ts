@@ -13,14 +13,18 @@ export function read(path: string): string {
 
 // The files under `folder`, by their `/`-separated path from it, `.git`
 // and `node_modules` skipped.
-export function folderFiles(folder: string, current = folder): string[] {
-  return readdirSync(current, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(current, entry.name);
-    if (entry.isDirectory()) {
-      return entry.name === ".git" || entry.name === "node_modules"
-        ? []
-        : folderFiles(folder, path);
-    }
-    return entry.isFile() ? [relative(folder, path).split("\\").join("/")] : [];
-  });
+export function folderFiles(folder: string): string[] {
+  const walk = (current: string): string[] =>
+    readdirSync(current, { withFileTypes: true }).flatMap((entry) => {
+      const path = join(current, entry.name);
+      if (entry.isDirectory()) {
+        return entry.name === ".git" || entry.name === "node_modules"
+          ? []
+          : walk(path);
+      }
+      return entry.isFile()
+        ? [relative(folder, path).split("\\").join("/")]
+        : [];
+    });
+  return walk(folder);
 }
