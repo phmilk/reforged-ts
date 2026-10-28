@@ -93,6 +93,7 @@ flowchart TD
   implement_spec["/implement-spec, which does not claim"]
   tdd["/tdd"]
   code_review["/code-review"]
+  next_step["/next-step: at most five next steps, from the real state"]
   add_wrapper["/add-wrapper"]
   add_lint_rule["/add-lint-rule"]
   new_patch["/new-patch"]
@@ -123,6 +124,8 @@ flowchart TD
   add_lint_rule --> pull_request
   new_patch --> pull_request
   pull_request -->|"the required checks green, a review"| merge
+  pull_request -->|"the end of every implement"| next_step
+  next_step -->|"the next Ticket of the Frontier"| claim
 ```
 
 | Node               | Details in                                                                                                                                                                |
@@ -139,6 +142,7 @@ flowchart TD
 | the Claim          | [Claim](issue-tracker.md#claim) in the issue tracker doc                                                                                                                  |
 | `/implement`       | [its `SKILL.md`](../../.claude/skills/implement/SKILL.md)                                                                                                                 |
 | `/implement-spec`  | [its `SKILL.md`](../../.claude/skills/implement-spec/SKILL.md)                                                                                                            |
+| `/next-step`       | [its `SKILL.md`](../../.claude/skills/next-step/SKILL.md); [Skill variants](#skill-variants); added to the Agent's context by the skill-target check, under the table     |
 | `/tdd`             | [its `SKILL.md`](../../.claude/skills/tdd/SKILL.md)                                                                                                                       |
 | `/code-review`     | [its `SKILL.md`](../../.claude/skills/code-review/SKILL.md); its reviewers and the fix round: [Subagents](#subagents)                                                     |
 | `/add-wrapper`     | [its `SKILL.md`](../../.claude/skills/add-wrapper/SKILL.md)                                                                                                               |
@@ -150,7 +154,7 @@ flowchart TD
 - **The Claim is the first write**: `gh issue edit <n> --add-assignee @me` before the branch, the first commit, any comment and the pull request. `/implement` and `/implement-spec` do not claim by themselves: claim the ticket with its spec, the issue, or every free ticket of a spec with the spec, then invoke one. A spec is never claimed on its own, nor before its tickets; the on-ramps, triage and the split write without a Claim.
 - **A project skill replaces `/implement`** for its task: `/add-wrapper` covers a Native, `/add-lint-rule` guards a pitfall at lint level, `/new-patch` adopts a Patch. Each carries its own steps to the pull request and its changeset.
 - **`/implement` works one ticket or issue** on the current branch: `/tdd` at agreed seams, then `/code-review`. **`/implement-spec` works a whole spec** on one branch and one draft pull request closing its tickets, never the spec, which whoever merges closes after the coverage check ([Closing a Spec](issue-tracker.md#claim)): an implementer per ticket on the frontier of the task graph, each in its own worktree driving `/tdd`, a merger after each, then `/code-review` on the whole.
-- **A skill pointed at the wrong issue stops** ([ADR 0025](../adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)). The skill-target check, [`.claude/hooks/skill-target.mjs`](../../.claude/hooks/skill-target.mjs), runs on a typed `/implement`, `/implement-spec`, `/ship-spec` or `/split-spec` and on a call of the Skill tool with one of them, so a skill another skill invokes is held to the same rule. It reads the first issue of the arguments (`734`, `#734`, `owner/repo#734` or its URL) and stops the skill, saying what to run instead: `/implement` on an issue with an open blocker (the blockers, and the takeable Tickets of its Spec from `pnpm spec:frontier`); `/implement`, `/implement-spec` or `/ship-spec` on a Spec with no Ticket (`/split-spec <n>` first); `/split-spec` on a Spec with Tickets and a Coverage table (nothing to split); `/split-spec`, `/implement-spec` or `/ship-spec` on a closed Spec, and `/implement` on a closed Ticket (closed, and by whom). An issue named in full is named in full again, and so is any issue of another repository than the clone's, in the reason and in the command it gives. The Upstream skills cannot carry the rule in their steps (ADR 0022), and the claim check stops a merge, not the work before it. With no issue reference it is silent; when `gh` or the network fails it lets the skill run with a one-line warning, since the claim check still holds the rule on the pull request.
+- **A skill pointed at the wrong issue stops** ([ADR 0025](../adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)). The skill-target check, [`.claude/hooks/skill-target.mjs`](../../.claude/hooks/skill-target.mjs), runs on a typed `/implement`, `/implement-spec`, `/ship-spec` or `/split-spec` and on a call of the Skill tool with one of them, so a skill another skill invokes is held to the same rule. It reads the first issue of the arguments (`734`, `#734`, `owner/repo#734` or its URL) and stops the skill, saying what to run instead: `/implement` on an issue with an open blocker (the blockers, and the takeable Tickets of its Spec from `pnpm spec:frontier`); `/implement`, `/implement-spec` or `/ship-spec` on a Spec with no Ticket (`/split-spec <n>` first); `/split-spec` on a Spec with Tickets and a Coverage table (nothing to split); `/split-spec`, `/implement-spec` or `/ship-spec` on a closed Spec, and `/implement` on a closed Ticket (closed, and by whom). An issue named in full is named in full again, and so is any issue of another repository than the clone's, in the reason and in the command it gives. The Upstream skills cannot carry the rule in their steps (ADR 0022), and the claim check stops a merge, not the work before it. When it lets `/implement` or `/implement-spec` through, it adds a line to the Agent's context: end the work with `next-step`, which prints at most five numbered next steps from the real state of the issue, its Spec and its pull request. With no issue reference it is silent; when `gh` or the network fails it lets the skill run with a one-line warning, since the claim check still holds the rule on the pull request.
 
 ## Subagents
 

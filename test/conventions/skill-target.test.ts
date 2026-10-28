@@ -612,20 +612,40 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("lets a takeable Ticket through, on both events, silently", () => {
+  it("lets a takeable Ticket through on both events, adding the next-step line to the Agent's context", () => {
     const answers = {
       repo: LIBRARY,
       issue: issueData({ parent: SPEC_PARENT }),
     };
+    const context = (event: string) => ({
+      hookSpecificOutput: {
+        hookEventName: event,
+        additionalContext:
+          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the Spec's state (ADR 0025, .claude/hooks/skill-target.mjs).",
+      },
+    });
 
     expect(runHook(typed("/implement #740"), answers)).toMatchObject({
       code: 0,
-      output: null,
+      output: context("UserPromptSubmit"),
     });
-    expect(runHook(skillCall("implement", "740"), answers)).toMatchObject({
+    expect(runHook(skillCall("implement-spec", "737"), answers)).toMatchObject({
       code: 0,
-      output: null,
+      output: context("PreToolUse"),
     });
+  });
+
+  it("lets split-spec and ship-spec through silently: next-step ends an implement", () => {
+    const answers = {
+      repo: LIBRARY,
+      issue: issueData({
+        labels: { nodes: [{ name: "spec" }] },
+        subIssues: { totalCount: 3 },
+      }),
+    };
+
+    expect(runHook(typed("/split-spec 737"), answers).output).toBeNull();
+    expect(runHook(skillCall("ship-spec", "737"), answers).output).toBeNull();
   });
 
   it("stays silent and asks GitHub nothing with no issue reference", () => {
