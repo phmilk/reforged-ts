@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { BOARD_OWNER, BOARD_REPOSITORIES } from "../src/board.js";
 import {
+  COVERAGE_MARKER,
   CRITERIA_MARKER,
   MARKER,
   MAX_ASSIGNMENTS,
+  planClosed,
   planIssue,
   planPullRequest,
   SPEC_LABEL,
   SPEC_MARKER,
+  type ClosedInput,
   type ClosingIssue,
   type ClosingPullRequest,
   type IssueInput,
@@ -15,6 +18,7 @@ import {
   type PullRequestInput,
 } from "../src/claim-check.js";
 import { LABELS } from "../src/repo-settings.js";
+import type { FetchedSpec, FetchedTicket } from "../src/spec-check.js";
 import { readWorkflow } from "./support/workflows.js";
 
 const REPOSITORY = "owner/fork";
@@ -1153,6 +1157,247 @@ describe("planIssue", () => {
   });
 });
 
+// The closed mode (#796): Ticket #12 of the library closes; #10 is its Spec,
+// #11 its other Ticket.
+const LIBRARY = "phmilk/reforged-ts";
+const TEMPLATE = "phmilk/reforged-ts-template";
+
+/** A Ticket of the Spec, closed as completed with its one criterion checked. */
+function subTicket(
+  number: number,
+  closedAt: string | null,
+  more: Partial<FetchedTicket> = {},
+): FetchedTicket {
+  return {
+    repository: LIBRARY,
+    number,
+    state: closedAt === null ? "OPEN" : "CLOSED",
+    stateReason: closedAt === null ? null : "COMPLETED",
+    closedAt,
+    assignees: ["alice"],
+    body: "## Acceptance criteria\n\n- [x] It reads the body.\n",
+    ...more,
+  };
+}
+
+/** Spec #10 of the library, one item covered by #12, over `tickets`. */
+function coverage(tickets: FetchedTicket[]): FetchedSpec {
+  return {
+    repository: LIBRARY,
+    number: 10,
+    title: "The Spec",
+    body:
+      "## Implementation Decisions\n\n- It reads the body.\n\n" +
+      "## Coverage table\n\n| Item | Ticket | Criterion |\n| --- | --- | --- |\n" +
+      "| It reads the body. | #12 | It reads the body. |\n",
+    tickets,
+  };
+}
+
+/** Ticket #12 of the library closed, its Spec #10 open, read as `tickets`. */
+function closed(
+  tickets: FetchedTicket[],
+  more: Partial<ClosedInput> = {},
+): ClosedInput {
+  return {
+    repository: LIBRARY,
+    ticket: 12,
+    spec: {
+      repository: LIBRARY,
+      number: 10,
+      url: `https://github.com/${LIBRARY}/issues/10`,
+      open: true,
+    },
+    coverage: coverage(tickets),
+    comment: null,
+    ...more,
+  };
+}
+
+const EARLIER = "2026-10-28T15:40:00Z";
+const LATER = "2026-10-28T15:49:00Z";
+
+describe("planClosed", () => {
+  it("comments the green verdict on the Spec, with the command that closes it, once its last Ticket closes", () => {
+    expect(
+      planClosed(closed([subTicket(11, EARLIER), subTicket(12, LATER)])),
+    ).toEqual({
+      verdict: "clear",
+      assignments: [],
+      comments: [
+        {
+          number: 10,
+          id: null,
+          body: `${COVERAGE_MARKER}\n\n**Spec check.** Every Ticket of #10 is closed, and its coverage check, \`pnpm spec:check 10\`, is green: 1 item, 1 row, 2 Tickets. Close the Spec, which this check never does: \`gh issue close 10 --comment "The coverage check is green: 1 item, 1 row, 2 Tickets."\`. Whoever merged its last Ticket, an assignee of the Spec or the maintainer may. See \`docs/agents/issue-tracker.md\`, "Closing a Spec".`,
+        },
+      ],
+      summary: [
+        "- #12, the last Ticket of #10 to close: the coverage check is green; commented on #10.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("comments the red verdict on the Spec, one line per gap as spec:check prints it, and closes nothing", () => {
+    const plan = planClosed(
+      closed([
+        subTicket(11, EARLIER, { stateReason: "NOT_PLANNED" }),
+        subTicket(12, LATER, {
+          body: "## Acceptance criteria\n\n- [ ] It reads the body.\n",
+        }),
+      ]),
+    );
+
+    expect(plan.comments).toEqual([
+      {
+        number: 10,
+        id: null,
+        body:
+          `${COVERAGE_MARKER}\n\n**Spec check.** Every Ticket of #10 is closed, but its coverage check, \`pnpm spec:check 10\`, is red: 1 item, 1 row, 2 Tickets, and 2 gaps:\n\n` +
+          "- #11 closed as NOT_PLANNED, not as completed.\n" +
+          '- #12 leaves a criterion unchecked: "It reads the body.".\n\n' +
+          'Leave the Spec open. Whoever fills a gap runs the check again, and the Spec closes on a green check. See `docs/agents/issue-tracker.md`, "Closing a Spec".',
+      },
+    ]);
+    expect(plan.summary).toEqual([
+      "- #12, the last Ticket of #10 to close: the coverage check is red, 2 gaps; commented on #10.",
+    ]);
+    expect(plan.exitCode).toBe(0);
+  });
+
+  it("says nothing while a Ticket of the Spec is open, in either Board repository", () => {
+    expect(
+      planClosed(
+        closed([
+          subTicket(11, null),
+          subTicket(12, LATER),
+          subTicket(5, null, { repository: TEMPLATE }),
+        ]),
+      ),
+    ).toEqual({
+      verdict: "clear",
+      assignments: [],
+      comments: [],
+      summary: [
+        `- #12, a Ticket of #10: #11 and ${TEMPLATE}#5 still open; nothing to check yet.`,
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("leaves the comment to the run of the Ticket that closed last, by time, then by repository and number", () => {
+    const later = planClosed(
+      closed([subTicket(11, "2026-10-28T15:50:00Z"), subTicket(12, LATER)]),
+    );
+    // Closed by one merge, in the same second: the higher key comments.
+    const tie = planClosed(
+      closed([subTicket(11, LATER), subTicket(12, LATER)]),
+    );
+    const tieLost = planClosed({
+      ...closed([subTicket(11, LATER), subTicket(12, LATER)]),
+      ticket: 11,
+    });
+
+    expect(later.comments).toEqual([]);
+    expect(later.summary).toEqual([
+      "- #12, a Ticket of #10: #11 closed after it, and its run comments the coverage check.",
+    ]);
+    expect(tie.comments).toHaveLength(1);
+    expect(tieLost.comments).toEqual([]);
+  });
+
+  it("comments on the Ticket a Spec of the other Board repository, which its token cannot write, named by its address", () => {
+    const plan = planClosed(
+      closed(
+        [
+          subTicket(11, EARLIER),
+          subTicket(12, LATER, { repository: TEMPLATE }),
+        ],
+        { repository: TEMPLATE },
+      ),
+    );
+
+    // The Coverage table names #12 of the library, a sub-issue it is not.
+    expect(plan.comments).toHaveLength(1);
+    expect(plan.comments[0]?.number).toBe(12);
+    expect(plan.comments[0]?.body).toContain(
+      `**Spec check.** Every Ticket of ${LIBRARY}#10 is closed, but its coverage check, \`pnpm spec:check 10\`, is red: 1 item, 1 row, 2 Tickets, and 1 gap:\n\n- The row of "It reads the body." names #12, which is not a sub-issue of the Spec.\n\n`,
+    );
+    expect(plan.summary).toEqual([
+      `- #12, the last Ticket of ${LIBRARY}#10 to close: the coverage check is red, 1 gap; commented on #12.`,
+    ]);
+  });
+
+  it("names the Template in the check, the Spec's address in the close command, on a Spec of the Template seen from the library", () => {
+    const spec = {
+      repository: TEMPLATE,
+      number: 10,
+      url: `https://github.com/${TEMPLATE}/issues/10`,
+      open: true,
+    };
+    const plan = planClosed(
+      closed([subTicket(11, EARLIER), subTicket(12, LATER)], {
+        spec,
+        coverage: {
+          ...coverage([subTicket(11, EARLIER), subTicket(12, LATER)]),
+          repository: TEMPLATE,
+          body: coverage([]).body.replace("| #12 |", `| ${LIBRARY}#12 |`),
+        },
+      }),
+    );
+
+    expect(plan.comments[0]?.body).toContain(
+      `its coverage check, \`pnpm spec:check 10 ${TEMPLATE}\`, is green: 1 item, 1 row, 2 Tickets. Close the Spec, which this check never does: \`gh issue close https://github.com/${TEMPLATE}/issues/10 --comment "The coverage check is green: 1 item, 1 row, 2 Tickets."\`.`,
+    );
+  });
+
+  it("edits its earlier comment to the new verdict, and leaves one that already says it", () => {
+    const tickets = [subTicket(11, EARLIER), subTicket(12, LATER)];
+    const first = planClosed(closed(tickets)).comments[0]?.body ?? "";
+    const stale = planClosed(
+      closed(tickets, {
+        comment: { id: 7, body: `${COVERAGE_MARKER}\n\nold` },
+      }),
+    );
+    const same = planClosed(
+      closed(tickets, {
+        comment: { id: 7, body: first.replaceAll("\n", "\r\n") },
+      }),
+    );
+
+    expect(stale.comments).toEqual([{ number: 10, id: 7, body: first }]);
+    expect(same.comments).toEqual([]);
+    expect(same.summary).toEqual([
+      "- #12, the last Ticket of #10 to close: the coverage check is green; the comment on #10 already says so.",
+    ]);
+  });
+
+  it("says nothing on an issue with no Spec, or whose Spec is closed", () => {
+    expect(planClosed(closed([], { spec: null, coverage: null }))).toEqual({
+      verdict: "clear",
+      assignments: [],
+      comments: [],
+      summary: ["- #12: no Spec; nothing to check."],
+      exitCode: 0,
+    });
+    expect(
+      planClosed(
+        closed([], {
+          spec: {
+            repository: LIBRARY,
+            number: 10,
+            url: `https://github.com/${LIBRARY}/issues/10`,
+            open: false,
+          },
+          coverage: null,
+        }),
+      ).summary,
+    ).toEqual([
+      "- #12, a Ticket of #10: the Spec is closed; nothing to check.",
+    ]);
+  });
+});
+
 /** The parsed workflow `file` of this repository. */
 const workflow = async (file: string) => (await readWorkflow(file)).workflow;
 
@@ -1190,11 +1435,27 @@ describe("claim-check.yml", () => {
     ).toEqual([
       "node release/src/claim-check.ts pull-request",
       "node release/src/claim-check.ts issue",
+      "node release/src/claim-check.ts closed",
       "gh workflow run board.yml --repo phmilk/reforged-ts",
     ]);
     expect(jobs.check?.steps?.map((step) => step.env ?? {})).toContainEqual({
       GITHUB_TOKEN: "${{ github.token }}",
     });
+  });
+
+  it("runs the issue mode on an assignment, the closed mode on a close", async () => {
+    const { jobs } = await workflow("claim-check.yml");
+    const ifOf = (mode: string) =>
+      jobs.check?.steps?.find(
+        (step) => step.run === `node release/src/claim-check.ts ${mode}`,
+      )?.if;
+
+    expect(ifOf("issue")).toBe(
+      "github.event_name == 'issues' && github.event.action != 'closed'",
+    );
+    expect(ifOf("closed")).toBe(
+      "github.event_name == 'issues' && github.event.action == 'closed'",
+    );
   });
 
   it("dispatches board.yml from its own job after an assignment in the library, the one job with actions: write", async () => {
@@ -1275,7 +1536,7 @@ describe("claim.yml", () => {
       pull_request_target: {
         types: ["opened", "reopened", "synchronize", "edited"],
       },
-      issues: { types: ["assigned", "unassigned"] },
+      issues: { types: ["assigned", "unassigned", "closed"] },
     });
     expect(Object.keys(jobs)).toEqual(["claim"]);
     expect(jobs.claim?.uses).toBe("./.github/workflows/claim-check.yml");

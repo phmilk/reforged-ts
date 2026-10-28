@@ -920,7 +920,8 @@ describe("claim-check", () => {
       expect(await run(args)).toEqual({
         code: 2,
         stdout: "",
-        stderr: "Usage: node release/src/claim-check.ts <pull-request|issue>\n",
+        stderr:
+          "Usage: node release/src/claim-check.ts <pull-request|issue|closed>\n",
         summary: "",
         output: "",
       });
@@ -1115,5 +1116,132 @@ describe("claim-check, the Spec and its blockers (ADR 0025)", () => {
         "Commented on #12.\n",
     );
     expect(JSON.stringify(received[1]?.body)).toContain("blockedBy");
+  });
+});
+
+describe("claim-check closed (#796)", () => {
+  const LIBRARY = "phmilk/reforged-ts";
+  const LIBRARY_ISSUES = `/repos/${LIBRARY}/issues`;
+  const CLOSED_EVENT = {
+    action: "closed",
+    issue: { number: 12 },
+    sender: { login: "alice" },
+  };
+  /** Ticket #12's parent, Spec #10 of the library, in `state`. */
+  const parent = (state = "OPEN", labels = ["spec"]) => ({
+    repository: {
+      issue: {
+        parent: {
+          number: 10,
+          url: `https://github.com/${LIBRARY}/issues/10`,
+          state,
+          repository: { nameWithOwner: LIBRARY },
+          labels: { nodes: labels.map((name) => ({ name })) },
+        },
+      },
+    },
+  });
+  /** A sub-issue of #10 closed as completed at `closedAt`, its criterion checked. */
+  const subIssue = (number: number, closedAt: string) => ({
+    number,
+    state: "CLOSED",
+    stateReason: "COMPLETED",
+    closedAt,
+    body: "## Acceptance criteria\n\n- [x] It reads the body.\n",
+    repository: { nameWithOwner: LIBRARY },
+    assignees: { nodes: [{ login: "alice" }] },
+  });
+  const SPEC = {
+    repository: {
+      issue: {
+        title: "The Spec",
+        body:
+          "## Implementation Decisions\n\n- It reads the body.\n\n" +
+          "## Coverage table\n\n| Item | Ticket | Criterion |\n| --- | --- | --- |\n" +
+          "| It reads the body. | #12 | It reads the body. |\n",
+        labels: { nodes: [{ name: "spec" }] },
+        subIssues: {
+          totalCount: 2,
+          nodes: [
+            subIssue(11, "2026-10-28T15:40:00Z"),
+            subIssue(12, "2026-10-28T15:49:00Z"),
+          ],
+        },
+      },
+    },
+  };
+  const env = { GITHUB_REPOSITORY: LIBRARY, GITHUB_REPOSITORY_OWNER: "phmilk" };
+
+  it("reads the Ticket's Spec and its Tickets, then comments the green verdict on the Spec, under node with no install", async () => {
+    answers.graphql.ClosedTicket = parent();
+    answers.graphql.SpecCoverage = SPEC;
+    answers.rest[`GET ${LIBRARY_ISSUES}/10/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${LIBRARY_ISSUES}/10/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["closed"], CLOSED_EVENT, env);
+    const line =
+      "- #12, the last Ticket of #10 to close: the coverage check is green; commented on #10.";
+
+    expect(result).toEqual({
+      code: 0,
+      stdout: `${line}\nCommented on #10.\n`,
+      stderr: "",
+      summary: `## Claim check\n\n${line}\n`,
+      output: "",
+    });
+    expect(sent()).toEqual([
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          variables: { owner: "phmilk", name: "reforged-ts", number: 12 },
+        }) as unknown,
+      ],
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          variables: { owner: "phmilk", name: "reforged-ts", number: 10 },
+        }) as unknown,
+      ],
+      [`GET ${LIBRARY_ISSUES}/10/comments?per_page=100&page=1`, undefined],
+      [
+        `POST ${LIBRARY_ISSUES}/10/comments`,
+        {
+          body: expect.stringMatching(
+            /^<!-- claim-check: coverage -->\n\n\*\*Spec check\.\*\* Every Ticket of #10 is closed, and its coverage check, `pnpm spec:check 10`, is green/,
+          ) as unknown,
+        },
+      ],
+    ]);
+  });
+
+  it("reads nothing more on an issue whose parent is no Spec, or a closed one", async () => {
+    answers.graphql.ClosedTicket = parent("OPEN", ["enhancement"]);
+    const noSpec = await run(["closed"], CLOSED_EVENT, env);
+    answers.graphql.ClosedTicket = parent("CLOSED");
+    const closedSpec = await run(["closed"], CLOSED_EVENT, env);
+
+    expect(noSpec.stdout).toBe("- #12: no Spec; nothing to check.\n");
+    expect(closedSpec.stdout).toBe(
+      "- #12, a Ticket of #10: the Spec is closed; nothing to check.\n",
+    );
+    expect(received).toHaveLength(2);
+  });
+
+  it("exits 1 on an issues event that is no close", async () => {
+    const result = await run(
+      ["closed"],
+      { ...CLOSED_EVENT, action: "assigned" },
+      env,
+    );
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("the closed mode runs on issues (closed)");
+    expect(received).toEqual([]);
   });
 });

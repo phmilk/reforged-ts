@@ -13,10 +13,18 @@
  * and restates none. A Ticket's criteria and their gaps are read by
  * `issue-markdown.ts`, which the claim check shares. A quoted cell is
  * found in a text that contains it, once both are read without bold
- * markers, with straight quotes and single spaces.
+ * markers, with straight quotes and single spaces. `renderVerdict` writes
+ * the verdict as the CLI prints it, and the claim check comments it when a
+ * Spec's last Ticket closes (#796).
+ *
+ * Self-contained on purpose, as the claim check is: Node built-ins only and
+ * erasable syntax only, `issue-markdown.ts` imported by its `.ts` name, so
+ * that the claim check imports it and Node runs both from a checkout with
+ * no install and no build. `readSpec` takes the GraphQL call rather than
+ * importing one; `BOARD_REPOSITORIES`, `issueKey`, `isRecord` and `plural`
+ * are copied from the others, and a test holds the list equal to the
+ * board's.
  */
-import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
-import { graphql } from "./github-graphql.js";
 import {
   criteriaOf,
   gapsOf,
@@ -27,13 +35,42 @@ import {
   oneLine,
   sections,
   type CriterionGap,
-} from "./issue-markdown.js";
-import type { GitHubApi } from "./repo-settings.js";
-import { isRecord } from "./unknown.js";
+} from "./issue-markdown.ts";
+
+/** An issue named by its repository (`owner/name`) and number. */
+export interface IssueRef {
+  repository: string;
+  number: number;
+}
+
+/**
+ * The repositories the Claim board spans, as `owner/name`: a sub-issue of
+ * another repository is no Ticket. A copy of `BOARD_REPOSITORIES` of
+ * `board.ts`, since this script imports nothing; a test holds them equal.
+ */
+export const BOARD_REPOSITORIES: readonly string[] = [
+  "phmilk/reforged-ts",
+  "phmilk/reforged-ts-template",
+];
+
+/** `owner/name#number`. */
+const issueKey = ({ repository, number }: IssueRef): string =>
+  `${repository}#${String(number)}`;
+
+/** Whether a parsed JSON value is an object (not an array, not `null`). */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** `count` with the noun that agrees with it: `1 item`, `2 items`. */
+const plural = (count: number, one: string, many: string): string =>
+  `${String(count)} ${count === 1 ? one : many}`;
 
 /** A sub-issue of the Spec, as GitHub returns it. */
 export interface FetchedTicket extends IssueRef {
   state: "OPEN" | "CLOSED";
+  /** When it last closed, ISO 8601; `null` while open. */
+  closedAt: string | null;
   /**
    * Why it closed, GitHub's `IssueStateReason` as written (`COMPLETED`,
    * `NOT_PLANNED`, `DUPLICATE`, `REOPENED` today), so that a value GitHub
@@ -382,6 +419,77 @@ export function coverageVerdict(spec: FetchedSpec): Verdict {
   };
 }
 
+// The verdict as text.
+
+/** `ref` as printed for a Spec of repository `home`: `#n` there, else in full. */
+const displayRef = (home: string, ref: IssueRef): string =>
+  ref.repository === home ? `#${String(ref.number)}` : issueKey(ref);
+
+/** One gap as a line of the verdict, its Tickets named from repository `home`. */
+export function describeGap(home: string, gap: Gap): string {
+  switch (gap.kind) {
+    case "no-table":
+      return "No Coverage table: the Spec's body has no ## Coverage table section with a table.";
+    case "no-row":
+      return `No row for the item "${gap.item}".`;
+    case "no-item":
+      return `The row of "${gap.item}" quotes no item of the Spec.`;
+    case "ambiguous-row":
+      return `The row of "${gap.item}" quotes words found in ${plural(gap.items, "item", "items")} of different texts, so it covers none: quote enough to name one.`;
+    case "no-ticket":
+      return `The row of "${gap.item}" names no Ticket.`;
+    case "not-sub-issue":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, which is not a sub-issue of the Spec.`;
+    case "outside-board":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, a sub-issue of the Spec outside the Board repositories (${BOARD_REPOSITORIES.join(", ")}), so no Ticket.`;
+    case "no-criterion":
+      return `The row of "${gap.item}" quotes the criterion "${gap.criterion}", which ${displayRef(home, gap.ticket)} does not hold.`;
+    case "open":
+      return `${displayRef(home, gap.ticket)} is open, held by ${
+        gap.assignees.length === 0
+          ? "nobody"
+          : gap.assignees.map((login) => `@${login}`).join(", ")
+      }, ${
+        gap.unchecked === 0
+          ? "with every criterion checked"
+          : `with ${plural(gap.unchecked, "criterion", "criteria")} unchecked`
+      }.`;
+    case "not-completed":
+      return `${displayRef(home, gap.ticket)} closed ${gap.reason === null ? "with no reason given" : `as ${gap.reason}`}, not as completed.`;
+    case "unchecked":
+      return `${displayRef(home, gap.ticket)} leaves a criterion unchecked: "${gap.criterion}".`;
+    case "no-outcome":
+      return `${displayRef(home, gap.ticket)} has a "check whether…" without its Outcome: line: "${gap.criterion}".`;
+  }
+}
+
+/** What the verdict counts, `3 items, 3 rows, 2 Tickets`. */
+export const verdictCounts = (verdict: Verdict): string =>
+  `${plural(verdict.items, "item", "items")}, ${plural(verdict.rows, "row", "rows")}, ` +
+  plural(verdict.tickets, "Ticket", "Tickets");
+
+/** The verdict on `spec`, as `pnpm spec:check` prints it. */
+export function renderVerdict(spec: FetchedSpec, verdict: Verdict): string {
+  const head =
+    `Spec #${String(spec.number)} of ${spec.repository}, "${spec.title}": ` +
+    `${verdictCounts(verdict)}.\n`;
+  if (verdict.gaps.length === 0) {
+    return (
+      head +
+      "Delivered: every item has a row, every Ticket closed as completed, " +
+      'every criterion is checked and every "check whether…" carries its Outcome. ' +
+      "The Spec may close.\n"
+    );
+  }
+  return (
+    head +
+    `Not delivered, ${plural(verdict.gaps.length, "gap", "gaps")}:\n` +
+    verdict.gaps
+      .map((gap) => `- ${describeGap(spec.repository, gap)}\n`)
+      .join("")
+  );
+}
+
 // Reading the Spec from GitHub.
 
 /** The label of a Spec, as `to-spec` and `write-spec` set it. */
@@ -394,6 +502,15 @@ export class SpecCheckError extends Error {
     this.name = "SpecCheckError";
   }
 }
+
+/**
+ * A GraphQL call: `query` with `variables` in, the answer's `data` out; it
+ * throws on an error answer.
+ */
+export type GraphQl = (
+  query: string,
+  variables: Readonly<Record<string, unknown>>,
+) => Promise<Record<string, unknown>>;
 
 /** More sub-issues than a Spec splits into: the query reads them in one page. */
 const TICKET_PAGE = 100;
@@ -408,7 +525,7 @@ const SPEC_COVERAGE = `query SpecCoverage($owner: String!, $name: String!, $numb
       subIssues(first: ${String(TICKET_PAGE)}) {
         totalCount
         nodes {
-          number state stateReason body
+          number state stateReason closedAt body
           repository { nameWithOwner }
           assignees(first: 10) { nodes { login } }
         }
@@ -445,6 +562,7 @@ function ticketOf(node: unknown, spec: string): FetchedTicket {
     number: node.number,
     state: node.state,
     stateReason: typeof node.stateReason === "string" ? node.stateReason : null,
+    closedAt: typeof node.closedAt === "string" ? node.closedAt : null,
     assignees: nodesOf(node.assignees).flatMap((user) =>
       isRecord(user) && typeof user.login === "string" ? [user.login] : [],
     ),
@@ -454,17 +572,17 @@ function ticketOf(node: unknown, spec: string): FetchedTicket {
 
 /**
  * Spec `number` of `repository` (`owner/name`) with every sub-issue, in
- * either Board repository or any other, through `api`. An error when the
- * issue is missing, is not labelled `spec`, or has more sub-issues than
- * one page reads.
+ * either Board repository or any other, through `query`, a GraphQL call
+ * that answers the `data` or throws. An error when the issue is missing,
+ * is not labelled `spec`, or has more sub-issues than one page reads.
  */
 export async function readSpec(
-  api: GitHubApi,
+  query: GraphQl,
   repository: string,
   number: number,
 ): Promise<FetchedSpec> {
   const [owner, name] = repository.split("/");
-  const data = await graphql(api, SPEC_COVERAGE, { owner, name, number });
+  const data = await query(SPEC_COVERAGE, { owner, name, number });
   const where = issueKey({ repository, number });
   const repo = data.repository;
   const issue = isRecord(repo) ? repo.issue : undefined;

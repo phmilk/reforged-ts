@@ -9,7 +9,11 @@
 # still unchecked draw a comment on the pull request; on an assignment, a
 # conflict, or a Claim of an unsplit Spec or a blocked issue, draws a
 # comment on the issue. Adding to a Spec a login that holds or delivered one
-# of its Tickets is not a conflict, nor is a login the maintainer adds. After
+# of its Tickets is not a conflict, nor is a login the maintainer adds. On a
+# close, once a Spec has no open Ticket left, the coverage check's verdict
+# is commented on the Spec (on the Ticket for a Spec of the other Board
+# repository), green with the command that closes it, never closing it
+# (ADR 0023). After
 # an assignment it made, it tells the Claim board, from the library or from
 # another Board repository (the jobs dispatch and board-dispatch). It never
 # reverts anything. The library's claim.yml and the Template's call it, so
@@ -85,10 +89,18 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node release/src/claim-check.ts pull-request
       - name: claim-check issue
-        if: github.event_name == 'issues'
+        if: github.event_name == 'issues' && github.event.action != 'closed'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node release/src/claim-check.ts issue
+      # A Ticket's close: once its Spec has no open Ticket left, the coverage
+      # verdict is commented, so that a last Ticket merged by auto-merge,
+      # with nobody there, still gets its Spec checked (#796).
+      - name: claim-check closed
+        if: github.event_name == 'issues' && github.event.action == 'closed'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node release/src/claim-check.ts closed
 
   # An assignment made with GITHUB_TOKEN raises no issues event, so the
   # board (board.yml) is told here, once the check says it assigned: in the
