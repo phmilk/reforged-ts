@@ -31,6 +31,15 @@ export interface LlmsTarget {
   readonly description?: string;
   /** The text that opens `llms.txt`. */
   readonly intro: string;
+  /**
+   * Whether each page's link is its file's path under `route`, not looked
+   * up in the routes: true for the Typings, whose pages TypeDoc writes with
+   * no `slug` or `id`, so a page's route is its file's path. The plugin's
+   * lookup compares every route with every page, 140 million comparisons
+   * for the Typings' 11,900 pages and about 25 s of `docs:check` (#789); the
+   * check after it still holds each link to a page of the target.
+   */
+  readonly linksFromPaths?: true;
 }
 
 const SITE_URL = "https://phmilk.github.io/reforged-ts";
@@ -71,6 +80,7 @@ export function llmsTargets(cut: readonly string[]): LlmsTarget[] {
       intro:
         "The reference of the Typings (reforged-types), the declarations of the Warcraft III Natives: a page per Native, Blizzard.j function and global of each Game version, as Markdown. " +
         `The documentation of the library has an llms.txt per docs version: ${llmsUrl("<version>")}, where <version> is next or a library major.minor.`,
+      linksFromPaths: true,
     },
   ];
 }
@@ -181,7 +191,8 @@ function llmsFiles(
         await llmsPlugin(context, pluginOptions(target)).postBuild?.({
           ...props,
           content: undefined,
-          routesPaths: routes,
+          // With no route to look up, the plugin links each page at its path.
+          routesPaths: target.linksFromPaths ? [] : routes,
         });
         const found = llmsProblems(
           props.outDir,

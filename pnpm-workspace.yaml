@@ -123,3 +123,11 @@ overrides:
   # TypeScript peer stops below 6: it runs on the catalog's version instead,
   # the one typescript-eslint brings.
   "eslint-plugin-tsdoc>@typescript-eslint/utils": "catalog:"
+
+# react-router 5 (Docusaurus') caches the compiled pattern of 10,000 route
+# paths and compiles any other on each match; the site has 12,300 routes, the
+# Typings' pages, so the static build compiled 2,300 of them again for every
+# page it rendered (#789). The patch raises the limit of the esm and cjs
+# builds to 100,000. 5.3.4 is react-router 5's last version.
+patchedDependencies:
+  react-router@5.3.4: patches/react-router@5.3.4.patch

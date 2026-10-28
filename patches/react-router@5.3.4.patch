@@ -1,0 +1,44 @@
+diff --git a/cjs/react-router.js b/cjs/react-router.js
+index b24531490a0143a80d3bc5dfadc6efaf86d074dd..346146cf52d5b39dd4acb1b1e070f286f3ffecf0 100644
+--- a/cjs/react-router.js
++++ b/cjs/react-router.js
+@@ -480,7 +480,7 @@ function Prompt(_ref) {
+ }
+ 
+ var cache = {};
+-var cacheLimit = 10000;
++var cacheLimit = 100000;
+ var cacheCount = 0;
+ 
+ function compilePath(path) {
+@@ -564,7 +564,7 @@ function Redirect(_ref) {
+ }
+ 
+ var cache$1 = {};
+-var cacheLimit$1 = 10000;
++var cacheLimit$1 = 100000;
+ var cacheCount$1 = 0;
+ 
+ function compilePath$1(path, options) {
+diff --git a/esm/react-router.js b/esm/react-router.js
+index 207cf597680f90c9b2759e61cbd40d4ee1ed3683..45e1f38be56a702aa4b04cba7dc75d339f25c15d 100644
+--- a/esm/react-router.js
++++ b/esm/react-router.js
+@@ -430,7 +430,7 @@ if (process.env.NODE_ENV !== "production") {
+ }
+ 
+ var cache = {};
+-var cacheLimit = 10000;
++var cacheLimit = 100000;
+ var cacheCount = 0;
+ 
+ function compilePath(path) {
+@@ -514,7 +514,7 @@ if (process.env.NODE_ENV !== "production") {
+ }
+ 
+ var cache$1 = {};
+-var cacheLimit$1 = 10000;
++var cacheLimit$1 = 100000;
+ var cacheCount$1 = 0;
+ 
+ function compilePath$1(path, options) {

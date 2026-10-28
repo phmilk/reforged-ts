@@ -163,3 +163,77 @@ describe("the Markdown copy of a page", () => {
     expect(full).toContain(DIAGRAM);
   });
 });
+
+describe("the Typings' LLM files", () => {
+  /** The site plugin's postBuild over the site folder written here. */
+  async function postBuild(routesPaths: string[]): Promise<void> {
+    const site = join(build, "site");
+    const plugin = llmsFilesPlugin([]);
+    if (typeof plugin !== "function") throw new Error("Not a plugin module.");
+    const context = {
+      siteDir: site,
+      outDir: join(build, "out"),
+      siteConfig: {
+        title: "reforged-ts",
+        tagline: "TypeScript for Warcraft III maps, compiled to Lua.",
+        url: "https://phmilk.github.io",
+        baseUrl: "/reforged-ts/",
+      },
+    } as unknown as LoadContext;
+    const plugged = (await plugin(context, undefined)) as Plugin;
+    await plugged.postBuild?.({
+      ...context,
+      routesPaths,
+    } as unknown as Parameters<NonNullable<Plugin["postBuild"]>>[0]);
+  }
+
+  beforeEach(async () => {
+    await write("site/docs/index.md", "# reforged-ts\n\nThe docs.\n");
+    await write("site/typings/index.mdx", "# reforged-types\n\nThe Typings.\n");
+    await write(
+      "site/typings/3.0.1/functions/AbilityId.md",
+      "# Function: AbilityId()\n\nAn ability's id.\n",
+    );
+    await write(
+      "site/typings/3.0.1/interfaces/ability.md",
+      "# Interface: ability\n\nAn ability.\n",
+    );
+  });
+
+  const DOCS = ["/reforged-ts/docs/next"];
+  const TYPINGS = [
+    "/reforged-ts/typings",
+    "/reforged-ts/typings/3.0.1/functions/AbilityId",
+    "/reforged-ts/typings/3.0.1/interfaces/ability",
+  ];
+
+  it("link each page at its file's path, which is its route", async () => {
+    await postBuild([...DOCS, ...TYPINGS]);
+
+    const index = await readFile(join(build, "out/typings/llms.txt"), "utf8");
+    expect(
+      [...index.matchAll(/^- \[.*?\]\((\S+?)\)/gm)]
+        .map(([, url]) => url)
+        .sort(),
+    ).toEqual(
+      [
+        "typings.md",
+        "typings/3.0.1/functions/AbilityId.md",
+        "typings/3.0.1/interfaces/ability.md",
+      ]
+        .map((path) => `${SITE_URL}/${path}`)
+        .sort(),
+    );
+  });
+
+  it("fail the build when a page's path is no route", async () => {
+    await expect(
+      postBuild([
+        ...DOCS,
+        ...TYPINGS.filter((route) => !route.endsWith("ability")),
+      ]),
+    ).rejects.toThrow(
+      `${SITE_URL}/typings/3.0.1/interfaces/ability.md, which is not the Markdown copy of a page of /typings.`,
+    );
+  });
+});
