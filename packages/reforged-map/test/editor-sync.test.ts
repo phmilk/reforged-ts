@@ -16,13 +16,13 @@ import {
 import {
   PACKAGE_ROOT,
   fixtureMap,
-  makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
 import {
   REMOVED_DEFINITIONS,
   SYNCED_DEFINITIONS,
 } from "./support/editor-sync.js";
+import { mapProject, sync, type MapProject } from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
@@ -43,42 +43,14 @@ const NO_WINDOW: ObjectSyncOptions = {
   worldEditorCheck: { readWindowTitles: () => [] },
 };
 
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
-}
-
-/** Links `node_modules/<name>` of `root` to this package's installation of it. */
-function link(root: string, name: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(
-    fs.realpathSync(path.join(PACKAGE_ROOT, "node_modules", name)),
-    linkPath,
-    "junction",
-  );
-}
-
-/** Writes files under the Map project's root, by relative path. */
-function write(root: string, files: Readonly<Record<string, string>>): void {
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-}
-
 /** A Map project over a copy of editor-objects.w3m, synced as the run that made the fixture synced it: every definition, then without the removed one. */
 function syncedProject(): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "reforged-ts-template.w3m");
-  fs.cpSync(fixtureMap("editor-objects.w3m"), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-
-  write(root, { ...SYNCED_DEFINITIONS, ...REMOVED_DEFINITIONS });
-  const first = syncObjectDefinitions(mapFolder, root, NO_WINDOW);
+  const project = mapProject(
+    "editor-objects.w3m",
+    { ...SYNCED_DEFINITIONS, ...REMOVED_DEFINITIONS },
+    { mapFolder: "reforged-ts-template.w3m" },
+  );
+  const first = sync(project);
   expect(first.added.map(({ rawcode }) => rawcode)).toEqual([
     "h002",
     "hkni",
@@ -87,11 +59,11 @@ function syncedProject(): MapProject {
     "B001",
   ]);
   for (const name of Object.keys(REMOVED_DEFINITIONS)) {
-    fs.rmSync(path.join(root, name));
+    fs.rmSync(path.join(project.root, name));
   }
-  const second = syncObjectDefinitions(mapFolder, root, NO_WINDOW);
+  const second = sync(project);
   expect(second.removed.map(({ rawcode }) => rawcode)).toEqual(["I001"]);
-  return { root, mapFolder };
+  return project;
 }
 
 describe("the World Editor contract of Object sync", () => {

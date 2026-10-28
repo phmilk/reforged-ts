@@ -3,7 +3,6 @@
 // test, merged into a staged copy of the map folder, read back through the
 // Object data editor. The map folder itself is never written.
 
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -17,89 +16,35 @@ import {
 import {
   PACKAGE_ROOT,
   fixtureMap,
-  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
+import {
+  mapProject,
+  snapshot,
+  type MapProject,
+  type ObjectProjectOptions,
+} from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
 /** The fixture the Map projects copy: a Custom object and a changed Built-in object of each kind, as the World Editor saved them. */
 const FIXTURE = "editor-objects.w3m";
 
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
+/** A Map project with the build's staged copy of its map folder: a second copy of the fixture, under dist/. */
+interface StagedProject extends MapProject {
   readonly staged: string;
 }
 
-interface MapProjectOptions {
-  /** Whether the Map project installs typescript. */
-  readonly typescript?: boolean;
-  /** Whether it installs reforged-builtins, or the folder of a stand-in. */
-  readonly builtins?: boolean | string;
-}
-
-/** Links `node_modules/<name>` of `root` to `target`. */
-function link(root: string, name: string, target: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(fs.realpathSync(target), linkPath, "junction");
-}
-
-/**
- * A Map project in a temporary folder: a copy of the fixture as its map
- * folder, a second copy as the build's staged copy, `files` under its root,
- * and typescript and reforged-builtins linked from this package's
- * installation.
- */
-function mapProject(
+/** A Map project of the fixture, `files` under its root, with a staged copy of its map folder. */
+function stagedProject(
   files: Readonly<Record<string, string>>,
-  { typescript = true, builtins = true }: MapProjectOptions = {},
-): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  const staged = path.join(root, "dist", "test.w3m");
-  fs.cpSync(fixtureMap(FIXTURE), mapFolder, { recursive: true });
+  options: ObjectProjectOptions = {},
+): StagedProject {
+  const project = mapProject(FIXTURE, files, options);
+  const staged = path.join(project.root, "dist", "test.w3m");
   fs.cpSync(fixtureMap(FIXTURE), staged, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  if (typescript) {
-    link(
-      root,
-      "typescript",
-      path.join(PACKAGE_ROOT, "node_modules", "typescript"),
-    );
-  }
-  if (builtins !== false) {
-    link(
-      root,
-      "reforged-builtins",
-      builtins === true
-        ? path.join(PACKAGE_ROOT, "node_modules", "reforged-builtins")
-        : builtins,
-    );
-  }
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-  return { root, mapFolder, staged };
-}
-
-/** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
-function snapshot(folder: string): Map<string, string> {
-  return new Map(
-    listTree(folder)
-      .filter((name) => fs.statSync(path.join(folder, name)).isFile())
-      .sort()
-      .map((name) => [
-        name,
-        createHash("sha256")
-          .update(fs.readFileSync(path.join(folder, name)))
-          .digest("hex"),
-      ]),
-  );
+  return { ...project, staged };
 }
 
 /** The object of a kind and Rawcode in a map folder, read back through the Object data editor. */
@@ -123,7 +68,7 @@ function modifications(object: ObjectDataObject | undefined): string[] {
 
 /** The error the merge throws, expected an ObjectDefinitionsError of `reason`. */
 function mergeError(
-  project: MapProject,
+  project: StagedProject,
   reason: ObjectDefinitionsErrorReason,
 ): ObjectDefinitionsError {
   let thrown: unknown;
@@ -142,7 +87,7 @@ const IMPORT = `import { defineAbility, defineBuff, defineDestructable, defineDo
 
 describe("mergeObjectDefinitions", () => {
   it("adds a Custom object of each kind and a change to a Built-in object to the staged copy, and never writes the map folder", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts":
         IMPORT +
         `export const Sergeant = defineUnit({
@@ -243,7 +188,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
   });
 
   it("keeps a value equal to the base's as a modification", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts":
         IMPORT +
         `export const Twin = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { uhpm: 420, umvs: 270 } });\n`,
@@ -257,7 +202,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
   });
 
   it("sets a field the field table does not know through the raw escape", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/abilities.ts":
         IMPORT +
         `export const Storm = defineAbility({ rawcode: "A001", base: FourCC("AHbz"), raw: [{ field: "Xzz1", type: "int", level: 2, dataPointer: 1, value: 7 }] });\n`,
@@ -278,7 +223,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
   });
 
   it("writes the translations of a localized value into the locales' tables (#712)", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts":
         IMPORT +
         `export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: localized("Sergeant", { deDE: "Feldwebel", ptBR: "Sergeant" }) } });\n`,
@@ -301,7 +246,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
   });
 
   it("does nothing, and needs neither peer, without definition files", () => {
-    const project = mapProject(
+    const project = stagedProject(
       { "src/objects/README.md": "Definitions go here.\n" },
       { typescript: false, builtins: false },
     );
@@ -313,7 +258,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
       warnings: [],
     });
     expect(snapshot(project.staged)).toEqual(before);
-    const missing = mapProject({}, { typescript: false, builtins: false });
+    const missing = stagedProject({}, { typescript: false, builtins: false });
     expect(
       mergeObjectDefinitions(missing.staged, missing.root).objects,
     ).toEqual([]);
@@ -322,7 +267,7 @@ export const Sharper = defineUpgrade({ rawcode: "R001", base: FourCC("Rhme"), fi
 
 describe("loading definitions", () => {
   it("loads a helper imported between files of src/objects/, with and without extension", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/helpers/tiers.ts":
         IMPORT +
         `export function tier(rawcode: string, level: number) {
@@ -354,7 +299,7 @@ export const prefix = PREFIX;
   });
 
   it("resolves packages and Node's built-in modules from the Map project's root", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "node_modules/creep-table/package.json":
         '{ "name": "creep-table", "main": "index.js" }\n',
       "node_modules/creep-table/index.js": "module.exports = { hp: 640 };\n",
@@ -392,7 +337,7 @@ export const Brute = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields:
   ])(
     "refuses an import of %s, naming the import and the importing file",
     (_, source, message) => {
-      const project = mapProject({
+      const project = stagedProject({
         "src/objects/units.ts": source,
         "src/util.ts": "export const x = 1;\n",
         "src/generated/custom-units.ts": "export const CustomUnits = {};\n",
@@ -408,7 +353,7 @@ export const Brute = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields:
   );
 
   it("names the file and the exception's message when a module throws", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts": `import "./broken";\nexport const x = 1;\n`,
       "src/objects/broken.ts": `throw new Error("no tiers configured");\n`,
     });
@@ -424,7 +369,7 @@ export const Brute = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields:
   });
 
   it("gives FourCC the game's integer", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts":
         IMPORT +
         `if (FourCC("hfoo") !== 0x68666f6f) throw new Error("wrong FourCC");
@@ -467,7 +412,7 @@ describe("checking definitions", () => {
   ])(
     "refuses %s, naming the file and the Rawcode",
     (_, call, message, rawcode) => {
-      const project = mapProject({
+      const project = stagedProject({
         "src/objects/units.ts": `${IMPORT}export const x = ${call};\n`,
       });
 
@@ -482,7 +427,7 @@ describe("checking definitions", () => {
   );
 
   it("refuses a Rawcode two files define for one kind, naming both files", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/a.ts": `${IMPORT}export const x = defineUnit({ rawcode: "h002", base: FourCC("hfoo") });\n`,
       "src/objects/b.ts": `${IMPORT}export const y = defineUnit({ rawcode: "h002", base: FourCC("hkni") });\n`,
     });
@@ -496,7 +441,7 @@ describe("checking definitions", () => {
   });
 
   it("allows a Custom buff and a Custom destructable at one Rawcode", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/effects.ts": `${IMPORT}export const a = defineBuff({ rawcode: "B002", base: FourCC("Binf") });
 export const b = defineDestructable({ rawcode: "B002", base: FourCC("LTlt") });
 `,
@@ -561,7 +506,7 @@ export const b = defineDestructable({ rawcode: "B002", base: FourCC("LTlt") });
   ])(
     "refuses %s, naming the file, the Rawcode and the field",
     (_, call, field, message) => {
-      const project = mapProject({
+      const project = stagedProject({
         "src/objects/units.ts": `${IMPORT}export const x = ${call};\n`,
       });
       const before = snapshot(project.staged);
@@ -575,7 +520,7 @@ export const b = defineDestructable({ rawcode: "B002", base: FourCC("LTlt") });
   );
 
   it("reports every field error at once", () => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts": `${IMPORT}export const x = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { umvs: "fast" as never, uhpm: 1.5 } });\n`,
     });
 
@@ -604,7 +549,7 @@ describe("a collision with the map folder", () => {
       "changes",
     ],
   ])("throws on %s, writing nothing", (_, rawcode, call, verb) => {
-    const project = mapProject({
+    const project = stagedProject({
       "src/objects/units.ts": `${IMPORT}export const x = ${call};\n`,
     });
     const map = snapshot(project.mapFolder);
@@ -626,7 +571,7 @@ describe("a missing peer", () => {
   };
 
   it("names typescript", () => {
-    const project = mapProject(definition, { typescript: false });
+    const project = stagedProject(definition, { typescript: false });
 
     expect(mergeError(project, "peer-missing").message).toMatch(
       /^typescript is not installed in the Map project \(.*\): Object definitions are transpiled with the Map project's own typescript\. Install typescript in the Map project\.$/,
@@ -634,7 +579,7 @@ describe("a missing peer", () => {
   });
 
   it("names reforged-builtins", () => {
-    const project = mapProject(definition, { builtins: false });
+    const project = stagedProject(definition, { builtins: false });
 
     expect(mergeError(project, "peer-missing").message).toMatch(
       /^reforged-builtins is not installed: Object definitions need its index and its field table\./,
@@ -670,7 +615,7 @@ describe("a missing peer", () => {
         fields: {},
       }),
     );
-    const project = mapProject(definition, { builtins: stand });
+    const project = stagedProject(definition, { builtins: stand });
 
     expect(mergeError(project, "peer-missing").message).toBe(
       "reforged-builtins has a field table of format 1 for Game version 9.9.9: Object definitions need the field table of format 2, with each field's category. Install a newer reforged-builtins in the Map project.",

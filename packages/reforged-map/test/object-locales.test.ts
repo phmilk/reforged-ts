@@ -6,7 +6,6 @@
 // ptBR and deDE, as the 3.0.1 editor kept it.
 
 import { Buffer } from "node:buffer";
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -15,18 +14,22 @@ import {
   adoptObjects,
   mergeObjectDefinitions,
   openObjectData,
-  syncObjectDefinitions,
   type ObjectDataObject,
-  type ObjectSyncOptions,
 } from "../src/index.js";
 import { importListWith } from "../src/war3map-imp.js";
 import {
   PACKAGE_ROOT,
   fixtureMap,
-  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
+import {
+  mapProject,
+  snapshot,
+  sync,
+  write,
+  type MapProject,
+} from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
@@ -53,47 +56,6 @@ const LOCALES = [
 
 const table = (locale: string) => `_Locales/${locale}.w3mod/war3map.wts`;
 
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
-}
-
-function link(root: string, name: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(
-    fs.realpathSync(path.join(PACKAGE_ROOT, "node_modules", name)),
-    linkPath,
-    "junction",
-  );
-}
-
-/** A Map project in a temporary folder: a copy of a fixture as its map folder, `files` under its root, typescript and reforged-builtins linked. */
-function mapProject(
-  fixture: string,
-  files: Readonly<Record<string, string>> = {},
-): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  fs.cpSync(fixtureMap(fixture), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-  write({ root, mapFolder }, files);
-  return { root, mapFolder };
-}
-
-function write(
-  project: MapProject,
-  files: Readonly<Record<string, string>>,
-): void {
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(project.root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-}
-
 /** The twelve `_Locales/<locale>.w3mod/` folders the World Editor creates empty on every save. */
 function emptyLocaleFolders(mapFolder: string): void {
   for (const locale of LOCALES) {
@@ -101,35 +63,6 @@ function emptyLocaleFolders(mapFolder: string): void {
       recursive: true,
     });
   }
-}
-
-const NO_WINDOW: ObjectSyncOptions = {
-  worldEditorCheck: { readWindowTitles: () => [] },
-};
-
-function sync(project: MapProject, options: ObjectSyncOptions = {}) {
-  return syncObjectDefinitions(project.mapFolder, project.root, {
-    ...NO_WINDOW,
-    ...options,
-  });
-}
-
-/** Every file and folder under a folder, by relative path with `/`, with the SHA-256 of a file's bytes. */
-function hashes(folder: string): Map<string, string> {
-  return new Map(
-    listTree(folder)
-      .map((name) => name.split(path.sep).join("/"))
-      .sort()
-      .map((name) => {
-        const file = path.join(folder, name);
-        return [
-          name,
-          fs.statSync(file).isFile()
-            ? createHash("sha256").update(fs.readFileSync(file)).digest("hex")
-            : "folder",
-        ];
-      }),
-  );
 }
 
 function text(folder: string, name: string): string {
@@ -211,13 +144,13 @@ describe("the Object data editor and _Locales", () => {
   it("saves a map folder with locale tables, unedited, byte for byte", () => {
     const folder = path.join(makeTempDir(), "test.w3m");
     fs.cpSync(fixtureMap("editor-locales.w3m"), folder, { recursive: true });
-    const before = hashes(folder);
+    const before = snapshot(folder, { folders: true });
 
     const editor = openObjectData(folder, { projectRoot: PACKAGE_ROOT });
     const { written } = editor.save(undefined, { worldEditorCheck: false });
 
     expect(written).toEqual([]);
-    expect(hashes(folder)).toEqual(before);
+    expect(snapshot(folder, { folders: true })).toEqual(before);
   });
 });
 
@@ -286,12 +219,12 @@ describe("Object sync of a localized value", () => {
       translations: { deDE: "Feldwebel", ptBR: "Sargento" },
     });
 
-    const before = hashes(project.root);
+    const before = snapshot(project.root, { folders: true });
     const again = sync(project);
 
     expect(again.written).toEqual([]);
     expect(again.manifestWritten).toBe(false);
-    expect(hashes(project.root)).toEqual(before);
+    expect(snapshot(project.root, { folders: true })).toEqual(before);
   });
 
   it("keeps every locale table complete when it adds a string, and drops a locale's table and its import entry once it translates nothing", () => {
@@ -445,7 +378,7 @@ describe("the build's merge of a localized value", () => {
     const project = mapProject("editor-objects.w3m", { [UNITS]: SERGEANT });
     const staged = path.join(makeTempDir(), "staged.w3m");
     fs.cpSync(project.mapFolder, staged, { recursive: true });
-    const before = hashes(project.mapFolder);
+    const before = snapshot(project.mapFolder, { folders: true });
 
     const result = mergeObjectDefinitions(staged, project.root);
 
@@ -463,7 +396,7 @@ describe("the build's merge of a localized value", () => {
         .find((block) => block.endsWith(": Sergeant"))
         ?.replace("Sergeant", "Sargento"),
     );
-    expect(hashes(project.mapFolder)).toEqual(before);
+    expect(snapshot(project.mapFolder, { folders: true })).toEqual(before);
   });
 });
 
@@ -508,13 +441,13 @@ export const LocaleFootman_h000 = defineUnit({
       },
     ]);
 
-    const before = hashes(project.root);
+    const before = snapshot(project.root, { folders: true });
     const synced = sync(project);
 
     expect(synced.written).toEqual([]);
     expect(synced.manifestWritten).toBe(false);
     expect(synced.warnings).toEqual([]);
-    expect(hashes(project.root)).toEqual(before);
+    expect(snapshot(project.root, { folders: true })).toEqual(before);
   });
 });
 

@@ -22,6 +22,7 @@ import {
   mapFolder,
   removeTemporary,
 } from "./support/map-folder.js";
+import { snapshot } from "./support/object-project.js";
 import { buildObjectData, buildWts } from "./support/object-data.js";
 
 afterAll(removeTemporary);
@@ -34,16 +35,6 @@ function copyFixture(name: string): string {
   const folder = path.join(makeTempDir(), name);
   fs.cpSync(fixtureMap(name), folder, { recursive: true });
   return folder;
-}
-
-/** Every file of a folder, by name, with the SHA-256 of its bytes: compared at once, however large. */
-function snapshot(folder: string): Map<string, string> {
-  return new Map(
-    fs
-      .readdirSync(folder)
-      .sort()
-      .map((name) => [name, digest(path.join(folder, name))]),
-  );
 }
 
 /** The SHA-256 of a file's bytes, in hex. */
