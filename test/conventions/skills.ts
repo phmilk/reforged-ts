@@ -4,10 +4,10 @@
 // the Skill variants among them.
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { parse } from "yaml";
 
-import { read, root } from "./repository.js";
+import { folderFiles, read, root } from "./repository.js";
 
 // The folder of the Agent skills and the skills CLI's lock, from the root.
 export const skillsFolder = ".claude/skills";
@@ -44,18 +44,6 @@ export function upstreamSkills(): string[] {
 export function repositorySkills(): string[] {
   const upstream = new Set(upstreamSkills());
   return skillFolders().filter((name) => !upstream.has(name));
-}
-
-function folderFiles(folder: string, current = folder): string[] {
-  return readdirSync(current, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(current, entry.name);
-    if (entry.isDirectory()) {
-      return entry.name === ".git" || entry.name === "node_modules"
-        ? []
-        : folderFiles(folder, path);
-    }
-    return entry.isFile() ? [relative(folder, path).split("\\").join("/")] : [];
-  });
 }
 
 // The files of a skill's folder, by their path from it, sorted.
