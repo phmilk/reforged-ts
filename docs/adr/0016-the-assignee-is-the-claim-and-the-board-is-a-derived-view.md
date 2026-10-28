@@ -27,5 +27,6 @@ We adopt one Claim protocol for both repositories, GitHub-only: the assignee is 
 - The `claim` check is one more workflow on `pull_request_target`, without a checkout of the pull request's code; it became a required check (`claim / check`) by a ruleset change, after targeted rehearsals of its paths in both repositories took the place of the planned two-week trial (#536).
 - The Template carries only the thin caller workflow and the tracker doc's Claim section, both Template maintenance, deleted in a generated Map project.
 - The board's writer runs on the library's events, so the Template's cards waited for the hourly run; ADR 0017 has every other Board repository dispatch the reconcile on its own events.
+- The board writes more than Status, each derived like it and written only when it differs: the label pair of an open Spec (ADR 0025), and one comment of the coverage check's verdict on an open Spec whose Tickets are all closed (ADR 0023, #796). It still closes no issue.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/518

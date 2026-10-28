@@ -382,6 +382,86 @@ export function coverageVerdict(spec: FetchedSpec): Verdict {
   };
 }
 
+// The verdict as text: what `pnpm spec:check` prints, and the board's
+// comment on a Spec whose Tickets are all closed quotes (#796).
+
+/** `count` with `one` or `many`: "1 item", "3 items". */
+const plural = (count: number, one: string, many: string): string =>
+  `${String(count)} ${count === 1 ? one : many}`;
+
+/** `ref` as printed for a Spec of repository `home`: `#n` there, else in full. */
+const displayRef = (home: string, ref: IssueRef): string =>
+  ref.repository === home ? `#${String(ref.number)}` : issueKey(ref);
+
+/** One gap as a line of the verdict, its Tickets named from repository `home`. */
+export function describeGap(home: string, gap: Gap): string {
+  switch (gap.kind) {
+    case "no-table":
+      return "No Coverage table: the Spec's body has no ## Coverage table section with a table.";
+    case "no-row":
+      return `No row for the item "${gap.item}".`;
+    case "no-item":
+      return `The row of "${gap.item}" quotes no item of the Spec.`;
+    case "ambiguous-row":
+      return `The row of "${gap.item}" quotes words found in ${plural(gap.items, "item", "items")} of different texts, so it covers none: quote enough to name one.`;
+    case "no-ticket":
+      return `The row of "${gap.item}" names no Ticket.`;
+    case "not-sub-issue":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, which is not a sub-issue of the Spec.`;
+    case "outside-board":
+      return `The row of "${gap.item}" names ${displayRef(home, gap.ticket)}, a sub-issue of the Spec outside the Board repositories (${BOARD_REPOSITORIES.join(", ")}), so no Ticket.`;
+    case "no-criterion":
+      return `The row of "${gap.item}" quotes the criterion "${gap.criterion}", which ${displayRef(home, gap.ticket)} does not hold.`;
+    case "open":
+      return `${displayRef(home, gap.ticket)} is open, held by ${
+        gap.assignees.length === 0
+          ? "nobody"
+          : gap.assignees.map((login) => `@${login}`).join(", ")
+      }, ${
+        gap.unchecked === 0
+          ? "with every criterion checked"
+          : `with ${plural(gap.unchecked, "criterion", "criteria")} unchecked`
+      }.`;
+    case "not-completed":
+      return `${displayRef(home, gap.ticket)} closed ${gap.reason === null ? "with no reason given" : `as ${gap.reason}`}, not as completed.`;
+    case "unchecked":
+      return `${displayRef(home, gap.ticket)} leaves a criterion unchecked: "${gap.criterion}".`;
+    case "no-outcome":
+      return `${displayRef(home, gap.ticket)} has a "check whether…" without its Outcome: line: "${gap.criterion}".`;
+  }
+}
+
+/** What the verdict counts: "3 items, 3 rows, 2 Tickets". */
+export const verdictCounts = (verdict: Verdict): string =>
+  `${plural(verdict.items, "item", "items")}, ${plural(verdict.rows, "row", "rows")}, ` +
+  plural(verdict.tickets, "Ticket", "Tickets");
+
+/** How many gaps: "1 gap", "3 gaps". */
+export const gapCount = (verdict: Verdict): string =>
+  plural(verdict.gaps.length, "gap", "gaps");
+
+/** The verdict on `spec`, as `pnpm spec:check` prints it. */
+export function renderVerdict(spec: FetchedSpec, verdict: Verdict): string {
+  const head =
+    `Spec #${String(spec.number)} of ${spec.repository}, "${spec.title}": ` +
+    `${verdictCounts(verdict)}.\n`;
+  if (verdict.gaps.length === 0) {
+    return (
+      head +
+      "Delivered: every item has a row, every Ticket closed as completed, " +
+      'every criterion is checked and every "check whether…" carries its Outcome. ' +
+      "The Spec may close.\n"
+    );
+  }
+  return (
+    head +
+    `Not delivered, ${gapCount(verdict)}:\n` +
+    verdict.gaps
+      .map((gap) => `- ${describeGap(spec.repository, gap)}\n`)
+      .join("")
+  );
+}
+
 // Reading the Spec from GitHub.
 
 /** The label of a Spec, as `to-spec` and `write-spec` set it. */

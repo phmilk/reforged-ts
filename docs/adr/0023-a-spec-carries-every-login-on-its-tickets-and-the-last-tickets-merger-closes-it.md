@@ -19,7 +19,8 @@ We amend ADR 0016 for Specs: its "one login per issue"; its "one Claim at a time
 ## Consequences
 
 - The claim check accepts a Spec assignee who holds or held one of its Tickets, and adds a pull request's author to the Ticket's Spec.
-- The board is unchanged: a Spec with assignees is In progress, and a parent takes the highest Status of its open Tickets.
+- The board's Status rules are unchanged: a Spec with assignees is In progress, and a parent takes the highest Status of its open Tickets.
+- The board comments the coverage check's verdict on every open Spec whose Tickets are all closed, one comment edited as the verdict changes, green with the command that closes it (#796). A last Ticket merged by auto-merge (ADR 0021) leaves nobody there to run the check, and nothing else did. This is not the rejected "board closing a Spec": the board closes nothing, the comment is a reminder, and the close stays the merger's, an assignee's or the maintainer's act, on evidence.
 - `implement-spec` still claims every free Ticket of a Spec at once, since its one pull request delivers them.
 - A Spec split before this change gets its Coverage table from `split-spec` before it can close on the check.
 - The Claim entry of the glossary and the Claim section of the issue tracker doc, in both repositories, follow.

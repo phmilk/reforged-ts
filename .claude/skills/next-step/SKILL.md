@@ -21,7 +21,7 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    - `/pr, then gh pr merge --auto --squash`, one step, when the branch has no pull request: the pull request merges once the required checks pass ([ADR 0021](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0021-an-agent-merges-its-own-pull-request-behind-the-required-checks-and-a-code-review.md)); `gh pr merge --auto --squash` alone, when it exists without auto-merge;
    - `/clear`, once the pull request is open;
    - `/implement <n>`, for the first Ticket of the Frontier you may take, other than the one just worked;
-   - when the Spec has no open Ticket left once this pull request merges: `pnpm spec:check <spec>`, then, on green, `gh issue close <spec> --comment "..."` ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim), ADR 0023).
+   - when the Spec has no open Ticket left once this pull request merges: `pnpm spec:check <spec>`, then, on green, `gh issue close <spec> --comment "..."` ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim), ADR 0023). The board comments the same verdict on the Spec once its Tickets are all closed, as a reminder: it closes nothing, so the close is still this step.
 
    An issue outside a Spec stops after `/clear`. Done when the list holds at most five steps, the first one runnable now.
 
