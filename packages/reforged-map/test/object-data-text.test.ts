@@ -815,6 +815,10 @@ describe("git diff of the map folder", () => {
       ],
     });
 
+  // Nine git processes and the two textconv runs of node they start. On
+  // the windows runner, in `pnpm run test` of ci.yml: 1.2 s (median of 60
+  // green runs, 2.2 s at most), and 6.4 s, past vitest's 5 s, in a run
+  // where the runner stalled (#658).
   it("prints the one line of the field a commit changed in war3map.w3u, under its object", () => {
     const repository = path.join(makeTempDir(), "my-map");
     const mapFolder = path.join(repository, "maps", "my-map.w3m");
@@ -895,5 +899,5 @@ describe("git diff of the map folder", () => {
         "maps/my-map.w3m/war3map.wts: text: unset",
       ),
     );
-  });
+  }, 30_000);
 });
