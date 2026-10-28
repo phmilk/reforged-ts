@@ -10,12 +10,24 @@
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
  * "A Spec's coverage", with which items a row's quote covers and which
  * table of the section is the Coverage table; this module reads by them
- * and restates none. A quoted cell is found in a text that contains it,
- * once both are read without bold markers, with straight quotes and
- * single spaces.
+ * and restates none. A Ticket's criteria and their gaps are read by
+ * `issue-markdown.ts`, which the claim check shares. A quoted cell is
+ * found in a text that contains it, once both are read without bold
+ * markers, with straight quotes and single spaces.
  */
 import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
+import {
+  criteriaOf,
+  gapsOf,
+  indentOf,
+  isFence,
+  LIST_ITEM,
+  normalize,
+  oneLine,
+  sections,
+  type CriterionGap,
+} from "./issue-markdown.js";
 import type { GitHubApi } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
 
@@ -83,8 +95,7 @@ export type Gap =
       criterion: string;
     }
   | { kind: "not-completed"; ticket: IssueRef; reason: string | null }
-  | { kind: "unchecked"; ticket: IssueRef; criterion: string }
-  | { kind: "no-outcome"; ticket: IssueRef; criterion: string };
+  | { kind: CriterionGap; ticket: IssueRef; criterion: string };
 
 /** The coverage check's verdict: delivered when it holds no gap. */
 export interface Verdict {
@@ -110,54 +121,8 @@ const ITEM_SECTIONS = [
 /** The heading of the Coverage table's section. */
 const TABLE_SECTION = "coverage table";
 
-/** Whether `line` opens or closes a fenced code block. */
-const isFence = (line: string): boolean => /^\s*(?:```|~~~)/.test(line);
-
-/** The lines of `text`. */
-const linesOf = (text: string): string[] => text.split(/\r?\n/);
-
-/** `parts` joined on one line, single spaces between words. */
-const oneLine = (parts: readonly string[]): string =>
-  parts.join(" ").replace(/\s+/g, " ").trim();
-
-/** The sections of `body`, by their level-two heading in lower case; text before the first is under `""`. */
-function sections(body: string): Map<string, string[]> {
-  const found = new Map<string, string[]>();
-  let lines: string[] = [];
-  found.set("", lines);
-  let fence = false;
-  for (const line of linesOf(body)) {
-    if (isFence(line)) fence = !fence;
-    const heading = fence ? null : /^##\s+(.*?)\s*#*\s*$/.exec(line);
-    if (heading === null) {
-      lines.push(line);
-      continue;
-    }
-    lines = [];
-    found.set(heading[1].toLowerCase(), lines);
-  }
-  return found;
-}
-
-/** The width of the leading white space of `line`, a tab counting four. */
-const indentOf = (line: string): number =>
-  (/^[ \t]*/.exec(line)?.[0] ?? "").replaceAll("\t", "    ").length;
-
-/** A list item's first line: its indent, its marker and its text. */
-const LIST_ITEM = /^([ \t]*)([-*+]|\d+[.)])([ \t]+)(.*)$/;
-
 /** A list item that is only a bold label, `**The claim check:**`. */
 const BOLD_LABEL = /^\*\*[^*]+\*\*$/;
-
-/** Text as the check compares it: no bold markers, straight quotes, single spaces. */
-function normalize(text: string): string {
-  return text
-    .replaceAll("**", "")
-    .replace(/[\u201C\u201D]/g, '"')
-    .replace(/[\u2018\u2019]/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 /**
  * The items of `lines` by the coverage rule: every list item and every
@@ -254,90 +219,6 @@ function tableOf(lines: readonly string[]): Row[] | null {
       criterion: cells[criterion] ?? "",
     }));
 }
-
-/** The section of a Ticket that holds its criteria. */
-const CRITERIA_SECTION = "acceptance criteria";
-
-/** A criterion's first line: its indent, its box and its text. */
-const CHECKBOX = /^([ \t]*)[-*+][ \t]+\[([ xX])\][ \t]+(.*)$/;
-
-/** The line that records the outcome of a "check whether…". */
-const OUTCOME = /^\s*Outcome:/;
-
-/** A criterion of a Ticket. */
-interface Criterion {
-  /** Its text, without its box and its `Outcome:` line, on one line. */
-  text: string;
-  checked: boolean;
-  /** Whether an `Outcome:` line follows it in the same list item. */
-  outcome: boolean;
-}
-
-/**
- * The criteria of a Ticket's `body`: the checklist items of its Acceptance
- * criteria, or of the whole body when it has no such section.
- */
-function criteriaOf(body: string): Criterion[] {
-  const lines = sections(body).get(CRITERIA_SECTION) ?? linesOf(body);
-  const found: {
-    indent: number;
-    checked: boolean;
-    text: string[];
-    outcome: boolean;
-  }[] = [];
-  let current: (typeof found)[number] | null = null;
-  let blank = false;
-  let inOutcome = false;
-  let fence = false;
-  for (const line of lines) {
-    if (isFence(line)) fence = !fence;
-    if (fence) continue;
-    const box = CHECKBOX.exec(line);
-    if (box !== null) {
-      current = {
-        indent: indentOf(line),
-        checked: box[2] !== " ",
-        text: [box[3]],
-        outcome: false,
-      };
-      found.push(current);
-      blank = false;
-      inOutcome = false;
-      continue;
-    }
-    if (line.trim() === "") {
-      blank = true;
-      continue;
-    }
-    if (
-      current === null ||
-      LIST_ITEM.test(line) ||
-      (blank && indentOf(line) <= current.indent)
-    ) {
-      current = null;
-      continue;
-    }
-    if (OUTCOME.test(line)) {
-      current.outcome = true;
-      inOutcome = true;
-    } else if (!inOutcome) {
-      current.text.push(line.trim());
-    }
-    blank = false;
-  }
-  return found.map(({ checked, text, outcome }) => ({
-    text: oneLine(text),
-    checked,
-    outcome,
-  }));
-}
-
-/**
- * Whether a criterion is a "check whether…": it opens with the words, bold
- * or not; one that only mentions a "check whether…" is not one.
- */
-const isCheckWhether = (criterion: Criterion): boolean =>
-  /^check whether\b/i.test(normalize(criterion.text));
 
 // The verdict.
 
@@ -471,11 +352,8 @@ function ticketGaps(ticket: FetchedTicket): Gap[] {
       ? []
       : [{ kind: "not-completed", ticket: ref, reason: ticket.stateReason }];
   for (const criterion of criteria) {
-    if (!criterion.checked) {
-      gaps.push({ kind: "unchecked", ticket: ref, criterion: criterion.text });
-    }
-    if (isCheckWhether(criterion) && !criterion.outcome) {
-      gaps.push({ kind: "no-outcome", ticket: ref, criterion: criterion.text });
+    for (const kind of gapsOf(criterion)) {
+      gaps.push({ kind, ticket: ref, criterion: criterion.text });
     }
   }
   return gaps;

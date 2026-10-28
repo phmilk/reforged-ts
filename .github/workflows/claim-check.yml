@@ -5,7 +5,8 @@
 # or an issue with an open blocker the pull request does not close too, ADR
 # 0025), and the author joins each Ticket's Spec (assigned in the caller's
 # repository; in the other Board repository, which github.token cannot
-# write, a comment on the Ticket names the command); on an assignment, a
+# write, a comment on the Ticket names the command), and a Ticket's criteria
+# still unchecked draw a comment on the pull request; on an assignment, a
 # conflict, or a Claim of an unsplit Spec or a blocked issue, draws a
 # comment on the issue. Adding to a Spec a login that holds or delivered one
 # of its Tickets is not a conflict, nor is a login the maintainer adds. After

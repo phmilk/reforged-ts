@@ -11,7 +11,10 @@
  * issue; adding to a Spec a login that holds or delivered one of its
  * Tickets is none, nor is a login the maintainer adds. A Claim of an
  * unsplit Spec or of an issue with an open blocker draws a comment too,
- * and is never undone (ADR 0025). The protocol is
+ * and is never undone (ADR 0025). A Ticket the pull request closes with
+ * criteria still unchecked, or a "check whether…" without its `Outcome:`
+ * line, draws a comment on the pull request under `CRITERIA_MARKER` that
+ * never weighs on the verdict (#792). The protocol is
  * `docs/agents/issue-tracker.md`, "Claim"; the texts are the spec's (#529),
  * the logins filled at run time, those of a Ticket's Spec follow ADR 0023,
  * and those of a Spec and of a blocker carry the rules of ADR 0025.
@@ -23,14 +26,19 @@
  * Self-contained on purpose: Node built-ins only and erasable syntax only
  * (no enum, no namespace, no parameter property), so that Node 24 runs it
  * from a checkout with no install and no build, as the workflow does:
- * `node release/src/claim-check.ts <pull-request|issue>`. Nothing is
- * imported from the other release scripts, since Node maps no `.js`
- * specifier to a `.ts` file: `isRecord`, `errorMessage`, the job summary
- * and the "started directly" test are copied from them.
+ * `node release/src/claim-check.ts <pull-request|issue>`. Of the other
+ * release scripts it imports `issue-markdown.ts` alone, self-contained in
+ * the same way and named by its `.ts` file, which Node runs and the build
+ * rewrites (`rewriteRelativeImportExtensions`), so that a Ticket's criteria
+ * and their gaps are read as `pnpm spec:check` reads them; `isRecord`, `errorMessage`,
+ * the job summary and the "started directly" test are copied from the
+ * others.
  */
 import { appendFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+
+import { criteriaOf, gapsOf } from "./issue-markdown.ts";
 
 const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
 
@@ -43,6 +51,13 @@ export const MARKER = "<!-- claim-check -->";
  * comment on the same Ticket never overwrites it.
  */
 export const SPEC_MARKER = "<!-- claim-check: spec -->";
+
+/**
+ * The hidden marker of the check's comment on a pull request that lists
+ * the criteria its Tickets still lack; apart from `MARKER`, so that it is
+ * settled on its own and never weighs on the verdict.
+ */
+export const CRITERIA_MARKER = "<!-- claim-check: criteria -->";
 
 /**
  * The login the check writes as: `GITHUB_TOKEN` comments as GitHub Actions.
@@ -84,7 +99,8 @@ const andList = (items: readonly string[]): string =>
  * (ADR 0023), nor `specClosed`, `blocked`, `unsplitClaim` and
  * `blockedClaim`, the lines of a Spec and of a blocker (ADR 0025), nor
  * `prematureSettled`, which settles a comment that held premature Claims
- * only, as text 6 settles a conflict.
+ * only, as text 6 settles a conflict, nor `criteriaLeft`, `gapNames` and
+ * `criteriaSettled`, the comment of a Ticket's criteria (#792).
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -141,6 +157,17 @@ export const TEXTS = {
   /** On an assignment: a Claim of an issue with open blockers, named as `blockers` (ADR 0025). */
   blockedClaim: (issue: number, blockers: readonly string[]): string =>
     `**Premature Claim.** #${String(issue)} is claimed, but it is blocked by ${andList(blockers)}, still open: an issue is worked once its blockers are closed, or delivered with them in one pull request, as \`implement-spec\`'s is. Nothing was unassigned. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+  /**
+   * A Ticket the pull request closes with criteria `pnpm spec:check` counts
+   * as gaps, one line each in `gaps`: unchecked, or a "check whether…"
+   * without its `Outcome:` line.
+   */
+  criteriaLeft: (ticket: number, gaps: readonly string[]): string =>
+    `**Criteria left.** #${String(ticket)}, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n${gaps.join("\n")}\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #${String(ticket)}. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+  /** How `criteriaLeft` names each gap of a criterion. */
+  gapNames: { unchecked: "unchecked", "no-outcome": "no `Outcome:` line" },
+  /** The criteria comment once no Ticket lacks any. */
+  criteriaSettled: "**Criteria left:** none.",
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
@@ -185,6 +212,8 @@ export interface ClosingIssue {
   isSpec: boolean;
   /** The issues it is blocked by that are open, of any repository. */
   openBlockers: readonly IssueRef[];
+  /** Its body, Markdown: a Ticket's criteria are read from it. */
+  body: string;
 }
 
 /** An issue named by its repository (`owner/name`) and number. */
@@ -219,6 +248,8 @@ export interface PullRequestInput {
   /** The issues the pull request closes, of any repository. */
   closing: readonly ClosingIssue[];
   comment: StickyComment | null;
+  /** The check's comment on the pull request under `CRITERIA_MARKER`. */
+  criteriaComment: StickyComment | null;
 }
 
 /** The issue branch's input: the event and what was fetched. */
@@ -314,6 +345,18 @@ function upsert(
     return [];
   }
   return [{ number, id: existing?.id ?? null, body }];
+}
+
+/**
+ * The criteria of a Ticket's `body` that `pnpm spec:check` counts as gaps,
+ * one line each: unchecked, or a "check whether…" without its `Outcome:`
+ * line (`docs/agents/issue-tracker.md`, "A Spec's coverage").
+ */
+function criteriaGaps(body: string): string[] {
+  return criteriaOf(body).flatMap((criterion) => {
+    const gaps = gapsOf(criterion).map((gap) => TEXTS.gapNames[gap]);
+    return gaps.length === 0 ? [] : [`- ${gaps.join(", ")}: ${criterion.text}`];
+  });
 }
 
 /**
@@ -480,12 +523,29 @@ ${command}`,
   // Only a failure is replaced on a pass; a reminder (text 1, text 3) stays.
   const settled =
     comment?.body.includes(FAILED_HEAD) === true ? TEXTS.passed : null;
+  const criteria: string[] = [];
+  for (const issue of closing) {
+    if (issue.repository !== repository || issue.spec === null) continue;
+    const gaps = criteriaGaps(issue.body);
+    if (gaps.length === 0) continue;
+    criteria.push(TEXTS.criteriaLeft(issue.number, gaps));
+    summary.push(
+      `- #${String(issue.number)}: ${String(gaps.length)} ${gaps.length === 1 ? "criterion" : "criteria"} unchecked or without their outcome; commented.`,
+    );
+  }
   return {
     verdict: failed ? "failed" : "passed",
     assignments,
     comments: [
       ...upsert(pullRequest.number, lines, comment, settled),
       ...ticketComments,
+      ...upsert(
+        pullRequest.number,
+        criteria,
+        input.criteriaComment,
+        TEXTS.criteriaSettled,
+        CRITERIA_MARKER,
+      ),
     ],
     summary,
     exitCode: failed ? 1 : 0,
@@ -826,6 +886,22 @@ async function findComment(
   number: number,
   marker: string = MARKER,
 ): Promise<StickyComment | null> {
+  const found = await findComments(api, repository, number, [marker]);
+  return found.get(marker) ?? null;
+}
+
+/**
+ * The check's sticky comments on `number`, keyed by marker; a marker of
+ * `markers` with no comment is absent. Read in one walk of the comments,
+ * which stops once each marker is found.
+ */
+async function findComments(
+  api: Api,
+  repository: string,
+  number: number,
+  markers: readonly string[],
+): Promise<Map<string, StickyComment>> {
+  const found = new Map<string, StickyComment>();
   const path = `/repos/${repository}/issues/${String(number)}/comments`;
   for (let page = 1; page <= MAX_PAGES; page++) {
     const { body } = await rest(
@@ -840,16 +916,22 @@ async function findComment(
     }
     for (const item of body) {
       if (
-        isRecord(item) &&
-        typeof item.id === "number" &&
-        typeof item.body === "string" &&
-        item.body.startsWith(marker) &&
-        byCheck(item.user)
+        !isRecord(item) ||
+        typeof item.id !== "number" ||
+        typeof item.body !== "string" ||
+        !byCheck(item.user)
       ) {
-        return { id: item.id, body: item.body };
+        continue;
       }
+      const { id, body: text } = item;
+      const marker = markers.find(
+        (candidate) => !found.has(candidate) && text.startsWith(candidate),
+      );
+      if (marker !== undefined) found.set(marker, { id, body: text });
     }
-    if (body.length < PAGE_SIZE) return null;
+    if (found.size === markers.length || body.length < PAGE_SIZE) {
+      return found;
+    }
   }
   throw new ClaimCheckError(
     `GET ${path} answered more than ${String(MAX_PAGES)} pages.`,
@@ -903,6 +985,7 @@ const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $f
         totalCount
         nodes {
           number
+          body
           repository { nameWithOwner }
           assignees(first: 20) { nodes { login } }
           labels(first: 50) { nodes { name } }
@@ -1026,6 +1109,7 @@ async function readClosingIssues(
     );
     const authorAssignable =
       ours && (await assignable(api, repository, number, pullRequest.author));
+    const body = at(node, "body");
     issues.push({
       repository: nameWithOwner,
       number,
@@ -1033,6 +1117,7 @@ async function readClosingIssues(
       authorAssignable,
       isSpec: nodesOf(at(node, "labels")).some(isSpecLabel),
       openBlockers,
+      body: typeof body === "string" ? body : "",
       spec: ours
         ? await readParentSpec(
             api,
@@ -1403,11 +1488,17 @@ async function checkPullRequest(
 ): Promise<Plan> {
   const pullRequest = pullRequestOf(event);
   const { repository } = settings;
+  const closing = await readClosingIssues(api, repository, pullRequest);
+  const comments = await findComments(api, repository, pullRequest.number, [
+    MARKER,
+    CRITERIA_MARKER,
+  ]);
   return planPullRequest({
     repository,
     pullRequest,
-    closing: await readClosingIssues(api, repository, pullRequest),
-    comment: await findComment(api, repository, pullRequest.number),
+    closing,
+    comment: comments.get(MARKER) ?? null,
+    criteriaComment: comments.get(CRITERIA_MARKER) ?? null,
   });
 }
 

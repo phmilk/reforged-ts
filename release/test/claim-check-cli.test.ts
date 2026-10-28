@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import { join } from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { MARKER, SPEC_MARKER } from "../src/claim-check.js";
+import { CRITERIA_MARKER, MARKER, SPEC_MARKER } from "../src/claim-check.js";
 import { repositoryRoot } from "../src/workspace.js";
 import { tempDir, writeText } from "./support/workspace.js";
 
@@ -193,13 +193,14 @@ const PULL_REQUEST_EVENT = {
 
 /**
  * The closing references of #34: #12 of this repository, with `parent` as
- * its parent issue when given, #5 of the other; `totalCount` as GitHub
- * counts them.
+ * its parent issue when given and `body` as its body, #5 of the other;
+ * `totalCount` as GitHub counts them.
  */
 function closing(
   assignees: string[],
   totalCount = 2,
   parent: unknown = null,
+  body = "",
 ): unknown {
   return {
     repository: {
@@ -209,6 +210,7 @@ function closing(
           nodes: [
             {
               number: 12,
+              body,
               repository: { nameWithOwner: REPOSITORY },
               assignees: { nodes: assignees.map((login) => ({ login })) },
               parent,
@@ -337,6 +339,61 @@ describe("claim-check pull-request", () => {
         `POST ${ISSUES}/34/comments`,
         {
           body: `${MARKER}\n\n**Claim check.** Added @alice to #10, the Spec of #12: a Spec carries every login on its Tickets. Join it in the command that claims a Ticket: \`gh issue edit 12 10 --add-assignee @me\`. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+        },
+      ],
+    ]);
+  });
+
+  it("reads the Ticket's body and edits its criteria comment to the criteria still left, beside the claim comment", async () => {
+    answers.graphql.closingIssuesReferences = closing(
+      ["alice"],
+      2,
+      {
+        number: 10,
+        url: `https://github.com/${REPOSITORY}/issues/10`,
+        repository: { nameWithOwner: REPOSITORY },
+        labels: { nodes: [{ name: "spec" }] },
+        assignees: { nodes: [{ login: "alice" }] },
+      },
+      "## Acceptance criteria\n\n- [x] The check passes.\n- [ ] The doc names the comment.\n",
+    );
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [
+        {
+          id: 8,
+          body: `${CRITERIA_MARKER}\n\n**Criteria left:** none.`,
+          user: { login: "github-actions[bot]", type: "Bot" },
+        },
+      ],
+    };
+    answers.rest[`PATCH ${ISSUES}/comments/8`] = {
+      status: 200,
+      body: { id: 8 },
+    };
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/10/assignees/alice`] = { status: 204 };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(0);
+    expect(result.summary).toContain(
+      "- #12: 1 criterion unchecked or without their outcome; commented.\n",
+    );
+    expect(sent()).toEqual([
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining("body") as unknown,
+        }) as unknown,
+      ],
+      [`GET ${ISSUES}/12/assignees/alice`, undefined],
+      [`GET ${ISSUES}/10/assignees/alice`, undefined],
+      [`GET ${ISSUES}/34/comments?per_page=100&page=1`, undefined],
+      [
+        `PATCH ${ISSUES}/comments/8`,
+        {
+          body: `${CRITERIA_MARKER}\n\n**Criteria left.** #12, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #12. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
         },
       ],
     ]);
