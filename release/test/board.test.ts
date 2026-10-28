@@ -885,14 +885,15 @@ const RULES: readonly {
   },
 ];
 
-/** The table under "**The rules.**" in `docs/release.md`, as written. */
+/** The table under "**The rules.**" in `docs/release.md`, one LF-ended line per row, as `markdownTable` writes one. */
 function rulesTable(): string {
-  const page = readFileSync(join(repositoryRoot, "docs", "release.md"), "utf8")
-    .replaceAll("\r\n", "\n")
-    .split("\n");
-  const start = page.findIndex((line) => line.startsWith("**The rules.**"));
+  const lines = readFileSync(
+    join(repositoryRoot, "docs", "release.md"),
+    "utf8",
+  ).split(/\r?\n/);
+  const start = lines.findIndex((line) => line.startsWith("**The rules.**"));
   expect(start, "docs/release.md has a paragraph **The rules.**").not.toBe(-1);
-  const rest = page.slice(start + 1);
+  const rest = lines.slice(start + 1);
   const first = rest.findIndex((line) => line.startsWith("|"));
   const end = rest.findIndex((line, at) => at > first && !line.startsWith("|"));
   return rest
