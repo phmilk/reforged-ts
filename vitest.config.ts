@@ -113,9 +113,10 @@ export default defineConfig({
       {
         // The repository's conventions, in Node, on the committed files that
         // agents, editors and the compiler read (AGENTS.md, CLAUDE.md,
-        // docs/agents/, .vscode, the library's tsconfig.json, .claude/), the session-start
-        // hook of .claude/settings.json, run against a fake home folder, and
-        // its background-wait check, on hook inputs as Claude Code sends them.
+        // docs/agents/, .vscode, the library's tsconfig.json, .claude/), the
+        // session-start hook of .claude/settings.json, run against a fake
+        // home folder, and its background-wait check, on hook inputs as
+        // Claude Code sends them.
         // Needs no build.
         test: {
           name: "conventions",
