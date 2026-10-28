@@ -3,7 +3,7 @@
  * temporary folder, written from a list of packages, optionally made a git
  * repository.
  */
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { gitIn, type Git } from "../../src/git.js";
@@ -95,11 +95,22 @@ export function changesetText(
 export async function initRepository(root: string): Promise<Git> {
   const git = gitIn(root);
   await git(["init", "--quiet", "--initial-branch", "master"]);
-  await git(["config", "user.name", "Fixture"]);
-  await git(["config", "user.email", "fixture@example.invalid"]);
-  await git(["config", "core.autocrlf", "false"]);
-  // The fixture's commits do not depend on the machine's signing setup.
-  await git(["config", "commit.gpgsign", "false"]);
+  // The repository's configuration, appended to the file `git init` wrote
+  // rather than set by one `git config` each. On the windows runner a
+  // release:check-changeset test, a dozen git processes, takes 1.4 s
+  // (median of 60 green ci runs), and each process takes seconds more when
+  // the runner stalls (#658). The fixture's commits do not depend on the
+  // machine's signing setup.
+  await appendFile(
+    join(root, ".git", "config"),
+    "[user]\n" +
+      "\tname = Fixture\n" +
+      "\temail = fixture@example.invalid\n" +
+      "[core]\n" +
+      "\tautocrlf = false\n" +
+      "[commit]\n" +
+      "\tgpgsign = false\n",
+  );
   await commitAll(git, "base");
   await git(["checkout", "--quiet", "-b", "feature"]);
   return git;

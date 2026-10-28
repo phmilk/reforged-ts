@@ -189,10 +189,17 @@ function realCheckRuns(): boolean {
 }
 
 describe("the real World Editor check", () => {
+  // The file's first powershell.exe, cold: on the windows runner, in
+  // `pnpm run test` of ci.yml, 4.0 s (median of 60 green runs, 9.6 s at
+  // most), where a later warm check, "is on by default" below, takes 0.7 s;
+  // past the check's default 15 s in a run where the runner stalled (#658).
+  // This test is about reading the titles, so it gives the check 50 s.
   it.runIf(realCheckRuns())(
     "returns no window for a temporary folder",
     () => {
-      expect(checkWorldEditor(mapFolder({}))).toBe("no-window");
+      expect(checkWorldEditor(mapFolder({}), { timeout: 50_000 })).toBe(
+        "no-window",
+      );
     },
     60_000,
   );
