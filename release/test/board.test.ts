@@ -33,9 +33,11 @@ import {
   type ProjectItem,
   type ProjectState,
   type ReconcileState,
+  type Status,
   type SubIssue,
 } from "../src/board.js";
 import { GraphQlError } from "../src/github-graphql.js";
+import { markdownTable } from "../src/markdown-table.js";
 import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
@@ -713,18 +715,18 @@ const SPEC = { repository: LIBRARY, number: 529, labels: ["spec"] };
 type RuleCase = readonly [
   name: string,
   more: Partial<BoardIssue>,
-  expected: string,
+  expected: Status,
   others?: readonly BoardIssue[],
 ];
 
 /**
  * "The rules" of `docs/release.md`, row by row in its order and word for
- * word, each with the cases that pin it, so that a change to the rules and
- * the table's text are edited in one place and the test below holds the
- * page to it.
+ * word, each with the cases that pin it: a rule's cases and its text are
+ * edited side by side, and the test below fails when the page and these
+ * rows drift apart.
  */
 const RULES: readonly {
-  status: string;
+  status: Status | "(parent rule)";
   rule: string;
   cases: readonly [RuleCase, ...RuleCase[]];
 }[] = [
@@ -883,29 +885,29 @@ const RULES: readonly {
   },
 ];
 
-/** The rows of the table under "**The rules.**" in `docs/release.md`: its Status and Rule cells. */
-function rulesTable(): { status: string; rule: string }[] {
-  const lines = readFileSync(
-    join(repositoryRoot, "docs", "release.md"),
-    "utf8",
-  ).split(/\r?\n/);
-  const start = lines.findIndex((line) => line.startsWith("**The rules.**"));
-  const rest = lines.slice(start + 1);
+/** The table under "**The rules.**" in `docs/release.md`, as written. */
+function rulesTable(): string {
+  const page = readFileSync(join(repositoryRoot, "docs", "release.md"), "utf8")
+    .replaceAll("\r\n", "\n")
+    .split("\n");
+  const start = page.findIndex((line) => line.startsWith("**The rules.**"));
+  expect(start, "docs/release.md has a paragraph **The rules.**").not.toBe(-1);
+  const rest = page.slice(start + 1);
   const first = rest.findIndex((line) => line.startsWith("|"));
   const end = rest.findIndex((line, at) => at > first && !line.startsWith("|"));
-  return rest.slice(first + 2, end).map((line) => {
-    const [status, rule] = line
-      .split("|")
-      .slice(1, -1)
-      .map((cell) => cell.trim());
-    return { status, rule };
-  });
+  return rest
+    .slice(first, end === -1 ? undefined : end)
+    .map((line) => `${line}\n`)
+    .join("");
 }
 
 describe("statusOf", () => {
   it("is described by the rules table of docs/release.md, row for row and word for word", () => {
-    expect(rulesTable()).toEqual(
-      RULES.map(({ status, rule }) => ({ status, rule })),
+    expect(rulesTable()).toBe(
+      markdownTable(
+        ["Status", "Rule"],
+        RULES.map(({ status, rule }) => [status, rule]),
+      ),
     );
   });
 
