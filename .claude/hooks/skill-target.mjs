@@ -21,6 +21,9 @@
 // - /split-spec, /implement-spec or /ship-spec names a closed Spec, or
 //   /implement a closed Ticket: closed, and by whom; nothing to run.
 //
+// When it lets /implement or /implement-spec through, it adds a line to the
+// Agent's context: end the work with the next-step skill (#745).
+//
 // An issue of the clone's repository is named #n, any other in full, in
 // the reason and in the commands it gives. With no issue reference it is
 // silent; when `gh` or the network fails it lets the skill run with a
@@ -293,6 +296,29 @@ export function verdict(request, issue, takeable, home) {
   return { verdict: "pass" };
 }
 
+/** The line an implement let through gets in the Agent's context (#745). */
+const NEXT_STEP = `This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (${SOURCE}).`;
+
+/**
+ * The output that lets `request` through: for /implement and
+ * /implement-spec, the next-step line in the Agent's context; nothing for
+ * the other skills.
+ *
+ * @param {Request} request
+ * @returns {object | null}
+ */
+export function passOutput(request) {
+  if (request.skill !== "implement" && request.skill !== "implement-spec") {
+    return null;
+  }
+  return {
+    hookSpecificOutput: {
+      hookEventName: request.event,
+      additionalContext: NEXT_STEP,
+    },
+  };
+}
+
 // GitHub, through `gh`.
 
 /** How long one `gh` call may take: the session waits on it. */
@@ -521,9 +547,13 @@ export async function run(input, projectDir) {
         ? await takeableOf(projectDir, issue.spec, home)
         : null;
     const result = verdict(request, issue, takeable, home);
-    return result.verdict === "block" ? result.output : null;
+    return result.verdict === "block" ? result.output : passOutput(request);
   } catch (error) {
-    return warning(error instanceof Error ? error.message : String(error));
+    // The skill runs, and still ends with its next steps.
+    const warned = warning(
+      error instanceof Error ? error.message : String(error),
+    );
+    return { ...warned, ...passOutput(request) };
   }
 }
 

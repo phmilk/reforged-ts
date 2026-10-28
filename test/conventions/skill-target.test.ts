@@ -612,20 +612,57 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("lets a takeable Ticket through, on both events, silently", () => {
+  it("lets a takeable Ticket through on both events, adding the next-step line to the Agent's context", () => {
     const answers = {
       repo: LIBRARY,
       issue: issueData({ parent: SPEC_PARENT }),
     };
+    const context = (event: string) => ({
+      hookSpecificOutput: {
+        hookEventName: event,
+        additionalContext:
+          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0025, .claude/hooks/skill-target.mjs).",
+      },
+    });
 
     expect(runHook(typed("/implement #740"), answers)).toMatchObject({
       code: 0,
-      output: null,
+      output: context("UserPromptSubmit"),
     });
     expect(runHook(skillCall("implement", "740"), answers)).toMatchObject({
       code: 0,
-      output: null,
+      output: context("PreToolUse"),
     });
+  });
+
+  it("lets /implement-spec through on a split Spec, adding the next-step line", () => {
+    const result = runHook(skillCall("implement-spec", "737"), {
+      repo: LIBRARY,
+      issue: issueData({
+        labels: { nodes: [{ name: "spec" }] },
+        subIssues: { totalCount: 3 },
+      }),
+    });
+
+    expect(result.output).toEqual({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        additionalContext: expect.stringContaining("run next-step") as unknown,
+      },
+    });
+  });
+
+  it("lets split-spec and ship-spec through silently: next-step ends an implement", () => {
+    const answers = {
+      repo: LIBRARY,
+      issue: issueData({
+        labels: { nodes: [{ name: "spec" }] },
+        subIssues: { totalCount: 3 },
+      }),
+    };
+
+    expect(runHook(typed("/split-spec 737"), answers).output).toBeNull();
+    expect(runHook(skillCall("ship-spec", "737"), answers).output).toBeNull();
   });
 
   it("stays silent and asks GitHub nothing with no issue reference", () => {
@@ -646,13 +683,33 @@ describe("the skill-target script", () => {
         "The skill-target check could not read GitHub (error connecting to api.github.com); the skill runs, and the claim check still holds the rule on its pull request.",
     };
 
+    // The skill runs, and still ends with its next steps.
+    const nextStep = expect.stringContaining("run next-step") as unknown;
+
     expect(runHook(typed("/implement 742"), answers)).toMatchObject({
       code: 0,
+      output: {
+        ...warning,
+        hookSpecificOutput: {
+          hookEventName: "UserPromptSubmit",
+          additionalContext: nextStep,
+        },
+      },
+    });
+    expect(runHook(skillCall("split-spec", "742"), answers)).toEqual({
+      code: 0,
       output: warning,
+      calls: expect.any(Array) as unknown,
     });
     expect(runHook(skillCall("implement", "742"), answers)).toMatchObject({
       code: 0,
-      output: warning,
+      output: {
+        ...warning,
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          additionalContext: nextStep,
+        },
+      },
     });
   });
 });
