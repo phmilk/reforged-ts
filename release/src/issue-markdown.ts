@@ -134,5 +134,21 @@ export function criteriaOf(body: string): Criterion[] {
  * Whether a criterion is a "check whether…": it opens with the words, bold
  * or not; one that only mentions a "check whether…" is not one.
  */
-export const isCheckWhether = (criterion: Criterion): boolean =>
+const isCheckWhether = (criterion: Criterion): boolean =>
   /^check whether\b/i.test(normalize(criterion.text));
+
+/** What a criterion still lacks before it is delivered (the coverage rule). */
+export type CriterionGap = "unchecked" | "no-outcome";
+
+/**
+ * The gaps of `criterion`, in this order: unchecked, then, for a "check
+ * whether…", no `Outcome:` line; none when it is delivered.
+ */
+export function gapsOf(criterion: Criterion): CriterionGap[] {
+  return [
+    ...(criterion.checked ? [] : ["unchecked" as const]),
+    ...(isCheckWhether(criterion) && !criterion.outcome
+      ? ["no-outcome" as const]
+      : []),
+  ];
+}

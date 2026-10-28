@@ -378,7 +378,7 @@ describe("claim-check pull-request", () => {
 
     expect(result.code).toBe(0);
     expect(result.summary).toContain(
-      "- #12: 1 criteria unchecked or without their outcome; commented.\n",
+      "- #12: 1 criterion unchecked or without their outcome; commented.\n",
     );
     expect(sent()).toEqual([
       [

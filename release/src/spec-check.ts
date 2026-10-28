@@ -10,17 +10,17 @@
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
  * "A Spec's coverage", with which items a row's quote covers and which
  * table of the section is the Coverage table; this module reads by them
- * and restates none, a Ticket's criteria through `issue-markdown.ts`,
- * which the claim check reads them with too. A quoted cell is found in a text that contains it,
- * once both are read without bold markers, with straight quotes and
- * single spaces.
+ * and restates none. A Ticket's criteria and their gaps are read by
+ * `issue-markdown.ts`, which the claim check shares. A quoted cell is
+ * found in a text that contains it, once both are read without bold
+ * markers, with straight quotes and single spaces.
  */
 import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
 import {
   criteriaOf,
   indentOf,
-  isCheckWhether,
+  gapsOf,
   isFence,
   LIST_ITEM,
   normalize,
@@ -352,11 +352,8 @@ function ticketGaps(ticket: FetchedTicket): Gap[] {
       ? []
       : [{ kind: "not-completed", ticket: ref, reason: ticket.stateReason }];
   for (const criterion of criteria) {
-    if (!criterion.checked) {
-      gaps.push({ kind: "unchecked", ticket: ref, criterion: criterion.text });
-    }
-    if (isCheckWhether(criterion) && !criterion.outcome) {
-      gaps.push({ kind: "no-outcome", ticket: ref, criterion: criterion.text });
+    for (const kind of gapsOf(criterion)) {
+      gaps.push({ kind, ticket: ref, criterion: criterion.text });
     }
   }
   return gaps;

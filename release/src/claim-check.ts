@@ -38,7 +38,7 @@ import { appendFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { criteriaOf, isCheckWhether } from "./issue-markdown.ts";
+import { criteriaOf, gapsOf } from "./issue-markdown.ts";
 
 const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
 
@@ -344,6 +344,12 @@ function upsert(
   return [{ number, id: existing?.id ?? null, body }];
 }
 
+/** How the comment names each gap of a criterion. */
+const GAP_NAMES = {
+  unchecked: "unchecked",
+  "no-outcome": "no `Outcome:` line",
+} as const;
+
 /**
  * The criteria of a Ticket's `body` that `pnpm spec:check` counts as gaps,
  * one line each: unchecked, or a "check whether…" without its `Outcome:`
@@ -351,12 +357,7 @@ function upsert(
  */
 function criteriaGaps(body: string): string[] {
   return criteriaOf(body).flatMap((criterion) => {
-    const gaps = [
-      ...(criterion.checked ? [] : ["unchecked"]),
-      ...(isCheckWhether(criterion) && !criterion.outcome
-        ? ["no `Outcome:` line"]
-        : []),
-    ];
+    const gaps = gapsOf(criterion).map((gap) => GAP_NAMES[gap]);
     return gaps.length === 0 ? [] : [`- ${gaps.join(", ")}: ${criterion.text}`];
   });
 }
@@ -532,7 +533,7 @@ ${command}`,
     if (gaps.length === 0) continue;
     criteria.push(TEXTS.criteriaLeft(issue.number, gaps));
     summary.push(
-      `- #${String(issue.number)}: ${String(gaps.length)} criteria unchecked or without their outcome; commented.`,
+      `- #${String(issue.number)}: ${String(gaps.length)} ${gaps.length === 1 ? "criterion" : "criteria"} unchecked or without their outcome; commented.`,
     );
   }
   return {
@@ -888,22 +889,22 @@ async function findComment(
   number: number,
   marker: string = MARKER,
 ): Promise<StickyComment | null> {
-  const [found] = await findComments(api, repository, number, [marker]);
-  return found;
+  const found = await findComments(api, repository, number, [marker]);
+  return found.get(marker) ?? null;
 }
 
 /**
- * The check's sticky comments on `number`, one per marker of `markers`
- * (`null` where none), read in one walk of its comments, which stops once
- * each is found.
+ * The check's sticky comments on `number` by their marker, of `markers`
+ * the ones found, read in one walk of its comments, which stops once each
+ * is found.
  */
 async function findComments(
   api: Api,
   repository: string,
   number: number,
   markers: readonly string[],
-): Promise<(StickyComment | null)[]> {
-  const found: (StickyComment | null)[] = markers.map(() => null);
+): Promise<Map<string, StickyComment>> {
+  const found = new Map<string, StickyComment>();
   const path = `/repos/${repository}/issues/${String(number)}/comments`;
   for (let page = 1; page <= MAX_PAGES; page++) {
     const { body } = await rest(
@@ -926,13 +927,14 @@ async function findComments(
         continue;
       }
       const { id, body: text } = item;
-      const at = markers.findIndex(
-        (marker, index) => found[index] === null && text.startsWith(marker),
+      const marker = markers.find(
+        (candidate) => !found.has(candidate) && text.startsWith(candidate),
       );
-      if (at !== -1) found[at] = { id, body: text };
+      if (marker !== undefined) found.set(marker, { id, body: text });
     }
-    if (found.every((comment) => comment !== null)) return found;
-    if (body.length < PAGE_SIZE) return found;
+    if (found.size === markers.length || body.length < PAGE_SIZE) {
+      return found;
+    }
   }
   throw new ClaimCheckError(
     `GET ${path} answered more than ${String(MAX_PAGES)} pages.`,
@@ -1110,6 +1112,7 @@ async function readClosingIssues(
     );
     const authorAssignable =
       ours && (await assignable(api, repository, number, pullRequest.author));
+    const body = at(node, "body");
     issues.push({
       repository: nameWithOwner,
       number,
@@ -1117,8 +1120,7 @@ async function readClosingIssues(
       authorAssignable,
       isSpec: nodesOf(at(node, "labels")).some(isSpecLabel),
       openBlockers,
-      body:
-        typeof at(node, "body") === "string" ? String(at(node, "body")) : "",
+      body: typeof body === "string" ? body : "",
       spec: ours
         ? await readParentSpec(
             api,
@@ -1490,18 +1492,16 @@ async function checkPullRequest(
   const pullRequest = pullRequestOf(event);
   const { repository } = settings;
   const closing = await readClosingIssues(api, repository, pullRequest);
-  const [comment, criteriaComment] = await findComments(
-    api,
-    repository,
-    pullRequest.number,
-    [MARKER, CRITERIA_MARKER],
-  );
+  const comments = await findComments(api, repository, pullRequest.number, [
+    MARKER,
+    CRITERIA_MARKER,
+  ]);
   return planPullRequest({
     repository,
     pullRequest,
     closing,
-    comment,
-    criteriaComment,
+    comment: comments.get(MARKER) ?? null,
+    criteriaComment: comments.get(CRITERIA_MARKER) ?? null,
   });
 }
 
