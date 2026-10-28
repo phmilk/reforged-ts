@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   applyBoardReconcile,
@@ -31,9 +33,12 @@ import {
   type ProjectItem,
   type ProjectState,
   type ReconcileState,
+  type Status,
   type SubIssue,
 } from "../src/board.js";
 import { GraphQlError } from "../src/github-graphql.js";
+import { markdownTable } from "../src/markdown-table.js";
+import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
   daysAgo,
@@ -706,107 +711,216 @@ const sub = (number: number, repository = LIBRARY): SubIssue => ({
 const MAP = { repository: LIBRARY, number: 518, labels: ["wayfinder:map"] };
 const SPEC = { repository: LIBRARY, number: 529, labels: ["spec"] };
 
-describe("statusOf", () => {
-  const alone = issueLookup([]);
+/** A case of `statusOf`: its name, the issue's fields, the Status, and the other issues it sees. */
+type RuleCase = readonly [
+  name: string,
+  more: Partial<BoardIssue>,
+  expected: Status,
+  others?: readonly BoardIssue[],
+];
 
-  it.each([
-    [
-      "Done: the issue is closed, whatever else holds",
-      {
-        state: "CLOSED",
-        assignees: ["alice"],
-        pullRequests: [pullRequest("OPEN")],
-        labels: ["ready-for-agent"],
-      },
-      "Done",
+/**
+ * "The rules" of `docs/release.md`, row by row in its order and word for
+ * word, each with the cases that pin it: a rule's cases and its text are
+ * edited side by side, and the test below fails when the page and these
+ * rows drift apart.
+ */
+const RULES: readonly {
+  status: Status | "(parent rule)";
+  rule: string;
+  cases: readonly [RuleCase, ...RuleCase[]];
+}[] = [
+  {
+    status: "Done",
+    rule: "the issue is closed",
+    cases: [
+      [
+        "Done: the issue is closed, whatever else holds",
+        {
+          state: "CLOSED",
+          assignees: ["alice"],
+          pullRequests: [pullRequest("OPEN")],
+          labels: ["ready-for-agent"],
+        },
+        "Done",
+      ],
     ],
-    [
-      "In review: an open pull request that is not a draft closes it, before the Claim and the blockers",
-      {
-        pullRequests: [pullRequest("OPEN")],
-        assignees: ["alice"],
-        blockedBy: 1,
-      },
-      "In review",
+  },
+  {
+    status: "In review",
+    rule: "an open pull request that is not a draft closes it, read from the pull request's own state (a merged one still references the issue and does not count)",
+    cases: [
+      [
+        "In review: an open pull request that is not a draft closes it, before the Claim and the blockers",
+        {
+          pullRequests: [pullRequest("OPEN")],
+          assignees: ["alice"],
+          blockedBy: 1,
+        },
+        "In review",
+      ],
+      [
+        "not In review: a draft alone",
+        {
+          pullRequests: [pullRequest("OPEN", true)],
+          labels: ["ready-for-human"],
+        },
+        "Ready",
+      ],
+      [
+        "not In review: a merged pull request still comes back and does not count",
+        { pullRequests: [pullRequest("MERGED"), pullRequest("CLOSED")] },
+        "Backlog",
+      ],
     ],
-    [
-      "In progress: an assignee, the Claim, before the blockers and the labels",
-      { assignees: ["alice"], blockedBy: 1, labels: ["ready-for-agent"] },
-      "In progress",
+  },
+  {
+    status: "In progress",
+    rule: "it has an assignee: the Claim. A draft pull request keeps it here",
+    cases: [
+      [
+        "In progress: an assignee, the Claim, before the blockers and the labels",
+        { assignees: ["alice"], blockedBy: 1, labels: ["ready-for-agent"] },
+        "In progress",
+      ],
+      [
+        "In progress: a draft keeps it",
+        { assignees: ["alice"], pullRequests: [pullRequest("OPEN", true)] },
+        "In progress",
+      ],
     ],
-    [
-      "In progress: a draft keeps it",
-      { assignees: ["alice"], pullRequests: [pullRequest("OPEN", true)] },
-      "In progress",
+  },
+  {
+    status: "(parent rule)",
+    rule: "it has open sub-issues and none of the above applies: the highest value among its open sub-issues by Backlog < Blocked < Ready < In progress < In review, each sub-issue by these same rules, so a map takes its specs' highest and a spec its tickets'; a Template ticket of a library spec counts",
+    cases: [
+      [
+        "(parent rule): its open sub-issue's value, before its own labels (the tests below hold the rest)",
+        { labels: ["ready-for-agent"], subIssues: [sub(11)] },
+        "Blocked",
+        [issue(11, { blockedBy: 1 })],
+      ],
     ],
-    [
-      "not In review: a draft alone",
-      {
-        pullRequests: [pullRequest("OPEN", true)],
-        labels: ["ready-for-human"],
-      },
-      "Ready",
+  },
+  {
+    status: "Blocked",
+    rule: "it has an open blocker (`issueDependenciesSummary.blockedBy`), whatever its labels",
+    cases: [
+      [
+        "Blocked: an open blocker, whatever the labels",
+        { blockedBy: 2, labels: ["ready-for-agent"] },
+        "Blocked",
+      ],
+      [
+        "Blocked: an open blocker on a frontier ticket",
+        { blockedBy: 1, labels: ["ticket"], parent: MAP },
+        "Blocked",
+      ],
+      [
+        "Blocked: an open blocker, before needs-split",
+        { blockedBy: 1, labels: ["spec", "needs-split"] },
+        "Blocked",
+      ],
     ],
-    [
-      "not In review: a merged pull request still comes back and does not count",
-      { pullRequests: [pullRequest("MERGED"), pullRequest("CLOSED")] },
-      "Backlog",
+  },
+  {
+    status: "Backlog",
+    rule: '`needs-split`: an unsplit Spec, whatever its other labels. An open Spec\'s labels are read here and below as `specLabelsOf` derives them ("The labels" below), so an unsplit Spec still `ready-for-agent` is Backlog already',
+    cases: [
+      [
+        "Backlog: needs-split, an unsplit Spec, before the triage labels",
+        { labels: ["spec", "needs-split", "ready-for-human"] },
+        "Backlog",
+      ],
+      [
+        "Backlog: an unsplit Spec still ready-for-agent, read as the board derives its labels",
+        { labels: ["spec", "ready-for-agent"] },
+        "Backlog",
+      ],
+      [
+        "Ready: a Spec split into closed Tickets still needs-split, read as the board derives its labels",
+        {
+          labels: ["spec", "needs-split"],
+          subIssues: [{ ...sub(11), state: "CLOSED" }],
+        },
+        "Ready",
+      ],
     ],
-    [
-      "Blocked: an open blocker, whatever the labels",
-      { blockedBy: 2, labels: ["ready-for-agent"] },
-      "Blocked",
+  },
+  {
+    status: "Ready",
+    rule: "`ready-for-agent`, `ready-for-human`, or an open child of a `wayfinder:map` (a frontier ticket)",
+    cases: [
+      ["Ready: ready-for-agent", { labels: ["ready-for-agent"] }, "Ready"],
+      [
+        "Ready: ready-for-human",
+        { labels: ["bug", "ready-for-human"] },
+        "Ready",
+      ],
+      [
+        "Ready: an open child of a wayfinder:map, a frontier ticket",
+        { labels: ["ticket"], parent: MAP },
+        "Ready",
+      ],
     ],
-    [
-      "Blocked: an open blocker on a frontier ticket",
-      { blockedBy: 1, labels: ["ticket"], parent: MAP },
-      "Blocked",
+  },
+  {
+    status: "Backlog",
+    rule: "everything else: `needs-triage`, `needs-info`, no label, a parent with no open child",
+    cases: [
+      [
+        "Backlog: a ticket of a spec, with no ready label",
+        { labels: ["ticket"], parent: SPEC },
+        "Backlog",
+      ],
+      ["Backlog: needs-triage", { labels: ["bug", "needs-triage"] }, "Backlog"],
+      ["Backlog: needs-info", { labels: ["needs-info"] }, "Backlog"],
+      ["Backlog: no label", {}, "Backlog"],
+      [
+        "Backlog: a parent with no open child",
+        { subIssues: [{ ...sub(11), state: "CLOSED" }] },
+        "Backlog",
+      ],
     ],
-    [
-      "Blocked: an open blocker, before needs-split",
-      { blockedBy: 1, labels: ["spec", "needs-split"] },
-      "Blocked",
-    ],
-    [
-      "Backlog: needs-split, an unsplit Spec, before the triage labels",
-      { labels: ["spec", "needs-split", "ready-for-human"] },
-      "Backlog",
-    ],
-    [
-      "Backlog: an unsplit Spec still ready-for-agent, read as the board derives its labels",
-      { labels: ["spec", "ready-for-agent"] },
-      "Backlog",
-    ],
-    [
-      "Ready: a Spec split into closed Tickets still needs-split, read as the board derives its labels",
-      {
-        labels: ["spec", "needs-split"],
-        subIssues: [{ ...sub(11), state: "CLOSED" }],
-      },
-      "Ready",
-    ],
-    ["Ready: ready-for-agent", { labels: ["ready-for-agent"] }, "Ready"],
-    ["Ready: ready-for-human", { labels: ["bug", "ready-for-human"] }, "Ready"],
-    [
-      "Ready: an open child of a wayfinder:map, a frontier ticket",
-      { labels: ["ticket"], parent: MAP },
-      "Ready",
-    ],
-    [
-      "Backlog: a ticket of a spec, with no ready label",
-      { labels: ["ticket"], parent: SPEC },
-      "Backlog",
-    ],
-    ["Backlog: needs-triage", { labels: ["bug", "needs-triage"] }, "Backlog"],
-    ["Backlog: needs-info", { labels: ["needs-info"] }, "Backlog"],
-    ["Backlog: no label", {}, "Backlog"],
-    [
-      "Backlog: a parent with no open child",
-      { subIssues: [{ ...sub(11), state: "CLOSED" }] },
-      "Backlog",
-    ],
-  ] as const)("%s", (_row, more, expected) => {
-    expect(statusOf(issue(1, more), alone)).toBe(expected);
+  },
+];
+
+/** The table under "**The rules.**" in `docs/release.md`, one LF-ended line per row, as `markdownTable` writes one. */
+function rulesTable(): string {
+  const lines = readFileSync(
+    join(repositoryRoot, "docs", "release.md"),
+    "utf8",
+  ).split(/\r?\n/);
+  const start = lines.findIndex((line) => line.startsWith("**The rules.**"));
+  expect(start, "docs/release.md has a paragraph **The rules.**").not.toBe(-1);
+  const rest = lines.slice(start + 1);
+  const first = rest.findIndex((line) => line.startsWith("|"));
+  const end = rest.findIndex((line, at) => at > first && !line.startsWith("|"));
+  return rest
+    .slice(first, end === -1 ? undefined : end)
+    .map((line) => `${line}\n`)
+    .join("");
+}
+
+describe("statusOf", () => {
+  it("is described by the rules table of docs/release.md, row for row and word for word", () => {
+    expect(rulesTable()).toBe(
+      markdownTable(
+        ["Status", "Rule"],
+        RULES.map(({ status, rule }) => [status, rule]),
+      ),
+    );
+  });
+
+  it.each(
+    RULES.flatMap(({ cases }, row) =>
+      cases.map(
+        ([name, more, expected, others = []]) =>
+          [`row ${String(row + 1)}: ${name}`, more, expected, others] as const,
+      ),
+    ),
+  )("%s", (_name, more, expected, others) => {
+    expect(statusOf(issue(1, more), issueLookup(others))).toBe(expected);
   });
 
   it("gives a parent the highest value among its open sub-issues, Backlog < Blocked < Ready < In progress < In review", () => {
