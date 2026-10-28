@@ -33,6 +33,7 @@ import {
   readSpec,
   verdictCounts,
   type FetchedSpec,
+  type Verdict,
 } from "./spec-check.js";
 import { errorMessage, isRecord } from "./unknown.js";
 
@@ -42,24 +43,32 @@ export const VERDICT_MARKER = "<!-- board: coverage check -->";
 /** Where "Closing a Spec" lives, which every comment points to. */
 const CLOSING = 'See `docs/agents/issue-tracker.md`, "Closing a Spec".';
 
-/** The Spec's number, then its repository when it is not the library's, as both commands take it. */
-const where = (spec: IssueRef, flag: string): string =>
-  spec.repository === BOARD_REPOSITORIES[0]
-    ? String(spec.number)
-    : `${String(spec.number)} ${flag}${spec.repository}`;
+/** Whether `spec` is of the library, whose repository both commands leave out. */
+const ofLibrary = (spec: IssueRef): boolean =>
+  spec.repository === BOARD_REPOSITORIES[0];
+
+/** The command that runs the coverage check of `spec`. */
+const checkCommand = (spec: IssueRef): string =>
+  `pnpm spec:check ${String(spec.number)}${ofLibrary(spec) ? "" : ` ${spec.repository}`}`;
+
+/** The command that closes `spec`, with `comment`. */
+const closeCommand = (spec: IssueRef, comment: string): string =>
+  `gh issue close ${String(spec.number)}${ofLibrary(spec) ? "" : ` -R ${spec.repository}`} --comment "${comment}"`;
 
 /**
- * The comment of `spec`'s verdict, under `VERDICT_MARKER`: green, the
- * counts and the command that closes it; red, each gap.
+ * The comment of `spec`'s verdict `verdict`, under `VERDICT_MARKER`:
+ * green, the counts and the command that closes it; red, each gap.
  */
-export function verdictComment(spec: FetchedSpec): string {
-  const verdict = coverageVerdict(spec);
-  const check = `\`pnpm spec:check ${where(spec, "")}\``;
+export function verdictComment(
+  spec: FetchedSpec,
+  verdict: Verdict = coverageVerdict(spec),
+): string {
+  const check = `\`${checkCommand(spec)}\``;
   const counts = verdictCounts(verdict);
   const text =
     verdict.gaps.length === 0
       ? `**Coverage check: green.** Every Ticket of this Spec is closed, and ${check} finds no gap: ${counts}. ` +
-        `Close the Spec: \`gh issue close ${where(spec, "-R ")} --comment "Delivered: the coverage check is green (${counts})."\`. ` +
+        `Close the Spec: \`${closeCommand(spec, `Delivered: the coverage check is green (${counts}).`)}\`. ` +
         "The board never closes it: whoever merged its last Ticket, an assignee of the Spec or the maintainer does (ADR 0023). " +
         CLOSING
       : `**Coverage check: red.** Every Ticket of this Spec is closed, but ${check} finds ${gapCount(verdict)} (${counts}):\n\n` +
@@ -122,9 +131,9 @@ export function planSpecVerdict(
   spec: FetchedSpec,
   existing: VerdictComment | null,
 ): BoardRequest | null {
-  const body = verdictComment(spec);
-  if (existing !== null && sameBody(existing.body, body)) return null;
   const verdict = coverageVerdict(spec);
+  const body = verdictComment(spec, verdict);
+  if (existing !== null && sameBody(existing.body, body)) return null;
   const result =
     verdict.gaps.length === 0 ? "green" : `red, ${gapCount(verdict)}`;
   const key = issueKey(spec);
@@ -234,20 +243,22 @@ export async function planSpecVerdicts(
 
 /**
  * Sends the plan's comments in order through `api`, calling `sent` after
- * each one that succeeds; one that fails is added to the plan's failures,
- * and the others are still sent.
+ * each one that succeeds; one that fails does not stop the others.
+ * Resolves with one sentence per failure, the error included.
  */
 export async function applySpecVerdicts(
   api: GitHubApi,
   plan: SpecVerdictPlan,
   sent: (request: BoardRequest) => void = () => undefined,
-): Promise<void> {
+): Promise<string[]> {
+  const failures: string[] = [];
   for (const request of plan.requests) {
     try {
       await graphql(api, request.query, request.variables);
       sent(request);
     } catch (error) {
-      plan.failures.push(`${errorMessage(error)} Not done: ${request.summary}`);
+      failures.push(`${errorMessage(error)} Not done: ${request.summary}`);
     }
   }
+  return failures;
 }

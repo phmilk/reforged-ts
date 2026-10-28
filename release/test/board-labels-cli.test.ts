@@ -392,6 +392,32 @@ describe("board:labels, the coverage check of a Spec whose Tickets are all close
     );
   });
 
+  it("still comments the verdicts when the labels fail, then exits 1", async () => {
+    const sent: Sent[] = [];
+    const base = answers();
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          operation === "Labels" && variables.name === "reforged-ts-template"
+            ? {
+                data: { repository: { needsSplit: null, readyForAgent: null } },
+              }
+            : base(operation, variables),
+        sent,
+      ),
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toBe(
+      `The label needs-split does not exist in ${TEMPLATE}: create it there (pnpm repo:settings creates the library's), then run board:labels again.\n`,
+    );
+    expect(mutations(sent).map(([operation]) => operation)).toEqual([
+      "AddComment",
+      "AddComment",
+    ]);
+  });
+
   it("prints the comments on a dry run and sends none", async () => {
     const sent: Sent[] = [];
     const result = await run(["--dry-run"], graphQlFetch(answers(), sent));

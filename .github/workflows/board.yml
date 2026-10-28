@@ -20,9 +20,10 @@
 # comment edited as it changes, never closing the Spec (ADR 0023, #796).
 # PROJECT_TOKEN writes no label, so the labels job mints the repositories'
 # App token over both repositories, issues write, in the environment `app`,
-# the App key's home, whose policy also admits master alone. Its writes raise labeled events, so one more run
-# follows and finds nothing to write. The reconcile runs after it even when
-# it fails: a Status never waits on a label.
+# the App key's home, whose policy also admits master alone. Its writes
+# raise labeled events, so one more run follows and finds nothing to write.
+# The reconcile runs after it even when it fails: a Status never waits on a
+# label.
 #
 # The writes need the maintainer's classic token, the secret PROJECT_TOKEN,
 # since neither GITHUB_TOKEN nor the App reaches a user-owned project. Two

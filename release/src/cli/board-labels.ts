@@ -22,6 +22,7 @@ import {
   readLabelState,
   type BoardIssue,
   type BoardLabelPlan,
+  type LabelState,
 } from "../board.js";
 import type { GitHubApi } from "../repo-settings.js";
 import { applySpecVerdicts, planSpecVerdicts } from "../spec-verdict.js";
@@ -73,49 +74,74 @@ export async function main(
     const api = gitHubApi(context.fetcher, token, "reforged-ts-board-labels");
     output.stdout(`Token: ${source}.\n`);
     const state = await readLabelState(api);
-    let plan: BoardLabelPlan;
-    try {
-      plan = planBoardLabels(state);
-    } catch (error) {
-      // A label missing from a repository: the summary says which.
-      await appendSummary(
-        context.env,
-        `## Board labels\n\n${errorMessage(error)}\n`,
-      );
-      throw error;
-    }
-    output.stdout(
-      `${plural(plan.specs, "open Spec", "open Specs")} of ${BOARD_REPOSITORIES.join(" and ")}.\n` +
-        `As they should be: ${plural(plan.kept, "Spec", "Specs")}.\n`,
+    // Neither pass stops the other: each says what failed, and either
+    // failing exits 1.
+    const labels = await writeLabels(
+      api,
+      state,
+      parsed.dryRun,
+      output,
+      context.env,
     );
-    printPlan(output, plan, describeRequest, parsed.dryRun);
-    if (!parsed.dryRun) {
-      const done: string[] = [];
-      try {
-        await applyBoardLabels(api, plan, ({ summary }) => {
-          done.push(summary);
-          output.stdout(`Done: ${summary}\n`);
-        });
-      } finally {
-        await appendSummary(
-          context.env,
-          "## Board labels\n\n" +
-            `${plural(plan.kept, "Spec as it should be", "Specs as they should be")}; ` +
-            `${plural(plan.requests.length, "request", "requests")}, ${String(done.length)} done.\n` +
-            `${done.map((summary) => `\n- ${summary}`).join("")}${done.length === 0 ? "" : "\n"}`,
-        );
-      }
-    }
-    return await commentVerdicts(
+    const verdicts = await commentVerdicts(
       api,
       state.issues,
       parsed.dryRun,
       output,
       context.env,
     );
+    return Math.max(labels, verdicts);
   } catch (error) {
     output.stderr(`${errorMessage(error)}\n`);
     return 1;
+  }
+}
+
+/**
+ * The label pair of each open Spec of `state`, written, or printed only on
+ * a dry run. A label missing from a repository, or a request that fails,
+ * is reported; resolves with 1 then, else 0.
+ */
+async function writeLabels(
+  api: GitHubApi,
+  state: LabelState,
+  dryRun: boolean,
+  output: Output,
+  env: Readonly<Record<string, string | undefined>>,
+): Promise<number> {
+  let plan: BoardLabelPlan;
+  try {
+    plan = planBoardLabels(state);
+  } catch (error) {
+    // A label missing from a repository: the summary says which.
+    await appendSummary(env, `## Board labels\n\n${errorMessage(error)}\n`);
+    output.stderr(`${errorMessage(error)}\n`);
+    return 1;
+  }
+  output.stdout(
+    `${plural(plan.specs, "open Spec", "open Specs")} of ${BOARD_REPOSITORIES.join(" and ")}.\n` +
+      `As they should be: ${plural(plan.kept, "Spec", "Specs")}.\n`,
+  );
+  printPlan(output, plan, describeRequest, dryRun);
+  if (dryRun) return 0;
+  const done: string[] = [];
+  try {
+    await applyBoardLabels(api, plan, ({ summary }) => {
+      done.push(summary);
+      output.stdout(`Done: ${summary}\n`);
+    });
+    return 0;
+  } catch (error) {
+    output.stderr(`${errorMessage(error)}\n`);
+    return 1;
+  } finally {
+    await appendSummary(
+      env,
+      "## Board labels\n\n" +
+        `${plural(plan.kept, "Spec as it should be", "Specs as they should be")}; ` +
+        `${plural(plan.requests.length, "request", "requests")}, ${String(done.length)} done.\n` +
+        `${done.map((summary) => `\n- ${summary}`).join("")}${done.length === 0 ? "" : "\n"}`,
+    );
   }
 }
 
@@ -141,24 +167,27 @@ async function commentVerdicts(
   output.stdout(`Coverage check: ${found}.\n`);
   printPlan(output, plan, describeRequest, dryRun);
   const done: string[] = [];
+  const failures = [...plan.failures];
   if (!dryRun) {
-    await applySpecVerdicts(api, plan, ({ summary }) => {
-      done.push(summary);
-      output.stdout(`Done: ${summary}\n`);
-    });
+    failures.push(
+      ...(await applySpecVerdicts(api, plan, ({ summary }) => {
+        done.push(summary);
+        output.stdout(`Done: ${summary}\n`);
+      })),
+    );
   }
-  for (const failure of plan.failures) output.stderr(`${failure}\n`);
+  for (const failure of failures) output.stderr(`${failure}\n`);
   if (!dryRun) {
-    const lines = [...done, ...plan.failures];
+    const lines = [...done, ...failures];
     await appendSummary(
       env,
       `## Coverage check\n\n${found}; ` +
         `${plural(plan.requests.length, "request", "requests")}, ${String(done.length)} done; ` +
-        `${plural(plan.failures.length, "failure", "failures")}.\n` +
+        `${plural(failures.length, "failure", "failures")}.\n` +
         `${lines.map((line) => `\n- ${line}`).join("")}${lines.length === 0 ? "" : "\n"}`,
     );
   }
-  return plan.failures.length === 0 ? 0 : 1;
+  return failures.length === 0 ? 0 : 1;
 }
 
 if (invokedDirectly(import.meta.url)) {
