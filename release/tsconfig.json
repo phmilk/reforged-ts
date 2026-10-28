@@ -15,6 +15,9 @@
     "types": ["node"],
     "strict": true,
     "verbatimModuleSyntax": true,
+    // claim-check.ts, which Node runs from source, imports issue-markdown.ts
+    // by its .ts name; the emit rewrites it to .js.
+    "rewriteRelativeImportExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,

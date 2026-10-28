@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BOARD_OWNER, BOARD_REPOSITORIES } from "../src/board.js";
 import {
+  CRITERIA_MARKER,
   MARKER,
   MAX_ASSIGNMENTS,
   planIssue,
@@ -58,6 +59,7 @@ function issue(
     spec: null,
     isSpec: false,
     openBlockers: [],
+    body: "",
     ...more,
   };
 }
@@ -88,6 +90,7 @@ function pullRequest(
     pullRequest: { number: 34, author: "alice" },
     closing,
     comment,
+    criteriaComment: null,
   };
 }
 
@@ -654,6 +657,87 @@ describe("planPullRequest", () => {
     expect(planPullRequest(failing).comments).toEqual([]);
     expect(planPullRequest(failing).exitCode).toBe(1);
     expect(planPullRequest(passed).comments).toEqual([]);
+  });
+});
+
+/** The body of Ticket #12: one criterion delivered, three gaps of the coverage rule. */
+const TICKET_BODY = `## What to build
+
+- [ ] A box outside the criteria, never read.
+
+## Acceptance criteria
+
+- [x] The check passes.
+- [ ] The doc names the comment.
+- [ ] **Check whether** the token can write labels.
+- [x] Check whether the App holds issues write.
+  Outcome: it does.
+- [x] Check whether the reconcile follows.
+`;
+
+/** What the check says of Ticket #12's body, word for word. */
+const TEXT_CRITERIA =
+  '**Criteria left.** #12, which this pull request closes, has criteria that `pnpm spec:check` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n- unchecked, no `Outcome:` line: **Check whether** the token can write labels.\n- no `Outcome:` line: Check whether the reconcile follows.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented `Outcome:` line under it, in the body of #12. This comment is updated on the pull request\'s next push or edit. See `docs/agents/issue-tracker.md`, "A Spec\'s coverage".';
+
+/** The criteria comment once nothing is left. */
+const TEXT_CRITERIA_SETTLED = "**Criteria left:** none.";
+
+/** A criteria comment's body: its marker, then one text per Ticket. */
+const criteriaBody = (...texts: string[]) =>
+  [CRITERIA_MARKER, ...texts].join("\n\n");
+
+/** Ticket #12 of Spec #10, the author's, with `body`. */
+const ticket = (body: string): ClosingIssue =>
+  issue(12, ["alice"], { spec: spec(["alice"]), body });
+
+describe("planPullRequest, a Ticket's criteria", () => {
+  it("comments the criteria a closed Ticket still lacks, and passes", () => {
+    expect(planPullRequest(pullRequest([ticket(TICKET_BODY)]))).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [{ number: 34, id: null, body: criteriaBody(TEXT_CRITERIA) }],
+      summary: [
+        "- #12: claimed by @alice, the author; passed.",
+        "- #10, the Spec of #12: the author @alice among its assignees.",
+        "- #12: 3 criteria unchecked or without their outcome; commented.",
+      ],
+      exitCode: 0,
+    });
+  });
+
+  it("settles its comment once every criterion is checked, with its outcome", () => {
+    const delivered = TICKET_BODY.replaceAll("- [ ]", "- [x]")
+      .replace("labels.\n", "labels.\n  Outcome: it can.\n")
+      .replace("follows.\n", "follows.\n  Outcome: it does.\n");
+
+    expect(
+      planPullRequest({
+        ...pullRequest([ticket(delivered)]),
+        criteriaComment: { id: 8, body: criteriaBody(TEXT_CRITERIA) },
+      }).comments,
+    ).toEqual([
+      { number: 34, id: 8, body: criteriaBody(TEXT_CRITERIA_SETTLED) },
+    ]);
+    expect(planPullRequest(pullRequest([ticket(delivered)])).comments).toEqual(
+      [],
+    );
+  });
+
+  it("reads only Tickets: an issue outside a Spec keeps its boxes to itself", () => {
+    expect(
+      planPullRequest(
+        pullRequest([issue(12, ["alice"], { body: TICKET_BODY })]),
+      ).comments,
+    ).toEqual([]);
+  });
+
+  it("names the criteria of a Ticket another login holds, beside the failure", () => {
+    const held = issue(12, ["bob"], { spec: spec(["bob"]), body: TICKET_BODY });
+
+    expect(planPullRequest(pullRequest([held])).comments).toEqual([
+      { number: 34, id: null, body: body(TEXT_2) },
+      { number: 34, id: null, body: criteriaBody(TEXT_CRITERIA) },
+    ]);
   });
 });
 
