@@ -297,8 +297,7 @@ export function verdict(request, issue, takeable, home) {
 }
 
 /** The line an implement let through gets in the Agent's context (#745). */
-const NEXT_STEP =
-  "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (.claude/hooks/skill-target.mjs).";
+const NEXT_STEP = `This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (${SOURCE}).`;
 
 /**
  * The output that lets `request` through: for /implement and

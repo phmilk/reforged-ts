@@ -621,7 +621,7 @@ describe("the skill-target script", () => {
       hookSpecificOutput: {
         hookEventName: event,
         additionalContext:
-          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (.claude/hooks/skill-target.mjs).",
+          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0025, .claude/hooks/skill-target.mjs).",
       },
     });
 
@@ -632,6 +632,23 @@ describe("the skill-target script", () => {
     expect(runHook(skillCall("implement", "740"), answers)).toMatchObject({
       code: 0,
       output: context("PreToolUse"),
+    });
+  });
+
+  it("lets /implement-spec through on a split Spec, adding the next-step line", () => {
+    const result = runHook(skillCall("implement-spec", "737"), {
+      repo: LIBRARY,
+      issue: issueData({
+        labels: { nodes: [{ name: "spec" }] },
+        subIssues: { totalCount: 3 },
+      }),
+    });
+
+    expect(result.output).toEqual({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        additionalContext: expect.stringContaining("run next-step") as unknown,
+      },
     });
   });
 
