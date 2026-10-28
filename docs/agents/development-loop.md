@@ -5,8 +5,8 @@ The development loop takes a piece of work from an on-ramp to a merged pull requ
 ## Where the Agent skills come from
 
 - **The Upstream skills.** Every skill of the loop but the repository's own is an Upstream skill: a skill of [`mattpocock/skills`](https://github.com/mattpocock/skills), committed unmodified in `.claude/skills/` at the version [`skills-lock.json`](../../skills-lock.json) names ([Installing and updating the Upstream skills](#installing-and-updating-the-upstream-skills)). A local session and a cloud session load the same files from the checkout; nothing is installed per machine, and upstream's plugin is not used (ADR 0022). A global copy left from before shadows them: [Removing the global copies](#removing-the-global-copies).
-- **The repository's.** The project skills `add-wrapper`, `add-lint-rule` and `new-patch`, and the Skill variants `write-spec` and `split-spec` ([Skill variants](#skill-variants)), live in `.claude/skills/` too, listed with their triggers under "Skills" in `AGENTS.md`.
-- **One source for both repositories.** What both repositories run, the Upstream skills with their lock, the Skill variants that work issues on the Claim board (`write-spec`, `split-spec`), the session-start hook, the background-wait check (`.claude/hooks/background-wait.mjs`, #767) and the skill-target check (`.claude/hooks/skill-target.mjs`, #743), is written here, in the library, and the Template carries a copy of it (ADR 0024); the band of background work (`.claude/mods/background-band`, #769) is enabled from the library's marketplace by the shared settings, with no file of it copied to the Template. [`.claude/shared.json`](../../.claude/shared.json) names what is shared. A change to a shared skill or file is made here, never in the Template's copy.
+- **The repository's.** The project skills `add-wrapper`, `add-lint-rule` and `new-patch`, and the Skill variants `write-spec`, `split-spec` and `next-step` ([Skill variants](#skill-variants)), live in `.claude/skills/` too, listed with their triggers under "Skills" in `AGENTS.md`.
+- **One source for both repositories.** What both repositories run, the Upstream skills with their lock, the Skill variants that work issues on the Claim board (`write-spec`, `split-spec`, `next-step`), the session-start hook, the background-wait check (`.claude/hooks/background-wait.mjs`, #767) and the skill-target check (`.claude/hooks/skill-target.mjs`, #743), is written here, in the library, and the Template carries a copy of it (ADR 0024); the band of background work (`.claude/mods/background-band`, #769) is enabled from the library's marketplace by the shared settings, with no file of it copied to the Template. [`.claude/shared.json`](../../.claude/shared.json) names what is shared. A change to a shared skill or file is made here, never in the Template's copy.
 - **Set up for this repository.** The three agents docs, [`issue-tracker.md`](issue-tracker.md), [`triage-labels.md`](triage-labels.md) and [`domain.md`](domain.md), are the output of `/setup-matt-pocock-skills`, with the "Agent skills" block of [`AGENTS.md`](../../AGENTS.md#agent-skills) that points at them. The Upstream skills read them for this repository's tracker, labels and domain docs; the repository has since edited them (the Claim, the kind labels), so they are its own: change a convention there, never in a skill.
 - **Named in a diagram.** A diagram cites a folder of `.claude/skills/` by its slash command, an Upstream skill as well as one of the repository's own. A skill from anywhere else is declared, with its source, in the `external` list of `test/conventions/diagrams.test.ts`: add it there first.
 
@@ -41,7 +41,7 @@ gh workflow run skills-update.yml
 
 ### Skill variants
 
-A Skill variant is an Agent skill of the repository built from an Upstream skill's steps, under its own name: `write-spec` is `to-spec`'s steps and `split-spec` is `to-tickets`', each of which an Agent may invoke. An Agent skill that only invokes Upstream skills by name, without copying their steps, is not a variant and records nothing.
+A Skill variant is an Agent skill of the repository built from an Upstream skill's steps, under its own name: `write-spec` is `to-spec`'s steps, `split-spec` is `to-tickets`' and `next-step` is `ask-matt`'s main flow from where an implement ends, each of which an Agent may invoke. An Agent skill that only invokes Upstream skills by name, without copying their steps, is not a variant and records nothing.
 
 - **Its own name.** A variant never takes an Upstream skill's name, so a slash command always means one skill.
 - **Its source, in its frontmatter.** Under `metadata`, `upstream` names the Upstream skill and `upstream-hash` records the lock's version of it when the variant was built or last reviewed. The lock holds no commit or version number per skill: a skill's version there is the `computedHash` of its folder, which changes exactly when one of the folder's files does. `upstream-hash` is that hash, copied from `skills-lock.json`:
@@ -93,7 +93,7 @@ flowchart TD
   implement_spec["/implement-spec, which does not claim"]
   tdd["/tdd"]
   code_review["/code-review"]
-  next_step["/next-step: at most five next steps, from the real state"]
+  next_step["/next-step"]
   add_wrapper["/add-wrapper"]
   add_lint_rule["/add-lint-rule"]
   new_patch["/new-patch"]
@@ -124,8 +124,9 @@ flowchart TD
   add_lint_rule --> pull_request
   new_patch --> pull_request
   pull_request -->|"the required checks green, a review"| merge
-  pull_request -->|"the end of every implement"| next_step
-  next_step -->|"the next Ticket of the Frontier"| claim
+  code_review -->|"the end of every implement"| next_step
+  next_step -->|"/pr"| pull_request
+  next_step -->|"a cleared context, then the next Ticket of the Frontier"| claim
 ```
 
 | Node               | Details in                                                                                                                                                                |

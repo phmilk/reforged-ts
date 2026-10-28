@@ -100,6 +100,7 @@ describe("the Agent skills of .claude/skills/", () => {
       "the Skill variants, each from its Upstream skill",
     ).toEqual(
       expect.arrayContaining([
+        "next-step from ask-matt",
         "split-spec from to-tickets",
         "write-spec from to-spec",
       ]),

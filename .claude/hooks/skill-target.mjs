@@ -297,7 +297,8 @@ export function verdict(request, issue, takeable, home) {
 }
 
 /** The line an implement let through gets in the Agent's context (#745). */
-const NEXT_STEP = `This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the Spec's state (${SOURCE}).`;
+const NEXT_STEP =
+  "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (.claude/hooks/skill-target.mjs).";
 
 /**
  * The output that lets `request` through: for /implement and
@@ -549,7 +550,11 @@ export async function run(input, projectDir) {
     const result = verdict(request, issue, takeable, home);
     return result.verdict === "block" ? result.output : passOutput(request);
   } catch (error) {
-    return warning(error instanceof Error ? error.message : String(error));
+    // The skill runs, and still ends with its next steps.
+    const warned = warning(
+      error instanceof Error ? error.message : String(error),
+    );
+    return { ...warned, ...passOutput(request) };
   }
 }
 

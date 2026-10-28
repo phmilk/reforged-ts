@@ -621,7 +621,7 @@ describe("the skill-target script", () => {
       hookSpecificOutput: {
         hookEventName: event,
         additionalContext:
-          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the Spec's state (ADR 0025, .claude/hooks/skill-target.mjs).",
+          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (.claude/hooks/skill-target.mjs).",
       },
     });
 
@@ -629,7 +629,7 @@ describe("the skill-target script", () => {
       code: 0,
       output: context("UserPromptSubmit"),
     });
-    expect(runHook(skillCall("implement-spec", "737"), answers)).toMatchObject({
+    expect(runHook(skillCall("implement", "740"), answers)).toMatchObject({
       code: 0,
       output: context("PreToolUse"),
     });
@@ -666,13 +666,33 @@ describe("the skill-target script", () => {
         "The skill-target check could not read GitHub (error connecting to api.github.com); the skill runs, and the claim check still holds the rule on its pull request.",
     };
 
+    // The skill runs, and still ends with its next steps.
+    const nextStep = expect.stringContaining("run next-step") as unknown;
+
     expect(runHook(typed("/implement 742"), answers)).toMatchObject({
       code: 0,
+      output: {
+        ...warning,
+        hookSpecificOutput: {
+          hookEventName: "UserPromptSubmit",
+          additionalContext: nextStep,
+        },
+      },
+    });
+    expect(runHook(skillCall("split-spec", "742"), answers)).toEqual({
+      code: 0,
       output: warning,
+      calls: expect.any(Array) as unknown,
     });
     expect(runHook(skillCall("implement", "742"), answers)).toMatchObject({
       code: 0,
-      output: warning,
+      output: {
+        ...warning,
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          additionalContext: nextStep,
+        },
+      },
     });
   });
 });
