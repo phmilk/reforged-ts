@@ -15,12 +15,8 @@ import {
   openRawcodeLookup,
   type RawcodeLookup,
 } from "../src/index.js";
-import {
-  PACKAGE_ROOT,
-  fixtureMap,
-  makeTempDir,
-  removeTemporary,
-} from "./support/map-folder.js";
+import { removeTemporary } from "./support/map-folder.js";
+import { link, mapProject, write } from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
@@ -28,17 +24,6 @@ afterAll(removeTemporary);
 const FIXTURE = "editor-objects.w3m";
 
 const IMPORT = `import { defineBuff, defineUnit, localized } from "reforged-map/objects";\n`;
-
-/** Links `node_modules/<name>` of `root` to this package's installation of it. */
-function link(root: string, name: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(
-    fs.realpathSync(path.join(PACKAGE_ROOT, "node_modules", name)),
-    linkPath,
-    "junction",
-  );
-}
 
 interface Project {
   readonly root: string;
@@ -52,19 +37,13 @@ function project(
   files: Readonly<Record<string, string>>,
   { typescript = true }: { typescript?: boolean } = {},
 ): Project {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  fs.cpSync(fixtureMap(FIXTURE), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  if (typescript) link(root, "typescript");
-  link(root, "reforged-builtins");
-  const write = (name: string, contents: string): void => {
-    const file = path.join(root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
+  const created = mapProject(FIXTURE, files, { typescript });
+  return {
+    ...created,
+    write: (name, contents) => {
+      write(created, { [name]: contents });
+    },
   };
-  for (const [name, contents] of Object.entries(files)) write(name, contents);
-  return { root, mapFolder, write };
 }
 
 /** An Object manifest owning these objects, with no modification recorded. */

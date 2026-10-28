@@ -5,7 +5,6 @@
 // Object data editor, the manifest as text, the definition files, the errors
 // and their reasons. The World Editor's windows are injected titles.
 
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, describe, expect, it, vi } from "vitest";
@@ -21,11 +20,16 @@ import {
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
-  fixtureMap,
-  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
+import {
+  mapProject,
+  snapshot,
+  sync,
+  write,
+  type MapProject,
+} from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
@@ -48,34 +52,6 @@ export const Paladin = defineUnit({ rawcode: "Hpal", fields: { uhpm: 700 } });
 `,
 };
 
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
-}
-
-/** Links `node_modules/<name>` of `root` to this package's installation of it. */
-function link(root: string, name: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(
-    fs.realpathSync(path.join(PACKAGE_ROOT, "node_modules", name)),
-    linkPath,
-    "junction",
-  );
-}
-
-/** Writes files under the Map project's root, by relative path. */
-function write(
-  project: MapProject,
-  files: Readonly<Record<string, string>>,
-): void {
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(project.root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-}
-
 const NO_WINDOW: ObjectReleaseOptions = {
   worldEditorCheck: { readWindowTitles: () => [] },
 };
@@ -90,15 +66,8 @@ function titles(folder: string, modified: boolean): ObjectReleaseOptions {
 function syncedProject(
   files: Readonly<Record<string, string>> = FILES,
 ): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  fs.cpSync(fixtureMap(FIXTURE), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-  const project = { root, mapFolder };
-  write(project, files);
-  syncObjectDefinitions(mapFolder, root, NO_WINDOW);
+  const project = mapProject(FIXTURE, files);
+  sync(project);
   return project;
 }
 
@@ -112,21 +81,6 @@ function release(
     ...NO_WINDOW,
     ...options,
   });
-}
-
-/** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
-function snapshot(folder: string): Map<string, string> {
-  return new Map(
-    listTree(folder)
-      .filter((name) => fs.statSync(path.join(folder, name)).isFile())
-      .sort()
-      .map((name) => [
-        name,
-        createHash("sha256")
-          .update(fs.readFileSync(path.join(folder, name)))
-          .digest("hex"),
-      ]),
-  );
 }
 
 /** The object of a kind and Rawcode in a map folder, read back through the Object data editor. */

@@ -5,7 +5,6 @@
 // bytes, the errors and their reasons. The World Editor's windows are
 // injected titles.
 
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -19,59 +18,20 @@ import {
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
-  fixtureMap,
-  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
+import {
+  link,
+  mapProject,
+  snapshot,
+  type MapProject,
+} from "./support/object-project.js";
 import { typecheck } from "./support/map-project.js";
 
 afterAll(removeTemporary);
 
 const MANIFEST = "object-manifest.json";
-
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
-}
-
-/** Links `node_modules/<name>` of `root` to `target`, this package's installation of it by default. */
-function link(
-  root: string,
-  name: string,
-  target = path.join(PACKAGE_ROOT, "node_modules", name),
-): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(fs.realpathSync(target), linkPath, "junction");
-}
-
-/** A Map project in a temporary folder: a copy of a fixture map folder, `files` under its root, typescript and reforged-builtins linked. */
-function mapProject(
-  fixture: string,
-  files: Readonly<Record<string, string>> = {},
-): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  fs.cpSync(fixtureMap(fixture), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-  write({ root, mapFolder }, files);
-  return { root, mapFolder };
-}
-
-/** Writes files under the Map project's root, by relative path. */
-function write(
-  project: MapProject,
-  files: Readonly<Record<string, string>>,
-): void {
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(project.root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-}
 
 const NO_WINDOW: ObjectAdoptionOptions = {
   worldEditorCheck: { readWindowTitles: () => [] },
@@ -93,21 +53,6 @@ function adopt(
     ...NO_WINDOW,
     ...options,
   });
-}
-
-/** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
-function hashes(folder: string): Map<string, string> {
-  return new Map(
-    listTree(folder)
-      .filter((name) => fs.statSync(path.join(folder, name)).isFile())
-      .sort()
-      .map((name) => [
-        name,
-        createHash("sha256")
-          .update(fs.readFileSync(path.join(folder, name)))
-          .digest("hex"),
-      ]),
-  );
 }
 
 /** A file of the Map project's, by relative path. */
@@ -388,11 +333,11 @@ export const Captain_h000 = defineUnit({
   it('adopts every adoptable object with "all", leaving the map folder byte for byte as it was', () => {
     const project = mapProject("editor-objects.w3m");
     adopt(project, ["h000"]);
-    const before = hashes(project.mapFolder);
+    const before = snapshot(project.mapFolder);
 
     const report = adopt(project, "all");
 
-    expect(hashes(project.mapFolder)).toEqual(before);
+    expect(snapshot(project.mapFolder)).toEqual(before);
     expect(
       report.adopted.map(({ kind, rawcode }) => `${kind} ${rawcode}`),
     ).toEqual([
@@ -420,14 +365,14 @@ export const Captain_h000 = defineUnit({
   it('adopts nothing with "all" when nothing is adoptable', () => {
     const project = mapProject("editor-objects.w3m");
     adopt(project, "all");
-    const before = hashes(project.root);
+    const before = snapshot(project.root);
 
     const report = adopt(project, "all");
 
     expect(report.adopted).toEqual([]);
     expect(report.files).toEqual([]);
     expect(report.manifestWritten).toBe(false);
-    expect(hashes(project.root)).toEqual(before);
+    expect(snapshot(project.root)).toEqual(before);
   });
 
   it("drops the removed entry of a Rawcode it adopts", () => {
@@ -463,11 +408,11 @@ export const Captain_h000 = defineUnit({
       call: () => unknown,
       reason: string,
     ): ObjectDefinitionsError {
-      const before = hashes(project.root);
+      const before = snapshot(project.root);
       const error = thrown(call);
       expect(error).toBeInstanceOf(ObjectDefinitionsError);
       expect((error as ObjectDefinitionsError).reason).toBe(reason);
-      expect(hashes(project.root)).toEqual(before);
+      expect(snapshot(project.root)).toEqual(before);
       return error as ObjectDefinitionsError;
     }
 
@@ -588,7 +533,7 @@ export const Captain_h000 = defineUnit({
 
     it("unsaved edits in the World Editor, unless forced", () => {
       const project = mapProject("editor-objects.w3m");
-      const before = hashes(project.root);
+      const before = snapshot(project.root);
 
       const error = thrown(() =>
         adopt(project, ["h000"], titles(project.mapFolder, true)),
@@ -601,7 +546,7 @@ export const Captain_h000 = defineUnit({
       expect((error as Error).message).toBe(
         `The World Editor shows unsaved edits for ${project.mapFolder} (its title ends in " *]"): nothing was adopted. Save or discard them in the World Editor first, then adopt again, or adopt with force to adopt what the map folder holds on disk.`,
       );
-      expect(hashes(project.root)).toEqual(before);
+      expect(snapshot(project.root)).toEqual(before);
 
       const forced = adopt(project, ["h000"], {
         ...titles(project.mapFolder, true),
@@ -632,7 +577,7 @@ export const Captain_h000 = defineUnit({
       it(`on ${fixture}`, () => {
         const project = mapProject(fixture);
         adopt(project, "all");
-        const before = hashes(project.root);
+        const before = snapshot(project.root);
 
         const report = syncObjectDefinitions(project.mapFolder, project.root, {
           worldEditorCheck: { readWindowTitles: () => [] },
@@ -643,14 +588,14 @@ export const Captain_h000 = defineUnit({
         expect(report.added).toEqual([]);
         expect(report.changed).toEqual([]);
         expect(report.warnings).toEqual([]);
-        expect(hashes(project.root)).toEqual(before);
+        expect(snapshot(project.root)).toEqual(before);
       });
     }
 
     it("with a field through the raw escape and a reference", () => {
       const project = projectWithUnknownField();
       adopt(project, "all");
-      const before = hashes(project.root);
+      const before = snapshot(project.root);
 
       const report = syncObjectDefinitions(project.mapFolder, project.root, {
         worldEditorCheck: { readWindowTitles: () => [] },
@@ -658,7 +603,7 @@ export const Captain_h000 = defineUnit({
 
       expect(report.written).toEqual([]);
       expect(report.manifestWritten).toBe(false);
-      expect(hashes(project.root)).toEqual(before);
+      expect(snapshot(project.root)).toEqual(before);
     });
   });
 });

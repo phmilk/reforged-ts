@@ -7,7 +7,6 @@
 // field facts are those of reforged-builtins' field table of Game version
 // 3.0.1, and the Built-in objects those of its index.
 
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -23,6 +22,7 @@ import {
   mapFolder,
   removeTemporary,
 } from "./support/map-folder.js";
+import { snapshot } from "./support/object-project.js";
 import {
   buildObjectData,
   type TestModification,
@@ -91,21 +91,6 @@ function expectFiles(
       data === undefined ? undefined : [...buildObjectData(data)],
     );
   }
-}
-
-/** Every file of a folder, by name, with the SHA-256 of its bytes. */
-function snapshot(folder: string): Map<string, string> {
-  return new Map(
-    fs
-      .readdirSync(folder)
-      .sort()
-      .map((name) => [
-        name,
-        createHash("sha256")
-          .update(fs.readFileSync(path.join(folder, name)))
-          .digest("hex"),
-      ]),
-  );
 }
 
 /** One Object kind's case of adding a Custom object: its files, an object it holds already, the new one and its two strings. */

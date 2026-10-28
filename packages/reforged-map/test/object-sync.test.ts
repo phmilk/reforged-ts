@@ -5,7 +5,6 @@
 // are injected titles.
 
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, describe, expect, it, vi } from "vitest";
@@ -14,17 +13,22 @@ import {
   ObjectDefinitionsError,
   mergeObjectDefinitions,
   openObjectData,
-  syncObjectDefinitions,
   type ObjectDataObject,
   type ObjectSyncOptions,
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
-  fixtureMap,
-  listTree,
   makeTempDir,
   removeTemporary,
 } from "./support/map-folder.js";
+import {
+  copyProject,
+  mapProject,
+  snapshot,
+  sync,
+  write,
+  type MapProject,
+} from "./support/object-project.js";
 
 afterAll(removeTemporary);
 
@@ -37,59 +41,6 @@ const UNITS = "src/objects/units.ts";
 
 const MANIFEST = "object-manifest.json";
 
-interface MapProject {
-  readonly root: string;
-  readonly mapFolder: string;
-}
-
-/** Links `node_modules/<name>` of `root` to this package's installation of it. */
-function link(root: string, name: string): void {
-  const linkPath = path.join(root, "node_modules", name);
-  fs.mkdirSync(path.dirname(linkPath), { recursive: true });
-  fs.symlinkSync(
-    fs.realpathSync(path.join(PACKAGE_ROOT, "node_modules", name)),
-    linkPath,
-    "junction",
-  );
-}
-
-/** A Map project in a temporary folder: a copy of the fixture as its map folder, `files` under its root, typescript and reforged-builtins linked. */
-function mapProject(files: Readonly<Record<string, string>>): MapProject {
-  const root = makeTempDir();
-  const mapFolder = path.join(root, "test.w3m");
-  fs.cpSync(fixtureMap(FIXTURE), mapFolder, { recursive: true });
-  fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-  write({ root, mapFolder }, files);
-  return { root, mapFolder };
-}
-
-/** Writes files under the Map project's root, by relative path. */
-function write(
-  project: MapProject,
-  files: Readonly<Record<string, string>>,
-): void {
-  for (const [name, contents] of Object.entries(files)) {
-    const file = path.join(project.root, name);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, contents);
-  }
-}
-
-/** A copy of a Map project in a new temporary folder, typescript and reforged-builtins linked again: `cpSync` would copy their folders on Windows (#754). */
-function copyProject(project: MapProject): MapProject {
-  const root = makeTempDir();
-  const modules = path.join(project.root, "node_modules");
-  fs.cpSync(project.root, root, {
-    recursive: true,
-    filter: (source) => source !== modules,
-  });
-  link(root, "typescript");
-  link(root, "reforged-builtins");
-  return { root, mapFolder: path.join(root, "test.w3m") };
-}
-
 /** The window titles of a World Editor holding a folder, saved or not. */
 function titles(folder: string, modified: boolean): ObjectSyncOptions {
   const title = `Warcraft III World Editor - [${path.resolve(folder)}${modified ? " *" : ""}]`;
@@ -101,33 +52,6 @@ function editorExecutable(): string {
   const file = path.join(makeTempDir(), "World Editor.exe");
   fs.writeFileSync(file, "");
   return file;
-}
-
-const NO_WINDOW: ObjectSyncOptions = {
-  worldEditorCheck: { readWindowTitles: () => [] },
-};
-
-/** Syncs a Map project with no World Editor window. */
-function sync(project: MapProject, options: ObjectSyncOptions = {}) {
-  return syncObjectDefinitions(project.mapFolder, project.root, {
-    ...NO_WINDOW,
-    ...options,
-  });
-}
-
-/** Every file of a folder, by relative path, with the SHA-256 of its bytes. */
-function snapshot(folder: string): Map<string, string> {
-  return new Map(
-    listTree(folder)
-      .filter((name) => fs.statSync(path.join(folder, name)).isFile())
-      .sort()
-      .map((name) => [
-        name,
-        createHash("sha256")
-          .update(fs.readFileSync(path.join(folder, name)))
-          .digest("hex"),
-      ]),
-  );
 }
 
 /** The object of a kind and Rawcode in a map folder, read back through the Object data editor. */
@@ -180,7 +104,7 @@ export const Knight = defineUnit({ rawcode: "hkni", fields: { uhpm: 900 } });
 
 describe("syncObjectDefinitions", () => {
   it("adds owned objects to the map folder in the Editor form, and records them in the manifest", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
 
     const report = sync(project);
 
@@ -264,7 +188,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("changes an owned object (a field set, a field removed) and removes owned objects no definition defines, warning of a removed Custom object's placements", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     write(project, {
       [UNITS]: `${IMPORT}export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: "Sergeant", uhpm: 500 } });\n`,
@@ -297,7 +221,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("writes no byte on a second sync, the manifest included", () => {
-    const project = mapProject({
+    const project = mapProject(FIXTURE, {
       [UNITS]: FIRST,
       "src/objects/abilities.ts": `${IMPORT}export const Storm = defineAbility({ rawcode: "A001", base: FourCC("AHbz"), fields: { anam: "Storm", Hbz1: { 1: 3, 2: 4 }, Hbz2: { 1: 90.5 } } });\n`,
     });
@@ -314,7 +238,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("keeps a shared TRIGSTR's text for its other owner", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const shared = objectOf(
       project.mapFolder,
@@ -345,7 +269,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("refuses while the World Editor shows unsaved edits, telling to save or discard them there, and writes nothing", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     const before = snapshot(project.root);
 
     const error = thrown(() => sync(project, titles(project.mapFolder, true)));
@@ -361,7 +285,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("writes while the World Editor holds the map without unsaved edits, and warns to reload it by hand without its executable", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
 
     const report = sync(project, titles(project.mapFolder, false));
 
@@ -375,7 +299,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("writes, then reloads the World Editor that holds the map without unsaved edits, given its executable", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     const executable = editorExecutable();
     const launch = vi.fn(() => {
       // The map folder is written when the World Editor reloads it.
@@ -400,7 +324,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("warns to reload by hand, naming why, when the reload fails, and still writes the manifest", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     const launch = vi.fn();
     const missing = path.join(makeTempDir(), "World Editor.exe");
 
@@ -424,7 +348,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("neither reloads nor warns when the World Editor does not hold the map", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     const launch = vi.fn();
 
     const report = sync(project, {
@@ -440,7 +364,7 @@ describe("syncObjectDefinitions", () => {
   });
 
   it("neither reloads nor warns when the sync writes nothing to a map the World Editor holds", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const launch = vi.fn();
 
@@ -459,7 +383,7 @@ describe("syncObjectDefinitions", () => {
   it.each([false, true])(
     "refuses a collision before anything is written (force %s)",
     (force) => {
-      const project = mapProject({
+      const project = mapProject(FIXTURE, {
         [UNITS]: `${FIRST}export const Captain = defineUnit({ rawcode: "h000", base: FourCC("hfoo") });\n`,
       });
       const before = snapshot(project.root);
@@ -476,7 +400,7 @@ describe("syncObjectDefinitions", () => {
   );
 
   it("does nothing, and writes no manifest, without definitions or owned objects", () => {
-    const project = mapProject({});
+    const project = mapProject(FIXTURE, {});
     const before = snapshot(project.root);
 
     const report = sync(project);
@@ -489,10 +413,10 @@ describe("syncObjectDefinitions", () => {
 
 describe("the Object manifest", () => {
   it("is byte-stable: written again from scratch, it has the same bytes", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const first = manifest(project);
-    const fresh = mapProject({ [UNITS]: FIRST });
+    const fresh = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(fresh);
 
     expect(manifest(fresh)).toBe(first);
@@ -510,7 +434,7 @@ describe("the Object manifest", () => {
             `export const U_${String(rawcode)} = defineUnit({ rawcode: "${String(rawcode)}", base: FourCC("hfoo"), fields: { uhpm: ${String(hp)} } });\n`,
         )
         .join("")}`;
-    const base = mapProject({ [UNITS]: definitions(100, 300) });
+    const base = mapProject(FIXTURE, { [UNITS]: definitions(100, 300) });
     sync(base);
     const ours = copyProject(base);
     const theirs = copyProject(base);
@@ -555,7 +479,7 @@ describe("the Object manifest", () => {
       '{ "format": 1, "owned": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }], "removed": [{ "kind": "unit", "rawcode": "h002", "modifications": [] }] }\n',
     ],
   ])("is refused, naming the file, when it %s", (_, text) => {
-    const project = mapProject({ [UNITS]: FIRST, [MANIFEST]: text });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST, [MANIFEST]: text });
     const before = snapshot(project.root);
 
     const error = thrown(() => sync(project));
@@ -574,7 +498,7 @@ describe("the Object manifest", () => {
   });
 
   it("is found where the option says", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
 
     sync(project, { manifest: "config/objects.json" });
 
@@ -590,7 +514,7 @@ describe("the Object manifest", () => {
 
 describe("the build's merge with the Object manifest", () => {
   it("replaces an owned object, removes a dropped one from the staged copy, and leaves the map folder and the manifest untouched", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     write(project, {
       [UNITS]: `${IMPORT}export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { uhpm: 500 } });\n`,
@@ -614,7 +538,7 @@ describe("the build's merge with the Object manifest", () => {
   });
 
   it("removes every owned object when no definition file is left", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     fs.rmSync(path.join(project.root, "src"), { recursive: true });
     const staged = path.join(project.root, "dist", "test.w3m");
@@ -678,7 +602,7 @@ const DRIFT_HEADER =
 
 describe("Object sync and changes made outside the code", () => {
   it("refuses an owned object changed in the map folder, listing each object and field with both values, and writes nothing", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     editMapFolder(project, (editor) => {
       editor.setField({ kind: "unit", rawcode: "h002", field: "uhpm" }, 500);
@@ -712,7 +636,7 @@ describe("Object sync and changes made outside the code", () => {
   });
 
   it("overwrites the changes with the code's version under force, with a warning per object", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const synced = manifest(project);
     editMapFolder(project, (editor) => {
@@ -734,7 +658,7 @@ describe("Object sync and changes made outside the code", () => {
   });
 
   it("reports an owned object deleted in the map folder as changed outside the code", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     editMapFolder(project, (editor) => {
       editor.removeObject({ kind: "unit", rawcode: "h003" });
@@ -756,7 +680,7 @@ describe("Object sync and changes made outside the code", () => {
   });
 
   it("refuses a change to an owned object the code dropped, rather than removing it in silence", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     editMapFolder(project, (editor) => {
       editor.setField({ kind: "unit", rawcode: "h003", field: "uhpm" }, 250);
@@ -775,7 +699,7 @@ describe("Object sync and changes made outside the code", () => {
   });
 
   it("recovers a sync interrupted before its manifest write without a drift report", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const stale = manifest(project);
     write(project, {
@@ -800,7 +724,7 @@ describe("Object sync and changes made outside the code", () => {
 
 describe("Object sync and the objects it removed", () => {
   it("records each removed object in the manifest, sorted with the owned ones, and drops the entry when a definition takes its Rawcode again", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     write(project, {
       [UNITS]: `${IMPORT}export const Sergeant = defineUnit({ rawcode: "h002", base: FourCC("hfoo"), fields: { unam: "Sergeant", uhpm: 420, usca: 1.1 } });\n`,
@@ -837,7 +761,7 @@ describe("Object sync and the objects it removed", () => {
   });
 
   it("removes again, with a warning, a removed object a stale World Editor save brought back", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     // The World Editor loads the map, the code drops Squire, and the World
     // Editor saves what it loaded.
@@ -861,7 +785,7 @@ describe("Object sync and the objects it removed", () => {
   });
 
   it("leaves alone a new object of the map folder at a removed Rawcode, and forgets the removed one", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
     sync(project);
@@ -881,7 +805,7 @@ describe("Object sync and the objects it removed", () => {
   });
 
   it("lets a definition take back its removed object a stale save brought back, without a collision", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     const loaded = objectFiles(project.mapFolder);
     write(project, { [UNITS]: FIRST.replace(/^export const Squire.*\n/m, "") });
@@ -903,7 +827,7 @@ describe("Object sync and the objects it removed", () => {
 
 describe("the build's merge and changes made outside the code", () => {
   it("warns per object changed outside the code and ships the code's version", () => {
-    const project = mapProject({ [UNITS]: FIRST });
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     sync(project);
     editMapFolder(project, (editor) => {
       editor.setField({ kind: "unit", rawcode: "h002", field: "uhpm" }, 500);

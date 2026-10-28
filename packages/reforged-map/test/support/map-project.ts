@@ -10,6 +10,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import * as ts from "typescript";
 import { PACKAGE_ROOT, makeTempDir } from "./map-folder.js";
+import { link } from "./object-project.js";
 import type { GeneratedFile } from "../../src/index.js";
 
 /** The Map project fixtures of the hand-built map folder. */
@@ -71,10 +72,7 @@ export function createMapProject(
     ...LINKED_PACKAGES,
     ...(builtins ? ["reforged-builtins"] : []),
   ]) {
-    const target = path.dirname(require.resolve(`${name}/package.json`));
-    const link = path.join(dir, "node_modules", ...name.split("/"));
-    fs.mkdirSync(path.dirname(link), { recursive: true });
-    fs.symlinkSync(fs.realpathSync(target), link, "junction");
+    link(dir, name, path.dirname(require.resolve(`${name}/package.json`)));
   }
   const library = path.join(
     dir,
