@@ -677,7 +677,7 @@ const TICKET_BODY = `## What to build
 
 /** What the check says of Ticket #12's body, word for word. */
 const TEXT_CRITERIA =
-  '**Criteria left.** #12, which this pull request closes, has criteria that `pnpm spec:check` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n- unchecked, no `Outcome:` line: **Check whether** the token can write labels.\n- no `Outcome:` line: Check whether the reconcile follows.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented `Outcome:` line under it, in the body of #12. This comment is updated on the pull request\'s next push or edit. See `docs/agents/issue-tracker.md`, "A Spec\'s coverage".';
+  '**Criteria left.** #12, which this pull request closes, has what `pnpm spec:check` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n- unchecked, no `Outcome:` line: **Check whether** the token can write labels.\n- no `Outcome:` line: Check whether the reconcile follows.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented `Outcome:` line under it, in the body of #12. This comment is updated on the pull request\'s next push or edit. See `docs/agents/issue-tracker.md`, "A Spec\'s coverage".';
 
 /** The criteria comment once nothing is left. */
 const TEXT_CRITERIA_SETTLED = "**Criteria left:** none.";

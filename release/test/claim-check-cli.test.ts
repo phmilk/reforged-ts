@@ -393,7 +393,7 @@ describe("claim-check pull-request", () => {
       [
         `PATCH ${ISSUES}/comments/8`,
         {
-          body: `${CRITERIA_MARKER}\n\n**Criteria left.** #12, which this pull request closes, has criteria that \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #12. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+          body: `${CRITERIA_MARKER}\n\n**Criteria left.** #12, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #12. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
         },
       ],
     ]);

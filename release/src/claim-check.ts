@@ -30,7 +30,7 @@
  * release scripts it imports `issue-markdown.ts` alone, self-contained in
  * the same way and named by its `.ts` file, which Node runs and the build
  * rewrites (`rewriteRelativeImportExtensions`), so that a Ticket's criteria
- * are read as `pnpm spec:check` reads them; `isRecord`, `errorMessage`,
+ * and their gaps are read as `pnpm spec:check` reads them; `isRecord`, `errorMessage`,
  * the job summary and the "started directly" test are copied from the
  * others.
  */
@@ -99,7 +99,8 @@ const andList = (items: readonly string[]): string =>
  * (ADR 0023), nor `specClosed`, `blocked`, `unsplitClaim` and
  * `blockedClaim`, the lines of a Spec and of a blocker (ADR 0025), nor
  * `prematureSettled`, which settles a comment that held premature Claims
- * only, as text 6 settles a conflict.
+ * only, as text 6 settles a conflict, nor `criteriaLeft`, `gapNames` and
+ * `criteriaSettled`, the comment of a Ticket's criteria (#792).
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -162,7 +163,9 @@ export const TEXTS = {
    * without its `Outcome:` line.
    */
   criteriaLeft: (ticket: number, gaps: readonly string[]): string =>
-    `**Criteria left.** #${String(ticket)}, which this pull request closes, has criteria that \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n${gaps.join("\n")}\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #${String(ticket)}. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+    `**Criteria left.** #${String(ticket)}, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n${gaps.join("\n")}\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #${String(ticket)}. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+  /** How `criteriaLeft` names each gap of a criterion. */
+  gapNames: { unchecked: "unchecked", "no-outcome": "no `Outcome:` line" },
   /** The criteria comment once no Ticket lacks any. */
   criteriaSettled: "**Criteria left:** none.",
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
@@ -344,12 +347,6 @@ function upsert(
   return [{ number, id: existing?.id ?? null, body }];
 }
 
-/** How the comment names each gap of a criterion. */
-const GAP_NAMES = {
-  unchecked: "unchecked",
-  "no-outcome": "no `Outcome:` line",
-} as const;
-
 /**
  * The criteria of a Ticket's `body` that `pnpm spec:check` counts as gaps,
  * one line each: unchecked, or a "check whether…" without its `Outcome:`
@@ -357,7 +354,7 @@ const GAP_NAMES = {
  */
 function criteriaGaps(body: string): string[] {
   return criteriaOf(body).flatMap((criterion) => {
-    const gaps = gapsOf(criterion).map((gap) => GAP_NAMES[gap]);
+    const gaps = gapsOf(criterion).map((gap) => TEXTS.gapNames[gap]);
     return gaps.length === 0 ? [] : [`- ${gaps.join(", ")}: ${criterion.text}`];
   });
 }
@@ -894,9 +891,9 @@ async function findComment(
 }
 
 /**
- * The check's sticky comments on `number` by their marker, of `markers`
- * the ones found, read in one walk of its comments, which stops once each
- * is found.
+ * The check's sticky comments on `number`, keyed by marker; a marker of
+ * `markers` with no comment is absent. Read in one walk of the comments,
+ * which stops once each marker is found.
  */
 async function findComments(
   api: Api,

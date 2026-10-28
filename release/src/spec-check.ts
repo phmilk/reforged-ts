@@ -19,13 +19,14 @@ import { BOARD_REPOSITORIES, issueKey, type IssueRef } from "./board.js";
 import { graphql } from "./github-graphql.js";
 import {
   criteriaOf,
-  indentOf,
   gapsOf,
+  indentOf,
   isFence,
   LIST_ITEM,
   normalize,
   oneLine,
   sections,
+  type CriterionGap,
 } from "./issue-markdown.js";
 import type { GitHubApi } from "./repo-settings.js";
 import { isRecord } from "./unknown.js";
@@ -94,8 +95,7 @@ export type Gap =
       criterion: string;
     }
   | { kind: "not-completed"; ticket: IssueRef; reason: string | null }
-  | { kind: "unchecked"; ticket: IssueRef; criterion: string }
-  | { kind: "no-outcome"; ticket: IssueRef; criterion: string };
+  | { kind: CriterionGap; ticket: IssueRef; criterion: string };
 
 /** The coverage check's verdict: delivered when it holds no gap. */
 export interface Verdict {
