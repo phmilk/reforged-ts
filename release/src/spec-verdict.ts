@@ -203,7 +203,7 @@ export interface SpecVerdictPlan {
   /** How many of their comments already say the verdict. */
   kept: number;
   /** One sentence per Spec it could not read, the error included. */
-  failures: string[];
+  failures: readonly string[];
 }
 
 /**
@@ -215,12 +215,8 @@ export async function planSpecVerdicts(
   api: GitHubApi,
   issues: readonly BoardIssue[],
 ): Promise<SpecVerdictPlan> {
-  const plan: SpecVerdictPlan = {
-    requests: [],
-    specs: 0,
-    kept: 0,
-    failures: [],
-  };
+  const failures: string[] = [];
+  const plan: SpecVerdictPlan = { requests: [], specs: 0, kept: 0, failures };
   for (const issue of specsToCheck(issues)) {
     plan.specs++;
     try {
@@ -233,7 +229,7 @@ export async function planSpecVerdicts(
       if (request === null) plan.kept++;
       else plan.requests.push(request);
     } catch (error) {
-      plan.failures.push(
+      failures.push(
         `The coverage check of ${issueKey(issue)} could not run: ${errorMessage(error)}`,
       );
     }

@@ -6,7 +6,9 @@
  * differences; Specs already right draw no request. Then it comments the
  * coverage check's verdict on every open Spec whose Tickets are all closed,
  * by `spec-verdict.ts`, and closes nothing (#796); a Spec that fails is
- * reported and the others are still commented. The token is
+ * reported and the others are still commented. Neither pass stops the
+ * other: a label missing or a label request refused still leaves the
+ * verdicts commented, and either failing exits 1. The token is
  * `LABELS_TOKEN`, the App's installation token over both repositories that
  * `board.yml` mints, since `PROJECT_TOKEN` writes no label, else, locally,
  * the `gh` login's; it says which. `--dry-run` prints the plan and sends

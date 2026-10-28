@@ -392,6 +392,31 @@ describe("board:labels, the coverage check of a Spec whose Tickets are all close
     );
   });
 
+  it("still comments the verdicts when GitHub refuses a label request, then exits 1", async () => {
+    const sent: Sent[] = [];
+    const base = answers();
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          operation === "RemoveLabels"
+            ? {
+                errors: [{ message: "Resource not accessible by integration" }],
+              }
+            : base(operation, variables),
+        sent,
+      ),
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain("Resource not accessible by integration");
+    expect(
+      mutations(sent)
+        .map(([operation]) => operation)
+        .filter((operation) => operation === "AddComment"),
+    ).toEqual(["AddComment", "AddComment"]);
+  });
+
   it("still comments the verdicts when the labels fail, then exits 1", async () => {
     const sent: Sent[] = [];
     const base = answers();
