@@ -2289,7 +2289,7 @@
         {
           "name": "UnitEquipItem",
           "signature": "UnitEquipItem takes unit whichUnit, item whichItem returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitEquipItem, of the same parameters, which Unit#equip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitEquipItem, of the same parameters, which Unit#equip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitEquipItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
@@ -2303,77 +2303,77 @@
         {
           "name": "UnitUnequipItem",
           "signature": "UnitUnequipItem takes unit whichUnit, item whichItem returns nothing",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItem, of the same parameters, which Unit#unequip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItem, of the same parameters, which Unit#unequip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitUnequipItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitUnequipItemFromSlot",
           "signature": "UnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItemFromSlot, of the same parameters, which Unit#unequipSlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitUnequipItemFromSlot, of the same parameters, which Unit#unequipSlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitUnequipItemFromSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitHasItemBagged",
           "signature": "UnitHasItemBagged takes unit whichUnit, item whichItem returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemBagged, of the same parameters, which Unit#hasBagged calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemBagged, of the same parameters, which Unit#hasBagged calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemBagged ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitExtendedInventorySize",
           "signature": "UnitExtendedInventorySize takes unit whichUnit returns integer",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitExtendedInventorySize, of the same parameters, which Unit#bagSize calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitExtendedInventorySize, of the same parameters, which Unit#bagSize calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitExtendedInventorySize ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitItemInBagSlot",
           "signature": "UnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInBagSlot, of the same parameters, which Unit#bagItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInBagSlot, of the same parameters, which Unit#bagItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitItemInBagSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitItemInEquipmentSlot",
           "signature": "UnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInEquipmentSlot, of the same parameters, which Unit#equippedItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitItemInEquipmentSlot, of the same parameters, which Unit#equippedItem calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitItemInEquipmentSlot ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitHasItemEquipped",
           "signature": "UnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipped, of the same parameters, which Unit#hasEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipped, of the same parameters, which Unit#hasEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemEquipped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitHasLoadoutSlotEmpty",
           "signature": "UnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasLoadoutSlotEmpty, of the same parameters, which Unit#hasEmptySlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasLoadoutSlotEmpty, of the same parameters, which Unit#hasEmptySlot calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasLoadoutSlotEmpty ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitHasAnyItemEquiped",
           "signature": "UnitHasAnyItemEquiped takes unit whichUnit returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasAnyItemEquipped, of the same parameters, which Unit#hasAnyEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasAnyItemEquipped, of the same parameters, which Unit#hasAnyEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasAnyItemEquiped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitHasItemEquipmentOfType",
           "signature": "UnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipmentOfType, of the same parameters, which Unit#hasEquipmentOfType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitHasItemEquipmentOfType, of the same parameters, which Unit#hasEquipmentOfType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitHasItemEquipmentOfType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "UnitCanEquipItemOfEquipmentType",
           "signature": "UnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitCanEquipItemOfEquipmentType, of the same parameters, which Unit#canEquip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzUnitCanEquipItemOfEquipmentType, of the same parameters, which Unit#canEquip calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... UnitCanEquipItemOfEquipmentType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         }
@@ -2865,49 +2865,49 @@
         {
           "name": "GetEquippedItem",
           "signature": "GetEquippedItem takes nothing returns item",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetEquippedItem, of the same parameters, which Item.fromEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetEquippedItem, of the same parameters, which Item.fromEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetEquippedItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "GetUnequippedItem",
           "signature": "GetUnequippedItem takes nothing returns item",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetUnequippedItem, of the same parameters, which Item.fromUnequipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetUnequippedItem, of the same parameters, which Item.fromUnequipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetUnequippedItem ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "SetItemColor",
           "signature": "SetItemColor takes item whichItem, playercolor whichColor returns nothing",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzSetItemColor, of the same parameters, which Item#color calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzSetItemColor, of the same parameters, which Item#color calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... SetItemColor ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "IsItemEquipped",
           "signature": "IsItemEquipped takes item whichItem returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemEquipped, of the same parameters, which Item#isEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemEquipped, of the same parameters, which Item#isEquipped calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... IsItemEquipped ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "IsItemInBag",
           "signature": "IsItemInBag takes item whichItem returns boolean",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemInBag, of the same parameters, which Item#isInBag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzIsItemInBag, of the same parameters, which Item#isInBag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... IsItemInBag ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "GetItemEquipmentType",
           "signature": "GetItemEquipmentType takes item whichItem returns equipmentType",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemEquipmentType, of the same parameters, which Item#equipmentType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemEquipmentType, of the same parameters, which Item#equipmentType calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetItemEquipmentType ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         },
         {
           "name": "GetItemTag",
           "signature": "GetItemTag takes item whichItem returns itemTag",
-          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemTag, of the same parameters, which Item#tag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. Their deprecation in the Typings is tracked by #671.",
+          "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemTag, of the same parameters, which Item#tag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
           "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetItemTag ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
           "date": "2026-10-21"
         }
