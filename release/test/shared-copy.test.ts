@@ -93,6 +93,7 @@ describe("sharedFiles", () => {
       expect.arrayContaining([
         "skills-lock.json",
         ".claude/hooks/background-wait.mjs",
+        ".claude/hooks/replaced-skill-stop.mjs",
         ".claude/hooks/shadowed-skills.mjs",
         ".claude/settings.json",
         ".claude/skills/write-spec/SKILL.md",
