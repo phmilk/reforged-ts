@@ -16,6 +16,7 @@
     "format": "node scripts/eslint.mjs --fix && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
     "test": "vitest run",
+    "test:slow-report": "pnpm --filter reforged-ts-release test:slow-report",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
     "builtins:generate": "pnpm --filter reforged-builtins builtins:generate",

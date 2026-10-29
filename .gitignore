@@ -47,6 +47,9 @@ jspm_packages/
 # TypeScript cache
 *.tsbuildinfo
 
+# The JSON report of a vitest run, as CI writes it (pnpm test:slow-report reads it)
+test-report.json
+
 # Optional npm cache directory
 .npm
 

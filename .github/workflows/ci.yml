@@ -71,8 +71,26 @@ jobs:
       # stage, as in `pnpm check`.
       - name: diagrams:check
         run: pnpm run diagrams:check
-      - name: test
-        run: pnpm run test
+      # The default reporter for the log, and the JSON report the slow
+      # tests are read from (#759): both legs write it, the windows one is
+      # where an explicit timeout's measurement comes from.
+      - id: test
+        name: test
+        run: pnpm run test --reporter=default --reporter=json --outputFile.json=test-report.json
+      # Every test above 5 s, in the job summary. A report, never a gate:
+      # runner variance would make a duration gate noise, so the step never
+      # fails the job, and it runs when the tests failed too.
+      - name: test:slow-report
+        if: "!cancelled() && steps.test.outcome != 'skipped'"
+        continue-on-error: true
+        run: pnpm run test:slow-report
+      - name: Upload the test report
+        if: "!cancelled() && steps.test.outcome != 'skipped'"
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-report-${{ matrix.os }}
+          path: test-report.json
+          if-no-files-found: warn
       - id: coverage-report
         name: coverage:report
         run: pnpm run coverage:report
