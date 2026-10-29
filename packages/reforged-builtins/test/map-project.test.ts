@@ -26,9 +26,11 @@ import {
 
 let workspace: Workspace;
 
+// Measured 0.6 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   workspace = await createWorkspace();
-}, 60_000);
+}, 30_000);
 
 afterAll(async () => {
   await (workspace as Workspace | undefined)?.dispose();
@@ -55,6 +57,8 @@ describe.each([
   let program: ts.Program;
   let diagnostics: string[];
 
+  // Measured 8.0 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration. Each row's own project.
   beforeAll(async () => {
     const project = await createMapProject(workspace, name, "checked", types);
     const result = typecheck(project);
@@ -120,6 +124,8 @@ describe("a Map project bundled with typescript-to-lua for Lua 5.3", () => {
   let dir: string;
   let bundle: string;
 
+  // Measured 3.0 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(async () => {
     const project = await createMapProject(workspace, "lua", "lua", TYPES, {
       luaBundle: "bundle.lua",
@@ -140,7 +146,7 @@ describe("a Map project bundled with typescript-to-lua for Lua 5.3", () => {
     const text = emitted.get(normalize(join(dir, "dist", "bundle.lua")));
     if (text === undefined) throw new Error("no bundle.lua");
     bundle = text;
-  }, 60_000);
+  }, 30_000);
 
   it("holds the units' module from the newest Game version, and no other kind's", () => {
     const modules = [...bundle.matchAll(/^\["([^"]+)"\] = function/gm)].map(

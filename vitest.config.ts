@@ -57,6 +57,10 @@ export default defineConfig({
           name: "create-reforged-map",
           root: "packages/create-reforged-map",
           // The end-to-end test starts git and pnpm: seconds on Windows.
+          // Measured 1.4 s at most with pnpm test on the windows CI leg of
+          // #815, 0.4 s on Linux (WSL 2, 8 threads), 2026-10. Kept at 30 s,
+          // the budget of a test that starts processes: the windows runner
+          // stalls them past 5 s, and once past 30 s (#658).
           testTimeout: 30_000,
           include: ["test/**/*.test.ts"],
           environment: "node",
@@ -116,8 +120,9 @@ export default defineConfig({
         // docs/agents/, .vscode, the library's tsconfig.json, .claude/), the
         // session-start hook of .claude/settings.json, run against a fake
         // home folder, and its background-wait, skill-target and Replaced
-        // skill Stop checks, on hook inputs as Claude Code sends them.
-        // Needs no build.
+        // skill Stop checks, on hook inputs as Claude Code sends them, and
+        // the measured comment of every explicit timeout of the workspace's
+        // tests. Needs no build.
         test: {
           name: "conventions",
           root: "test/conventions",
@@ -133,7 +138,10 @@ export default defineConfig({
           root: "release",
           // A test creates a git repository, commits and spawns the script:
           // over a second each on the Windows runner, past 5 s when it is
-          // loaded (#276's run).
+          // loaded (#276's run). Measured 2.3 s at most with pnpm test on
+          // the windows CI leg of #815, 3.1 s on Linux (WSL 2, 8 threads),
+          // 2026-10. Kept at 30 s: the windows runner stalls a spawn past it
+          // at times (#658).
           testTimeout: 30_000,
           include: ["test/**/*.test.ts"],
           environment: "node",
@@ -147,7 +155,9 @@ export default defineConfig({
           name: "website",
           root: "website",
           // A test's first TypeDoc run loads TypeScript and TypeDoc cold:
-          // seconds, more under a loaded machine or CI.
+          // seconds, more under a loaded machine or CI. Measured 4.2 s at most
+          // with pnpm test on the windows CI leg of #815, 9.2 s on Linux
+          // (WSL 2, 8 threads), 2026-10.
           testTimeout: 30_000,
           include: ["test/**/*.test.{mts,ts}"],
           exclude: ["**/fixtures/**"],
@@ -176,7 +186,8 @@ export default defineConfig({
           name: "probe",
           root: "probe",
           // A build runs typescript-to-lua on the Probe: a second or more
-          // each, cold.
+          // each, cold. Measured 3.1 s at most with pnpm test on the windows
+          // CI leg of #815, 6.1 s on Linux (WSL 2, 8 threads), 2026-10.
           testTimeout: 30_000,
           include: ["test/**/*.test.ts", "test/lua.spec.ts"],
           exclude: ["test/lua/**"],

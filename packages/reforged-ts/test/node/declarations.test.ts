@@ -28,6 +28,8 @@ const negative = fixtureFiles("negative");
 let project: MapProject;
 let result: TypecheckResult;
 
+// Measured 15.8 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   project = await createMapProject();
   result = typecheck(project);

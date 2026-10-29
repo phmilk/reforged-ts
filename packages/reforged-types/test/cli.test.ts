@@ -314,6 +314,8 @@ describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
   const previous = join(packageRoot, "vendor", "3.0.0.24268");
   const committed = join(packageRoot, "vendor", "3.0.1.24370");
 
+  // Measured 3.0 s with pnpm test on the windows CI leg of #815, 8.6 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("vendors the same bytes again and regenerates the committed output unchanged", async () => {
     const provenance = JSON.parse(
       await readFile(join(committed, "provenance.json"), "utf8"),
@@ -383,5 +385,5 @@ describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
         path,
       ).toBe(true);
     }
-  }, 60_000);
+  }, 30_000);
 });
