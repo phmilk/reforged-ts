@@ -178,6 +178,15 @@ export default defineConfig(
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        // typescript-eslint 8.72.1 parses a single run (inferred from CI=true
+        // or the ESLint binary) with one Program per tsconfig, kept beside
+        // the project service's: the `packages` group then outgrows a 7 GB
+        // machine's heap. That Program's current directory is the
+        // process's, so tsdoc/syntax, which reads the tsdoc.json there,
+        // finds none when ESLint runs from website/ (docs:audit). The
+        // project service alone, as before, roots each program at
+        // tsconfigRootDir.
+        disallowAutomaticSingleRunInference: true,
       },
     },
     rules: {
