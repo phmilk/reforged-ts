@@ -26,6 +26,12 @@ Decision record: https://github.com/phmilk/reforged-ts/issues/725
 
 ## Amendment (2026-10-27)
 
-The band of background work (`.claude/mods/background-band`, #769) is shared the way this record turned down: as a plugin, from the library's marketplace, enabled by the shared settings, with no file copied into the Template. Both reasons against a plugin hold and cost it nothing. It only shows what runs in the background, so a cloud session that does not load it loses a view and no guarantee: the background-wait check, which blocks, is a hook in the copied settings and runs wherever hooks run. And it holds no skill to namespace. The library's default branch is the one copy, so a change to the band reaches both repositories once merged, with no Template pull request.
+The band of background work (#769) was shared the way this record turned down: as a plugin, from the library's marketplace, enabled by the shared settings, with no file copied into the Template. Both reasons against a plugin hold and cost it nothing. It only shows what runs in the background, so a cloud session that does not load it loses a view and no guarantee: the background-wait check, which blocks, is a hook in the copied settings and runs wherever hooks run. And it holds no skill to namespace. The library's default branch is the one copy, so a change to the band reaches both repositories once merged, with no Template pull request.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/767
+
+## Amendment (2026-10-29)
+
+The band of background work was removed, with the library's marketplace and the shared settings' entries that enabled it: Claude Code shows the same background work, and no Collaborator got the band without installing it by hand. The background-wait check stays a hook in the copied settings, so what the amendment above relied on holds without it. No plugin is shared any more, and what both repositories share is copied, as this record decided.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/808

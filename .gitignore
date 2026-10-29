@@ -154,16 +154,13 @@ probe/build/
 probe/.probe/
 
 # Claude Code local settings, worktrees and session state; the Agent skills
-# under .claude/skills/, the list of what both repositories share, the shared
-# project settings and their hooks, and the project mods under .claude/mods/
-# are committed, less the declarations the engine lays beside a mod it loads.
+# under .claude/skills/, the list of what both repositories share and the
+# shared project settings and their hooks are committed.
 .claude/*
 !.claude/skills/
 !.claude/shared.json
 !.claude/settings.json
 !.claude/hooks/
-!.claude/mods/
-.claude/mods/*/.claude-plugin/types/
 
 # eslint-plugin-reforged cost measurement corpus (scripts/measure-cost.mjs removes it)
 packages/eslint-plugin-reforged/test/fixture-project/.cost/
