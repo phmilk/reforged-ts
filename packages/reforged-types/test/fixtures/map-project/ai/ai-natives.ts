@@ -1,4 +1,4 @@
-// Positive: the AI natives, with reforged-types/3.0.0/common.ai in types,
+// Positive: the AI natives, with reforged-types/3.0.1/common.ai in types,
 // alongside the common.j and Blizzard.j declarations.
 StartThread(() => {
   if (CaptainAtGoal() && GetMinesOwned() > 0) {

@@ -186,7 +186,7 @@ An error that points into the library comes back as `src/handles/handle.lua:84: 
 
 ### Declaration fixtures
 
-`node/declarations.test.ts` emits the library's declarations from the sources, installs them with the package's `package.json` in a temporary Map project (with `reforged-types/3.0.0` and the typescript-to-lua language extensions in `types`) and type-checks every file under `node/fixtures/declarations/` there with the workspace TypeScript.
+`node/declarations.test.ts` emits the library's declarations from the sources, installs them with the package's `package.json` in a temporary Map project (with `reforged-types/3.0.1` and the typescript-to-lua language extensions in `types`) and type-checks every file under `node/fixtures/declarations/` there with the workspace TypeScript.
 
 - A file in `positive/` must produce no diagnostic.
 - A file in `negative/` states each error it expects with a trailing comment on the offending line, `// error TS2322` (several codes separated by spaces), and must produce exactly those: a diagnostic not stated fails the test, and so does a stated one that does not occur.

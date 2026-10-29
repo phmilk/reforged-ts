@@ -237,12 +237,12 @@ describe("buildProbe", () => {
   it("bakes the Patch of the Typings' manifest into the bundle", async () => {
     const dir = await mkdtemp(join(tmpdir(), "probe-manifest-"));
     const manifest = join(dir, "manifest.json");
-    await writeFile(manifest, JSON.stringify({ patch: "3.0.0.11111" }));
+    await writeFile(manifest, JSON.stringify({ patch: "3.0.1.11111" }));
     const result = buildProbe("hello", await tempFolders({ manifest }));
 
-    expect(result.patch).toBe("3.0.0.11111");
+    expect(result.patch).toBe("3.0.1.11111");
     expect(await readFile(result.bundleFile, "utf8")).toContain(
-      `"3.0.0.11111"`,
+      `"3.0.1.11111"`,
     );
   });
 

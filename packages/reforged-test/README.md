@@ -2,7 +2,7 @@
 
 Runs TypeScript tests for Warcraft III Reforged map code on real Lua 5.3, with the game's Natives stubbed in Lua, and reports every test to [vitest](https://vitest.dev/).
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 
@@ -57,7 +57,7 @@ The runner exports:
 
 A failed expectation fails its test with a message such as `Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)`. Any other error fails it with the Lua message, location included.
 
-Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.0`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`.
+Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`.
 
 ## Running the tests with vitest
 

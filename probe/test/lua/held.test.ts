@@ -17,7 +17,7 @@ describe("the held Probe's bundle", () => {
     __stub_fire_timer(startedTimer(0));
     expect(__stub_args("TimerStart").length).toEqual(2);
     expect(__stub_preload_file(RESULT_FILE)).toEqual([
-      "1 BEGIN patch=3.0.0.12345 probe=held run=bridge",
+      "1 BEGIN patch=3.0.1.12345 probe=held run=bridge",
       "2 CHECKPOINT",
     ]);
     expect(__stub_displayed().length).toEqual(0);
@@ -26,7 +26,7 @@ describe("the held Probe's bundle", () => {
   it("writes END status=ok when the Probe's timer calls finish, after every record, and no checkpoint past it", () => {
     __stub_fire_timer(startedTimer(1));
     expect(__stub_preload_file(RESULT_FILE)).toEqual([
-      "1 BEGIN patch=3.0.0.12345 probe=held run=bridge",
+      "1 BEGIN patch=3.0.1.12345 probe=held run=bridge",
       "2 step name=run",
       "3 step name=timer",
       "4 END status=ok",

@@ -19,8 +19,8 @@
     "noEmit": true
   },
   "files": [
-    "../../../3.0.0.d.ts",
-    "../../../3.0.0/common.ai.d.ts",
+    "../../../3.0.1.d.ts",
+    "../../../3.0.1/common.ai.d.ts",
     "../../../lua-runtime.d.ts",
     "../../../rawcode.d.ts"
   ],

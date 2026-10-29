@@ -8,7 +8,7 @@ description: How the Typings and the library type a Rawcode by its Object kind, 
 
 A Rawcode is the four-character id of one type of object, which a map script holds as an integer: the Footman's is `FourCC("hfoo")`, Blizzard's `FourCC("AHbz")`. The Natives take a Rawcode to create a unit, add an ability or count an upgrade, and return one to say which type a unit, an item or a spell is. A Rawcode of the wrong kind does not fail in Lua: the Native returns nothing or does nothing, and the mistake shows only in game, if at all.
 
-The [Typings](typings.md) type each Rawcode by its Object kind, and the library's Wrappers take and return the same types, so a unit type's Rawcode where an ability's is expected, or a plain `number` where any Rawcode is expected, is a compile error. The types exist for the compiler alone: the emitted Lua is the same as for a plain number. [`Rawcode`](/typings/3.0.0/type-aliases/Rawcode), [`ObjectKind`](/typings/3.0.0/type-aliases/ObjectKind) and [`UnknownRawcode`](/typings/3.0.0/type-aliases/UnknownRawcode) are global types, like `FourCC`: they come with the Typings entry the Map project already lists in `types`, without an import.
+The [Typings](typings.md) type each Rawcode by its Object kind, and the library's Wrappers take and return the same types, so a unit type's Rawcode where an ability's is expected, or a plain `number` where any Rawcode is expected, is a compile error. The types exist for the compiler alone: the emitted Lua is the same as for a plain number. [`Rawcode`](/typings/3.0.1/type-aliases/Rawcode), [`ObjectKind`](/typings/3.0.1/type-aliases/ObjectKind) and [`UnknownRawcode`](/typings/3.0.1/type-aliases/UnknownRawcode) are global types, like `FourCC`: they come with the Typings entry the Map project already lists in `types`, without an import.
 
 ## `Rawcode<K>` and `ObjectKind`
 
@@ -302,7 +302,7 @@ Add the package's overloads' entry for the Game version next to the Typings' in 
 ```json title="tsconfig.json"
 {
   "compilerOptions": {
-    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
+    "types": ["reforged-types/3.0.1", "reforged-builtins/3.0.1"]
   }
 }
 ```

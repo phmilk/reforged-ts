@@ -15,5 +15,5 @@
     "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["3.0.0.d.ts", "3.0.0/common.ai.d.ts"]
+  "files": ["3.0.1.d.ts", "3.0.1/common.ai.d.ts"]
 }

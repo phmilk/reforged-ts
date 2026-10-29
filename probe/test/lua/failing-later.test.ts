@@ -19,7 +19,7 @@ describe("the failing-later Probe's bundle", () => {
     expect(starts[1]?.[1]).toEqual(1);
     expect(starts[1]?.[2]).toEqual(false);
     expect(__stub_preload_file(RESULT_FILE)).toEqual([
-      "1 BEGIN patch=3.0.0.12345 probe=failing-later run=bridge",
+      "1 BEGIN patch=3.0.1.12345 probe=failing-later run=bridge",
       "2 CHECKPOINT",
     ]);
   });
@@ -33,7 +33,7 @@ describe("the failing-later Probe's bundle", () => {
       globals.debug = debugLibrary;
     }
     expect(__stub_preload_file(RESULT_FILE)).toEqual([
-      "1 BEGIN patch=3.0.0.12345 probe=failing-later run=bridge",
+      "1 BEGIN patch=3.0.1.12345 probe=failing-later run=bridge",
       "2 step name=run",
       "3 step name=timer",
       "4 ERROR message=Error:%20The%20later%20step%20broke.",

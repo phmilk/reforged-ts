@@ -1,7 +1,6 @@
 /**
- * Seam 1 on real inputs: the vendored Patches, 3.0.0.24268 and the supported
- * 3.0.1.24370, and the real Overlay; the counts and facts are the supported
- * Patch's.
+ * Seam 1 on real inputs: the vendored Patch, the supported 3.0.1.24370, and
+ * the real Overlay; the counts and facts are the supported Patch's.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -11,7 +10,6 @@ import { generate, type GenerateSuccess } from "../src/index.js";
 import { generatedFile } from "./support/fixture.js";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
-const previousDir = join(packageRoot, "vendor", "3.0.0.24268");
 const patchDir = join(packageRoot, "vendor", "3.0.1.24370");
 const overlayDir = join(packageRoot, "overlay");
 
@@ -22,7 +20,7 @@ let commonAi: string;
 
 beforeAll(async () => {
   const generated = await generate({
-    patchDirs: [previousDir, patchDir],
+    patchDir,
     overlayDir,
   });
   if (!generated.ok) {
@@ -86,15 +84,10 @@ const TYPE = /^declare interface /;
 const GLOBAL = /^declare (const|let) /;
 
 describe("Patch 3.0.1.24370 with the real Overlay", () => {
-  it("generates the three files of each Patch without a diagnostic", () => {
+  it("generates the three files of the Patch without a diagnostic", () => {
     expect(result.patch).toBe("3.0.1.24370");
-    expect(result.patches).toEqual(["3.0.0.24268", "3.0.1.24370"]);
+    expect(result.patches).toEqual(["3.0.1.24370"]);
     expect([...result.files.keys()]).toEqual([
-      "3.0.0/common.j.d.ts",
-      "3.0.0/blizzard.j.d.ts",
-      "3.0.0/common.ai.d.ts",
-      "3.0.0/manifest.json",
-      "3.0.0.d.ts",
       "3.0.1/common.j.d.ts",
       "3.0.1/blizzard.j.d.ts",
       "3.0.1/common.ai.d.ts",

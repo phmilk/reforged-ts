@@ -29,10 +29,10 @@ const fixturesRoot = join(packageRoot, "test", "fixtures", "map-project");
 
 /** The `types` entries the Template lists; `common.ai` is the AI opt-in. */
 export const TEMPLATE_TYPES = [
-  "reforged-types/3.0.0",
+  "reforged-types/3.0.1",
   "@typescript-to-lua/language-extensions",
 ];
-export const AI_TYPES = [...TEMPLATE_TYPES, "reforged-types/3.0.0/common.ai"];
+export const AI_TYPES = [...TEMPLATE_TYPES, "reforged-types/3.0.1/common.ai"];
 
 /** Packages the Map project gets besides reforged-types (its dependency, and a Template dev dependency). */
 const LINKED_PACKAGES = ["lua-types", "@typescript-to-lua/language-extensions"];

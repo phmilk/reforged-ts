@@ -84,7 +84,7 @@ describe("the typings type-check", () => {
       config.fileNames.map((name) =>
         relative(packageRoot, name).replace(/\\/g, "/"),
       ),
-    ).toEqual(["3.0.0.d.ts", "3.0.0/common.ai.d.ts"]);
+    ).toEqual(["3.0.1.d.ts", "3.0.1/common.ai.d.ts"]);
     expect(config.options.noEmit).toBe(true);
     expect(config.options.skipLibCheck).toBeFalsy();
   });
@@ -96,7 +96,7 @@ describe("the typings type-check", () => {
   }, 60_000);
 
   it("fails when a generated file is broken", async () => {
-    const path = "3.0.0/common.j.d.ts";
+    const path = "3.0.1/common.j.d.ts";
     const text = await readFile(join(packageRoot, path), "utf8");
 
     const diagnostics = typecheck({
@@ -104,7 +104,7 @@ describe("the typings type-check", () => {
     });
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
-    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
+    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.1\/common\.j\.d\.ts$/);
   }, 60_000);
 
   it("fails when the Rawcode types file is broken", async () => {

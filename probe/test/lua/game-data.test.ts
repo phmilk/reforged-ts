@@ -10,7 +10,7 @@ describe("the BEGIN line of a build with Game data", () => {
   it("carries each field of the Game data the build set, sorted with the others", () => {
     loadBundle("hello_game_data");
     expect(__stub_preload_file("reforged-ts\\probes\\hello.txt")).toEqual([
-      "1 BEGIN gameDataSet=custom gameDataVersion=roc meleeMap=true patch=3.0.0.12345 probe=hello run=bridge",
+      "1 BEGIN gameDataSet=custom gameDataVersion=roc meleeMap=true patch=3.0.1.12345 probe=hello run=bridge",
       "2 CHECKPOINT",
     ]);
   });

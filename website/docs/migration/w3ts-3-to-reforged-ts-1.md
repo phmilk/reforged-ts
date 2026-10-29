@@ -35,7 +35,7 @@ w3ts 3.x brought the Typings of Patch 1.33.0 through its own dependency, `war3-t
 {
   "compilerOptions": {
     "moduleResolution": "bundler",
-    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"]
+    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1"]
   }
 }
 ```
@@ -60,7 +60,7 @@ What changes when a Map project keeps a name that did not change: a return type,
 
 - **The package.** `war3-types-strict` (Patch 1.33.0) becomes `reforged-types`, a peer dependency of reforged-ts whose range is a caret on the version the library was released with, so the package manager warns when a major does not match. The Map project installs it and lists its entry in `types` (see [Install and tsconfig](#install-and-tsconfig)).
 - **The Patch.** The declarations are generated from the Patch files of Game version 3.0.0, so the Natives, types and globals the game added after Patch 1.33.0 are declared. The compatibility matrix lists the Patch each release supports.
-- **The AI Natives are opt-in.** `war3-types-strict/1.33.0` declared the Natives of `common.ai` with the others. They are valid only in AI scripts, so `reforged-types/3.0.0` leaves them out; add `reforged-types/3.0.0/common.ai` to `types` to declare them.
+- **The AI Natives are opt-in.** `war3-types-strict/1.33.0` declared the Natives of `common.ai` with the others. They are valid only in AI scripts, so `reforged-types/3.0.1` leaves them out; add `reforged-types/3.0.1/common.ai` to `types` to declare them.
 - **Nullability is a reviewed decision per Native.** A hand-curated Overlay, seeded with war3-types-strict's nullability decisions, says for every Native whether it can return nothing (`T | undefined`) and for each parameter whether it takes `undefined`. The generator fails on a Native without an entry, so every nullable type is a decision someone reviewed.
 - **The hover says more.** Each Native shows its Jass types (`integer (32-bit)`, `real`), `@async` when its value is valid only for the local player, `@deprecated` with the reason, `@patch` for the Patch that added it, and a link to its reference page.
 

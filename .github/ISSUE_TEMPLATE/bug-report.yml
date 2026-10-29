@@ -18,8 +18,8 @@ body:
     id: typings-version
     attributes:
       label: Typings version
-      description: The version of `reforged-types`, and the Game version your `tsconfig.json` selects (`reforged-types/3.0.0`).
-      placeholder: 1.0.0-alpha.2, 3.0.0
+      description: The version of `reforged-types`, and the Game version your `tsconfig.json` selects (`reforged-types/3.0.1`).
+      placeholder: 1.0.0-alpha.2, 3.0.1
     validations:
       required: true
   - type: input
@@ -27,7 +27,7 @@ body:
     attributes:
       label: Build
       description: The Build of the game Patch you ran the map on, all four numbers. The game shows it on its main menu.
-      placeholder: 3.0.0.24268
+      placeholder: 3.0.1.24370
     validations:
       required: true
   - type: dropdown

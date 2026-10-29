@@ -18,7 +18,7 @@ const TYPES_FOLDER = join(WORKSPACE_FOLDER, "packages", "reforged-types");
 
 /**
  * The manifest of the Typings the Probes compile against, those of the Game
- * version of the newest vendored Build (`reforged-types/3.0.0`): its
+ * version of the newest vendored Build (`reforged-types/3.0.1`): its
  * `patch` is their Build. `probe:build` compiles against its Game version,
  * whatever probes/tsconfig.json names.
  */

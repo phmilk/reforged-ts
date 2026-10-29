@@ -4,7 +4,7 @@ Reads a Warcraft III Reforged map folder at build time and returns the code a [r
 
 A Map project gets it through the [Template](https://github.com/phmilk/reforged-ts-template), whose build calls it on every install, build and watch. It needs `reforged-types` 1.0.0-alpha.5 or later as a peer, the first that declares the Rawcode types. [`reforged-builtins`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins) is an optional peer, resolved from the Map project's own installation: its index names a Custom object after its base and gives the lookup the Built-in objects. Without it, `generateObjects` names such an object `Unnamed`, with a warning, and the lookup is unavailable. `typescript` is an optional peer too, needed only by a Map project with [Object definitions](#object-definitions), which are transpiled with it; such a project needs `reforged-builtins` as well.
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build.
 
 <!-- The release's version step (release:version) stamps the docs version of each release into these links: docs/release.md. -->
 
