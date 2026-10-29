@@ -1,5 +1,11 @@
 # reforged-types
 
+## 1.0.0-alpha.8
+
+### Minor Changes
+
+- [#824](https://github.com/phmilk/reforged-ts/pull/824) [`aa24196`](https://github.com/phmilk/reforged-ts/commit/aa24196f70ab8cbc1cf493db006dfc85fcf342d1) Thanks [@wyller](https://github.com/wyller)! - Mark the 19 unprefixed equipment Natives of 3.0.0 (`UnitEquipItem`, `GetItemTag`, `SetItemColor` and the rest) `@deprecated`, each naming its `Blz` twin of the same parameters: the 3.0.1 patch notes say the Natives without the prefix will be removed in a future patch. Call the `Blz` twin instead.
+
 ## 1.0.0-alpha.7
 
 ### Minor Changes
