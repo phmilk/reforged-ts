@@ -40,9 +40,10 @@
 // the reason and in the commands it gives. With no issue reference it reads
 // no issue and lets the skill run with its line; when `gh` or the network
 // fails it lets the skill run with a one-line warning and its line, since
-// the claim check still holds the rule on the pull request. requestOf, issueRefOf, verdict, replacedVerdict and passOutput
-// are pure; the rest reads GitHub through `gh` and the branches through
-// `git`, and prints the event's output. It always exits 0.
+// the claim check still holds the rule on the pull request. requestOf,
+// issueRefOf, verdict, replacedVerdict and passOutput are pure; the rest
+// reads GitHub through `gh` and the branches through `git`, and prints the
+// event's output. It always exits 0.
 //
 // Dependency-free: it runs on the Node that runs the session, before any
 // `pnpm install`. Both repositories run it (.claude/shared.json, ADR 0024).
@@ -98,7 +99,7 @@ import { replacedSkills } from "./replaced-skills.mjs";
  */
 
 /**
- * The skills the check holds, by the name a prompt or the Skill tool gives.
+ * The skills the check reads, by the name a prompt or the Skill tool gives.
  *
  * @type {readonly Skill[]}
  */
@@ -409,7 +410,7 @@ export function replacedVerdict(input, replaced) {
   );
 }
 
-/** The source the lines a skill let through cite. */
+/** The source cited by the line a skill that was let through gets. */
 const NEXT_STEP_SOURCE = "ADR 0026, .claude/hooks/skill-target.mjs";
 
 /**
@@ -495,7 +496,7 @@ const GIT_TIMEOUT_MS = 5_000;
 /**
  * `gh`'s standard output for `args` (constants and a checked repository
  * name only), with `input` on its standard input; throws with `gh`'s own
- * message when it fails. On Windows the shell finds `gh.exe` or a `gh.cmd`.
+ * message when it fails.
  *
  * @param {readonly string[]} args
  * @param {string} [input]
@@ -668,7 +669,7 @@ function currentRepository() {
 
 /**
  * `git`'s trimmed standard output for `args` (constants only) in `cwd`;
- * throws when it fails. On Windows the shell finds `git.exe` or a `git.cmd`.
+ * throws when it fails.
  *
  * @param {readonly string[]} args
  * @param {string} cwd
@@ -752,13 +753,13 @@ export async function run(input, projectDir) {
           : projectDir,
       )
     : null;
-  const allowed = passOutput(request, branches);
+  const passing = passOutput(request, branches);
   // /grill-with-docs and /write-spec name no issue to check.
-  if (!ISSUE_CHECKED.includes(request.skill)) return allowed;
+  if (!ISSUE_CHECKED.includes(request.skill)) return passing;
   // A bare number or #n names an issue of this clone's repository; an
   // issue named in full is named in full again. With none, the skill runs.
   const named = issueRefOf(request.args, null);
-  if (named === null) return allowed;
+  if (named === null) return passing;
   try {
     const home = named.repository === null ? currentRepository() : null;
     const issue = readIssue({
@@ -773,13 +774,13 @@ export async function run(input, projectDir) {
         ? await takeableOf(projectDir, issue.spec, home)
         : null;
     const result = verdict(request, issue, takeable, home);
-    return result.verdict === "block" ? result.output : allowed;
+    return result.verdict === "block" ? result.output : passing;
   } catch (error) {
     // The skill runs, and still ends with its next steps.
     const warned = warning(
       error instanceof Error ? error.message : String(error),
     );
-    return { ...warned, ...allowed };
+    return { ...warned, ...passing };
   }
 }
 
