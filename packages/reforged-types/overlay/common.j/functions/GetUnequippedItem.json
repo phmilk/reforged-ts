@@ -6,6 +6,7 @@
     "family": "event-response"
   },
   "params": [],
+  "deprecated": "Use {@link BlzGetUnequippedItem} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).",
   "notes": "Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.",
   "since": "3.0.0.24268"
 }

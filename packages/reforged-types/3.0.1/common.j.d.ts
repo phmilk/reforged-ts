@@ -16172,6 +16172,7 @@ declare function GetManipulatedItem(): item | undefined;
 /**
  * @returns item
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzGetEquippedItem} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEquippedItem}
  */
@@ -16187,6 +16188,7 @@ declare function BlzGetEquippedItem(): item | undefined;
 /**
  * @returns item
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzGetUnequippedItem} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnequippedItem}
  */
@@ -16930,6 +16932,7 @@ declare function SetItemPosition(i: item, x: number, y: number): void;
  * @param whichColor - playercolor
  * @returns nothing
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzSetItemColor} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetItemColor}
  */
 declare function SetItemColor(whichItem: item, whichColor: playercolor): void;
@@ -16995,6 +16998,7 @@ declare function IsItemInvulnerable(whichItem: item): boolean;
  * @param whichItem - item
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzIsItemEquipped} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsItemEquipped}
  */
 declare function IsItemEquipped(whichItem: item): boolean;
@@ -17003,6 +17007,7 @@ declare function IsItemEquipped(whichItem: item): boolean;
  * @param whichItem - item
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzIsItemInBag} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsItemInBag}
  */
 declare function IsItemInBag(whichItem: item): boolean;
@@ -17162,6 +17167,7 @@ declare function SetItemUserData(whichItem: item, data: number): void;
  * @param whichItem - item
  * @returns equipmentType
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzGetItemEquipmentType} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item), the integer of `EQUIPMENT_TYPE_NONE`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemEquipmentType}
  */
@@ -17171,6 +17177,7 @@ declare function GetItemEquipmentType(whichItem: item): equipmentType;
  * @param whichItem - item
  * @returns itemTag
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzGetItemTag} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item), the integer of `ITEMTAG_TYPE_UNDEFINED`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemTag}
  */
@@ -17896,6 +17903,7 @@ declare function UnitAddItem(whichUnit: unit, whichItem: item): boolean;
  * @param whichItem - item
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitEquipItem} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitEquipItem}
  */
 declare function UnitEquipItem(whichUnit: unit, whichItem: item): boolean;
@@ -17949,6 +17957,7 @@ declare function UnitRemoveItemFromSlot(whichUnit: unit, itemSlot: number): item
  * @param whichItem - item
  * @returns nothing
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitUnequipItem} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitUnequipItem}
  */
 declare function UnitUnequipItem(whichUnit: unit, whichItem: item): void;
@@ -17967,6 +17976,7 @@ declare function BlzUnitUnequipItem(whichUnit: unit, whichItem: item): void;
  * @param slot - loadoutslot
  * @returns item
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitUnequipItemFromSlot} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitUnequipItemFromSlot}
  */
@@ -17994,6 +18004,7 @@ declare function UnitHasItem(whichUnit: unit, whichItem: item): boolean;
  * @param whichItem - item
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitHasItemBagged} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemBagged}
  */
 declare function UnitHasItemBagged(whichUnit: unit, whichItem: item): boolean;
@@ -18027,6 +18038,7 @@ declare function UnitInventorySize(whichUnit: unit): number;
  * @param whichUnit - unit
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitExtendedInventorySize} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitExtendedInventorySize}
  */
 declare function UnitExtendedInventorySize(whichUnit: unit): number;
@@ -18044,6 +18056,7 @@ declare function BlzUnitExtendedInventorySize(whichUnit: unit): number;
  * @param itemSlot - integer (32-bit)
  * @returns item
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitItemInBagSlot} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitItemInBagSlot}
  */
@@ -18054,6 +18067,7 @@ declare function UnitItemInBagSlot(whichUnit: unit, itemSlot: number): item | un
  * @param itemSlot - loadoutslot
  * @returns item
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitItemInEquipmentSlot} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitItemInEquipmentSlot}
  */
@@ -18064,6 +18078,7 @@ declare function UnitItemInEquipmentSlot(whichUnit: unit, itemSlot: loadoutslot)
  * @param whichItem - item
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitHasItemEquipped} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemEquipped}
  */
 declare function UnitHasItemEquipped(whichUnit: unit, whichItem: item): boolean;
@@ -18073,6 +18088,7 @@ declare function UnitHasItemEquipped(whichUnit: unit, whichItem: item): boolean;
  * @param itemSlot - loadoutslot
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitHasLoadoutSlotEmpty} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasLoadoutSlotEmpty}
  */
 declare function UnitHasLoadoutSlotEmpty(whichUnit: unit, itemSlot: loadoutslot): boolean;
@@ -18081,6 +18097,7 @@ declare function UnitHasLoadoutSlotEmpty(whichUnit: unit, itemSlot: loadoutslot)
  * @param whichUnit - unit
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitHasAnyItemEquipped} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasAnyItemEquiped}
  */
 declare function UnitHasAnyItemEquiped(whichUnit: unit): boolean;
@@ -18090,6 +18107,7 @@ declare function UnitHasAnyItemEquiped(whichUnit: unit): boolean;
  * @param equipmentId - equipmentType
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitHasItemEquipmentOfType} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemEquipmentOfType}
  */
 declare function UnitHasItemEquipmentOfType(whichUnit: unit, equipmentId: equipmentType): boolean;
@@ -18099,6 +18117,7 @@ declare function UnitHasItemEquipmentOfType(whichUnit: unit, equipmentId: equipm
  * @param equipmentId - equipmentType
  * @returns boolean
  * @patch 3.0.0.24268
+ * @deprecated Use {@link BlzUnitCanEquipItemOfEquipmentType} instead, of the same parameters. Patch 3.0.1.24370 added it and gave the equipment Natives of 3.0 the Blz prefix; its notes say the Natives without the prefix will be removed in a future patch (https://liquipedia.net/warcraft/Patch_3.0.1).
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitCanEquipItemOfEquipmentType}
  */
 declare function UnitCanEquipItemOfEquipmentType(whichUnit: unit, equipmentId: equipmentType): boolean;

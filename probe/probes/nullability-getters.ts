@@ -67,8 +67,10 @@ function sliceCases(): ReturnCase[] {
     ),
     enumGetterCases("GetItemType", [whichItem], ([i]) => GetItemType(i)),
     enumGetterCases("GetItemEquipmentType", [whichItem], ([i]) =>
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
       GetItemEquipmentType(i),
     ),
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
     enumGetterCases("GetItemTag", [whichItem], ([i]) => GetItemTag(i)),
     enumGetterCases("BlzGetItemEquipmentType", [whichItem], ([i]) =>
       BlzGetItemEquipmentType(i),
