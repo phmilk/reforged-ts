@@ -7,7 +7,11 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 
+import { namesSkill } from "../../.claude/hooks/replaced-skills.mjs";
 import { folderFiles, read, root } from "./repository.js";
+
+// Whether a line names a skill, as the hooks read it.
+export { namesSkill };
 
 // The folder of the Agent skills and the skills CLI's lock, from the root.
 export const skillsFolder = ".claude/skills";
@@ -108,14 +112,6 @@ export function variants(): Variant[] {
       ? []
       : [{ folder, name: fields?.name, upstream, upstreamHash }];
   });
-}
-
-// Whether a line names a skill: its name as a word of its own, a slash
-// command (`/to-spec`), a code span or a path segment, never inside a longer
-// name (`to-spec` is not named by `to-specs` or `my-to-spec`).
-export function namesSkill(line: string, name: string): boolean {
-  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(?<![\\w-])${escaped}(?![\\w-])`).test(line);
 }
 
 // The lines of a Markdown doc that name a Replaced skill without its variant

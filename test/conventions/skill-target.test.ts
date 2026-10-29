@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   issueRefOf,
+  replacedVerdict,
   requestOf,
   verdict,
 } from "../../.claude/hooks/skill-target.mjs";
@@ -84,6 +85,66 @@ describe("requestOf", () => {
         tool_input: { command: "/implement 734" },
       }),
     ).toBeNull();
+  });
+});
+
+// A typed Replaced skill never starts (ADR 0027): the map of Replaced
+// skills comes from the skills' folders, so the stop reads no issue.
+describe("replacedVerdict", () => {
+  const map = { "to-spec": "write-spec", "to-tickets": "split-spec" };
+
+  it("stops a typed Replaced skill, with or without an issue reference, naming the variant to run", () => {
+    expect(replacedVerdict(typed("/to-spec"), map)).toEqual({
+      verdict: "block",
+      reason:
+        "/to-spec is a Replaced skill: `write-spec` replaces `to-spec`, which is never run or recommended (ADR 0027, .claude/hooks/skill-target.mjs). Run /write-spec instead.",
+      output: {
+        decision: "block",
+        reason:
+          "/to-spec is a Replaced skill: `write-spec` replaces `to-spec`, which is never run or recommended (ADR 0027, .claude/hooks/skill-target.mjs). Run /write-spec instead.",
+      },
+    });
+    expect(replacedVerdict(typed("/to-tickets #802"), map)).toMatchObject({
+      verdict: "block",
+      output: {
+        decision: "block",
+        reason: expect.stringMatching(
+          /`split-spec` replaces `to-tickets`.*Run \/split-spec #802 instead\.$/,
+        ) as unknown,
+      },
+    });
+  });
+
+  it("stops a plugin's copy of one, and a Skill tool call of one", () => {
+    expect(
+      replacedVerdict(typed("/mattpocock-skills:to-spec"), map),
+    ).toMatchObject({ verdict: "block" });
+    expect(
+      replacedVerdict(skillCall("mattpocock-skills:to-tickets", "802"), map),
+    ).toMatchObject({
+      verdict: "block",
+      output: {
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          permissionDecision: "deny",
+          permissionDecisionReason: expect.stringContaining(
+            "Run /split-spec 802 instead.",
+          ) as unknown,
+        },
+      },
+    });
+  });
+
+  it("passes the variant, another skill, and a prompt that only mentions one", () => {
+    for (const input of [
+      typed("/write-spec"),
+      typed("/to-specs"),
+      typed("/implement 734"),
+      typed("should I run /to-spec?"),
+      skillCall("split-spec", "802"),
+    ]) {
+      expect(replacedVerdict(input, map)).toEqual({ verdict: "pass" });
+    }
   });
 });
 
@@ -663,6 +724,24 @@ describe("the skill-target script", () => {
 
     expect(runHook(typed("/split-spec 737"), answers).output).toBeNull();
     expect(runHook(skillCall("ship-spec", "737"), answers).output).toBeNull();
+  });
+
+  it("stops a typed Replaced skill offline, with or without an issue reference, asking GitHub nothing", () => {
+    const offline = { fail: "error connecting to api.github.com" };
+    for (const [prompt, command] of [
+      ["/to-spec", "/write-spec"],
+      ["/to-tickets 802", "/split-spec 802"],
+      ["/to-spec #802", "/write-spec #802"],
+    ] as const) {
+      expect(runHook(typed(prompt), offline)).toEqual({
+        code: 0,
+        output: {
+          decision: "block",
+          reason: expect.stringContaining(`Run ${command} instead.`) as unknown,
+        },
+        calls: [],
+      });
+    }
   });
 
   it("stays silent and asks GitHub nothing with no issue reference", () => {

@@ -5,8 +5,9 @@
 // (docs/agents/development-loop.md, "Skill variants"). A Replaced skill is
 // never run or recommended, and is named only beside its variant.
 //
-// The hooks that hold the rule import replacedSkills; the skills conventions
-// test (test/conventions/skills.test.ts) reads the same map and fails when a
+// The hooks that hold the rule (skill-target.mjs, replaced-skill-stop.mjs)
+// import replacedSkills and namesSkill; the skills conventions test
+// (test/conventions/skills.test.ts) reads the same map and fails when a
 // `replaces` names no Upstream skill of the lock. It is not a hook itself and
 // prints nothing.
 //
@@ -74,4 +75,18 @@ export function replacedSkills(skillsFolder = SKILLS_FOLDER) {
   return Object.fromEntries(
     pairs.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
   );
+}
+
+/**
+ * Whether `line` names the skill `name`: its name as a word of its own, a
+ * slash command (`/to-spec`), a code span or a path segment, never inside a
+ * longer name (`to-spec` is not named by `to-specs` or `my-to-spec`).
+ *
+ * @param {string} line
+ * @param {string} name
+ * @returns {boolean}
+ */
+export function namesSkill(line, name) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![\\w-])${escaped}(?![\\w-])`).test(line);
 }
