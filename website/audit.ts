@@ -66,7 +66,21 @@ export function workspaceSubject(): AuditSubject {
   return {
     root,
     reference: library,
-    eslint: { cwd: root },
+    // tsdoc/syntax reads the tsdoc.json in the current directory of the
+    // file's program. In a single run, which typescript-eslint infers from
+    // CI=true, that program's current directory is the process's: here
+    // website/, which holds none, so every tag of the workspace's would be
+    // undefined. The project service's program has tsconfigRootDir, the
+    // root, as its current directory, like `pnpm lint`.
+    eslint: {
+      cwd: root,
+      overrideConfig: {
+        files: ["**/*.ts"],
+        languageOptions: {
+          parserOptions: { disallowAutomaticSingleRunInference: true },
+        },
+      },
+    },
     lint: ["packages/reforged-ts/src"],
   };
 }
