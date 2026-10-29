@@ -62,6 +62,7 @@ wrapper-coverage/report.md
 !.claude/skills/new-patch/
 !.claude/skills/next-step/
 !.claude/skills/ship/
+!.claude/skills/ship-spec/
 !.claude/skills/split-spec/
 !.claude/skills/write-spec/
 

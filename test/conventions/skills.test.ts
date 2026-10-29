@@ -136,6 +136,16 @@ describe("the Agent skills of .claude/skills/", () => {
     );
   });
 
+  // ship-spec invokes Upstream skills by name and copies none of their
+  // steps, so it records no upstream and is no Skill variant (#811).
+  it("has ship-spec, which invokes Upstream skills by name, as a repository skill and no Skill variant", () => {
+    expect(repository, "the repository's own skills").toContain("ship-spec");
+    expect(
+      variants().map(({ folder }) => folder),
+      "the Skill variants: ship-spec records no metadata.upstream",
+    ).not.toContain("ship-spec");
+  });
+
   it("has every Upstream skill of the lock, from mattpocock/skills, with the content the lock records", () => {
     const problems = Object.entries(lock()).flatMap(([name, entry]) => {
       const folder = `${skillsFolder}/${name}`;

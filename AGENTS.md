@@ -50,6 +50,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - A Replaced skill (`to-spec`, replaced by `write-spec`; `to-tickets`, replaced by `split-spec`) is never run or recommended: run and name its Skill variant, and name the Replaced skill only beside its variant, on the same line (ADR 0027).
 - Before running Subagents, read `docs/agents/development-loop.md`, "Subagents".
 - Every implement ends with `/ship`, which pushes the branch and opens its pull request: that is the Collaborator's request to push and open it, unless the Collaborator says otherwise in the session (ADR 0026).
+- A Collaborator, or an Agent a Collaborator runs, merges their own pull request without a human review only by auto-merge (`gh pr merge --auto --squash`), after `/code-review` and the fixes of what it found: never with `--admin`, the API's merge endpoint or a required check red (ADR 0021).
 
 ## Runtime constraints
 
@@ -89,6 +90,7 @@ One line per Agent skill of the repository: its `SKILL.md`, then its trigger. Wh
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
 - [next-step](.claude/skills/next-step/SKILL.md): print the next steps at the end of every `/grill-with-docs`, `/write-spec`, `/split-spec` and implement, or when explicitly asked for them.
 - [ship](.claude/skills/ship/SKILL.md): push an implement's branch and open its pull request, at the end of every implement or when explicitly asked to ship a branch.
+- [ship-spec](.claude/skills/ship-spec/SKILL.md): run a split Spec from its Frontier to its close, each Ticket shipped with auto-merge, when explicitly asked to ship a Spec.
 - [split-spec](.claude/skills/split-spec/SKILL.md): split a Spec into Tickets with its Coverage table, when explicitly asked to or when another skill asks for it. It replaces `to-tickets`.
 - [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one. It replaces `to-spec`.
 
