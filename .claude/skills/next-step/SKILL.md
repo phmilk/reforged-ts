@@ -25,9 +25,10 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
 
    An issue outside a Spec stops after `/clear`. Done when the list holds at most five steps, the first one runnable now.
 
-3. **Print them.** At most five numbered lines and nothing else, in the conversation's language, each one naming the skill or command to run with its argument:
+3. **Print them.** In the conversation's language, one heading line, `Next step:` for one step and `Next steps:` for several (`Próximo passo:` or `Próximos passos:` in Portuguese), then at most five numbered lines and nothing else, each one naming the skill or command to run with its argument:
 
    ```text
+   Next steps:
    1. /code-review origin/master
    2. /pr, then gh pr merge --auto --squash
    3. /clear
@@ -38,4 +39,4 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
 
 ## Done
 
-The steps are printed when each comes from the state read in step 1, none is already done, and the list is at most five numbered lines with nothing around them.
+The steps are printed when each comes from the state read in step 1, none is already done, and the list is the heading line and at most five numbered lines, with nothing else around them.
