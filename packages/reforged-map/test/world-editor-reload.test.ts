@@ -77,6 +77,8 @@ describe("reloadWorldEditor", () => {
     ]);
   });
 
+  // Measured 0.0 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: it runs
+  // on WSL alone.
   it.runIf(onWsl())(
     "converts the path with the real wslpath -w on WSL",
     () => {
@@ -94,7 +96,7 @@ describe("reloadWorldEditor", () => {
         expected,
       ]);
     },
-    30_000,
+    15_000,
   );
 
   it("throws when wslpath fails, launching nothing", () => {
@@ -156,6 +158,8 @@ describe("reloadWorldEditor", () => {
     },
   );
 
+  // Measured 0.1 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10, skipped
+  // on windows. Kept above its own waits, 5 s and 10 s.
   it.runIf(process.platform !== "win32")(
     "starts the executable and returns without waiting for it",
     async () => {

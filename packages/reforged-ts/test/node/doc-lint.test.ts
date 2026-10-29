@@ -92,6 +92,8 @@ describe("the doc comment lint", () => {
     ).toEqual([]);
   });
 
+  // Measured 2.7 s with pnpm test on the windows CI leg of #815, 8.4 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it.each(["common.j.d.ts", "common.ai.d.ts", "blizzard.j.d.ts"])(
     "accepts every header of the generated Typings in %s",
     async (file) => {
@@ -103,7 +105,7 @@ describe("the doc comment lint", () => {
         ),
       ).toEqual([]);
     },
-    60_000,
+    30_000,
   );
 
   it("reports a @param without the hyphen, an undeclared tag and an unescaped brace", async () => {

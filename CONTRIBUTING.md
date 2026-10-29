@@ -127,6 +127,22 @@ pnpm --filter reforged-ts test                   # the library's tests only
 pnpm --filter reforged-ts test -t timer.test.ts  # one file's tests: each file is a describe named after it
 ```
 
+## Slow tests and explicit timeouts
+
+vitest gives a test 5 s, and a hook 10 s. Both legs of CI write a JSON report of the test run next to the log (`--reporter=json`), and the `test:slow-report` step lists every test above 5 s, with its file, name and duration, in the leg's job summary; the report itself is the run's `test-report-<os>` artifact. It is a report, never a gate: runner variance would make a duration gate noise, so the step never fails the job. Locally, `pnpm test --reporter=default --reporter=json --outputFile.json=test-report.json` then `pnpm test:slow-report` prints the same list.
+
+A test that needs more than the default gets an explicit timeout: the third argument of `it`, `test` or `describe`, the `timeout` of their options, the second argument of a hook, or `testTimeout` or `hookTimeout` of a project in `vitest.config.ts`. Every explicit timeout carries, in the `//` comment right above it or right above the call it ends, the sentence `Measured <duration> with <command> on <platform>`, for example:
+
+```ts
+// Starts tsc on the fixture project, cold.
+// Measured 12 s with pnpm test on the windows CI leg, 2026-10.
+it("type-checks the project", () => {
+  // ...
+}, 60_000);
+```
+
+Take the duration from the windows leg's job summary or its report, the slowest platform, and set the timeout a few times above it; a timeout far above its measurement is lowered, or dropped for the default. A hook's duration is not in the report: measure its file's duration less its tests'. The conventions test `test/conventions/timeouts.test.ts` fails on an explicit timeout without that sentence.
+
 ## Wrappers
 
 - **Naming.** A Wrapper is named after its Native type, capitalised (`timer` is `Timer`, `unit` is `Unit`), unless that name collides with a Native function; then it takes a descriptive noun (`rect` is `Rectangle` because `Rect` is a Native, `player` is `MapPlayer` because `Player` is one). The Handle base's doc comment (`packages/reforged-ts/src/handles/handle.ts`) holds this rule with the others every Wrapper follows: no public constructor, creation throws, lookup returns `undefined`.

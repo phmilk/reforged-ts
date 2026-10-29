@@ -31,6 +31,8 @@ function code(lua: string): string {
 describe("the emitted Lua of the synced collections", () => {
   const emitted = new Map<string, string>();
 
+  // Measured 17.0 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     const { diagnostics } = transpileProject(
       join(packageRoot, "tsconfig.json"),

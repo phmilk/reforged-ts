@@ -32,6 +32,8 @@ describe("the check-time measurement", () => {
     );
   });
 
+  // Measured 3.1 s with pnpm test on the windows CI leg of #815, 7.4 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("type-checks the project with and without the committed overloads", () => {
     const result = measure({
       root: ROOT,
@@ -45,5 +47,5 @@ describe("the check-time measurement", () => {
     expect(formatMeasurement(result)).toMatch(
       /^Check time of a Map project, median, with \d+ FourCC overloads and without:\n- 4 calls: /,
     );
-  }, 60_000);
+  }, 30_000);
 });

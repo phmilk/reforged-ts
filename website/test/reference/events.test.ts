@@ -25,6 +25,8 @@ const NAMESPACES = {
 
 let project: ProjectReflection;
 
+// Measured 12.5 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   const app = await Application.bootstrapWithPlugins({
     ...referenceTypedocOptions(LIBRARY_REFERENCE, { strict: false }),

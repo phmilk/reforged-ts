@@ -819,6 +819,8 @@ describe("git diff of the map folder", () => {
   // the windows runner, in `pnpm run test` of ci.yml: 1.2 s (median of 60
   // green runs, 2.2 s at most), and 6.4 s, past vitest's 5 s, in a run
   // where the runner stalled (#658).
+  // Measured 1.4 s with pnpm test on the windows CI leg of #815, 0.6 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("prints the one line of the field a commit changed in war3map.w3u, under its object", () => {
     const repository = path.join(makeTempDir(), "my-map");
     const mapFolder = path.join(repository, "maps", "my-map.w3m");
@@ -899,5 +901,5 @@ describe("git diff of the map folder", () => {
         "maps/my-map.w3m/war3map.wts: text: unset",
       ),
     );
-  }, 30_000);
+  }, 15_000);
 });

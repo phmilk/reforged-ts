@@ -70,6 +70,8 @@ let local: string;
 /** A project whose generated constants modules are absent. */
 let noConstants: string;
 
+// Measured 3.9 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   const probe = packPlugin();
   const maps = { "editor-objects.w3m": fixtureMap("editor-objects.w3m") };
@@ -98,7 +100,7 @@ beforeAll(async () => {
   for (const file of [rawcodes, leftAlone, local, noConstants]) {
     await server.open(file);
   }
-}, 120_000);
+}, 30_000);
 
 afterAll(() => {
   server.close();

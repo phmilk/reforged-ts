@@ -16,6 +16,8 @@ const project = fileURLToPath(
 let vitest: Vitest;
 let module: TestModule;
 
+// Measured 4.6 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   const exitCode = process.exitCode;
   vitest = await startVitest(
@@ -34,7 +36,7 @@ beforeAll(async () => {
   if (only === undefined)
     throw new Error("the inner vitest run collected no module");
   module = only;
-}, 60_000);
+}, 30_000);
 
 afterAll(async () => {
   await vitest.close();

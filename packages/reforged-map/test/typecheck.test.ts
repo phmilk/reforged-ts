@@ -49,10 +49,12 @@ describe("the generated declarations in a Map project", () => {
   let output: EditorGlobalsOutput;
   let diagnostics: string[];
 
+  // Measured 5.4 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     output = generate();
     diagnostics = typecheck(createMapProject(output.files));
-  }, 60_000);
+  }, 30_000);
 
   it("declare what the fixtures' editor-globals.d.ts declares", () => {
     const generated = output.files.find((f) => f.name === DECLARATIONS_FILE);

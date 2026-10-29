@@ -62,6 +62,8 @@ let rawcodes: string;
 let throwing: string;
 let throwingRawcodes: string;
 
+// Measured 4.9 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   const probe = packPlugin();
   const maps = { "editor-objects.w3m": fixtureMap("editor-objects.w3m") };
@@ -86,7 +88,7 @@ beforeAll(async () => {
   throwingRawcodes = path.join(throwing, "src", "rawcodes.ts");
   server = new TsServer(probe);
   for (const file of [rawcodes, throwingRawcodes]) await server.open(file);
-}, 120_000);
+}, 30_000);
 
 afterAll(() => {
   server.close();
@@ -171,6 +173,8 @@ describe("go to definition on a Rawcode an Object definition defines", () => {
 });
 
 describe("a definition that throws", () => {
+  // Measured 1.4 s with pnpm test on the windows CI leg of #815, 1.4 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("makes the hover unavailable, naming its file, never unknown, and resumes once it is fixed", async () => {
     const unavailable =
       /^Rawcode details are unavailable: The Object definitions could not be loaded: .*src\/objects\/broken\.ts[^\n]*$/;
@@ -199,5 +203,5 @@ describe("a definition that throws", () => {
     expect(await hover('"h002"', throwingRawcodes)).toMatch(
       SERGEANT_HOVER.join("\n\n"),
     );
-  }, 30_000);
+  }, 15_000);
 });
