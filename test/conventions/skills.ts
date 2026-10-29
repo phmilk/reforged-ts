@@ -109,3 +109,37 @@ export function variants(): Variant[] {
       : [{ folder, name: fields?.name, upstream, upstreamHash }];
   });
 }
+
+// Whether a line names a skill: its name as a word of its own, a slash
+// command (`/to-spec`), a code span or a path segment, never inside a longer
+// name (`to-spec` is not named by `to-specs` or `my-to-spec`).
+export function namesSkill(line: string, name: string): boolean {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![\\w-])${escaped}(?![\\w-])`).test(line);
+}
+
+// The lines of a Markdown doc that name a Replaced skill without its variant
+// on the same line (ADR 0027), each as `<line number>: <line>`, given the map
+// of Replaced skills (replacedSkills of .claude/hooks/replaced-skills.mjs).
+// A fenced block counts only when it is a diagram (`mermaid`): a diagram is
+// the loop the docs show, while a command or a configuration example (the
+// install command lists every Upstream skill) recommends nothing.
+export function unpairedReplacedSkills(
+  text: string,
+  replaced: Readonly<Record<string, string>>,
+): string[] {
+  let fence: string | undefined;
+  return text.split(/\r?\n/).flatMap((line, index) => {
+    const opening = /^\s*```(\w*)/.exec(line);
+    if (opening !== null) {
+      fence = fence === undefined ? (opening[1] ?? "") : undefined;
+      return [];
+    }
+    if (fence !== undefined && fence !== "mermaid") return [];
+    const unpaired = Object.entries(replaced).filter(
+      ([skill, variant]) =>
+        namesSkill(line, skill) && !namesSkill(line, variant),
+    );
+    return unpaired.length === 0 ? [] : [`${String(index + 1)}: ${line}`];
+  });
+}

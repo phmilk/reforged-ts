@@ -236,6 +236,18 @@ _Avoid_: global skill, vendored skill, external skill
 An Agent skill of this repository built from an Upstream skill's steps, under its own name, recording the Upstream skill's version it was built from.
 _Avoid_: wrapper (a library class over a Handle), fork, override
 
+**Replaced skill**:
+An Upstream skill a Skill variant declares it replaces (`to-spec`, replaced by `write-spec`); kept unmodified, never run or recommended, and named only beside its variant.
+_Avoid_: deprecated skill (upstream's own folder of retired skills), disabled skill, overridden skill
+
+**Judgement call**:
+A reversible choice an Agent makes on its own, with a reason, where the issue, the docs and the ADRs leave room; listed in the pull request's body, it never holds the merge.
+_Avoid_: assumption, guess, decision (alone)
+
+**Open decision**:
+A choice an Agent met that is not its to make, stated in the pull request's body for a human; while one is open, the pull request does not auto-merge.
+_Avoid_: open question, blocker (an issue that blocks a Ticket), TODO
+
 **Probe**:
 A TypeScript file of the Probe runner (`probe/probes/<probe>.ts`, named in kebab-case) that runs in the real game to measure what only the game can tell (whether a Native returns nothing, what a `Preload` line survives), and writes what it measures as records of its Result file. It exports `run(p)` and may import the library.
 _Avoid_: probe map (the Lua pasted into the World Editor, #9), test, script

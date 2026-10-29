@@ -22,7 +22,7 @@ Two more labels say what an issue is, next to its triage label. Apply them when 
 
 | Label    | Applied to                                                                                                          |
 | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| `spec`   | A spec, created with the `to-spec` or `write-spec` skill. Its tickets are sub-issues.                               |
+| `spec`   | A spec, created with the `write-spec` skill. Its tickets are sub-issues.                                            |
 | `ticket` | A ticket of a spec, created with the `split-spec` skill (a sub-issue), which splits a Spec with its Coverage table. |
 
 Both repos (`phmilk/reforged-ts` and `phmilk/reforged-ts-template`) have them. Issues of the wayfinder map, bugs and follow-ups carry neither.
