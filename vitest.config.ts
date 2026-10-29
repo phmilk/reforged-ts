@@ -119,10 +119,10 @@ export default defineConfig({
         // agents, editors and the compiler read (AGENTS.md, CLAUDE.md,
         // docs/agents/, .vscode, the library's tsconfig.json, .claude/), the
         // session-start hook of .claude/settings.json, run against a fake
-        // home folder, and its background-wait, skill-target and Replaced
-        // skill Stop checks, on hook inputs as Claude Code sends them, and
-        // the measured comment of every explicit timeout of the workspace's
-        // tests. Needs no build.
+        // home folder, and its background-wait, skill-target, Replaced skill
+        // Stop and ship Stop checks, on hook inputs as Claude Code sends
+        // them, and the measured comment of every explicit timeout of the
+        // workspace's tests. Needs no build.
         test: {
           name: "conventions",
           root: "test/conventions",
