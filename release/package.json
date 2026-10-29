@@ -1,7 +1,7 @@
 {
   "name": "reforged-ts-release",
   "private": true,
-  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:*, patch-watch:*, skills:* and diagrams:* scripts, and the rename map module the workspace's scripts import (reforged-ts-release/rename-map). Never published.",
+  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:*, patch-watch:*, skills:*, diagrams:* and test:slow-report scripts, and the rename map module the workspace's scripts import (reforged-ts-release/rename-map). Never published.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -42,7 +42,8 @@
     "github-app": "tsc -p tsconfig.json && node build/cli/github-app.js",
     "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js",
     "skills:update": "tsc -p tsconfig.json && node build/cli/skills-update.js",
-    "skills:copy": "tsc -p tsconfig.json && node build/cli/shared-copy.js"
+    "skills:copy": "tsc -p tsconfig.json && node build/cli/shared-copy.js",
+    "test:slow-report": "tsc -p tsconfig.json && node build/cli/slow-tests.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",
