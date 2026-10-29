@@ -5,8 +5,8 @@ The development loop takes a piece of work from an on-ramp to a merged pull requ
 ## Where the Agent skills come from
 
 - **The Upstream skills.** Every skill of the loop but the repository's own is an Upstream skill: a skill of [`mattpocock/skills`](https://github.com/mattpocock/skills), committed unmodified in `.claude/skills/` at the version [`skills-lock.json`](../../skills-lock.json) names ([Installing and updating the Upstream skills](#installing-and-updating-the-upstream-skills)). A local session and a cloud session load the same files from the checkout; nothing is installed per machine, and upstream's plugin is not used (ADR 0022). A global copy left from before shadows them: [Removing the global copies](#removing-the-global-copies).
-- **The repository's.** The project skills `add-wrapper`, `add-lint-rule` and `new-patch`, and the Skill variants `write-spec`, `split-spec` and `next-step` ([Skill variants](#skill-variants)), live in `.claude/skills/` too, listed with their triggers under "Skills" in `AGENTS.md`.
-- **One source for both repositories.** What both repositories run, the Upstream skills with their lock, the Skill variants that work issues on the Claim board (`write-spec`, `split-spec`, `next-step`), the session-start hook, the background-wait check (`.claude/hooks/background-wait.mjs`, #767), the skill-target check (`.claude/hooks/skill-target.mjs`, #743), the map of Replaced skills (`.claude/hooks/replaced-skills.mjs`) and the Replaced skill Stop check (`.claude/hooks/replaced-skill-stop.mjs`, #804), is written here, in the library, and the Template carries a copy of it (ADR 0024); the band of background work (`.claude/mods/background-band`, #769) is enabled from the library's marketplace by the shared settings, with no file of it copied to the Template. [`.claude/shared.json`](../../.claude/shared.json) names what is shared. A change to a shared skill or file is made here, never in the Template's copy.
+- **The repository's.** The project skills `add-wrapper`, `add-lint-rule` and `new-patch`, the Skill variants `write-spec`, `split-spec` and `next-step` ([Skill variants](#skill-variants)), and `ship`, which invokes `/code-review` and `/pr` by name, live in `.claude/skills/` too, listed with their triggers under "Skills" in `AGENTS.md`.
+- **One source for both repositories.** What both repositories run, the Upstream skills with their lock, the Skill variants that work issues on the Claim board (`write-spec`, `split-spec`, `next-step`), `ship`, which opens an implement's pull request (ADR 0026), the session-start hook, the background-wait check (`.claude/hooks/background-wait.mjs`, #767), the skill-target check (`.claude/hooks/skill-target.mjs`, #743), the map of Replaced skills (`.claude/hooks/replaced-skills.mjs`) and the Replaced skill Stop check (`.claude/hooks/replaced-skill-stop.mjs`, #804), is written here, in the library, and the Template carries a copy of it (ADR 0024); the band of background work (`.claude/mods/background-band`, #769) is enabled from the library's marketplace by the shared settings, with no file of it copied to the Template. [`.claude/shared.json`](../../.claude/shared.json) names what is shared. A change to a shared skill or file is made here, never in the Template's copy.
 - **Set up for this repository.** The three agents docs, [`issue-tracker.md`](issue-tracker.md), [`triage-labels.md`](triage-labels.md) and [`domain.md`](domain.md), are the output of `/setup-matt-pocock-skills`, with the "Agent skills" block of [`AGENTS.md`](../../AGENTS.md#agent-skills) that points at them. The Upstream skills read them for this repository's tracker, labels and domain docs; the repository has since edited them (the Claim, the kind labels), so they are its own: change a convention there, never in a skill.
 - **Named in a diagram.** A diagram cites a folder of `.claude/skills/` by its slash command, an Upstream skill as well as one of the repository's own. A skill from anywhere else is declared, with its source, in the `external` list of `test/conventions/diagrams.test.ts`: add it there first.
 
@@ -72,7 +72,7 @@ A personal skill of your own that shares a repository skill's name is renamed or
 
 ## The loop
 
-An on-ramp shapes the work, the spec and its tickets fix it, the Claim takes it, and an implementation skill carries it to the pull request:
+An on-ramp shapes the work, the spec and its tickets fix it, the Claim takes it, an implementation skill carries it to its end, and `/ship` opens the pull request:
 
 ```mermaid
 flowchart TD
@@ -94,6 +94,7 @@ flowchart TD
   tdd["/tdd"]
   code_review["/code-review"]
   next_step["/next-step"]
+  ship["/ship: the push, the pull request with its Review section, auto-merge unless a human is needed"]
   add_wrapper["/add-wrapper"]
   add_lint_rule["/add-lint-rule"]
   new_patch["/new-patch"]
@@ -117,7 +118,10 @@ flowchart TD
   implement --> tdd
   implement_spec -->|"one implementer per ticket"| tdd
   tdd --> code_review
-  code_review -->|"its fixes, reviewed once more"| pull_request
+  code_review -->|"its fixes, reviewed once more"| ship
+  implement -->|"at its end"| ship
+  implement_spec -->|"at its end, its draft marked ready"| ship
+  ship -->|"a body from /pr"| pull_request
   add_wrapper --> pull_request
   add_lint_rule --> pull_request
   new_patch --> pull_request
@@ -143,6 +147,7 @@ flowchart TD
 | `/implement-spec`  | [its `SKILL.md`](../../.claude/skills/implement-spec/SKILL.md)                                                                                                            |
 | `/next-step`       | [its `SKILL.md`](../../.claude/skills/next-step/SKILL.md); [Skill variants](#skill-variants); added to the Agent's context by the skill-target check, under the table     |
 | `/tdd`             | [its `SKILL.md`](../../.claude/skills/tdd/SKILL.md)                                                                                                                       |
+| `/ship`            | [its `SKILL.md`](../../.claude/skills/ship/SKILL.md); [ADR 0026](../adr/0026-an-implement-ends-with-its-pull-request-opened-by-ship.md)                                   |
 | `/code-review`     | [its `SKILL.md`](../../.claude/skills/code-review/SKILL.md); its reviewers and the fix round: [Subagents](#subagents)                                                     |
 | `/add-wrapper`     | [its `SKILL.md`](../../.claude/skills/add-wrapper/SKILL.md)                                                                                                               |
 | `/add-lint-rule`   | [its `SKILL.md`](../../.claude/skills/add-lint-rule/SKILL.md); [Adding or changing a rule](../../packages/eslint-plugin-reforged/AGENTS.md#adding-or-changing-a-rule)     |
@@ -153,6 +158,7 @@ flowchart TD
 - **The Claim is the first write**: `gh issue edit <n> --add-assignee @me` before the branch, the first commit, any comment and the pull request. `/implement` and `/implement-spec` do not claim by themselves: claim the ticket with its spec, the issue, or every free ticket of a spec with the spec, then invoke one. A spec is never claimed on its own, nor before its tickets; the on-ramps, triage and the split write without a Claim.
 - **A project skill replaces `/implement`** for its task: `/add-wrapper` covers a Native, `/add-lint-rule` guards a pitfall at lint level, `/new-patch` adopts a Patch. Each carries its own steps to the pull request and its changeset.
 - **`/implement` works one ticket or issue** on the current branch: `/tdd` at agreed seams, then `/code-review`. **`/implement-spec` works a whole spec** on one branch and one draft pull request closing its tickets, never the spec, which whoever merges closes after the coverage check ([Closing a Spec](issue-tracker.md#claim)): an implementer per ticket on the frontier of the task graph, each in its own worktree driving `/tdd`, a merger after each, then `/code-review` on the whole.
+- **An implement ends with `/ship`** ([ADR 0026](../adr/0026-an-implement-ends-with-its-pull-request-opened-by-ship.md)), the Collaborator's standing request to push and open the pull request unless they say otherwise in the session: its steps take the branch through a review, a green `pnpm check` and a body with a `## Review` section to a pull request with auto-merge on, unless a human is needed.
 - **A skill pointed at the wrong issue stops** ([ADR 0025](../adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)). The skill-target check, [`.claude/hooks/skill-target.mjs`](../../.claude/hooks/skill-target.mjs), runs on a typed `/implement`, `/implement-spec`, `/ship-spec` or `/split-spec` and on a call of the Skill tool with one of them, so a skill another skill invokes is held to the same rule. It reads the first issue of the arguments (`734`, `#734`, `owner/repo#734` or its URL) and stops the skill, saying what to run instead: `/implement` on an issue with an open blocker (the blockers, and the takeable Tickets of its Spec from `pnpm spec:frontier`); `/implement`, `/implement-spec` or `/ship-spec` on a Spec with no Ticket (`/split-spec <n>` first); `/split-spec` on a Spec with Tickets and a Coverage table (nothing to split); `/split-spec`, `/implement-spec` or `/ship-spec` on a closed Spec, and `/implement` on a closed Ticket (closed, and by whom). An issue named in full is named in full again, and so is any issue of another repository than the clone's, in the reason and in the command it gives. The Upstream skills cannot carry the rule in their steps (ADR 0022), and the claim check stops a merge, not the work before it. When it lets `/implement` or `/implement-spec` through, it adds a line to the Agent's context: end the work with `next-step`, which prints at most five numbered next steps from the real state of the issue, its Spec and its pull request. A typed Replaced skill, or a call of the Skill tool with one, is stopped too, naming the variant to run with the same arguments (ADR 0027); that stop reads the map of Replaced skills from the skills' folders, so it needs neither GitHub nor an issue reference. With no issue reference it is otherwise silent; when `gh` or the network fails it lets the skill run with a one-line warning, the `next-step` line still added, since the claim check holds the rule on the pull request.
 
 ## Subagents
