@@ -315,6 +315,8 @@ describe("migration/renames.json", () => {
   let project: MapProject;
   let api: DeclarationResolver;
 
+  // Measured 12.8 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(async () => {
     project = await createMapProject();
     api = publicApi(project);

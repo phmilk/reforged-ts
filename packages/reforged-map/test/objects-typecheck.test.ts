@@ -79,6 +79,8 @@ describe("the generated objects in a Map project", () => {
   let tsconfig: string;
   let diagnostics: string[];
 
+  // Measured 6.5 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     output = generate();
     tsconfig = createMapProject(output.files, FIXTURES);
@@ -120,6 +122,8 @@ describe("the generated objects in a Map project", () => {
     ]);
   });
 
+  // Measured 1.5 s with pnpm test on the windows CI leg of #815, 3.9 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it('compile the constants to an integer, equal to FourCC("h000") on reforged-test (Lua 5.3)', () => {
     const emitted = new Map<string, string>();
     tstl.transpileProject(
@@ -165,7 +169,7 @@ describe("the generated objects in a Map project", () => {
         status: "pass",
       },
     ]);
-  }, 60_000);
+  }, 30_000);
 });
 
 const MODIFIED_FIXTURES = "modified-map-project";
@@ -209,12 +213,14 @@ describe("a modified Built-in object and a shared Rawcode in a Map project with 
   let output: ObjectsOutput;
   let tsconfig: string;
 
+  // Measured 0.1 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     output = generateModified();
     tsconfig = createMapProject(output.files, MODIFIED_FIXTURES, {
       builtins: true,
     });
-  }, 60_000);
+  }, 30_000);
 
   it("are the files the fixtures stand in for", () => {
     expect(output.warnings).toEqual([]);
@@ -259,11 +265,14 @@ describe("a modified Built-in object and a shared Rawcode in a Map project with 
     ).toContain("named Militia in this map");
   });
 
+  // Starts tsc on the project. Measured 1.3 s with pnpm test on the windows
+  // CI leg of #815, 2.2 s on Linux (WSL 2, 8 threads) alone and past the
+  // default 5 s in a full pnpm test there, 2026-10.
   it("type-check each constant of B000 where its kind is expected and its literal anywhere, and report the buff's constant where a destructable's is expected", () => {
     expect(typecheck(tsconfig)).toEqual([
       "src/buff-into-destructable.ts:5 TS2345",
     ]);
-  });
+  }, 30_000);
 });
 
 /** The program of a Map project's tsconfig.json, and its checker. */

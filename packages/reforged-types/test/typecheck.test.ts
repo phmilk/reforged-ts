@@ -89,12 +89,16 @@ describe("the typings type-check", () => {
     expect(config.options.skipLibCheck).toBeFalsy();
   });
 
+  // Measured 1.8 s with pnpm test on the windows CI leg of #815, 4.1 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("passes on the committed output, with lua-types/5.3 in the program", () => {
     const diagnostics = typecheck();
 
     expect(format(diagnostics)).toBe("");
-  }, 60_000);
+  }, 30_000);
 
+  // Measured 1.5 s with pnpm test on the windows CI leg of #815, 3.2 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("fails when a generated file is broken", async () => {
     const path = "3.0.0/common.j.d.ts";
     const text = await readFile(join(packageRoot, path), "utf8");
@@ -105,8 +109,10 @@ describe("the typings type-check", () => {
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
     expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
-  }, 60_000);
+  }, 30_000);
 
+  // Measured 1.0 s with pnpm test on the windows CI leg of #815, 1.8 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("fails when the Rawcode types file is broken", async () => {
     const text = await readFile(join(packageRoot, "rawcode.d.ts"), "utf8");
 
@@ -116,7 +122,7 @@ describe("the typings type-check", () => {
 
     expect(diagnostics.map((d) => d.code)).toEqual([2344]);
     expect(diagnostics[0].file?.fileName).toMatch(/\/rawcode\.d\.ts$/);
-  }, 60_000);
+  }, 15_000);
 });
 
 describe("the Lua runtime file", () => {

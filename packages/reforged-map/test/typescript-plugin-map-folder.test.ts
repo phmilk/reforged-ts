@@ -46,6 +46,8 @@ const DISCOVERY = (
 const AFTER_INTERVAL = 1200;
 
 /** Each test opens a project, whose load tsserver takes seconds for under a full test run. */
+// Measured 2.6 s at most with pnpm test on the windows CI leg of #815, 4.7 s on
+// Linux (WSL 2, 8 threads), 2026-10.
 const OPENS_A_PROJECT = { timeout: 30_000 };
 
 const wait = (ms: number): Promise<void> =>
@@ -53,9 +55,11 @@ const wait = (ms: number): Promise<void> =>
 
 let server: TsServer;
 
+// Measured 0.4 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(() => {
   server = new TsServer(packPlugin());
-}, 60_000);
+}, 30_000);
 
 afterAll(() => {
   server.close();

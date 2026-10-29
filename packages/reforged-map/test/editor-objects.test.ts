@@ -119,10 +119,12 @@ describe("the Object data saved by the 3.0 World Editor", () => {
   let output: ObjectsOutput;
   let diagnostics: string[];
 
+  // Measured 3.4 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     output = generateObjects(FOLDER, { projectRoot: PACKAGE_ROOT });
     diagnostics = typecheck(createMapProject(output.files, FIXTURES));
-  }, 60_000);
+  }, 30_000);
 
   /** The generated file of that name. */
   function contents(name: string): string {

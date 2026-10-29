@@ -230,11 +230,13 @@ describe("the map folder saved by the 3.0 World Editor", () => {
 describe("the declarations generated from it in a Map project", () => {
   let diagnostics: string[];
 
+  // Measured 4.1 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     diagnostics = typecheck(
       createMapProject(generateEditorGlobals(FOLDER).files, MAP_PROJECT),
     );
-  }, 60_000);
+  }, 30_000);
 
   it("declare what the fixtures' editor-globals.d.ts declares", () => {
     expect(
