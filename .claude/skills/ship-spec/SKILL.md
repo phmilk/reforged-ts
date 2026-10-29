@@ -5,7 +5,7 @@ description: Run a split Spec from its Frontier to its close, each Ticket claime
 
 # Ship a Spec
 
-An Agent skill both Board repositories share, which invokes `/tdd`, `/code-review`, `/diagnosing-bugs` and `/ship` by name and copies no steps of theirs, so it is not a Skill variant ([Skill variants](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#skill-variants)). `/ship-spec <spec>` takes a split Spec of the library and runs it to its close: it claims each Ticket of the Frontier the login may take as its work starts, has an implementer Subagent work it in its own worktree and ship it, starts what each merge unblocked, and closes the Spec on a green coverage check. Each pull request merges by auto-merge behind the required checks, after `/code-review` and its fixes ([ADR 0021](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0021-an-agent-merges-its-own-pull-request-behind-the-required-checks-and-a-code-review.md)). `implement`, `implement-spec` and `to-tickets` are human-only, so the steps it takes from them are written here.
+An Agent skill both Board repositories share, which invokes `/tdd`, `/code-review`, `/diagnosing-bugs` and `/ship` by name and copies no steps of theirs, so it is not a Skill variant ([Skill variants](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#skill-variants)). `/ship-spec <spec>` takes a split Spec of the library and runs it to its close: it claims each Ticket of the Frontier the login may take as its work starts, has an implementer Subagent work it in its own worktree and ship it, starts what each merge unblocked, and closes the Spec on a green coverage check. Each pull request merges by auto-merge behind the required checks, after `/code-review` and its fixes ([ADR 0021](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0021-an-agent-merges-its-own-pull-request-behind-the-required-checks-and-a-code-review.md)). `implement`, `implement-spec` and `to-tickets` (which `split-spec` replaces) are human-only, so the steps it takes from them are written here.
 
 The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../AGENTS.md#domain-docs) (Spec, Ticket, Frontier, Claim, Coverage table, Subagent). The protocol is the [Claim section](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim) of the library's tracker doc, the Subagent rules are the development loop doc's [Subagents](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#subagents), and both bind every step below. Run it from a clone of the library: `pnpm spec:frontier` and `pnpm spec:check` live there.
 
@@ -18,7 +18,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 ## Steps
 
 1. **Check the Spec.** Read `gh issue view <spec> --json state,labels,body` and its sub-issues, `gh api repos/phmilk/reforged-ts/issues/<spec>/sub_issues --paginate`. The Spec is labelled `spec`, open, has at least one sub-issue, and its body has a `## Coverage table` section. When any of these fails, stop and say so: the issue is not a split Spec, and its split is `/split-spec <spec>`, a human's decision with its quiz. Never split it yourself. Done when the four hold, or you stopped naming `/split-spec <spec>`.
-2. **Clear stale locks.** No implementer of this run is in flight yet, so a check lock left by an earlier run is stale: remove it (`rmdir` of the lock folder, [The check lock](#the-check-lock)). Done when no lock folder is left.
+2. **Clear stale locks.** No implementer of this run is in flight yet, so a check lock left by an earlier run is stale: remove it (`rm -rf` of the lock folder, [The check lock](#the-check-lock)). Done when no lock folder is left.
 3. **Read the Frontier.** `pnpm spec:frontier <spec>`. It prints three lists for the `gh` login: takeable now, held by the login (each with its open pull requests), and held by other logins (with their assignees). Read the Frontier only through it, so that this skill, the skill-target check and `next-step` agree. Done when you hold the three lists.
 4. **Resume what the login holds.** For each held Ticket:
    - **With an open pull request:** carry it on from that pull request, never restarting it: watch it as step 7 does. When auto-merge is off and its body says what waits for a human, it is a stop already made: put it in the ledger.
@@ -60,9 +60,8 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
 8. **Loop.** After a stop, start no new Ticket: every other Ticket in flight runs to its own end (merged or stopped), then go to step 9. Otherwise, after each merge, step 3 again. When the Frontier lists no takeable Ticket, nothing is in flight, and Tickets remain open: those held by other logins, named with their assignees in the ledger, are the run's stop. Done when nothing is in flight and the Frontier holds nothing this run will start.
 9. **Close, or leave the close.** Read the Spec's open sub-issues.
-   - **None open:** run `pnpm spec:check <spec>`. On green (exit 0), close the Spec with the end comment, written to a file: `gh issue close <spec> --comment "$(cat <file>)"`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
-   - **Tickets of other logins open:** post the end comment on the Spec and leave it open; whoever merges the last one closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
-   - **Tickets of this login open, stopped:** post the end comment on the Spec and leave it open.
+   - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), close the Spec with the end comment, written to a file: `gh issue close <spec> --comment "$(cat <file>)"`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
+   - **Any Ticket open** (held by another login, stopped, or not started after a stop): post the end comment on the Spec and leave it open; whoever merges the last Ticket closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
 
    Then remove every worktree of the run that is left, and the check lock if one is. Done when the end comment is on the Spec and printed in the chat, word for word.
 
@@ -79,7 +78,7 @@ Posted on the Spec (`gh issue comment <spec> --body-file <file>`, or as the clos
 
 ### Left open
 
-- #<ticket> <title>: @<assignee>
+- #<ticket> <title>: @<assignee>, or no assignee
 
 ### Stops
 
@@ -102,7 +101,7 @@ The repository's rules name where a human is needed; there, the Ticket stops ([S
 
 ## Stopping
 
-A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree (its branch stays, for the next run), and add the stop to the ledger. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
+A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree (its branch stays, for the next run), and add the stop to the ledger. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
 
 ## Merge conflicts
 
@@ -118,7 +117,7 @@ until mkdir "$lock" 2>/dev/null; do sleep 15; done; echo "<ticket>" > "$lock/hol
 rm -rf "$lock"                                                                          # release it
 ```
 
-A wait that reaches its ten-minute timeout is run again. A lock whose holder is no longer in flight is stale: remove it when you remove that Ticket's worktree.
+A wait that reaches its ten-minute timeout is run again. A lock whose holder is no longer in flight is stale: remove it (`rm -rf "$lock"`) when you remove that Ticket's worktree.
 
 ## Three in flight
 
