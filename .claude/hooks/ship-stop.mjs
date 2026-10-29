@@ -178,6 +178,17 @@ export function pullRequestStateOf(answer) {
 }
 
 /**
+ * Whether the check looks at a hook input at all: a Stop whose stop hook is
+ * not already active.
+ *
+ * @param {HookInput} input
+ * @returns {boolean}
+ */
+function applies(input) {
+  return input.hook_event_name === "Stop" && input.stop_hook_active !== true;
+}
+
+/**
  * The check's verdict on a hook input, given its three facts: `block` with
  * the reason the Agent reads and the Stop output, or `pass`.
  *
@@ -186,9 +197,7 @@ export function pullRequestStateOf(answer) {
  * @returns {Verdict}
  */
 export function verdict(input, facts) {
-  if (input.hook_event_name !== "Stop" || input.stop_hook_active === true) {
-    return { verdict: "pass" };
-  }
+  if (!applies(input)) return { verdict: "pass" };
   const { pending, ahead, pullRequest } = facts;
   if (!pending || ahead === null || ahead <= 0) return { verdict: "pass" };
   if (pullRequest !== "none" && pullRequest !== "draft") {
@@ -216,9 +225,7 @@ export function run(input, read) {
   /** @type {Facts} */
   const facts = { pending: false, ahead: null, pullRequest: null };
   const decide = () => verdict(input, facts);
-  if (input.hook_event_name !== "Stop" || input.stop_hook_active === true) {
-    return decide();
-  }
+  if (!applies(input)) return decide();
   try {
     facts.pending = implementPending(read.transcript());
     if (!facts.pending) return decide();
