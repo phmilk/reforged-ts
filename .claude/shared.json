@@ -7,6 +7,7 @@
     ".claude/hooks/replaced-skill-stop.mjs",
     ".claude/hooks/replaced-skills.mjs",
     ".claude/hooks/shadowed-skills.mjs",
+    ".claude/hooks/ship-stop.mjs",
     ".claude/hooks/skill-target.mjs",
     ".claude/settings.json"
   ]
