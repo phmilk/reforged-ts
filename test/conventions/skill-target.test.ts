@@ -202,7 +202,7 @@ describe("passOutput", () => {
   });
 
   it("off the default branch, names /ship and next-step only", () => {
-    for (const current of ["806-next-steps-main-flow", ""]) {
+    for (const current of ["feat/806-next-steps-main-flow", ""]) {
       expect(
         passOutput(implement("implement"), { current, default: "master" }),
       ).toEqual(context("UserPromptSubmit", SHIP_AND_NEXT_STEP));
@@ -401,6 +401,30 @@ describe("verdict", () => {
       );
     },
   );
+
+  it("passes /grill-with-docs and /write-spec, which name no issue to check, whatever the issue", () => {
+    const closedSpec = {
+      repository: LIBRARY,
+      number: 802,
+      open: false,
+      closedBy: "alice",
+      isSpec: true,
+      subIssues: 0,
+      coverageTable: false,
+      openBlockers: [],
+      spec: null,
+    };
+    for (const skill of ["grill-with-docs", "write-spec"] as const) {
+      expect(
+        verdict(
+          { event: "UserPromptSubmit", skill, args: "802" },
+          closedSpec,
+          null,
+          LIBRARY,
+        ),
+      ).toEqual({ verdict: "pass" });
+    }
+  });
 
   it("stops /implement on a closed Spec too", () => {
     const result = verdict(
@@ -792,7 +816,7 @@ describe("the skill-target script", () => {
 
   it("lets a takeable Ticket through on both events off the default branch, adding /ship and next-step to the Agent's context", () => {
     const answers = {
-      git: { current: "740-a-ticket", default: "master" },
+      git: { current: "feat/740-a-ticket", default: "master" },
       repo: LIBRARY,
       issue: issueData({ parent: SPEC_PARENT }),
     };
@@ -905,7 +929,7 @@ describe("the skill-target script", () => {
 
   it("asks GitHub nothing with no issue reference, adding only the skill's line", () => {
     const answers = {
-      git: { current: "806-next-steps-main-flow", default: "master" },
+      git: { current: "feat/806-next-steps-main-flow", default: "master" },
       repo: LIBRARY,
     };
 

@@ -14,7 +14,14 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
 
 ## Steps
 
-1. **Read the state.** The skill that just ended in this session: `/grill-with-docs`, `/write-spec`, `/split-spec`, or an implement (`/implement`, `/implement-spec`, or a project skill that replaces `/implement`); with none, an implement when the branch has commits ahead of its base, else the Collaborator's question. After `/write-spec`, the Spec it published; after `/split-spec`, the Spec it split and its Frontier, `pnpm spec:frontier <spec>`. After `/grill-with-docs` there is no issue yet: read nothing more. After an implement, the issue just worked, or the one the Collaborator names: `gh issue view <n> --json number,state,title,labels,body`, its body for the criteria still unchecked and the "check whether…" without their `Outcome:` line. Its parent, `gh api repos/<owner>/<repo>/issues/<n>/parent` (a 404: no parent), and when the parent is labelled `spec`, that Spec's Frontier: `pnpm spec:frontier <spec>`. The branch, `git branch --show-current`, and its pull request: `gh pr view --json number,state,autoMergeRequest`. Whether `/code-review` ran on the branch's last commits: its two reports in this session, since it posts nothing to GitHub. Done when each of these is read, or known to be absent.
+1. **Read the state.** First the skill that just ended in this session: `/grill-with-docs`, `/write-spec`, `/split-spec`, or an implement (`/implement`, `/implement-spec`, or a project skill that replaces `/implement`); with none, an implement when the branch has commits ahead of its base, else the Collaborator's question. Then what that hand-over needs:
+   - **After `/grill-with-docs`:** nothing more; there is no issue yet.
+   - **After `/write-spec`:** the Spec it published.
+   - **After `/split-spec`:** the Spec it split and its Frontier, `pnpm spec:frontier <spec>`.
+   - **After an implement:** the issue just worked, or the one the Collaborator names: `gh issue view <n> --json number,state,title,labels,body`, its body for the criteria still unchecked and the "check whether…" without their `Outcome:` line. Its parent, `gh api repos/<owner>/<repo>/issues/<n>/parent` (a 404: no parent), and when the parent is labelled `spec`, that Spec's Frontier: `pnpm spec:frontier <spec>`. The branch, `git branch --show-current`, and its pull request: `gh pr view --json number,state,autoMergeRequest`. Whether `/code-review` ran on the branch's last commits: its two reports in this session, since it posts nothing to GitHub.
+
+   Done when the hand-over is known and each of its reads is done, or known to be absent.
+
 2. **Choose the steps.** `ask-matt`'s main flow, in this repository's names, from the hand-over just reached:
    - **After `/grill-with-docs`:** `/write-spec`, which turns the session into a Spec. Done there: one step.
    - **After `/write-spec`:** `/split-spec <spec>`, which splits it into Tickets with its Coverage table. Done there: one step.

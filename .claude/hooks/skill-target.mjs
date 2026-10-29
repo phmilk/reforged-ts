@@ -39,8 +39,8 @@
 // An issue of the clone's repository is named #n, any other in full, in
 // the reason and in the commands it gives. With no issue reference it reads
 // no issue and lets the skill run with its line; when `gh` or the network
-// fails it lets the skill run with a one-line warning and its line, since the claim check still holds the rule on the pull
-// request. requestOf, issueRefOf, verdict, replacedVerdict and passOutput
+// fails it lets the skill run with a one-line warning and its line, since
+// the claim check still holds the rule on the pull request. requestOf, issueRefOf, verdict, replacedVerdict and passOutput
 // are pure; the rest reads GitHub through `gh` and the branches through
 // `git`, and prints the event's output. It always exits 0.
 //
@@ -116,7 +116,12 @@ const SKILLS = [
  *
  * @type {readonly Skill[]}
  */
-const HELD = ["implement", "implement-spec", "ship-spec", "split-spec"];
+const ISSUE_CHECKED = [
+  "implement",
+  "implement-spec",
+  "ship-spec",
+  "split-spec",
+];
 
 /**
  * The implements: they end with /ship, then next-step.
@@ -305,7 +310,7 @@ function insteadOfBlocked(spec, takeable, home) {
  */
 export function verdict(request, issue, takeable, home) {
   const { skill } = request;
-  if (!HELD.includes(skill)) return { verdict: "pass" };
+  if (!ISSUE_CHECKED.includes(skill)) return { verdict: "pass" };
   const name = refName(issue, home);
   if (!issue.open) {
     // A closed Spec, whatever skill names it; a closed Ticket, for the
@@ -404,6 +409,7 @@ export function replacedVerdict(input, replaced) {
   );
 }
 
+/** The source the lines a skill let through cite. */
 const NEXT_STEP_SOURCE = "ADR 0026, .claude/hooks/skill-target.mjs";
 
 /**
@@ -459,6 +465,25 @@ export function passOutput(request, branches) {
   };
 }
 
+/**
+ * Runs `program` with `args` (constants and checked names only), its output
+ * as text. On Windows it goes through the shell, which finds a `.exe` or a
+ * `.cmd` of that name.
+ *
+ * @param {"gh" | "git"} program
+ * @param {readonly string[]} args
+ * @param {{ input?: string, cwd?: string, timeout: number }} options
+ */
+function spawnTool(program, args, options) {
+  return process.platform === "win32"
+    ? spawnSync(`${program} ${args.join(" ")}`, {
+        ...options,
+        encoding: "utf8",
+        shell: true,
+      })
+    : spawnSync(program, args, { ...options, encoding: "utf8" });
+}
+
 // GitHub, through `gh`.
 
 /** How long one `gh` call may take: the session waits on it. */
@@ -477,19 +502,7 @@ const GIT_TIMEOUT_MS = 5_000;
  * @returns {string}
  */
 function gh(args, input) {
-  const windows = process.platform === "win32";
-  const result = windows
-    ? spawnSync(`gh ${args.join(" ")}`, {
-        input,
-        encoding: "utf8",
-        shell: true,
-        timeout: GH_TIMEOUT_MS,
-      })
-    : spawnSync("gh", args, {
-        input,
-        encoding: "utf8",
-        timeout: GH_TIMEOUT_MS,
-      });
+  const result = spawnTool("gh", args, { input, timeout: GH_TIMEOUT_MS });
   if (result.error !== undefined) throw result.error;
   if (result.status !== 0) {
     throw new Error(
@@ -662,19 +675,7 @@ function currentRepository() {
  * @returns {string}
  */
 function git(args, cwd) {
-  const windows = process.platform === "win32";
-  const result = windows
-    ? spawnSync(`git ${args.join(" ")}`, {
-        cwd,
-        encoding: "utf8",
-        shell: true,
-        timeout: GIT_TIMEOUT_MS,
-      })
-    : spawnSync("git", args, {
-        cwd,
-        encoding: "utf8",
-        timeout: GIT_TIMEOUT_MS,
-      });
+  const result = spawnTool("git", args, { cwd, timeout: GIT_TIMEOUT_MS });
   if (result.error !== undefined) throw result.error;
   if (result.status !== 0) {
     throw new Error(`git ${args[0] ?? ""} exited ${String(result.status)}`);
@@ -751,13 +752,13 @@ export async function run(input, projectDir) {
           : projectDir,
       )
     : null;
-  const pass = passOutput(request, branches);
+  const allowed = passOutput(request, branches);
   // /grill-with-docs and /write-spec name no issue to check.
-  if (!HELD.includes(request.skill)) return pass;
+  if (!ISSUE_CHECKED.includes(request.skill)) return allowed;
   // A bare number or #n names an issue of this clone's repository; an
   // issue named in full is named in full again. With none, the skill runs.
   const named = issueRefOf(request.args, null);
-  if (named === null) return pass;
+  if (named === null) return allowed;
   try {
     const home = named.repository === null ? currentRepository() : null;
     const issue = readIssue({
@@ -772,13 +773,13 @@ export async function run(input, projectDir) {
         ? await takeableOf(projectDir, issue.spec, home)
         : null;
     const result = verdict(request, issue, takeable, home);
-    return result.verdict === "block" ? result.output : pass;
+    return result.verdict === "block" ? result.output : allowed;
   } catch (error) {
     // The skill runs, and still ends with its next steps.
     const warned = warning(
       error instanceof Error ? error.message : String(error),
     );
-    return { ...warned, ...pass };
+    return { ...warned, ...allowed };
   }
 }
 
