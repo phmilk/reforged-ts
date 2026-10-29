@@ -139,7 +139,7 @@ describe("probe:read", () => {
     const { context, resultFile } = await setup();
     await writeResult(resultFile, preloadFile(bridgeLines()));
 
-    expect(readProbeRun(BRIDGE_PROBE, context).patch).toBe("3.0.0.12345");
+    expect(readProbeRun(BRIDGE_PROBE, context).patch).toBe("3.0.1.12345");
   });
 
   it("prints the Game data of the BEGIN line on its own line, before the records", async () => {

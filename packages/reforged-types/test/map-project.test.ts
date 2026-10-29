@@ -65,15 +65,15 @@ describe("a Map project with the Template's types", () => {
       typings.map((name) => name.slice(normalize(workspace.installed).length)),
     ).toEqual(
       expect.arrayContaining([
-        "/3.0.0.d.ts",
+        "/3.0.1.d.ts",
         "/rawcode.d.ts",
         "/lua-runtime.d.ts",
-        "/3.0.0/common.j.d.ts",
-        "/3.0.0/blizzard.j.d.ts",
+        "/3.0.1/common.j.d.ts",
+        "/3.0.1/blizzard.j.d.ts",
       ]),
     );
     expect(typings).not.toContain(
-      normalize(join(workspace.installed, "3.0.0", "common.ai.d.ts")),
+      normalize(join(workspace.installed, "3.0.1", "common.ai.d.ts")),
     );
   });
 

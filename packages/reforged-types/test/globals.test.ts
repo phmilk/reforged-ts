@@ -628,7 +628,7 @@ describe("generate: globals block errors", () => {
 
 describe("generate: the vendored Patch files", () => {
   const patchDir = fileURLToPath(
-    new URL("../vendor/3.0.0.24268", import.meta.url),
+    new URL("../vendor/3.0.1.24370", import.meta.url),
   );
   const emptyOverlay = fileURLToPath(
     new URL("./fixtures/cli/overlay", import.meta.url),
@@ -645,7 +645,7 @@ describe("generate: the vendored Patch files", () => {
           d.file === source &&
           d.message.includes("for global "),
       ).length;
-    expect(missingGlobals("common.j")).toBe(1738);
+    expect(missingGlobals("common.j")).toBe(1871);
     expect(missingGlobals("blizzard.j")).toBe(522);
     expect(missingGlobals("common.ai")).toBe(472);
     expect(result.diagnostics).toContainEqual(

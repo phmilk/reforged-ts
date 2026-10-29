@@ -39,7 +39,7 @@ export const FAILING_PROBE = "failing";
 export const BRIDGE_RUN_ID = "bridge";
 
 /**
- * The manifest the Lua test's build reads, whose `patch`, 3.0.0.12345, is
+ * The manifest the Lua test's build reads, whose `patch`, 3.0.1.12345, is
  * the Patch in the fixtures' `BEGIN` line: not the Typings' own, so a new
  * Patch changes no fixture.
  */

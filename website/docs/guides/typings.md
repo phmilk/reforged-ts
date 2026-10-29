@@ -15,12 +15,12 @@ The Template lists the Typings of its Game version in `types`, next to typescrip
 ```json
 {
   "compilerOptions": {
-    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"]
+    "types": ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1"]
   }
 }
 ```
 
-That one entry declares every `common.j` Native, type and global, the `blizzard.j` functions and globals, the globals the game's Lua adds (`FourCC`, `__jarray`), the Rawcode types (`Rawcode`, `ObjectKind`, `UnknownRawcode`) and the Lua 5.3 standard library. The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out; to use them, add `reforged-types/3.0.0/common.ai` to `types` as well.
+That one entry declares every `common.j` Native, type and global, the `blizzard.j` functions and globals, the globals the game's Lua adds (`FourCC`, `__jarray`), the Rawcode types (`Rawcode`, `ObjectKind`, `UnknownRawcode`) and the Lua 5.3 standard library. The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out; to use them, add `reforged-types/3.0.1/common.ai` to `types` as well.
 
 The declarations turn the game's rules into compile errors:
 

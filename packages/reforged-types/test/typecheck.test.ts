@@ -84,7 +84,7 @@ describe("the typings type-check", () => {
       config.fileNames.map((name) =>
         relative(packageRoot, name).replace(/\\/g, "/"),
       ),
-    ).toEqual(["3.0.0.d.ts", "3.0.0/common.ai.d.ts"]);
+    ).toEqual(["3.0.1.d.ts", "3.0.1/common.ai.d.ts"]);
     expect(config.options.noEmit).toBe(true);
     expect(config.options.skipLibCheck).toBeFalsy();
   });
@@ -100,7 +100,7 @@ describe("the typings type-check", () => {
   // Measured 1.5 s with pnpm test on the windows CI leg of #815, 3.2 s on Linux
   // (WSL 2, 8 threads), 2026-10.
   it("fails when a generated file is broken", async () => {
-    const path = "3.0.0/common.j.d.ts";
+    const path = "3.0.1/common.j.d.ts";
     const text = await readFile(join(packageRoot, path), "utf8");
 
     const diagnostics = typecheck({
@@ -108,7 +108,7 @@ describe("the typings type-check", () => {
     });
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
-    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
+    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.1\/common\.j\.d\.ts$/);
   }, 30_000);
 
   // Measured 1.0 s with pnpm test on the windows CI leg of #815, 1.8 s on Linux

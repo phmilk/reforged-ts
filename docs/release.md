@@ -51,7 +51,7 @@ Every publishable package declares the game Patch it supports in its `package.js
 
 It is the minimum Patch the package supports ([ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md)), and the one place that says so: the compatibility matrix and the docs read it, and so will the Patch-watch workflow the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)). Private packages (the workspace root, the release scripts) have none. The fields must agree:
 
-- Each names a Patch `reforged-types` ships an entry for: a Game version folder of the Typings (`packages/reforged-types/3.0.0/`) whose `manifest.json` records that Build.
+- Each names a Patch `reforged-types` ships an entry for: a Game version folder of the Typings (`packages/reforged-types/3.0.1/`) whose `manifest.json` records that Build.
 - The library's (`reforged-ts`) is the newest Patch the Typings ship an entry for: the library pins the newest Patch it supports.
 
 `pnpm release:check-patches` checks both and prints one line per package that breaks them. It is the script CI calls ([#48](https://github.com/phmilk/reforged-ts/issues/48)), and the compatibility matrix generator runs the same check before writing a row. Its programmatic entry point is `checkPatches` in `release/src/check-patches.ts`.
@@ -69,7 +69,7 @@ Which fields move:
 
 - `reforged-types` and `reforged-ts` move to the new Patch every time, since the library pins the newest Patch the Typings ship.
 - `reforged-builtins` moves to the new Patch every time it is regenerated for it: `builtins:generate` writes its `reforged.patch`, and its `exports` move to a Game version the Build opens.
-- Another package moves when the minimum Patch it supports changes.
+- Another package moves when the minimum Patch it supports changes, or when the Typings drop the Game version its Build belongs to: `reforged-types` ships only the Game versions from its own `reforged.patch` up (#800), so a field naming an older Build moves to that `reforged.patch`.
 - When the new Build shares its Game version with the old one (`3.0.0.24268` then `3.0.0.24277`), the Game version folder is regenerated from the new Build and the old Build loses its entry: every field naming the old Build moves to the new one.
 
 When the rules give the library no bump, its field still moves, so the changeset names it with `none` (which `release:check-changeset` accepts for the changed manifest); no library version is released and its next release carries the field:

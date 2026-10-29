@@ -311,7 +311,6 @@ describe("typings:generate <tag>", () => {
 
 describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
   const packageRoot = fileURLToPath(new URL("../", import.meta.url));
-  const previous = join(packageRoot, "vendor", "3.0.0.24268");
   const committed = join(packageRoot, "vendor", "3.0.1.24370");
 
   // Measured 3.0 s with pnpm test on the windows CI leg of #815, 8.6 s on Linux
@@ -322,7 +321,6 @@ describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
     ) as { tag: string; commit: string };
     const vendorDir = await tempDir("vendor");
     const outDir = await tempDir("out");
-    await cp(previous, join(vendorDir, "3.0.0.24268"), { recursive: true });
     await cp(committed, join(vendorDir, "3.0.1.24370"), { recursive: true });
 
     const { status, stdout } = await runCli(
@@ -349,14 +347,8 @@ describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
     expect(lines[0]).toBe(
       `Vendored ${provenance.tag}: Patch 3.0.1.24370 at commit ${provenance.commit}, unchanged.`,
     );
-    expect(lines[1]).toBe(
-      "In Patch 3.0.1.24370 and not in Patch 3.0.0.24268 (174):",
-    );
-    expect(
-      stdout.endsWith(
-        "\nGenerated 11 files for Patches 3.0.0.24268 and 3.0.1.24370.\n",
-      ),
-    ).toBe(true);
+    expect(lines[1]).toBe("Generated 6 files for Patch 3.0.1.24370.");
+    expect(lines.slice(2)).toEqual([""]);
     for (const name of await readdir(committed)) {
       expect(
         (await readFile(join(vendorDir, "3.0.1.24370", name))).equals(
@@ -366,11 +358,6 @@ describe("typings:generate on the vendored 3.0.1.24370 tag", () => {
       ).toBe(true);
     }
     for (const path of [
-      "3.0.0/common.j.d.ts",
-      "3.0.0/blizzard.j.d.ts",
-      "3.0.0/common.ai.d.ts",
-      "3.0.0/manifest.json",
-      "3.0.0.d.ts",
       "3.0.1/common.j.d.ts",
       "3.0.1/blizzard.j.d.ts",
       "3.0.1/common.ai.d.ts",

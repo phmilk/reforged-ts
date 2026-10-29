@@ -103,10 +103,10 @@ const PACKAGES: readonly Expected[] = [
       /^async-natives\.json$/,
     ],
     required: [
-      "3.0.0.d.ts",
-      "3.0.0/common.j.d.ts",
-      "3.0.0/blizzard.j.d.ts",
-      "3.0.0/common.ai.d.ts",
+      "3.0.1.d.ts",
+      "3.0.1/common.j.d.ts",
+      "3.0.1/blizzard.j.d.ts",
+      "3.0.1/common.ai.d.ts",
       "lua-runtime.d.ts",
       "rawcode.d.ts",
       "async-natives.json",
@@ -276,6 +276,31 @@ describe("the workspace manifests", () => {
       ranges.filter((line) => !line.endsWith(" workspace:^")),
       "a hand-written range or another workspace protocol",
     ).toEqual([]);
+  });
+});
+
+describe("the reforged-types tarball", () => {
+  it("ships the Typings of no Game version below its minimum Patch", () => {
+    const result = packed.get("reforged-types");
+    if (result === undefined) throw new Error("reforged-types was not packed");
+    const { files, manifest } = result;
+    const { patch } = manifest.reforged as { patch: string };
+    // A Game version as one number, its three components in 10 bits each.
+    const rank = (version: string) =>
+      version
+        .split(".")
+        .slice(0, 3)
+        .reduce((sum, part) => sum * 1024 + Number(part), 0);
+    const minimum = rank(patch);
+    const below = (version: string) => rank(version) < minimum;
+    expect(
+      files.filter((path) => {
+        const version = /^(\d+\.\d+\.\d+)(?:\.d\.ts$|\/)/.exec(path)?.[1];
+        return version !== undefined && below(version);
+      }),
+    ).toEqual([]);
+    // 3.0.0 is below the minimum Patch, 3.0.1.24370 (#800).
+    expect(files.filter((path) => path.startsWith("3.0.0"))).toEqual([]);
   });
 });
 

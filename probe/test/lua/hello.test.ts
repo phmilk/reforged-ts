@@ -73,7 +73,7 @@ describe("the hello Probe's bundle", () => {
 
   it("writes BEGIN and a CHECKPOINT line in main, before the editor's main and with no message: the line probe:run waits for to post its key", () => {
     const written = [
-      "1 BEGIN patch=3.0.0.12345 probe=hello run=bridge",
+      "1 BEGIN patch=3.0.1.12345 probe=hello run=bridge",
       "2 CHECKPOINT",
     ];
     expect(fileWhenEditorMainRan).toEqual(written);

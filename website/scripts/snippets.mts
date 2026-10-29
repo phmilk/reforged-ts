@@ -115,7 +115,7 @@ export const MAP_PROJECT_OPTIONS: ts.CompilerOptions = {
   strict: true,
   skipLibCheck: true,
   noEmit: true,
-  types: ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"],
+  types: ["@typescript-to-lua/language-extensions", "reforged-types/3.0.1"],
 };
 
 /** A Map project's options with the Built-in objects' overloads in `types`. */
