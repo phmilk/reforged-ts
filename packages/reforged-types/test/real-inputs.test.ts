@@ -18,6 +18,8 @@ let commonJ: string;
 let blizzardJ: string;
 let commonAi: string;
 
+// Measured 8.9 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   const generated = await generate({
     patchDir,

@@ -36,6 +36,8 @@ describe("the check-time measurement of the map's overloads", () => {
     );
   });
 
+  // Measured 4.5 s with pnpm test on the windows CI leg of #815, 12.3 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("type-checks the project with and without the overloads generateObjects writes", () => {
     const result = measure({ objects: 3, calls: [4], runs: 1 });
 
@@ -45,8 +47,10 @@ describe("the check-time measurement of the map's overloads", () => {
     expect(formatMeasurement(result)).toMatch(
       /^Check time of a Map project, median, with the FourCC overloads of 3 Custom units and without:\n- 4 calls: /,
     );
-  }, 60_000);
+  }, 30_000);
 
+  // Measured 3.5 s with pnpm test on the windows CI leg of #815, 7.2 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("prints the measurement of the command, and exits 2 on a bad argument", () => {
     const out: string[] = [];
     const err: string[] = [];
@@ -63,10 +67,12 @@ describe("the check-time measurement of the map's overloads", () => {
     ]);
     expect(main(["--", "--runs", "1"], output, 2, [2])).toBe(0);
     expect(out.join("")).toMatch(/Custom units and without:\n- 2 calls: /);
-  }, 60_000);
+  }, 30_000);
 });
 
 describe("the reload cost of the Rawcode lookup over Object definitions", () => {
+  // Measured 0.3 s with pnpm test on the windows CI leg of #815, 0.6 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("loads every definition file, then reloads after each edit of one", () => {
     const result = measureReload({ files: 3, runs: 4 });
 
@@ -75,8 +81,10 @@ describe("the reload cost of the Rawcode lookup over Object definitions", () => 
     expect(formatReload(result)).toMatch(
       /^Rawcode lookup over 3 Object definition files: first load \d+ ms, reload after editing one file \d+ ms \(median\), \d+ ms at most\.\n$/,
     );
-  }, 60_000);
+  }, 15_000);
 
+  // Measured 0.2 s with pnpm test on the windows CI leg of #815, 0.3 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it("prints the measurement of the command, and exits 2 on a bad argument", () => {
     const out: string[] = [];
     const err: string[] = [];
@@ -89,5 +97,5 @@ describe("the reload cost of the Rawcode lookup over Object definitions", () => 
     expect(err).toEqual(["Usage: map:measure:definitions [--runs <n>]\n"]);
     expect(mainDefinitions(["--", "--runs", "1"], output, 2)).toBe(0);
     expect(out.join("")).toMatch(/over 2 Object definition files/);
-  }, 60_000);
+  }, 15_000);
 });

@@ -161,7 +161,7 @@ async function beforeFirstPublish(): Promise<string> {
   return root;
 }
 
-describe("changeset version", { timeout: 60_000 }, () => {
+describe("changeset version", () => {
   it("gives every publishable package 1.0.0-alpha.0 first", async () => {
     const root = await beforeFirstPublish();
     const releaseVersions = await versions(root);

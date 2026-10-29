@@ -612,6 +612,8 @@ describe("the adopted files in a Map project", () => {
   let diagnostics: string[];
   let files: string[];
 
+  // Measured 3.8 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     if (
       !fs.existsSync(path.join(PACKAGE_ROOT, "dist", "object-definitions.d.ts"))
@@ -657,7 +659,7 @@ describe("the adopted files in a Map project", () => {
       }),
     );
     diagnostics = typecheck(tsconfig);
-  }, 60_000);
+  }, 30_000);
 
   it("type-check", () => {
     expect(files.length).toBeGreaterThan(30);

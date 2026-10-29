@@ -16,6 +16,8 @@ const modules = ["handlekeys", "handlemap", "handleset"] as const;
 /** The emitted Lua of each module, by module name. */
 const lua = new Map<string, string>();
 
+// Measured 16.2 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(() => {
   const { diagnostics } = transpileProject(
     tsconfig,

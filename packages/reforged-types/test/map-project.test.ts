@@ -26,9 +26,11 @@ import { required } from "./support/fixture.js";
 
 let workspace: Workspace;
 
+// Measured 0.4 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   workspace = await createWorkspace();
-}, 60_000);
+}, 30_000);
 
 afterAll(async () => {
   await (workspace as Workspace | undefined)?.dispose();
@@ -39,12 +41,14 @@ describe("a Map project with the Template's types", () => {
   let program: ts.Program;
   let diagnostics: string[];
 
+  // Measured 3.4 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(async () => {
     project = await createMapProject(workspace, "checked", TEMPLATE_TYPES);
     const result = typecheck(project);
     program = result.program;
     diagnostics = result.diagnostics.map((d) => locate(project, d));
-  }, 60_000);
+  }, 30_000);
 
   it("reads the Typings from the installed package, never from this package's sources", () => {
     const typings = program
@@ -169,10 +173,12 @@ describe("a Map project with the Template's types", () => {
 describe("a Map project that adds the common.ai path", () => {
   let diagnostics: string[];
 
+  // Measured 2.1 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(async () => {
     const project = await createMapProject(workspace, "ai", AI_TYPES);
     diagnostics = typecheck(project).diagnostics.map((d) => locate(project, d));
-  }, 60_000);
+  }, 30_000);
 
   it("type-checks calls to the AI natives with zero diagnostics", () => {
     expect(
@@ -193,6 +199,8 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
   let lua: string;
   let rawcodesLua: string;
 
+  // Measured 1.9 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(async () => {
     source = await readFixture("lua", "callbacks.ts");
     const project = await createMapProject(workspace, "lua", TEMPLATE_TYPES);
@@ -218,7 +226,7 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
       emitted.get(normalize(join(project.dir, "dist", "rawcodes.lua"))),
       "rawcodes.lua",
     );
-  }, 60_000);
+  }, 30_000);
 
   it("compiles a fixture that has no @noSelfInFile of its own", () => {
     expect(source).not.toContain("@noSelf");

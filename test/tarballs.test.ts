@@ -239,6 +239,8 @@ const sources = new Map<string, Manifest>();
 let rootManifest: Manifest;
 let temp: string;
 
+// Measured 0.7 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+// windows leg's report carries no hook duration.
 beforeAll(async () => {
   rootManifest = await readManifest(join(workspaceRoot, "package.json"));
   for (const dir of await readdir(join(workspaceRoot, "packages"))) {
@@ -253,7 +255,7 @@ beforeAll(async () => {
       packed.set(dir, await pack(dir, join(temp, dir)));
     }),
   );
-}, 180_000);
+}, 30_000);
 
 afterAll(async () => {
   await rm(temp, { recursive: true, force: true });

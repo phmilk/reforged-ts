@@ -194,6 +194,8 @@ describe("the real World Editor check", () => {
   // most), where a later warm check, "is on by default" below, takes 0.7 s;
   // past the check's default 15 s in a run where the runner stalled (#658).
   // This test is about reading the titles, so it gives the check 50 s.
+  // Measured 4.5 s with pnpm test on the windows CI leg of #815, 2.0 s on Linux
+  // (WSL 2, 8 threads), 2026-10. Kept above the check's 50 s.
   it.runIf(realCheckRuns())(
     "returns no window for a temporary folder",
     () => {
@@ -204,6 +206,8 @@ describe("the real World Editor check", () => {
     60_000,
   );
 
+  // Measured 0.0 s with pnpm test on the windows CI leg of #815, 0.0 s on Linux
+  // (WSL 2, 8 threads), 2026-10.
   it.runIf(realCheckRuns())(
     "fails as the writer error when it times out",
     () => {
@@ -211,11 +215,13 @@ describe("the real World Editor check", () => {
         thrown(() => checkWorldEditor(mapFolder({}), { timeout: 1 })),
       ).toMatchObject({ reason: "world-editor-check-failed" });
     },
-    60_000,
+    15_000,
   );
 });
 
 describe("a save's World Editor check", () => {
+  // Measured 0.6 s with pnpm test on the windows CI leg of #815, 1.8 s on Linux
+  // (WSL 2, 8 threads), 2026-10. Kept above the check's default 15 s.
   it("is on by default", () => {
     const folder = copyFixture();
     const target = staleCopy(folder);
@@ -225,7 +231,7 @@ describe("a save's World Editor check", () => {
       written: ["war3map.w3u"],
       worldEditor: "no-window",
     });
-  }, 60_000);
+  }, 30_000);
 
   it("writes when no World Editor window holds the folder, and the result says so", () => {
     const folder = copyFixture();

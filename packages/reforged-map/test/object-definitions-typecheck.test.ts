@@ -65,6 +65,8 @@ export const h = defineUnit({ rawcode: "h008", base: FourCC("hfoo"), fields: { u
 describe("the types of Object definitions in a Map project", () => {
   let diagnostics: string[];
 
+  // Measured 4.3 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
+  // windows leg's report carries no hook duration.
   beforeAll(() => {
     if (
       !fs.existsSync(path.join(PACKAGE_ROOT, "dist", "object-definitions.d.ts"))
@@ -110,7 +112,7 @@ describe("the types of Object definitions in a Map project", () => {
       }),
     );
     diagnostics = typecheck(tsconfig);
-  }, 60_000);
+  }, 30_000);
 
   it("accepts a definition of every kind, the empty value, a localized value, levels and the raw escape", () => {
     expect(
