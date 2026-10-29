@@ -88,7 +88,7 @@ One line per Agent skill of the repository: its `SKILL.md`, then its trigger. Wh
 - [add-lint-rule](.claude/skills/add-lint-rule/SKILL.md): guard a pitfall at lint level, or add a rule to `eslint-plugin-reforged`.
 - [add-wrapper](.claude/skills/add-wrapper/SKILL.md): cover a Native, add a member to a Wrapper, or close a Native the Wrapper coverage report lists as missing.
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
-- [next-step](.claude/skills/next-step/SKILL.md): print the next steps at the end of every implement, or when explicitly asked for them.
+- [next-step](.claude/skills/next-step/SKILL.md): print the next steps at the end of every `/grill-with-docs`, `/write-spec`, `/split-spec` and implement, or when explicitly asked for them.
 - [ship](.claude/skills/ship/SKILL.md): push an implement's branch and open its pull request, at the end of every implement or when explicitly asked to ship a branch.
 - [split-spec](.claude/skills/split-spec/SKILL.md): split a Spec into Tickets with its Coverage table, when explicitly asked to or when another skill asks for it. It replaces `to-tickets`.
 - [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one. It replaces `to-spec`.

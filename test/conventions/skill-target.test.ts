@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   issueRefOf,
+  passOutput,
   replacedVerdict,
   requestOf,
   verdict,
@@ -68,6 +69,19 @@ describe("requestOf", () => {
     expect(requestOf(skillCall("reforged:implement"))).toEqual({
       event: "PreToolUse",
       skill: "implement",
+      args: "",
+    });
+  });
+
+  it("reads the other hand-overs of the main flow, /grill-with-docs and /write-spec", () => {
+    expect(requestOf(typed("/grill-with-docs the plan"))).toEqual({
+      event: "UserPromptSubmit",
+      skill: "grill-with-docs",
+      args: "the plan",
+    });
+    expect(requestOf(skillCall("write-spec"))).toEqual({
+      event: "PreToolUse",
+      skill: "write-spec",
       args: "",
     });
   });
@@ -145,6 +159,87 @@ describe("replacedVerdict", () => {
     ]) {
       expect(replacedVerdict(input, map)).toEqual({ verdict: "pass" });
     }
+  });
+});
+
+// The line a skill let through adds to the Agent's context (#806): an
+// implement names the branch to create on the default branch, then /ship
+// and next-step; the other hand-overs of the main flow name next-step.
+const SHIP_AND_NEXT_STEP =
+  "This repository ends every implement with /ship, which reviews the branch, pushes it and opens its pull request, then with the next-step skill, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0026, .claude/hooks/skill-target.mjs).";
+const ON_MASTER = `This session is on the default branch, master: before the first commit, create the work's branch from the remote default, git fetch origin master then git switch -c <type>/<n>-<slug> origin/master, <type> the Conventional Commits type of the work, <n> its issue and <slug> a few kebab-case words of the issue's title. ${SHIP_AND_NEXT_STEP}`;
+const handOver = (skill: string) =>
+  `This repository ends /${skill} with the next-step skill: when this work is done, run next-step, which prints the next steps of the main flow from the state of the work, its issue and its Spec (ADR 0026, .claude/hooks/skill-target.mjs).`;
+const context = (event: string, line: unknown) => ({
+  hookSpecificOutput: { hookEventName: event, additionalContext: line },
+});
+
+describe("passOutput", () => {
+  const implement = (skill: "implement" | "implement-spec") => ({
+    event: "UserPromptSubmit" as const,
+    skill,
+    args: "806",
+  });
+
+  it("on the default branch, tells an implement to create <type>/<n>-<slug> from the remote default first, then to end with /ship and next-step", () => {
+    const onMaster = { current: "master", default: "master" };
+    expect(passOutput(implement("implement"), onMaster)).toEqual(
+      context("UserPromptSubmit", ON_MASTER),
+    );
+    expect(
+      passOutput(implement("implement-spec"), {
+        current: "main",
+        default: "main",
+      }),
+    ).toEqual(
+      context(
+        "UserPromptSubmit",
+        expect.stringMatching(
+          /^This session is on the default branch, main: .*git fetch origin main then git switch -c <type>\/<n>-<slug> origin\/main, .*ends every implement with \/ship.*next-step skill/,
+        ) as unknown,
+      ),
+    );
+  });
+
+  it("off the default branch, names /ship and next-step only", () => {
+    for (const current of ["806-next-steps-main-flow", ""]) {
+      expect(
+        passOutput(implement("implement"), { current, default: "master" }),
+      ).toEqual(context("UserPromptSubmit", SHIP_AND_NEXT_STEP));
+    }
+  });
+
+  it("names the branch to create as a condition when git could not read the branches", () => {
+    expect(passOutput(implement("implement"), null)).toEqual(
+      context(
+        "UserPromptSubmit",
+        `When this session is on the default branch, first create the work's branch <type>/<n>-<slug> from the remote default (git fetch origin <default>, then git switch -c <type>/<n>-<slug> origin/<default>). ${SHIP_AND_NEXT_STEP}`,
+      ),
+    );
+  });
+
+  it("adds the next-step line to /grill-with-docs, /write-spec and /split-spec, whatever the branch", () => {
+    for (const skill of [
+      "grill-with-docs",
+      "write-spec",
+      "split-spec",
+    ] as const) {
+      expect(
+        passOutput(
+          { event: "PreToolUse", skill, args: "" },
+          { current: "master", default: "master" },
+        ),
+      ).toEqual(context("PreToolUse", handOver(skill)));
+    }
+  });
+
+  it("adds nothing to /ship-spec", () => {
+    expect(
+      passOutput(
+        { event: "PreToolUse", skill: "ship-spec", args: "802" },
+        null,
+      ),
+    ).toBeNull();
   });
 });
 
@@ -400,7 +495,22 @@ if (args[0] === "repo") {
 }
 `;
 
+// A fake `git` beside it: the branches of answers.git, or a failure.
+const FAKE_GIT = `import { readFileSync } from "node:fs";
+const args = process.argv.slice(2);
+const answers = JSON.parse(readFileSync(process.env.FAKE_GH_ANSWERS, "utf8"));
+if (answers.git === undefined) process.exit(128);
+if (args[0] === "symbolic-ref") {
+  process.stdout.write("origin/" + answers.git.default + "\\n");
+} else if (args[0] === "branch") {
+  process.stdout.write(answers.git.current + "\\n");
+} else {
+  process.exit(1);
+}
+`;
+
 interface Answers {
+  git?: { current: string; default: string };
   repo?: string;
   issue?: unknown;
   spec?: unknown;
@@ -421,6 +531,13 @@ function runHook(input: unknown, answers: Answers) {
   );
   chmodSync(join(dir, "gh"), 0o755);
   writeFileSync(join(dir, "gh.cmd"), '@node "%~dp0fake-gh.mjs" %*\r\n');
+  writeFileSync(join(dir, "fake-git.mjs"), FAKE_GIT);
+  writeFileSync(
+    join(dir, "git"),
+    '#!/bin/sh\nexec node "$(dirname "$0")/fake-git.mjs" "$@"\n',
+  );
+  chmodSync(join(dir, "git"), 0o755);
+  writeFileSync(join(dir, "git.cmd"), '@node "%~dp0fake-git.mjs" %*\r\n');
   writeFileSync(join(dir, "answers.json"), JSON.stringify(answers));
   writeFileSync(join(dir, "calls.log"), "");
   // Windows spells it Path: every spelling goes, one PATH comes back.
@@ -673,47 +790,72 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("lets a takeable Ticket through on both events, adding the next-step line to the Agent's context", () => {
+  it("lets a takeable Ticket through on both events off the default branch, adding /ship and next-step to the Agent's context", () => {
     const answers = {
+      git: { current: "740-a-ticket", default: "master" },
       repo: LIBRARY,
       issue: issueData({ parent: SPEC_PARENT }),
     };
-    const context = (event: string) => ({
-      hookSpecificOutput: {
-        hookEventName: event,
-        additionalContext:
-          "This repository ends every implement with the next-step skill: when this work is done, run next-step, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0025, .claude/hooks/skill-target.mjs).",
-      },
-    });
 
     expect(runHook(typed("/implement #740"), answers)).toMatchObject({
       code: 0,
-      output: context("UserPromptSubmit"),
+      output: context("UserPromptSubmit", SHIP_AND_NEXT_STEP),
     });
     expect(runHook(skillCall("implement", "740"), answers)).toMatchObject({
       code: 0,
-      output: context("PreToolUse"),
+      output: context("PreToolUse", SHIP_AND_NEXT_STEP),
     });
   });
 
-  it("lets /implement-spec through on a split Spec, adding the next-step line", () => {
-    const result = runHook(skillCall("implement-spec", "737"), {
+  it("on the default branch, tells the implement to create its branch from the remote default first", () => {
+    const answers = {
+      git: { current: "master", default: "master" },
       repo: LIBRARY,
+      issue: issueData({ parent: SPEC_PARENT }),
+    };
+
+    expect(runHook(typed("/implement 740"), answers).output).toEqual(
+      context("UserPromptSubmit", ON_MASTER),
+    );
+  });
+
+  it("lets /implement-spec through on a split Spec, adding the branch line of the Template's main", () => {
+    const result = runHook(skillCall("implement-spec", "737"), {
+      git: { current: "main", default: "main" },
+      repo: TEMPLATE,
       issue: issueData({
         labels: { nodes: [{ name: "spec" }] },
         subIssues: { totalCount: 3 },
       }),
     });
 
-    expect(result.output).toEqual({
-      hookSpecificOutput: {
-        hookEventName: "PreToolUse",
-        additionalContext: expect.stringContaining("run next-step") as unknown,
-      },
-    });
+    expect(result.output).toEqual(
+      context(
+        "PreToolUse",
+        expect.stringMatching(
+          /^This session is on the default branch, main: .*origin\/main, .*\/ship.*next-step/,
+        ),
+      ),
+    );
   });
 
-  it("lets split-spec and ship-spec through silently: next-step ends an implement", () => {
+  it("names the branch to create as a condition when git fails", () => {
+    const result = runHook(typed("/implement 740"), {
+      repo: LIBRARY,
+      issue: issueData({ parent: SPEC_PARENT }),
+    });
+
+    expect(result.output).toEqual(
+      context(
+        "UserPromptSubmit",
+        expect.stringMatching(
+          /^When this session is on the default branch, first create/,
+        ),
+      ),
+    );
+  });
+
+  it("lets split-spec through with the next-step line, and ship-spec silently", () => {
     const answers = {
       repo: LIBRARY,
       issue: issueData({
@@ -722,8 +864,25 @@ describe("the skill-target script", () => {
       }),
     };
 
-    expect(runHook(typed("/split-spec 737"), answers).output).toBeNull();
+    expect(runHook(typed("/split-spec 737"), answers).output).toEqual(
+      context("UserPromptSubmit", handOver("split-spec")),
+    );
     expect(runHook(skillCall("ship-spec", "737"), answers).output).toBeNull();
+  });
+
+  it("lets /grill-with-docs and /write-spec through with the next-step line, asking GitHub nothing", () => {
+    const answers = { fail: "error connecting to api.github.com" };
+
+    expect(runHook(typed("/grill-with-docs #802"), answers)).toEqual({
+      code: 0,
+      output: context("UserPromptSubmit", handOver("grill-with-docs")),
+      calls: [],
+    });
+    expect(runHook(skillCall("write-spec"), answers)).toEqual({
+      code: 0,
+      output: context("PreToolUse", handOver("write-spec")),
+      calls: [],
+    });
   });
 
   it("stops a typed Replaced skill offline, with or without an issue reference, asking GitHub nothing", () => {
@@ -744,11 +903,23 @@ describe("the skill-target script", () => {
     }
   });
 
-  it("stays silent and asks GitHub nothing with no issue reference", () => {
-    expect(
-      runHook(typed("/implement the plan above"), { repo: LIBRARY }),
-    ).toEqual({ code: 0, output: null, calls: [] });
-    expect(runHook(skillCall("implement"), { repo: LIBRARY })).toEqual({
+  it("asks GitHub nothing with no issue reference, adding only the skill's line", () => {
+    const answers = {
+      git: { current: "806-next-steps-main-flow", default: "master" },
+      repo: LIBRARY,
+    };
+
+    expect(runHook(typed("/implement the plan above"), answers)).toEqual({
+      code: 0,
+      output: context("UserPromptSubmit", SHIP_AND_NEXT_STEP),
+      calls: [],
+    });
+    expect(runHook(skillCall("implement"), answers)).toEqual({
+      code: 0,
+      output: context("PreToolUse", SHIP_AND_NEXT_STEP),
+      calls: [],
+    });
+    expect(runHook(skillCall("ship-spec"), answers)).toEqual({
       code: 0,
       output: null,
       calls: [],
@@ -762,8 +933,10 @@ describe("the skill-target script", () => {
         "The skill-target check could not read GitHub (error connecting to api.github.com); the skill runs, and the claim check still holds the rule on its pull request.",
     };
 
-    // The skill runs, and still ends with its next steps.
-    const nextStep = expect.stringContaining("run next-step") as unknown;
+    // The skill runs, and still ends with /ship and its next steps.
+    const nextStep = expect.stringContaining(
+      "ends every implement with /ship",
+    ) as unknown;
 
     expect(runHook(typed("/implement 742"), answers)).toMatchObject({
       code: 0,
@@ -777,7 +950,7 @@ describe("the skill-target script", () => {
     });
     expect(runHook(skillCall("split-spec", "742"), answers)).toEqual({
       code: 0,
-      output: warning,
+      output: { ...warning, ...context("PreToolUse", handOver("split-spec")) },
       calls: expect.any(Array) as unknown,
     });
     expect(runHook(skillCall("implement", "742"), answers)).toMatchObject({
