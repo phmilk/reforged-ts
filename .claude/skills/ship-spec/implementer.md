@@ -25,3 +25,12 @@ Commands in the foreground, each with a timeout of at most ten minutes; never en
 ```
 
 When `ship-spec` continues an implementer by its id (a `DIRTY` pull request), its message names the pull request and asks for `origin/master` merged by intent, the checks the merge touches run under the check lock, and the push.
+
+When it continues one for a red CI (`SKILL.md`, "A red CI"), or spawns one with this prompt for a resumed pull request, its message names the pull request, the failed check and its run's link, and asks for:
+
+- one `/diagnosing-bugs` pass on the failed job's log (`gh run view <run> --log-failed`);
+- the one fix it leads to, committed with the trailer `Red-CI-run: <run>` in its message, which tells a later run the pull request has had its fix;
+- the checks the fix touches, run under the check lock, then the push;
+- no rerun: reruns are `ship-spec`'s, and only of a known flake.
+
+Its report says the fix's commit and that it is pushed, or why it stopped: a fix it could not find is a stop.

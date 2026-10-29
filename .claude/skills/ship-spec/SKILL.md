@@ -53,7 +53,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 7. **Watch each pull request** until it merges or stops, with a Monitor (or a background command with a bounded runtime) on `gh pr view <pr> --json state,mergeStateStatus,statusCheckRollup`, never a turn ended on a wait with nothing to wake you:
    - **Merged:** put it in the ledger, remove its worktree and branch (`git worktree remove .claude/worktrees/<ticket>`, `git branch -D <branch>`), and go to step 3: the Tickets its merge unblocked start from the new `origin/master`.
    - **`DIRTY`:** another merge conflicts with it. Continue its implementer by its id: merge `origin/master` into the branch, resolved by intent ([Merge conflicts](#merge-conflicts)), run the checks the merge touches, push.
-   - **A required check red:** stop the Ticket ([Stopping](#stopping)), with the failed check's name and its run's link. A red CI is never rerun or merged past here.
+   - **A required check red:** settle it as [A red CI](#a-red-ci) says: one rerun of a known flake, or one fix, then a stop.
    - **Auto-merge off,** its body naming what waits for a human: stop the Ticket.
 
    Done when the pull request is merged or its Ticket stopped.
@@ -102,6 +102,16 @@ The repository's rules name where a human is needed; there, the Ticket stops ([S
 ## Stopping
 
 A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree (its branch stays, for the next run), and add the stop to the ledger. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
+
+## A red CI
+
+Only this run's pull requests are its business: those its implementers opened and those step 4 resumed. A red check on any other pull request, the release pull request (`changeset-release/master`) among them, is left alone, catalogued flake or not. On one of its own, read the red run (`gh pr checks <pr>` for its link) and take the first branch that holds:
+
+1. **A known flake:** the failure matches the [known-flake catalogue](known-flakes.md), and the run is at its first attempt (`gh run view <run> --json attempt`). Rerun its failed jobs once, `gh run rerun <run> --failed`, and keep watching. A run past its first attempt has had its rerun: never a second.
+2. **Caused by the code:** any other failure, a catalogued flake back after its rerun included, on a pull request with no fix for a red CI yet (after `git fetch origin <branch>`, `git log origin/<branch> --grep "^Red-CI-run:"` prints nothing). Continue its implementer by its id, or, when step 4 resumed it, make its worktree from its branch (`git worktree add .claude/worktrees/<ticket> <branch>`) and spawn one with the prompt of [`implementer.md`](implementer.md), the pull request named. Either way give it the failed check's name and its run's link: one `/diagnosing-bugs` pass, one fix pushed. Keep watching: the fix's run is read again from branch 1, so a catalogued flake on it still gets its one rerun.
+3. **Still red after the fix:** any other red, on a pull request that has its fix: stop the Ticket ([Stopping](#stopping)), with the failed check's name and its run's link.
+
+A red required check is never merged past: auto-merge waits for it.
 
 ## Merge conflicts
 
