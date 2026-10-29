@@ -60,13 +60,16 @@ function lookups(): readonly [string, string, () => unknown][] {
     [
       "UnitUnequipItemFromSlot",
       "empty slot",
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
       () => UnitUnequipItemFromSlot(hero, EQUIPMENT_LOADOUT_SLOT_HEAD),
     ],
     ["UnitItemInSlot", "empty slot", () => UnitItemInSlot(hero, 0)],
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
     ["UnitItemInBagSlot", "empty slot", () => UnitItemInBagSlot(hero, 0)],
     [
       "UnitItemInEquipmentSlot",
       "empty slot",
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
       () => UnitItemInEquipmentSlot(hero, EQUIPMENT_LOADOUT_SLOT_HEAD),
     ],
     // One past the last player slot.

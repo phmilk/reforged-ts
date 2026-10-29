@@ -18,8 +18,10 @@ import { eventResponseCase } from "./nullability/nullable";
 const EVENT_RESPONSES: readonly [string, () => unknown][] = [
   ["GetManipulatingUnit", () => GetManipulatingUnit()],
   ["GetManipulatedItem", () => GetManipulatedItem()],
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
   ["GetEquippedItem", () => GetEquippedItem()],
   ["BlzGetEquippedItem", () => BlzGetEquippedItem()],
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- the sweep measures the unprefixed Native beside its Blz twin while the Patch declares it (#671)
   ["GetUnequippedItem", () => GetUnequippedItem()],
   ["BlzGetUnequippedItem", () => BlzGetUnequippedItem()],
   ["BlzGetAbsorbingItem", () => BlzGetAbsorbingItem()],
