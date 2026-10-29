@@ -4,6 +4,7 @@
   "skills": ["next-step", "split-spec", "write-spec"],
   "files": [
     ".claude/hooks/background-wait.mjs",
+    ".claude/hooks/replaced-skills.mjs",
     ".claude/hooks/shadowed-skills.mjs",
     ".claude/hooks/skill-target.mjs",
     ".claude/settings.json"

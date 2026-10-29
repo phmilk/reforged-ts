@@ -48,6 +48,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
 - A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
 - Before working on an issue, claim it: `gh issue edit <n> --add-assignee @me`, your first write, before the branch, the first commit, any comment and the pull request; a Ticket or an issue assigned to another login is theirs. A Ticket is claimed together with its Spec, and the stale rule and the takeover are in `docs/agents/issue-tracker.md`, "Claim".
+- A Replaced skill (`to-spec`, replaced by `write-spec`; `to-tickets`, replaced by `split-spec`) is never run or recommended: run and name its Skill variant, and name the Replaced skill only beside its variant, on the same line (ADR 0027).
 - Before running Subagents, read `docs/agents/development-loop.md`, "Subagents".
 
 ## Runtime constraints
@@ -77,7 +78,7 @@ Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The w
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec` or `write-spec`, `ticket` on one created with `split-spec`. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `write-spec`, `ticket` on one created with `split-spec`. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
 
 ### Skills
 
@@ -87,8 +88,8 @@ One line per Agent skill of the repository: its `SKILL.md`, then its trigger. Wh
 - [add-wrapper](.claude/skills/add-wrapper/SKILL.md): cover a Native, add a member to a Wrapper, or close a Native the Wrapper coverage report lists as missing.
 - [new-patch](.claude/skills/new-patch/SKILL.md): adopt a new game Patch, from a jass-history tag or a "New Patch detected" issue.
 - [next-step](.claude/skills/next-step/SKILL.md): print the next steps at the end of every implement, or when explicitly asked for them.
-- [split-spec](.claude/skills/split-spec/SKILL.md): split a Spec into Tickets with its Coverage table, when explicitly asked to or when another skill asks for it.
-- [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one.
+- [split-spec](.claude/skills/split-spec/SKILL.md): split a Spec into Tickets with its Coverage table, when explicitly asked to or when another skill asks for it. It replaces `to-tickets`.
+- [write-spec](.claude/skills/write-spec/SKILL.md): write a Spec when explicitly asked for one, or when another skill asks for one. It replaces `to-spec`.
 
 The other folders of `.claude/skills/` are the Upstream skills of [`mattpocock/skills`](https://github.com/mattpocock/skills), at the version [`skills-lock.json`](skills-lock.json) names.
 

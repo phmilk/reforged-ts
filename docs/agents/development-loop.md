@@ -53,6 +53,7 @@ A Skill variant is an Agent skill of the repository built from an Upstream skill
   ```
 
 - **Reviewed on every update.** The skills conventions test fails when a variant records an Upstream skill the lock does not name, or a hash that is not the lock's current one. After an update moves that hash, read the diff of the Upstream skill's folder, carry the changed steps into the variant where they apply, then copy the new hash into `upstream-hash`.
+- **What it replaces.** A variant may declare, under `metadata`, `replaces`: the Upstream skill it takes the place of, which is then a Replaced skill (ADR 0027). `write-spec` declares `replaces: to-spec` and `split-spec` declares `replaces: to-tickets`, since `to-spec` labels an unsplit Spec `ready-for-agent` against ADR 0025 and `to-tickets` writes no Coverage table. A Replaced skill keeps its folder unmodified (ADR 0022) but is never run or recommended: an Agent runs and names its variant, and names the Replaced skill only beside it, on the same line ("`write-spec` replaces `to-spec`"). The map lives in the variants' frontmatter alone, read by [`.claude/hooks/replaced-skills.mjs`](../../.claude/hooks/replaced-skills.mjs), a dependency-free reader the hooks import; the skills conventions test fails when a `replaces` names no Upstream skill of the lock, and when `AGENTS.md` or this doc names a Replaced skill without its variant on the same line. A new variant that replaces an Upstream skill only declares it: nothing else is edited.
 - **The human-only flag.** A variant may drop upstream's `disable-model-invocation: true`, so that an Agent or another skill can invoke it; its description then narrows the trigger to an explicit request or another skill's call, as `write-spec`'s does.
 
 ## Removing the global copies
@@ -85,8 +86,7 @@ flowchart TD
     diagnosing_bugs["/diagnosing-bugs"]
   end
   grill_with_docs["/grill-with-docs"]
-  to_spec["/to-spec: a spec"]
-  write_spec["/write-spec: a spec an Agent writes when asked"]
+  write_spec["/write-spec: a spec"]
   split_spec["/split-spec: its tickets and its Coverage table"]
   claim["the Claim, the first write: gh issue edit --add-assignee @me"]
   implement["/implement, which does not claim"]
@@ -106,9 +106,7 @@ flowchart TD
   diagnosing_bugs --> grill_with_docs
   triage -->|"a ready-for-agent issue"| claim
   diagnosing_bugs -->|"a bug fixed at once"| claim
-  grill_with_docs --> to_spec
   grill_with_docs --> write_spec
-  to_spec --> split_spec
   write_spec --> split_spec
   split_spec --> claim
   claim -->|"a ticket or an issue"| implement
@@ -138,7 +136,6 @@ flowchart TD
 | `/prototype`       | [its `SKILL.md`](../../.claude/skills/prototype/SKILL.md)                                                                                                                 |
 | `/diagnosing-bugs` | [its `SKILL.md`](../../.claude/skills/diagnosing-bugs/SKILL.md)                                                                                                           |
 | `/grill-with-docs` | [its `SKILL.md`](../../.claude/skills/grill-with-docs/SKILL.md); the docs it reads and writes: [`domain.md`](domain.md)                                                   |
-| `/to-spec`         | [its `SKILL.md`](../../.claude/skills/to-spec/SKILL.md); its label: [Kind labels](triage-labels.md#kind-labels)                                                           |
 | `/write-spec`      | [its `SKILL.md`](../../.claude/skills/write-spec/SKILL.md); [Skill variants](#skill-variants); its labels: [Kind labels](triage-labels.md#kind-labels)                    |
 | `/split-spec`      | [its `SKILL.md`](../../.claude/skills/split-spec/SKILL.md); [Skill variants](#skill-variants); its rule and table: [A Spec's coverage](issue-tracker.md#a-specs-coverage) |
 | the Claim          | [Claim](issue-tracker.md#claim) in the issue tracker doc                                                                                                                  |

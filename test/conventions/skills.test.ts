@@ -12,6 +12,9 @@
 //   current one (docs/agents/development-loop.md, "Skill variants");
 // - the "Skills" list of AGENTS.md misses a repository skill or names an
 //   Upstream one;
+// - a Skill variant's `metadata.replaces` names no Upstream skill of the lock,
+//   or AGENTS.md or the development loop doc names a Replaced skill without
+//   its variant on the same line (ADR 0027);
 // - the list of what is shared names a lock, skill or file that is not there;
 // - an Upstream skill could be rewritten by git or by `pnpm format`, or a
 //   repository skill is not formatted.
@@ -25,6 +28,10 @@ import { join, posix } from "node:path";
 import { getFileInfo } from "prettier";
 import { describe, expect, it } from "vitest";
 
+import {
+  replacedSkills,
+  replacesOf,
+} from "../../.claude/hooks/replaced-skills.mjs";
 import { section } from "./markdown.js";
 import { read, root } from "./repository.js";
 import {
@@ -33,11 +40,13 @@ import {
   lock,
   type LockEntry,
   lockPath,
+  namesSkill,
   repositorySkills,
   skillFiles,
   skillFolders,
   skillsFolder,
   upstreamSkills,
+  unpairedReplacedSkills,
   type Variant,
   variants,
 } from "./skills.js";
@@ -83,6 +92,26 @@ function variantProblems(
         ];
   });
 }
+
+// What is wrong with a map of Replaced skills against the Upstream skills of
+// the lock: a `replaces` that names none of them.
+function replacesProblems(
+  replaced: Readonly<Record<string, string>>,
+  upstreamNames: readonly string[],
+): string[] {
+  const names = new Set(upstreamNames);
+  return Object.entries(replaced).flatMap(([skill, variant]) =>
+    names.has(skill)
+      ? []
+      : [
+          `${variant}: metadata.replaces names ${skill}, which is no Upstream skill of ${lockPath}`,
+        ],
+  );
+}
+
+// The docs a Collaborator or an Agent reads for the development loop, held to
+// the map of Replaced skills.
+const loopDocs = ["AGENTS.md", "docs/agents/development-loop.md"];
 
 const upstream = upstreamSkills();
 const repository = repositorySkills();
@@ -303,6 +332,122 @@ describe("the check of the Skill variants", () => {
     expect(
       variantProblems([variant({ upstreamHash: undefined })], entries),
     ).toEqual([expect.stringContaining("metadata.upstream-hash (undefined)")]);
+  });
+});
+
+describe("the map of Replaced skills", () => {
+  const fixtures = join(root, "test/conventions/fixtures/replaced-skills");
+
+  it("reads write-spec replacing to-spec and split-spec replacing to-tickets from the skills' folders", () => {
+    expect(replacedSkills(), "the map of Replaced skills").toEqual({
+      "to-spec": "write-spec",
+      "to-tickets": "split-spec",
+    });
+  });
+
+  it("has every replaces name an Upstream skill of the lock", () => {
+    expect(
+      replacesProblems(replacedSkills(), upstream),
+      "the `metadata.replaces` of the Skill variants (ADR 0027)",
+    ).toEqual([]);
+  });
+
+  it("fails a fixture whose replaces names no Upstream skill of the lock", () => {
+    const map = replacedSkills(fixtures);
+    expect(map, "the fixtures' map: only metadata.replaces counts").toEqual({
+      "to-spec": "spec-writer",
+      "to-tikets": "ticket-splitter",
+    });
+    expect(replacesProblems(map, upstream)).toEqual([
+      expect.stringContaining(
+        "ticket-splitter: metadata.replaces names to-tikets",
+      ),
+    ]);
+  });
+
+  it("reads replaces under metadata only, quoted or not", () => {
+    const skill = (frontmatter: string) =>
+      `---\n${frontmatter}\n---\n# A skill\n`;
+    expect(replacesOf(skill("name: a\nmetadata:\n  replaces: to-spec"))).toBe(
+      "to-spec",
+    );
+    expect(replacesOf(skill("metadata:\n  replaces: 'to-spec'"))).toBe(
+      "to-spec",
+    );
+    expect(
+      replacesOf(skill("replaces: to-spec\nmetadata:\n  upstream: x")),
+    ).toBe(undefined);
+    expect(replacesOf("# no frontmatter\nreplaces: to-spec")).toBe(undefined);
+  });
+
+  it("names AGENTS.md's and the development loop doc's Replaced skills only beside their variant", () => {
+    const map = replacedSkills();
+    const problems = loopDocs.flatMap((path) =>
+      unpairedReplacedSkills(read(path), map).map((line) => `${path}:${line}`),
+    );
+    expect(
+      problems,
+      "the lines naming a Replaced skill without its variant: name the variant instead, or both on one line (ADR 0027)",
+    ).toEqual([]);
+  });
+
+  describe("the check of a doc's lines", () => {
+    const map = { "to-spec": "write-spec", "to-tickets": "split-spec" };
+
+    it("fails a line naming a Replaced skill alone, as a command, a code span or a word", () => {
+      expect(
+        unpairedReplacedSkills(
+          [
+            "Run `/to-spec` next.",
+            "then to-tickets",
+            '  grill_with_docs --> to_spec["/to-spec: a spec"]',
+          ].join("\n"),
+          map,
+        ),
+      ).toEqual([
+        "1: Run `/to-spec` next.",
+        "2: then to-tickets",
+        '3:   grill_with_docs --> to_spec["/to-spec: a spec"]',
+      ]);
+    });
+
+    it("passes a line naming the variant beside it, and a longer name", () => {
+      expect(
+        unpairedReplacedSkills(
+          "`write-spec` replaces `to-spec`.\nthe to-specs, my-to-spec",
+          map,
+        ),
+      ).toEqual([]);
+    });
+
+    it("fails the line whose variant stands on another line", () => {
+      expect(
+        unpairedReplacedSkills("Run /to-spec,\nnot /write-spec.", map),
+      ).toEqual(["1: Run /to-spec,"]);
+    });
+
+    it("reads a diagram's lines and skips a command's or an example's", () => {
+      expect(
+        unpairedReplacedSkills(
+          [
+            "```sh",
+            "npx skills add -s to-spec to-tickets",
+            "```",
+            "```mermaid",
+            '  a["/to-spec"]',
+            "```",
+          ].join("\n"),
+          map,
+        ),
+      ).toEqual(['5:   a["/to-spec"]']);
+    });
+
+    it("names a skill as a whole word only", () => {
+      expect(namesSkill("see .claude/skills/to-spec/SKILL.md", "to-spec")).toBe(
+        true,
+      );
+      expect(namesSkill("auto-spec", "to-spec")).toBe(false);
+    });
   });
 });
 
