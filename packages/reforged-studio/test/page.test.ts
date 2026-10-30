@@ -380,7 +380,10 @@ describe("the Studio's page, /objects/<rawcode>", () => {
     async () => {
       const page = await open("/objects/B000");
 
-      const notice = await textOf(page.locator(".notice"));
+      // "Choose an object." is a notice too, until the answer comes.
+      const notice = await textOf(
+        page.locator(".notice", { hasText: "Object kinds" }),
+      );
       expect(notice).toContain("B000 names an object of 2 Object kinds");
       expect(notice).toContain('FourCC("B000") has no typed overload');
       const choices = page.locator(".choices button");
@@ -402,9 +405,10 @@ describe("the Studio's page, /objects/<rawcode>", () => {
     async () => {
       const page = await open("/objects/h00Z");
 
-      expect(await textOf(page.locator(".notice"))).toContain(
-        "h00Z is neither in this map nor Built-in.",
-      );
+      // "Choose an object." is a notice too, until the answer comes.
+      expect(
+        await textOf(page.locator(".notice", { hasText: "neither" })),
+      ).toContain("h00Z is neither in this map nor Built-in.");
       const captain = page.locator(".choices button", { hasText: "h000" });
       expect(await textOf(captain)).toContain("Captain");
       await captain.click();

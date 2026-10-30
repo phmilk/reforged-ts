@@ -304,6 +304,163 @@ kbd {
 .value.modified {
   background: var(--modified-soft);
 }
+/* Editing (#834): the unsaved bar, the inline inputs, the toast, the dialogs. */
+.value.unsaved {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.editing {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-left: auto;
+}
+.unsaved-count {
+  color: var(--muted);
+}
+.unsaved-count.dirty {
+  color: var(--accent);
+  font-weight: 600;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.field-line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.edit-value {
+  all: unset;
+  cursor: text;
+  min-width: 3rem;
+}
+.edit-value:hover,
+.edit-value:focus-visible {
+  outline: 1px dashed var(--line);
+}
+.field-input,
+.chip-input,
+.field-editor select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.field-input {
+  width: 100%;
+  min-width: 8rem;
+}
+.chip-input {
+  width: 6rem;
+  font-family: var(--mono);
+}
+.chips,
+.icon-field,
+.chip.reference {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.reset {
+  color: var(--muted);
+}
+.field-error {
+  margin: 2px 0 0;
+  color: var(--danger);
+}
+.translations {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.translations div {
+  display: flex;
+  gap: 6px;
+}
+.translations dt {
+  font-family: var(--mono);
+}
+.translations dd {
+  margin: 0;
+}
+.toast {
+  margin: 0.5rem 1rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+}
+.toast.refused {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.dialog {
+  width: min(820px, 94vw);
+  max-height: 76vh;
+  overflow: auto;
+  background: var(--panel);
+  border-radius: 10px;
+  box-shadow: 0 20px 60px #0005;
+  padding: 10px 14px;
+}
+.dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.dialog [role="tab"][aria-selected="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.icon-grid {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.icon-grid button[aria-pressed="true"] {
+  border-color: var(--accent);
+}
+.icon-path {
+  display: flex;
+  gap: 6px;
+}
+.icon-path input {
+  flex: 1;
+  font: inherit;
+}
+.diff-file h4 {
+  margin: 10px 0 4px;
+  font-family: var(--mono);
+}
+.diff-file pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow-x: auto;
+}
+.diff-file .added {
+  color: #2f855a;
+}
+.diff-file .removed {
+  color: var(--danger);
+}
+.diff-file .hunk {
+  color: var(--accent);
+}
 .value .icon {
   margin-right: 6px;
 }

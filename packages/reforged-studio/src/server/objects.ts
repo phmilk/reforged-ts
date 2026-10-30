@@ -10,6 +10,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import type {
+  FieldEntry,
+  FieldTable,
   GameDataSet,
   ObjectDataModification,
   ObjectKind,
@@ -25,6 +27,7 @@ import { OBJECT_KINDS } from "../kinds.js";
 import {
   OBJECT_ORIGINS,
   type DefinitionSource,
+  type FieldInput,
   type FieldRow,
   type ListedObject,
   type ObjectDetail,
@@ -347,25 +350,74 @@ export function definitionLine(file: string, rawcode: string): number {
   return any === -1 ? 1 : any + 1;
 }
 
+/** What one object's field table is read from. */
+export interface DetailSources {
+  /** The session's working state. */
+  readonly working: ObjectState;
+  /** What the map folder held at the session's last read, to tell an unsaved edit. */
+  readonly saved: ObjectState;
+  /** The game data model base values and labels are read from. */
+  readonly gameData: GameData;
+  /** `reforged-builtins`' field table, which gives each field its input; undefined when it cannot be read. */
+  readonly fieldTable: FieldTable | undefined;
+  /** Every object the Studio shows, which a Rawcode list's chips name. */
+  readonly objects: readonly ListedObject[];
+}
+
+/** The input of each category of the field table but the numbers. */
+const INPUTS: Readonly<
+  Partial<Record<NonNullable<FieldEntry["category"]>, FieldInput>>
+> = {
+  boolean: "toggle",
+  enumeration: "select",
+  rawcodeList: "rawcodes",
+  rawcode: "text",
+  text: "text",
+  stringList: "text",
+};
+
+/** The input of a field, by its value type and its category in the field table, an icon's by its metadata type. */
+function inputOf(
+  valueType: NonNullable<FieldRow["valueType"]>,
+  entry: FieldEntry | undefined,
+  metaType: string | undefined,
+): FieldInput {
+  if (metaType === "icon" && valueType === "string") return "icon";
+  const input =
+    entry?.category === undefined ? undefined : INPUTS[entry.category];
+  if (input !== undefined) return input;
+  if (valueType === "int") return "integer";
+  if (valueType === "string") return "text";
+  return "real";
+}
+
+/** The Rawcodes of a Rawcode list's value: `Adef,A000`. */
+const rawcodesOf = (value: string): string[] =>
+  value
+    .split(",")
+    .map((rawcode) => rawcode.trim())
+    .filter((rawcode) => rawcode !== "");
+
 /**
  * One object's field table: each field of its kind the install knows (but a
  * field specific to other bases), one row per level for a field of levels,
  * with its base's value and the working state's modification; then each
- * modification of a field the install does not know.
+ * modification of a field the install does not know. Each row says the
+ * input it edits with, from the field table.
  */
 export function detailOf(
   object: ListedObject,
-  working: ObjectState,
-  gameData: GameData,
+  sources: DetailSources,
 ): ObjectDetail {
+  const { working, saved, gameData, fieldTable } = sources;
   const kind = gameData.kinds[object.kind];
   const base = baseRawcode(object);
   const baseValues = kind.objects.get(base)?.values;
-  const modifications =
-    object.origin === "custom" || object.origin === "modified"
-      ? (working.get(objectKey(object.kind, object.rawcode))?.modifications ??
-        [])
-      : [];
+  const entries = fieldTable?.fields[object.kind];
+  const inMap = object.origin === "custom" || object.origin === "modified";
+  const key = objectKey(object.kind, object.rawcode);
+  const modifications = inMap ? (working.get(key)?.modifications ?? []) : [];
+  const savedModifications = inMap ? (saved.get(key)?.modifications ?? []) : [];
   const used = new Set<ObjectDataModification>();
   const find = (field: string, level: number | undefined) => {
     const found = modifications.find(
@@ -376,6 +428,26 @@ export function detailOf(
     );
     if (found !== undefined) used.add(found);
     return found;
+  };
+  /** The saved state's modification of a field, to tell an unsaved edit. */
+  const savedOf = (field: string, level: number | undefined) =>
+    savedModifications.find(
+      (modification) =>
+        modification.field === field &&
+        (level === undefined || modification.level === level),
+    );
+  const named = (rawcode: string, of: ObjectKind | undefined) => {
+    const found = sources.objects.find(
+      (other) =>
+        other.rawcode === rawcode && (of === undefined || other.kind === of),
+    );
+    return found === undefined
+      ? { rawcode }
+      : {
+          rawcode,
+          kind: found.kind,
+          ...(found.name !== undefined && { name: found.name }),
+        };
   };
   /** A value as the editor shows it: an enumeration's label, a `WESTRING_` key resolved. */
   const shown = (
@@ -399,6 +471,27 @@ export function detailOf(
       modification === undefined
         ? baseDisplay
         : shown(modification.value, enumeration);
+    const entry = entries?.[head.id];
+    const valueType = modification?.type ?? entry?.type;
+    const input =
+      valueType === undefined || object.origin === "definition"
+        ? undefined
+        : inputOf(valueType, entry, head.type ?? entry?.metaType);
+    const enumerated = fieldTable?.enumerations?.[entry?.metaType ?? ""];
+    const options =
+      input !== "select"
+        ? undefined
+        : (enumeration ??
+          enumerated?.map((value) => ({ value: String(value) })));
+    const of = OBJECT_KINDS.find((candidate) => candidate === entry?.of);
+    const current =
+      modification === undefined ? baseValue : String(modification.value);
+    const before = savedOf(head.id, level);
+    const unsaved =
+      before === undefined || modification === undefined
+        ? before !== modification
+        : JSON.stringify([before.value, before.translations]) !==
+          JSON.stringify([modification.value, modification.translations]);
     return {
       id: head.id,
       ...(head.label !== undefined && { label: head.label }),
@@ -412,6 +505,19 @@ export function detailOf(
       }),
       ...(display !== undefined && { display }),
       modified: modification !== undefined,
+      unsaved,
+      ...(input !== undefined && { input }),
+      ...(valueType !== undefined && { valueType }),
+      ...(options !== undefined && { options }),
+      ...(of !== undefined && { of }),
+      ...(input === "rawcodes" &&
+        current !== undefined && {
+          references: rawcodesOf(current).map((rawcode) => named(rawcode, of)),
+        }),
+      ...(entry?.localizable === true && { localizable: true }),
+      ...(modification?.translations !== undefined && {
+        translations: modification.translations,
+      }),
     };
   };
 
@@ -466,6 +572,20 @@ export function detailOf(
         modification,
       ),
     );
+  }
+  // A field the saved state modifies and the working state no longer does,
+  // and that the install does not know: a row of its own, unsaved.
+  for (const modification of savedModifications) {
+    if (fields.some((field) => field.id === modification.field)) continue;
+    fields.push({
+      ...row(
+        { id: modification.field },
+        modification.level,
+        undefined,
+        undefined,
+      ),
+      unsaved: true,
+    });
   }
   return {
     ...object,

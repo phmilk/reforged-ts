@@ -28,6 +28,12 @@ function stamps(files: readonly string[]): Map<string, string> {
 export interface Watch {
   /** Stops polling. */
   stop(): void;
+  /**
+   * Takes the files' stamps as they are now, so that the next poll does
+   * not report a change the Studio made and read itself, such as its own
+   * save.
+   */
+  resync(): void;
 }
 
 /**
@@ -58,6 +64,9 @@ export function watchFiles(
   return {
     stop() {
       clearInterval(timer);
+    },
+    resync() {
+      known = stamps(list());
     },
   };
 }

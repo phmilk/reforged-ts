@@ -77,7 +77,13 @@ export {
   type ObjectDefinitionProblem,
   type ObjectDefinitionsErrorReason,
 } from "./definitions-error.js";
-export type { GameDataSet } from "./builtins.js";
+export {
+  loadFieldTable,
+  type FieldEntry,
+  type FieldTable,
+  type FieldTableResult,
+  type GameDataSet,
+} from "./builtins.js";
 export type { Locale, ObjectKind } from "./model.js";
 
 /** The name of the generated TypeScript declarations of the Editor globals. */

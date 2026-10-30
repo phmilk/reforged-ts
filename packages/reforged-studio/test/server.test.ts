@@ -255,6 +255,10 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
       stored: expect.stringMatching(/^TRIGSTR_\d+$/) as string,
       display: "Militia",
       modified: true,
+      unsaved: false,
+      input: "text",
+      valueType: "string",
+      localizable: true,
     });
     expect(fields.find((row) => row.id === "uhpm")).toEqual({
       id: "uhpm",
@@ -265,6 +269,9 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
       baseDisplay: "420",
       display: "420",
       modified: false,
+      unsaved: false,
+      input: "integer",
+      valueType: "int",
     });
   });
 
@@ -289,6 +296,9 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
         stored: 80,
         display: "80",
         modified: true,
+        unsaved: false,
+        input: "integer",
+        valueType: "int",
       },
       {
         id: "amcs",
@@ -297,6 +307,9 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
         stored: 100,
         display: "100",
         modified: true,
+        unsaved: false,
+        input: "integer",
+        valueType: "int",
       },
       {
         id: "amcs",
@@ -305,6 +318,9 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
         stored: 120,
         display: "120",
         modified: true,
+        unsaved: false,
+        input: "integer",
+        valueType: "int",
       },
     ]);
   });

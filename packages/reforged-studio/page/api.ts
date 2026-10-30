@@ -4,11 +4,18 @@
  * a host such as a VS Code webview points it at the server.
  */
 import type {
+  DiffAnswer,
+  Edit,
   ErrorAnswer,
+  IconsAnswer,
   ObjectsAnswer,
   RawcodeAnswer,
+  ResetRequest,
+  SaveAnswer,
+  SaveRefusedAnswer,
   SearchAnswer,
   SessionAnswer,
+  SessionCounts,
   StudioEvents,
 } from "../src/server/api-types.js";
 
@@ -89,6 +96,40 @@ export const api = {
     ),
   openInEditor: (kind: string, rawcode: string) =>
     post<unknown>("/open-in-editor", { kind, rawcode }),
+  /** Applies edits as one undo step, or throws the editor's refusal. */
+  edits: (edits: readonly Edit[]) => post<SessionCounts>("/edits", { edits }),
+  /** Puts a field, or a whole object, back to its base. */
+  reset: (target: ResetRequest) => post<SessionCounts>("/reset", target),
+  undo: () => post<SessionCounts>("/undo", {}),
+  redo: () => post<SessionCounts>("/redo", {}),
+  /** Saves: the answer, or the refusal with the counts, every unsaved edit kept. */
+  save: async (
+    reloadWorldEditor: boolean,
+  ): Promise<
+    | { readonly saved: true; readonly answer: SaveAnswer }
+    | { readonly saved: false; readonly answer: SaveRefusedAnswer }
+  > => {
+    const response = await fetch(`${base}/save`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ reloadWorldEditor }),
+    });
+    const body = (await response.json()) as unknown;
+    if (response.ok) return { saved: true, answer: body as SaveAnswer };
+    if (response.status === 409) {
+      return { saved: false, answer: body as SaveRefusedAnswer };
+    }
+    const error = (body as Partial<ErrorAnswer>).error;
+    throw new ApiError(
+      response.status,
+      error?.reason ?? "unknown",
+      error?.message ?? response.statusText,
+    );
+  },
+  reloadWorldEditor: () => post<unknown>("/reload-world-editor", {}),
+  diff: (against: "saved" | "head") =>
+    get<DiffAnswer>(`/diff?against=${against}`),
+  icons: () => get<IconsAnswer>("/icons"),
 };
 
 /** Listens to the event stream; returns how to stop. */

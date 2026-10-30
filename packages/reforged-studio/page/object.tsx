@@ -1,19 +1,22 @@
 /**
- * One object, read-only: its header (icon, name, Rawcode, chips, base),
+ * One object: its header (icon, name, Rawcode, chips, base, its reset),
  * its "Differs from <base>" section, and its field table with each field's
- * label, id, display and raw values, the rows of a field of levels grouped
- * and collapsible, compared objects of its kind as extra columns, and a
- * toggle that hides the fields at their base's value. Also the pages of a
- * deep link that selects nothing: a Rawcode two kinds share, an unknown
- * one, a malformed one.
+ * label, id, display and raw values, each editable field's inline editor
+ * (`./edit.tsx`), the rows of a field of levels grouped and collapsible,
+ * compared objects of its kind as extra columns, and a toggle that hides
+ * the fields at their base's value. Also the pages of a deep link that
+ * selects nothing: a Rawcode two kinds share, an unknown one, a malformed
+ * one.
  */
 import { Fragment, useState } from "react";
 import type {
   FieldRow,
   ObjectDetail,
   RawcodeAnswer,
+  SessionCounts,
 } from "../src/server/api-types.js";
 import { api } from "./api.js";
+import { FieldEditor, type FieldActions } from "./edit.js";
 import {
   go,
   Icon,
@@ -84,22 +87,32 @@ function Value(props: {
   );
 }
 
-/** One cell of a column: highlighted when the object modifies the field. */
+/**
+ * One cell of a column: highlighted when the object modifies the field, and
+ * more strongly, with a bar, when an unsaved edit changed it; the selected
+ * object's editable field holds its inline editor.
+ */
 function Cell(props: {
   readonly row: FieldRow | undefined;
   readonly object: ObjectDetail;
+  readonly actions?: (row: FieldRow) => FieldActions;
 }) {
-  const { row, object } = props;
+  const { row, object, actions } = props;
+  const owner = object.name ?? object.rawcode;
   return (
     <td
-      className={`value${row?.modified === true ? " modified" : ""}`}
+      className={`value${row?.modified === true ? " modified" : ""}${row?.unsaved === true ? " unsaved" : ""}`}
       title={
         row?.modified === true
           ? `Base: ${row.baseDisplay ?? row.base ?? "none"}`
           : undefined
       }
     >
-      <Value row={row} owner={object.name ?? object.rawcode} />
+      {row?.input !== undefined && actions !== undefined ? (
+        <FieldEditor row={row} owner={owner} actions={actions(row)} />
+      ) : (
+        <Value row={row} owner={owner} />
+      )}
     </td>
   );
 }
@@ -140,7 +153,7 @@ function Differs(props: { readonly object: ObjectDetail }) {
               <td>
                 <code>{row.id}</code>
               </td>
-              <td className="value modified">
+              <td className={`value modified${row.unsaved ? " unsaved" : ""}`}>
                 <Value row={row} owner={object.name ?? object.rawcode} />
               </td>
               <td className="base">
@@ -205,8 +218,10 @@ function FieldTable(props: {
   readonly columns: readonly ObjectDetail[];
   readonly hideAtBase: boolean;
   readonly onUnpin: (object: ObjectDetail) => void;
+  /** The actions of the selected object's editable fields; undefined when it is read-only. */
+  readonly actions: ((row: FieldRow) => FieldActions) | undefined;
 }) {
-  const { columns, hideAtBase, onUnpin } = props;
+  const { columns, hideAtBase, onUnpin, actions } = props;
   const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set());
   const byKey = columns.map(
     (column) => new Map(column.fields.map((row) => [rowKey(row), row])),
@@ -265,6 +280,7 @@ function FieldTable(props: {
                     key={`${column.kind}:${column.rawcode}`}
                     row={byKey[i]?.get(row.key)}
                     object={column}
+                    actions={i === 0 ? actions : undefined}
                   />
                 ))}
               </tr>
@@ -320,6 +336,7 @@ function FieldTable(props: {
                         key={`${column.kind}:${column.rawcode}`}
                         row={byKey[i]?.get(key)}
                         object={column}
+                        actions={i === 0 ? actions : undefined}
                       />
                     ))}
                   </tr>
@@ -343,12 +360,57 @@ export function ObjectPage(props: {
   readonly pinned: boolean;
   readonly onPin: () => void;
   readonly onUnpin: (object: ObjectDetail) => void;
+  /** Told the session's counts after an edit or a reset the server took. */
+  readonly onChanged: (counts: SessionCounts) => void;
 }) {
-  const { answer, selected, compared, pinned, onPin, onUnpin } = props;
+  const { answer, selected, compared, pinned, onPin, onUnpin, onChanged } =
+    props;
   const [hideAtBase, setHideAtBase] = useState(false);
+  const [resetError, setResetError] = useState<string>();
   const others = answer.objects
     .filter((object) => object.kind !== selected.kind)
     .map((object) => object.kind);
+  const { kind, rawcode } = selected;
+  const actions =
+    selected.readOnly === undefined
+      ? (row: FieldRow): FieldActions => {
+          const level = row.level === undefined ? {} : { level: row.level };
+          return {
+            set: async (value) => {
+              onChanged(
+                await api.edits([
+                  {
+                    op: "setField",
+                    kind,
+                    rawcode,
+                    field: row.id,
+                    ...level,
+                    value,
+                  },
+                ]),
+              );
+            },
+            reset: async () => {
+              onChanged(
+                await api.reset({ kind, rawcode, field: row.id, ...level }),
+              );
+            },
+          };
+        }
+      : undefined;
+  const resetObject = () => {
+    api.reset({ kind, rawcode }).then(
+      (counts) => {
+        setResetError(undefined);
+        onChanged(counts);
+      },
+      (reason: unknown) => {
+        setResetError(
+          reason instanceof Error ? reason.message : String(reason),
+        );
+      },
+    );
+  };
   return (
     <article className="object">
       <header className="object-header">
@@ -407,10 +469,30 @@ export function ObjectPage(props: {
             </p>
           )}
         </div>
+        {(selected.origin === "custom" || selected.origin === "modified") && (
+          <button
+            type="button"
+            onClick={resetObject}
+            title={
+              selected.origin === "custom"
+                ? "Put every field back to its base's value"
+                : "Put the Built-in object back as the game has it"
+            }
+          >
+            {selected.origin === "custom"
+              ? "Reset to base"
+              : "Reset to the Built-in object"}
+          </button>
+        )}
         <button type="button" onClick={onPin} aria-pressed={pinned}>
           {pinned ? "Stop comparing" : "Compare"}
         </button>
       </header>
+      {resetError !== undefined && (
+        <p className="field-error" role="alert">
+          {resetError}
+        </p>
+      )}
       <Differs object={selected} />
       <div className="toolbar">
         <label>
@@ -431,6 +513,7 @@ export function ObjectPage(props: {
         columns={[selected, ...compared]}
         hideAtBase={hideAtBase}
         onUnpin={onUnpin}
+        actions={actions}
       />
     </article>
   );
