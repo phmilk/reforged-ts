@@ -35,7 +35,7 @@ For a pull request step 4 resumed, which has no implementer to continue, `ship-s
 ```text
 You fix the red CI of pull request #<pr> of <repo>, for Ticket #<ticket>: the check `<check>` failed in <run link>. The Ticket is built and shipped: fix the failure, nothing else. Read `gh issue view <ticket> -R <repo>` and `gh pr view <pr> -R <repo>` for what the work is; every `gh` call names its repository with `-R`.
 
-Your worktree: <absolute path>, branch `<branch>`, on the pull request's head. If `git -C <worktree> rev-parse HEAD origin/<branch>` prints two hashes, stop and report it; never reset.
+Your worktree: <absolute path>, branch `<branch>`, on the pull request's head. If `git -C <worktree> rev-parse HEAD` and `git -C <worktree> rev-parse origin/<branch>` print different hashes, stop and report it; never reset.
 
 Read first: `AGENTS.md` in the worktree, and the library's `docs/agents/development-loop.md`, "Subagents" (https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#subagents), whose rules bind you.
 
