@@ -39,7 +39,9 @@ function flakes(text: string): Flake[] {
   if (header === undefined) return [];
   const column = (name: string): number =>
     header.findIndex((each) => each.trim() === name);
-  const [job, file, test] = ["Job", "File", "Test"].map(column);
+  const job = column("Job");
+  const file = column("File");
+  const test = column("Test");
   return body.map((row) => ({
     job: cell(row[job] ?? ""),
     file: cell(row[file] ?? ""),
