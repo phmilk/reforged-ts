@@ -26,7 +26,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
    Done when each held Ticket is in flight or in the ledger.
 
-5. **Start the takeable Tickets**, at most three in flight (in flight: from its Claim to its merge or its stop). Take them in the order the Frontier prints; a Probe Ticket waits while another Probe Ticket is in flight. A Ticket of the Template takes the differences of [`template-tickets.md`](template-tickets.md) at each sub-step. For each one:
+5. **Start the takeable Tickets**, as many as [Three in flight](#three-in-flight) allows (in flight: from its Claim to its merge or its stop). Take them in the order the Frontier prints; a Probe Ticket waits while another Probe Ticket is in flight. A Ticket of the Template takes the differences of [`template-tickets.md`](template-tickets.md) at each sub-step. For each one:
    1. **Read it**, `gh issue view <ticket> --json title,body`, for the stops [Where a human is needed](#where-a-human-is-needed) names.
    2. **Claim it with its Spec, in one command**, as its work starts and never ahead: `gh issue edit <ticket> <spec> --add-assignee @me`. Read it back: a second login on the Ticket means it was taken meanwhile: withdraw (`gh issue edit <ticket> <spec> --remove-assignee @me`, the Spec only when you hold no other Ticket of it), comment why, and skip it.
    3. **A stop before the work:** a Ticket that needs a Probe run on a machine without the game, or a Template Ticket that needs a library version its `origin/main` does not install yet ([A library version the Template does not install yet](template-tickets.md#a-library-version-the-template-does-not-install-yet)), gets its "Stopping" comment now ([Stopping](#stopping)) and no worktree.
@@ -42,7 +42,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
    5. **Spawn its implementer**, an unnamed Subagent with the prompt of [`implementer.md`](implementer.md), its placeholders filled. Keep its id.
 
-   Done when three Tickets are in flight, or every takeable Ticket is in flight or in the ledger.
+   Done when no more may be in flight, or every takeable Ticket is in flight or in the ledger.
 
 6. **Hear each implementer's report.** It ends one of two ways:
    - **Shipped:** its pull request is open, with auto-merge on. Watch it (step 7).

@@ -90,4 +90,4 @@ An implementer that finds, in its work, that it needs a library change no blocke
 
 Its implementer gets the prompt of [`implementer.md`](implementer.md) with the Template's values in its placeholders: its repository, `main`, its worktree's path, and the absolute paths of the library's skill and check lock, since the Template's copy of the shared skills may lag behind the library's. It runs `/ship` from its worktree, so its pull request opens in the Template, against `main`, and merges by auto-merge (squash), as the Template's repository settings allow (phmilk/reforged-ts-template#137). The Template has no `.changeset/` folder, so it carries no changeset.
 
-Its required checks are the Template's own. The [known-flake catalogue](known-flakes.md) lists library jobs only, so a red Template check is never a known flake: it gets one fix, then a stop ([A red CI](SKILL.md#a-red-ci)). The Template's sync pull request, which the release dispatch opens, is not this run's, as the library's release pull request is not.
+Its required checks are the Template's own, and a red one is settled as [A red CI](SKILL.md#a-red-ci) says.
