@@ -130,7 +130,7 @@ flowchart TD
   add_wrapper --> pull_request
   add_lint_rule --> pull_request
   new_patch --> pull_request
-  pull_request -->|"the required checks green, a review"| merge
+  pull_request -->|"the required checks green, after /code-review"| merge
   merge -->|"the Frontier read again from master, until no ticket is open"| ship_spec
   ship_spec -->|"no ticket open"| spec_closed
   implement -->|"at its end"| next_step
