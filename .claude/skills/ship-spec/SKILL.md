@@ -89,7 +89,7 @@ Posted on the Spec (`gh issue comment <spec> --body-file <file>`, or as the clos
 <`pnpm spec:check <spec>` green, and the Spec closed; or red, with each gap it printed; or not run, with the Tickets still open>
 ```
 
-Each section says "None." when empty.
+Each section says "None." when empty. A Template Ticket or pull request is written in full, `phmilk/reforged-ts-template#<n>`, since a bare `#<n>` on the Spec links into the library.
 
 ## Where a human is needed
 

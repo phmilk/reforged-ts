@@ -59,8 +59,9 @@ The library releases before the Template consumes a new version: the release pub
 3. **The packages each merge changes**, from the changesets it added, after `git fetch origin master --tags`: `git diff-tree --no-commit-id --name-only --diff-filter=A -r <oid> -- .changeset/` lists them (not those under `.changeset/pre/`), and `git show <oid>:<file>` gives each one's frontmatter, one `"<package>": <bump>` line per package. Keep the packages the Template's `package.json` on `origin/main` depends on. An empty changeset needs no version.
 4. **The first version of each package that carries the merge**, `<package>@<version>`, from the first branch that holds:
    - **Released:** `git tag --contains <oid> --list '<package>@*' | sort -V | head -1` prints a tag; the release workflow tags a package when it publishes it. The version is the tag's.
+   - **Not on `master`:** `git merge-base --is-ancestor <oid> origin/master` fails (merged into another branch): unpublished, and the version is the next release of the package after its last tag, named so.
    - **Versioned:** the changeset is gone from `origin/master`'s `.changeset/` (`git cat-file -e origin/master:<file>` fails), consumed by a Version Packages pull request. The version is the package's in the commit that consumed it: `git log origin/master --diff-filter=A --format=%H -1 -- .changeset/pre/<id>.md` (outside pre mode, `--diff-filter=D -- <file>`), then `git show <that commit>:packages/<package>/package.json`.
-   - **Pending:** the changeset is still on `origin/master`. The version is the one Changesets plans, read in a throwaway detached worktree of `origin/master` with the clone's own Changesets, which needs no install there:
+   - **Pending:** the changeset is still on `origin/master`. The version is the one Changesets plans, read in a throwaway detached worktree of `origin/master` with the clone's own Changesets (installed by `pnpm install` in the clone), which needs no install there:
 
      ```sh
      status="$(mktemp -d)/master"
@@ -72,7 +73,7 @@ The library releases before the Template consumes a new version: the release pub
 
 5. **Published or not:** `npm view <package>@<version> version` prints the version when npm holds it; an error (`E404`) means it does not.
 
-When every version is published, work the Ticket. When any is not, the Ticket stops before its work, like a Probe Ticket on a machine without the game ([Stopping](SKILL.md#stopping)): its "Stopping" comment names each `<package>@<version>` npm lacks, the library pull request it carries, and that the maintainer's release resumes it; no worktree and no branch. The version is recomputed at each run, never read back from that comment, since more changesets may land meanwhile.
+When every version is published, work the Ticket. When any is not, the Ticket stops before its work, like a Probe Ticket on a machine without the game ([Stopping](SKILL.md#stopping)): its "Stopping" comment names each `<package>@<version>` npm lacks, the library pull request it carries in full form (`phmilk/reforged-ts#<pr>`, since a bare `#<pr>` on a Template issue links into the Template), and that the maintainer's release resumes it; no worktree and no branch. The version is recomputed at each run, never read back from that comment, since more changesets may land meanwhile.
 
 **Resuming it.** Held by the login with no pull request, a Ticket stopped for an unpublished version needs no human answer: step 4 runs the check above again, and starts the Ticket as step 5 does once npm holds every version; otherwise its stop stands, in the ledger with the versions still missing.
 
