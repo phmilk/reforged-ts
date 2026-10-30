@@ -689,6 +689,31 @@ describe("openRawcodeLookup, the listing", () => {
     expect(keys.indexOf("unit:Hpal")).toBeLessThan(keys.indexOf("unit:h000"));
     expect(keys.indexOf("unit:h000")).toBeLessThan(keys.indexOf("unit:h00A"));
     expect(keys.indexOf("unit:h00A")).toBeLessThan(keys.indexOf("unit:hfoo"));
+    // The kinds in Object kind order, each kind's Rawcodes by code point.
+    const kinds = objects.map((object) => object.kind);
+    expect([...new Set(kinds)]).toEqual([
+      "unit",
+      "item",
+      "ability",
+      "buff",
+      "destructable",
+      "doodad",
+      "upgrade",
+    ]);
+    // Each kind in one run: six changes of kind for seven kinds.
+    expect(
+      kinds.filter((kind, at) => at > 0 && kind !== kinds[at - 1]),
+    ).toHaveLength(6);
+    for (const kind of new Set(kinds)) {
+      const rawcodes = objects
+        .filter((object) => object.kind === kind)
+        .map((object) => object.rawcode);
+      expect(
+        rawcodes.every(
+          (rawcode, at) => at === 0 || (rawcodes[at - 1] ?? "") < rawcode,
+        ),
+      ).toBe(true);
+    }
     // Every unit before every item, every buff before every destructable.
     expect(keys.findLastIndex((key) => key.startsWith("unit:"))).toBeLessThan(
       keys.findIndex((key) => key.startsWith("item:")),

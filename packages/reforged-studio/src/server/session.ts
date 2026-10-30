@@ -16,6 +16,7 @@ import {
   type ObjectDataObject,
   type ObjectKind,
   type RawcodeLookup,
+  type RawcodeObject,
 } from "reforged-map";
 import type { Edit, SessionCounts } from "./api-types.js";
 
@@ -60,6 +61,28 @@ export class EditRefusedError extends Error {
 export interface SessionOptions {
   readonly projectRoot: string;
   readonly mapFolder: string;
+}
+
+/**
+ * The Object definition that defines an object of a listing: its file
+ * relative to the Map project's root, with `/`; undefined when none does.
+ */
+function definitionFile(
+  objects: readonly RawcodeObject[],
+  projectRoot: string,
+  { kind, rawcode }: { kind: ObjectKind; rawcode: string },
+): string | undefined {
+  const object = objects.find(
+    (other) => other.kind === kind && other.rawcode === rawcode,
+  );
+  return object === undefined ||
+    object.origin === "builtin" ||
+    object.definitionFile === undefined
+    ? undefined
+    : path
+        .relative(projectRoot, object.definitionFile)
+        .split(path.sep)
+        .join("/");
 }
 
 /** The objects of an editor, as a state. */
@@ -200,7 +223,11 @@ export class Session {
       throw new EditRefusedError("unavailable", listing.reason);
     }
     for (const edit of edits) {
-      const file = this.definitionOf(edit.kind, edit.rawcode);
+      const file = definitionFile(
+        listing.objects,
+        this.#options.projectRoot,
+        edit,
+      );
       if (file !== undefined) {
         throw new EditRefusedError(
           "object-definition",
@@ -226,30 +253,6 @@ export class Session {
       this.undo.push({ edits: applied });
       this.redo.length = 0;
     }
-  }
-
-  /**
-   * The Object definition that defines an object, by the lookup: its file
-   * relative to the Map project's root, with `/`.
-   *
-   * @param kind - The object's Object kind.
-   * @param rawcode - Its Rawcode.
-   * @returns The file, or undefined when no definition defines it.
-   */
-  definitionOf(kind: ObjectKind, rawcode: string): string | undefined {
-    const listing = this.lookup.list();
-    if (listing.status !== "listed") return undefined;
-    const object = listing.objects.find(
-      (other) => other.kind === kind && other.rawcode === rawcode,
-    );
-    return object === undefined ||
-      object.origin === "builtin" ||
-      object.definitionFile === undefined
-      ? undefined
-      : path
-          .relative(this.#options.projectRoot, object.definitionFile)
-          .split(path.sep)
-          .join("/");
   }
 
   /** The working state's object of a kind and Rawcode. */
