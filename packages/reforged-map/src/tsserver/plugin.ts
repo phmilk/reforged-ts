@@ -1,6 +1,7 @@
 // The plugin's language service: hover and go to definition on a Rawcode
 // literal (#595), from the Rawcode lookup the lint rule calls too (#579),
-// which follows the Object definitions (#708).
+// which follows the Object definitions (#708), and the Studio's link on the
+// hover of a literal and of a Rawcode constant (#833).
 // Every other request, and every request the plugin fails on, is the
 // language service's own.
 
@@ -14,9 +15,11 @@ import {
   type RawcodeLookup,
   type RawcodeLookupResult,
 } from "../lookup.js";
+import { rawcodeConstantAt } from "./constant.js";
 import { rawcodeDefinitions } from "./definition.js";
-import { rawcodeHoverText } from "./hover.js";
+import { rawcodeConstantHoverText, rawcodeHoverText } from "./hover.js";
 import { rawcodeLiteralAt, type RawcodeLiteral } from "./literal.js";
+import { liveStudioReader, type LiveStudio } from "./studio.js";
 
 /** The prefix of every line the plugin writes to the tsserver log. */
 const LOG_PREFIX = "reforged-map/typescript-plugin:";
@@ -96,9 +99,49 @@ export function create(
       position,
     );
     if (literal === undefined) return undefined;
-    const { result, lookup } = source.lookup(literal);
+    const { result, lookup } = source.lookup(
+      literal.form === "string" ? literal.rawcode : (literal.rawcode ?? ""),
+    );
     if (result.status === "unavailable") log(result.reason);
     return { literal, result, lookup, program };
+  };
+
+  /**
+   * The hover line of the Rawcode constant at a position: the Studio's
+   * link to the object the lookup says it names; undefined when the
+   * position is on no constant of an object.
+   */
+  const constantText = (
+    fileName: string,
+    position: number,
+  ): { text: string; node: ts.Node } | undefined => {
+    const program = languageService.getProgram();
+    const sourceFile = program?.getSourceFile(fileName);
+    if (program === undefined || sourceFile === undefined) return undefined;
+    const reference = rawcodeConstantAt(
+      typescript,
+      program.getTypeChecker(),
+      sourceFile,
+      position,
+    );
+    if (reference === undefined) return undefined;
+    const { result } = source.lookup(reference.rawcode);
+    if (result.status !== "known" && result.status !== "not-in-game-data-set") {
+      return undefined;
+    }
+    const object = result.objects.find(
+      ({ constant }) =>
+        constant?.object === reference.object &&
+        constant.member === reference.member &&
+        (!constant.generated ||
+          path.basename(reference.fileName) === constant.module),
+    );
+    return object === undefined
+      ? undefined
+      : {
+          text: rawcodeConstantHoverText(object, source.studio()),
+          node: reference.node,
+        };
   };
 
   // Every member of the language service, then the three requests the
@@ -129,12 +172,18 @@ export function create(
     );
     try {
       const found = resolve(fileName, position);
-      if (found === undefined) return own;
+      if (found === undefined) {
+        const constant = constantText(fileName, position);
+        return constant === undefined
+          ? own
+          : withText(typescript, own, constant.node, constant.text);
+      }
       const text = rawcodeHoverText(
         found.literal,
         found.result,
         found.lookup?.gameVersion(),
         root,
+        source.studio(),
       );
       return withText(typescript, own, found.literal.node, text);
     } catch (error) {
@@ -197,22 +246,25 @@ export function create(
   return proxy;
 }
 
-/** Where the plugin's lookups come from: the map folder, found or named, and its lookup. */
+/** Where the plugin's lookups come from: the map folder, found or named, its lookup and its Studio. */
 interface RawcodeSource {
   /** The map folder, or why there is none. */
   mapFolder(): { mapFolder: string } | { reason: string };
-  /** What the lookup says of a literal, and the lookup that said it. */
-  lookup(literal: RawcodeLiteral): {
+  /** What the lookup says of a Rawcode, and the lookup that said it. */
+  lookup(rawcode: string): {
     result: RawcodeLookupResult;
     lookup: RawcodeLookup | undefined;
   };
+  /** The live Studio on the map folder, as the runtime file says; undefined when none holds it, or there is no map folder. */
+  studio(): LiveStudio | undefined;
 }
 
 /**
  * The map folder named by the option, against the project root, or found as
  * the one map folder at the project root or else under its `maps/`, looked for again at most
- * once per second; and the lookup over it, shared by every project with the
- * same map folder and project root.
+ * once per second; the lookup over it, shared by every project with the
+ * same map folder and project root; and the Studio the runtime file at the
+ * project root names for it, read again at most once per second.
  */
 function rawcodeSource(
   root: string,
@@ -233,11 +285,14 @@ function rawcodeSource(
     }
     return found;
   };
+  const studio = liveStudioReader(root);
   return {
     mapFolder,
-    lookup(literal) {
-      const rawcode =
-        literal.form === "string" ? literal.rawcode : (literal.rawcode ?? "");
+    studio() {
+      const folder = mapFolder();
+      return "mapFolder" in folder ? studio(folder.mapFolder) : undefined;
+    },
+    lookup(rawcode) {
       const folder = mapFolder();
       if (!("mapFolder" in folder)) {
         // A malformed literal is malformed even without a map folder, as the

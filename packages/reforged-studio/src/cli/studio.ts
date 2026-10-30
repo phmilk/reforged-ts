@@ -9,8 +9,10 @@
  *
  * The Map project's root is the current folder when `--project` is left
  * out; the game is found as `startStudio` finds it. It prints the Studio's
- * URL, opens it unless `--no-open`, and stops on Ctrl+C. A missing game or
- * map folder prints one line naming what to fix, and exits 1.
+ * URL, opens it unless `--no-open`, and stops on Ctrl+C; when a Studio
+ * already runs on the map folder, it opens and prints that one's, and ends.
+ * A missing game or map folder prints one line naming what to fix, and
+ * exits 1.
  */
 import path from "node:path";
 import { parseArgs } from "node:util";
@@ -58,14 +60,20 @@ try {
       ...(port !== undefined && { port }),
       open: values["no-open"] !== true,
     });
-    process.stdout.write(
-      `The Studio runs at ${studio.url}/objects. Press Ctrl+C to stop it.\n`,
-    );
-    const stop = () => {
-      void studio.close().then(() => process.exit(0));
-    };
-    process.once("SIGINT", stop);
-    process.once("SIGTERM", stop);
+    if (!studio.started) {
+      process.stdout.write(
+        `A Studio already runs on this map folder, at ${studio.url}/objects.\n`,
+      );
+    } else {
+      process.stdout.write(
+        `The Studio runs at ${studio.url}/objects. Press Ctrl+C to stop it.\n`,
+      );
+      const stop = () => {
+        void studio.close().then(() => process.exit(0));
+      };
+      process.once("SIGINT", stop);
+      process.once("SIGTERM", stop);
+    }
   }
 } catch (error) {
   if (

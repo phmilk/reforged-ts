@@ -98,7 +98,7 @@ export function decodeRawcode(value: number): string | undefined {
 }
 
 /** The innermost node whose text spans `position`. */
-function nodeAt(
+export function nodeAt(
   sourceFile: ts.SourceFile,
   position: number,
 ): ts.Node | undefined {

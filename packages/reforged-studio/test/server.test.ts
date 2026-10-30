@@ -484,6 +484,8 @@ describe("the Studio's Object definitions", () => {
       path.join(project.root, "src", "objects", "units.ts"),
     ]);
 
+    // A second Studio on the map folder would open the first one's.
+    await visual.close();
     const none = await start(project, { env: { PATH: empty } });
     const refused = await request(none, "/api/open-in-editor", {
       json: { kind: "unit", rawcode: "h002" },

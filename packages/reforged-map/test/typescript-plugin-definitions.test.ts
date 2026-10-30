@@ -117,6 +117,7 @@ describe("hover on a Rawcode an Object definition defines", () => {
         ...SERGEANT_HOVER,
         "Race: human.",
         "Its constant is `CustomUnits.Sergeant_h002`, from the generated `custom-units.ts`.",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });
@@ -129,6 +130,7 @@ describe("hover on a Rawcode an Object definition defines", () => {
         "Race: human.",
         "In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
         "Its constant is `Units.Knight_hkni`, from `reforged-builtins/units`.",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });
