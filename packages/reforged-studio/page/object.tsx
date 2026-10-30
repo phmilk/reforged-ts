@@ -378,7 +378,7 @@ export function ObjectPage(props: {
     onAdopted,
   } = props;
   const [hideAtBase, setHideAtBase] = useState(false);
-  const [resetError, setResetError] = useState<string>();
+  const [actionError, setActionError] = useState<string>();
   const others = answer.objects
     .filter((object) => object.kind !== selected.kind)
     .map((object) => object.kind);
@@ -413,11 +413,11 @@ export function ObjectPage(props: {
   const resetObject = () => {
     api.reset({ kind, rawcode }).then(
       (counts) => {
-        setResetError(undefined);
+        setActionError(undefined);
         onChanged(counts);
       },
       (reason: unknown) => {
-        setResetError(
+        setActionError(
           reason instanceof Error ? reason.message : String(reason),
         );
       },
@@ -426,11 +426,11 @@ export function ObjectPage(props: {
   const adopt = () => {
     api.adopt(kind, rawcode).then(
       (adopted) => {
-        setResetError(undefined);
+        setActionError(undefined);
         onAdopted(adopted);
       },
       (reason: unknown) => {
-        setResetError(
+        setActionError(
           reason instanceof Error ? reason.message : String(reason),
         );
       },
@@ -522,9 +522,9 @@ export function ObjectPage(props: {
           {pinned ? "Stop comparing" : "Compare"}
         </button>
       </header>
-      {resetError !== undefined && (
+      {actionError !== undefined && (
         <p className="field-error" role="alert">
-          {resetError}
+          {actionError}
         </p>
       )}
       <Differs object={selected} />

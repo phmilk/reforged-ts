@@ -383,9 +383,14 @@ export interface IconsAnswer {
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`,
  * `"nothing-to-undo"`, `"nothing-to-redo"`, `"no-world-editor"`,
- * `"reload-failed"`, `"unsaved-edits"`; and, for an adoption,
- * `reforged-map`'s `ObjectDefinitionsError` reasons (`"not-adoptable"`,
- * `"target-exists"`).
+ * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-missing"`; and, for
+ * an adoption, every reason `reforged-map`'s `adoptObjects` throws, each
+ * answered with a 409: its `ObjectDefinitionsError` reasons
+ * (`"not-adoptable"`, `"target-exists"`, `"load-failed"`,
+ * `"invalid-definition"`, `"defined-twice"`, `"manifest-unreadable"`,
+ * `"peer-missing"`) and its `ObjectDataWriterError` reasons
+ * (`"modified-in-world-editor"`, `"world-editor-check-failed"`,
+ * `"builtins-missing"`).
  */
 export interface ErrorAnswer {
   /** The refusal. */
@@ -405,6 +410,16 @@ export interface AdoptRequest {
   readonly rawcode: string;
 }
 
+/** An object an adoption handed to the code, and its new definition file. */
+export interface AdoptedObject {
+  /** The object's Object kind. */
+  readonly kind: ObjectKind;
+  /** The object's Rawcode. */
+  readonly rawcode: string;
+  /** The definition file relative to the Map project's root, with `/`. */
+  readonly path: string;
+}
+
 /**
  * `POST /api/adopt`'s answer: `reforged-map`'s Object adoption wrote the
  * object's definition file and its entry in the Object manifest, and the
@@ -413,13 +428,9 @@ export interface AdoptRequest {
  */
 export interface AdoptAnswer extends SessionCounts {
   /** The object adopted, with its new definition file. */
-  readonly adopted: {
-    readonly kind: ObjectKind;
-    readonly rawcode: string;
+  readonly adopted: AdoptedObject & {
     /** The definition file, an absolute path. */
     readonly file: string;
-    /** The definition file relative to the Map project's root, with `/`. */
-    readonly path: string;
   };
   /** Whether the Object manifest was written, which adoption does only when its bytes change. */
   readonly manifestWritten: boolean;
@@ -474,10 +485,5 @@ export interface StudioEvents {
     readonly files: readonly string[];
   };
   readonly saved: SessionCounts & { readonly written: readonly string[] };
-  readonly adopted: SessionCounts & {
-    readonly kind: ObjectKind;
-    readonly rawcode: string;
-    /** The definition file relative to the Map project's root, with `/`. */
-    readonly path: string;
-  };
+  readonly adopted: SessionCounts & AdoptedObject;
 }

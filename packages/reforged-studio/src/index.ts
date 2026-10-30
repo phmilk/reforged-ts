@@ -88,6 +88,7 @@ export { DEFAULT_PORT } from "./server/listen.js";
 export {
   OBJECT_ORIGINS,
   type AdoptAnswer,
+  type AdoptedObject,
   type AdoptRequest,
   type DefinitionSource,
   type DiffAnswer,

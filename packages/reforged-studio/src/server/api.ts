@@ -10,7 +10,9 @@ import {
   checkWorldEditor,
   ObjectDataWriterError,
   ObjectDefinitionsError,
+  MapFolderError,
   reloadWorldEditor,
+  type DefinedObject,
   type GameDataSet,
   type ObjectKind,
   type WorldEditorCheckOptions,
@@ -22,6 +24,7 @@ import type { PathResolver } from "../paths.js";
 import {
   OBJECT_ORIGINS,
   type AdoptAnswer,
+  type AdoptedObject,
   type DiffAnswer,
   type Edit,
   type ErrorAnswer,
@@ -561,7 +564,8 @@ function reloadRoute(context: ApiContext): Answer {
 /**
  * Answers `POST /api/adopt`: `reforged-map`'s Object adoption of one
  * object, `adoptObjects`, the function `pnpm objects:adopt` runs, with the
- * same World Editor check; its definition file formatted with the Map
+ * same World Editor check, refused with a 409 for each reason it throws
+ * and for a missing map folder; its definition file formatted with the Map
  * project's Prettier, as `objects:adopt` formats it. It adopts the object
  * as the map folder holds it on disk, so it is refused while the Studio
  * holds unsaved edits. After it the Studio reads the map folder again, its
@@ -577,9 +581,14 @@ async function adopt(
   if (
     typeof kind !== "string" ||
     !isKind(kind) ||
-    typeof rawcode !== "string"
+    typeof rawcode !== "string" ||
+    rawcode.length !== 4
   ) {
-    return refuse(400, "bad-request", "The body is { kind, rawcode }.");
+    return refuse(
+      400,
+      "bad-request",
+      "The body is { kind, rawcode }, the Rawcode four characters.",
+    );
   }
   const { session } = context;
   const { unsavedEdits } = session.counts();
@@ -607,7 +616,18 @@ async function adopt(
     ) {
       return refuse(409, error.reason, error.message);
     }
+    if (error instanceof MapFolderError) {
+      return refuse(409, "map-folder-missing", error.message);
+    }
     throw error;
+  }
+  const [object] = report.adopted as readonly (DefinedObject | undefined)[];
+  if (object === undefined) {
+    return refuse(
+      409,
+      "not-adoptable",
+      `Object adoption adopted nothing at the ${kind} ${rawcode}.`,
+    );
   }
   const formatting = await formatDefinitionFiles(
     context.projectRoot,
@@ -615,25 +635,18 @@ async function adopt(
   );
   session.reopen();
   context.resync();
-  const [object] = report.adopted;
-  const shown = path
-    .relative(context.projectRoot, object.file)
-    .split(path.sep)
-    .join("/");
-  const counts = session.counts();
-  context.events.send("adopted", {
-    ...counts,
+  const adopted: AdoptedObject = {
     kind: object.kind,
     rawcode: object.rawcode,
-    path: shown,
-  });
+    path: path
+      .relative(context.projectRoot, object.file)
+      .split(path.sep)
+      .join("/"),
+  };
+  const counts = session.counts();
+  context.events.send("adopted", { ...counts, ...adopted });
   return new Answer(200, {
-    adopted: {
-      kind: object.kind,
-      rawcode: object.rawcode,
-      file: object.file,
-      path: shown,
-    },
+    adopted: { ...adopted, file: object.file },
     manifestWritten: report.manifestWritten,
     formatted: formatting.formatted,
     worldEditor: report.worldEditor,

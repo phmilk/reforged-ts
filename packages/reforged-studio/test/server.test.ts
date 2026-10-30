@@ -1097,6 +1097,21 @@ describe("the Studio's Object adoption", () => {
 
     const bad = await adopt(studio, "unicorn", "h000");
     expect(bad.status).toBe(400);
+    const short = await adopt(studio, "unit", "h00");
+    expect(short.status).toBe(400);
+  });
+
+  it("refuses when the map folder is gone, writing nothing", async () => {
+    const project = mapProject();
+    const studio = await start(project);
+    fs.rmSync(project.mapFolder, { recursive: true });
+
+    const answer = await adopt(studio, "unit", "h000");
+    expect(answer.status).toBe(409);
+    expect((answer.body as ErrorAnswer).error.reason).toBe(
+      "map-folder-missing",
+    );
+    expect(fs.existsSync(path.join(project.root, "src"))).toBe(false);
   });
 
   it("writes the map folder and the code only through reforged-map", () => {
