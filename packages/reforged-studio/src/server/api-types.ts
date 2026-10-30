@@ -379,18 +379,15 @@ export interface IconsAnswer {
 
 /**
  * A refusal: its reason and a message an author reads. The reasons are
- * `reforged-map`'s `ObjectDataWriterError` reasons, and the Studio's own:
+ * {@link reforged-map#ObjectDataWriterErrorReason}s, and the Studio's own:
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`,
  * `"nothing-to-undo"`, `"nothing-to-redo"`, `"no-world-editor"`,
- * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-missing"`; and, for
- * an adoption, every reason `reforged-map`'s `adoptObjects` throws, each
- * answered with a 409: its `ObjectDefinitionsError` reasons
- * (`"not-adoptable"`, `"target-exists"`, `"load-failed"`,
- * `"invalid-definition"`, `"defined-twice"`, `"manifest-unreadable"`,
- * `"peer-missing"`) and its `ObjectDataWriterError` reasons
- * (`"modified-in-world-editor"`, `"world-editor-check-failed"`,
- * `"builtins-missing"`).
+ * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-unreadable"`; and,
+ * for an adoption, every reason `reforged-map`'s `adoptObjects` throws,
+ * each answered with a 409: its
+ * {@link reforged-map#ObjectDefinitionsErrorReason}s and its
+ * {@link reforged-map#ObjectDataWriterErrorReason}s.
  */
 export interface ErrorAnswer {
   /** The refusal. */

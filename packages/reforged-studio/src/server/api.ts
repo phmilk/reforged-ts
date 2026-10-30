@@ -565,7 +565,7 @@ function reloadRoute(context: ApiContext): Answer {
  * Answers `POST /api/adopt`: `reforged-map`'s Object adoption of one
  * object, `adoptObjects`, the function `pnpm objects:adopt` runs, with the
  * same World Editor check, refused with a 409 for each reason it throws
- * and for a missing map folder; its definition file formatted with the Map
+ * and for a map folder it cannot read; its definition file formatted with the Map
  * project's Prettier, as `objects:adopt` formats it. It adopts the object
  * as the map folder holds it on disk, so it is refused while the Studio
  * holds unsaved edits. After it the Studio reads the map folder again, its
@@ -617,16 +617,14 @@ async function adopt(
       return refuse(409, error.reason, error.message);
     }
     if (error instanceof MapFolderError) {
-      return refuse(409, "map-folder-missing", error.message);
+      return refuse(409, "map-folder-unreadable", error.message);
     }
     throw error;
   }
-  const [object] = report.adopted as readonly (DefinedObject | undefined)[];
+  const object = report.adopted[0] as DefinedObject | undefined;
   if (object === undefined) {
-    return refuse(
-      409,
-      "not-adoptable",
-      `Object adoption adopted nothing at the ${kind} ${rawcode}.`,
+    throw new Error(
+      `Object adoption adopted nothing at the ${kind} ${rawcode}, without refusing it.`,
     );
   }
   const formatting = await formatDefinitionFiles(

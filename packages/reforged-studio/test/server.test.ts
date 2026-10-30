@@ -1101,7 +1101,7 @@ describe("the Studio's Object adoption", () => {
     expect(short.status).toBe(400);
   });
 
-  it("refuses when the map folder is gone, writing nothing", async () => {
+  it("refuses a map folder it cannot read, writing nothing", async () => {
     const project = mapProject();
     const studio = await start(project);
     fs.rmSync(project.mapFolder, { recursive: true });
@@ -1109,7 +1109,7 @@ describe("the Studio's Object adoption", () => {
     const answer = await adopt(studio, "unit", "h000");
     expect(answer.status).toBe(409);
     expect((answer.body as ErrorAnswer).error.reason).toBe(
-      "map-folder-missing",
+      "map-folder-unreadable",
     );
     expect(fs.existsSync(path.join(project.root, "src"))).toBe(false);
   });
