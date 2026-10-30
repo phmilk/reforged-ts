@@ -55,9 +55,10 @@ jobs:
       # Playwright names, and on ubuntu the system libraries it needs.
       - name: Install Chromium
         shell: bash
-        env:
-          WITH_DEPS: ${{ matrix.os == 'ubuntu' && '--with-deps' || '' }}
-        run: pnpm --filter reforged-studio exec playwright install $WITH_DEPS --only-shell --no-progress chromium
+        run: |
+          args=(--only-shell --no-progress)
+          if [ "$RUNNER_OS" = Linux ]; then args+=(--with-deps); fi
+          pnpm --filter reforged-studio exec playwright install "${args[@]}" chromium
       - name: lint
         run: pnpm run lint
       - name: typecheck
