@@ -18,7 +18,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 ## Steps
 
 1. **Check the Spec.** Read `gh issue view <spec> --json state,labels,body` and its sub-issues, `gh api repos/phmilk/reforged-ts/issues/<spec>/sub_issues --paginate`. The Spec is labelled `spec`, open, has at least one sub-issue, and its body has a `## Coverage table` section. When any of these fails, stop and say so: the issue is not a split Spec, and its split is `/split-spec <spec>`, a human's decision with its quiz. Never split it yourself. Done when the four hold, or you stopped naming `/split-spec <spec>`.
-2. **Clear stale locks.** No implementer of this run is in flight yet, so a check lock left by an earlier run is stale: remove it (`rm -rf` of the lock folder, [The check lock](#the-check-lock)). Done when no lock folder is left.
+2. **Clear a stale lock.** Remove the check lock only when it is stale ([The check lock](#the-check-lock)): a live one is another run's, on another Spec, and stays. Done when no stale lock is left.
 3. **Read the Frontier.** `pnpm spec:frontier <spec>`. It prints three lists for the `gh` login: takeable now, held by the login (each with its open pull requests), and held by other logins (with their assignees). Read the Frontier only through it, so that this skill, the skill-target check and `next-step` agree. Done when you hold the three lists.
 4. **Resume what the login holds.** For each held Ticket:
    - **With an open pull request:** carry it on from that pull request, never restarting it: watch it as step 7 does. When auto-merge is off and its body says what waits for a human, it is a stop already made: put it in the ledger.
@@ -63,7 +63,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
    - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), close the Spec with the end comment, written to a file: `gh issue close <spec> --comment "$(cat <file>)"`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
    - **Any Ticket open** (held by another login, stopped, or not started after a stop): post the end comment on the Spec and leave it open; whoever merges the last Ticket closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
 
-   Then remove every worktree of the run that is left, and the check lock if one is. Done when the end comment is on the Spec and printed in the chat, word for word.
+   Then remove every worktree of the run that is left, and the check lock when it is stale. Done when the end comment is on the Spec and printed in the chat, word for word.
 
 ## The end comment
 
@@ -122,12 +122,15 @@ A conflict is resolved by intent, never by picking lines: read what each side me
 The full `pnpm check` of every worktree, the Template's included, runs one at a time, under a lock the worktrees share: a folder in the library clone's common git folder, which `mkdir` creates atomically on every platform and no worktree tracks. Read its absolute path once, from the library's clone, and give it to each implementer: from a Template worktree, `git rev-parse` would name the Template's folder, a second lock. The implementer takes it before the first step of the check and releases it after the last, whatever the result; `/ship`'s check is held the same way:
 
 ```sh
-lock="$(git rev-parse --path-format=absolute --git-common-dir)/ship-spec-check.lock"   # in the library's clone
-until mkdir "$lock" 2>/dev/null; do sleep 15; done; echo "<ticket>" > "$lock/holder"   # take it
-rm -rf "$lock"                                                                          # release it
+lock="$(git rev-parse --path-format=absolute --git-common-dir)/ship-spec-check.lock"          # in the library's clone
+until mkdir "$lock" 2>/dev/null; do sleep 15; done; echo "<spec> <ticket>" > "$lock/holder"   # take it
+rm -rf "$lock"                                                                                # release it
 ```
 
-A wait that reaches its ten-minute timeout is run again. A lock whose holder is no longer in flight is stale: remove it (`rm -rf "$lock"`) when you remove that Ticket's worktree.
+A wait that reaches its ten-minute timeout is run again. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
+
+- its holder names this run's Spec and a Ticket of it not in flight now (at step 2, none is): remove it when you remove that Ticket's worktree, or at step 2;
+- its folder is older than the longest check: the `check` script's commands at ten minutes each, with a margin, two hours: `find "$lock" -maxdepth 0 -mmin +120` prints it. A lock with no holder file yet, between its `mkdir` and its `echo`, is judged by the folder's age alone.
 
 ## Three in flight
 
