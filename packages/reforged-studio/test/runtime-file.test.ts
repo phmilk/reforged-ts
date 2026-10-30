@@ -9,7 +9,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
-import { STUDIO_RUNTIME_FILE, type StudioRuntimeFile } from "../src/index.js";
+import { STUDIO_RUNTIME_FILE, type StudioRuntimeFile } from "reforged-map";
 import {
   closeStudios,
   mapProject,

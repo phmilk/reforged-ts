@@ -277,3 +277,9 @@ export {
   type UnavailableLookup,
   type UnknownRawcode,
 } from "./lookup.js";
+export {
+  readLiveStudio,
+  STUDIO_RUNTIME_FILE,
+  STUDIO_RUNTIME_FORMAT,
+  type StudioRuntimeFile,
+} from "./studio-runtime-file.js";

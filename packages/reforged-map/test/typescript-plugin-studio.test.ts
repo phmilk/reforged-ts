@@ -96,8 +96,8 @@ let dead: ReturnType<typeof project>;
 let elsewhere: ReturnType<typeof project>;
 let none: ReturnType<typeof project>;
 
-// Measured 3.1 s, the whole file, four projects opened, with
-// `pnpm exec vitest run` on this file on Linux (WSL 2, 8 threads), 2026-10.
+// Measured 3.1 s with `pnpm exec vitest run` on this file on Linux (WSL 2,
+// 8 threads), 2026-10: the whole file, its four projects opened.
 beforeAll(async () => {
   live = project();
   writeRuntimeFile(live.root, { pid: process.pid, mapFolder: live.mapFolder });
@@ -183,6 +183,12 @@ describe.each([
     expect(text).toMatch(/^Captain \(`h000`\), a Custom unit of this map/);
     expect(text.endsWith(`\n\n${NOT_RUNNING}`)).toBe(true);
     expect(text).not.toMatch(/Open in the Studio/);
+  });
+
+  it("says that pnpm studio opens the object of a shared Rawcode's constant", async () => {
+    expect(await hover(which(), "HolyFire_B000;")).toMatch(
+      new RegExp(`\\n\\n${escape(NOT_RUNNING)}$`),
+    );
   });
 });
 

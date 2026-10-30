@@ -34,7 +34,7 @@ It polls, once a second with `stat` and holding no file open, the files the look
 
 ## The runtime file
 
-While it runs, the Studio writes `.reforged-studio.json` at the Map project's root, which a Map project git-ignores: one per Map project, so a Studio started on another map folder of the project replaces it. It is UTF-8 JSON (`STUDIO_RUNTIME_FILE`, `StudioRuntimeFile`):
+While it runs, the Studio writes `.reforged-studio.json` at the Map project's root, which a Map project git-ignores: one per Map project, so a Studio started on another map folder of the project replaces it. It is UTF-8 JSON, whose name, format and reader are `reforged-map`'s (`STUDIO_RUNTIME_FILE`, `StudioRuntimeFile`, `readLiveStudio`):
 
 ```json
 {
@@ -46,7 +46,7 @@ While it runs, the Studio writes `.reforged-studio.json` at the Map project's ro
 }
 ```
 
-It is written once the server listens, and removed on a clean stop: `close()`, the process's normal end, Ctrl+C and a termination signal, after which a signal nothing else listens to ends the process as it would have. A Studio stopping removes the file only while it is still its own. A crash may leave it, so every reader takes it as live only when `pid` is a running process (a synchronous signal-0 check) and `mapFolder` is the folder it reads, through links and, on Windows, without regard to case; `liveStudio(projectRoot, mapFolder)` applies that rule. A second Studio on the same map folder opens the first one's URL instead of starting, and the hover of `reforged-map`'s TypeScript plugin links to `<url>/objects/<rawcode>` from it ([its README](../reforged-map/README.md#the-typescript-plugin)).
+It is written once the server listens, and removed on a clean stop: `close()`, the process's normal end, Ctrl+C and a termination signal, after which a signal nothing else listens to ends the process as it would have. A Studio stopping removes the file only while it is still its own. A crash may leave it, so every reader takes it as live only when `pid` is a running process (a synchronous signal-0 check) and `mapFolder` is the folder it reads, through links and, on Windows, without regard to case: `reforged-map`'s `readLiveStudio(projectRoot, mapFolder)` applies that rule for the Studio and the hover alike. A second Studio on the same map folder opens the first one's URL instead of starting, and the hover of `reforged-map`'s TypeScript plugin links to `<url>/objects/<rawcode>` from it ([its README](../reforged-map/README.md#the-typescript-plugin)).
 
 ## The API for a host
 

@@ -7,7 +7,12 @@
 import { spawn } from "node:child_process";
 import http from "node:http";
 import path from "node:path";
-import type { WorldEditorCheckOptions } from "reforged-map";
+import {
+  readLiveStudio,
+  STUDIO_RUNTIME_FORMAT,
+  type StudioRuntimeFile,
+  type WorldEditorCheckOptions,
+} from "reforged-map";
 import { openStorage } from "./casc/storage.js";
 import { readGameData, type GameData } from "./game-data.js";
 import { findInstall, systemMachine } from "./install.js";
@@ -16,13 +21,7 @@ import { handle } from "./server/api.js";
 import { EventStreams } from "./server/events.js";
 import { DEFAULT_PORT, listen } from "./server/listen.js";
 import type { EditorEnvironment } from "./server/open-in-editor.js";
-import {
-  liveStudio,
-  removeRuntimeFile,
-  STUDIO_RUNTIME_FORMAT,
-  writeRuntimeFile,
-  type StudioRuntimeFile,
-} from "./server/runtime-file.js";
+import { removeRuntimeFile, writeRuntimeFile } from "./server/runtime-file.js";
 import { Session } from "./server/session.js";
 import { watchFiles } from "./server/watch.js";
 
@@ -155,7 +154,7 @@ function holdRuntimeFile(
 export async function startStudio(options: StudioOptions): Promise<Studio> {
   const projectRoot = path.resolve(options.projectRoot);
   const mapFolder = path.resolve(options.mapFolder);
-  const running = liveStudio(projectRoot, mapFolder);
+  const running = readLiveStudio(projectRoot, mapFolder);
   if (running !== undefined) {
     if (options.open === true) openBrowser(`${running.url}/objects`);
     return { url: running.url, started: false, close: () => Promise.resolve() };
