@@ -1,8 +1,9 @@
 /**
  * `builtins:generate [--install <folder>] [--out <folder>] [--client-build
- * <Build>]`: finds the install (`reforged-studio`'s `findInstall`), refuses one whose Build is
- * not `reforged-types`' `reforged.patch` (or `--client-build`, a later Build
- * of its Game version accepted in its place), then writes the index and the
+ * <Build>]`: finds the install (`reforged-studio`'s `findInstall`), refuses
+ * one whose Build is not `reforged-types`' `reforged.patch` (or
+ * `--client-build`, a later Build of its Game version accepted in its
+ * place), then writes the index and the
  * provenance file of its Game version, and the artefacts emitted from the
  * index, under `--out` (the package root by default). Prints the counts,
  * then the warnings; on any error it writes nothing, prints the errors and

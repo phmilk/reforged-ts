@@ -28,6 +28,11 @@ const FILES: Readonly<Record<string, string>> = {
     "hd icon",
   // A texture of the base layer still stored as `.blp`.
   "War3.w3mod:Textures/Footman.blp": "base blp",
+  // A localized texture: the enUS sub-layer of a layer comes before it.
+  "War3.w3mod:UI/Glues/Title.dds": "base title",
+  "War3.w3mod:_Locales/enUS.w3mod:UI/Glues/Title.dds": "base enUS title",
+  "War3.w3mod:_HD.w3mod:_Locales/enUS.w3mod:UI/Glues/Title.dds":
+    "hd enUS title",
   // An alias, its source found nowhere.
   "War3.w3mod:Textures/GenericGlow1.dds": "glow",
   "War3.w3mod:FileAliases.json": JSON.stringify([
@@ -46,6 +51,10 @@ async function mapFolder(): Promise<string> {
     "war3mapImported/Hero.mdx": "map hero",
     "_hd.w3mod/war3mapImported/Hero.mdx": "map hd hero",
     "units/human/footman/footman.mdx": "map footman",
+    "war3mapImported/Note.mdx": "map note",
+    "_Locales/enUS.w3mod/war3mapImported/Note.mdx": "map enUS note",
+    "_hd.w3mod/_Locales/enUS.w3mod/war3mapImported/Note.mdx":
+      "map hd enUS note",
   };
   for (const [path, content] of Object.entries(files)) {
     await mkdir(dirname(join(folder, path)), { recursive: true });
@@ -151,6 +160,24 @@ describe("createPathResolver", () => {
     // Matched without regard to case, before the storage.
     expect((await found(hd, "Units\\Human\\Footman\\Footman.mdx")).text).toBe(
       "map footman",
+    );
+  });
+
+  it("reads a layer's enUS sub-layer before it, in the map folder and the storage", async () => {
+    const hd = await resolver("hd", true);
+    const sd = await resolver("sd", true);
+
+    expect((await found(hd, "war3mapImported\\Note.mdx")).text).toBe(
+      "map hd enUS note",
+    );
+    expect((await found(sd, "war3mapImported\\Note.mdx")).text).toBe(
+      "map enUS note",
+    );
+    expect((await found(hd, "UI\\Glues\\Title.blp")).text).toBe(
+      "hd enUS title",
+    );
+    expect((await found(sd, "UI\\Glues\\Title.blp")).text).toBe(
+      "base enUS title",
     );
   });
 

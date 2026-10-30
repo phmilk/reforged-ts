@@ -4,7 +4,10 @@
  * a model names is looked for in the map folder first, layered like the
  * game (`_hd.w3mod/<path>`, as HiveWE's lookup orders a map's files), then
  * in the chosen art layer of the storage (`_HD.w3mod:` or `_DE.w3mod:`),
- * then in its base layer. In each place a `.blp` or `.tif` path falls back
+ * then in its base layer, each layer's enUS sub-layer
+ * (`_Locales/enUS.w3mod`) before it. HiveWE's tileset and `_teen` layers
+ * are not read: the Studio previews no tileset, and the teen layer
+ * replaces art for a content filter the World Editor does not apply. In each place a `.blp` or `.tif` path falls back
  * to the `.dds` that 3.0 stores, and a path found in none of them goes
  * through `FileAliases.json`. A path that resolves nowhere is reported as
  * missing: 2 to 5 % of Blizzard's own references dangle.
@@ -24,15 +27,26 @@ const ART_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
   de: `${BASE_LAYER}_DE.w3mod:`,
 };
 
-/** The layer of the map folder the HD and DE art layers read before its root, as HiveWE's lookup does. */
+/**
+ * The layer of the map folder the HD and DE art layers read before its
+ * root, as HiveWE's lookup does. HiveWE reads no DE layer, and the folder
+ * the World Editor writes a DE-only import to was not observed (#481): DE
+ * reads the HD layer until a human checks it (#842).
+ */
 const MAP_HD_LAYER = "_hd.w3mod";
+
+/** The enUS sub-layer each layer of the map folder reads first, as HiveWE's lookup does. */
+const MAP_LOCALE = "_Locales/enUS.w3mod/";
+
+/** The enUS sub-layer each layer of the storage reads first. */
+const STORAGE_LOCALE = "_Locales/enUS.w3mod:";
 
 /** The aliases of the storage, in its base layer: `{ src, dest, assetType }` objects. */
 export const FILE_ALIASES = `${BASE_LAYER}FileAliases.json`;
 
 /** What to resolve against. */
 export interface PathResolverOptions {
-  /** The art layer chosen (`artLayerOf`). */
+  /** The art layer chosen (`readArtLayer`). */
   artLayer: ArtLayer;
   /** The map folder whose imports come first; none when absent. */
   mapFolder?: string;
@@ -78,10 +92,12 @@ export function createPathResolver(
     return (await aliases).get(path.toLowerCase());
   };
 
-  const layers = [ART_LAYERS[options.artLayer], BASE_LAYER].filter(
-    (layer) => layer !== undefined,
-  );
-  const mapLayers = options.artLayer === "sd" ? [""] : [`${MAP_HD_LAYER}/`, ""];
+  const layers = [ART_LAYERS[options.artLayer], BASE_LAYER]
+    .filter((layer) => layer !== undefined)
+    .flatMap((layer) => [`${layer}${STORAGE_LOCALE}`, layer]);
+  const mapLayers = (
+    options.artLayer === "sd" ? [""] : [`${MAP_HD_LAYER}/`, ""]
+  ).flatMap((layer) => [`${layer}${MAP_LOCALE}`, layer]);
 
   const find = async (path: string): Promise<ResolvedPath | undefined> => {
     const candidates = extensions(path);
