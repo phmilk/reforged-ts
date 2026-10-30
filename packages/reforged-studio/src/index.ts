@@ -86,6 +86,12 @@ export {
 export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
+  liveStudio,
+  STUDIO_RUNTIME_FILE,
+  STUDIO_RUNTIME_FORMAT,
+  type StudioRuntimeFile,
+} from "./server/runtime-file.js";
+export {
   OBJECT_ORIGINS,
   type DefinitionSource,
   type Edit,

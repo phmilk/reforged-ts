@@ -60,6 +60,8 @@ const FOOTMAN = [
   "Race: human.",
   "In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
   "Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
+  // No Studio runs on the map folder (#833).
+  "`pnpm studio` opens this object.",
 ].join("\n\n");
 
 let server: TsServer;
@@ -142,6 +144,7 @@ describe("hover on a Rawcode literal", () => {
         "**Captain** (`h000`), a Custom unit of this map, derived from Footman (`hfoo`).",
         "Race: human.",
         "Its constant is `CustomUnits.Captain_h000`, from the generated `custom-units.ts`.",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });
@@ -153,6 +156,7 @@ describe("hover on a Rawcode literal", () => {
         "Race: human.",
         "In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
         "Its constant is `Units.Knight_hkni`, from `reforged-builtins/units`.",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });
@@ -166,6 +170,7 @@ describe("hover on a Rawcode literal", () => {
         "Its constant is `CustomBuffs.HolyFire_B000`, from the generated `custom-buffs.ts`.",
         "**Gate** (`B000`), a Custom destructable of this map, derived from Summer Tree Wall (`LTlt`).",
         "Its constant is `CustomDestructables.Gate_B000`, from the generated `custom-destructables.ts`.",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });
@@ -178,6 +183,7 @@ describe("hover on a Rawcode literal", () => {
         "In the Custom (The Frozen Throne) Game data set.",
         "Its constant is `Abilities.Pillage_Asa2`, from `reforged-builtins/abilities`.",
         "`Asa2` (Pillage) is a Built-in ability of Patch 3.0.1 but not of this map's Game data set (Melee (Forsaken Kingdom)).",
+        "`pnpm studio` opens this object.",
       ].join("\n\n"),
     );
   });

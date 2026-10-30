@@ -6,7 +6,7 @@ It holds two parts: the Studio's server and page ([#831](https://github.com/phmi
 
 ## Starting the Studio
 
-`startStudio({ projectRoot, mapFolder, gameExecutable, worldEditorExecutable, port, open })` starts it and returns `{ url, close }`; `url` is `http://localhost:<port>`, the page `<url>/objects`, an object `<url>/objects/<rawcode>`. It runs in Node from the Map project's own installation: `reforged-map` is its peer, and `reforged-builtins` and `typescript` are resolved from `projectRoot` through it, as the lookup resolves them. It never depends on `reforged-ts`.
+`startStudio({ projectRoot, mapFolder, gameExecutable, worldEditorExecutable, port, open })` starts it and returns `{ url, started, close }`, or, when a live Studio already holds the map folder ([the runtime file](#the-runtime-file)), opens that one's page when `open` is true and returns its URL with `started` false, starting nothing; `url` is `http://localhost:<port>`, the page `<url>/objects`, an object `<url>/objects/<rawcode>`. It runs in Node from the Map project's own installation: `reforged-map` is its peer, and `reforged-builtins` and `typescript` are resolved from `projectRoot` through it, as the lookup resolves them. It never depends on `reforged-ts`.
 
 - `projectRoot`: the Map project's root, under which its Object definitions (`src/objects`) and Object manifest (`object-manifest.json`) are.
 - `mapFolder`: the map folder, saved as a folder by the World Editor.
@@ -22,7 +22,7 @@ The bin is a thin wrapper over it, for a Map project not made from the Template,
 reforged-studio --map maps/my-map.w3m [--project <root>] [--game <executable>] [--world-editor <executable>] [--port <port>] [--no-open]
 ```
 
-It prints the URL, opens the page unless `--no-open`, and stops on Ctrl+C.
+It prints the URL, opens the page unless `--no-open`, and stops on Ctrl+C; when a Studio already runs on the map folder, it opens and prints that one's URL, and ends.
 
 ## The server
 
@@ -31,6 +31,22 @@ The server is Node's `http`, no framework. It listens on `127.0.0.1` only. It an
 It opens the map folder once with `reforged-map`'s `openObjectData(mapFolder, { projectRoot })`, and its Rawcode lookup with `openRawcodeLookup`, so the Studio, the hover and the lint rule agree on what a Rawcode names. The session keeps the saved state (what the map folder held at the last read), the working state (the saved state plus the unsaved edits), the states before and after its last save, and the undo and redo stacks, in the shape of the prototype of [#476](https://github.com/phmilk/reforged-ts/issues/476). An edit is one of the editor's, checked at once; the edits of one request are one undo step, applied all or none.
 
 It polls, once a second with `stat` and holding no file open, the files the lookup reads (the Object data files and their Skin files, `war3map.wts`, `war3map.w3i`, the Object definitions and the Object manifest) and the placement files, `war3map.doo` and `war3mapUnits.doo`. On a change with no unsaved edit it opens the map folder again, replaces the saved state and sends `reloaded`; with unsaved edits it keeps them and sends `changed-on-disk`.
+
+## The runtime file
+
+While it runs, the Studio writes `.reforged-studio.json` at the Map project's root, which a Map project git-ignores: one per Map project, so a Studio started on another map folder of the project replaces it. It is UTF-8 JSON (`STUDIO_RUNTIME_FILE`, `StudioRuntimeFile`):
+
+```json
+{
+  "format": 1,
+  "url": "http://localhost:5476",
+  "pid": 12345,
+  "mapFolder": "<absolute path>",
+  "startedAt": "<ISO 8601>"
+}
+```
+
+It is written once the server listens, and removed on a clean stop: `close()`, the process's normal end, Ctrl+C and a termination signal, after which a signal nothing else listens to ends the process as it would have. A Studio stopping removes the file only while it is still its own. A crash may leave it, so every reader takes it as live only when `pid` is a running process (a synchronous signal-0 check) and `mapFolder` is the folder it reads, through links and, on Windows, without regard to case; `liveStudio(projectRoot, mapFolder)` applies that rule. A second Studio on the same map folder opens the first one's URL instead of starting, and the hover of `reforged-map`'s TypeScript plugin links to `<url>/objects/<rawcode>` from it ([its README](../reforged-map/README.md#the-typescript-plugin)).
 
 ## The API for a host
 

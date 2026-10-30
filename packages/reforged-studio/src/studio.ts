@@ -16,6 +16,13 @@ import { handle } from "./server/api.js";
 import { EventStreams } from "./server/events.js";
 import { DEFAULT_PORT, listen } from "./server/listen.js";
 import type { EditorEnvironment } from "./server/open-in-editor.js";
+import {
+  liveStudio,
+  removeRuntimeFile,
+  STUDIO_RUNTIME_FORMAT,
+  writeRuntimeFile,
+  type StudioRuntimeFile,
+} from "./server/runtime-file.js";
 import { Session } from "./server/session.js";
 import { watchFiles } from "./server/watch.js";
 
@@ -58,7 +65,16 @@ export interface StudioOptions {
 export interface Studio {
   /** Its origin, `http://localhost:<port>`: the page is at `<url>/objects`, an object at `<url>/objects/<rawcode>`. */
   readonly url: string;
-  /** Stops the server, its watch and its event streams. */
+  /**
+   * Whether this call started it: false when a live Studio already held the
+   * map folder, whose URL `url` is and which keeps running.
+   */
+  readonly started: boolean;
+  /**
+   * Stops the server, its watch and its event streams, and removes its
+   * runtime file; a second call waits for the first. It does nothing for a
+   * Studio this call did not start.
+   */
   close(): Promise<void>;
 }
 
@@ -80,13 +96,47 @@ function openBrowser(url: string): void {
   child.unref();
 }
 
+/** The signals of a stop from the terminal, on which the runtime file is removed. */
+const STOP_SIGNALS: readonly NodeJS.Signals[] = ["SIGINT", "SIGTERM"];
+
+/**
+ * Keeps the runtime file while the Studio runs: written now, removed by the
+ * returned function, on the process's normal end, or on Ctrl+C or a
+ * termination signal, after which a signal no one else listens to ends the
+ * process as it would have without the Studio.
+ */
+function holdRuntimeFile(
+  projectRoot: string,
+  record: StudioRuntimeFile,
+): () => void {
+  writeRuntimeFile(projectRoot, record);
+  const release = (): void => {
+    process.off("exit", release);
+    for (const signal of STOP_SIGNALS) process.off(signal, onSignal);
+    removeRuntimeFile(projectRoot, record);
+  };
+  const onSignal = (signal: NodeJS.Signals): void => {
+    release();
+    if (process.listenerCount(signal) === 0) process.kill(process.pid, signal);
+  };
+  process.on("exit", release);
+  for (const signal of STOP_SIGNALS) process.on(signal, onSignal);
+  return release;
+}
+
 /**
  * Starts the Studio on a Map project's map folder.
  *
  * @remarks
- * It finds the game's install and opens its storage, opens the map folder
- * once with `reforged-map`'s `openObjectData` and its Rawcode lookup with
- * `openRawcodeLookup`, then listens on `127.0.0.1` only. It answers only
+ * When a live Studio already holds the map folder, as its runtime file
+ * (`.reforged-studio.json` at the Map project's root) says, it opens that
+ * Studio's page when `open` is true and returns its URL, starting nothing.
+ * Otherwise it finds the game's install and opens its storage, opens the
+ * map folder once with `reforged-map`'s `openObjectData` and its Rawcode
+ * lookup with `openRawcodeLookup`, then listens on `127.0.0.1` only and
+ * writes the runtime file, replacing a Studio's on another map folder of
+ * the Map project; `close()`, the process's normal end, Ctrl+C and a
+ * termination signal remove it. It answers only
  * requests whose `Host` is `localhost:<port>` or `127.0.0.1:<port>`, and a
  * write only from its own origin. It polls the files the lookup reads and
  * the placement files once a second, holding none open: a change with no
@@ -96,7 +146,8 @@ function openBrowser(url: string): void {
  *
  * @param options - The Map project, its map folder, the game, the port and
  *   whether to open the page.
- * @returns The running Studio: its URL, and how to stop it.
+ * @returns The running Studio: its URL, whether this call started it, and
+ *   how to stop it.
  * @throws {@link InstallNotFoundError} When the game's install is not found;
  *   its message names the setting to fix.
  * @throws `reforged-map`'s `MapFolderError` When the map folder is missing.
@@ -104,6 +155,11 @@ function openBrowser(url: string): void {
 export async function startStudio(options: StudioOptions): Promise<Studio> {
   const projectRoot = path.resolve(options.projectRoot);
   const mapFolder = path.resolve(options.mapFolder);
+  const running = liveStudio(projectRoot, mapFolder);
+  if (running !== undefined) {
+    if (options.open === true) openBrowser(`${running.url}/objects`);
+    return { url: running.url, started: false, close: () => Promise.resolve() };
+  }
   const installDir = findInstall(
     options.gameExecutable,
     projectRoot,
@@ -146,6 +202,13 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
   });
   port = await listen(server, options.port ?? DEFAULT_PORT);
   const url = `http://localhost:${String(port)}`;
+  const releaseRuntimeFile = holdRuntimeFile(projectRoot, {
+    format: STUDIO_RUNTIME_FORMAT,
+    url,
+    pid: process.pid,
+    mapFolder,
+    startedAt: new Date().toISOString(),
+  });
 
   const watch = watchFiles(
     () => [
@@ -181,10 +244,13 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
 
   if (options.open === true) openBrowser(`${url}/objects`);
 
+  let closed: Promise<void> | undefined;
   return {
     url,
+    started: true,
     close: () =>
-      new Promise((resolve, reject) => {
+      (closed ??= new Promise((resolve, reject) => {
+        releaseRuntimeFile();
         watch.stop();
         events.close();
         server.close((error) => {
@@ -192,6 +258,6 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
           else reject(error);
         });
         server.closeAllConnections();
-      }),
+      })),
   };
 }

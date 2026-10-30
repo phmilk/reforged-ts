@@ -1,7 +1,7 @@
 // The hover text of a Rawcode literal, built from the lookup's result in the
-// words of the generated TSDoc (#579) and of the lint rule's messages (#582).
-// The one function that builds it, so that a later line (the Studio's link)
-// has one place to go.
+// words of the generated TSDoc (#579) and of the lint rule's messages (#582),
+// and the Studio's link under it and under a Rawcode constant's own TSDoc
+// (#833). The one place that builds them.
 
 import type {
   RawcodeLookupResult,
@@ -11,6 +11,7 @@ import type {
 import { displayPath } from "../definitions-loader.js";
 import { UNNAMED } from "../names.js";
 import type { RawcodeLiteral } from "./literal.js";
+import type { LiveStudio } from "./studio.js";
 
 /**
  * The hover text of a Rawcode literal, in Markdown: what the lookup says it
@@ -21,6 +22,9 @@ import type { RawcodeLiteral } from "./literal.js";
  * @param gameVersion - The Game version of the index the lookup read.
  * @param projectRoot - The Map project's root, which the file of an
  *   Object definition is shown relative to.
+ * @param studio - The live Studio on the map folder, undefined when none
+ *   holds it: the last line of a Rawcode that names an object links to it,
+ *   or says that `pnpm studio` opens it.
  * @returns Paragraphs separated by blank lines.
  */
 export function rawcodeHoverText(
@@ -28,6 +32,7 @@ export function rawcodeHoverText(
   result: RawcodeLookupResult,
   gameVersion: string | undefined,
   projectRoot: string,
+  studio: LiveStudio | undefined,
 ): string {
   const patch = `Patch ${gameVersion ?? "(unknown)"}`;
   const paragraphs: string[] = [];
@@ -49,6 +54,7 @@ export function rawcodeHoverText(
       for (const object of result.objects) {
         paragraphs.push(objectBlock(object, patch, projectRoot));
       }
+      paragraphs.push(studioLine(studio, result.rawcode, result.objects));
       break;
     }
     case "not-in-game-data-set": {
@@ -61,6 +67,7 @@ export function rawcodeHoverText(
           `${code(object.rawcode)}${name} is a Built-in ${object.kind} of ${patch} but not of this map's Game data set (${result.gameDataSet.label}).`,
         );
       }
+      paragraphs.push(studioLine(studio, result.rawcode, result.objects));
       break;
     }
     case "unknown": {
@@ -91,6 +98,45 @@ export function rawcodeHoverText(
     }
   }
   return paragraphs.join("\n\n");
+}
+
+/**
+ * The line a Rawcode constant's hover adds under its own TSDoc: the
+ * Studio's link to its object, with its kind.
+ *
+ * @param object - The object the constant names.
+ * @param studio - The live Studio on the map folder, undefined when none
+ *   holds it.
+ * @returns The link, or the sentence saying that `pnpm studio` opens it.
+ */
+export function rawcodeConstantHoverText(
+  object: RawcodeObject,
+  studio: LiveStudio | undefined,
+): string {
+  return studioLine(studio, object.rawcode, [object]);
+}
+
+/**
+ * The Studio's line for the objects of a Rawcode: "Open in the Studio",
+ * `<url>/objects/<rawcode>` with `?kind=` when they are of one kind, else
+ * the sentence saying that `pnpm studio` opens it.
+ */
+function studioLine(
+  studio: LiveStudio | undefined,
+  rawcode: string,
+  objects: readonly RawcodeObject[],
+): string {
+  if (studio === undefined) return "`pnpm studio` opens this object.";
+  const kind = objects.length === 1 ? `?kind=${objects[0].kind}` : "";
+  return `[Open in the Studio](${studio.url}/objects/${urlPart(rawcode)}${kind})`;
+}
+
+/** A Rawcode as a part of a URL in a Markdown link: its parentheses escaped too. */
+function urlPart(text: string): string {
+  return encodeURIComponent(text).replace(
+    /[()'!*]/g,
+    (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
 }
 
 /** What a cast number decodes to: a Rawcode, or bytes that are not one. */
