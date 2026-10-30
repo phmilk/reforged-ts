@@ -7,6 +7,8 @@
  * unsaved changes, undo and redo (Ctrl+Z, Ctrl+Shift+Z or Ctrl+Y), the
  * explicit save (Ctrl+S) and its toast with "Reload in the World Editor",
  * the setting that makes the reload automatic, and the diff (`./edit.tsx`).
+ * Creating and deleting objects (#835): "New object", its dialog and the
+ * delete's confirmation (`./create.tsx`).
  * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
@@ -20,10 +22,11 @@ import type {
   SessionCounts,
 } from "../src/server/api-types.js";
 import { api, listen } from "./api.js";
+import { CreateDialog, DeleteDialog, type CreateStart } from "./create.js";
 import { DiffDialog } from "./edit.js";
 import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
-import { KINDS, useRoute } from "./parts.js";
+import { go, KINDS, useRoute } from "./parts.js";
 import { Search } from "./search.js";
 import { Tree, type Selection } from "./tree.js";
 import "./style.css";
@@ -119,6 +122,8 @@ function App() {
   const [toast, setToast] = useState<Toast>();
   const [diffing, setDiffing] = useState(false);
   const [autoReload, setAutoReload] = useState(readAutoReload);
+  const [creating, setCreating] = useState<CreateStart>();
+  const [deleting, setDeleting] = useState<Selection>();
 
   const failed = useCallback((reason: unknown) => {
     setError(reason instanceof Error ? reason.message : String(reason));
@@ -342,6 +347,14 @@ function App() {
         </label>
         <button
           type="button"
+          onClick={() => {
+            setCreating({ kind: kind as CreateStart["kind"] });
+          }}
+        >
+          New object
+        </button>
+        <button
+          type="button"
           className="search-button"
           onClick={() => {
             setSearching(true);
@@ -473,12 +486,54 @@ function App() {
               onPin={togglePin}
               onUnpin={unpin}
               onChanged={changed}
+              onCreate={setCreating}
+              onDelete={() => {
+                setDeleting(selection);
+              }}
             />
           ) : (
-            <NoSelection answer={detail} />
+            <NoSelection
+              answer={detail}
+              onCreate={(rawcode) => {
+                setCreating({ kind: kind as CreateStart["kind"], rawcode });
+              }}
+            />
           )}
         </section>
       </main>
+      {creating !== undefined && (
+        <CreateDialog
+          start={creating}
+          onClose={() => {
+            setCreating(undefined);
+          }}
+          onCreated={(answer) => {
+            setCreating(undefined);
+            changed(answer);
+            setToast({
+              text: `Created ${answer.rawcode}: save to write it to the map folder.`,
+            });
+            go({ rawcode: answer.rawcode, kind: answer.kind });
+          }}
+        />
+      )}
+      {deleting !== undefined && (
+        <DeleteDialog
+          kind={deleting.kind as CreateStart["kind"]}
+          rawcode={deleting.rawcode}
+          onClose={() => {
+            setDeleting(undefined);
+          }}
+          onDeleted={(answer) => {
+            setDeleting(undefined);
+            changed(answer);
+            setToast({
+              text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
+            });
+            go({ rawcode: undefined, kind: undefined });
+          }}
+        />
+      )}
       {diffing && (
         <DiffDialog
           onClose={() => {
