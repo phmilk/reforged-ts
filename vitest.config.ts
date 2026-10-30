@@ -26,6 +26,16 @@ export default defineConfig({
         },
       },
       {
+        // The reader of the game's install, in Node, on synthetic CASC
+        // storages and map folders the tests write in a temporary folder.
+        test: {
+          name: "reforged-studio",
+          root: "packages/reforged-studio",
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
         // The harness glue, in Node, on hand-written Lua fixtures.
         test: {
           name: "reforged-test",

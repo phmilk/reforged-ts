@@ -17,7 +17,7 @@ import {
   serializeFields,
   type FieldTable,
 } from "../src/fields.js";
-import { parseSlk } from "../src/slk.js";
+import { parseSlk } from "reforged-studio";
 import {
   base,
   NO_OTHER_KINDS,
@@ -27,7 +27,7 @@ import {
   unitDataSlk,
   WORLD_EDIT_STRINGS,
   writeStorage,
-} from "./support/casc.js";
+} from "../../reforged-studio/test/support/casc.js";
 
 /** The editor data's path in the storage. */
 const EDITOR_DATA_PATH = base(EDITOR_DATA);
@@ -76,7 +76,7 @@ async function run(installDir: string) {
           file.startsWith(installDir) && file.endsWith(".build.info"),
       },
       cwd: outDir,
-      // The Build of the synthetic install (test/support/casc.ts).
+      // The Build of the synthetic install (reforged-studio's test/support/casc.ts).
       typingsBuild: "3.0.0.24268",
     },
   );

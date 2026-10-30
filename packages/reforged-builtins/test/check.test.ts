@@ -27,7 +27,7 @@ import {
   unitStrings,
   NO_OTHER_KINDS,
   writeStorage,
-} from "./support/casc.js";
+} from "../../reforged-studio/test/support/casc.js";
 
 const UNITS = [
   { id: "hfoo", race: "human", name: "Footman" },
@@ -66,7 +66,7 @@ async function regenerate(root: string): Promise<void> {
           file.startsWith(storage.installDir) && file.endsWith(".build.info"),
       },
       cwd: root,
-      // The Build of the synthetic install (test/support/casc.ts).
+      // The Build of the synthetic install (reforged-studio's test/support/casc.ts).
       typingsBuild: "3.0.0.24268",
     },
   );

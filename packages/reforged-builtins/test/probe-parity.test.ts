@@ -1,5 +1,6 @@
 /**
- * The generator mirrors three helpers of the Probe runner, which it cannot
+ * The generator and `reforged-studio`, whose reader of the install it
+ * imports, mirror three helpers of the Probe runner, which they cannot
  * import (the packages share no code): the reader of the Build (from
  * `.build.info` and the build config it names), the WSL check and the
  * script check. Each pair is run on the same inputs here, so
@@ -10,8 +11,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { invokedDirectly as probeInvokedDirectly } from "../../../probe/src/cli/common.js";
 import { readClientBuild } from "../../../probe/src/game.js";
 import { isWsl as probeIsWsl } from "../../../probe/src/machine.js";
-import { buildConfigName, parseBuildInfo } from "../src/casc/storage.js";
-import { invokedDirectly, isWsl } from "../src/cli/generate.js";
+import { buildConfigName, isWsl, parseBuildInfo } from "reforged-studio";
+import { invokedDirectly } from "../src/cli/generate.js";
 
 const KEY = "3a9d8f26806936764d2d9ad526a65e04";
 /**

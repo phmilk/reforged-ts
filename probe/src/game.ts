@@ -117,7 +117,7 @@ export interface ClientBuild {
 
 // The reading of .build.info and of the build config's build-name mirrors
 // parseBuildInfo and buildConfigName in
-// packages/reforged-builtins/src/casc/storage.ts, which the Probe runner
+// packages/reforged-studio/src/casc/storage.ts, which the Probe runner
 // does not depend on: change both together.
 // packages/reforged-builtins/test/probe-parity.test.ts runs both.
 

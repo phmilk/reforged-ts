@@ -1,6 +1,6 @@
 # The names the game gives where the names files disagree
 
-Which name the game gives a Built-in object when its enUS names files set it twice, or set it in a section cased unlike its Rawcode, measured for [#564](https://github.com/phmilk/reforged-ts/issues/564). `reforged-builtins`' generator settled both by assumption until then (`nameFileOrder` in `packages/reforged-builtins/src/generate.ts`, `Profile` in `packages/reforged-builtins/src/profile.ts`). Each claim is marked **Observed** (recorded by the Probe run below) or **Inferred** (follows from it, not measured).
+Which name the game gives a Built-in object when its enUS names files set it twice, or set it in a section cased unlike its Rawcode, measured for [#564](https://github.com/phmilk/reforged-ts/issues/564). `reforged-builtins`' generator settled both by assumption until then (`nameFileOrder` in `packages/reforged-builtins/src/generate.ts`, `Profile`, then in `packages/reforged-builtins/src/profile.ts` and now in `packages/reforged-studio/src/profile.ts`). Each claim is marked **Observed** (recorded by the Probe run below) or **Inferred** (follows from it, not measured).
 
 ## TL;DR
 

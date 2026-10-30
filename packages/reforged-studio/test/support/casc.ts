@@ -48,7 +48,7 @@ export const contentKey = (text: string): string => hex(md5(Buffer.from(text)));
 
 /** A fresh temporary folder. */
 export const tempDir = (name: string): Promise<string> =>
-  mkdtemp(join(tmpdir(), `reforged-builtins-${name}-`));
+  mkdtemp(join(tmpdir(), `reforged-studio-${name}-`));
 
 /** The BLTE stream of `content` in the given framing. */
 export function blte(content: Uint8Array, framing: Framing): Buffer {
