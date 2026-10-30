@@ -5,11 +5,11 @@
  * game (`_hd.w3mod/<path>`, as HiveWE's lookup orders a map's files), then
  * in the chosen art layer of the storage (`_HD.w3mod:` or `_DE.w3mod:`),
  * then in its base layer, each layer's enUS sub-layer
- * (`_Locales/enUS.w3mod`) before it. HiveWE's tileset and `_teen` layers
- * are not read: the Studio previews no tileset, and the teen layer
- * replaces art for a content filter the World Editor does not apply. In each place a `.blp` or `.tif` path falls back
- * to the `.dds` that 3.0 stores, and a path found in none of them goes
- * through `FileAliases.json`. A path that resolves nowhere is reported as
+ * (`_Locales/enUS.w3mod`) before it. The tileset and `_teen` sub-layers
+ * HiveWE's lookup also reads are not read: a preview has no tileset, and
+ * which art the World Editor shows from `_teen` was not checked. In each
+ * place a `.blp` or `.tif` path falls back to the `.dds` that 3.0 stores,
+ * and a path found in none of them goes through `FileAliases.json`. A path that resolves nowhere is reported as
  * missing: 2 to 5 % of Blizzard's own references dangle.
  */
 import { readdir, readFile } from "node:fs/promises";
@@ -33,13 +33,13 @@ const ART_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
  * the World Editor writes a DE-only import to was not observed (#481): DE
  * reads the HD layer until a human checks it (#842).
  */
-const MAP_HD_LAYER = "_hd.w3mod";
+const MAP_HD_LAYER = "_hd.w3mod/";
 
 /** The enUS sub-layer each layer of the map folder reads first, as HiveWE's lookup does. */
-const MAP_LOCALE = "_Locales/enUS.w3mod/";
+const MAP_LOCALE_LAYER = "_Locales/enUS.w3mod/";
 
 /** The enUS sub-layer each layer of the storage reads first. */
-const STORAGE_LOCALE = "_Locales/enUS.w3mod:";
+const STORAGE_LOCALE_LAYER = "_Locales/enUS.w3mod:";
 
 /** The aliases of the storage, in its base layer: `{ src, dest, assetType }` objects. */
 export const FILE_ALIASES = `${BASE_LAYER}FileAliases.json`;
@@ -92,12 +92,16 @@ export function createPathResolver(
     return (await aliases).get(path.toLowerCase());
   };
 
-  const layers = [ART_LAYERS[options.artLayer], BASE_LAYER]
-    .filter((layer) => layer !== undefined)
-    .flatMap((layer) => [`${layer}${STORAGE_LOCALE}`, layer]);
-  const mapLayers = (
-    options.artLayer === "sd" ? [""] : [`${MAP_HD_LAYER}/`, ""]
-  ).flatMap((layer) => [`${layer}${MAP_LOCALE}`, layer]);
+  const layers = withLocale(
+    [ART_LAYERS[options.artLayer], BASE_LAYER].filter(
+      (layer) => layer !== undefined,
+    ),
+    STORAGE_LOCALE_LAYER,
+  );
+  const mapLayers = withLocale(
+    options.artLayer === "sd" ? [""] : [MAP_HD_LAYER, ""],
+    MAP_LOCALE_LAYER,
+  );
 
   const find = async (path: string): Promise<ResolvedPath | undefined> => {
     const candidates = extensions(path);
@@ -147,6 +151,11 @@ export function createPathResolver(
         : { ...aliased, path };
     },
   };
+}
+
+/** Each of `layers`, its enUS sub-layer `locale` before it. */
+function withLocale(layers: readonly string[], locale: string): string[] {
+  return layers.flatMap((layer) => [layer + locale, layer]);
 }
 
 /**

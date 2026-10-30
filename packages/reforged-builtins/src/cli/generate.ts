@@ -3,12 +3,12 @@
  * <Build>]`: finds the install (`reforged-studio`'s `findInstall`), refuses
  * one whose Build is not `reforged-types`' `reforged.patch` (or
  * `--client-build`, a later Build of its Game version accepted in its
- * place), then writes the index and the
- * provenance file of its Game version, and the artefacts emitted from the
- * index, under `--out` (the package root by default). Prints the counts,
- * then the warnings; on any error it writes nothing, prints the errors and
- * exits 1. A bad argument exits 2. A leading `--`, which
- * `pnpm builtins:generate -- …` passes through, is skipped.
+ * place), then writes the index and the provenance file of its Game
+ * version, and the artefacts emitted from the index, under `--out` (the
+ * package root by default). Prints the counts, then the warnings; on any
+ * error it writes nothing, prints the errors and exits 1. A bad argument
+ * exits 2. A leading `--`, which `pnpm builtins:generate -- …` passes
+ * through, is skipped.
  *
  * `invokedDirectly` mirrors the Probe runner's (`probe/src/cli/common.ts`),
  * as `reforged-studio`'s `isWsl` mirrors its `probe/src/machine.ts` and its
