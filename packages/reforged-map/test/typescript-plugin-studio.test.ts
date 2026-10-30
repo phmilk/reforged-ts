@@ -53,9 +53,6 @@ const link = (target: string): string =>
 /** The time after which the plugin reads the file again: one second, and a margin. */
 const AFTER_INTERVAL = 1200;
 
-/** Each test may wait for the plugin's interval, under a full test run. */
-const WAITS = { timeout: 30_000 };
-
 const wait = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -99,8 +96,8 @@ let dead: ReturnType<typeof project>;
 let elsewhere: ReturnType<typeof project>;
 let none: ReturnType<typeof project>;
 
-// Four projects opened, each measured 1 s at most with pnpm test on Linux
-// (WSL 2, 8 threads), 2026-10.
+// Measured 3.1 s, the whole file, four projects opened, with
+// `pnpm exec vitest run` on this file on Linux (WSL 2, 8 threads), 2026-10.
 beforeAll(async () => {
   live = project();
   writeRuntimeFile(live.root, { pid: process.pid, mapFolder: live.mapFolder });
@@ -116,7 +113,7 @@ beforeAll(async () => {
   for (const { source } of [live, dead, elsewhere, none]) {
     await server.open(source);
   }
-}, 60_000);
+}, 30_000);
 
 afterAll(() => {
   server.close();
@@ -189,7 +186,7 @@ describe.each([
   });
 });
 
-describe("reading the runtime file again", WAITS, () => {
+describe("reading the runtime file again", () => {
   it("follows a Studio that starts, after the plugin's interval", async () => {
     expect(await hover(none, '"h000"')).toMatch(/pnpm studio/);
     writeRuntimeFile(none.root, {
