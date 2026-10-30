@@ -33,7 +33,7 @@ When it continues one for a red CI (`SKILL.md`, "A red CI"), its message names t
 For a pull request step 4 resumed, which has no implementer to continue, `ship-spec` makes its worktree from the remote tip (`git fetch origin <branch>`, then `git worktree add .claude/worktrees/<ticket> <branch>`; for a Template Ticket, both through the Template's checkout, the worktree in the folder [`template-tickets.md`](template-tickets.md), "Its worktree", names) and spawns an unnamed Subagent with this prompt, its placeholders filled:
 
 ```text
-You fix the red CI of pull request #<pr> of <repo>, for Ticket #<ticket>: the check `<check>` failed in <run link>. The Ticket is built and shipped: fix the failure, nothing else. Read `gh issue view <ticket> -R <repo>` and `gh pr view <pr> -R <repo>` for what the work is; every `gh` call names its repository with `-R`.
+You fix the red CI of pull request #<pr> of <repo>, for Ticket #<ticket>, a Ticket of the Spec phmilk/reforged-ts#<spec>: the check `<check>` failed in <run link>. The Ticket is built and shipped: fix the failure, nothing else. Read `gh issue view <ticket> -R <repo>` and `gh pr view <pr> -R <repo>` for what the work is; every `gh` call names its repository with `-R`.
 
 Your worktree: <absolute path>, branch `<branch>`, on the pull request's head. If `git -C <worktree> rev-parse HEAD` and `git -C <worktree> rev-parse origin/<branch>` print different hashes, stop and report it; never reset.
 
