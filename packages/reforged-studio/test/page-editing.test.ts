@@ -23,7 +23,10 @@ import {
   type Project,
 } from "./support/studio.js";
 
-// Chromium's launch and each page's load, as page.test.ts budgets them.
+// Chromium's launch and the editing flow's requests. Measured 1.7 s for the
+// test and 3.6 s for the file, the launch included, with pnpm vitest run
+// --project reforged-studio on Linux (WSL 2, 8 threads), 2026-10. Kept at
+// 30 s, as page.test.ts, for the windows runner (#658).
 const TIMEOUT = 30_000;
 
 let browser: Browser;

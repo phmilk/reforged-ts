@@ -17,7 +17,6 @@ import type {
   FieldRow,
   RawcodeAnswer,
   SaveAnswer,
-  SaveRefusedAnswer,
   SessionCounts,
 } from "../src/index.js";
 import {
@@ -351,7 +350,7 @@ describe("saving in the Studio", () => {
       error: { reason: "modified-in-world-editor" },
       unsavedEdits: 1,
       undo: 1,
-    } satisfies Partial<SaveRefusedAnswer>);
+    });
     expect(onDisk(project, "h001", "uhpm")).toBeUndefined();
     expect((await rowOf(studio, "h001", "uhpm"))?.value).toBe(700);
     expect(editor.state.launched).toEqual([]);
@@ -379,7 +378,7 @@ describe("saving in the Studio", () => {
       unsavedEdits: 2,
       replayed: 2,
       notReplayed: [],
-    } satisfies Partial<SaveRefusedAnswer>);
+    });
     expect((await rowOf(studio, "h001", "uhpm"))?.value).toBe(700);
     expect((await rowOf(studio, "h000", "unam"))?.value).toBe("Major");
     expect(onDisk(project, "h001", "uhpm")).toBeUndefined();
