@@ -206,10 +206,15 @@ export function diffFiles(
 }
 
 /** The output of a git command run in a folder, as bytes; undefined when it fails. */
-function git(folder: string, args: readonly string[]): Buffer | undefined {
+function git(
+  folder: string,
+  args: readonly string[],
+  input?: string,
+): Buffer | undefined {
   try {
     return execFileSync("git", ["-C", folder, ...args], {
-      stdio: ["ignore", "pipe", "ignore"],
+      stdio: [input === undefined ? "ignore" : "pipe", "pipe", "ignore"],
+      ...(input !== undefined && { input }),
       maxBuffer: 256 * 1024 * 1024,
     });
   } catch {
@@ -218,16 +223,42 @@ function git(folder: string, args: readonly string[]): Buffer | undefined {
 }
 
 /**
- * The files of a map folder at `HEAD` of the git repository that holds it,
- * read with `git show HEAD:<path>`; undefined when the map folder is in no
- * git repository, or git cannot be run.
+ * The objects `git cat-file --batch` printed, in the order asked: each
+ * one's bytes, undefined for one it reports missing.
+ */
+function batchObjects(output: Buffer, count: number): (Buffer | undefined)[] {
+  const objects: (Buffer | undefined)[] = [];
+  let at = 0;
+  while (objects.length < count && at < output.length) {
+    const end = output.indexOf(0x0a, at);
+    if (end === -1) break;
+    const header = output.subarray(at, end).toString("utf8").split(" ");
+    at = end + 1;
+    if (header.length !== 3) {
+      objects.push(undefined);
+      continue;
+    }
+    const size = Number(header[2]);
+    objects.push(output.subarray(at, at + size));
+    at += size + 1;
+  }
+  return objects;
+}
+
+/**
+ * Some files of a map folder at `HEAD` of the git repository that holds it,
+ * read in one `git cat-file --batch` as `git show HEAD:<path>` reads each;
+ * undefined when the map folder is in no git repository, or git cannot be
+ * run.
  *
  * @param mapFolder - The map folder, an absolute path.
- * @returns A reader of a file at `HEAD` by its path in the map folder, with
- *   `/`, which gives undefined for a file `HEAD` does not hold.
+ * @param files - The files to read, by path in the map folder with `/`.
+ * @returns A reader of a file at `HEAD` by its path in the map folder,
+ *   which gives undefined for a file `HEAD` does not hold.
  */
 export function headFiles(
   mapFolder: string,
+  files: readonly string[],
 ): ((file: string) => Uint8Array | undefined) | undefined {
   const top = git(mapFolder, ["rev-parse", "--show-toplevel"])
     ?.toString("utf8")
@@ -242,6 +273,21 @@ export function headFiles(
   } catch {
     return undefined;
   }
-  return (file) =>
-    git(top, ["show", `HEAD:${prefix === "" ? file : `${prefix}/${file}`}`]);
+  const names = [...new Set(files)];
+  const output =
+    names.length === 0
+      ? Buffer.alloc(0)
+      : git(
+          top,
+          ["cat-file", "--batch"],
+          names
+            .map(
+              (file) => `HEAD:${prefix === "" ? file : `${prefix}/${file}`}\n`,
+            )
+            .join(""),
+        );
+  // No HEAD yet (a repository without a commit) holds no file.
+  const objects = batchObjects(output ?? Buffer.alloc(0), names.length);
+  const byName = new Map(names.map((name, index) => [name, objects[index]]));
+  return (file) => byName.get(file);
 }

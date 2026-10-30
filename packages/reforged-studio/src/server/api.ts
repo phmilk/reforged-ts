@@ -572,7 +572,7 @@ function diff(context: ApiContext, query: URLSearchParams): Answer {
       files: diffFiles((file) => files.saved.get(file), files.working, names),
     } satisfies DiffAnswer);
   }
-  const head = headFiles(context.mapFolder);
+  const head = headFiles(context.mapFolder, names);
   if (head === undefined) {
     return new Answer(200, {
       against,

@@ -495,12 +495,12 @@ describe("saving in the Studio", () => {
 });
 
 describe("the Studio's diffs", () => {
-  /** Makes the Map project a git repository, every file committed. */
+  /** Makes the Map project a git repository, its map folder committed. */
   function commit(project: Project): void {
     const git = (...args: string[]) =>
       execFileSync("git", ["-C", project.root, ...args], { stdio: "ignore" });
     git("init", "--quiet");
-    git("add", "--all");
+    git("add", "maps");
     git(
       "-c",
       "user.name=Studio",
