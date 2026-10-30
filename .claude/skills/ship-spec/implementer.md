@@ -10,7 +10,7 @@ Your worktree: <absolute path>, branch `<branch>`, already on `origin/<default>`
 Read first, in the worktree: `AGENTS.md`, `GLOSSARY.md` and the ADRs of the Ticket's area; and the library's `docs/agents/development-loop.md`, "Subagents" (https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#subagents), whose rules bind you.
 
 Work:
-1. `pnpm install` in the worktree.
+1. `pnpm install` in the worktree. In the Template, install each published library version the Ticket needs that `origin/main` does not install yet, at the range the sync writes (`pnpm add <package>@^<version>`), and say so in the pull request (`<skill>/template-tickets.md`, "A library version not yet published").
 2. Build each criterion of the Ticket test-first with `/tdd`, at the seams the Spec's Testing Decisions name. Typecheck and run single test files as often as you like.
 3. Run the full `pnpm check` under the check lock `<lock>`, as `<skill>/SKILL.md`, "The check lock", says: take it, run each command of the `check` script of the worktree's package.json in the foreground within ten minutes (in the library, `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm test` and the rest), then release it, whatever the result. When it is red, run one `/diagnosing-bugs` pass on the failure, make the one fix it leads to, commit it and run the check again.
 4. Where the repository has a `.changeset/` folder, add the changeset `docs/release.md` asks for (`pnpm changeset add --empty` when nothing published changes), committed; the Template has none. Commit with Conventional Commit messages.
@@ -19,7 +19,7 @@ Work:
 
 You may: push your branch, open its pull request and turn on its auto-merge (`/ship`), edit the Ticket's body for its criteria, and post the "Stopping" comment on the Ticket. Nothing else on GitHub: no other comment, issue edit or label, and never a merge outside auto-merge.
 
-Stop and report, without guessing, at: a criterion open to more than one reading (give the options); `pnpm check` red after one fix; a merge conflict you cannot resolve by intent (`<skill>/SKILL.md`, "Merge conflicts"); a fact only the game can settle on a machine without it; in the Template, a library change the work needs that its `origin/main` does not install yet (name it). Commit what you have first.
+Stop and report, without guessing, at: a criterion open to more than one reading (give the options); `pnpm check` red after one fix; a merge conflict you cannot resolve by intent (`<skill>/SKILL.md`, "Merge conflicts"); a fact only the game can settle on a machine without it; in the Template, a library change the work needs that no published version carries (name it). Commit what you have first.
 
 Commands in the foreground, each with a timeout of at most ten minutes; never end a turn waiting on a background command. Report once, when done: the pull request and whether auto-merge is on, or why you stopped, with the branch's last commit and whether you posted a "Stopping" comment.
 ```

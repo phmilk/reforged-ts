@@ -22,14 +22,14 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 3. **Read the Frontier.** `pnpm spec:frontier <spec>`. It prints three lists for the `gh` login: takeable now, held by the login (each with its open pull requests), and held by other logins (with their assignees). Read the Frontier only through it, so that this skill, the skill-target check and `next-step` agree. Done when you hold the three lists.
 4. **Resume what the login holds.** For each held Ticket:
    - **With an open pull request:** carry it on from that pull request, never restarting it: watch it as step 7 does. When auto-merge is off and its body says what waits for a human, it is a stop already made: put it in the ledger.
-   - **Without one:** read the Ticket's last "Stopping" comment and what came after it. When a human answered what was pending, start it as step 5 does, from its branch when one exists (`git branch --list '*/<ticket>-*'`, in the Template's checkout for a Template Ticket) rather than from the default branch. A Template Ticket stopped for a library version resumes as [Resuming it](template-tickets.md#a-library-version-the-template-does-not-install-yet) says. Otherwise its stop stands: put it in the ledger.
+   - **Without one:** read the Ticket's last "Stopping" comment and what came after it. When a human answered what was pending, start it as step 5 does, from its branch when one exists (`git branch --list '*/<ticket>-*'`, in the Template's checkout for a Template Ticket) rather than from the default branch. A Template Ticket stopped for a library version resumes as [Resuming it](template-tickets.md#a-library-version-not-yet-published) says. Otherwise its stop stands: put it in the ledger.
 
    Done when each held Ticket is in flight or in the ledger.
 
 5. **Start the takeable Tickets**, as many as [Three in flight](#three-in-flight) allows (in flight: from its Claim to its merge or its stop). Take them in the order the Frontier prints; a Probe Ticket waits while another Probe Ticket is in flight. A Ticket of the Template takes the differences of [`template-tickets.md`](template-tickets.md) at each sub-step. For each one:
    1. **Read it**, `gh issue view <ticket> --json title,body`, for the stops [Where a human is needed](#where-a-human-is-needed) names.
    2. **Claim it with its Spec, in one command**, as its work starts and never ahead: `gh issue edit <ticket> <spec> --add-assignee @me`. Read it back: a second login on the Ticket means it was taken meanwhile: withdraw (`gh issue edit <ticket> <spec> --remove-assignee @me`, the Spec only when you hold no other Ticket of it), comment why, and skip it.
-   3. **A stop before the work:** a Ticket that needs a Probe run on a machine without the game, or a Template Ticket that needs a library version its `origin/main` does not install yet ([A library version the Template does not install yet](template-tickets.md#a-library-version-the-template-does-not-install-yet)), gets its "Stopping" comment now ([Stopping](#stopping)) and no worktree.
+   3. **A stop before the work:** a Ticket that needs a Probe run on a machine without the game, or a Template Ticket that needs a library version not yet published ([A library version not yet published](template-tickets.md#a-library-version-not-yet-published)), gets its "Stopping" comment now ([Stopping](#stopping)) and no worktree.
    4. **Make its worktree** from `origin/master` (a Template Ticket's, from the Template's `origin/main`: [Its worktree](template-tickets.md#its-worktree)), then check its base:
 
       ```sh
@@ -60,14 +60,14 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
 8. **Loop.** After a stop, start no new Ticket: every other Ticket in flight runs to its own end (merged or stopped), then go to step 9. Otherwise, after each merge, step 3 again. When the Frontier lists no takeable Ticket, nothing is in flight, and Tickets remain open: those held by other logins, named with their assignees in the ledger, are the run's stop. Done when nothing is in flight and the Frontier holds nothing this run will start.
 9. **Close, or leave the close.** Read the Spec's open sub-issues.
-   - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), post the end comment, then close the Spec: `gh issue close <spec>`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
+   - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), close the Spec with the end comment, as the Claim section's "Closing a Spec" does: `gh issue close <spec> --comment "$(cat <file>)"`. On red (exit 1), leave the Spec open and post the end comment (`gh issue comment <spec> --body-file <file>`) with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
    - **Any Ticket open** (held by another login, stopped, or not started after a stop): post the end comment on the Spec and leave it open; whoever merges the last Ticket closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
 
    Then remove every worktree of the run that is left, and the check lock when it is stale. Done when the end comment is on the Spec and printed in the chat, word for word.
 
 ## The end comment
 
-Posted on the Spec, written to a file (`gh issue comment <spec> --body-file <file>`), and printed in the chat, from the ledger:
+Written to a file, posted on the Spec as step 9 says, and printed in the chat, from the ledger:
 
 ```markdown
 ## ship-spec

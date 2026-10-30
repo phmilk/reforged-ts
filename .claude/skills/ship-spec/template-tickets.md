@@ -37,9 +37,9 @@ gh issue edit https://github.com/phmilk/reforged-ts-template/issues/<ticket> --a
 
 A withdrawal takes the same two commands with `--remove-assignee @me`.
 
-## A library version the Template does not install yet
+## A library version not yet published
 
-The library releases before the Template consumes a new version: the release publishes to npm, then its dispatch opens the Template's sync pull request ([`docs/release.md`](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#the-template-dispatch), "The Template dispatch"). A Template Ticket that builds on a library change is blocked by the library Ticket that makes it (native blocked-by edges work across the two repositories). Once that Ticket merges, the Template Ticket is on the Frontier, yet the change may sit on `master` unpublished, or be published and not yet installed by the Template: only the sync pull request, which a maintainer merges, raises the Template's lockfile to it. Find out, after the Claim and before any worktree, for each library blocker of the Template Ticket:
+The library releases before the Template consumes a new version: the release publishes to npm, then its dispatch opens the Template's sync pull request ([`docs/release.md`](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#the-template-dispatch), "The Template dispatch"). A Template Ticket that builds on a library change is blocked by the library Ticket that makes it (native blocked-by edges work across the two repositories). Once that Ticket merges, the Template Ticket is on the Frontier, yet the change may sit on `master` unpublished. Find out, after the Claim and before any worktree, for each library blocker of the Template Ticket:
 
 1. **Its blockers in the library**, closed ones (an open one keeps it off the Frontier):
 
@@ -56,7 +56,7 @@ The library releases before the Template consumes a new version: the release pub
 
    Keep the nodes with `merged: true`. A blocker closed with none needs no version.
 
-3. **The packages each merge changes**, from the changesets it added, after `git fetch origin master --tags`: `git diff-tree --no-commit-id --name-only --diff-filter=A -r <oid> -- .changeset/` lists them (not those under `.changeset/pre/`), and `git show <oid>:<file>` gives each one's frontmatter, one `"<package>": <bump>` line per package. Keep the packages the Template's `package.json` on `origin/main` depends on. An empty changeset needs no version.
+3. **The packages each merge changes**, from the changesets it added, after `git fetch origin master --tags`: `git diff-tree --no-commit-id --name-only --diff-filter=A -r <oid> -- .changeset/` lists them (not those under `.changeset/pre/`), and `git show <oid>:<file>` gives each one's frontmatter, one `"<package>": <bump>` line per package. Keep the packages the Template's `package.json` on `origin/main` depends on, and those the Ticket names (a package the Template takes up for the first time). An empty changeset needs no version.
 4. **The first version of each package that carries the merge**, `<package>@<version>`, from the first branch that holds:
    - **Released:** `git tag --contains <oid> --list '<package>@*' | sort -V | head -1` prints a tag; the release workflow tags a package when it publishes it. The version is the tag's.
    - **Not on `master`:** `git merge-base --is-ancestor <oid> origin/master` fails (merged into another branch): unpublished, and the version is the next release of the package after its last tag, named so.
@@ -72,17 +72,9 @@ The library releases before the Template consumes a new version: the release pub
      The version is the `newVersion` of the package's entry under `releases` in `$status/status.json`. Remove the worktree afterwards (`git worktree remove --force "$status"`).
 
 5. **Published or not:** `npm view <package>@<version> version` prints the version when npm holds it; an error (`E404`) means it does not.
-6. **Installed or not:** the version the Template's `origin/main` installs, from the importer `.` of its lockfile, after `git -C "$template" fetch origin main`:
+   When npm holds every version, work the Ticket. A version the Template's `origin/main` does not install yet (its sync pull request not merged, or a package it takes up for the first time) is installed by the implementer as part of the Ticket's work, at the range the sync writes (`pnpm add <package>@^<version>`), and its pull request says so. When any version is unpublished, the Ticket stops before its work, like a Probe Ticket on a machine without the game ([Stopping](SKILL.md#stopping)): its "Stopping" comment names each unpublished `<package>@<version>`, the library pull request it carries in full form (`phmilk/reforged-ts#<pr>`, since a bare `#<pr>` on a Template issue links into the Template), and that it resumes once the maintainer's release publishes it; no worktree and no branch. The version is recomputed at each run, never read back from that comment, since more changesets may land meanwhile.
 
-   ```sh
-   git -C "$template" show origin/main:pnpm-lock.yaml | awk -v p="<package>" '/^[^ ]/ { i = ($0 == "importers:"); d = 0 } i && $0 == "  .:" { d = 1 } d && $0 == "      " p ":" { f = 1 } f && $1 == "version:" { sub(/\(.*/, "", $2); print $2; exit }'
-   ```
-
-   It is installed when that prints `<version>` or a later version in semver order (a prerelease sorts before its release).
-
-When every version is installed, work the Ticket. When any is not, the Ticket stops before its work, like a Probe Ticket on a machine without the game ([Stopping](SKILL.md#stopping)): its "Stopping" comment names each `<package>@<version>` the Template's `main` does not install yet, whether npm holds it, the library pull request it carries in full form (`phmilk/reforged-ts#<pr>`, since a bare `#<pr>` on a Template issue links into the Template), and that it resumes once the maintainer's release is published and the Template's sync pull request that installs it is merged; no worktree and no branch. The version is recomputed at each run, never read back from that comment, since more changesets may land meanwhile.
-
-**Resuming it.** Held by the login with no pull request, a Ticket stopped for a version the Template does not install yet needs no human answer: step 4 of [`SKILL.md`](SKILL.md) runs the check above again, and starts the Ticket as step 5 does once the Template's `origin/main` installs every version; otherwise its stop stands, in the ledger with the versions still missing.
+**Resuming it.** Held by the login with no pull request, a Ticket stopped for an unpublished version needs no human answer: step 4 of [`SKILL.md`](SKILL.md) runs the check above again, and starts the Ticket as step 5 does once npm holds every version; otherwise its stop stands, in the ledger with the versions still unpublished.
 
 An implementer that finds, in its work, that it needs a library change no blocker names stops and reports the change, and the Ticket stops with it as its question: which library Ticket delivers it is a human's call.
 
