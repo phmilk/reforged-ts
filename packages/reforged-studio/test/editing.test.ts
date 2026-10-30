@@ -500,7 +500,8 @@ describe("the Studio's diffs", () => {
     const git = (...args: string[]) =>
       execFileSync("git", ["-C", project.root, ...args], { stdio: "ignore" });
     git("init", "--quiet");
-    git("add", "maps");
+    // The map folder's bytes as they are, as a Map project's .gitattributes keeps them.
+    git("-c", "core.autocrlf=false", "add", "maps");
     git(
       "-c",
       "user.name=Studio",

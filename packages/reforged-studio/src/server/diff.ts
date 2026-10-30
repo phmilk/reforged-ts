@@ -7,8 +7,6 @@
  * text; the hunks are `git diff`'s, three lines of context.
  */
 import { execFileSync } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
 import { objectDataText } from "reforged-map";
 import type { FileDiff } from "./api-types.js";
 
@@ -260,31 +258,21 @@ export function headFiles(
   mapFolder: string,
   files: readonly string[],
 ): ((file: string) => Uint8Array | undefined) | undefined {
-  const top = git(mapFolder, ["rev-parse", "--show-toplevel"])
+  const inside = git(mapFolder, ["rev-parse", "--is-inside-work-tree"])
     ?.toString("utf8")
     .trim();
-  if (top === undefined || top === "") return undefined;
-  let prefix: string;
-  try {
-    prefix = path
-      .relative(fs.realpathSync(top), fs.realpathSync(mapFolder))
-      .split(path.sep)
-      .join("/");
-  } catch {
-    return undefined;
-  }
+  if (inside !== "true") return undefined;
   const names = [...new Set(files)];
+  // `HEAD:./<path>` names the path from the map folder, git's working
+  // directory here: no path of the repository's root is compared, which
+  // Windows may spell with a short name (`RUNNER~1`) on one side only.
   const output =
     names.length === 0
       ? Buffer.alloc(0)
       : git(
-          top,
+          mapFolder,
           ["cat-file", "--batch"],
-          names
-            .map(
-              (file) => `HEAD:${prefix === "" ? file : `${prefix}/${file}`}\n`,
-            )
-            .join(""),
+          names.map((file) => `HEAD:./${file}\n`).join(""),
         );
   // No HEAD yet (a repository without a commit) holds no file.
   const objects = batchObjects(output ?? Buffer.alloc(0), names.length);
