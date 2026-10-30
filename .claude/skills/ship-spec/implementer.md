@@ -19,7 +19,7 @@ Work:
 
 You may: push your branch, open its pull request and turn on its auto-merge (`/ship`), edit the Ticket's body for its criteria, and post the "Stopping" comment on the Ticket. Nothing else on GitHub: no other comment, issue edit or label, and never a merge outside auto-merge.
 
-Stop and report, without guessing, at: a criterion open to more than one reading (give the options); `pnpm check` red after one fix; a merge conflict you cannot resolve by intent (`<skill>/SKILL.md`, "Merge conflicts"); a fact only the game can settle on a machine without it; in the Template, a library change the work needs that npm does not hold yet (name it). Commit what you have first.
+Stop and report, without guessing, at: a criterion open to more than one reading (give the options); `pnpm check` red after one fix; a merge conflict you cannot resolve by intent (`<skill>/SKILL.md`, "Merge conflicts"); a fact only the game can settle on a machine without it; in the Template, a library change the work needs that its `origin/main` does not install yet (name it). Commit what you have first.
 
 Commands in the foreground, each with a timeout of at most ten minutes; never end a turn waiting on a background command. Report once, when done: the pull request and whether auto-merge is on, or why you stopped, with the branch's last commit and whether you posted a "Stopping" comment.
 ```
