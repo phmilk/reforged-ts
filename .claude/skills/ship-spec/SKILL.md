@@ -60,14 +60,14 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
 8. **Loop.** After a stop, start no new Ticket: every other Ticket in flight runs to its own end (merged or stopped), then go to step 9. Otherwise, after each merge, step 3 again. When the Frontier lists no takeable Ticket, nothing is in flight, and Tickets remain open: those held by other logins, named with their assignees in the ledger, are the run's stop. Done when nothing is in flight and the Frontier holds nothing this run will start.
 9. **Close, or leave the close.** Read the Spec's open sub-issues.
-   - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), close the Spec with the end comment, written to a file: `gh issue close <spec> --comment "$(cat <file>)"`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
+   - **No Ticket open:** run `pnpm spec:check <spec>`. On green (exit 0), post the end comment, then close the Spec: `gh issue close <spec>`. On red (exit 1), leave the Spec open and post the end comment with every gap the check printed: a gap goes back to a human and `/split-spec`, so create no Ticket.
    - **Any Ticket open** (held by another login, stopped, or not started after a stop): post the end comment on the Spec and leave it open; whoever merges the last Ticket closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
 
    Then remove every worktree of the run that is left, and the check lock when it is stale. Done when the end comment is on the Spec and printed in the chat, word for word.
 
 ## The end comment
 
-Posted on the Spec (`gh issue comment <spec> --body-file <file>`, or as the close's comment) and printed in the chat, from the ledger:
+Posted on the Spec, written to a file (`gh issue comment <spec> --body-file <file>`), and printed in the chat, from the ledger:
 
 ```markdown
 ## ship-spec
