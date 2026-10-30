@@ -32,7 +32,7 @@ import {
   type ListedObject,
   type ObjectDetail,
 } from "./api-types.js";
-import { objectKey, type ObjectState } from "./session.js";
+import { contentOf, objectKey, type ObjectState } from "./session.js";
 
 /** What the objects are composed from. */
 export interface ObjectSources {
@@ -490,8 +490,7 @@ export function detailOf(
     const unsaved =
       before === undefined || modification === undefined
         ? before !== modification
-        : JSON.stringify([before.value, before.translations]) !==
-          JSON.stringify([modification.value, modification.translations]);
+        : contentOf(before) !== contentOf(modification);
     return {
       id: head.id,
       ...(head.label !== undefined && { label: head.label }),
@@ -576,7 +575,15 @@ export function detailOf(
   // A field the saved state modifies and the working state no longer does,
   // and that the install does not know: a row of its own, unsaved.
   for (const modification of savedModifications) {
-    if (fields.some((field) => field.id === modification.field)) continue;
+    if (
+      fields.some(
+        (field) =>
+          field.id === modification.field &&
+          (field.level === undefined || field.level === modification.level),
+      )
+    ) {
+      continue;
+    }
     fields.push({
       ...row(
         { id: modification.field },

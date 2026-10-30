@@ -62,6 +62,13 @@ function typing(target: EventTarget | null): boolean {
   );
 }
 
+/** The counts of an answer that carries them beside other fields. */
+const countsOf = (answer: SessionCounts): SessionCounts => ({
+  unsavedEdits: answer.unsavedEdits,
+  undo: answer.undo,
+  redo: answer.redo,
+});
+
 /** The toast after a save, an undo or a redo. */
 interface Toast {
   readonly text: string;
@@ -119,11 +126,7 @@ function App() {
 
   /** Takes the counts of a change the server made, and reads the views again. */
   const changed = useCallback((next: SessionCounts) => {
-    setCounts({
-      unsavedEdits: next.unsavedEdits,
-      undo: next.undo,
-      redo: next.redo,
-    });
+    setCounts(countsOf(next));
     setVersion((count) => count + 1);
   }, []);
 
@@ -148,34 +151,23 @@ function App() {
       });
     }, failed);
   }, [autoReload, changed, failed]);
+  /** Shows a refusal of the API in the toast. */
+  const refused = useCallback((reason: unknown) => {
+    setToast({
+      text: reason instanceof Error ? reason.message : String(reason),
+      refused: true,
+    });
+  }, []);
   const undo = useCallback(() => {
-    api.undo().then(changed, (reason: unknown) => {
-      setToast({
-        text: reason instanceof Error ? reason.message : String(reason),
-        refused: true,
-      });
-    });
-  }, [changed]);
+    api.undo().then(changed, refused);
+  }, [changed, refused]);
   const redo = useCallback(() => {
-    api.redo().then(changed, (reason: unknown) => {
-      setToast({
-        text: reason instanceof Error ? reason.message : String(reason),
-        refused: true,
-      });
-    });
-  }, [changed]);
+    api.redo().then(changed, refused);
+  }, [changed, refused]);
   const reloadWorldEditor = () => {
-    api.reloadWorldEditor().then(
-      () => {
-        setToast({ text: "The World Editor reloads the map." });
-      },
-      (reason: unknown) => {
-        setToast({
-          text: reason instanceof Error ? reason.message : String(reason),
-          refused: true,
-        });
-      },
-    );
+    api.reloadWorldEditor().then(() => {
+      setToast({ text: "The World Editor reloads the map." });
+    }, refused);
   };
   // The latest actions, for the one keyboard listener.
   const actions = useRef({ save, undo, redo });
@@ -197,11 +189,7 @@ function App() {
           );
         },
         saved: (data) => {
-          setCounts({
-            unsavedEdits: data.unsavedEdits,
-            undo: data.undo,
-            redo: data.redo,
-          });
+          setCounts(countsOf(data));
         },
       }),
     [],
@@ -234,11 +222,7 @@ function App() {
   useEffect(() => {
     api.session().then((answer) => {
       setSession(answer);
-      setCounts({
-        unsavedEdits: answer.unsavedEdits,
-        undo: answer.undo,
-        redo: answer.redo,
-      });
+      setCounts(countsOf(answer));
     }, failed);
   }, [version, failed]);
   useEffect(() => {

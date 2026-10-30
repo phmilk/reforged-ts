@@ -264,6 +264,19 @@ describe("editing in the Studio", () => {
     expect((await rowOf(studio, "hfoo", "unam"))?.value).toBe("Militia");
   });
 
+  it("takes no step for a reset of a field the object does not modify", async () => {
+    const studio = await start(mapProject());
+    await setUnitFields(studio, [["h000", "uhpm", 600]]);
+    await request(studio, "/api/undo", { json: {} });
+
+    const reset = await request(studio, "/api/reset", {
+      json: { kind: "unit", rawcode: "h000", field: "uhpm" },
+    });
+
+    // The step undone stays to redo: an empty reset clears nothing.
+    expect(reset.body).toEqual({ unsavedEdits: 0, undo: 0, redo: 1 });
+  });
+
   it("keeps a field's translations, read-only, through an edit of its default text", async () => {
     const project = mapProject({}, LOCALES_FIXTURE);
     const studio = await start(project);

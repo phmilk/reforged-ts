@@ -145,7 +145,7 @@ const modificationKey = (modification: ObjectDataModification): string =>
  * `TRIGSTR_nnn` is left out: an undo that gives a removed name back gives it
  * the text it had, under the number the writer picks.
  */
-const contentOf = (modification: ObjectDataModification): string =>
+export const contentOf = (modification: ObjectDataModification): string =>
   JSON.stringify([modification.value, modification.translations]);
 
 /** How many fields and objects `working` changes from `saved`. */
@@ -195,23 +195,32 @@ function restore(
   };
 }
 
-/** The `removeField` of a modification's field. */
-function removal(
-  kind: ObjectKind,
-  rawcode: string,
-  modification: ObjectDataModification,
-): Edit {
+/** The `removeField` of an object's field, at its level and data pointer when it has them. */
+function fieldRemoval(address: {
+  readonly kind: ObjectKind;
+  readonly rawcode: string;
+  readonly field: string;
+  readonly level?: number;
+  readonly dataPointer?: number;
+}): Extract<Edit, { op: "removeField" }> {
   return {
     op: "removeField",
-    kind,
-    rawcode,
-    field: modification.field,
-    ...(modification.level !== undefined && { level: modification.level }),
-    ...(modification.dataPointer !== undefined && {
-      dataPointer: modification.dataPointer,
+    kind: address.kind,
+    rawcode: address.rawcode,
+    field: address.field,
+    ...(address.level !== undefined && { level: address.level }),
+    ...(address.dataPointer !== undefined && {
+      dataPointer: address.dataPointer,
     }),
   };
 }
+
+/** The `removeField` of a modification's field. */
+const removal = (
+  kind: ObjectKind,
+  rawcode: string,
+  modification: ObjectDataModification,
+): Edit => fieldRemoval({ ...modification, kind, rawcode });
 
 /** Each modification of an object by its place, the last one of a place kept. */
 const byPlace = (
@@ -451,18 +460,8 @@ export class Session {
   }): Edit[] {
     const { kind, rawcode, field } = target;
     if (field !== undefined) {
-      return [
-        {
-          op: "removeField",
-          kind,
-          rawcode,
-          field,
-          ...(target.level !== undefined && { level: target.level }),
-          ...(target.dataPointer !== undefined && {
-            dataPointer: target.dataPointer,
-          }),
-        },
-      ];
+      const edit = fieldRemoval({ ...target, field });
+      return this.#held(edit) === undefined ? [] : [edit];
     }
     const object = this.#object(kind, rawcode);
     if (object === undefined) return [];
@@ -627,7 +626,7 @@ export class Session {
       case "removeField": {
         const before = this.#held(edit);
         if (before !== undefined) return [restore(kind, rawcode, before)];
-        return edit.op === "setField" ? [removalOf(edit)] : [];
+        return edit.op === "setField" ? [fieldRemoval(edit)] : [];
       }
       case "addObject":
         return [{ op: "removeObject", kind, rawcode }];
@@ -695,16 +694,4 @@ export class Session {
         return;
     }
   }
-}
-
-/** The `removeField` that takes back a `setField` of a field the object did not hold. */
-function removalOf(edit: Extract<SessionEdit, { op: "setField" }>): Edit {
-  return {
-    op: "removeField",
-    kind: edit.kind,
-    rawcode: edit.rawcode,
-    field: edit.field,
-    ...(edit.level !== undefined && { level: edit.level }),
-    ...(edit.dataPointer !== undefined && { dataPointer: edit.dataPointer }),
-  };
 }

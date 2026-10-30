@@ -107,6 +107,11 @@ function send(response: http.ServerResponse, answer: Answer): void {
 
 /** Reads a request's JSON body. */
 async function readJson(request: http.IncomingMessage): Promise<unknown> {
+  return JSON.parse(await readText(request)) as unknown;
+}
+
+/** Reads a request's body as UTF-8 text, at most {@link BODY_LIMIT} bytes. */
+async function readText(request: http.IncomingMessage): Promise<string> {
   const chunks: Buffer[] = [];
   let size = 0;
   for await (const chunk of request as AsyncIterable<Buffer>) {
@@ -114,7 +119,7 @@ async function readJson(request: http.IncomingMessage): Promise<unknown> {
     if (size > BODY_LIMIT) throw new SyntaxError("The body is too large.");
     chunks.push(chunk);
   }
-  return JSON.parse(Buffer.concat(chunks).toString("utf8")) as unknown;
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 const isKind = (value: string): value is ObjectKind =>
@@ -387,14 +392,7 @@ function applied(context: ApiContext, change: () => void): Answer {
 async function readOptionalJson(
   request: http.IncomingMessage,
 ): Promise<Record<string, unknown>> {
-  const chunks: Buffer[] = [];
-  let size = 0;
-  for await (const chunk of request as AsyncIterable<Buffer>) {
-    size += chunk.byteLength;
-    if (size > BODY_LIMIT) throw new SyntaxError("The body is too large.");
-    chunks.push(chunk);
-  }
-  const text = Buffer.concat(chunks).toString("utf8").trim();
+  const text = (await readText(request)).trim();
   if (text === "") return {};
   const body = JSON.parse(text) as unknown;
   if (typeof body !== "object" || body === null || Array.isArray(body)) {
