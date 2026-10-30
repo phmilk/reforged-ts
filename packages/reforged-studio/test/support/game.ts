@@ -75,6 +75,9 @@ export const EDITOR_STRINGS = {
   WESTRING_UE_ATTACKTYPE_NORMAL: "Normal",
   WESTRING_UE_ATTACKTYPE_PIERCE: "Pierce",
   WESTRING_AEVAL_ACDN: "Stats - Cooldown",
+  WESTRING_UE_UNITRACE_HUMAN: "Human",
+  WESTRING_UE_UNITRACE_OTHER: "Other",
+  WESTRING_ITEMCLASS_PERMANENT: "Permanent",
 } as const;
 
 /** The units' metadata: a profile name and icon, a stat, an enumeration and the editor's flags. */
@@ -341,7 +344,7 @@ export const OTHER_FILES: Readonly<Record<string, string>> = {
   }),
 };
 
-/** The editor's strings and data: labels and two enumerations. */
+/** The editor's strings and data: labels and four enumerations, two the fields read and two the World Editor's tree groups by. */
 export const EDITOR_FILES: Readonly<Record<string, string>> = {
   [WORLD_EDIT_GAME_STRINGS]: profile({
     WorldEditStrings: { WESTRING_DEST_TREE: "Lordaeron Summer Tree Wall" },
@@ -353,6 +356,17 @@ export const EDITOR_FILES: Readonly<Record<string, string>> = {
       "00": "unknown,WESTRING_NONE",
       "01": "normal,WESTRING_UE_ATTACKTYPE_NORMAL",
       "02": "pierce,WESTRING_UE_ATTACKTYPE_PIERCE",
+    },
+    unitRace: {
+      Sort: "1",
+      "00": "human,WESTRING_UE_UNITRACE_HUMAN",
+      "01": "other,WESTRING_UE_UNITRACE_OTHER",
+      "02": "naga,WESTRING_UE_UNITRACE_NAGA,1",
+      NumValues: "3",
+    },
+    itemClass: {
+      "00": "Permanent,WESTRING_ITEMCLASS_PERMANENT",
+      NumValues: "1",
     },
   }),
 };

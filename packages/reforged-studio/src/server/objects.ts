@@ -2,8 +2,10 @@
  * The objects the Studio shows: the Rawcode lookup's (the map folder's as
  * on disk, the Object definitions and the Built-in objects of
  * `reforged-builtins`), with the map folder's replaced by the session's
- * working state, so that an unsaved edit shows; and one object's field
- * table, its fields and base values read from the install.
+ * working state, so that an unsaved edit shows, each with its group in the
+ * World Editor's tree and its icon from the install's game data model; and
+ * one object's field table, its fields, base values and the values as the
+ * editor shows them read from the install.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -13,7 +15,7 @@ import type {
   ObjectKind,
   RawcodeObject,
 } from "reforged-map";
-import type { GameData } from "../game-data.js";
+import type { GameData, GameField, GameKind } from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
 import {
   OBJECT_ORIGINS,
@@ -36,6 +38,107 @@ export interface ObjectSources {
   readonly saved: ObjectState;
   /** The session's working state. */
   readonly working: ObjectState;
+  /** The game data model base values, groups and icons are read from. */
+  readonly gameData: GameData;
+}
+
+/**
+ * The field each kind's icon is, as the Object Editor shows it in its tree:
+ * the Art of a unit, an item, an ability or a buff, an upgrade's first
+ * level's; destructables and doodads have none. A kind whose install lacks
+ * it takes its first field of the type `icon`.
+ */
+const ICON_FIELDS: Readonly<Record<ObjectKind, string | undefined>> = {
+  unit: "uico",
+  item: "iico",
+  ability: "aart",
+  buff: "fart",
+  destructable: undefined,
+  doodad: undefined,
+  upgrade: "gar1",
+};
+
+/** The icon field of a kind, in its install's fields. */
+function iconField(kind: GameKind): GameField | undefined {
+  const preferred = ICON_FIELDS[kind.kind];
+  if (preferred === undefined) return undefined;
+  return (
+    kind.fields.get(preferred) ??
+    [...kind.fields.values()].find((field) => field.type === "icon")
+  );
+}
+
+/** The labels of the words of the World Editor's tree groups (`GameObject.group`). */
+const GROUP_WORDS: Readonly<Record<string, string>> = {
+  melee: "Melee",
+  campaign: "Campaign",
+  units: "Units",
+  buildings: "Buildings",
+  heroes: "Heroes",
+  special: "Special",
+  items: "Items",
+  buffs: "Buffs",
+  effects: "Effects",
+};
+
+/**
+ * A Built-in object's group in the World Editor's tree, each level
+ * labelled: a race through the editor data's `unitRace` (the label the
+ * Object Editor gives), an item's class through its `itemClass`, the
+ * tree's words through {@link GROUP_WORDS}, a value with no label as it
+ * is; empty levels left out. Undefined when the install does not hold it.
+ */
+function groupOf(
+  kind: ObjectKind,
+  rawcode: string,
+  gameData: GameData,
+): string[] | undefined {
+  const object = gameData.kinds[kind].objects.get(rawcode);
+  if (object === undefined) return undefined;
+  const enumerated = (type: string, value: string) =>
+    gameData.enumeration(type)?.find((entry) => entry.value === value)?.label;
+  return object.group
+    .map((value, level) =>
+      level === 0 && kind === "item"
+        ? (enumerated("itemClass", value) ?? value)
+        : level === 0 &&
+            kind !== "destructable" &&
+            kind !== "doodad" &&
+            kind !== "item"
+          ? (enumerated("unitRace", value) ?? value)
+          : (GROUP_WORDS[value] ?? value),
+    )
+    .filter((label) => label !== "");
+}
+
+/**
+ * The path of an object's icon: the working state's modification of its
+ * kind's icon field, else its base's value (a Custom object's base, else
+ * its own Built-in object's); undefined when neither holds one.
+ */
+function iconOf(
+  kind: ObjectKind,
+  rawcode: string,
+  baseRawcode: string,
+  working: ObjectState,
+  gameData: GameData,
+): string | undefined {
+  const field = iconField(gameData.kinds[kind]);
+  if (field === undefined) return undefined;
+  const modification = working
+    .get(objectKey(kind, rawcode))
+    ?.modifications.find(
+      (candidate) =>
+        candidate.field === field.id && (candidate.level ?? 1) === 1,
+    );
+  if (modification !== undefined) {
+    return String(modification.value) || undefined;
+  }
+  const value = gameData.kinds[kind].objects
+    .get(baseRawcode)
+    ?.values.get(field.id);
+  const first = typeof value === "string" ? value : value?.[0];
+  return first === undefined || first === "" ? undefined : first;
 }
 
 /** The Object definition of a listed object, when one defines it. */
@@ -82,7 +185,8 @@ function builtinName(object: RawcodeObject | undefined): string | undefined {
  * Rawcode in code point order.
  */
 export function composeObjects(sources: ObjectSources): ListedObject[] {
-  const { listed, saved, working, gameDataSet, projectRoot } = sources;
+  const { listed, saved, working, gameDataSet, projectRoot, gameData } =
+    sources;
   const byKey = new Map(
     listed.map((object) => [objectKey(object.kind, object.rawcode), object]),
   );
@@ -170,10 +274,25 @@ export function composeObjects(sources: ObjectSources): ListedObject[] {
 
   for (const object of objects) shareRawcode(object.kind, object.rawcode);
   return objects
-    .map((object) => ({
-      ...object,
-      shared: (kindsOf.get(object.rawcode)?.size ?? 0) > 1,
-    }))
+    .map((object) => {
+      const group =
+        object.origin === "builtin" || object.origin === "modified"
+          ? groupOf(object.kind, object.rawcode, gameData)
+          : undefined;
+      const icon = iconOf(
+        object.kind,
+        object.rawcode,
+        object.base?.rawcode ?? object.rawcode,
+        working,
+        gameData,
+      );
+      return {
+        ...object,
+        ...(group !== undefined && { group }),
+        ...(icon !== undefined && { icon }),
+        shared: (kindsOf.get(object.rawcode)?.size ?? 0) > 1,
+      };
+    })
     .sort(
       (a, b) =>
         OBJECT_KINDS.indexOf(a.kind) - OBJECT_KINDS.indexOf(b.kind) ||
@@ -239,24 +358,43 @@ export function detailOf(
     if (found !== undefined) used.add(found);
     return found;
   };
+  /** A value as the editor shows it: an enumeration's label, a `WESTRING_` key resolved. */
+  const shown = (
+    value: number | string,
+    enumeration: GameField["enumeration"],
+  ): string => {
+    const raw = String(value);
+    const label = enumeration?.find((entry) => entry.value === raw)?.label;
+    return label ?? gameData.text(raw) ?? raw;
+  };
   const row = (
     head: Pick<FieldRow, "id" | "label" | "type" | "category">,
     level: number | undefined,
     baseValue: string | undefined,
     modification: ObjectDataModification | undefined,
-  ): FieldRow => ({
-    id: head.id,
-    ...(head.label !== undefined && { label: head.label }),
-    ...(head.type !== undefined && { type: head.type }),
-    ...(head.category !== undefined && { category: head.category }),
-    ...(level !== undefined && { level }),
-    ...(baseValue !== undefined && { base: baseValue }),
-    ...(modification !== undefined && {
-      value: modification.value,
-      stored: modification.stored,
-    }),
-    modified: modification !== undefined,
-  });
+    enumeration?: GameField["enumeration"],
+  ): FieldRow => {
+    const baseDisplay =
+      baseValue === undefined ? undefined : shown(baseValue, enumeration);
+    const display =
+      modification === undefined
+        ? baseDisplay
+        : shown(modification.value, enumeration);
+    return {
+      id: head.id,
+      ...(head.label !== undefined && { label: head.label }),
+      ...(head.type !== undefined && { type: head.type }),
+      ...(head.category !== undefined && { category: head.category }),
+      ...(level !== undefined && { level }),
+      ...(baseValue !== undefined && { base: baseValue, baseDisplay }),
+      ...(modification !== undefined && {
+        value: modification.value,
+        stored: modification.stored,
+      }),
+      ...(display !== undefined && { display }),
+      modified: modification !== undefined,
+    };
+  };
 
   const fields: FieldRow[] = [];
   for (const field of kind.fields.values()) {
@@ -276,11 +414,27 @@ export function detailOf(
         .map((modification) => modification.level ?? 0);
       const count = Math.max(levels.length, ...modified);
       for (let level = 1; level <= count; level++) {
-        fields.push(row(head, level, levels[level - 1], find(field.id, level)));
+        fields.push(
+          row(
+            head,
+            level,
+            levels[level - 1],
+            find(field.id, level),
+            field.enumeration,
+          ),
+        );
       }
     } else {
       const single = typeof value === "string" ? value : value?.[0];
-      fields.push(row(head, undefined, single, find(field.id, undefined)));
+      fields.push(
+        row(
+          head,
+          undefined,
+          single,
+          find(field.id, undefined),
+          field.enumeration,
+        ),
+      );
     }
   }
   for (const modification of modifications) {

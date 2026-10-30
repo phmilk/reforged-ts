@@ -50,6 +50,14 @@ jobs:
         uses: ./.github/actions/setup-workspace
         with:
           cache: true
+      # The Studio's page tests (#832) drive headless Chromium through
+      # Playwright: its headless shell, at the version the lockfile's
+      # Playwright names, and on ubuntu the system libraries it needs.
+      - name: Install Chromium
+        shell: bash
+        env:
+          WITH_DEPS: ${{ matrix.os == 'ubuntu' && '--with-deps' || '' }}
+        run: pnpm --filter reforged-studio exec playwright install $WITH_DEPS --only-shell --no-progress chromium
       - name: lint
         run: pnpm run lint
       - name: typecheck

@@ -60,12 +60,28 @@ async function post<T>(path: string, json: unknown): Promise<T> {
   return body as T;
 }
 
+/** `&all=1` when the objects outside the map's Game data set are shown. */
+const allOf = (all: boolean): string => (all ? "&all=1" : "");
+
 export const api = {
   session: () => get<SessionAnswer>("/session"),
-  objects: (kind: string) =>
-    get<ObjectsAnswer>(`/objects?kind=${encodeURIComponent(kind)}`),
-  search: (query: string) =>
-    get<SearchAnswer>(`/search?q=${encodeURIComponent(query)}`),
+  objects: (kind: string, all = false) =>
+    get<ObjectsAnswer>(
+      `/objects?kind=${encodeURIComponent(kind)}${allOf(all)}`,
+    ),
+  search: (query: string, all = false) =>
+    get<SearchAnswer>(`/search?q=${encodeURIComponent(query)}${allOf(all)}`),
+  /** The bytes of an icon's or a model's file; undefined when it is found nowhere. */
+  file: async (path: string): Promise<ArrayBuffer | undefined> => {
+    const response = await fetch(
+      `${base}/files?path=${encodeURIComponent(path)}`,
+    );
+    if (response.status === 404) return undefined;
+    if (!response.ok) {
+      throw new ApiError(response.status, "unknown", response.statusText);
+    }
+    return response.arrayBuffer();
+  },
   rawcode: (rawcode: string, kind?: string) =>
     get<RawcodeAnswer>(
       `/objects/${encodeURIComponent(rawcode)}${kind === undefined ? "" : `?kind=${encodeURIComponent(kind)}`}`,

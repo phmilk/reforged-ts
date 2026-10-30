@@ -1,223 +1,41 @@
 /**
- * The Studio's page, the first slice of its Objects area (#831): a tab per
- * Object kind listing its objects by origin, a search, and one object's
- * field table, at `/objects/<rawcode>[?kind=]`. It reads its route from the
- * path and talks to the server only through `./api.ts`. The tree, the
- * chips, compare and icons come with #832.
+ * The Studio's page: its Objects area, read-only (#832), in the layout of
+ * the prototype of #476: one tab per Object kind, the tree (`./tree.tsx`),
+ * one object's field table (`./object.tsx`), the global search, Ctrl+K
+ * (`./search.tsx`), and the map's Game data set named at the top, with a
+ * toggle that shows the objects outside it. It reads its route from the
+ * path, `/objects/<rawcode>[?kind=]`, and talks to the server only through
+ * `./api.ts`.
  */
 import { StrictMode, useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import type {
-  ListedObject,
+  ObjectDetail,
   ObjectsAnswer,
   RawcodeAnswer,
   SessionAnswer,
 } from "../src/server/api-types.js";
 import { api, listen } from "./api.js";
+import { NoSelection, ObjectPage } from "./object.js";
+import { KINDS, useRoute } from "./parts.js";
+import { Search } from "./search.js";
+import { Tree, type Selection } from "./tree.js";
 import "./style.css";
 
-const KINDS = [
-  ["unit", "Units"],
-  ["item", "Items"],
-  ["ability", "Abilities"],
-  ["buff", "Buffs/Effects"],
-  ["destructable", "Destructibles"],
-  ["doodad", "Doodads"],
-  ["upgrade", "Upgrades"],
-] as const;
-
-const ORIGIN_LABELS: Readonly<Record<ListedObject["origin"], string>> = {
-  custom: "Custom",
-  definition: "Object definition",
-  modified: "Modified Built-in",
-  builtin: "Built-in",
-};
-
-/** The route the path names: `/objects/<rawcode>?kind=<kind>`. */
-interface Route {
-  readonly rawcode: string | undefined;
-  readonly kind: string | undefined;
-}
-
-function readRoute(): Route {
-  const match = /^\/objects\/([^/]+)/.exec(location.pathname);
-  const kind = new URLSearchParams(location.search).get("kind") ?? undefined;
-  return {
-    rawcode:
-      match?.[1] === undefined ? undefined : decodeURIComponent(match[1]),
-    kind,
-  };
-}
-
-function go(route: Route): void {
-  const path =
-    route.rawcode === undefined
-      ? "/objects"
-      : `/objects/${encodeURIComponent(route.rawcode)}${route.kind === undefined ? "" : `?kind=${route.kind}`}`;
-  history.pushState(null, "", path);
-  dispatchEvent(new PopStateEvent("popstate"));
-}
-
-function useRoute(): Route {
-  const [route, setRoute] = useState(readRoute);
-  useEffect(() => {
-    const changed = () => {
-      setRoute(readRoute());
-    };
-    addEventListener("popstate", changed);
-    return () => {
-      removeEventListener("popstate", changed);
-    };
-  }, []);
-  return route;
-}
-
-function ObjectList(props: {
-  readonly objects: readonly ListedObject[];
-  readonly selected: Route;
-}) {
-  return (
-    <ul className="objects">
-      {props.objects.map((object) => (
-        <li key={`${object.kind}:${object.rawcode}`}>
-          <button
-            type="button"
-            className={
-              object.rawcode === props.selected.rawcode ? "selected" : undefined
-            }
-            onClick={() => {
-              go({ rawcode: object.rawcode, kind: object.kind });
-            }}
-          >
-            <span className="name">{object.name ?? "(unnamed)"}</span>{" "}
-            <code>{object.rawcode}</code>{" "}
-            <span className={`origin ${object.origin}`}>
-              {ORIGIN_LABELS[object.origin]}
-            </span>
-            {object.shared && <span className="origin shared">shared</span>}
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ObjectView(props: { readonly answer: RawcodeAnswer }) {
-  const { answer } = props;
-  if (answer.status === "malformed") {
-    return <p>{answer.rawcode} is not a Rawcode: four printable characters.</p>;
-  }
-  if (answer.status === "unknown") {
-    return (
-      <div>
-        <p>
-          <code>{answer.rawcode}</code> is neither in this map nor Built-in.
-        </p>
-        {answer.suggestions.length > 0 && (
-          <p>
-            Did you mean{" "}
-            {answer.suggestions.map((suggestion) => (
-              <button
-                type="button"
-                key={suggestion.rawcode}
-                onClick={() => {
-                  go({ rawcode: suggestion.rawcode, kind: suggestion.kind });
-                }}
-              >
-                {suggestion.name ?? suggestion.rawcode} (
-                <code>{suggestion.rawcode}</code>)
-              </button>
-            ))}
-            ?
-          </p>
-        )}
-      </div>
-    );
-  }
-  const { selected } = answer;
-  if (selected === undefined) {
-    return (
-      <div>
-        <p>
-          <code>{answer.rawcode}</code> names an object of each of these Object
-          kinds: choose one.
-        </p>
-        <ObjectList
-          objects={answer.objects}
-          selected={{ rawcode: undefined, kind: undefined }}
-        />
-      </div>
-    );
-  }
-  return (
-    <div>
-      <h2>
-        {selected.name ?? "(unnamed)"} <code>{selected.rawcode}</code>{" "}
-        <span className={`origin ${selected.origin}`}>
-          {ORIGIN_LABELS[selected.origin]}
-        </span>
-      </h2>
-      {answer.status === "not-in-game-data-set" && (
-        <p className="warning">
-          Not in this map&apos;s Game data set, {answer.gameDataSet.label}.
-        </p>
-      )}
-      {selected.readOnly !== undefined && (
-        <p className="readonly">
-          Read-only: defined in {selected.readOnly.path}, line{" "}
-          {selected.readOnly.line}.{" "}
-          <button
-            type="button"
-            onClick={() => {
-              void api.openInEditor(selected.kind, selected.rawcode);
-            }}
-          >
-            Open in editor
-          </button>
-        </p>
-      )}
-      <table className="fields">
-        <thead>
-          <tr>
-            <th>Field</th>
-            <th>Label</th>
-            <th>Value</th>
-            <th>Raw</th>
-            <th>Base</th>
-          </tr>
-        </thead>
-        <tbody>
-          {selected.fields.map((row) => (
-            <tr
-              key={`${row.id}:${String(row.level ?? 0)}`}
-              className={row.modified ? "modified" : undefined}
-            >
-              <td>
-                <code>{row.id}</code>
-                {row.level !== undefined && ` (${String(row.level)})`}
-              </td>
-              <td>{row.label}</td>
-              <td>{row.modified ? String(row.value) : row.base}</td>
-              <td>
-                <code>{row.modified ? String(row.stored) : row.base}</code>
-              </td>
-              <td>{row.base}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+/** The key of a selection, its kind and Rawcode. */
+const keyOf = (selection: Selection): string =>
+  `${selection.kind}:${selection.rawcode}`;
 
 function App() {
   const route = useRoute();
   const [session, setSession] = useState<SessionAnswer>();
   const [kind, setKind] = useState<string>(route.kind ?? "unit");
+  const [all, setAll] = useState(false);
   const [listing, setListing] = useState<ObjectsAnswer>();
-  const [query, setQuery] = useState("");
-  const [found, setFound] = useState<readonly ListedObject[]>();
   const [detail, setDetail] = useState<RawcodeAnswer>();
+  const [pinned, setPinned] = useState<readonly Selection[]>([]);
+  const [compared, setCompared] = useState<readonly ObjectDetail[]>([]);
+  const [searching, setSearching] = useState(false);
   const [banner, setBanner] = useState<string>();
   const [error, setError] = useState<string>();
   const [version, setVersion] = useState(0);
@@ -244,47 +62,144 @@ function App() {
     [],
   );
   useEffect(() => {
+    const keydown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setSearching(true);
+      }
+    };
+    addEventListener("keydown", keydown);
+    return () => {
+      removeEventListener("keydown", keydown);
+    };
+  }, []);
+  useEffect(() => {
     api.session().then(setSession, failed);
   }, [version, failed]);
   useEffect(() => {
-    api.objects(kind).then(setListing, failed);
-  }, [kind, version, failed]);
-  useEffect(() => {
-    if (query.trim() === "") {
-      setFound(undefined);
-      return;
-    }
-    api.search(query).then((answer) => {
-      setFound(answer.objects);
-    }, failed);
-  }, [query, version, failed]);
+    api.objects(kind, all).then(setListing, failed);
+  }, [kind, all, version, failed]);
   useEffect(() => {
     if (route.rawcode === undefined) {
       setDetail(undefined);
       return;
     }
     if (route.kind !== undefined) setKind(route.kind);
-    api.rawcode(route.rawcode, route.kind).then(setDetail, failed);
+    let live = true;
+    api.rawcode(route.rawcode, route.kind).then((answer) => {
+      if (!live) return;
+      setDetail(answer);
+      if (
+        (answer.status === "known" ||
+          answer.status === "not-in-game-data-set") &&
+        answer.selected !== undefined
+      ) {
+        setKind(answer.selected.kind);
+      }
+    }, failed);
+    return () => {
+      live = false;
+    };
   }, [route.rawcode, route.kind, version, failed]);
+
+  const selected =
+    detail !== undefined &&
+    (detail.status === "known" || detail.status === "not-in-game-data-set")
+      ? detail.selected
+      : undefined;
+  const selection =
+    selected === undefined
+      ? undefined
+      : { kind: selected.kind, rawcode: selected.rawcode };
+
+  // The compared objects: those pinned of the selected object's kind, but itself.
+  const comparedKeys = pinned
+    .filter(
+      (pin) =>
+        pin.kind === selected?.kind &&
+        (selection === undefined || keyOf(pin) !== keyOf(selection)),
+    )
+    .map(keyOf)
+    .join(" ");
+  useEffect(() => {
+    if (comparedKeys === "") {
+      setCompared([]);
+      return;
+    }
+    let live = true;
+    Promise.all(
+      comparedKeys.split(" ").map(async (key) => {
+        const [pinKind = "", rawcode = ""] = key.split(":");
+        const answer = await api.rawcode(rawcode, pinKind);
+        return answer.status === "known" ||
+          answer.status === "not-in-game-data-set"
+          ? answer.selected
+          : undefined;
+      }),
+    ).then((details) => {
+      if (live) {
+        setCompared(
+          details.filter((found): found is ObjectDetail => found !== undefined),
+        );
+      }
+    }, failed);
+    return () => {
+      live = false;
+    };
+  }, [comparedKeys, version, failed]);
+
+  const isPinned =
+    selection !== undefined &&
+    pinned.some((pin) => keyOf(pin) === keyOf(selection));
+  const togglePin = () => {
+    if (selection === undefined) return;
+    setPinned(
+      isPinned
+        ? pinned.filter((pin) => keyOf(pin) !== keyOf(selection))
+        : [...pinned, selection],
+    );
+  };
+  const unpin = (object: ObjectDetail) => {
+    setPinned(
+      pinned.filter(
+        (pin) =>
+          keyOf(pin) !== keyOf({ kind: object.kind, rawcode: object.rawcode }),
+      ),
+    );
+  };
 
   return (
     <div className="studio">
-      <header>
+      <header className="topbar">
         <h1>Studio</h1>
         {session !== undefined && (
-          <span className="session">
-            {session.mapFolder}, Game data set{" "}
-            {session.gameDataSet?.label ?? "unknown"}, Build {session.build}
+          <span className="session" title={session.mapFolder}>
+            {session.mapFolder.split(/[\\/]/).at(-1)} · Build {session.build}
           </span>
         )}
-        <input
-          type="search"
-          placeholder="Search by name or Rawcode"
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
+        <span className="game-data-set">
+          Game data set:{" "}
+          <b>{session?.gameDataSet?.label ?? "not stated by war3map.w3i"}</b>
+        </span>
+        <label>
+          <input
+            type="checkbox"
+            checked={all}
+            onChange={(event) => {
+              setAll(event.target.checked);
+            }}
+          />{" "}
+          Show objects outside it
+        </label>
+        <button
+          type="button"
+          className="search-button"
+          onClick={() => {
+            setSearching(true);
           }}
-        />
+        >
+          Search <kbd>Ctrl+K</kbd>
+        </button>
       </header>
       {banner !== undefined && (
         <p className="banner">
@@ -300,11 +215,13 @@ function App() {
         </p>
       )}
       {error !== undefined && <p className="warning">{error}</p>}
-      <nav className="tabs">
+      <nav className="tabs" role="tablist" aria-label="Object kinds">
         {KINDS.map(([id, label]) => (
           <button
             type="button"
+            role="tab"
             key={id}
+            aria-selected={id === kind}
             className={id === kind ? "selected" : undefined}
             onClick={() => {
               setKind(id);
@@ -316,19 +233,35 @@ function App() {
       </nav>
       <main>
         <aside>
-          <ObjectList
-            objects={found ?? listing?.objects ?? []}
-            selected={route}
-          />
+          <Tree objects={listing?.objects ?? []} selected={selection} />
         </aside>
-        <section>
+        <section className="pane">
           {detail === undefined ? (
-            <p>Choose an object.</p>
+            <p className="notice muted">Choose an object.</p>
+          ) : selected !== undefined &&
+            (detail.status === "known" ||
+              detail.status === "not-in-game-data-set") ? (
+            <ObjectPage
+              answer={detail}
+              selected={selected}
+              compared={compared}
+              pinned={isPinned}
+              onPin={togglePin}
+              onUnpin={unpin}
+            />
           ) : (
-            <ObjectView answer={detail} />
+            <NoSelection answer={detail} />
           )}
         </section>
       </main>
+      {searching && (
+        <Search
+          all={all}
+          onClose={() => {
+            setSearching(false);
+          }}
+        />
+      )}
     </div>
   );
 }

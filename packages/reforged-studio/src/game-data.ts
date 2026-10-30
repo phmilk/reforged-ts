@@ -138,6 +138,12 @@ export interface GameData {
    * strings, `undefined` when they do not hold it; any other value as it is.
    */
   text(value: string): string | undefined;
+  /**
+   * The raw values and labels of the enumeration `type` in the editor data
+   * (`unitRace`), whether a field reads it or not: the World Editor labels
+   * its tree's groups with some; `undefined` when the data has none.
+   */
+  enumeration(type: string): readonly EnumerationValue[] | undefined;
 }
 
 /** What to read. */
@@ -292,7 +298,7 @@ export async function readGameData(
     };
   }
 
-  return { build: storage.build, gameDataSet, kinds, text };
+  return { build: storage.build, gameDataSet, kinds, text, enumeration };
 }
 
 /**
