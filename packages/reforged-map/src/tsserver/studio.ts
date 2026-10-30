@@ -3,13 +3,13 @@
 // once a second, as the lookup checks its files.
 
 import { DEFAULT_MIN_INTERVAL } from "../lookup.js";
-import { readLiveStudio } from "../studio-runtime-file.js";
+import {
+  readLiveStudio,
+  type StudioRuntimeFile,
+} from "../studio-runtime-file.js";
 
-/** A live Studio on the map folder the plugin reads: its origin. */
-export interface LiveStudio {
-  /** Its origin, `http://localhost:<port>`, without a trailing slash. */
-  readonly url: string;
-}
+/** A live Studio on the map folder the plugin reads: its origin, without a trailing slash. */
+export type LiveStudio = Pick<StudioRuntimeFile, "url">;
 
 /**
  * The live Studio of a Map project's map folder, read again at most once
@@ -32,15 +32,7 @@ export function liveStudioReader(
       now < last.at ||
       now - last.at >= DEFAULT_MIN_INTERVAL
     ) {
-      const live = readLiveStudio(root, mapFolder);
-      last = {
-        at: now,
-        mapFolder,
-        studio:
-          live === undefined
-            ? undefined
-            : { url: live.url.replace(/\/+$/, "") },
-      };
+      last = { at: now, mapFolder, studio: readLiveStudio(root, mapFolder) };
     }
     return last.studio;
   };

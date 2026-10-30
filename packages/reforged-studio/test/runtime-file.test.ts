@@ -137,9 +137,19 @@ describe("the Studio's runtime file", () => {
     });
   });
 
-  it("is replaced when it cannot be read", async () => {
+  it.each([
+    ["it cannot be read", "{ not json"],
+    [
+      "it is not of the format",
+      JSON.stringify({
+        format: 1,
+        url: "http://localhost:1",
+        pid: process.pid,
+      }),
+    ],
+  ])("is replaced when %s", async (_, contents) => {
     const project = mapProject();
-    fs.writeFileSync(runtimeFile(project), "{ not json");
+    fs.writeFileSync(runtimeFile(project), contents);
 
     const studio = await start(project);
 

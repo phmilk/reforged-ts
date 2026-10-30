@@ -51,15 +51,18 @@ function folderKey(folder: string): string {
 }
 
 /**
- * The Studio's runtime file of a Map project, when it is live for a map
- * folder: of format 1, with an `http:` or `https:` `url`, its `pid` a
- * running process and its `mapFolder` that folder, through links and, on
- * Windows, without regard to case.
+ * Reads the Studio's runtime file of a Map project, and returns it when it
+ * is live for a map folder: its `pid` a running process and its
+ * `mapFolder` that folder, through links and, on Windows, without regard
+ * to case.
  *
  * @param projectRoot - The Map project's root.
  * @param mapFolder - The map folder the reader reads.
- * @returns What the file holds; undefined when there is no file, it is not
- *   of the format, its process has ended or it names another map folder.
+ * @returns What the file holds, its `url` without a trailing slash;
+ *   undefined when there is no file, it is not JSON of the format (format
+ *   1, an `http:` or `https:` `url`, a positive integer `pid`, a string
+ *   `mapFolder` and `startedAt`), its process has ended or it names
+ *   another map folder.
  */
 export function readLiveStudio(
   projectRoot: string,
@@ -94,6 +97,12 @@ export function readLiveStudio(
     return undefined;
   }
   return isRunning(pid) && folderKey(folder) === folderKey(mapFolder)
-    ? { format, url, pid, mapFolder: folder, startedAt }
+    ? {
+        format,
+        url: url.replace(/\/+$/, ""),
+        pid,
+        mapFolder: folder,
+        startedAt,
+      }
     : undefined;
 }
