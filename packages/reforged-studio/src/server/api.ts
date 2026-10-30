@@ -13,6 +13,7 @@ import {
 } from "reforged-map";
 import type { GameData } from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
+import type { PathResolver } from "../paths.js";
 import {
   OBJECT_ORIGINS,
   type Edit,
@@ -52,6 +53,8 @@ export interface ApiContext {
   readonly fallbackGameDataSet: string;
   readonly worldEditorCheck: WorldEditorCheckOptions | undefined;
   readonly env: EditorEnvironment;
+  /** The resolver of icons' and models' paths, the map folder's imports first. */
+  readonly paths: PathResolver;
 }
 
 /** An answer the routes give: its status and its JSON body. */
@@ -105,23 +108,33 @@ const isKind = (value: string): value is ObjectKind =>
 const isOrigin = (value: string): value is ObjectOrigin =>
   (OBJECT_ORIGINS as readonly string[]).includes(value);
 
-/** The objects and the map's Game data set, or the lookup's reason it cannot list them. */
-function objectsOf(
-  context: ApiContext,
-): { objects: ListedObject[]; gameDataSet: GameDataSet | undefined } | Answer {
+/** The objects, the map's Game data set and its game data model, or the lookup's reason it cannot list them. */
+async function objectsOf(context: ApiContext): Promise<
+  | {
+      objects: ListedObject[];
+      gameDataSet: GameDataSet | undefined;
+      gameData: GameData;
+    }
+  | Answer
+> {
   const { session } = context;
   const listing = session.lookup.list();
   if (listing.status === "unavailable") {
     return refuse(503, "unavailable", listing.reason);
   }
+  const gameData = await context.gameData(
+    baseValuesSet(context, listing.gameDataSet),
+  );
   return {
     gameDataSet: listing.gameDataSet,
+    gameData,
     objects: composeObjects({
       projectRoot: context.projectRoot,
       listed: listing.objects,
       gameDataSet: listing.gameDataSet,
       saved: session.saved,
       working: session.working(),
+      gameData,
     }),
   };
 }
@@ -159,10 +172,13 @@ function filterOf(
     (all || object.inGameDataSet);
 }
 
-function listObjects(context: ApiContext, query: URLSearchParams): Answer {
+async function listObjects(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<Answer> {
   const filter = filterOf(query);
   if (filter instanceof Answer) return filter;
-  const listed = objectsOf(context);
+  const listed = await objectsOf(context);
   if (listed instanceof Answer) return listed;
   return new Answer(200, {
     gameDataSet: listed.gameDataSet,
@@ -170,11 +186,14 @@ function listObjects(context: ApiContext, query: URLSearchParams): Answer {
   } satisfies ObjectsAnswer);
 }
 
-function search(context: ApiContext, query: URLSearchParams): Answer {
+async function search(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<Answer> {
   const filter = filterOf(query);
   if (filter instanceof Answer) return filter;
   const text = (query.get("q") ?? "").trim();
-  const listed = objectsOf(context);
+  const listed = await objectsOf(context);
   if (listed instanceof Answer) return listed;
   const lower = text.toLowerCase();
   const candidates = listed.objects.filter(filter);
@@ -231,7 +250,7 @@ async function rawcodeObjects(
       } satisfies RawcodeAnswer);
     case "known":
     case "not-in-game-data-set": {
-      const listed = objectsOf(context);
+      const listed = await objectsOf(context);
       if (listed instanceof Answer) return listed;
       const objects = listed.objects.filter(
         (object) =>
@@ -244,13 +263,7 @@ async function rawcodeObjects(
           : objects.filter((object) => object.kind === kind);
       const selected =
         candidates.length === 1
-          ? detailOf(
-              candidates[0],
-              context.session.working(),
-              await context.gameData(
-                baseValuesSet(context, listed.gameDataSet),
-              ),
-            )
+          ? detailOf(candidates[0], context.session.working(), listed.gameData)
           : undefined;
       const answer: RawcodeAnswer =
         result.status === "known"
@@ -348,7 +361,7 @@ async function openDefinition(
   if (typeof kind !== "string" || typeof rawcode !== "string") {
     return refuse(400, "bad-request", "The body is { kind, rawcode }.");
   }
-  const listed = objectsOf(context);
+  const listed = await objectsOf(context);
   if (listed instanceof Answer) return listed;
   const definition = listed.objects.find(
     (object) => object.kind === kind && object.rawcode === rawcode,
@@ -374,6 +387,44 @@ async function openDefinition(
     file: definition.file,
     line,
   } satisfies OpenInEditorAnswer);
+}
+
+/**
+ * Answers `GET /api/files?path=`: the bytes of an icon's or a model's file,
+ * resolved in #481's order, the map folder's imports first; a 404 for a
+ * path found nowhere, which the page shows as a placeholder.
+ */
+async function serveFile(
+  context: ApiContext,
+  query: URLSearchParams,
+  response: http.ServerResponse,
+): Promise<void> {
+  const asked = query.get("path");
+  if (asked === null || asked.trim() === "") {
+    send(response, refuse(400, "bad-request", "The query is ?path=<path>."));
+    return;
+  }
+  const resolved = await context.paths.resolve(asked);
+  if (!resolved.found) {
+    send(
+      response,
+      refuse(
+        404,
+        "not-found",
+        `${resolved.path} is neither in the map folder nor in the install.`,
+      ),
+    );
+    return;
+  }
+  const bytes = await resolved.read();
+  response
+    .writeHead(200, {
+      "content-type": "application/octet-stream",
+      "content-length": String(bytes.byteLength),
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+    })
+    .end(bytes);
 }
 
 async function sessionAnswer(context: ApiContext): Promise<Answer> {
@@ -432,14 +483,16 @@ export async function handle(
     } else if (route === "GET /api/events") {
       context.events.open(response, context.session.counts());
     } else if (route === "GET /api/objects") {
-      send(response, listObjects(context, searchParams));
+      send(response, await listObjects(context, searchParams));
     } else if (method === "GET" && pathname.startsWith("/api/objects/")) {
       const rawcode = decodeURIComponent(
         pathname.slice("/api/objects/".length),
       );
       send(response, await rawcodeObjects(context, rawcode, searchParams));
     } else if (route === "GET /api/search") {
-      send(response, search(context, searchParams));
+      send(response, await search(context, searchParams));
+    } else if (route === "GET /api/files") {
+      await serveFile(context, searchParams, response);
     } else if (route === "POST /api/edits") {
       send(response, await edit(context, request));
     } else if (route === "POST /api/open-in-editor") {

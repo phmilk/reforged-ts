@@ -83,6 +83,17 @@ describe("readGameData's fields", () => {
     expect(data.kinds.unit.fields.get("uhpm")?.enumeration).toBeUndefined();
   });
 
+  it("gives an enumeration no field reads by its type, the one the tree's groups are labelled from", async () => {
+    const data = await gameData();
+
+    expect(data.enumeration("unitRace")).toEqual([
+      { value: "human", label: "Human" },
+      { value: "other", label: "Other" },
+      { value: "naga" },
+    ]);
+    expect(data.enumeration("noSuchType")).toBeUndefined();
+  });
+
   it("resolves a WESTRING_ key through the editor strings, the second file's value winning", async () => {
     const data = await gameData("custom-fk", {
       [base("_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt")]:

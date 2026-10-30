@@ -34,6 +34,7 @@ import {
   write,
   type Project,
 } from "./support/studio.js";
+import { FOOTMAN_ICON, IMPORTED_ICON } from "./support/images.js";
 
 afterEach(closeStudios);
 afterAll(removeTemporary);
@@ -100,6 +101,7 @@ describe("the Studio's objects", () => {
       origin: "builtin",
       name: "Paladin",
       builtinName: "Paladin",
+      group: ["Human", "Melee", "Heroes"],
       inGameDataSet: true,
       shared: false,
     });
@@ -248,8 +250,10 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
       type: "string",
       category: "text",
       base: "Footman",
+      baseDisplay: "Footman",
       value: "Militia",
       stored: expect.stringMatching(/^TRIGSTR_\d+$/) as string,
+      display: "Militia",
       modified: true,
     });
     expect(fields.find((row) => row.id === "uhpm")).toEqual({
@@ -258,6 +262,8 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
       type: "int",
       category: "stats",
       base: "420",
+      baseDisplay: "420",
+      display: "420",
       modified: false,
     });
   });
@@ -276,9 +282,30 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
     ]);
     // `amcs` is not in the synthetic install: the modification's own row.
     expect(found.selected?.fields.filter((row) => row.id === "amcs")).toEqual([
-      { id: "amcs", level: 1, value: 80, stored: 80, modified: true },
-      { id: "amcs", level: 2, value: 100, stored: 100, modified: true },
-      { id: "amcs", level: 3, value: 120, stored: 120, modified: true },
+      {
+        id: "amcs",
+        level: 1,
+        value: 80,
+        stored: 80,
+        display: "80",
+        modified: true,
+      },
+      {
+        id: "amcs",
+        level: 2,
+        value: 100,
+        stored: 100,
+        display: "100",
+        modified: true,
+      },
+      {
+        id: "amcs",
+        level: 3,
+        value: 120,
+        stored: 120,
+        display: "120",
+        modified: true,
+      },
     ]);
   });
 
@@ -342,6 +369,153 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
     expect(answer.headers["content-security-policy"]).toContain(
       "default-src 'self'",
     );
+  });
+});
+
+describe("the Studio's tree", () => {
+  it("gives each Built-in object the install holds its group in the World Editor's tree, labelled from the editor data", async () => {
+    const studio = await start(mapProject());
+
+    const listed = (await request(studio, "/api/objects?origin=builtin&all=1"))
+      .body as ObjectsAnswer;
+    const groupOf = (kind: string, rawcode: string) =>
+      listed.objects.find(
+        (object) => object.kind === kind && object.rawcode === rawcode,
+      )?.group;
+    expect(groupOf("unit", "Hpal")).toEqual(["Human", "Melee", "Heroes"]);
+    expect(groupOf("unit", "htow")).toEqual(["Human", "Melee", "Buildings"]);
+    // A race the editor strings do not label keeps its raw value.
+    expect(groupOf("unit", "nmrl")).toEqual(["naga", "Campaign", "Units"]);
+    expect(groupOf("unit", "zcso")).toEqual(["Other", "Melee", "Special"]);
+    expect(groupOf("item", "ratf")).toEqual(["Permanent"]);
+    expect(groupOf("ability", "AHbz")).toEqual(["Human", "Heroes"]);
+    expect(groupOf("buff", "BHbz")).toEqual(["Human", "Effects"]);
+    expect(groupOf("upgrade", "Rhme")).toEqual(["Human"]);
+    // `hkni` is Built-in, but the synthetic install does not hold it.
+    expect(groupOf("unit", "hkni")).toBeUndefined();
+  });
+
+  it("gives each object its icon's path, its own modification over its base's", async () => {
+    const studio = await start(mapProject());
+    const iconOf = async (rawcode: string) =>
+      (
+        (await request(studio, "/api/objects?kind=unit")).body as ObjectsAnswer
+      ).objects.find((object) => object.rawcode === rawcode)?.icon;
+
+    expect(await iconOf("hfoo")).toBe(
+      "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+    );
+    expect(await iconOf("h000")).toBe(
+      "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+    );
+    expect(await iconOf("Hpal")).toBeUndefined();
+
+    await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h000",
+            field: "uico",
+            value: "war3mapImported\\BTNCaptain.blp",
+          },
+        ],
+      },
+    });
+    expect(await iconOf("h000")).toBe("war3mapImported\\BTNCaptain.blp");
+    const detail = (await request(studio, "/api/objects/h000"))
+      .body as RawcodeAnswer;
+    expect(detail).toMatchObject({
+      selected: { icon: "war3mapImported\\BTNCaptain.blp" },
+    });
+  });
+});
+
+describe("the Studio's field table", () => {
+  it("gives each value as the editor shows it beside its raw value: an enumeration's label, an editor string resolved", async () => {
+    const studio = await start(mapProject());
+
+    await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "hfoo",
+            field: "ua1t",
+            value: "pierce",
+          },
+        ],
+      },
+    });
+    const footman = (await request(studio, "/api/objects/hfoo"))
+      .body as RawcodeAnswer;
+    if (footman.status !== "known") throw new Error(footman.status);
+    expect(
+      footman.selected?.fields.find((row) => row.id === "ua1t"),
+    ).toMatchObject({
+      base: "normal",
+      baseDisplay: "Normal",
+      value: "pierce",
+      stored: "pierce",
+      display: "Pierce",
+      modified: true,
+    });
+
+    const tree = (await request(studio, "/api/objects/LTlt"))
+      .body as RawcodeAnswer;
+    if (tree.status !== "known") throw new Error(tree.status);
+    expect(
+      tree.selected?.fields.find((row) => row.id === "bnam"),
+    ).toMatchObject({
+      base: "WESTRING_DEST_TREE",
+      baseDisplay: "Lordaeron Summer Tree Wall",
+      display: "Lordaeron Summer Tree Wall",
+    });
+  });
+});
+
+describe("the Studio's files, /api/files?path=", () => {
+  it("serves an icon from the map folder's imports first, then from the install's art layer", async () => {
+    const project = mapProject();
+    fs.mkdirSync(path.join(project.mapFolder, "war3mapImported"));
+    fs.writeFileSync(
+      path.join(project.mapFolder, "war3mapImported", "BTNCaptain.blp"),
+      IMPORTED_ICON,
+    );
+    const studio = await start(project);
+
+    const imported = await request(
+      studio,
+      `/api/files?path=${encodeURIComponent("war3mapImported\\BTNCaptain.blp")}`,
+    );
+    expect(imported.status).toBe(200);
+    expect(imported.headers["content-type"]).toBe("application/octet-stream");
+    expect(imported.headers["x-content-type-options"]).toBe("nosniff");
+    expect(new Uint8Array(imported.bytes)).toEqual(IMPORTED_ICON);
+
+    // The skin file names a `.blp`; the HD layer holds its `.dds`.
+    const footman = await request(
+      studio,
+      `/api/files?path=${encodeURIComponent("ReplaceableTextures\\CommandButtons\\BTNFootman.blp")}`,
+    );
+    expect(footman.status).toBe(200);
+    expect(new Uint8Array(footman.bytes)).toEqual(FOOTMAN_ICON);
+  });
+
+  it("answers 404 for a path found nowhere, and 400 without a path", async () => {
+    const studio = await start(mapProject());
+
+    const missing = await request(
+      studio,
+      "/api/files?path=ReplaceableTextures/CommandButtons/BTNNowhere.blp",
+    );
+    expect(missing.status).toBe(404);
+    expect((missing.body as ErrorAnswer).error.reason).toBe("not-found");
+
+    const none = await request(studio, "/api/files");
+    expect(none.status).toBe(400);
   });
 });
 

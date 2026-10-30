@@ -17,6 +17,7 @@ import { openStorage } from "./casc/storage.js";
 import { readGameData, type GameData } from "./game-data.js";
 import { findInstall, systemMachine } from "./install.js";
 import { GAME_DATA_SETS } from "./layers.js";
+import { createPathResolver } from "./paths.js";
 import { handle } from "./server/api.js";
 import { EventStreams } from "./server/events.js";
 import { DEFAULT_PORT, listen } from "./server/listen.js";
@@ -177,6 +178,9 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
     return read;
   };
 
+  // The art layer is HD until #839 reads the World Editor's preference.
+  const paths = createPathResolver(storage, { artLayer: "hd", mapFolder });
+
   const session = new Session({ projectRoot, mapFolder });
   const events = new EventStreams();
 
@@ -194,6 +198,7 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         fallbackGameDataSet: GAME_DATA_SETS[0]?.id ?? "custom-fk",
         worldEditorCheck: options.worldEditorCheck,
         env: options.env ?? process.env,
+        paths,
       },
       request,
       response,

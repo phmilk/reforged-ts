@@ -28,7 +28,8 @@ export default defineConfig({
       {
         // The Studio's server, through its HTTP API, and the reader of the
         // game's install, in Node, on synthetic CASC storages and map
-        // folders the tests write in a temporary folder.
+        // folders the tests write in a temporary folder; its built page in
+        // headless Chromium, through Playwright, over the same server.
         test: {
           name: "reforged-studio",
           root: "packages/reforged-studio",

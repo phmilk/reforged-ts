@@ -49,6 +49,18 @@ export interface ListedObject {
   readonly builtinName?: string;
   /** The Object definition that defines it, for the origin `"definition"`. */
   readonly definition?: DefinitionSource;
+  /**
+   * Its group in the World Editor's tree, outermost first, each labelled as
+   * the editor data labels it (`["Human", "Melee", "Heroes"]`): for a
+   * Built-in object the install holds, modified or not; absent otherwise.
+   */
+  readonly group?: readonly string[];
+  /**
+   * The path of its icon (`ReplaceableTextures\CommandButtons\BTNFootman.blp`),
+   * its own modification over its base's value, as the field holds it;
+   * absent when it has none. `GET /api/files?path=` serves it.
+   */
+  readonly icon?: string;
   /** Whether the map's Game data set holds it: false for a Built-in object outside it. */
   readonly inGameDataSet: boolean;
   /** Whether an object of another Object kind has its Rawcode (`B000`). */
@@ -87,10 +99,19 @@ export interface FieldRow {
   readonly level?: number;
   /** Its base's value at that level, as the game's files hold it; absent when they hold none. */
   readonly base?: string;
+  /** Its base's value as the editor shows it: an enumeration's label, a `WESTRING_` key resolved; absent with `base`. */
+  readonly baseDisplay?: string;
   /** Its value in the session's working state, a `TRIGSTR_nnn` resolved; absent when the object does not modify it. */
   readonly value?: number | string;
   /** Its value as the file stores it (`TRIGSTR_004`); absent when the object does not modify it. */
   readonly stored?: number | string;
+  /**
+   * The value shown, as the editor shows it: the working state's value when
+   * the object modifies it, else its base's, an enumeration's label
+   * (`Normal` for `normal`) and a `WESTRING_` key resolved; absent when
+   * there is neither.
+   */
+  readonly display?: string;
   /** Whether the object modifies it. */
   readonly modified: boolean;
 }

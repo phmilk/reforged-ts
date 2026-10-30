@@ -19,6 +19,7 @@ import {
 } from "../../src/index.js";
 import { writeStorage } from "./casc.js";
 import { GAME_FILES } from "./game.js";
+import { FOOTMAN_ICON, FOOTMAN_ICON_FILE } from "./images.js";
 
 const require = createRequire(import.meta.url);
 
@@ -104,9 +105,11 @@ export function mapProject(
   return project;
 }
 
-/** The game's executable of a synthetic install, which the Studio finds the install from. */
+/** The game's executable of a synthetic install, with the Footman's icon, which the Studio finds the install from. */
 export async function syntheticGame(): Promise<string> {
-  const { installDir } = await writeStorage({ files: { ...GAME_FILES } });
+  const { installDir } = await writeStorage({
+    files: { ...GAME_FILES, [FOOTMAN_ICON_FILE]: FOOTMAN_ICON },
+  });
   temporary.push(installDir);
   return path.join(installDir, "_retail_", "x86_64", "Warcraft III.exe");
 }
@@ -142,6 +145,8 @@ export interface Answer {
   readonly status: number;
   readonly headers: http.IncomingHttpHeaders;
   readonly text: string;
+  /** The body's bytes. */
+  readonly bytes: Buffer;
   /** The parsed body; undefined when it is not JSON. */
   readonly body: unknown;
 }
@@ -192,7 +197,8 @@ export function request(
         const chunks: Buffer[] = [];
         response.on("data", (chunk: Buffer) => chunks.push(chunk));
         response.on("end", () => {
-          const text = Buffer.concat(chunks).toString("utf8");
+          const bytes = Buffer.concat(chunks);
+          const text = bytes.toString("utf8");
           let parsed: unknown;
           try {
             parsed = JSON.parse(text);
@@ -203,6 +209,7 @@ export function request(
             status: response.statusCode ?? 0,
             headers: response.headers,
             text,
+            bytes,
             body: parsed,
           });
         });
