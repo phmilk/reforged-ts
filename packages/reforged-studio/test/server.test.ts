@@ -14,6 +14,7 @@ import { afterAll, afterEach, describe, expect, it } from "vitest";
 import {
   InstallNotFoundError,
   startStudio,
+  type AdoptAnswer,
   type ErrorAnswer,
   type ListedObject,
   type ObjectsAnswer,
@@ -24,6 +25,7 @@ import {
 import {
   closeStudios,
   events,
+  link,
   makeTempDir,
   mapProject,
   portOf,
@@ -38,6 +40,8 @@ import { FOOTMAN_ICON, IMPORTED_ICON } from "./support/images.js";
 
 afterEach(closeStudios);
 afterAll(removeTemporary);
+
+type Studio = Awaited<ReturnType<typeof start>>;
 
 /** The Rawcodes of listed objects, each with its kind and origin. */
 const keys = (objects: readonly ListedObject[]): string[] =>
@@ -892,6 +896,228 @@ describe("the Studio's watch of the map folder", () => {
       status: "known",
       selected: { origin: "definition" },
     });
+  });
+});
+
+describe("the Studio's Object adoption", () => {
+  /** The title of a World Editor window holding the map folder, with unsaved edits or not. */
+  const title = (project: Project, modified: boolean): string =>
+    `Warcraft III World Editor - [${project.mapFolder}${modified ? " *" : ""}]`;
+
+  /** Every file of a folder, by path in it, with its bytes. */
+  function filesOf(folder: string): Map<string, Buffer> {
+    return new Map(
+      fs
+        .readdirSync(folder, { recursive: true, withFileTypes: true })
+        .filter((entry) => entry.isFile())
+        .map((entry) => {
+          const file = path.join(entry.parentPath, entry.name);
+          return [path.relative(folder, file), fs.readFileSync(file)];
+        }),
+    );
+  }
+
+  /** The Object manifest's owned entries, as `kind rawcode`. */
+  function owned(project: Project): string[] {
+    const file = path.join(project.root, "object-manifest.json");
+    if (!fs.existsSync(file)) return [];
+    const manifest = JSON.parse(fs.readFileSync(file, "utf8")) as {
+      owned?: { kind: string; rawcode: string }[];
+    };
+    return (manifest.owned ?? []).map(
+      ({ kind, rawcode }) => `${kind} ${rawcode}`,
+    );
+  }
+
+  /** Adopts an object through the API. */
+  const adopt = (studio: Studio, kind: string, rawcode: string) =>
+    request(studio, "/api/adopt", { json: { kind, rawcode } });
+
+  it("adopts a Custom object with reforged-map's Object adoption, leaves the map folder as it was, and shows it as an Object definition", async () => {
+    const project = mapProject();
+    const before = filesOf(project.mapFolder);
+    const studio = await start(project, {
+      worldEditorCheck: { readWindowTitles: () => [title(project, false)] },
+    });
+    const stream = await events(studio);
+    await stream.next("session");
+
+    const answer = await adopt(studio, "unit", "h000");
+    const file = path.join(
+      project.root,
+      "src",
+      "objects",
+      "unit",
+      "Captain_h000.ts",
+    );
+    expect(answer.status).toBe(200);
+    expect(answer.body).toEqual({
+      adopted: {
+        kind: "unit",
+        rawcode: "h000",
+        file,
+        path: "src/objects/unit/Captain_h000.ts",
+      },
+      manifestWritten: true,
+      formatted: false,
+      worldEditor: "open",
+      warnings: [],
+      unsavedEdits: 0,
+      undo: 0,
+      redo: 0,
+    } satisfies AdoptAnswer);
+    expect(fs.readFileSync(file, "utf8")).toContain(
+      "export const Captain_h000 = defineUnit({",
+    );
+    expect(owned(project)).toEqual(["unit h000"]);
+    expect(filesOf(project.mapFolder)).toEqual(before);
+    expect((await stream.next("adopted")).data).toEqual({
+      kind: "unit",
+      rawcode: "h000",
+      path: "src/objects/unit/Captain_h000.ts",
+      unsavedEdits: 0,
+      undo: 0,
+      redo: 0,
+    });
+    stream.close();
+
+    const found = (await request(studio, "/api/objects/h000?kind=unit"))
+      .body as RawcodeAnswer;
+    if (found.status !== "known") throw new Error(found.status);
+    expect(found.selected).toMatchObject({
+      origin: "definition",
+      definition: { path: "src/objects/unit/Captain_h000.ts" },
+      readOnly: { path: "src/objects/unit/Captain_h000.ts" },
+    });
+    const refused = await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h000",
+            field: "uhpm",
+            value: 1,
+          },
+        ],
+      },
+    });
+    expect((refused.body as ErrorAnswer).error.reason).toBe(
+      "object-definition",
+    );
+  });
+
+  it("adopts a modified Built-in object, named as the map names it", async () => {
+    const studio = await start(mapProject());
+
+    const answer = await adopt(studio, "unit", "hfoo");
+    expect(answer.status).toBe(200);
+    expect(answer.body).toMatchObject({
+      adopted: { path: "src/objects/unit/Militia_hfoo.ts" },
+      worldEditor: "no-window",
+    });
+    const found = (await request(studio, "/api/objects/hfoo?kind=unit"))
+      .body as RawcodeAnswer;
+    expect(found).toMatchObject({ selected: { origin: "definition" } });
+  });
+
+  it("formats the definition file with the Map project's Prettier, as objects:adopt does", async () => {
+    const project = mapProject({ ".prettierrc": '{ "useTabs": true }\n' });
+    link(project.root, "prettier");
+    const studio = await start(project);
+
+    const answer = await adopt(studio, "unit", "h000");
+    expect(answer.body).toMatchObject({ formatted: true });
+    const text = fs.readFileSync(
+      path.join(project.root, "src", "objects", "unit", "Captain_h000.ts"),
+      "utf8",
+    );
+    expect(text).toContain('\trawcode: "h000",');
+  });
+
+  it("refuses while the World Editor shows unsaved edits for the map folder, writing nothing", async () => {
+    const project = mapProject();
+    const studio = await start(project, {
+      worldEditorCheck: { readWindowTitles: () => [title(project, true)] },
+    });
+
+    const answer = await adopt(studio, "unit", "h000");
+    expect(answer.status).toBe(409);
+    expect((answer.body as ErrorAnswer).error.reason).toBe(
+      "modified-in-world-editor",
+    );
+    expect(fs.existsSync(path.join(project.root, "src"))).toBe(false);
+    expect(owned(project)).toEqual([]);
+    const found = (await request(studio, "/api/objects/h000?kind=unit"))
+      .body as RawcodeAnswer;
+    expect(found).toMatchObject({ selected: { origin: "custom" } });
+  });
+
+  it("refuses while the Studio holds unsaved edits, keeping them", async () => {
+    const project = mapProject();
+    const studio = await start(project);
+    await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h001",
+            field: "uhpm",
+            value: 700,
+          },
+        ],
+      },
+    });
+
+    const answer = await adopt(studio, "unit", "h000");
+    expect(answer.status).toBe(409);
+    expect((answer.body as ErrorAnswer).error).toEqual({
+      reason: "unsaved-edits",
+      message:
+        "The Studio holds 1 unsaved change, and adoption adopts the object as the map folder holds it on disk: save or undo your edits first, then adopt again.",
+    });
+    expect(fs.existsSync(path.join(project.root, "src"))).toBe(false);
+    expect(
+      ((await request(studio, "/api/session")).body as SessionAnswer)
+        .unsavedEdits,
+    ).toBe(1);
+  });
+
+  it("refuses what Object adoption refuses: an Object definition, an unchanged Built-in object", async () => {
+    const project = mapProject({ "src/objects/units.ts": SERGEANT });
+    const studio = await start(project);
+
+    for (const rawcode of ["h002", "hkni"]) {
+      const answer = await adopt(studio, "unit", rawcode);
+      expect(answer.status).toBe(409);
+      expect((answer.body as ErrorAnswer).error.reason).toBe("not-adoptable");
+    }
+    expect(owned(project)).toEqual([]);
+
+    const bad = await adopt(studio, "unicorn", "h000");
+    expect(bad.status).toBe(400);
+  });
+
+  it("writes the map folder and the code only through reforged-map", () => {
+    // Every Object data write is the editor's save(), adoption is
+    // adoptObjects; the files the server writes itself are its runtime
+    // file, the temporary folder of the encoded files, and the Prettier
+    // formatting of the definition files adoption wrote.
+    const allowed = new Map([
+      ["runtime-file.ts", 2],
+      ["session.ts", 2],
+      ["format.ts", 1],
+    ]);
+    const folder = path.join(import.meta.dirname, "..", "src", "server");
+    for (const name of fs.readdirSync(folder)) {
+      const text = fs.readFileSync(path.join(folder, name), "utf8");
+      const writes =
+        text.match(
+          /\bfs\.(?:writeFile|writeFileSync|rm|rmSync|unlinkSync|renameSync|copyFileSync|cpSync|appendFileSync|mkdirSync|mkdtempSync)\(/g,
+        ) ?? [];
+      expect([name, writes.length]).toEqual([name, allowed.get(name) ?? 0]);
+    }
   });
 });
 

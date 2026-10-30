@@ -4,9 +4,12 @@
  * {@link ErrorAnswer}.
  */
 import type http from "node:http";
+import path from "node:path";
 import {
+  adoptObjects,
   checkWorldEditor,
   ObjectDataWriterError,
+  ObjectDefinitionsError,
   reloadWorldEditor,
   type GameDataSet,
   type ObjectKind,
@@ -18,6 +21,7 @@ import { OBJECT_KINDS } from "../kinds.js";
 import type { PathResolver } from "../paths.js";
 import {
   OBJECT_ORIGINS,
+  type AdoptAnswer,
   type DiffAnswer,
   type Edit,
   type ErrorAnswer,
@@ -36,6 +40,7 @@ import {
 } from "./api-types.js";
 import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
+import { formatDefinitionFiles } from "./format.js";
 import { composeObjects, detailOf, definitionLine } from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
 import { servePage } from "./page.js";
@@ -554,6 +559,90 @@ function reloadRoute(context: ApiContext): Answer {
 }
 
 /**
+ * Answers `POST /api/adopt`: `reforged-map`'s Object adoption of one
+ * object, `adoptObjects`, the function `pnpm objects:adopt` runs, with the
+ * same World Editor check; its definition file formatted with the Map
+ * project's Prettier, as `objects:adopt` formats it. It adopts the object
+ * as the map folder holds it on disk, so it is refused while the Studio
+ * holds unsaved edits. After it the Studio reads the map folder again, its
+ * undo and redo stacks emptied as after any reload, and the object shows as
+ * an Object definition.
+ */
+async function adopt(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const body = await readOptionalJson(request);
+  const { kind, rawcode } = body;
+  if (
+    typeof kind !== "string" ||
+    !isKind(kind) ||
+    typeof rawcode !== "string"
+  ) {
+    return refuse(400, "bad-request", "The body is { kind, rawcode }.");
+  }
+  const { session } = context;
+  const { unsavedEdits } = session.counts();
+  if (unsavedEdits > 0) {
+    return refuse(
+      409,
+      "unsaved-edits",
+      `The Studio holds ${String(unsavedEdits)} unsaved change${unsavedEdits === 1 ? "" : "s"}, and adoption adopts the object as the map folder holds it on disk: save or undo your edits first, then adopt again.`,
+    );
+  }
+  let report;
+  try {
+    report = adoptObjects(
+      context.mapFolder,
+      context.projectRoot,
+      [`${kind}:${rawcode}`],
+      context.worldEditorCheck === undefined
+        ? {}
+        : { worldEditorCheck: context.worldEditorCheck },
+    );
+  } catch (error) {
+    if (
+      error instanceof ObjectDefinitionsError ||
+      error instanceof ObjectDataWriterError
+    ) {
+      return refuse(409, error.reason, error.message);
+    }
+    throw error;
+  }
+  const formatting = await formatDefinitionFiles(
+    context.projectRoot,
+    report.files,
+  );
+  session.reopen();
+  context.resync();
+  const [object] = report.adopted;
+  const shown = path
+    .relative(context.projectRoot, object.file)
+    .split(path.sep)
+    .join("/");
+  const counts = session.counts();
+  context.events.send("adopted", {
+    ...counts,
+    kind: object.kind,
+    rawcode: object.rawcode,
+    path: shown,
+  });
+  return new Answer(200, {
+    adopted: {
+      kind: object.kind,
+      rawcode: object.rawcode,
+      file: object.file,
+      path: shown,
+    },
+    manifestWritten: report.manifestWritten,
+    formatted: formatting.formatted,
+    worldEditor: report.worldEditor,
+    warnings: [...report.warnings, ...formatting.warnings],
+    ...counts,
+  } satisfies AdoptAnswer);
+}
+
+/**
  * Answers `GET /api/diff?against=saved|head`: the unsaved changes, or the
  * changes since the last commit, in the text of `reforged-map`'s
  * `textconv` function.
@@ -767,6 +856,8 @@ export async function handle(
       send(response, await save(context, request));
     } else if (route === "POST /api/reload-world-editor") {
       send(response, reloadRoute(context));
+    } else if (route === "POST /api/adopt") {
+      send(response, await adopt(context, request));
     } else if (route === "GET /api/diff") {
       send(response, diff(context, searchParams));
     } else if (route === "GET /api/icons") {

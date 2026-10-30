@@ -72,7 +72,7 @@ export interface Project {
 }
 
 /** Links `node_modules/<name>` of `root` to this package's installation of it, as a junction (#754). */
-function link(root: string, name: string): void {
+export function link(root: string, name: string): void {
   const linkPath = path.join(root, "node_modules", name);
   fs.mkdirSync(path.dirname(linkPath), { recursive: true });
   fs.symlinkSync(fs.realpathSync(packageFolder(name)), linkPath, "junction");

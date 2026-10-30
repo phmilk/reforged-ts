@@ -1,5 +1,6 @@
 /**
- * One object: its header (icon, name, Rawcode, chips, base, its reset),
+ * One object: its header (icon, name, Rawcode, chips, base, its reset,
+ * "Adopt into code"),
  * its "Differs from <base>" section, and its field table with each field's
  * label, id, display and raw values, each editable field's inline editor
  * (`./edit.tsx`), the rows of a field of levels grouped and collapsible,
@@ -10,6 +11,7 @@
  */
 import { Fragment, useState } from "react";
 import type {
+  AdoptAnswer,
   FieldRow,
   ObjectDetail,
   RawcodeAnswer,
@@ -362,9 +364,19 @@ export function ObjectPage(props: {
   readonly onUnpin: (object: ObjectDetail) => void;
   /** Told the session's counts after an edit or a reset the server took. */
   readonly onChanged: (counts: SessionCounts) => void;
+  /** Told the answer of an adoption the server took. */
+  readonly onAdopted: (answer: AdoptAnswer) => void;
 }) {
-  const { answer, selected, compared, pinned, onPin, onUnpin, onChanged } =
-    props;
+  const {
+    answer,
+    selected,
+    compared,
+    pinned,
+    onPin,
+    onUnpin,
+    onChanged,
+    onAdopted,
+  } = props;
   const [hideAtBase, setHideAtBase] = useState(false);
   const [resetError, setResetError] = useState<string>();
   const others = answer.objects
@@ -403,6 +415,19 @@ export function ObjectPage(props: {
       (counts) => {
         setResetError(undefined);
         onChanged(counts);
+      },
+      (reason: unknown) => {
+        setResetError(
+          reason instanceof Error ? reason.message : String(reason),
+        );
+      },
+    );
+  };
+  const adopt = () => {
+    api.adopt(kind, rawcode).then(
+      (adopted) => {
+        setResetError(undefined);
+        onAdopted(adopted);
       },
       (reason: unknown) => {
         setResetError(
@@ -482,6 +507,15 @@ export function ObjectPage(props: {
             {selected.origin === "custom"
               ? "Reset to base"
               : "Reset to the Built-in object"}
+          </button>
+        )}
+        {(selected.origin === "custom" || selected.origin === "modified") && (
+          <button
+            type="button"
+            onClick={adopt}
+            title="Hand this object to the code: an Object definition under src/objects/, as pnpm objects:adopt writes it"
+          >
+            Adopt into code
           </button>
         )}
         <button type="button" onClick={onPin} aria-pressed={pinned}>

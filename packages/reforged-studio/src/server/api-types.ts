@@ -383,7 +383,9 @@ export interface IconsAnswer {
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`,
  * `"nothing-to-undo"`, `"nothing-to-redo"`, `"no-world-editor"`,
- * `"reload-failed"`.
+ * `"reload-failed"`, `"unsaved-edits"`; and, for an adoption,
+ * `reforged-map`'s `ObjectDefinitionsError` reasons (`"not-adoptable"`,
+ * `"target-exists"`).
  */
 export interface ErrorAnswer {
   /** The refusal. */
@@ -393,6 +395,40 @@ export interface ErrorAnswer {
     /** The Object definition's file, for `"object-definition"`. */
     readonly file?: string;
   };
+}
+
+/** The body of `POST /api/adopt`: the Custom object or modified Built-in object of the map folder to hand to the code. */
+export interface AdoptRequest {
+  /** The object's Object kind. */
+  readonly kind: ObjectKind;
+  /** The object's Rawcode. */
+  readonly rawcode: string;
+}
+
+/**
+ * `POST /api/adopt`'s answer: `reforged-map`'s Object adoption wrote the
+ * object's definition file and its entry in the Object manifest, and the
+ * Studio read the map folder again, so that the object shows as an Object
+ * definition.
+ */
+export interface AdoptAnswer extends SessionCounts {
+  /** The object adopted, with its new definition file. */
+  readonly adopted: {
+    readonly kind: ObjectKind;
+    readonly rawcode: string;
+    /** The definition file, an absolute path. */
+    readonly file: string;
+    /** The definition file relative to the Map project's root, with `/`. */
+    readonly path: string;
+  };
+  /** Whether the Object manifest was written, which adoption does only when its bytes change. */
+  readonly manifestWritten: boolean;
+  /** Whether the definition file was formatted with the Map project's Prettier: false when the Map project has none. */
+  readonly formatted: boolean;
+  /** What the World Editor showed of the map folder before the first write. */
+  readonly worldEditor: WorldEditorState | undefined;
+  /** Adoption's warnings, each one line, such as a field adopted through the raw escape or a formatting that failed. */
+  readonly warnings: readonly string[];
 }
 
 /** `GET /api/session`: the session's map folder, game and counts. */
@@ -428,7 +464,8 @@ export interface OpenInEditorAnswer {
  * connecting; `reloaded` when the map folder changed on disk with no
  * unsaved edit and the Studio read it again; `changed-on-disk` when it
  * changed with unsaved edits, which it keeps and does not read over;
- * `saved` when the Studio saved the map folder.
+ * `saved` when the Studio saved the map folder; `adopted` when it adopted
+ * an object into the code and read the map folder again.
  */
 export interface StudioEvents {
   readonly session: SessionCounts;
@@ -437,4 +474,10 @@ export interface StudioEvents {
     readonly files: readonly string[];
   };
   readonly saved: SessionCounts & { readonly written: readonly string[] };
+  readonly adopted: SessionCounts & {
+    readonly kind: ObjectKind;
+    readonly rawcode: string;
+    /** The definition file relative to the Map project's root, with `/`. */
+    readonly path: string;
+  };
 }
