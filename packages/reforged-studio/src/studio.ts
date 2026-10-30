@@ -12,6 +12,7 @@ import {
   STUDIO_RUNTIME_FORMAT,
   type StudioRuntimeFile,
   type WorldEditorCheckOptions,
+  type WorldEditorReloadOptions,
 } from "reforged-map";
 import { openStorage } from "./casc/storage.js";
 import { readGameData, type GameData } from "./game-data.js";
@@ -44,7 +45,9 @@ export interface StudioOptions {
   gameExecutable?: string;
   /**
    * The World Editor's executable, which the reload after a save starts
-   * (`-launch -loadfile`): kept for the save, which comes with #834.
+   * (`-launch -loadfile`), with `reforged-map`'s `reloadWorldEditor`. When
+   * left out, a save that would offer the reload says the executable is
+   * missing.
    */
   worldEditorExecutable?: string;
   /** The first port tried, {@link DEFAULT_PORT} when left out: the next free one above it is taken when it is not free; 0 takes any free port. */
@@ -57,6 +60,12 @@ export interface StudioOptions {
    * in tests; the system's check when left out.
    */
   worldEditorCheck?: WorldEditorCheckOptions;
+  /**
+   * The World Editor reload's options (`reforged-map`'s
+   * `WorldEditorReloadOptions`), such as a stand-in launcher in tests; the
+   * system's when left out.
+   */
+  worldEditorReload?: WorldEditorReloadOptions;
   /** The environment "Open in editor" reads `PATH`, `VISUAL` and `EDITOR` from; `process.env` when left out. */
   env?: EditorEnvironment;
 }
@@ -185,6 +194,12 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
   const events = new EventStreams();
 
   let port = 0;
+  // The watch's resync, once the watch runs: after the Studio's own save.
+  let resync = (): void => undefined;
+  const worldEditorExecutable =
+    options.worldEditorExecutable === undefined
+      ? undefined
+      : path.resolve(options.worldEditorExecutable);
   const server = http.createServer((request, response) => {
     void handle(
       {
@@ -197,6 +212,11 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         gameData: gameDataOf,
         fallbackGameDataSet: GAME_DATA_SETS[0]?.id ?? "custom-fk",
         worldEditorCheck: options.worldEditorCheck,
+        worldEditorExecutable,
+        worldEditorReload: options.worldEditorReload,
+        resync: () => {
+          resync();
+        },
         env: options.env ?? process.env,
         paths,
       },
@@ -245,6 +265,10 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
       return true;
     },
   );
+
+  resync = () => {
+    watch.resync();
+  };
 
   if (options.open === true) openBrowser(`${url}/objects`);
 

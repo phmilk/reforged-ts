@@ -171,10 +171,22 @@ export function loadBuiltins(projectRoot: string): BuiltinsResult {
 }
 
 /**
- * Resolves reforged-builtins from `projectRoot`, as {@link builtinsFiles},
- * and reads the field table of the Game version its kind entry points
- * resolve to, next to its index, in format 1 or 2. An installation of
- * reforged-builtins older than its field table has none.
+ * Reads the field table of `reforged-builtins`: where each field of each
+ * Object kind goes, its value type, whether it is localizable, and, in
+ * format 2, its metadata type, its category and the enumerations.
+ *
+ * @remarks
+ * `reforged-builtins` is resolved from `projectRoot`, as the Object data
+ * editor resolves it, and the field table read is the one of the Game
+ * version its kind entry points resolve to, next to its index, in format 1
+ * or 2. An installation of `reforged-builtins` older than its field table
+ * has none. A tool that edits through `openObjectData`, such as the
+ * Studio, reads it to offer each field the input its type takes.
+ *
+ * @param projectRoot - A folder of the Map project, from which
+ *   `reforged-builtins` is resolved as Node resolves a package.
+ * @returns The field table, or why there is none, in words an author reads
+ *   after "reforged-builtins ".
  */
 export function loadFieldTable(projectRoot: string): FieldTableResult {
   const result = loadArtefact(

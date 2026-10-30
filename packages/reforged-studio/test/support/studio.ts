@@ -90,13 +90,22 @@ export function write(
   }
 }
 
-/** A Map project in a temporary folder: the fixture as `maps/test.w3m`, `files` under its root. */
+/** The fixture map folder of a Custom unit, `h000`, whose name and tooltip are translated into ptBR and deDE under `_Locales/`. */
+export const LOCALES_FIXTURE = path.join(
+  packageFolder("reforged-map"),
+  "test",
+  "fixtures",
+  "editor-locales.w3m",
+);
+
+/** A Map project in a temporary folder: a fixture, {@link FIXTURE} by default, as `maps/test.w3m`, `files` under its root. */
 export function mapProject(
   files: Readonly<Record<string, string>> = {},
+  fixture: string = FIXTURE,
 ): Project {
   const root = makeTempDir("project");
   const mapFolder = path.join(root, "maps", "test.w3m");
-  fs.cpSync(FIXTURE, mapFolder, { recursive: true });
+  fs.cpSync(fixture, mapFolder, { recursive: true });
   fs.writeFileSync(path.join(root, "package.json"), '{ "private": true }\n');
   link(root, "reforged-builtins");
   link(root, "typescript");

@@ -7,25 +7,34 @@ import type http from "node:http";
 import {
   checkWorldEditor,
   ObjectDataWriterError,
+  reloadWorldEditor,
   type GameDataSet,
   type ObjectKind,
   type WorldEditorCheckOptions,
+  type WorldEditorReloadOptions,
 } from "reforged-map";
 import type { GameData } from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
 import type { PathResolver } from "../paths.js";
 import {
   OBJECT_ORIGINS,
+  type DiffAnswer,
   type Edit,
   type ErrorAnswer,
+  type IconsAnswer,
   type ListedObject,
   type ObjectOrigin,
   type ObjectsAnswer,
   type OpenInEditorAnswer,
   type RawcodeAnswer,
+  type ReloadAnswer,
+  type ReloadOffer,
+  type SaveAnswer,
+  type SaveRefusedAnswer,
   type SearchAnswer,
   type SessionAnswer,
 } from "./api-types.js";
+import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
 import { composeObjects, detailOf, definitionLine } from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
@@ -52,6 +61,12 @@ export interface ApiContext {
   /** The Game data set base values are read from when the map's is unknown. */
   readonly fallbackGameDataSet: string;
   readonly worldEditorCheck: WorldEditorCheckOptions | undefined;
+  /** The World Editor's executable, which the reload after a save starts; undefined when the Studio was given none. */
+  readonly worldEditorExecutable: string | undefined;
+  /** The reload's options, such as a stand-in launcher in tests. */
+  readonly worldEditorReload: WorldEditorReloadOptions | undefined;
+  /** Takes the watched files' stamps as they are, after the Studio wrote or read the map folder itself. */
+  readonly resync: () => void;
   readonly env: EditorEnvironment;
   /** The resolver of icons' and models' paths, the map folder's imports first. */
   readonly paths: PathResolver;
@@ -92,6 +107,11 @@ function send(response: http.ServerResponse, answer: Answer): void {
 
 /** Reads a request's JSON body. */
 async function readJson(request: http.IncomingMessage): Promise<unknown> {
+  return JSON.parse(await readText(request)) as unknown;
+}
+
+/** Reads a request's body as UTF-8 text, at most {@link BODY_LIMIT} bytes. */
+async function readText(request: http.IncomingMessage): Promise<string> {
   const chunks: Buffer[] = [];
   let size = 0;
   for await (const chunk of request as AsyncIterable<Buffer>) {
@@ -99,7 +119,7 @@ async function readJson(request: http.IncomingMessage): Promise<unknown> {
     if (size > BODY_LIMIT) throw new SyntaxError("The body is too large.");
     chunks.push(chunk);
   }
-  return JSON.parse(Buffer.concat(chunks).toString("utf8")) as unknown;
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 const isKind = (value: string): value is ObjectKind =>
@@ -263,7 +283,13 @@ async function rawcodeObjects(
           : objects.filter((object) => object.kind === kind);
       const selected =
         candidates.length === 1
-          ? detailOf(candidates[0], context.session.working(), listed.gameData)
+          ? detailOf(candidates[0], {
+              working: context.session.working(),
+              saved: context.session.saved,
+              gameData: listed.gameData,
+              fieldTable: context.session.fieldTable,
+              objects: listed.objects,
+            })
           : undefined;
       const answer: RawcodeAnswer =
         result.status === "known"
@@ -293,6 +319,9 @@ function editProblem(value: unknown): string | undefined {
     case "setField":
       if (typeof edit.value !== "string" && typeof edit.value !== "number") {
         return "setField's value is a number or a string";
+      }
+      if ("translations" in edit) {
+        return "a field's translations are read-only: setField sets its default text, and its translations are kept";
       }
     // falls through
     case "removeField":
@@ -329,8 +358,19 @@ async function edit(
     if (problem !== undefined)
       return refuse(400, "bad-request", `Not an edit: ${problem}.`);
   }
-  try {
+  return applied(context, () => {
     context.session.edit(edits as Edit[]);
+  });
+}
+
+/**
+ * Runs a change of the working state and answers the counts, or the
+ * refusal: the session's (409, 503 while the lookup is unavailable) or the
+ * editor's (422).
+ */
+function applied(context: ApiContext, change: () => void): Answer {
+  try {
+    change();
   } catch (error) {
     if (error instanceof EditRefusedError) {
       return refuse(
@@ -346,6 +386,218 @@ async function edit(
     throw error;
   }
   return new Answer(200, context.session.counts());
+}
+
+/** Reads a request's JSON body, an empty body as an empty object. */
+async function readOptionalJson(
+  request: http.IncomingMessage,
+): Promise<Record<string, unknown>> {
+  const text = (await readText(request)).trim();
+  if (text === "") return {};
+  const body = JSON.parse(text) as unknown;
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    throw new SyntaxError("The body is a JSON object.");
+  }
+  return body as Record<string, unknown>;
+}
+
+/**
+ * Answers `POST /api/reset`: the edits that put a field back to its base,
+ * or a whole object back to its base (a Custom object) or to the Built-in
+ * object (a modified Built-in object), as one undo step.
+ */
+async function reset(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const body = await readOptionalJson(request);
+  const { kind, rawcode, field, level, dataPointer } = body;
+  if (
+    typeof kind !== "string" ||
+    !isKind(kind) ||
+    typeof rawcode !== "string" ||
+    (field !== undefined && typeof field !== "string") ||
+    (level !== undefined && typeof level !== "number") ||
+    (dataPointer !== undefined && typeof dataPointer !== "number")
+  ) {
+    return refuse(
+      400,
+      "bad-request",
+      "The body is { kind, rawcode, field?, level?, dataPointer? }.",
+    );
+  }
+  return applied(context, () => {
+    const edits = context.session.resetEdits({
+      kind,
+      rawcode,
+      ...(field !== undefined && { field }),
+      ...(level !== undefined && { level }),
+      ...(dataPointer !== undefined && { dataPointer }),
+    });
+    if (edits.length > 0) context.session.edit(edits);
+  });
+}
+
+/** Starts the World Editor on the map folder with `-launch -loadfile`; the reason it could not, or undefined. */
+function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
+  const executable = context.worldEditorExecutable;
+  if (executable === undefined) {
+    return {
+      reason: "no-world-editor",
+      message:
+        "The Studio was started without the World Editor's executable: start it with worldEditorExecutable (--world-editor) to reload the map there.",
+    };
+  }
+  try {
+    reloadWorldEditor(context.mapFolder, executable, context.worldEditorReload);
+  } catch (error) {
+    return {
+      reason: "reload-failed",
+      message: error instanceof Error ? error.message : String(error),
+    };
+  }
+  return undefined;
+}
+
+/**
+ * Answers `POST /api/save`: the editor's `save()` with the World Editor
+ * check on. Saved, it offers the reload when the World Editor holds the map
+ * folder without unsaved edits and files were written, or reloads at once
+ * when the request asks. Refused, every unsaved edit is kept; after
+ * `"changed-on-disk"` the map folder is read again and the unsaved edits
+ * replayed on top.
+ */
+async function save(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const body = await readOptionalJson(request);
+  const { session } = context;
+  let result;
+  try {
+    result = session.save(context.worldEditorCheck ?? true);
+  } catch (error) {
+    if (!(error instanceof ObjectDataWriterError)) throw error;
+    if (error.reason === "changed-on-disk") {
+      const replay = session.replayOnDisk();
+      context.resync();
+      return new Answer(409, {
+        error: {
+          reason: error.reason,
+          message: `${error.file ?? "A file"} changed on disk since the Studio read the map folder (a World Editor save?): nothing was written. The Studio read the map folder again and put your unsaved edits on top: review them, then save again.`,
+          ...(error.file !== undefined && { file: error.file }),
+        },
+        ...session.counts(),
+        replayed: replay.replayed,
+        notReplayed: replay.notReplayed,
+      } satisfies SaveRefusedAnswer);
+    }
+    return new Answer(409, {
+      error: { reason: error.reason, message: error.message },
+      ...session.counts(),
+    } satisfies SaveRefusedAnswer);
+  }
+  context.resync();
+  let reload: ReloadOffer = "none";
+  let reloadError: string | undefined;
+  if (result.worldEditor === "open" && result.written.length > 0) {
+    if (context.worldEditorExecutable === undefined) reload = "no-executable";
+    else if (body.reloadWorldEditor === true) {
+      const failed = reloadNow(context);
+      reload = failed === undefined ? "sent" : "offered";
+      reloadError = failed?.message;
+    } else reload = "offered";
+  }
+  const counts = session.counts();
+  context.events.send("saved", { ...counts, written: result.written });
+  return new Answer(200, {
+    written: result.written,
+    worldEditor: result.worldEditor,
+    reload,
+    ...(reloadError !== undefined && { reloadError }),
+    ...counts,
+  } satisfies SaveAnswer);
+}
+
+/**
+ * Answers `POST /api/reload-world-editor`: `reloadWorldEditor(mapFolder,
+ * worldEditorExecutable)`, refused while the World Editor shows unsaved
+ * edits for the map folder, which the reload would drop.
+ */
+function reloadRoute(context: ApiContext): Answer {
+  let state;
+  try {
+    state = checkWorldEditor(context.mapFolder, context.worldEditorCheck);
+  } catch (error) {
+    return refuse(
+      409,
+      "world-editor-check-failed",
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+  if (state === "modified") {
+    return refuse(
+      409,
+      "modified-in-world-editor",
+      `The World Editor shows unsaved edits for ${context.mapFolder}: reloading would drop them. Save or discard them there first.`,
+    );
+  }
+  const failed = reloadNow(context);
+  if (failed !== undefined) {
+    return refuse(
+      failed.reason === "no-world-editor" ? 409 : 500,
+      failed.reason,
+      failed.message,
+    );
+  }
+  return new Answer(200, { reloaded: true } satisfies ReloadAnswer);
+}
+
+/**
+ * Answers `GET /api/diff?against=saved|head`: the unsaved changes, or the
+ * changes since the last commit, in the text of `reforged-map`'s
+ * `textconv` function.
+ */
+function diff(context: ApiContext, query: URLSearchParams): Answer {
+  const against = query.get("against") ?? "saved";
+  if (against !== "saved" && against !== "head") {
+    return refuse(400, "bad-request", "The query is ?against=saved|head.");
+  }
+  const files = context.session.files();
+  const names = [...files.saved.keys(), ...files.working.keys()];
+  if (against === "saved") {
+    return new Answer(200, {
+      against,
+      available: true,
+      files: diffFiles((file) => files.saved.get(file), files.working, names),
+    } satisfies DiffAnswer);
+  }
+  const head = headFiles(context.mapFolder, names);
+  if (head === undefined) {
+    return new Answer(200, {
+      against,
+      available: false,
+      reason: `${context.mapFolder} is not in a git repository: there is no last commit to compare with.`,
+    } satisfies DiffAnswer);
+  }
+  return new Answer(200, {
+    against,
+    available: true,
+    files: diffFiles(head, files.working, names),
+  } satisfies DiffAnswer);
+}
+
+/** Answers `GET /api/icons`: every icon's path the objects of every kind use, for the icon picker. */
+async function icons(context: ApiContext): Promise<Answer> {
+  const listed = await objectsOf(context);
+  if (listed instanceof Answer) return listed;
+  const paths = new Set<string>();
+  for (const object of listed.objects) {
+    if (object.icon !== undefined) paths.add(object.icon);
+  }
+  return new Answer(200, {
+    icons: [...paths].sort(),
+  } satisfies IconsAnswer);
 }
 
 async function openDefinition(
@@ -495,6 +747,30 @@ export async function handle(
       await serveFile(context, searchParams, response);
     } else if (route === "POST /api/edits") {
       send(response, await edit(context, request));
+    } else if (route === "POST /api/reset") {
+      send(response, await reset(context, request));
+    } else if (route === "POST /api/undo") {
+      send(
+        response,
+        applied(context, () => {
+          context.session.undoStep();
+        }),
+      );
+    } else if (route === "POST /api/redo") {
+      send(
+        response,
+        applied(context, () => {
+          context.session.redoStep();
+        }),
+      );
+    } else if (route === "POST /api/save") {
+      send(response, await save(context, request));
+    } else if (route === "POST /api/reload-world-editor") {
+      send(response, reloadRoute(context));
+    } else if (route === "GET /api/diff") {
+      send(response, diff(context, searchParams));
+    } else if (route === "GET /api/icons") {
+      send(response, await icons(context));
     } else if (route === "POST /api/open-in-editor") {
       send(response, await openDefinition(context, request));
     } else if (pathname.startsWith("/api/")) {
