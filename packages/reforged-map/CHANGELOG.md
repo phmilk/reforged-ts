@@ -1,5 +1,20 @@
 # reforged-map
 
+## 1.0.0-alpha.9
+
+### Minor Changes
+
+- [#846](https://github.com/phmilk/reforged-ts/pull/846) [`28563b5`](https://github.com/phmilk/reforged-ts/commit/28563b5d5a7c61ec15ac367cfa8d7d92915b8e41) Thanks [@wyller](https://github.com/wyller)! - `reforged-map`: the Rawcode lookup lists every object it knows, with the map's Game data set (`list()`), and names the files it reads (`files()`), for a tool that shows and watches them all, such as the Studio. `reforged-builtins`: its README says the generator reaches `reforged-studio` through the workspace root; nothing changes for a Map project.
+
+- [#848](https://github.com/phmilk/reforged-ts/pull/848) [`58495a5`](https://github.com/phmilk/reforged-ts/commit/58495a558138a031d7e12fdea9f06451663d04ba) Thanks [@wyller](https://github.com/wyller)! - The TypeScript plugin's hover links a Rawcode literal and a Rawcode constant to its object in the Studio while one runs on the map folder, read from the Studio's runtime file `.reforged-studio.json` at the Map project's root; with none running, it says that `pnpm studio` opens the object. `readLiveStudio`, `STUDIO_RUNTIME_FILE`, `STUDIO_RUNTIME_FORMAT` and `StudioRuntimeFile` read that file for any other tool.
+
+- [#850](https://github.com/phmilk/reforged-ts/pull/850) [`6224cab`](https://github.com/phmilk/reforged-ts/commit/6224cabbcdf4e57fa4834bd07b7358bbae128337) Thanks [@wyller](https://github.com/wyller)! - `loadFieldTable(projectRoot)` reads `reforged-builtins`' field table as the Object data editor does, with its `FieldTable`, `FieldEntry` and `FieldTableResult` types, for a tool that edits through the editor, such as the Studio, which offers each field the input its type and category take.
+
+### Patch Changes
+
+- Updated dependencies [[`28563b5`](https://github.com/phmilk/reforged-ts/commit/28563b5d5a7c61ec15ac367cfa8d7d92915b8e41)]:
+  - reforged-builtins@1.0.0-alpha.8
+
 ## 1.0.0-alpha.8
 
 ### Patch Changes
