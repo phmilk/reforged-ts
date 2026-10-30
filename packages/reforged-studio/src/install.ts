@@ -4,8 +4,14 @@
  * `WC3_EXECUTABLE` environment variable, else the well-known install
  * folders. The install is the folder that holds `.build.info`: the nearest
  * one at or above the argument or the executable (the executable sits in
- * `<install>/_retail_/x86_64`).
+ * `<install>/_retail_/x86_64`). The `reforged-builtins` generator and the
+ * real-install check (`./check-install.ts`) find it so.
+ *
+ * `isWsl` mirrors the Probe runner's (`probe/src/machine.ts`): the packages
+ * share no code, and `reforged-builtins`' `test/probe-parity.test.ts` pins
+ * the pair to the same behaviour.
  */
+import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { BUILD_INFO_FILE } from "./casc/storage.js";
 
@@ -110,3 +116,31 @@ function installAbove(
     if (pathOf.dirname(folder) === folder) return undefined;
   }
 }
+
+/** Whether Linux runs under WSL: its distribution variable, else `/proc/version`. */
+export function isWsl(
+  platform: NodeJS.Platform,
+  env: Readonly<Record<string, string | undefined>>,
+  procVersion: string | undefined,
+): boolean {
+  if (platform !== "linux") return false;
+  if (env.WSL_DISTRO_NAME !== undefined && env.WSL_DISTRO_NAME !== "") {
+    return true;
+  }
+  return /microsoft/i.test(procVersion ?? "");
+}
+
+/** The real machine. */
+export const systemMachine: InstallMachine = {
+  platform: process.platform,
+  wsl: isWsl(
+    process.platform,
+    process.env,
+    statSync("/proc/version", { throwIfNoEntry: false })?.isFile()
+      ? readFileSync("/proc/version", "utf8")
+      : undefined,
+  ),
+  env: process.env,
+  isFile: (file) =>
+    statSync(file, { throwIfNoEntry: false })?.isFile() ?? false,
+};

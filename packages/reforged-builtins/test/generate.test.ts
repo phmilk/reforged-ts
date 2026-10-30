@@ -6,9 +6,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { readFully } from "../src/casc/storage.js";
 import { main, typingsBuild } from "../src/cli/generate.js";
-import type { InstallMachine } from "../src/install.js";
 import {
   base,
   contentKey,
@@ -30,7 +28,8 @@ import {
   writeStorage,
   type StorageOptions,
   type SyntheticUnit,
-} from "./support/casc.js";
+} from "../../reforged-studio/test/support/casc.js";
+import type { InstallMachine } from "reforged-studio";
 
 /**
  * A machine with no game where the lookup would look on its own. Its
@@ -45,7 +44,7 @@ const NO_GAME: InstallMachine = {
 };
 
 /**
- * The Build the synthetic installs are on (`test/support/casc.ts`), which
+ * The Build the synthetic installs are on (`reforged-studio`'s `test/support/casc.ts`), which
  * `run` adopts in place of reforged-types' own unless told otherwise.
  */
 const SYNTHETIC_BUILD = "3.0.0.24268";
@@ -312,27 +311,6 @@ return {
     );
   });
 
-  it("reads files in plain, zlib and mixed BLTE frames alike", async () => {
-    const all = (framing: string) => {
-      const options = unitStorage(HUMAN, CAMPAIGN);
-      return {
-        ...options,
-        framing: Object.fromEntries(
-          Object.keys(options.files).map((p) => [p, framing]),
-        ),
-      };
-    };
-    const outputs = [];
-    for (const framing of ["plain", "zlib", "mixed"]) {
-      const storage = await writeStorage(all(framing));
-      const outDir = await tempDir("out");
-      expect((await run(storage.installDir, outDir)).status).toBe(0);
-      outputs.push(await readFile(join(outDir, "3.0.0", "index.json"), "utf8"));
-    }
-    expect(outputs[1]).toBe(outputs[0]);
-    expect(outputs[2]).toBe(outputs[0]);
-  });
-
   it("writes the same bytes when the inputs are unchanged", async () => {
     const storage = await writeStorage(unitStorage(HUMAN, CAMPAIGN));
     const outDir = await tempDir("out");
@@ -482,26 +460,6 @@ return {
     ).toContain('"Ansp": {"kind":"unit","name":"Spy","race":"creeps"');
   });
 
-  it("finds every file of a storage whose encoding file spans many pages", async () => {
-    const filler = Object.fromEntries(
-      Array.from({ length: 120 }, (_, i) => [
-        `War3.w3mod:Filler/f${String(i)}.txt`,
-        `filler ${String(i)}`,
-      ]),
-    );
-    const storage = await writeStorage(
-      unitStorage(HUMAN, CAMPAIGN, { files: filler }),
-    );
-    const outDir = await tempDir("out");
-
-    const { status, stdout } = await run(storage.installDir, outDir);
-
-    expect(status).toBe(0);
-    expect(stdout).toContain(
-      ": 5 units, 0 items, 0 abilities, 0 buffs, 0 destructables, 0 doodads and 0 upgrades.\n",
-    );
-  });
-
   it("skips the -- that pnpm passes before the arguments", async () => {
     const storage = await writeStorage(unitStorage(HUMAN));
     const outDir = await tempDir("out");
@@ -565,37 +523,6 @@ describe("the Build of an install", () => {
     expect(
       JSON.parse(await readFile(join(outDir, "3.0.0", "index.json"), "utf8")),
     ).toMatchObject({ build: "3.0.0.24268" });
-  });
-});
-
-describe("readFully", () => {
-  it("reads on after a short read, and stops at the end of the file", async () => {
-    const content = Uint8Array.from({ length: 10 }, (_, i) => i + 1);
-    const calls: number[] = [];
-    // A file that returns at most 3 bytes per read.
-    const file = {
-      read: (
-        buffer: Uint8Array,
-        offset: number,
-        length: number,
-        position: number,
-      ) => {
-        calls.push(position);
-        const chunk = content.subarray(
-          position,
-          Math.min(position + Math.min(length, 3), content.byteLength),
-        );
-        buffer.set(chunk, offset);
-        return Promise.resolve({ bytesRead: chunk.byteLength });
-      },
-    };
-
-    const whole = new Uint8Array(8);
-    expect(await readFully(file, whole, 2)).toBe(8);
-    expect([...whole]).toEqual([3, 4, 5, 6, 7, 8, 9, 10]);
-    expect(calls).toEqual([2, 5, 8]);
-
-    expect(await readFully(file, new Uint8Array(8), 6)).toBe(4);
   });
 });
 
@@ -698,17 +625,6 @@ describe("builtins:generate refuses, writing nothing", () => {
     );
   });
 
-  it("a BLTE frame of a mode other than plain and zlib, naming the file", async () => {
-    const { stderr } = await refused({
-      ...unitStorage(HUMAN),
-      framing: { [UNIT_DATA]: "4" },
-    });
-
-    expect(stderr).toContain(
-      `- error: ${UNIT_DATA}: BLTE frame 0 has mode "4"; the reader decodes "N" (plain) and "Z" (zlib) only.\n`,
-    );
-  });
-
   it("a file the root does not list, naming its path", async () => {
     const files = Object.fromEntries(
       Object.entries(unitStorage(HUMAN).files).filter(
@@ -719,18 +635,6 @@ describe("builtins:generate refuses, writing nothing", () => {
 
     expect(stderr).toContain(
       `- error: ${UNIT_META_DATA} is not in the root of the storage at ${storage.installDir}.\n`,
-    );
-  });
-
-  it("a content key the encoding file does not resolve, naming the path", async () => {
-    const options = unitStorage(HUMAN);
-    const { stderr, storage } = await refused({
-      ...options,
-      notInEncoding: [UNIT_DATA],
-    });
-
-    expect(stderr).toContain(
-      `- error: ${UNIT_DATA}: its content key ${storage.contentKeys[UNIT_DATA]} is in no entry of the encoding file.\n`,
     );
   });
 

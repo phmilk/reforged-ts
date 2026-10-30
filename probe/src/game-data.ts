@@ -8,7 +8,7 @@
  * and the Template's: a field another format adds or drops before them
  * would move them.
  */
-import VERSIONS from "../../packages/reforged-builtins/src/game-data-versions.json" with { type: "json" };
+import VERSIONS from "../../packages/reforged-studio/src/game-data-versions.json" with { type: "json" };
 import { AuthorError } from "./errors.js";
 
 /** The Game Data Sets, by the index the file stores, as the World Editor of 3.0 lists them in its map options. */
@@ -18,7 +18,8 @@ export type GameDataSet = (typeof GAME_DATA_SETS)[number];
 /**
  * The Game Data Versions, by the index the file stores, which is their
  * value: Reign of Chaos, The Frozen Throne, Forsaken Kingdom. The list is
- * reforged-builtins' (#620), whose generator reads it too.
+ * reforged-studio's (#620), whose layers the reforged-builtins generator
+ * reads too.
  */
 export const GAME_DATA_VERSIONS: readonly string[] = VERSIONS.toSorted(
   (a, b) => a.version - b.version,

@@ -97,6 +97,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
+    "reforged-studio": "workspace:^",
     "reforged-test": "workspace:^",
     "reforged-ts": "workspace:^",
     "reforged-types": "workspace:^",

@@ -1,21 +1,23 @@
 /**
  * `builtins:generate [--install <folder>] [--out <folder>] [--client-build
- * <Build>]`: finds the install (`../install.ts`), refuses one whose Build is
- * not `reforged-types`' `reforged.patch` (or `--client-build`, a later Build
- * of its Game version accepted in its place), then writes the index and the
- * provenance file of its Game version, and the artefacts emitted from the
- * index, under `--out` (the package root by default). Prints the counts,
- * then the warnings; on any error it writes nothing, prints the errors and
- * exits 1. A bad argument exits 2. A leading `--`, which
- * `pnpm builtins:generate -- …` passes through, is skipped.
+ * <Build>]`: finds the install (`reforged-studio`'s `findInstall`), refuses
+ * one whose Build is not `reforged-types`' `reforged.patch` (or
+ * `--client-build`, a later Build of its Game version accepted in its
+ * place), then writes the index and the provenance file of its Game
+ * version, and the artefacts emitted from the index, under `--out` (the
+ * package root by default). Prints the counts, then the warnings; on any
+ * error it writes nothing, prints the errors and exits 1. A bad argument
+ * exits 2. A leading `--`, which `pnpm builtins:generate -- …` passes
+ * through, is skipped.
  *
- * `isWsl` and `invokedDirectly` mirror the Probe runner's
- * (`probe/src/machine.ts`, `probe/src/cli/common.ts`), as `parseBuildInfo`
- * and `buildConfigName` (`src/casc/storage.ts`) mirror its reader of the
- * Build, `readClientBuild` (`probe/src/game.ts`): the packages share no code, and
- * `test/probe-parity.test.ts` pins each pair to the same behaviour.
+ * `invokedDirectly` mirrors the Probe runner's (`probe/src/cli/common.ts`),
+ * as `reforged-studio`'s `isWsl` mirrors its `probe/src/machine.ts` and its
+ * `parseBuildInfo` and `buildConfigName` the Probe runner's reader of the
+ * Build, `readClientBuild` (`probe/src/game.ts`): the packages share no
+ * code, and `test/probe-parity.test.ts` pins each pair to the same
+ * behaviour.
  */
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
@@ -35,8 +37,9 @@ import {
   findInstall,
   INSTALL_OPTION,
   InstallNotFoundError,
+  systemMachine,
   type InstallMachine,
-} from "../install.js";
+} from "reforged-studio";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -52,21 +55,6 @@ export const PROCESS_OUTPUT: Output = {
 export const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 const USAGE = `Usage: builtins:generate [${INSTALL_OPTION} <folder>] [--out <folder>]\n`;
-
-/** The real machine. */
-export const systemMachine: InstallMachine = {
-  platform: process.platform,
-  wsl: isWsl(
-    process.platform,
-    process.env,
-    statSync("/proc/version", { throwIfNoEntry: false })?.isFile()
-      ? readFileSync("/proc/version", "utf8")
-      : undefined,
-  ),
-  env: process.env,
-  isFile: (file) =>
-    statSync(file, { throwIfNoEntry: false })?.isFile() ?? false,
-};
 
 /** The Build of the Typings: `reforged-types`' `reforged.patch`. */
 export function typingsBuild(): string {
@@ -179,19 +167,6 @@ export function formatDiagnostics(diagnostics: readonly Diagnostic[]): string {
     )
     .map((d) => `- ${d.severity}: ${d.message}\n`)
     .join("");
-}
-
-/** Whether Linux runs under WSL: its distribution variable, else `/proc/version`. */
-export function isWsl(
-  platform: NodeJS.Platform,
-  env: Readonly<Record<string, string | undefined>>,
-  procVersion: string | undefined,
-): boolean {
-  if (platform !== "linux") return false;
-  if (env.WSL_DISTRO_NAME !== undefined && env.WSL_DISTRO_NAME !== "") {
-    return true;
-  }
-  return /microsoft/i.test(procVersion ?? "");
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */

@@ -11,8 +11,7 @@
  */
 import { KIND_CONSTANTS, list } from "./emit.js";
 import { byCodePoint, type ObjectKind } from "./model.js";
-import type { Profile } from "./profile.js";
-import type { SlkTable } from "./slk.js";
+import type { Profile, SlkTable } from "reforged-studio";
 
 /**
  * The field table's shape the generator writes: 2, which adds each field's

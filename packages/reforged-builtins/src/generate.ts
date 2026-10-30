@@ -14,11 +14,24 @@
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import {
+  BASE_LAYER,
   BUILD_INFO_FILE,
   CascError,
+  EDITOR_STRINGS,
+  ENUS_LAYER,
+  GAME_DATA_SETS,
+  KIND_FILES,
+  layeredPath,
+  NO_VERSION,
   openStorage,
+  parseSlk,
+  Profile,
+  VERSION_COLUMN,
+  versionOf,
+  WORLD_EDIT_SECTION,
   type CascStorage,
-} from "./casc/storage.js";
+  type KindFiles,
+} from "reforged-studio";
 import { BUILD, compareVersions } from "./check.js";
 import {
   byCodePoint,
@@ -27,7 +40,6 @@ import {
   serializeIndex,
   serializeProvenance,
   type BuiltinsIndex,
-  type GameDataSet,
   type IndexEntry,
   type ObjectKind,
   type ProvenanceInput,
@@ -47,127 +59,13 @@ import {
   type Enumerate,
   type KindMetaData,
 } from "./fields.js";
-import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
 import { constantName, displayName, duplicateConstants } from "./names.js";
-import { Profile } from "./profile.js";
-import { parseSlk } from "./slk.js";
-
-/** The column of the Game Data Version an object came with, in the data of the versioned kinds. */
-const VERSION_COLUMN = "version";
-
-/** The version of a row whose cell is no number: below every set's, so every set holds it. */
-const NO_VERSION = -1;
-
-/** A row's Game Data Version: 0 without a cell, `NO_VERSION` for a cell that is no number. */
-function versionOf(row: ReadonlyMap<string, string>): number {
-  const version = Number(row.get(VERSION_COLUMN) ?? 0);
-  return Number.isNaN(version) ? NO_VERSION : version;
-}
-
-/** The base layer: the object data of the sets of Forsaken Kingdom. */
-export const BASE_LAYER = "War3.w3mod:";
-/** The enUS locale layer, which holds the names. */
-export const ENUS_LAYER = "War3.w3mod:_Locales/enUS.w3mod:";
-
-/** A Game data set and the layer its object data comes from. */
-interface LayeredGameDataSet extends GameDataSet {
-  /**
-   * The layer whose file of a kind replaces the base layer's, when it has
-   * one: `_Balance/<Set>_V<version>`, which the install has for Custom of
-   * Reign of Chaos and The Frozen Throne and Melee of Reign of Chaos only.
-   */
-  layer: string;
-  /**
-   * The Game Data Version: an object whose `version` cell is greater, one
-   * of a later expansion, is not in the set.
-   */
-  version: number;
-  /**
-   * The qualifier of its own values in the profile files, which no layer
-   * replaces: `Name:custom,V1=` names an object in the Custom set of The
-   * Frozen Throne, over `Name=`. The sets of Forsaken Kingdom have none:
-   * the profile files hold no `V2` value. Melee of The Frozen Throne keeps
-   * `melee,V1`, which they hold, though it reads the base layer.
-   */
-  qualifier?: string;
-}
-
-/** A map's Game Data Sets, as the World Editor of 3.0 offers them, but Default. */
-const SETS = [
-  { id: "custom", label: "Custom", layer: "Custom" },
-  { id: "melee", label: "Melee", layer: "Melee" },
-] as const;
 
 /**
- * The Game Data Versions, by the value of the `version` cells, latest first.
- * `game-data-versions.json` lists them by that value, the index a map's
- * `war3map.w3i` stores: the workspace's one list of them, which the Probe
- * runner reads too (#620).
+ * Where a kind's objects, races and names are, inside a layer: its files
+ * (`reforged-studio`'s `KIND_FILES`), and the fields that name an object.
  */
-const VERSIONS = GAME_DATA_VERSIONS.toSorted((a, b) => b.version - a.version);
-
-/**
- * The Game data sets the index lists: one per Game Data Set and Game Data
- * Version of a map, latest version first, as Probe runs on 3.0.0.24268
- * settled them (#575, docs/research/builtins-layers.md). A map reads the
- * layer `_Balance/<Set>_V<version>` where the install has it, else the
- * base layer, and leaves out the units, items and abilities of a later
- * version: all the sets of Forsaken Kingdom read the base layer whole. A
- * map's Default set reads Custom, or Melee on a melee map, so it has no set
- * of its own.
- */
-export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = VERSIONS.flatMap(
-  (version) =>
-    SETS.map((set) => ({
-      id: `${set.id}-${version.id}`,
-      label: `${set.label} (${version.label})`,
-      layer: `${BASE_LAYER}_Balance/${set.layer}_V${String(version.version)}.w3mod:`,
-      version: version.version,
-      ...(version !== VERSIONS[0] && {
-        qualifier: `${set.id},V${String(version.version)}`,
-      }),
-    })),
-);
-
-/**
- * The editor strings the data's `WESTRING_` names resolve through, keys
- * matched without regard to case: the destructables' and doodads' names are
- * mostly in the second file. A key both files set keeps the second's value
- * (`WESTRING_DOOD_YOIG` is "Iron Gate", then "Iron Gate (A)"): the World
- * Editor reads these files, not the game, so the Probe that settled the
- * names files' rule (#564) cannot settle this one.
- */
-export const EDITOR_STRINGS: readonly string[] = [
-  `${ENUS_LAYER}UI/WorldEditGameStrings.txt`,
-  `${ENUS_LAYER}UI/WorldEditStrings.txt`,
-];
-/** The section of the editor strings that holds the keys. */
-const WORLD_EDIT_SECTION = "WorldEditStrings";
-
-/** Where a kind's objects, races and names are, inside a layer. */
-interface KindSource {
-  kind: ObjectKind;
-  /** The data file, in the base layer. */
-  data: string;
-  /** The data file's table, as the metadata's `slk` column names it. */
-  table: string;
-  /** The data file's column of the Rawcode. */
-  idColumn: string;
-  /** The data file's column of the race, for a kind that has one. */
-  raceColumn?: string;
-  /**
-   * Whether a set leaves out an object of a later Game Data Version than its
-   * own, by the data's `version` column: units, items and abilities, as the
-   * Probe runs of #575 measured. A map of Reign of Chaos still creates a
-   * destructable of The Frozen Throne and gives a unit its buffs, and a map
-   * of The Frozen Throne a buff of Forsaken Kingdom (#622), so every set
-   * holds them as its layer lists them. So it holds upgrades, of which no
-   * layer has one of a later version than its sets', and doodads, which no
-   * Native creates.
-   */
-  versioned?: boolean;
-  /** The metadata file, in the base layer, that locates the name. */
-  metaData: string;
+interface KindSource extends KindFiles {
   /**
    * The metadata's IDs of the fields the Object Editor shows as the name,
    * the first that holds a value winning: a buff without an editor name
@@ -184,11 +82,6 @@ interface KindSource {
   commentField?: string;
   /** The profile files of the names, in the enUS layer, for a kind with a name in them. */
   strings?: NamesFiles;
-  /**
-   * The metadata's columns of which one says a field is the kind's, for the
-   * metadata units and items share (`KindMetaData` in `./fields.ts`).
-   */
-  fieldUse?: readonly string[];
 }
 
 /** A kind's names files, matched without regard to case. */
@@ -208,79 +101,36 @@ const ABILITY_STRINGS: NamesFiles = {
 /** The kinds read, in this order. */
 const KINDS: readonly KindSource[] = [
   {
-    kind: "unit",
-    versioned: true,
-    data: "Units/UnitData.slk",
-    table: "UnitData",
-    idColumn: "unitID",
-    raceColumn: "race",
-    metaData: "Units/UnitMetaData.slk",
+    ...KIND_FILES.unit,
     nameFields: ["unam"],
-    fieldUse: ["useUnit", "useHero", "useBuilding"],
     strings: {
       pattern: /^units\/[a-z]*unitstrings\.txt$/i,
       glob: "Units/*UnitStrings.txt",
     },
   },
   {
-    kind: "item",
-    versioned: true,
-    data: "Units/ItemData.slk",
-    table: "ItemData",
-    idColumn: "itemID",
-    metaData: "Units/UnitMetaData.slk",
+    ...KIND_FILES.item,
     nameFields: ["unam"],
-    fieldUse: ["useItem"],
     strings: {
       pattern: /^units\/itemstrings\.txt$/i,
       glob: "Units/ItemStrings.txt",
     },
   },
   {
-    kind: "ability",
-    versioned: true,
-    data: "Units/AbilityData.slk",
-    table: "AbilityData",
-    idColumn: "alias",
-    raceColumn: "race",
-    metaData: "Units/AbilityMetaData.slk",
+    ...KIND_FILES.ability,
     nameFields: ["anam"],
     strings: ABILITY_STRINGS,
   },
   {
-    kind: "buff",
-    data: "Units/AbilityBuffData.slk",
-    table: "AbilityBuffData",
-    idColumn: "alias",
-    raceColumn: "race",
-    metaData: "Units/AbilityBuffMetaData.slk",
+    ...KIND_FILES.buff,
     nameFields: ["fnam", "ftip"],
     commentField: "fnam",
     strings: ABILITY_STRINGS,
   },
+  { ...KIND_FILES.destructable, nameFields: ["bnam"] },
+  { ...KIND_FILES.doodad, nameFields: ["dnam"] },
   {
-    kind: "destructable",
-    data: "Units/DestructableData.slk",
-    table: "DestructableData",
-    idColumn: "DestructableID",
-    metaData: "Units/DestructableMetaData.slk",
-    nameFields: ["bnam"],
-  },
-  {
-    kind: "doodad",
-    data: "Doodads/Doodads.slk",
-    table: "DoodadData",
-    idColumn: "doodID",
-    metaData: "Doodads/DoodadMetaData.slk",
-    nameFields: ["dnam"],
-  },
-  {
-    kind: "upgrade",
-    data: "Units/UpgradeData.slk",
-    table: "UpgradeData",
-    idColumn: "upgradeid",
-    raceColumn: "race",
-    metaData: "Units/UpgradeMetaData.slk",
+    ...KIND_FILES.upgrade,
     nameFields: ["gnam"],
     commentField: "gnam",
     strings: {
@@ -468,9 +318,7 @@ async function extract(
       Map<string, ReadonlyMap<string, string>>
     >();
     const setFiles = GAME_DATA_SETS.map((set) =>
-      listed.has((set.layer + source.data).toLowerCase())
-        ? set.layer + source.data
-        : BASE_LAYER + source.data,
+      layeredPath(set, source.data, listed),
     );
     for (const path of new Set(setFiles)) {
       rowsByFile.set(path, await kindRows(source, path, read, diagnostics));
@@ -599,7 +447,7 @@ async function extract(
       kind: source.kind,
       path,
       table: parseSlk(await read(path)),
-      ...(source.fieldUse !== undefined && { use: source.fieldUse }),
+      ...(source.use !== undefined && { use: source.use }),
     });
   }
   // The enumerations of the World Editor's data, when the install has the

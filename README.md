@@ -83,6 +83,7 @@ flowchart LR
     reforged_types["reforged-types"]
   end
   subgraph private["Private packages"]
+    reforged_studio["reforged-studio"]
     reforged_ts_probe["reforged-ts-probe"]
     reforged_ts_release["reforged-ts-release"]
     reforged_ts_website["reforged-ts-website"]

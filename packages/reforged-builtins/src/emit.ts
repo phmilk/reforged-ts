@@ -4,7 +4,7 @@
  * declarations and their Lua module. Nothing here reads the game: the check
  * emits them again from the committed index and compares.
  */
-import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
+import { GAME_DATA_VERSIONS } from "reforged-studio";
 import {
   byCodePoint,
   type BuiltinsIndex,

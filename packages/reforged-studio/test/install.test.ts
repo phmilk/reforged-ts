@@ -7,7 +7,7 @@ import {
   findInstall,
   InstallNotFoundError,
   type InstallMachine,
-} from "../src/install.js";
+} from "../src/index.js";
 
 function machine(
   buildInfos: readonly string[],

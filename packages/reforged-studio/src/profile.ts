@@ -11,7 +11,7 @@
  * `Ansp`), and a key set twice for one Rawcode, in one file or across files
  * read in order, keeps its first value; the later one is reported. The
  * World Editor's own strings files are read with `new Profile("last")`, a
- * rule the game cannot settle (`EDITOR_STRINGS` in `generate.ts`); their
+ * rule the game cannot settle (`EDITOR_STRINGS` in `layers.ts`); their
  * one section matches without regard to case too.
  */
 
@@ -107,6 +107,11 @@ export class Profile {
    * as the World Editor names an upgrade by its names of every level.
    */
   list(section: string, key: string): string | undefined {
+    return this.items(section, key)?.join(",");
+  }
+
+  /** The items of the list `key` holds, each unquoted, as a field of one value per level gives its levels. */
+  items(section: string, key: string): string[] | undefined {
     const value = this.#raw(section, key);
     return value === undefined ? undefined : unquoteItems(value);
   }
@@ -124,9 +129,9 @@ function firstItem(value: string): string {
   return (comma === -1 ? value : value.slice(0, comma)).trim();
 }
 
-/** A list as a line spells it, the quotes around its items removed. */
-function unquoteItems(value: string): string {
-  if (!value.includes('"')) return value;
+/** The items of a list as a line spells it, the quotes around them removed. */
+function unquoteItems(value: string): string[] {
+  if (!value.includes('"')) return value.split(",");
   const items: string[] = [];
   let at = 0;
   for (;;) {
@@ -139,7 +144,7 @@ function unquoteItems(value: string): string {
       comma = value.indexOf(",", at);
       items.push(value.slice(at, comma === -1 ? undefined : comma));
     }
-    if (comma === -1) return items.join(",");
+    if (comma === -1) return items;
     at = comma + 1;
   }
 }
