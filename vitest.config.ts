@@ -26,8 +26,9 @@ export default defineConfig({
         },
       },
       {
-        // The reader of the game's install, in Node, on synthetic CASC
-        // storages and map folders the tests write in a temporary folder.
+        // The Studio's server, through its HTTP API, and the reader of the
+        // game's install, in Node, on synthetic CASC storages and map
+        // folders the tests write in a temporary folder.
         test: {
           name: "reforged-studio",
           root: "packages/reforged-studio",

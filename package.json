@@ -79,6 +79,7 @@
     "eslint-plugin-prettier": "catalog:",
     "eslint-plugin-tsdoc": "catalog:",
     "prettier": "catalog:",
+    "reforged-studio": "workspace:^",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "vitest": "catalog:",

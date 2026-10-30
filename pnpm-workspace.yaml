@@ -98,6 +98,10 @@ catalog:
   react: ^19.3.0
   react-dom: ^19.3.0
   "@types/react": ^19.3.0
+  "@types/react-dom": ^19.3.0
+  # The Studio's page (#831): bundled into static files at reforged-studio's
+  # build, React (above) its component framework. vitest runs on it too.
+  vite: ^8.3.5
   # The API reference (#40): TypeDoc, its Markdown output and the Docusaurus
   # plugin that runs it into the docs tree. The two plugins follow TypeDoc's
   # minor (their peer ranges name it); move the three together.

@@ -1,5 +1,7 @@
 /**
- * The programmatic entry of `reforged-studio`: the reader of the developer's
+ * The programmatic entry of `reforged-studio`: `startStudio`, the Studio's
+ * local server on a Map project's map folder, with the types of its JSON
+ * API (`./server/api-types.ts`); and the reader of the developer's
  * own Warcraft III install, which the Studio and the `reforged-builtins`
  * generator read the game through. It reads the local CASC storage
  * (`./casc/storage.ts`), the SLK tables and profile files of its object
@@ -81,3 +83,23 @@ export {
   type InstallCheck,
   type InstallCheckOptions,
 } from "./check-install.js";
+export { startStudio, type Studio, type StudioOptions } from "./studio.js";
+export { DEFAULT_PORT } from "./server/listen.js";
+export {
+  OBJECT_ORIGINS,
+  type DefinitionSource,
+  type Edit,
+  type EditsRequest,
+  type ErrorAnswer,
+  type FieldRow,
+  type ListedObject,
+  type ObjectDetail,
+  type ObjectOrigin,
+  type ObjectsAnswer,
+  type OpenInEditorAnswer,
+  type RawcodeAnswer,
+  type SearchAnswer,
+  type SessionAnswer,
+  type SessionCounts,
+  type StudioEvents,
+} from "./server/api-types.js";

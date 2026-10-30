@@ -211,6 +211,26 @@ export interface UnavailableLookup {
   readonly reason: string;
 }
 
+/** Every object the lookup knows, which {@link RawcodeLookup.list} returns. */
+export interface ListedRawcodes {
+  /** Tells a listing apart from an unavailable lookup. */
+  readonly status: "listed";
+  /**
+   * The objects, the map's and the Built-in objects, each as a lookup of its
+   * Rawcode returns it, by Object kind order then Rawcode in code point order.
+   */
+  readonly objects: readonly RawcodeObject[];
+  /**
+   * The map's Game data set, with its id and the name the World Editor gives
+   * it; undefined when it cannot be read from `war3map.w3i`, or the index
+   * does not have it, as a warning then says.
+   */
+  readonly gameDataSet: GameDataSet | undefined;
+}
+
+/** What {@link RawcodeLookup.list} returns, told apart by its `status`. */
+export type RawcodeListResult = ListedRawcodes | UnavailableLookup;
+
 /** What {@link RawcodeLookup.lookup} returns, told apart by its `status`. */
 export type RawcodeLookupResult =
   | KnownRawcode
@@ -253,6 +273,26 @@ export interface RawcodeLookup {
    *   unavailable.
    */
   warnings(): readonly string[];
+  /**
+   * Lists every object the lookup knows, for a tool that shows them all,
+   * such as the Studio. It reads what a lookup reads, and as freshly.
+   * Synchronous, and never throws.
+   *
+   * @returns The objects and the map's Game data set, or unavailable with
+   *   the reason a lookup gives.
+   */
+  list(): RawcodeListResult;
+  /**
+   * Lists the files whose modification times the lookup checks, absolute: the
+   * Object data files and their Skin files, `war3map.wts`, `war3map.w3i`,
+   * the package.json and index of `reforged-builtins` when it is installed,
+   * every definition file under the definitions folder, then the Object
+   * manifest; a file need not exist. For a tool that watches what the
+   * lookup reads. Synchronous, and never throws.
+   *
+   * @returns The files, listed afresh at each call.
+   */
+  files(): readonly string[];
 }
 
 /**
@@ -351,6 +391,27 @@ export function openRawcodeLookup(
         return [];
       }
     },
+    list() {
+      try {
+        const state = load();
+        return "status" in state
+          ? state
+          : {
+              status: "listed",
+              objects: sortedObjects(state),
+              gameDataSet: state.gameDataSet,
+            };
+      } catch (error) {
+        return unavailable(error);
+      }
+    },
+    files() {
+      try {
+        return lookupFiles(options);
+      } catch {
+        return [];
+      }
+    },
   };
 }
 
@@ -379,24 +440,44 @@ function isMalformed(rawcode: string): boolean {
  * that appears or disappears changes it too.
  */
 function filesFingerprint(options: RawcodeLookupOptions): string {
-  const { mapFolder, projectRoot } = options;
-  const files = [...objectDataFileNames(), WTS_FILE, W3I_FILE].map((name) =>
-    path.join(mapFolder, name),
-  );
-  const builtins = builtinsFiles(projectRoot);
-  if (builtins !== undefined) files.push(builtins.manifest);
-  if (builtins?.index !== undefined) files.push(builtins.index);
-  files.push(...definitionsViewFiles(projectRoot, options));
-  const folder = fs.statSync(mapFolder, { throwIfNoEntry: false });
+  const folder = fs.statSync(options.mapFolder, { throwIfNoEntry: false });
   return [
     String(folder?.isDirectory() === true),
-    ...files.map((file) => {
+    ...lookupFiles(options).map((file) => {
       const stat = fs.statSync(file, { throwIfNoEntry: false });
       return stat === undefined
         ? `${file} -`
         : `${file} ${String(stat.mtimeMs)} ${String(stat.ctimeMs)} ${String(stat.size)}`;
     }),
   ].join("\n");
+}
+
+/**
+ * Every file the lookup reads, absolute: the Object data files, then
+ * `war3map.wts` and `war3map.w3i`, the package.json and index of
+ * reforged-builtins, the definition files and the Object manifest.
+ */
+function lookupFiles(options: RawcodeLookupOptions): string[] {
+  const { mapFolder, projectRoot } = options;
+  const files = [...objectDataFileNames(), WTS_FILE, W3I_FILE].map((name) =>
+    path.resolve(mapFolder, name),
+  );
+  const builtins = builtinsFiles(projectRoot);
+  if (builtins !== undefined) files.push(builtins.manifest);
+  if (builtins?.index !== undefined) files.push(builtins.index);
+  files.push(...definitionsViewFiles(projectRoot, options));
+  return files;
+}
+
+/** Every object of a read, by Object kind order then Rawcode in code point order. */
+function sortedObjects(state: Loaded): RawcodeObject[] {
+  return [...state.objects.values()]
+    .flat()
+    .sort(
+      (a, b) =>
+        OBJECT_KINDS.indexOf(a.kind) - OBJECT_KINDS.indexOf(b.kind) ||
+        (a.rawcode < b.rawcode ? -1 : a.rawcode > b.rawcode ? 1 : 0),
+    );
 }
 
 /** Reads the map folder, the index and the Object definitions; throws what makes the lookup unavailable until a later check reads them again. */
