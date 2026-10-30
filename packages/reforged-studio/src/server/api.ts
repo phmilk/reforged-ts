@@ -7,6 +7,7 @@ import type http from "node:http";
 import {
   checkWorldEditor,
   ObjectDataWriterError,
+  type ObjectDataObject,
   reloadWorldEditor,
   type GameDataSet,
   type ObjectKind,
@@ -17,7 +18,15 @@ import type { GameData } from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
 import type { PathResolver } from "../paths.js";
 import {
+  placementCount,
+  placementFile,
+  readPlacements,
+} from "../placements.js";
+import {
   OBJECT_ORIGINS,
+  type CreateAnswer,
+  type DeleteAnswer,
+  type DeletionAnswer,
   type DiffAnswer,
   type Edit,
   type ErrorAnswer,
@@ -26,7 +35,10 @@ import {
   type ObjectOrigin,
   type ObjectsAnswer,
   type OpenInEditorAnswer,
+  type FreeRawcodeAnswer,
   type RawcodeAnswer,
+  type RawcodeCheckAnswer,
+  type Referrer,
   type ReloadAnswer,
   type ReloadOffer,
   type SaveAnswer,
@@ -39,8 +51,17 @@ import type { EventStreams } from "./events.js";
 import { composeObjects, detailOf, definitionLine } from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
 import { servePage } from "./page.js";
+import {
+  freeRawcode,
+  holdersText,
+  isRawcode,
+  rawcodeHolders,
+  rawcodePrefix,
+  removedRawcodes,
+  type RawcodeSources,
+} from "./rawcodes.js";
 import { refusal } from "./requests.js";
-import { EditRefusedError, type Session } from "./session.js";
+import { EditRefusedError, objectKey, type Session } from "./session.js";
 
 /** The most objects a search answers. */
 const SEARCH_LIMIT = 50;
@@ -254,56 +275,50 @@ async function rawcodeObjects(
     );
   }
   const result = context.session.lookup.lookup(rawcode);
-  switch (result.status) {
-    case "malformed":
-      return new Answer(400, {
-        status: "malformed",
-        rawcode,
-      } satisfies RawcodeAnswer);
-    case "unavailable":
-      return refuse(503, "unavailable", result.reason);
-    case "unknown":
-      return new Answer(404, {
-        status: "unknown",
-        rawcode,
-        suggestions: result.suggestions,
-      } satisfies RawcodeAnswer);
-    case "known":
-    case "not-in-game-data-set": {
-      const listed = await objectsOf(context);
-      if (listed instanceof Answer) return listed;
-      const objects = listed.objects.filter(
-        (object) =>
-          object.rawcode === rawcode &&
-          result.objects.some((other) => other.kind === object.kind),
-      );
-      const candidates =
-        kind === null
-          ? objects
-          : objects.filter((object) => object.kind === kind);
-      const selected =
-        candidates.length === 1
-          ? detailOf(candidates[0], {
-              working: context.session.working(),
-              saved: context.session.saved,
-              gameData: listed.gameData,
-              fieldTable: context.session.fieldTable,
-              objects: listed.objects,
-            })
-          : undefined;
-      const answer: RawcodeAnswer =
-        result.status === "known"
-          ? { status: "known", rawcode, objects, ...(selected && { selected }) }
-          : {
-              status: "not-in-game-data-set",
-              rawcode,
-              objects,
-              ...(selected && { selected }),
-              gameDataSet: result.gameDataSet,
-            };
-      return new Answer(200, answer);
-    }
+  if (result.status === "malformed") {
+    return new Answer(400, {
+      status: "malformed",
+      rawcode,
+    } satisfies RawcodeAnswer);
   }
+  if (result.status === "unavailable") {
+    return refuse(503, "unavailable", result.reason);
+  }
+  // The working state's objects: one an unsaved edit added is known, one it
+  // removed is not, whatever the map folder on disk holds.
+  const listed = await objectsOf(context);
+  if (listed instanceof Answer) return listed;
+  const objects = listed.objects.filter((object) => object.rawcode === rawcode);
+  if (objects.length === 0) {
+    return new Answer(404, {
+      status: "unknown",
+      rawcode,
+      suggestions: result.status === "unknown" ? result.suggestions : [],
+    } satisfies RawcodeAnswer);
+  }
+  const candidates =
+    kind === null ? objects : objects.filter((object) => object.kind === kind);
+  const selected =
+    candidates.length === 1
+      ? detailOf(candidates[0], {
+          working: context.session.working(),
+          saved: context.session.saved,
+          gameData: listed.gameData,
+          fieldTable: context.session.fieldTable,
+          objects: listed.objects,
+        })
+      : undefined;
+  const answer: RawcodeAnswer =
+    result.status === "not-in-game-data-set"
+      ? {
+          status: "not-in-game-data-set",
+          rawcode,
+          objects,
+          ...(selected && { selected }),
+          gameDataSet: result.gameDataSet,
+        }
+      : { status: "known", rawcode, objects, ...(selected && { selected }) };
+  return new Answer(200, answer);
 }
 
 /** Checks that a value is one edit of the API, or says why not. */
@@ -436,6 +451,297 @@ async function reset(
     });
     if (edits.length > 0) context.session.edit(edits);
   });
+}
+
+/** What a new Rawcode is checked against, or the lookup's reason it cannot list the objects. */
+function rawcodeSources(context: ApiContext): RawcodeSources | Answer {
+  const { session } = context;
+  const listing = session.lookup.list();
+  if (listing.status === "unavailable") {
+    return refuse(503, "unavailable", listing.reason);
+  }
+  // The lookup's files end with the Object manifest.
+  const manifest = session.lookup.files().at(-1);
+  return {
+    listed: listing.objects,
+    working: session.working(),
+    removed: manifest === undefined ? [] : removedRawcodes(manifest),
+    placements: readPlacements(context.mapFolder),
+  };
+}
+
+/** The `?kind=` of a query, or a refusal. */
+function kindOf(query: URLSearchParams): ObjectKind | Answer {
+  const kind = query.get("kind") ?? "";
+  return isKind(kind)
+    ? kind
+    : refuse(
+        400,
+        "bad-request",
+        `The query names its kind, one of ${OBJECT_KINDS.join(", ")}.`,
+      );
+}
+
+/**
+ * Answers `GET /api/free-rawcode?kind=&base=`: the Rawcode suggested for a
+ * new object of a kind, a unit's prefix taken from its base, or from the
+ * base of the Custom object it copies (`?copyOf=`).
+ */
+function freeRawcodeRoute(context: ApiContext, query: URLSearchParams): Answer {
+  const kind = kindOf(query);
+  if (kind instanceof Answer) return kind;
+  const sources = rawcodeSources(context);
+  if (sources instanceof Answer) return sources;
+  const copyOf = query.get("copyOf");
+  const base =
+    copyOf === null
+      ? (query.get("base") ?? undefined)
+      : sources.working.get(objectKey(kind, copyOf))?.base;
+  const prefix = rawcodePrefix(kind, base);
+  const rawcode = freeRawcode(prefix, sources);
+  return new Answer(200, {
+    kind,
+    prefix,
+    ...(rawcode !== undefined && { rawcode }),
+  } satisfies FreeRawcodeAnswer);
+}
+
+/** Answers `GET /api/rawcode-check?rawcode=`: whether a new object can take a Rawcode, and what holds it. */
+function rawcodeCheck(context: ApiContext, query: URLSearchParams): Answer {
+  const rawcode = query.get("rawcode") ?? "";
+  if (!isRawcode(rawcode)) {
+    return new Answer(200, {
+      rawcode,
+      free: false,
+      holders: [],
+      message: `${rawcode === "" ? "An empty text" : rawcode} is not a Rawcode: a Rawcode is four printable ASCII characters.`,
+    } satisfies RawcodeCheckAnswer);
+  }
+  const sources = rawcodeSources(context);
+  if (sources instanceof Answer) return sources;
+  const holders = rawcodeHolders(rawcode, sources);
+  return new Answer(200, {
+    rawcode,
+    free: holders.length === 0,
+    holders,
+    ...(holders.length > 0 && { message: holdersText(rawcode, holders) }),
+  } satisfies RawcodeCheckAnswer);
+}
+
+/**
+ * Answers `POST /api/create`: a new Custom object based on a Built-in
+ * object or copying a Custom object, as one undo step, refused with
+ * `"rawcode-taken"` when anything holds its Rawcode.
+ */
+async function create(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { kind, rawcode, base, copyOf } = await readOptionalJson(request);
+  const from =
+    typeof base === "string" && copyOf === undefined
+      ? { base }
+      : typeof copyOf === "string" && base === undefined
+        ? { copyOf }
+        : undefined;
+  if (
+    typeof kind !== "string" ||
+    !isKind(kind) ||
+    typeof rawcode !== "string" ||
+    from === undefined
+  ) {
+    return refuse(
+      400,
+      "bad-request",
+      "The body is { kind, rawcode, base } or { kind, rawcode, copyOf }.",
+    );
+  }
+  if (!isRawcode(rawcode)) {
+    return refuse(
+      422,
+      "invalid-value",
+      `${rawcode} is not a Rawcode: a Rawcode is four printable ASCII characters.`,
+    );
+  }
+  const sources = rawcodeSources(context);
+  if (sources instanceof Answer) return sources;
+  const holders = rawcodeHolders(rawcode, sources);
+  if (holders.length > 0) {
+    return refuse(409, "rawcode-taken", holdersText(rawcode, holders));
+  }
+  const answer = applied(context, () => {
+    context.session.create({ kind, rawcode, ...from });
+  });
+  if (answer.status !== 200) return answer;
+  return new Answer(200, {
+    kind,
+    rawcode,
+    ...context.session.counts(),
+  } satisfies CreateAnswer);
+}
+
+/**
+ * The ids of an object's fields whose value names an object: a Rawcode or
+ * a Rawcode list field of the object's kind, by `reforged-builtins`' field
+ * table; any text field naming its Rawcode when there is no field table.
+ */
+function referringFields(
+  context: ApiContext,
+  object: ObjectDataObject,
+  target: { readonly kind: ObjectKind; readonly rawcode: string },
+): string[] {
+  const entries = context.session.fieldTable?.fields[object.kind];
+  const fields = new Set<string>();
+  for (const modification of object.modifications) {
+    if (typeof modification.value !== "string") continue;
+    if (entries !== undefined) {
+      if (!Object.hasOwn(entries, modification.field)) continue;
+      const entry = entries[modification.field];
+      if (entry.category !== "rawcode" && entry.category !== "rawcodeList") {
+        continue;
+      }
+      if (entry.of !== undefined && entry.of !== target.kind) continue;
+    }
+    const names = modification.value
+      .split(",")
+      .some((rawcode) => rawcode.trim() === target.rawcode);
+    if (names) fields.add(modification.field);
+  }
+  return [...fields];
+}
+
+/** One referrer in a sentence: its name and Rawcode, then its fields. */
+const referrerText = (referrer: Referrer): string =>
+  `${referrer.name === undefined ? referrer.rawcode : `${referrer.name} (${referrer.rawcode})`} in ${referrer.fields.join(", ")}`;
+
+/**
+ * The message of a delete confirmation, in #482's words: what the delete
+ * does to the objects that name it and to its placements.
+ */
+function deletionMessage(
+  deletion: Pick<
+    DeletionAnswer,
+    "rawcode" | "referrers" | "placements" | "placementFile"
+  >,
+): string {
+  const { rawcode, referrers, placements, placementFile: file } = deletion;
+  const parts = [
+    `Deleting ${rawcode} removes it from the map folder's Object data at the next save.`,
+  ];
+  if (referrers.length > 0) {
+    parts.push(
+      `${String(referrers.length)} object${referrers.length === 1 ? " names" : "s name"} it, and will name a Rawcode no object has: ${referrers.map(referrerText).join("; ")}.`,
+    );
+  }
+  if (placements > 0 && file !== undefined) {
+    const one = placements === 1;
+    parts.push(
+      `It is placed ${String(placements)} time${one ? "" : "s"} on the terrain, in ${file}. The Studio leaves ${one ? "that placement" : "those placements"} there: the game already skips ${one ? "it" : "them"}, and the World Editor drops ${one ? "it" : "them"} without asking at its next save.`,
+    );
+  }
+  return parts.join(" ");
+}
+
+/** What deleting an object does: the objects that name it, its placements, and whether it can be. */
+function deletionOf(
+  context: ApiContext,
+  kind: ObjectKind,
+  rawcode: string,
+): DeletionAnswer | Answer {
+  const { session } = context;
+  const listing = session.lookup.list();
+  if (listing.status === "unavailable") {
+    return refuse(503, "unavailable", listing.reason);
+  }
+  const working = session.working();
+  const listed = listing.objects.find(
+    (other) => other.kind === kind && other.rawcode === rawcode,
+  );
+  const definition =
+    listed !== undefined &&
+    listed.origin !== "builtin" &&
+    listed.definitionFile !== undefined;
+  const deletable =
+    working.get(objectKey(kind, rawcode))?.origin === "custom" && !definition;
+  const names = new Map(
+    listing.objects.map((other) => [
+      objectKey(other.kind, other.rawcode),
+      other.name,
+    ]),
+  );
+  const referrers: Referrer[] = [];
+  for (const other of working.values()) {
+    if (other.kind === kind && other.rawcode === rawcode) continue;
+    const fields = referringFields(context, other, { kind, rawcode });
+    if (fields.length === 0) continue;
+    const name = names.get(objectKey(other.kind, other.rawcode));
+    referrers.push({
+      kind: other.kind,
+      rawcode: other.rawcode,
+      ...(name !== undefined && { name }),
+      fields,
+    });
+  }
+  const file = placementFile(kind);
+  const placements = placementCount(
+    readPlacements(context.mapFolder),
+    kind,
+    rawcode,
+  );
+  const facts = {
+    kind,
+    rawcode,
+    referrers,
+    placements,
+    ...(file !== undefined && { placementFile: file }),
+  };
+  let message: string;
+  if (deletable) message = deletionMessage(facts);
+  else if (definition) {
+    message = `${rawcode} is an Object definition's: delete it in the code.`;
+  } else {
+    message = `${rawcode} is no Custom ${kind} of the map folder: only a Custom object is deleted.`;
+  }
+  return { ...facts, deletable, message };
+}
+
+/** Answers `GET /api/deletion?kind=&rawcode=`: what deleting an object does, for its confirmation. */
+function deletionRoute(context: ApiContext, query: URLSearchParams): Answer {
+  const kind = kindOf(query);
+  if (kind instanceof Answer) return kind;
+  const found = deletionOf(context, kind, query.get("rawcode") ?? "");
+  return found instanceof Answer ? found : new Answer(200, found);
+}
+
+/**
+ * Answers `POST /api/delete`: removes a Custom object as one undo step,
+ * refused for any other object; its placements stay on disk, and the
+ * answer counts them.
+ */
+async function deleteRoute(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { kind, rawcode } = await readOptionalJson(request);
+  if (
+    typeof kind !== "string" ||
+    !isKind(kind) ||
+    typeof rawcode !== "string"
+  ) {
+    return refuse(400, "bad-request", "The body is { kind, rawcode }.");
+  }
+  const answer = applied(context, () => {
+    context.session.deleteObject({ kind, rawcode });
+  });
+  if (answer.status !== 200) return answer;
+  return new Answer(200, {
+    placements: placementCount(
+      readPlacements(context.mapFolder),
+      kind,
+      rawcode,
+    ),
+    ...context.session.counts(),
+  } satisfies DeleteAnswer);
 }
 
 /** Starts the World Editor on the map folder with `-launch -loadfile`; the reason it could not, or undefined. */
@@ -747,6 +1053,16 @@ export async function handle(
       await serveFile(context, searchParams, response);
     } else if (route === "POST /api/edits") {
       send(response, await edit(context, request));
+    } else if (route === "GET /api/free-rawcode") {
+      send(response, freeRawcodeRoute(context, searchParams));
+    } else if (route === "GET /api/rawcode-check") {
+      send(response, rawcodeCheck(context, searchParams));
+    } else if (route === "POST /api/create") {
+      send(response, await create(context, request));
+    } else if (route === "GET /api/deletion") {
+      send(response, deletionRoute(context, searchParams));
+    } else if (route === "POST /api/delete") {
+      send(response, await deleteRoute(context, request));
     } else if (route === "POST /api/reset") {
       send(response, await reset(context, request));
     } else if (route === "POST /api/undo") {

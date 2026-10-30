@@ -416,30 +416,109 @@ export class Session {
    * @throws ObjectDataWriterError The editor's refusal.
    */
   edit(edits: readonly Edit[]): void {
-    const listing = this.lookup.list();
-    if (listing.status === "unavailable") {
-      // Without the lookup, which objects the code owns is unknown: no edit.
-      throw new EditRefusedError("unavailable", listing.reason);
-    }
-    for (const edit of edits) {
-      const file = definitionFile(
-        listing.objects,
-        this.#options.projectRoot,
-        edit,
-      );
-      if (file !== undefined) {
-        throw new EditRefusedError(
-          "object-definition",
-          `${edit.rawcode} is an Object definition of ${file}: edit it there.`,
-          file,
-        );
-      }
-    }
+    this.#refuseDefinitions(edits, "edit");
     const applied = this.#applyAll(edits);
     if (applied.length > 0) {
       this.undo.push({ edits: applied });
       this.redo.length = 0;
     }
+  }
+
+  /**
+   * Refuses objects the code owns, before any change: `"unavailable"` when
+   * the lookup cannot say which objects those are.
+   */
+  #refuseDefinitions(
+    objects: readonly { readonly kind: ObjectKind; readonly rawcode: string }[],
+    verb: "edit" | "delete",
+  ): void {
+    const listing = this.lookup.list();
+    if (listing.status === "unavailable") {
+      // Without the lookup, which objects the code owns is unknown: no edit.
+      throw new EditRefusedError("unavailable", listing.reason);
+    }
+    for (const object of objects) {
+      const file = definitionFile(
+        listing.objects,
+        this.#options.projectRoot,
+        object,
+      );
+      if (file !== undefined) {
+        throw new EditRefusedError(
+          "object-definition",
+          `${object.rawcode} is an Object definition of ${file}: ${verb} it there.`,
+          file,
+        );
+      }
+    }
+  }
+
+  /**
+   * Adds a Custom object as one undo step: based on a Built-in object, or a
+   * copy of a Custom object of its kind, with its base and every
+   * modification, translations included. Whether its Rawcode is free across
+   * the seven kinds is the caller's; the editor refuses one its kind holds.
+   *
+   * @param object - The new object's kind and Rawcode, and its base or the
+   *   Custom object it copies.
+   * @throws {@link EditRefusedError} With the reason `"not-custom"`, when
+   *   the object to copy is no Custom object of the working state.
+   * @throws ObjectDataWriterError The editor's refusal; nothing is changed.
+   */
+  create(object: {
+    readonly kind: ObjectKind;
+    readonly rawcode: string;
+    readonly base?: string;
+    readonly copyOf?: string;
+  }): void {
+    const { kind, rawcode, copyOf } = object;
+    let edits: SessionEdit[];
+    if (copyOf === undefined) {
+      edits = [{ op: "addObject", kind, rawcode, base: object.base ?? "" }];
+    } else {
+      const source = this.#object(kind, copyOf);
+      if (source?.origin !== "custom" || source.base === undefined) {
+        throw new EditRefusedError(
+          "not-custom",
+          `${copyOf} is no Custom ${kind} of the map folder: only a Custom object is copied; a new object is based on a Built-in one.`,
+        );
+      }
+      edits = [
+        { op: "addObject", kind, rawcode, base: source.base },
+        ...source.modifications.map((modification) =>
+          restore(kind, rawcode, modification),
+        ),
+      ];
+    }
+    const applied = this.#applyAll(edits);
+    this.undo.push({ edits: applied });
+    this.redo.length = 0;
+  }
+
+  /**
+   * Removes a Custom object as one undo step: only a Custom object of the
+   * working state, and never one an Object definition defines. Its
+   * placements on the terrain stay in the placement files (#482).
+   *
+   * @param object - Its kind and Rawcode.
+   * @throws {@link EditRefusedError} With the reason `"object-definition"`
+   *   for an object the code owns, `"not-custom"` for any other object but a
+   *   Custom one, or `"unavailable"` as {@link Session.edit} refuses.
+   * @throws ObjectDataWriterError The editor's refusal; nothing is changed.
+   */
+  deleteObject(object: {
+    readonly kind: ObjectKind;
+    readonly rawcode: string;
+  }): void {
+    const { kind, rawcode } = object;
+    this.#refuseDefinitions([object], "delete");
+    if (this.#object(kind, rawcode)?.origin !== "custom") {
+      throw new EditRefusedError(
+        "not-custom",
+        `${rawcode} is no Custom ${kind} of the map folder: only a Custom object is deleted; a modified Built-in object is reset.`,
+      );
+    }
+    this.edit([{ op: "removeObject", kind, rawcode }]);
   }
 
   /**
