@@ -713,8 +713,10 @@ describe("openRawcodeLookup, the listing", () => {
       origin: "modified",
       name: "Militia",
     });
+    const paladin = openSample().lookup("Hpal");
+    expect(paladin.status).toBe("known");
     expect(objects.find((object) => object.rawcode === "Hpal")).toEqual(
-      (openSample().lookup("Hpal") as { objects: unknown[] }).objects[0],
+      paladin.status === "known" ? paladin.objects[0] : undefined,
     );
     expect(listing.gameDataSet).toBeUndefined();
   });
