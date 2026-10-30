@@ -21,5 +21,6 @@ We let any Collaborator, and any Agent a Collaborator runs, merge their own pull
 - The quality bar of a merge is the required checks plus `/code-review`, so a flaky required check now blocks Agents directly: the known-flake catalogue comes from diagnosing #658, and an empty catalogue allows no rerun.
 - The Template's repository settings turn auto-merge on, as the library's already do.
 - A Collaborator who wants a human review of a given pull request asks for it; nothing here forbids one.
+- No global rule or hook changes: a Collaborator's own instructions and hooks against merging around a check (`--admin`, the API's merge endpoint) stay as they are, and this decision widens none of them.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/727

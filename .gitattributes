@@ -32,5 +32,6 @@ packages/eslint-plugin-reforged/test/fixture-project/maps/*.w3m/** -text -diff
 .claude/skills/new-patch/** text=auto eol=lf
 .claude/skills/next-step/** text=auto eol=lf
 .claude/skills/ship/** text=auto eol=lf
+.claude/skills/ship-spec/** text=auto eol=lf
 .claude/skills/split-spec/** text=auto eol=lf
 .claude/skills/write-spec/** text=auto eol=lf
