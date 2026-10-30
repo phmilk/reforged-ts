@@ -97,6 +97,7 @@ flowchart LR
   reforged_builtins -.->|"peer"| reforged_types
   reforged_map -.->|"optional peer"| reforged_builtins
   reforged_map -.->|"peer"| reforged_types
+  reforged_studio -.->|"peer"| reforged_map
   reforged_ts -.->|"optional peer"| reforged_test
   reforged_ts -.->|"peer"| reforged_types
   reforged_ts_probe --> reforged_builtins

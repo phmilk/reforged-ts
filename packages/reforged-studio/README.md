@@ -1,8 +1,56 @@
 # reforged-studio
 
-The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). It is private and unpublished while its Spec is built; the server, the page and the release come in its later Tickets.
+The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). It is private and unpublished while its Spec is built; editing, saving, the tree, previews and the release come in its later Tickets.
 
-What it holds today is the reader of the developer's own Warcraft III install ([#830](https://github.com/phmilk/reforged-ts/issues/830)), which the Studio reads the game through and which the `reforged-builtins` generator imports as a workspace dev dependency: the workspace's one copy of each reader. Nothing in it writes to disk.
+It holds two parts: the Studio's server and page ([#831](https://github.com/phmilk/reforged-ts/issues/831)), and the reader of the developer's own Warcraft III install ([#830](https://github.com/phmilk/reforged-ts/issues/830)), which the Studio reads the game through and which the `reforged-builtins` generator imports through the workspace root's dev dependency: the workspace's one copy of each reader.
+
+## Starting the Studio
+
+`startStudio({ projectRoot, mapFolder, gameExecutable, worldEditorExecutable, port, open })` starts it and returns `{ url, close }`; `url` is `http://localhost:<port>`, the page `<url>/objects`, an object `<url>/objects/<rawcode>`. It runs in Node from the Map project's own installation: `reforged-map` is its peer, and `reforged-builtins` and `typescript` are resolved from `projectRoot` through it, as the lookup resolves them. It never depends on `reforged-ts`.
+
+- `projectRoot`: the Map project's root, under which its Object definitions (`src/objects`) and Object manifest (`object-manifest.json`) are.
+- `mapFolder`: the map folder, saved as a folder by the World Editor.
+- `gameExecutable`: the game's executable, or any path inside its install; else the one `WC3_EXECUTABLE` names, else the Battle.net app's default folders. Not found, it throws `InstallNotFoundError`, whose one-line message names the setting to fix.
+- `worldEditorExecutable`: the World Editor the reload after a save starts, which comes with the save.
+- `port`: the first port tried, 5476 when left out; the next free one above it is taken when it is not free, and 0 takes any.
+- `open`: whether to open the page in the system's browser.
+- `worldEditorCheck` and `env`, for tests and tools: `reforged-map`'s World Editor check options, and the environment "Open in editor" reads.
+
+The bin is a thin wrapper over it, for a Map project not made from the Template, whose `pnpm studio` calls `startStudio` itself:
+
+```sh
+reforged-studio --map maps/my-map.w3m [--project <root>] [--game <executable>] [--world-editor <executable>] [--port <port>] [--no-open]
+```
+
+It prints the URL, opens the page unless `--no-open`, and stops on Ctrl+C.
+
+## The server
+
+The server is Node's `http`, no framework. It listens on `127.0.0.1` only. It answers only a request whose `Host` is `localhost:<port>` or `127.0.0.1:<port>`, against DNS rebinding, and accepts a write, any method but `GET`, only with an `Origin` of its own, `http://localhost:<port>` or `http://127.0.0.1:<port>`: anything else is a 403.
+
+It opens the map folder once with `reforged-map`'s `openObjectData(mapFolder, { projectRoot })`, and its Rawcode lookup with `openRawcodeLookup`, so the Studio, the hover and the lint rule agree on what a Rawcode names. The session keeps the saved state (what the map folder held at the last read), the working state (the saved state plus the unsaved edits), the states before and after its last save, and the undo and redo stacks, in the shape of the prototype of [#476](https://github.com/phmilk/reforged-ts/issues/476). An edit is one of the editor's, checked at once; the edits of one request are one undo step, applied all or none.
+
+It polls, once a second with `stat` and holding no file open, the files the lookup reads (the Object data files and their Skin files, `war3map.wts`, `war3map.w3i`, the Object definitions and the Object manifest) and the placement files, `war3map.doo` and `war3mapUnits.doo`. On a change with no unsaved edit it opens the map folder again, replaces the saved state and sends `reloaded`; with unsaved edits it keeps them and sends `changed-on-disk`.
+
+## The API for a host
+
+The page talks to the server only through this JSON API and its one event stream, and uses nothing a VS Code webview lacks: a later host serves the same page over the same API, pointing it at the server through the page's `reforged-studio-api` meta. The bodies' types are exported (`ObjectsAnswer`, `RawcodeAnswer`, `StudioEvents` and the others). A refusal is `{ error: { reason, message } }`.
+
+| Route                                      | Answer                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET /api/session`                         | The map folder, the Build, the map's Game data set, what the World Editor shows of the map folder, the warnings and the unsaved edits.                                                                                                                                                                                   |
+| `GET /api/objects[?kind=&origin=&all=1]`   | The objects, by Object kind, origin (`custom`, `definition`, `modified`, `builtin`) and Rawcode, each with its name, base, Object definition, whether the map's Game data set holds it and whether another kind shares its Rawcode. The Built-in objects outside the map's Game data set show only with `all=1`, marked. |
+| `GET /api/search?q=[&kind=&origin=&all=1]` | The objects of that Rawcode, then those whose name holds the text; for an unknown Rawcode, the lookup's suggestions.                                                                                                                                                                                                     |
+| `GET /api/objects/<rawcode>[?kind=]`       | What the lookup says: `known` (or `not-in-game-data-set`) with its objects, and the one selected, with its field table and base values; both objects of a shared Rawcode and none selected without `?kind=`; `unknown` (404) with the suggestions; `malformed` (400).                                                    |
+| `POST /api/edits`                          | `{ edits: [...] }`, each a `setField`, `removeField`, `addObject` or `removeObject`: the counts, or the editor's refusal (422) with its reason, or `object-definition` (409) for an object the code owns, naming its file.                                                                                               |
+| `POST /api/open-in-editor`                 | `{ kind, rawcode }` of an Object definition: runs `code -g <file>:<line>`, else `$VISUAL <file>`, else `$EDITOR <file>`, or answers `no-editor` (404).                                                                                                                                                                   |
+| `GET /api/events`                          | A `text/event-stream`: `session` on connecting, `reloaded`, `changed-on-disk`.                                                                                                                                                                                                                                           |
+
+An object's field table has a row per field of its kind the install knows, one per level for a field of levels, with its base's value as the game's files hold it under the map's Game data set, and the working state's value and raw value where the object modifies it; then a row per modification of a field the install does not know. An Object definition is read-only, with its file and the line of its Rawcode.
+
+## The page
+
+The page is built at the package's build into `dist/page/`, static files shipped in the tarball: [React](https://react.dev) is its component framework, bundled with [Vite](https://vite.dev), and nothing is fetched from a CDN at run time (its Content-Security-Policy is `default-src 'self'`). Today it lists a kind's objects, searches, and shows one object's field table at `/objects/<rawcode>`; the Object Editor's tree, chips, compare and icons come with [#832](https://github.com/phmilk/reforged-ts/issues/832).
 
 ## The reader of the install
 

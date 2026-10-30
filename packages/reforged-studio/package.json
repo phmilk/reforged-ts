@@ -31,23 +31,36 @@
     },
     "./package.json": "./package.json"
   },
+  "bin": {
+    "reforged-studio": "./dist/cli/studio.js"
+  },
   "files": [
     "/dist/**/*.js",
     "/dist/**/*.d.ts",
+    "/dist/page/**",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "build": "tsc -p tsconfig.json && vite build page --outDir ../dist/page --emptyOutDir --base / --logLevel warn",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p page/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-studio",
     "studio:check-install": "tsc -p tsconfig.json && node dist/cli/check-install.js",
     "prepare": "pnpm run build"
   },
+  "peerDependencies": {
+    "reforged-map": "workspace:^"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "reforged-map": "workspace:^",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   }
 }

@@ -676,3 +676,84 @@ function unknown(result: RawcodeLookupResult) {
   }
   return result;
 }
+
+describe("openRawcodeLookup, the listing", () => {
+  it("lists every object, of the map and Built-in, by Object kind then Rawcode", () => {
+    const listing = openSample().list();
+    if (listing.status !== "listed") throw new Error(listing.status);
+    const { objects } = listing;
+    const keys = objects.map((object) => `${object.kind}:${object.rawcode}`);
+
+    expect(keys).toEqual(
+      [...keys].sort((a, b) => {
+        const [aKind = "", aRawcode = ""] = a.split(":");
+        const [bKind = "", bRawcode = ""] = b.split(":");
+        const order = [
+          "unit",
+          "item",
+          "ability",
+          "buff",
+          "destructable",
+          "doodad",
+          "upgrade",
+        ];
+        return (
+          order.indexOf(aKind) - order.indexOf(bKind) ||
+          (aRawcode < bRawcode ? -1 : aRawcode > bRawcode ? 1 : 0)
+        );
+      }),
+    );
+    expect(objects.filter((object) => object.rawcode === "B000")).toMatchObject(
+      [
+        { kind: "buff", origin: "custom", name: "Holy Fire" },
+        { kind: "destructable", origin: "custom", name: "Gate" },
+      ],
+    );
+    expect(objects.find((object) => object.rawcode === "hfoo")).toMatchObject({
+      origin: "modified",
+      name: "Militia",
+    });
+    expect(objects.find((object) => object.rawcode === "Hpal")).toEqual(
+      (openSample().lookup("Hpal") as { objects: unknown[] }).objects[0],
+    );
+    expect(listing.gameDataSet).toBeUndefined();
+  });
+
+  it("gives the map's Game data set with the listing", () => {
+    const listing = openWith({ set: 2, version: 1 }).list();
+
+    expect(listing).toMatchObject({
+      status: "listed",
+      gameDataSet: { id: "melee-tft", label: "Melee (The Frozen Throne)" },
+    });
+  });
+
+  it("is unavailable as a lookup is, with its reason", () => {
+    const lookup = openRawcodeLookup({
+      mapFolder: sampleMap(),
+      projectRoot: makeTempDir(),
+    });
+
+    expect(lookup.list()).toEqual(lookup.lookup("hfoo"));
+  });
+
+  it("names the files it reads: the Object data, war3map.wts and war3map.w3i, the index and the definitions", () => {
+    const folder = sampleMap();
+    const files = openRawcodeLookup({
+      mapFolder: folder,
+      projectRoot: PACKAGE_ROOT,
+    }).files();
+
+    expect(files).toEqual(
+      expect.arrayContaining([
+        path.join(folder, "war3map.w3u"),
+        path.join(folder, "war3mapSkin.w3u"),
+        path.join(folder, "war3map.w3q"),
+        path.join(folder, "war3map.wts"),
+        path.join(folder, "war3map.w3i"),
+        path.join(PACKAGE_ROOT, "object-manifest.json"),
+      ]),
+    );
+    expect(files.every((file) => path.isAbsolute(file))).toBe(true);
+  });
+});

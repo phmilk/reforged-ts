@@ -1,0 +1,84 @@
+/* The Studio's page: system fonts and colours only, nothing fetched. */
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+body {
+  margin: 0;
+}
+.studio header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+.studio h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.studio header input {
+  margin-left: auto;
+  min-width: 16rem;
+}
+.session {
+  opacity: 0.7;
+}
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+}
+.tabs button.selected,
+.objects button.selected {
+  font-weight: bold;
+}
+.studio main {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) 3fr;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+.objects {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(100vh - 8rem);
+  overflow: auto;
+}
+.objects button {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  padding: 0.15rem 0.25rem;
+}
+.origin {
+  font-size: 0.8em;
+  padding: 0 0.3em;
+  border-radius: 0.3em;
+  border: 1px solid currentColor;
+  opacity: 0.7;
+  margin-left: 0.25em;
+}
+.fields {
+  border-collapse: collapse;
+  width: 100%;
+}
+.fields th,
+.fields td {
+  text-align: left;
+  padding: 0.15rem 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+.fields tr.modified {
+  background: color-mix(in srgb, #3b82f6 15%, transparent);
+}
+.banner,
+.warning,
+.readonly {
+  margin: 0.5rem 1rem;
+}
+.warning {
+  color: #b45309;
+}
