@@ -4,11 +4,12 @@
  * shares, a Built-in object outside the map's Game data set).
  */
 import { useEffect, useRef, useState } from "react";
+import type { ObjectKind } from "reforged-map";
 import type { ListedObject } from "../src/server/api-types.js";
 import { iconUrl } from "./icons.js";
 
 /** The Object kinds, in the Object Editor's order, with their tabs' labels. */
-export const KINDS = [
+export const KINDS: readonly (readonly [ObjectKind, string])[] = [
   ["unit", "Units"],
   ["item", "Items"],
   ["ability", "Abilities"],
@@ -16,10 +17,10 @@ export const KINDS = [
   ["destructable", "Destructibles"],
   ["doodad", "Doodads"],
   ["upgrade", "Upgrades"],
-] as const;
+];
 
 /** An Object kind's name in a sentence: `a destructable`. */
-export const KIND_NOUNS: Readonly<Record<string, string>> = {
+export const KIND_NOUNS: Readonly<Record<ObjectKind, string>> = {
   unit: "a unit",
   item: "an item",
   ability: "an ability",
@@ -164,7 +165,7 @@ export function OriginChip(props: { readonly object: ListedObject }) {
 /** The warning chip of a Rawcode another Object kind shares, naming the other kinds when they are known. */
 export function SharedChip(props: {
   readonly object: ListedObject;
-  readonly others?: readonly string[];
+  readonly others?: readonly ObjectKind[];
 }) {
   const { object, others } = props;
   if (!object.shared) return null;
@@ -176,7 +177,7 @@ export function SharedChip(props: {
       ⚠{" "}
       {others === undefined || others.length === 0
         ? `${object.rawcode} is shared`
-        : `${object.rawcode} is also ${others.map((kind) => KIND_NOUNS[kind] ?? kind).join(" and ")}`}
+        : `${object.rawcode} is also ${others.map((kind) => KIND_NOUNS[kind]).join(" and ")}`}
     </span>
   );
 }

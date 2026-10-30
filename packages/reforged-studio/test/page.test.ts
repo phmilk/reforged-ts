@@ -42,7 +42,16 @@ beforeAll(async () => {
       "The Studio's page is not built: run `pnpm build` before these tests.",
     );
   }
-  const project = mapProject();
+  const project = mapProject({
+    "src/objects/units.ts": `import { defineUnit } from "reforged-map/objects";
+
+export const Sergeant = defineUnit({
+  rawcode: "h002",
+  base: FourCC("hfoo"),
+  fields: { unam: "Sergeant", uhpm: 500 },
+});
+`,
+  });
   fs.mkdirSync(path.join(project.mapFolder, "war3mapImported"));
   fs.writeFileSync(
     path.join(project.mapFolder, "war3mapImported", "BTNCaptain.blp"),
@@ -163,6 +172,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       const texts = await headings.allTextContents();
       expect(texts.map((text) => text.replace(/^. | \(\d+\)$/g, ""))).toEqual([
         "Custom objects",
+        "Object definitions",
         "Modified Built-in objects",
         "Built-in objects",
       ]);
@@ -178,6 +188,26 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       expect(
         await textOf(page.locator('.tree .item[data-rawcode="Hpal"]')),
       ).toContain("Paladin");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "shows an Object definition read-only, with its lock and its file",
+    async () => {
+      const page = await open("/objects/h002");
+
+      const chip = page.locator(".object-header .chip.definition");
+      expect(await textOf(chip)).toBe(
+        "🔒 Object definition · src/objects/units.ts",
+      );
+      expect(await textOf(page.locator(".object-header"))).toContain(
+        "Read-only: defined in src/objects/units.ts, line 4.",
+      );
+      expect(
+        await textOf(page.locator('.tree .item[data-rawcode="h002"]')),
+      ).toContain("🔒");
       await page.close();
     },
     TIMEOUT,

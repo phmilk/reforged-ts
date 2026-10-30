@@ -102,7 +102,7 @@ catalog:
   # The Studio's page (#831): bundled into static files at reforged-studio's
   # build, React (above) its component framework. vitest runs on it too.
   vite: ^8.3.5
-  # Seam 2 of the Studio (#832): its page in headless Chromium, driven from
+  # The Studio's end-to-end tests (#832): its page in headless Chromium, driven from
   # vitest over the Studio's server. CI installs the browser
   # (`playwright install chromium`); a machine runs it once.
   playwright: ^1.64.1

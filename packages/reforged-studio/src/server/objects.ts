@@ -15,7 +15,12 @@ import type {
   ObjectKind,
   RawcodeObject,
 } from "reforged-map";
-import type { GameData, GameField, GameKind } from "../game-data.js";
+import type {
+  FieldValue,
+  GameData,
+  GameField,
+  GameKind,
+} from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
 import {
   OBJECT_ORIGINS,
@@ -82,6 +87,25 @@ const GROUP_WORDS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * The enumeration of the editor data that labels each kind's outermost
+ * group: the race of a unit, an ability, a buff or an upgrade, the class
+ * of an item; a destructable's or a doodad's category has none.
+ */
+const GROUP_ENUMERATIONS: Readonly<Record<ObjectKind, string | undefined>> = {
+  unit: "unitRace",
+  item: "itemClass",
+  ability: "unitRace",
+  buff: "unitRace",
+  destructable: undefined,
+  doodad: undefined,
+  upgrade: "unitRace",
+};
+
+/** A base value's first level: the value itself for a field of one value. */
+const firstValue = (value: FieldValue | undefined): string | undefined =>
+  typeof value === "string" ? value : value?.[0];
+
+/**
  * A Built-in object's group in the World Editor's tree, each level
  * labelled: a race through the editor data's `unitRace` (the label the
  * Object Editor gives), an item's class through its `itemClass`, the
@@ -95,18 +119,14 @@ function groupOf(
 ): string[] | undefined {
   const object = gameData.kinds[kind].objects.get(rawcode);
   if (object === undefined) return undefined;
-  const enumerated = (type: string, value: string) =>
-    gameData.enumeration(type)?.find((entry) => entry.value === value)?.label;
+  const outermost = GROUP_ENUMERATIONS[kind];
   return object.group
     .map((value, level) =>
-      level === 0 && kind === "item"
-        ? (enumerated("itemClass", value) ?? value)
-        : level === 0 &&
-            kind !== "destructable" &&
-            kind !== "doodad" &&
-            kind !== "item"
-          ? (enumerated("unitRace", value) ?? value)
-          : (GROUP_WORDS[value] ?? value),
+      level === 0 && outermost !== undefined
+        ? (gameData
+            .enumeration(outermost)
+            ?.find((entry) => entry.value === value)?.label ?? value)
+        : (GROUP_WORDS[value] ?? value),
     )
     .filter((label) => label !== "");
 }
@@ -134,10 +154,9 @@ function iconOf(
   if (modification !== undefined) {
     return String(modification.value) || undefined;
   }
-  const value = gameData.kinds[kind].objects
-    .get(baseRawcode)
-    ?.values.get(field.id);
-  const first = typeof value === "string" ? value : value?.[0];
+  const first = firstValue(
+    gameData.kinds[kind].objects.get(baseRawcode)?.values.get(field.id),
+  );
   return first === undefined || first === "" ? undefined : first;
 }
 
@@ -425,7 +444,7 @@ export function detailOf(
         );
       }
     } else {
-      const single = typeof value === "string" ? value : value?.[0];
+      const single = firstValue(value);
       fields.push(
         row(
           head,

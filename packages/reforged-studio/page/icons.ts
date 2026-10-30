@@ -67,9 +67,22 @@ export function iconUrl(path: string): Promise<string | undefined> {
           return undefined;
         }
       },
-      () => undefined,
+      () => {
+        // A failed request is not the file's answer: the next asks again.
+        icons.delete(key);
+        return undefined;
+      },
     );
     icons.set(key, url);
   }
   return url;
+}
+
+/**
+ * Forgets every icon decoded, after the map folder changed on disk: an
+ * import may have changed, and the next icon shown reads it again. The
+ * object URLs are not revoked, since an icon on screen still shows one.
+ */
+export function forgetIcons(): void {
+  icons.clear();
 }

@@ -16,6 +16,7 @@ import type {
   SessionAnswer,
 } from "../src/server/api-types.js";
 import { api, listen } from "./api.js";
+import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
 import { KINDS, useRoute } from "./parts.js";
 import { Search } from "./search.js";
@@ -48,6 +49,7 @@ function App() {
     () =>
       listen({
         reloaded: () => {
+          forgetIcons();
           setBanner(
             "The map folder changed on disk: the Studio read it again.",
           );

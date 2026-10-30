@@ -33,9 +33,20 @@ function rawOf(row: FieldRow | undefined): string | undefined {
   return row.base;
 }
 
-/** Whether a row holds its base's value: unmodified, or modified to the same value. */
+/**
+ * Whether a row holds its base's value: unmodified, or modified to the
+ * same value, as the file stores it or as the same number (`1.5`, `1.50`).
+ */
 function atBase(row: FieldRow | undefined): boolean {
-  return row === undefined || !row.modified || String(row.value) === row.base;
+  if (!row?.modified) return true;
+  if (row.base === undefined) return false;
+  const stored = String(row.stored);
+  if (stored === row.base) return true;
+  return (
+    stored.trim() !== "" &&
+    row.base.trim() !== "" &&
+    Number(stored) === Number(row.base)
+  );
 }
 
 /** One cell's value: its display value, and its raw value where the two differ; an icon field's icon. */
@@ -52,8 +63,8 @@ function Value(props: {
   }
   return (
     <>
-      {row.type === "icon" && display !== undefined && display !== "" && (
-        <Icon path={display} label={owner} />
+      {row.type === "icon" && raw !== undefined && raw !== "" && (
+        <Icon path={raw} label={owner} />
       )}
       <span className="display">{display}</span>
       {raw !== undefined && raw !== display && (
