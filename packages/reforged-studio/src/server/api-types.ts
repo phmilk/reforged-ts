@@ -59,12 +59,15 @@ export interface ListedObject {
 export interface ObjectsAnswer {
   /** The map's Game data set; undefined when `war3map.w3i` does not say it. */
   readonly gameDataSet: GameDataSet | undefined;
+  /** The objects the filter keeps. */
   readonly objects: readonly ListedObject[];
 }
 
 /** `GET /api/search?q=`: the objects whose Rawcode or name matches, a Rawcode's first. */
 export interface SearchAnswer {
+  /** The text searched, trimmed. */
   readonly query: string;
+  /** The objects found, at most 50: those of the Rawcode, then those whose name holds the text. */
   readonly objects: readonly ListedObject[];
   /** For a query of four characters, no object of that Rawcode found: the lookup's suggestions. */
   readonly suggestions?: readonly RawcodeSuggestion[];
@@ -167,6 +170,7 @@ export type Edit =
 
 /** The body of `POST /api/edits`: edits applied together, as one undo step, or none of them. */
 export interface EditsRequest {
+  /** The edits, applied in order. */
   readonly edits: readonly Edit[];
 }
 
@@ -187,6 +191,7 @@ export interface SessionCounts {
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`.
  */
 export interface ErrorAnswer {
+  /** The refusal. */
   readonly error: {
     readonly reason: string;
     readonly message: string;
@@ -197,7 +202,9 @@ export interface ErrorAnswer {
 
 /** `GET /api/session`: the session's map folder, game and counts. */
 export interface SessionAnswer extends SessionCounts {
+  /** The map folder, an absolute path. */
   readonly mapFolder: string;
+  /** The Map project's root, an absolute path. */
   readonly projectRoot: string;
   /** The Build of the install read. */
   readonly build: string;
@@ -215,7 +222,9 @@ export interface SessionAnswer extends SessionCounts {
 export interface OpenInEditorAnswer {
   /** `"code"`, `"VISUAL"` or `"EDITOR"`. */
   readonly editor: "code" | "VISUAL" | "EDITOR";
+  /** The Object definition's file, an absolute path. */
   readonly file: string;
+  /** The line of its Rawcode, from 1. */
   readonly line: number;
 }
 

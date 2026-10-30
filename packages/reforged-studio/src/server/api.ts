@@ -320,7 +320,12 @@ async function edit(
     context.session.edit(edits as Edit[]);
   } catch (error) {
     if (error instanceof EditRefusedError) {
-      return refuse(409, error.reason, error.message, error.file);
+      return refuse(
+        error.reason === "unavailable" ? 503 : 409,
+        error.reason,
+        error.message,
+        error.file,
+      );
     }
     if (error instanceof ObjectDataWriterError) {
       return refuse(422, error.reason, error.message);

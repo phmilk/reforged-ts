@@ -213,7 +213,7 @@ export interface UnavailableLookup {
 
 /** Every object the lookup knows, which {@link RawcodeLookup.list} returns. */
 export interface ListedRawcodes {
-  /** `"listed"`. */
+  /** Tells a listing apart from an unavailable lookup. */
   readonly status: "listed";
   /**
    * The objects, the map's and the Built-in objects, each as a lookup of its
@@ -283,7 +283,7 @@ export interface RawcodeLookup {
    */
   list(): RawcodeListResult;
   /**
-   * The files whose modification times the lookup checks, absolute: the
+   * Lists the files whose modification times the lookup checks, absolute: the
    * Object data files and their Skin files, `war3map.wts`, `war3map.w3i`,
    * the package.json and index of `reforged-builtins` when it is installed,
    * every definition file under the definitions folder, then the Object
@@ -398,7 +398,7 @@ export function openRawcodeLookup(
           ? state
           : {
               status: "listed",
-              objects: listed(state),
+              objects: sortedObjects(state),
               gameDataSet: state.gameDataSet,
             };
       } catch (error) {
@@ -470,7 +470,7 @@ function lookupFiles(options: RawcodeLookupOptions): string[] {
 }
 
 /** Every object of a read, by Object kind order then Rawcode in code point order. */
-function listed(state: Loaded): RawcodeObject[] {
+function sortedObjects(state: Loaded): RawcodeObject[] {
   return [...state.objects.values()]
     .flat()
     .sort(

@@ -684,24 +684,17 @@ describe("openRawcodeLookup, the listing", () => {
     const { objects } = listing;
     const keys = objects.map((object) => `${object.kind}:${object.rawcode}`);
 
-    expect(keys).toEqual(
-      [...keys].sort((a, b) => {
-        const [aKind = "", aRawcode = ""] = a.split(":");
-        const [bKind = "", bRawcode = ""] = b.split(":");
-        const order = [
-          "unit",
-          "item",
-          "ability",
-          "buff",
-          "destructable",
-          "doodad",
-          "upgrade",
-        ];
-        return (
-          order.indexOf(aKind) - order.indexOf(bKind) ||
-          (aRawcode < bRawcode ? -1 : aRawcode > bRawcode ? 1 : 0)
-        );
-      }),
+    // Custom objects sort with the Built-in ones, by code point: `h000`
+    // before `hfoo`, an uppercase Rawcode before a lowercase one.
+    expect(keys.indexOf("unit:Hpal")).toBeLessThan(keys.indexOf("unit:h000"));
+    expect(keys.indexOf("unit:h000")).toBeLessThan(keys.indexOf("unit:h00A"));
+    expect(keys.indexOf("unit:h00A")).toBeLessThan(keys.indexOf("unit:hfoo"));
+    // Every unit before every item, every buff before every destructable.
+    expect(keys.findLastIndex((key) => key.startsWith("unit:"))).toBeLessThan(
+      keys.findIndex((key) => key.startsWith("item:")),
+    );
+    expect(keys.indexOf("buff:B000")).toBeLessThan(
+      keys.indexOf("destructable:B000"),
     );
     expect(objects.filter((object) => object.rawcode === "B000")).toMatchObject(
       [

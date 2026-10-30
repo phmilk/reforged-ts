@@ -391,6 +391,30 @@ describe("the Studio's Object definitions", () => {
     ).toBe(0);
   });
 
+  it("refuses every edit while the Object definitions cannot be loaded", async () => {
+    const studio = await start(
+      mapProject({
+        "src/objects/broken.ts": 'throw new Error("broken");\n',
+      }),
+    );
+
+    const answer = await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h000",
+            field: "uhpm",
+            value: 600,
+          },
+        ],
+      },
+    });
+    expect(answer.status).toBe(503);
+    expect((answer.body as ErrorAnswer).error.reason).toBe("unavailable");
+  });
+
   /** A folder holding a stand-in `code` command, which writes its arguments to `out`. */
   function codeOnPath(out: string): string {
     const bin = makeTempDir("bin");

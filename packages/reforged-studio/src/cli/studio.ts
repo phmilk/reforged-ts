@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * The `reforged-studio` bin, a thin wrapper over `startStudio` for a Map
- * project not made from the Template, whose `pnpm studio` calls
- * `startStudio` itself:
+ * project not made from the Template, whose `pnpm studio` is to call
+ * `startStudio` itself (phmilk/reforged-ts-template#145):
  *
  * `reforged-studio --map <folder> [--project <root>] [--game <executable>]
  * [--world-editor <executable>] [--port <port>] [--no-open]`

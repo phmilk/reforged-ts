@@ -16,7 +16,7 @@ It holds two parts: the Studio's server and page ([#831](https://github.com/phmi
 - `open`: whether to open the page in the system's browser.
 - `worldEditorCheck` and `env`, for tests and tools: `reforged-map`'s World Editor check options, and the environment "Open in editor" reads.
 
-The bin is a thin wrapper over it, for a Map project not made from the Template, whose `pnpm studio` calls `startStudio` itself:
+The bin is a thin wrapper over it, for a Map project not made from the Template, whose `pnpm studio` is to call `startStudio` itself ([reforged-ts-template#145](https://github.com/phmilk/reforged-ts-template/issues/145)):
 
 ```sh
 reforged-studio --map maps/my-map.w3m [--project <root>] [--game <executable>] [--world-editor <executable>] [--port <port>] [--no-open]

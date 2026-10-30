@@ -1,8 +1,8 @@
 /**
  * `startStudio`, the Studio's programmatic entry: a local server on a Map
  * project's map folder, bound to the loopback interface, serving the page
- * and its JSON API (`./server/`). The `reforged-studio` bin and the
- * Template's `pnpm studio` both call it.
+ * and its JSON API (`./server/`). The `reforged-studio` bin calls it, and
+ * the Template's `pnpm studio` will (phmilk/reforged-ts-template#145).
  */
 import { spawn } from "node:child_process";
 import http from "node:http";
@@ -122,14 +122,14 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
     return read;
   };
 
-  const current = new Session({ projectRoot, mapFolder });
+  const session = new Session({ projectRoot, mapFolder });
   const events = new EventStreams();
 
   let port = 0;
   const server = http.createServer((request, response) => {
     void handle(
       {
-        session: current,
+        session,
         events,
         port: () => port,
         projectRoot,
@@ -149,7 +149,7 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
 
   const watch = watchFiles(
     () => [
-      ...current.lookup.files(),
+      ...session.lookup.files(),
       ...PLACEMENT_FILES.map((name) => path.join(mapFolder, name)),
     ],
     (files) => {
@@ -162,19 +162,19 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
           .split(path.sep)
           .join("/"),
       );
-      const counts = current.counts();
+      const counts = session.counts();
       if (counts.unsavedEdits > 0) {
         events.send("changed-on-disk", { ...counts, files: names });
         return true;
       }
       try {
-        current.reopen();
+        session.reopen();
       } catch {
         // The map folder cannot be read yet (a World Editor save replacing
         // it): the next poll tries again.
         return false;
       }
-      events.send("reloaded", { ...current.counts(), files: names });
+      events.send("reloaded", { ...session.counts(), files: names });
       return true;
     },
   );

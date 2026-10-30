@@ -189,10 +189,16 @@ export class Session {
    * editor refuses takes back the ones applied before it.
    *
    * @param edits - The edits, in order.
-   * @throws {@link EditRefusedError} With the reason `"object-definition"`.
+   * @throws {@link EditRefusedError} With the reason `"object-definition"`,
+   *   or `"unavailable"` when the lookup cannot say which objects the code owns.
    * @throws ObjectDataWriterError The editor's refusal.
    */
   edit(edits: readonly Edit[]): void {
+    const listing = this.lookup.list();
+    if (listing.status === "unavailable") {
+      // Without the lookup, which objects the code owns is unknown: no edit.
+      throw new EditRefusedError("unavailable", listing.reason);
+    }
     for (const edit of edits) {
       const file = this.definitionOf(edit.kind, edit.rawcode);
       if (file !== undefined) {
