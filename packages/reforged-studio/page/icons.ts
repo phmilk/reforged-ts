@@ -69,7 +69,7 @@ export function iconUrl(path: string): Promise<string | undefined> {
       },
       () => {
         // A failed request is not the file's answer: the next asks again.
-        icons.delete(key);
+        if (icons.get(key) === url) icons.delete(key);
         return undefined;
       },
     );

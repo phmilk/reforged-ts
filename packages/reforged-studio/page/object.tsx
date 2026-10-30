@@ -33,19 +33,29 @@ function rawOf(row: FieldRow | undefined): string | undefined {
   return row.base;
 }
 
+/** A decimal number's text: `1.5`, `-2`, `.50`. */
+const DECIMAL = /^\s*-?(\d+\.?\d*|\.\d+)\s*$/;
+
+/** Whether two values are the same, as text or as the same decimal number (`1.5`, `1.50`). */
+function same(value: unknown, base: string): boolean {
+  const text = String(value);
+  if (text === base) return true;
+  return (
+    DECIMAL.test(text) && DECIMAL.test(base) && Number(text) === Number(base)
+  );
+}
+
 /**
  * Whether a row holds its base's value: unmodified, or modified to the
- * same value, as the file stores it or as the same number (`1.5`, `1.50`).
+ * same value, in the working state (a `TRIGSTR_` resolved) or as the file
+ * stores it.
  */
 function atBase(row: FieldRow | undefined): boolean {
   if (!row?.modified) return true;
   if (row.base === undefined) return false;
-  const stored = String(row.stored);
-  if (stored === row.base) return true;
   return (
-    stored.trim() !== "" &&
-    row.base.trim() !== "" &&
-    Number(stored) === Number(row.base)
+    (row.value !== undefined && same(row.value, row.base)) ||
+    (row.stored !== undefined && same(row.stored, row.base))
   );
 }
 

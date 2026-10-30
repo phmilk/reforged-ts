@@ -107,9 +107,9 @@ const firstValue = (value: FieldValue | undefined): string | undefined =>
 
 /**
  * A Built-in object's group in the World Editor's tree, each level
- * labelled: a race through the editor data's `unitRace` (the label the
- * Object Editor gives), an item's class through its `itemClass`, the
- * tree's words through {@link GROUP_WORDS}, a value with no label as it
+ * labelled: the outermost through the enumeration of the editor data
+ * {@link GROUP_ENUMERATIONS} names, the tree's words through
+ * {@link GROUP_WORDS}, a value with no label as it
  * is; empty levels left out. Undefined when the install does not hold it.
  */
 function groupOf(
