@@ -1,9 +1,10 @@
 // The reader of war3map.w3i, the map's options: only its Game data set, the
 // Game Data Set (Default, Custom, Melee) and the Game Data Version (Reign of
 // Chaos, The Frozen Throne, Forsaken Kingdom) it declares, which name one
-// of reforged-builtins' Game data sets together (`melee-fk`). Default reads
-// Custom, or Melee when the melee map flag is set, as Probe runs measured
-// (#575, #596).
+// of reforged-builtins' Game data sets together (`melee-fk`), and its
+// Supported Modes, which the Studio limits its art layer to (#839). Default
+// reads Custom, or Melee when the melee map flag is set, as Probe runs
+// measured (#575, #596).
 //
 // The header is read up to the Game Data Version, in the formats wc3libs
 // reads (`W3I.java`): 18, 25, 28, 31, 32, 33 and 39, the 3.0 World
@@ -67,16 +68,48 @@ export function readWar3mapW3i(mapFolder: string, model: MapFolderModel): void {
     return;
   }
   try {
-    model.gameDataSet = gameDataSet(bytes);
+    model.gameDataSet = readOptions(bytes).gameDataSet;
   } catch (error) {
     if (!(error instanceof W3iError)) throw error;
     model.warnings.push(`${W3I_FILE} not read (${error.message}): ${UNKNOWN}`);
   }
 }
 
+/**
+ * Reads the Supported Modes a map folder's `war3map.w3i` declares: the art
+ * the map allows, as the World Editor's map options store it.
+ *
+ * @remarks
+ * The values are read in the order of the World Editor's strings, which no
+ * one checked in the World Editor yet: 1 SD, 2 HD, 3 All Modes and 4 DE.
+ * Every map the 3.0 World Editor saved in the workspace's fixtures stores 3.
+ *
+ * @param mapFolder - The map folder, saved as a folder by the World Editor.
+ * @returns The Supported Modes, as the file stores them; undefined when the
+ *   file is missing or unreadable, or of a format before 31, which has none.
+ */
+export function readSupportedModes(mapFolder: string): number | undefined {
+  const bytes = readMapFile(mapFolder, W3I_FILE);
+  if (bytes === undefined) return undefined;
+  try {
+    return readOptions(bytes).supportedModes;
+  } catch (error) {
+    if (!(error instanceof W3iError)) throw error;
+    return undefined;
+  }
+}
+
 class W3iError extends Error {}
 
-function gameDataSet(bytes: Uint8Array): string {
+/** What the reader reads of war3map.w3i. */
+interface MapOptions {
+  /** The Game data set, as the id of reforged-builtins' index. */
+  readonly gameDataSet: string;
+  /** The Supported Modes; undefined in a format before 31. */
+  readonly supportedModes: number | undefined;
+}
+
+function readOptions(bytes: Uint8Array): MapOptions {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   let offset = 0;
   const skip = (length: number): number => {
@@ -115,6 +148,7 @@ function gameDataSet(bytes: Uint8Array): string {
   skipStrings(format >= 25 ? 4 : 3);
   const set = byIndex(GAME_DATA_SETS, int32(), "Game Data Set");
   let version: (typeof GAME_DATA_VERSIONS)[number] = "tft";
+  let supportedModes: number | undefined;
   if (format >= GAME_DATA_VERSION_FORMAT) {
     // The prologue's model, text, title and subtitle.
     skipStrings(4);
@@ -122,13 +156,13 @@ function gameDataSet(bytes: Uint8Array): string {
     skip(4 * 4 + 4 + (format >= 39 ? 4 * 6 : 0) + 4);
     // The sound environment.
     skipStrings(1);
-    // The light tileset, the water colour, the script language, the
-    // supported modes.
-    skip(1 + 4 + 4 + 4);
+    // The light tileset, the water colour, the script language.
+    skip(1 + 4 + 4);
+    supportedModes = int32();
     version = byIndex(GAME_DATA_VERSIONS, int32(), "Game Data Version");
   }
   const resolved = set === "default" ? (melee ? "melee" : "custom") : set;
-  return `${resolved}-${version}`;
+  return { gameDataSet: `${resolved}-${version}`, supportedModes };
 }
 
 function byIndex<T>(ids: readonly T[], index: number, field: string): T {

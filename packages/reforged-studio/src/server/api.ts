@@ -19,9 +19,16 @@ import {
   type WorldEditorCheckOptions,
   type WorldEditorReloadOptions,
 } from "reforged-map";
+import { ART_LAYERS } from "../art-layer.js";
+import type { CascStorage } from "../casc/storage.js";
 import type { GameData } from "../game-data.js";
 import { isKind, OBJECT_KINDS } from "../kinds.js";
-import type { PathResolver } from "../paths.js";
+import type { ArtLayer, PathResolver, ResolvedPath } from "../paths.js";
+import {
+  THUMBNAIL_LIMIT,
+  type ThumbnailCache,
+  type ThumbnailKey,
+} from "../thumbnails.js";
 import {
   placementCount,
   placementFile,
@@ -31,6 +38,7 @@ import {
   OBJECT_ORIGINS,
   type AdoptAnswer,
   type AdoptedObject,
+  type ArtLayerAnswer,
   type BulkAnswer,
   type BulkOperation,
   type CreateAnswer,
@@ -41,6 +49,7 @@ import {
   type ErrorAnswer,
   type IconsAnswer,
   type ListedObject,
+  type ModelsAnswer,
   type ObjectOrigin,
   type ObjectsAnswer,
   type OpenInEditorAnswer,
@@ -54,12 +63,14 @@ import {
   type SaveRefusedAnswer,
   type SearchAnswer,
   type SessionAnswer,
+  type ThumbnailAnswer,
   type SessionCounts,
 } from "./api-types.js";
 import { bulkEdits, BulkRefusedError, tableOf } from "./bulk.js";
 import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
 import { formatDefinitionFiles } from "./format.js";
+import { installModels, mapModels, searchModels } from "./models.js";
 import { composeObjects, detailOf, definitionLine } from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
 import { servePage } from "./page.js";
@@ -83,6 +94,17 @@ const SEARCH_LIMIT = 50;
 /** The largest request body read, in bytes. */
 const BODY_LIMIT = 1024 * 1024;
 
+/** The most models' paths `GET /api/models` answers when the request sets no limit. */
+const MODELS_LIMIT = 200;
+
+/** The art layer of the session: the one icons and previews are read in, and those the map allows. */
+export interface ArtLayerState {
+  /** The art layer read in now. */
+  current: ArtLayer;
+  /** The art layers the map's Supported Modes allow. */
+  readonly allowed: readonly ArtLayer[];
+}
+
 /** What the routes reach. */
 export interface ApiContext {
   readonly session: Session;
@@ -103,8 +125,14 @@ export interface ApiContext {
   /** Takes the watched files' stamps as they are, after the Studio wrote or read the map folder itself. */
   readonly resync: () => void;
   readonly env: EditorEnvironment;
-  /** The resolver of icons' and models' paths, the map folder's imports first. */
-  readonly paths: PathResolver;
+  /** The resolver of icons' and models' paths in an art layer, the map folder's imports first. */
+  readonly paths: (artLayer: ArtLayer) => PathResolver;
+  /** The session's art layer, which the header's switch changes. */
+  readonly artLayer: ArtLayerState;
+  /** The install's storage, whose models the picker lists. */
+  readonly storage: CascStorage;
+  /** The thumbnails of the models, on disk under the user's cache folder. */
+  readonly thumbnails: ThumbnailCache;
 }
 
 /** An answer the routes give: its status and its JSON body. */
@@ -147,14 +175,45 @@ async function readJson(request: http.IncomingMessage): Promise<unknown> {
 
 /** Reads a request's body as UTF-8 text, at most {@link BODY_LIMIT} bytes. */
 async function readText(request: http.IncomingMessage): Promise<string> {
+  return (await readBytes(request, BODY_LIMIT)).toString("utf8");
+}
+
+/** Reads a request's body, at most `limit` bytes. */
+async function readBytes(
+  request: http.IncomingMessage,
+  limit: number,
+): Promise<Buffer> {
   const chunks: Buffer[] = [];
   let size = 0;
   for await (const chunk of request as AsyncIterable<Buffer>) {
     size += chunk.byteLength;
-    if (size > BODY_LIMIT) throw new SyntaxError("The body is too large.");
+    if (size > limit) throw new SyntaxError("The body is too large.");
     chunks.push(chunk);
   }
-  return Buffer.concat(chunks).toString("utf8");
+  return Buffer.concat(chunks);
+}
+
+const isArtLayer = (value: unknown): value is ArtLayer =>
+  (ART_LAYERS as readonly unknown[]).includes(value);
+
+/**
+ * The art layer of a request's `?layer=`, the session's when it has none,
+ * or the refusal of one the map does not allow.
+ */
+function layerOf(
+  context: ApiContext,
+  query: URLSearchParams,
+): ArtLayer | Answer {
+  const asked = query.get("layer");
+  if (asked === null) return context.artLayer.current;
+  if (!isArtLayer(asked) || !context.artLayer.allowed.includes(asked)) {
+    return refuse(
+      400,
+      "bad-request",
+      `${asked} is no art layer of this map; its Supported Modes allow ${context.artLayer.allowed.join(", ")}.`,
+    );
+  }
+  return asked;
 }
 
 const isOrigin = (value: string): value is ObjectOrigin =>
@@ -1213,6 +1272,36 @@ async function openDefinition(
 }
 
 /**
+ * The file a request's `?path=` and `?layer=` name, resolved in #481's
+ * order in that art layer: the refusal of a request without a path or with
+ * a layer the map does not allow, and the 404 of a path found nowhere.
+ */
+async function resolveQueriedFile(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<{ resolved: ResolvedPath; layer: ArtLayer } | Answer> {
+  const asked = query.get("path");
+  if (asked === null || asked.trim() === "") {
+    return refuse(
+      400,
+      "bad-request",
+      "The query is ?path=<path>[&layer=sd|hd|de].",
+    );
+  }
+  const layer = layerOf(context, query);
+  if (layer instanceof Answer) return layer;
+  const resolved = await context.paths(layer).resolve(asked);
+  if (!resolved.found) {
+    return refuse(
+      404,
+      "not-found",
+      `${resolved.path} is neither in the map folder nor in the install.`,
+    );
+  }
+  return { resolved, layer };
+}
+
+/**
  * Answers `GET /api/files?path=`: the bytes of an icon's or a model's file,
  * resolved in #481's order, the map folder's imports first; a 404 for a
  * path found nowhere, which the page shows as a placeholder.
@@ -1222,23 +1311,12 @@ async function serveFile(
   query: URLSearchParams,
   response: http.ServerResponse,
 ): Promise<void> {
-  const asked = query.get("path");
-  if (asked === null || asked.trim() === "") {
-    send(response, refuse(400, "bad-request", "The query is ?path=<path>."));
+  const found = await resolveQueriedFile(context, query);
+  if (found instanceof Answer) {
+    send(response, found);
     return;
   }
-  const resolved = await context.paths.resolve(asked);
-  if (!resolved.found) {
-    send(
-      response,
-      refuse(
-        404,
-        "not-found",
-        `${resolved.path} is neither in the map folder nor in the install.`,
-      ),
-    );
-    return;
-  }
+  const { resolved } = found;
   const bytes = await resolved.read();
   response
     .writeHead(200, {
@@ -1248,6 +1326,143 @@ async function serveFile(
       "x-content-type-options": "nosniff",
     })
     .end(bytes);
+}
+
+/** Answers `POST /api/art-layer`: the art layer the session reads icons and previews in from now on. */
+async function setArtLayer(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { artLayer } = await readOptionalJson(request);
+  if (!isArtLayer(artLayer)) {
+    return refuse(
+      400,
+      "bad-request",
+      `The body is { artLayer }, one of ${ART_LAYERS.join(", ")}.`,
+    );
+  }
+  if (!context.artLayer.allowed.includes(artLayer)) {
+    return refuse(
+      409,
+      "not-supported",
+      `The map's Supported Modes do not allow ${artLayer}: they allow ${context.artLayer.allowed.join(", ")}.`,
+    );
+  }
+  context.artLayer.current = artLayer;
+  return new Answer(200, { artLayer } satisfies ArtLayerAnswer);
+}
+
+/** The install's models of each art layer, listed once. */
+const listedModels = new WeakMap<CascStorage, Map<ArtLayer, string[]>>();
+
+/**
+ * Answers `GET /api/models?q=[&limit=&layer=]`: the models' paths of the
+ * map folder's imports and of the install in the art layer, those whose
+ * path holds the text.
+ */
+async function models(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<Answer> {
+  const layer = layerOf(context, query);
+  if (layer instanceof Answer) return layer;
+  const text = (query.get("q") ?? "").trim();
+  const limitText = query.get("limit");
+  const limit = limitText === null ? MODELS_LIMIT : Number(limitText);
+  if (!Number.isInteger(limit) || limit < 1) {
+    return refuse(400, "bad-request", "The limit is a whole number above 0.");
+  }
+  let byLayer = listedModels.get(context.storage);
+  if (byLayer === undefined) {
+    byLayer = new Map();
+    listedModels.set(context.storage, byLayer);
+  }
+  let install = byLayer.get(layer);
+  if (install === undefined) {
+    install = installModels(context.storage, layer);
+    byLayer.set(layer, install);
+  }
+  const found = searchModels(await mapModels(context.mapFolder), install, text);
+  return new Answer(200, {
+    query: text,
+    models: found.slice(0, limit),
+    total: found.length,
+  } satisfies ModelsAnswer);
+}
+
+/**
+ * The key of the thumbnail a request names, from its `?path=` and
+ * `?layer=`: the path normalized as the resolver finds it, and a map
+ * import's bytes; the refusal of a request without a path, and the 404 of
+ * a model found nowhere.
+ */
+async function thumbnailKey(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<ThumbnailKey | Answer> {
+  const found = await resolveQueriedFile(context, query);
+  if (found instanceof Answer) return found;
+  const { resolved, layer } = found;
+  return {
+    path: resolved.path,
+    artLayer: layer,
+    ...(resolved.from === "map" && { imported: await resolved.read() }),
+  };
+}
+
+/**
+ * Answers `GET /api/thumbnails?path=[&layer=]`: the PNG the cache holds for
+ * a model, or a 404 the page answers by drawing it.
+ */
+async function readThumbnail(
+  context: ApiContext,
+  query: URLSearchParams,
+  response: http.ServerResponse,
+): Promise<void> {
+  const key = await thumbnailKey(context, query);
+  if (key instanceof Answer) {
+    send(response, key);
+    return;
+  }
+  const png = await context.thumbnails.read(key);
+  if (png === undefined) {
+    send(
+      response,
+      refuse(404, "not-cached", `No thumbnail of ${key.path} is cached yet.`),
+    );
+    return;
+  }
+  response
+    .writeHead(200, {
+      "content-type": "image/png",
+      "content-length": String(png.byteLength),
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+    })
+    .end(png);
+}
+
+/** Answers `PUT /api/thumbnails?path=[&layer=]`: keeps the PNG the page drew for a model. */
+async function writeThumbnail(
+  context: ApiContext,
+  query: URLSearchParams,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const key = await thumbnailKey(context, query);
+  if (key instanceof Answer) return key;
+  const png = await readBytes(request, THUMBNAIL_LIMIT);
+  try {
+    await context.thumbnails.write(key, png);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      return refuse(400, "bad-request", error.message);
+    }
+    throw error;
+  }
+  return new Answer(200, {
+    path: key.path,
+    artLayer: key.artLayer,
+  } satisfies ThumbnailAnswer);
 }
 
 async function sessionAnswer(context: ApiContext): Promise<Answer> {
@@ -1274,6 +1489,8 @@ async function sessionAnswer(context: ApiContext): Promise<Answer> {
       ...session.warnings,
       ...(listing.status === "unavailable" ? [listing.reason] : []),
     ],
+    artLayer: context.artLayer.current,
+    artLayers: context.artLayer.allowed,
     ...session.counts(),
   } satisfies SessionAnswer);
 }
@@ -1316,6 +1533,14 @@ export async function handle(
       send(response, await search(context, searchParams));
     } else if (route === "GET /api/files") {
       await serveFile(context, searchParams, response);
+    } else if (route === "POST /api/art-layer") {
+      send(response, await setArtLayer(context, request));
+    } else if (route === "GET /api/models") {
+      send(response, await models(context, searchParams));
+    } else if (route === "GET /api/thumbnails") {
+      await readThumbnail(context, searchParams, response);
+    } else if (route === "PUT /api/thumbnails") {
+      send(response, await writeThumbnail(context, searchParams, request));
     } else if (route === "POST /api/edits") {
       send(response, await edit(context, request));
     } else if (route === "GET /api/free-rawcode") {

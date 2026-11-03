@@ -716,6 +716,8 @@ describe("the Studio's session", () => {
       build: "3.0.0.24268",
       gameDataSet: { id: "melee-fk", label: "Melee (Forsaken Kingdom)" },
       baseValues: "melee-fk",
+      artLayer: "hd",
+      artLayers: ["sd", "hd", "de"],
       worldEditor: "no-window",
       warnings: [],
       unsavedEdits: 0,

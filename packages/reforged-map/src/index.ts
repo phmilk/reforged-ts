@@ -283,6 +283,7 @@ export {
   type UnavailableLookup,
   type UnknownRawcode,
 } from "./lookup.js";
+export { readSupportedModes } from "./war3map-w3i.js";
 export {
   readLiveStudio,
   STUDIO_RUNTIME_FILE,

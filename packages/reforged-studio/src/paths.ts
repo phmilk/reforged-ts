@@ -1,7 +1,6 @@
 /**
- * Path resolution for icons and models, as #481 measured it
- * (`docs/research/studio-model-previews.md`): a path an object's field or
- * a model names is looked for in the map folder first, layered like the
+ * Path resolution for icons and models, as #481 measured it: a path an
+ * object's field or a model names is looked for in the map folder first, layered like the
  * game (`_hd.w3mod/<path>`, as HiveWE's lookup orders a map's files), then
  * in the chosen art layer of the storage (`_HD.w3mod:` or `_DE.w3mod:`),
  * then in its base layer, each layer's enUS sub-layer

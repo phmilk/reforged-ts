@@ -9,16 +9,27 @@ import http from "node:http";
 import path from "node:path";
 import {
   readLiveStudio,
+  readSupportedModes,
   STUDIO_RUNTIME_FORMAT,
   type StudioRuntimeFile,
   type WorldEditorCheckOptions,
   type WorldEditorReloadOptions,
 } from "reforged-map";
+import {
+  allowedArtLayers,
+  findWorldEditorPreferences,
+  readArtLayer,
+  systemPreferencesMachine,
+} from "./art-layer.js";
 import { openStorage } from "./casc/storage.js";
 import { readGameData, type GameData } from "./game-data.js";
 import { findInstall, systemMachine } from "./install.js";
 import { GAME_DATA_SETS } from "./layers.js";
-import { createPathResolver } from "./paths.js";
+import {
+  createPathResolver,
+  type ArtLayer,
+  type PathResolver,
+} from "./paths.js";
 import { handle } from "./server/api.js";
 import { EventStreams } from "./server/events.js";
 import { DEFAULT_PORT, listen } from "./server/listen.js";
@@ -26,6 +37,7 @@ import type { EditorEnvironment } from "./server/open-in-editor.js";
 import { removeRuntimeFile, writeRuntimeFile } from "./server/runtime-file.js";
 import { Session } from "./server/session.js";
 import { watchFiles } from "./server/watch.js";
+import { defaultCacheFolder, ThumbnailCache } from "./thumbnails.js";
 
 /** The options of {@link startStudio}. */
 export interface StudioOptions {
@@ -68,6 +80,22 @@ export interface StudioOptions {
   worldEditorReload?: WorldEditorReloadOptions;
   /** The environment "Open in editor" reads `PATH`, `VISUAL` and `EDITOR` from; `process.env` when left out. */
   env?: EditorEnvironment;
+  /**
+   * The World Editor's preferences file, whose Asset Mode the art layer
+   * defaults to. When left out, `WorldEditPreferences.txt` of the folder
+   * `WC3_USER_FOLDER` names, else of `Warcraft III` in the Documents known
+   * folder, as Windows gives it; a file that cannot be read gives HD.
+   */
+  worldEditorPreferences?: string;
+  /**
+   * The folder the thumbnails of model previews are cached in, by Build,
+   * art layer and path. When left out, the user's cache folder:
+   * `%LOCALAPPDATA%\reforged-studio\thumbnails` on Windows,
+   * `~/Library/Caches/reforged-studio/thumbnails` on macOS, and
+   * `~/.cache/reforged-studio/thumbnails` (or under `XDG_CACHE_HOME`)
+   * elsewhere.
+   */
+  cacheFolder?: string;
 }
 
 /** A running Studio, which {@link startStudio} returns. */
@@ -140,7 +168,9 @@ function holdRuntimeFile(
  * When a live Studio already holds the map folder, as its runtime file
  * (`.reforged-studio.json` at the Map project's root) says, it opens that
  * Studio's page when `open` is true and returns its URL, starting nothing.
- * Otherwise it finds the game's install and opens its storage, opens the
+ * Otherwise it finds the game's install and opens its storage, chooses
+ * the art layer (the World Editor's Asset Mode preference, limited by the
+ * map's Supported Modes, HD when the preference cannot be read), opens the
  * map folder once with `reforged-map`'s `openObjectData` and its Rawcode
  * lookup with `openRawcodeLookup`, then listens on `127.0.0.1` only and
  * writes the runtime file, replacing a Studio's on another map folder of
@@ -187,8 +217,34 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
     return read;
   };
 
-  // The art layer is HD until #839 reads the World Editor's preference.
-  const paths = createPathResolver(storage, { artLayer: "hd", mapFolder });
+  const supportedModes = readSupportedModes(mapFolder);
+  const preferencesFile =
+    options.worldEditorPreferences ??
+    (await findWorldEditorPreferences(
+      systemPreferencesMachine(systemMachine.wsl),
+    ));
+  const artLayer = {
+    current: await readArtLayer({
+      ...(preferencesFile !== undefined && { preferencesFile }),
+      ...(supportedModes !== undefined && { supportedModes }),
+    }),
+    allowed: allowedArtLayers(supportedModes),
+  };
+  const resolvers = new Map<ArtLayer, PathResolver>();
+  const paths = (layer: ArtLayer): PathResolver => {
+    let resolver = resolvers.get(layer);
+    if (resolver === undefined) {
+      resolver = createPathResolver(storage, { artLayer: layer, mapFolder });
+      resolvers.set(layer, resolver);
+    }
+    return resolver;
+  };
+  const thumbnails = new ThumbnailCache(
+    options.cacheFolder === undefined
+      ? defaultCacheFolder()
+      : path.resolve(options.cacheFolder),
+    build,
+  );
 
   const session = new Session({ projectRoot, mapFolder });
   const events = new EventStreams();
@@ -219,6 +275,9 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         },
         env: options.env ?? process.env,
         paths,
+        artLayer,
+        storage,
+        thumbnails,
       },
       request,
       response,
