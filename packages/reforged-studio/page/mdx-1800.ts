@@ -22,8 +22,8 @@
  *
  * The layouts are those HiveWE's and WhiteoutLib's readers give, read for
  * facts only (HiveWE is AGPL: no code of it is here). The tests read
- * synthetic models of 1800; reading the install's own models is checked on
- * a machine with the game (#842). Limits taken as they are: an
+ * synthetic models of 1800; reading the install's own models is a check
+ * for a machine with the game, which #842 is to take up. Limits taken as they are: an
  * SD-on-HD or crystal layer draws as SD, and a model with more than 255
  * bones keeps its bone indices only up to 255.
  *

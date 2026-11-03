@@ -422,8 +422,9 @@ export interface ListedModel {
 
 /**
  * `GET /api/models?q=[&limit=&layer=]`: the models' paths of the install,
- * in the session's art layer (or the one `layer` names) and the base layer, and of the map folder's imports,
- * those whose path holds the text, the imports first, then by path.
+ * in the session's art layer (or the one `layer` names) and the base
+ * layer, and of the map folder's imports, those whose path holds the text,
+ * the imports first, then by path.
  */
 export interface ModelsAnswer {
   /** The text searched, trimmed. */

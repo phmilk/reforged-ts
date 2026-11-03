@@ -33,7 +33,6 @@ import {
   type AdoptAnswer,
   type AdoptedObject,
   type ArtLayerAnswer,
-  type ThumbnailAnswer,
   type DiffAnswer,
   type Edit,
   type ErrorAnswer,
@@ -50,6 +49,7 @@ import {
   type SaveRefusedAnswer,
   type SearchAnswer,
   type SessionAnswer,
+  type ThumbnailAnswer,
 } from "./api-types.js";
 import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
@@ -805,7 +805,7 @@ async function openDefinition(
  * order in that art layer: the refusal of a request without a path or with
  * a layer the map does not allow, and the 404 of a path found nowhere.
  */
-async function resolveAsked(
+async function resolveQueriedFile(
   context: ApiContext,
   query: URLSearchParams,
 ): Promise<{ resolved: ResolvedPath; layer: ArtLayer } | Answer> {
@@ -840,7 +840,7 @@ async function serveFile(
   query: URLSearchParams,
   response: http.ServerResponse,
 ): Promise<void> {
-  const found = await resolveAsked(context, query);
+  const found = await resolveQueriedFile(context, query);
   if (found instanceof Answer) {
     send(response, found);
     return;
@@ -929,7 +929,7 @@ async function thumbnailKey(
   context: ApiContext,
   query: URLSearchParams,
 ): Promise<ThumbnailKey | Answer> {
-  const found = await resolveAsked(context, query);
+  const found = await resolveQueriedFile(context, query);
   if (found instanceof Answer) return found;
   const { resolved, layer } = found;
   return {

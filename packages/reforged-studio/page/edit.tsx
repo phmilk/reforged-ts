@@ -9,9 +9,10 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { DiffAnswer, FieldRow } from "../src/server/api-types.js";
 import { api, ApiError } from "./api.js";
+import { addModel } from "./model-list.js";
 import { ModelPicker, ModelThumb } from "./models.js";
-import { firstModel } from "./preview.js";
 import { go, Icon } from "./parts.js";
+import { firstModel } from "./preview.js";
 
 /** What a field editor does: sets the value, or puts the field back to its base. */
 export interface FieldActions {
@@ -394,7 +395,7 @@ export function FieldEditor(props: {
               current={list ? firstModel(current) : current}
               onPick={(path) => {
                 setPicking(false);
-                commit(list && current !== "" ? `${current},${path}` : path);
+                commit(list ? addModel(current, path) : path);
               }}
               onClose={() => {
                 setPicking(false);
