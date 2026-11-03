@@ -12,7 +12,11 @@ import type {
   WorldEditorState,
 } from "reforged-map";
 
-/** A placement file's name: `war3mapUnits.doo` (units and items) or `war3map.doo` (destructables and doodads). */
+/**
+ * A placement file's name: `war3mapUnits.doo` (units and items) or
+ * `war3map.doo` (destructables and doodads). It is defined here, not in the
+ * placement reader, so that the page's types need no Node module.
+ */
 export type PlacementFile = "war3mapUnits.doo" | "war3map.doo";
 
 /**

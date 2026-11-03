@@ -10,7 +10,7 @@
  */
 import fs from "node:fs";
 import type { ObjectKind, RawcodeObject } from "reforged-map";
-import { OBJECT_KINDS } from "../kinds.js";
+import { isKind } from "../kinds.js";
 import { DOODADS_FILE, UNITS_FILE, type Placements } from "../placements.js";
 import type { ObjectOrigin, RawcodeHolder } from "./api-types.js";
 import type { ObjectState } from "./session.js";
@@ -222,9 +222,9 @@ export function removedRawcodes(
   return removed.flatMap((entry: unknown) => {
     const { kind, rawcode } = (entry ?? {}) as Record<string, unknown>;
     return typeof kind === "string" &&
-      (OBJECT_KINDS as readonly string[]).includes(kind) &&
+      isKind(kind) &&
       typeof rawcode === "string"
-      ? [{ kind: kind as ObjectKind, rawcode }]
+      ? [{ kind, rawcode }]
       : [];
   });
 }

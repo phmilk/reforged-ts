@@ -100,7 +100,7 @@ describe("the free Rawcode", () => {
       studio,
       "/api/free-rawcode?kind=unit&copyOf=hfoo",
     );
-    expect(notCustom.status).toBe(404);
+    expect(notCustom.status).toBe(409);
     expect((notCustom.body as ErrorAnswer).error.reason).toBe("not-custom");
   });
 

@@ -15,7 +15,7 @@ import {
   type WorldEditorReloadOptions,
 } from "reforged-map";
 import type { GameData } from "../game-data.js";
-import { OBJECT_KINDS } from "../kinds.js";
+import { isKind, OBJECT_KINDS } from "../kinds.js";
 import type { PathResolver } from "../paths.js";
 import {
   placementCount,
@@ -144,9 +144,6 @@ async function readText(request: http.IncomingMessage): Promise<string> {
   }
   return Buffer.concat(chunks).toString("utf8");
 }
-
-const isKind = (value: string): value is ObjectKind =>
-  (OBJECT_KINDS as readonly string[]).includes(value);
 
 const isOrigin = (value: string): value is ObjectOrigin =>
   (OBJECT_ORIGINS as readonly string[]).includes(value);
@@ -498,9 +495,9 @@ function freeRawcodeRoute(context: ApiContext, query: URLSearchParams): Answer {
   let base = query.get("base") ?? undefined;
   if (copyOf !== null) {
     const source = sources.working.get(objectKey(kind, copyOf));
-    if (source?.origin !== "custom") {
+    if (source?.origin !== "custom" || source.base === undefined) {
       return refuse(
-        404,
+        409,
         "not-custom",
         `${copyOf} is no Custom ${kind} of the map folder: only a Custom object is copied.`,
       );
