@@ -31,6 +31,13 @@ import {
 // 30 s, as page-editing.test.ts, for the windows runner (#658).
 const TIMEOUT = 30_000;
 
+/**
+ * How long a poll waits for what the watch reads: its one-second interval,
+ * then the read of the map folder, on a loaded runner (`expect.poll`'s
+ * default, one second, misses it under the whole suite).
+ */
+const WATCH_TIMEOUT = 10_000;
+
 let browser: Browser;
 
 beforeAll(async () => {
@@ -134,7 +141,7 @@ describe("turns with the World Editor in the Studio's page", () => {
       fs.writeFileSync(w3u, stale);
       const banner = page.getByTestId("put-back");
       await expect
-        .poll(() => banner.textContent())
+        .poll(() => banner.textContent(), { timeout: WATCH_TIMEOUT })
         .toContain("put back 1 field the Studio had saved: h001 uhpm");
 
       await banner.getByRole("button", { name: "Show" }).click();
