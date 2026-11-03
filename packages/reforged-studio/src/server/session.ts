@@ -315,11 +315,22 @@ export class Session {
           );
   }
 
-  /** The conflicts left to choose and the fields a World Editor save put back. */
+  /**
+   * The conflicts left to choose, each with mine as the working state holds
+   * it now, and the fields a World Editor save put back. A conflict an edit
+   * resolved, its field given the map folder's value, is dropped here.
+   */
   turns(): TurnsAnswer {
     const working = this.working();
+    // Mine as the working state holds it now, an edit since the merge
+    // changes it; a conflict whose mine an edit made theirs is none.
+    this.#conflicts = this.#conflicts.filter(
+      (pending) =>
+        JSON.stringify(
+          turnValue(pending.place, heldAt(working, pending.place)),
+        ) !== JSON.stringify(pending.conflict.theirs),
+    );
     return {
-      // Mine as the working state holds it now: an edit since the merge changes it.
       conflicts: this.#conflicts.map((pending) => ({
         ...pending.conflict,
         mine: turnValue(pending.place, heldAt(working, pending.place)),

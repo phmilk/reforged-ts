@@ -73,25 +73,20 @@ export function ConflictsDialog(props: {
     Readonly<Partial<Record<string, ConflictChoice["take"]>>>
   >({});
   const [error, setError] = useState<string>();
-  const chosen = conflicts.filter(
-    (conflict) => choices[conflict.id] !== undefined,
-  );
+  // The rows with a side, the only ones sent.
+  const chosen = conflicts.flatMap((conflict) => {
+    const take = choices[conflict.id];
+    return take === undefined ? [] : [{ id: conflict.id, take }];
+  });
   const chooseAll = (take: ConflictChoice["take"]) => {
     setChoices(
       Object.fromEntries(conflicts.map((conflict) => [conflict.id, take])),
     );
   };
   const apply = () => {
-    api
-      .chooseConflicts(
-        conflicts.flatMap((conflict) => {
-          const take = choices[conflict.id];
-          return take === undefined ? [] : [{ id: conflict.id, take }];
-        }),
-      )
-      .then(onChosen, (reason: unknown) => {
-        setError(refusalText(reason));
-      });
+    api.chooseConflicts(chosen).then(onChosen, (reason: unknown) => {
+      setError(refusalText(reason));
+    });
   };
   return (
     <div

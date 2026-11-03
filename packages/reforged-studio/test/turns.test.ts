@@ -292,6 +292,16 @@ describe("a conflict", () => {
     });
   });
 
+  it("is none once an edit gives the field the map folder's value", async () => {
+    const { studio } = await conflicted();
+
+    await setUnitFields(studio, [["h001", "uhpm", 800]]);
+
+    const { conflicts } = (await request(studio, "/api/turns"))
+      .body as TurnsAnswer;
+    expect(conflicts.map((conflict) => conflict.field)).toEqual(["umvs"]);
+  });
+
   it("empties the undo stack, whose steps would write the old saved state over the disk's", async () => {
     const { studio, reloaded } = await conflicted();
 
