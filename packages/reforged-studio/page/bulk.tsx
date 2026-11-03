@@ -111,9 +111,10 @@ export function BulkDialog(props: {
   const [op, setOp] = useState<BulkOperation>("set");
   const [value, setValue] = useState("");
   const [error, setError] = useState<string>();
-  const first = rawcodes[0];
+  const first = rawcodes.at(0);
   useEffect(() => {
-    if (start.column !== undefined) return;
+    // A dialog without a selection has no field to offer.
+    if (start.column !== undefined || first === undefined) return;
     let live = true;
     // The fields the first object's field table gives, editable ones only.
     api.rawcode(first, kind).then(

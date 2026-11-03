@@ -573,8 +573,7 @@ async function bulk(
   const body = await readOptionalJson(request);
   const { op, kind, rawcodes, value } = body;
   const address = fieldAddress(body);
-  const numeric =
-    typeof op === "string" && isNumericOperation(op as BulkOperation);
+  const numeric = typeof op === "string" && isNumericOperation(op);
   if (
     typeof op !== "string" ||
     !(BULK_OPERATIONS as readonly string[]).includes(op) ||
@@ -619,7 +618,7 @@ async function bulk(
       {
         op: op as BulkOperation,
         kind,
-        rawcodes: rawcodes,
+        rawcodes,
         ...address,
         ...((typeof value === "string" || typeof value === "number") && {
           value,

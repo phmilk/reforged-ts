@@ -81,7 +81,8 @@ export interface BulkSources {
  * @param sources - The selection's objects and their field tables.
  * @returns The edits, in the selection's order.
  * @throws {@link BulkRefusedError} With the reason `"not-numeric"` when
- *   `"add"` or `"multiply"` names a field that is no number, `"no-field"`
+ *   `"add"` or `"multiply"` names a field that is no number,
+ *   `"read-only"` for a field whose type the field table does not give, `"no-field"`
  *   when an object's field table has no such field and `"no-value"` when an
  *   object holds no number in it, naming those objects.
  */
@@ -119,6 +120,13 @@ export function bulkEdits(request: BulkRequest, sources: BulkSources): Edit[] {
       fieldless.push(object.rawcode);
       continue;
     }
+    if (row.input === undefined) {
+      throw new BulkRefusedError(
+        422,
+        "read-only",
+        `${fieldName(field, level)} of ${object.rawcode} is read-only: the field table does not give its type.`,
+      );
+    }
     if (!NUMBER_INPUTS.has(row.input)) {
       throw new BulkRefusedError(
         422,
@@ -142,20 +150,21 @@ export function bulkEdits(request: BulkRequest, sources: BulkSources): Edit[] {
       ),
     });
   }
-  const list = (rawcodes: readonly string[]) =>
+  /** The subject of a refusal's sentence: the Rawcodes and their verb. */
+  const subjectOf = (rawcodes: readonly string[]) =>
     `${rawcodes.join(", ")} ${rawcodes.length === 1 ? "has" : "have"}`;
   if (fieldless.length > 0) {
     throw new BulkRefusedError(
       422,
       "no-field",
-      `${list(fieldless)} no field ${fieldName(field, level)}: its kind or its base does not give it.`,
+      `${subjectOf(fieldless)} no field ${fieldName(field, level)}: its kind or its base does not give it.`,
     );
   }
   if (valueless.length > 0) {
     throw new BulkRefusedError(
       422,
       "no-value",
-      `${list(valueless)} no number in ${fieldName(field, level)}, nor does the base: set it first.`,
+      `${subjectOf(valueless)} no number in ${fieldName(field, level)}, nor does the base: set it first.`,
     );
   }
   return edits;

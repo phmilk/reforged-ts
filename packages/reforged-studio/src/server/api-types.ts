@@ -417,8 +417,13 @@ export interface EditsRequest {
  */
 export type BulkOperation = "set" | "add" | "multiply" | "reset";
 
-/** The operations of a bulk edit that take a number: `"add"` and `"multiply"`. */
-export const isNumericOperation = (op: BulkOperation): boolean =>
+/**
+ * Whether a bulk edit's operation takes a number: `"add"` and `"multiply"`.
+ *
+ * @param op - The operation, as a request names it.
+ * @returns True for `"add"` and `"multiply"`.
+ */
+export const isNumericOperation = (op: string): boolean =>
   op === "add" || op === "multiply";
 
 /** The body of `POST /api/bulk`: one field of a selection of objects of one kind, edited as one undo step. */
@@ -464,8 +469,11 @@ export interface TableColumn {
 }
 
 /**
- * A column's key, which tells it from the other columns of a table: its
- * field's id and its level (`acdn:2`, `uhpm:`).
+ * Gives a column its key, which tells it from the other columns of a table:
+ * its field's id and its level (`acdn:2`, `uhpm:`).
+ *
+ * @param column - The column, or a field table's row of its field.
+ * @returns The key.
  */
 export const columnKey = (column: {
   readonly id: string;
