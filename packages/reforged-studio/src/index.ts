@@ -122,6 +122,7 @@ export {
   type ObjectOrigin,
   type ObjectsAnswer,
   type OpenInEditorAnswer,
+  type PlacementFile,
   type RawcodeAnswer,
   type RawcodeCheckAnswer,
   type RawcodeHolder,

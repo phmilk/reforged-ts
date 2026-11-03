@@ -19,12 +19,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ObjectKind } from "reforged-map";
+import type { PlacementFile } from "./server/api-types.js";
 
 /** The placement file of units and items. */
-export const UNITS_FILE = "war3mapUnits.doo";
+export const UNITS_FILE = "war3mapUnits.doo" satisfies PlacementFile;
 
 /** The placement file of destructables and doodads. */
-export const DOODADS_FILE = "war3map.doo";
+export const DOODADS_FILE = "war3map.doo" satisfies PlacementFile;
 
 /** The placements of one file, by Rawcode: how many records name it. */
 export type PlacementCounts = ReadonlyMap<string, number>;
@@ -300,9 +301,7 @@ export function readPlacements(mapFolder: string): Placements {
  * @param kind - The Object kind.
  * @returns The file's name, or undefined.
  */
-export function placementFile(
-  kind: ObjectKind,
-): typeof UNITS_FILE | typeof DOODADS_FILE | undefined {
+export function placementFile(kind: ObjectKind): PlacementFile | undefined {
   switch (kind) {
     case "unit":
     case "item":

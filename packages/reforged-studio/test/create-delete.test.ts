@@ -96,6 +96,12 @@ describe("the free Rawcode", () => {
     expect(
       (await request(studio, "/api/free-rawcode?kind=nothing")).status,
     ).toBe(400);
+    const notCustom = await request(
+      studio,
+      "/api/free-rawcode?kind=unit&copyOf=hfoo",
+    );
+    expect(notCustom.status).toBe(404);
+    expect((notCustom.body as ErrorAnswer).error.reason).toBe("not-custom");
   });
 
   it("skips a Rawcode an object of another kind holds, and one an unsaved edit added", async () => {

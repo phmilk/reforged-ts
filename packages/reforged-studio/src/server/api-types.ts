@@ -12,6 +12,9 @@ import type {
   WorldEditorState,
 } from "reforged-map";
 
+/** A placement file's name: `war3mapUnits.doo` (units and items) or `war3map.doo` (destructables and doodads). */
+export type PlacementFile = "war3mapUnits.doo" | "war3map.doo";
+
 /**
  * Who owns an object, as the tree groups them: `"custom"`, a Custom object
  * of the map folder; `"definition"`, an object an Object definition of the
@@ -265,7 +268,7 @@ export type RawcodeHolder =
   | { readonly by: "removed"; readonly kind: ObjectKind }
   | {
       readonly by: "placed";
-      readonly file: "war3mapUnits.doo" | "war3map.doo";
+      readonly file: PlacementFile;
       /** How many placements of the file name it. */
       readonly count: number;
     };
@@ -353,7 +356,7 @@ export interface DeletionAnswer {
   /** How many times it is placed on the terrain. */
   readonly placements: number;
   /** The file that places it; absent for a kind nothing places. */
-  readonly placementFile?: "war3mapUnits.doo" | "war3map.doo";
+  readonly placementFile?: PlacementFile;
   /** What the delete does, or why it cannot be done, in sentences an author reads. */
   readonly message: string;
 }

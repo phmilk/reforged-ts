@@ -518,7 +518,9 @@ export class Session {
         `${rawcode} is no Custom ${kind} of the map folder: only a Custom object is deleted; a modified Built-in object is reset.`,
       );
     }
-    this.edit([{ op: "removeObject", kind, rawcode }]);
+    const applied = this.#applyAll([{ op: "removeObject", kind, rawcode }]);
+    this.undo.push({ edits: applied });
+    this.redo.length = 0;
   }
 
   /**

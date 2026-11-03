@@ -10,6 +10,7 @@
  */
 import fs from "node:fs";
 import type { ObjectKind, RawcodeObject } from "reforged-map";
+import { OBJECT_KINDS } from "../kinds.js";
 import { DOODADS_FILE, UNITS_FILE, type Placements } from "../placements.js";
 import type { ObjectOrigin, RawcodeHolder } from "./api-types.js";
 import type { ObjectState } from "./session.js";
@@ -99,16 +100,26 @@ export function rawcodeHolders(
   return holders;
 }
 
-/** The kind of an object a holder names, in a sentence. */
-const KIND_NAMES: Readonly<Record<ObjectKind, string>> = {
-  unit: "unit",
-  item: "item",
-  ability: "ability",
-  buff: "buff",
-  destructable: "destructable",
-  doodad: "doodad",
-  upgrade: "upgrade",
-};
+/**
+ * An object in a sentence: its name and Rawcode, or its Rawcode alone.
+ *
+ * @param rawcode - Its Rawcode.
+ * @param name - Its name, when one is known.
+ * @returns The words.
+ */
+export const objectText = (
+  rawcode: string,
+  name: string | undefined,
+): string => (name === undefined ? rawcode : `${name} (${rawcode})`);
+
+/**
+ * The message that refuses a text as a Rawcode.
+ *
+ * @param text - The text.
+ * @returns The sentence.
+ */
+export const notRawcodeText = (text: string): string =>
+  `${text === "" ? "An empty text" : text} is not a Rawcode: a Rawcode is four printable ASCII characters.`;
 
 /** The words an origin takes in a sentence. */
 const ORIGIN_NAMES: Readonly<Record<ObjectOrigin, string>> = {
@@ -132,9 +143,9 @@ export function holdersText(
   const parts = holders.map((holder) => {
     switch (holder.by) {
       case "object":
-        return `${ORIGIN_NAMES[holder.origin]} ${KIND_NAMES[holder.kind]} ${holder.name === undefined ? rawcode : `${holder.name} (${rawcode})`}`;
+        return `${ORIGIN_NAMES[holder.origin]} ${holder.kind} ${objectText(rawcode, holder.name)}`;
       case "removed":
-        return `the Object manifest, which records the ${KIND_NAMES[holder.kind]} ${rawcode} as removed`;
+        return `the Object manifest, which records the ${holder.kind} ${rawcode} as removed`;
       case "placed":
         return `${String(holder.count)} placement${holder.count === 1 ? "" : "s"} on the terrain in ${holder.file}`;
     }
@@ -210,7 +221,9 @@ export function removedRawcodes(
   if (!Array.isArray(removed)) return [];
   return removed.flatMap((entry: unknown) => {
     const { kind, rawcode } = (entry ?? {}) as Record<string, unknown>;
-    return typeof kind === "string" && typeof rawcode === "string"
+    return typeof kind === "string" &&
+      (OBJECT_KINDS as readonly string[]).includes(kind) &&
+      typeof rawcode === "string"
       ? [{ kind: kind as ObjectKind, rawcode }]
       : [];
   });

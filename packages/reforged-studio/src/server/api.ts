@@ -55,6 +55,8 @@ import {
   freeRawcode,
   holdersText,
   isRawcode,
+  notRawcodeText,
+  objectText,
   rawcodeHolders,
   rawcodePrefix,
   removedRawcodes,
@@ -460,7 +462,7 @@ function rawcodeSources(context: ApiContext): RawcodeSources | Answer {
   if (listing.status === "unavailable") {
     return refuse(503, "unavailable", listing.reason);
   }
-  // The lookup's files end with the Object manifest.
+  // The lookup's files end with the Object manifest, as `files()` documents.
   const manifest = session.lookup.files().at(-1);
   return {
     listed: listing.objects,
@@ -493,10 +495,18 @@ function freeRawcodeRoute(context: ApiContext, query: URLSearchParams): Answer {
   const sources = rawcodeSources(context);
   if (sources instanceof Answer) return sources;
   const copyOf = query.get("copyOf");
-  const base =
-    copyOf === null
-      ? (query.get("base") ?? undefined)
-      : sources.working.get(objectKey(kind, copyOf))?.base;
+  let base = query.get("base") ?? undefined;
+  if (copyOf !== null) {
+    const source = sources.working.get(objectKey(kind, copyOf));
+    if (source?.origin !== "custom") {
+      return refuse(
+        404,
+        "not-custom",
+        `${copyOf} is no Custom ${kind} of the map folder: only a Custom object is copied.`,
+      );
+    }
+    base = source.base;
+  }
   const prefix = rawcodePrefix(kind, base);
   const rawcode = freeRawcode(prefix, sources);
   return new Answer(200, {
@@ -514,7 +524,7 @@ function rawcodeCheck(context: ApiContext, query: URLSearchParams): Answer {
       rawcode,
       free: false,
       holders: [],
-      message: `${rawcode === "" ? "An empty text" : rawcode} is not a Rawcode: a Rawcode is four printable ASCII characters.`,
+      message: notRawcodeText(rawcode),
     } satisfies RawcodeCheckAnswer);
   }
   const sources = rawcodeSources(context);
@@ -557,11 +567,7 @@ async function create(
     );
   }
   if (!isRawcode(rawcode)) {
-    return refuse(
-      422,
-      "invalid-value",
-      `${rawcode} is not a Rawcode: a Rawcode is four printable ASCII characters.`,
-    );
+    return refuse(422, "invalid-value", notRawcodeText(rawcode));
   }
   const sources = rawcodeSources(context);
   if (sources instanceof Answer) return sources;
@@ -612,7 +618,7 @@ function referringFields(
 
 /** One referrer in a sentence: its name and Rawcode, then its fields. */
 const referrerText = (referrer: Referrer): string =>
-  `${referrer.name === undefined ? referrer.rawcode : `${referrer.name} (${referrer.rawcode})`} in ${referrer.fields.join(", ")}`;
+  `${objectText(referrer.rawcode, referrer.name)} in ${referrer.fields.join(", ")}`;
 
 /**
  * The message of a delete confirmation, in #482's words: what the delete
