@@ -7,6 +7,7 @@
  * unsaved changes, undo and redo (Ctrl+Z, Ctrl+Shift+Z or Ctrl+Y), the
  * explicit save (Ctrl+S) and its toast with "Reload in the World Editor",
  * the setting that makes the reload automatic, and the diff (`./edit.tsx`).
+ * Adoption (#838): "Adopt into code" and its toast.
  * Creating and deleting objects (#835): "New object", its dialog and the
  * delete's confirmation (`./create.tsx`).
  * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
@@ -15,6 +16,7 @@
 import { StrictMode, useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import type {
+  AdoptAnswer,
   ObjectDetail,
   ObjectsAnswer,
   RawcodeAnswer,
@@ -163,6 +165,23 @@ function App() {
       refused: true,
     });
   }, []);
+  /** Takes an adoption's answer: reads the views again, the object now an Object definition, and says where it went. */
+  const adopted = useCallback(
+    (answer: AdoptAnswer) => {
+      changed(answer);
+      const { kind, rawcode, path } = answer.adopted;
+      setToast({
+        text: [
+          `Adopted the ${kind} ${rawcode} into ${path}.`,
+          ...(answer.formatted
+            ? []
+            : ["The Map project has no Prettier: format it before a commit."]),
+          ...answer.warnings,
+        ].join(" "),
+      });
+    },
+    [changed],
+  );
   const undo = useCallback(() => {
     api.undo().then(changed, refused);
   }, [changed, refused]);
@@ -195,6 +214,10 @@ function App() {
         },
         saved: (data) => {
           setCounts(countsOf(data));
+        },
+        adopted: (data) => {
+          setCounts(countsOf(data));
+          setVersion((count) => count + 1);
         },
       }),
     [],
@@ -486,6 +509,7 @@ function App() {
               onPin={togglePin}
               onUnpin={unpin}
               onChanged={changed}
+              onAdopted={adopted}
               onCreate={setCreating}
               onDelete={() => {
                 setDeleting(selection);

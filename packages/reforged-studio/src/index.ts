@@ -99,6 +99,9 @@ export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
   OBJECT_ORIGINS,
+  type AdoptAnswer,
+  type AdoptedObject,
+  type AdoptRequest,
   type DefinitionSource,
   type CreateAnswer,
   type CreateRequest,
