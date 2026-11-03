@@ -399,6 +399,94 @@ export interface EditsRequest {
   readonly edits: readonly Edit[];
 }
 
+/**
+ * What a bulk edit does to one field of each object of a selection:
+ * `"set"` gives it a value; `"add"` adds a number to its value and
+ * `"multiply"` multiplies it, each object's own value (its modification,
+ * else its base's), an integer field rounded to a whole number; `"reset"`
+ * puts it back to its base.
+ */
+export type BulkOperation = "set" | "add" | "multiply" | "reset";
+
+/** The body of `POST /api/bulk`: one field of a selection of objects of one kind, edited as one undo step. */
+export interface BulkRequest {
+  /** What the edit does. */
+  readonly op: BulkOperation;
+  /** The objects' Object kind. */
+  readonly kind: ObjectKind;
+  /** The objects' Rawcodes, at least one. */
+  readonly rawcodes: readonly string[];
+  /** The field. */
+  readonly field: string;
+  /** The field's level, for a field of levels. */
+  readonly level?: number;
+  /** The field's data pointer, in the kinds that store one. */
+  readonly dataPointer?: number;
+  /** The value `"set"` gives, or the number `"add"` adds and `"multiply"` multiplies by; absent for `"reset"`. */
+  readonly value?: number | string;
+}
+
+/** `POST /api/bulk`'s answer: the counts, and how many objects the step edits. */
+export interface BulkAnswer extends SessionCounts {
+  /** The objects the step edits: each object of the selection, but those a reset leaves as they are. */
+  readonly edited: number;
+}
+
+/** One column of the Table mode: a field, at one level for a field of levels. */
+export interface TableColumn {
+  /** The field's id (`uhpm`). */
+  readonly id: string;
+  /** Its enUS label, from the install; absent when the install gives none. */
+  readonly label?: string;
+  /** Its metadata category (`stats`); absent for a field the install does not know. */
+  readonly category?: string;
+  /** Its level, from 1, for a field of levels. */
+  readonly level?: number;
+  /** The input its cells edit with, as {@link FieldRow.input} says; absent when no row edits it. */
+  readonly input?: FieldInput;
+  /** The type its values store, as {@link FieldRow.valueType} says. */
+  readonly valueType?: FieldRow["valueType"];
+  /** An enumeration's raw values and labels, for the input `"select"`. */
+  readonly options?: readonly FieldOption[];
+}
+
+/** One cell of the Table mode: an object's field. */
+export interface TableCell {
+  /** The value shown, as {@link FieldRow.display} says; absent when there is none. */
+  readonly display?: string;
+  /** The value an edit starts from: the working state's value when the object modifies it, else its base's; absent when there is neither. */
+  readonly value?: number | string;
+  /** Whether the object modifies it. */
+  readonly modified: boolean;
+  /** Whether an unsaved edit set, changed or removed it. */
+  readonly unsaved: boolean;
+  /** Whether it can be edited: false for an Object definition and a field with no input. */
+  readonly editable: boolean;
+}
+
+/** One row of the Table mode: an object, with a cell per column, null where its kind's fields do not give it the column. */
+export interface TableRow extends ListedObject {
+  /** Its cells, in the columns' order. */
+  readonly cells: readonly (TableCell | null)[];
+}
+
+/**
+ * `GET /api/table?kind=[&objects=all][&fields=all][&all=1]`: one Object
+ * kind as a spreadsheet, one row per object and one column per field. By
+ * default the map's objects (Custom objects, Object definitions, modified
+ * Built-in objects) and the columns one of them modifies; `objects=all`
+ * adds the Built-in objects, `fields=all` every column, and `all=1` the
+ * objects outside the map's Game data set.
+ */
+export interface TableAnswer {
+  /** The Object kind. */
+  readonly kind: ObjectKind;
+  /** The columns, in the order of the kind's fields. */
+  readonly columns: readonly TableColumn[];
+  /** The rows, in the tree's order. */
+  readonly rows: readonly TableRow[];
+}
+
 /** What the session holds of unsaved work, in each answer that changes it. */
 export interface SessionCounts {
   /** The fields and objects the working state changes from the saved state. */

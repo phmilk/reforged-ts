@@ -102,6 +102,9 @@ export {
   type AdoptAnswer,
   type AdoptedObject,
   type AdoptRequest,
+  type BulkAnswer,
+  type BulkOperation,
+  type BulkRequest,
   type DefinitionSource,
   type CreateAnswer,
   type CreateRequest,
@@ -140,4 +143,8 @@ export {
   type SessionAnswer,
   type SessionCounts,
   type StudioEvents,
+  type TableAnswer,
+  type TableCell,
+  type TableColumn,
+  type TableRow,
 } from "./server/api-types.js";
