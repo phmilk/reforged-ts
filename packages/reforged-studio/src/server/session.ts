@@ -31,6 +31,7 @@ import type {
   Edit,
   NotReplayed,
   SessionCounts,
+  StudioEvents,
   TurnsAnswer,
 } from "./api-types.js";
 import {
@@ -45,17 +46,15 @@ import {
   type ObjectState,
   type SessionEdit,
 } from "./states.js";
-
 import {
   editsTo,
   findPutBack,
   heldAt,
   planMerge,
+  turnValue,
   type PendingConflict,
   type PendingPutBack,
 } from "./turns.js";
-
-export { contentOf, objectKey, type ObjectState } from "./states.js";
 
 /** One edit of an undo step, with the edits that take it back. */
 interface AppliedEdit {
@@ -190,6 +189,28 @@ function encodedFiles(editor: ObjectDataEditor): Map<string, Uint8Array> {
   }
 }
 
+/**
+ * The data of the `reloaded` event, once the session read the map folder
+ * again: its counts, the files that changed, and how many conflicts and
+ * fields put back `GET /api/turns` lists.
+ *
+ * @param session - The session.
+ * @param files - The files that changed, as the event names them.
+ * @returns The event's data.
+ */
+export function reloadedEvent(
+  session: Session,
+  files: readonly string[],
+): StudioEvents["reloaded"] {
+  const turns = session.turns();
+  return {
+    ...session.counts(),
+    files,
+    conflicts: turns.conflicts.length,
+    putBack: turns.putBack.length,
+  };
+}
+
 /** The session of one Studio. */
 export class Session {
   /** The lookup of the map folder, the hover's and the lint rule's. */
@@ -207,6 +228,8 @@ export class Session {
     { readonly before: ObjectState; readonly after: ObjectState } | undefined;
   /** The conflicts of the last merge left to choose, the unsaved value held until then. */
   #conflicts: PendingConflict[] = [];
+  /** The edit the last {@link Session.#applyAll} that failed was applying, to name it. */
+  #refused: SessionEdit | undefined;
   /** The fields of the Studio's last save that the saved state holds as before it, found at the last read. */
   #putBack: PendingPutBack[] = [];
   /** The steps undo takes back, the last one last. */
@@ -294,8 +317,13 @@ export class Session {
 
   /** The conflicts left to choose and the fields a World Editor save put back. */
   turns(): TurnsAnswer {
+    const working = this.working();
     return {
-      conflicts: this.#conflicts.map((pending) => pending.conflict),
+      // Mine as the working state holds it now: an edit since the merge changes it.
+      conflicts: this.#conflicts.map((pending) => ({
+        ...pending.conflict,
+        mine: turnValue(pending.place, heldAt(working, pending.place)),
+      })),
       putBack: this.#putBack.map((pending) => pending.putBack),
     };
   }
@@ -607,7 +635,9 @@ export class Session {
    * is applied on the new saved state. Where the map folder changed the
    * place too, to another value, it is a conflict, the unsaved value held
    * until the author chooses ({@link Session.chooseConflicts}); a conflict
-   * left from a merge before stays one. The undo and redo stacks stay.
+   * left from a merge before stays one. The undo and redo stacks are
+   * emptied, as after any reload: their steps restore values of the old
+   * saved state, which an undo would write over the map folder's new ones.
    *
    * @returns How many edits were replayed, and those the editor refused.
    */
@@ -626,10 +656,10 @@ export class Session {
         this.#applyAll(step.edits);
       } catch (error) {
         if (!(error instanceof ObjectDataWriterError)) throw error;
-        const first = step.edits.at(0);
-        if (first !== undefined) {
+        const refused = this.#refused ?? step.edits.at(0);
+        if (refused !== undefined) {
           notReplayed.push({
-            edit: publicEdit(first),
+            edit: publicEdit(refused),
             reason: error.reason,
             message: error.message,
           });
@@ -640,6 +670,10 @@ export class Session {
       if (step.conflict !== undefined) conflicts.push(step.conflict);
     }
     this.#conflicts = conflicts;
+    // The steps' inverses were read on the old saved state: an undo would
+    // write its values over the map folder's new ones without a choice.
+    this.undo.length = 0;
+    this.redo.length = 0;
     return { replayed, notReplayed };
   }
 
@@ -683,12 +717,15 @@ export class Session {
    */
   #applyAll(edits: readonly SessionEdit[]): AppliedEdit[] {
     const applied: AppliedEdit[] = [];
+    this.#refused = undefined;
     try {
       for (const edit of edits) {
+        this.#refused = edit;
         const inverse = this.#inverse(edit);
         this.#apply(edit);
         applied.push({ edit, inverse });
       }
+      this.#refused = undefined;
     } catch (error) {
       for (const { inverse } of applied.toReversed()) {
         for (const edit of inverse) this.#apply(edit);

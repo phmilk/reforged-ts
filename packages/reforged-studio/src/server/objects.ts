@@ -32,7 +32,7 @@ import {
   type ListedObject,
   type ObjectDetail,
 } from "./api-types.js";
-import { contentOf, objectKey, type ObjectState } from "./session.js";
+import { contentOf, objectKey, type ObjectState } from "./states.js";
 
 /** What the objects are composed from. */
 export interface ObjectSources {

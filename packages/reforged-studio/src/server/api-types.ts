@@ -572,8 +572,9 @@ export interface NotReplayed {
 /**
  * `POST /api/save`'s refusal, answered with 409: `"modified-in-world-editor"`,
  * `"changed-on-disk"`, `"world-editor-check-failed"` or `"conflicts"` (a
- * conflict is left to choose), every unsaved edit kept. After `"changed-on-disk"` the Studio has read the map folder again
- * and replayed its unsaved edits on top, field by field.
+ * conflict is left to choose), every unsaved edit kept. After
+ * `"changed-on-disk"` the Studio has read the map folder again and
+ * replayed its unsaved edits on top, field by field.
  */
 export interface SaveRefusedAnswer extends ErrorAnswer, SessionCounts {
   /** After `"changed-on-disk"`: how many edits were replayed on the map folder read again. */

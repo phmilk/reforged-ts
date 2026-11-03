@@ -13,7 +13,7 @@ import type { ObjectKind, RawcodeObject } from "reforged-map";
 import { isKind } from "../kinds.js";
 import { DOODADS_FILE, UNITS_FILE, type Placements } from "../placements.js";
 import type { ObjectOrigin, RawcodeHolder } from "./api-types.js";
-import type { ObjectState } from "./session.js";
+import type { ObjectState } from "./states.js";
 
 /** The prefix the World Editor gives a new object of each kind but a unit, whose prefix is its base's first letter. */
 export const RAWCODE_PREFIXES: Readonly<

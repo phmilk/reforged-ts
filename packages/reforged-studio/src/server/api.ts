@@ -97,10 +97,11 @@ import {
 import { refusal } from "./requests.js";
 import {
   EditRefusedError,
-  objectKey,
+  reloadedEvent,
   type Replay,
   type Session,
 } from "./session.js";
+import { objectKey } from "./states.js";
 
 /** The most objects a search answers. */
 const SEARCH_LIMIT = 50;
@@ -1027,18 +1028,11 @@ function reloadFromDisk(context: ApiContext): Answer {
     throw error;
   }
   context.resync();
-  const turns = session.turns();
-  const counts = session.counts();
-  context.events.send("reloaded", {
-    ...counts,
-    files: [],
-    conflicts: turns.conflicts.length,
-    putBack: turns.putBack.length,
-  });
+  context.events.send("reloaded", reloadedEvent(session, []));
   return new Answer(200, {
-    ...counts,
+    ...session.counts(),
     ...replay,
-    ...turns,
+    ...session.turns(),
   } satisfies ReloadFromDiskAnswer);
 }
 
@@ -1140,12 +1134,10 @@ async function save(
       const replay = session.replayOnDisk();
       context.resync();
       const turns = session.turns();
-      context.events.send("reloaded", {
-        ...session.counts(),
-        files: error.file === undefined ? [] : [error.file],
-        conflicts: turns.conflicts.length,
-        putBack: turns.putBack.length,
-      });
+      context.events.send(
+        "reloaded",
+        reloadedEvent(session, error.file === undefined ? [] : [error.file]),
+      );
       return new Answer(409, {
         error: {
           reason: error.reason,

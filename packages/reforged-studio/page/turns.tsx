@@ -84,10 +84,10 @@ export function ConflictsDialog(props: {
   const apply = () => {
     api
       .chooseConflicts(
-        chosen.map((conflict) => ({
-          id: conflict.id,
-          take: choices[conflict.id] ?? "mine",
-        })),
+        conflicts.flatMap((conflict) => {
+          const take = choices[conflict.id];
+          return take === undefined ? [] : [{ id: conflict.id, take }];
+        }),
       )
       .then(onChosen, (reason: unknown) => {
         setError(refusalText(reason));

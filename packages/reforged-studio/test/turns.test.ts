@@ -163,7 +163,7 @@ describe("a change on disk", () => {
     expect(reloaded.status).toBe(200);
     expect(reloaded.body).toEqual({
       unsavedEdits: 2,
-      undo: 1,
+      undo: 0,
       redo: 0,
       replayed: 2,
       notReplayed: [],
@@ -268,7 +268,7 @@ describe("a conflict", () => {
     expect(chosen.status).toBe(200);
     expect(chosen.body).toMatchObject({
       conflicts: [],
-      undo: 2,
+      undo: 1,
     } satisfies Partial<TurnsChangedAnswer>);
     expect(await shown(studio, "h001", "umvs")).toBe(400);
 
@@ -276,6 +276,29 @@ describe("a conflict", () => {
     expect(onDisk(project, "h001", "uhpm")).toBe(700);
     expect(onDisk(project, "h001", "umvs")).toBe(400);
     expect(onDisk(project, "h000", "unam")).toBe("Major");
+  });
+
+  it("shows mine as the working state holds it after a later edit", async () => {
+    const { studio } = await conflicted();
+
+    await setUnitFields(studio, [["h001", "uhpm", 650]]);
+
+    const { conflicts } = (await request(studio, "/api/turns"))
+      .body as TurnsAnswer;
+    expect(conflicts[0]).toMatchObject({
+      field: "uhpm",
+      mine: { is: "value", value: 650 },
+      theirs: { is: "value", value: 800 },
+    });
+  });
+
+  it("empties the undo stack, whose steps would write the old saved state over the disk's", async () => {
+    const { studio, reloaded } = await conflicted();
+
+    expect(reloaded.undo).toBe(0);
+    const undone = await request(studio, "/api/undo", { json: {} });
+    expect(undone.body).toMatchObject({ error: { reason: "nothing-to-undo" } });
+    expect(await shown(studio, "h001", "uhpm")).toBe(700);
   });
 
   it("refuses a choice of no conflict left", async () => {

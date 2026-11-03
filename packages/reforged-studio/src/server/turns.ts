@@ -211,7 +211,7 @@ export interface PendingConflict {
 export interface Replayed {
   readonly place: Place;
   readonly edits: readonly SessionEdit[];
-  /** Whether the place is a conflict, its unsaved value applied until the author chooses. */
+  /** The conflict at the place, when it is one: its unsaved value applied until the author chooses. */
   readonly conflict?: PendingConflict;
 }
 
@@ -241,7 +241,8 @@ export function planMerge(
   for (const { place, held, contents } of compare([saved, working, next])) {
     const [base, mine, theirs] = contents;
     if (mine === base || mine === theirs) continue;
-    const edits = editsTo(place, held[2], held[1]);
+    const [, mineHeld, theirsHeld] = held;
+    const edits = editsTo(place, theirsHeld, mineHeld);
     if (theirs === base && !pending.has(place.id)) {
       plan.push({ place, edits });
       continue;
@@ -251,12 +252,12 @@ export function planMerge(
       edits,
       conflict: {
         place,
-        theirs: held[2],
+        theirs: theirsHeld,
         conflict: {
           id: place.id,
           ...place.address,
-          mine: turnValue(place, held[1]),
-          theirs: turnValue(place, held[2]),
+          mine: turnValue(place, mineHeld),
+          theirs: turnValue(place, theirsHeld),
         },
       },
     });
@@ -294,13 +295,14 @@ export function findPutBack(
   for (const { place, held, contents } of compare([before, after, next])) {
     const [was, wrote, now] = contents;
     if (was === wrote || now === wrote || now !== was) continue;
+    const [, wroteHeld, nowHeld] = held;
     found.push({
       place,
-      studio: held[1],
+      studio: wroteHeld,
       putBack: {
         ...place.address,
-        studio: turnValue(place, held[1]),
-        worldEditor: turnValue(place, held[2]),
+        studio: turnValue(place, wroteHeld),
+        worldEditor: turnValue(place, nowHeld),
       },
     });
   }
