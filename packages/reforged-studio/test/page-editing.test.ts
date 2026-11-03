@@ -29,6 +29,8 @@ import {
 // --project reforged-studio on Linux (WSL 2, 8 threads), 2026-10. Kept at
 // 30 s, as page.test.ts, for the windows runner (#658).
 const TIMEOUT = 30_000;
+/** How long the page waits for an adoption, which loads the Map project's Prettier. */
+const ADOPTION_TIMEOUT = 15_000;
 
 let browser: Browser;
 let studio: Studio;
@@ -149,13 +151,18 @@ describe("adopting from the Studio's page", () => {
       const adopt = page.getByRole("button", { name: "Adopt into code" });
       await adopt.click();
 
+      // Adoption loads the Map project's Prettier: slow on a loaded machine.
       await expect
-        .poll(() => page.getByRole("status").textContent())
+        .poll(() => page.getByRole("status").textContent(), {
+          timeout: ADOPTION_TIMEOUT,
+        })
         .toContain(
           "Adopted the unit h000 into src/objects/unit/Captain_h000.ts.",
         );
       await expect
-        .poll(() => page.locator(".object-header").textContent())
+        .poll(() => page.locator(".object-header").textContent(), {
+          timeout: ADOPTION_TIMEOUT,
+        })
         .toContain("Read-only: defined in src/objects/unit/Captain_h000.ts");
       expect(await adopt.count()).toBe(0);
       expect(
