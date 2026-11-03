@@ -16,7 +16,6 @@ import type {
   Conflict,
   ReloadFromDiskAnswer,
   RawcodeAnswer,
-  SaveRefusedAnswer,
   TurnsAnswer,
   TurnsChangedAnswer,
 } from "../src/index.js";
@@ -223,7 +222,7 @@ describe("a conflict", () => {
     expect(reloaded.replayed).toBe(3);
     expect(reloaded.conflicts).toEqual([
       {
-        id: expect.any(String) as unknown,
+        id: expect.any(String) as string,
         kind: "unit",
         rawcode: "h001",
         field: "uhpm",
@@ -231,7 +230,7 @@ describe("a conflict", () => {
         theirs: { is: "value", value: 800 },
       },
       {
-        id: expect.any(String) as unknown,
+        id: expect.any(String) as string,
         kind: "unit",
         rawcode: "h001",
         field: "umvs",
@@ -255,7 +254,7 @@ describe("a conflict", () => {
     expect(refused.body).toMatchObject({
       error: { reason: "conflicts" },
       conflicts: reloaded.conflicts,
-    } satisfies Partial<SaveRefusedAnswer>);
+    });
     expect(onDisk(project, "h001", "uhpm")).toBe(800);
 
     const chosen = await request(studio, "/api/conflicts", {
