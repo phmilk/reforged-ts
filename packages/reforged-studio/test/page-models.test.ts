@@ -26,9 +26,11 @@ import {
   start,
 } from "./support/studio.js";
 
-// Chromium's launch, each page's load and its software WebGL. Kept at 30 s,
-// the budget of a test that starts processes, for the windows runner
-// (#658).
+// Chromium's launch, each page's load and its software WebGL. Measured 2.0 s
+// for the slowest test and 9.2 s for the file, the launch included, with
+// pnpm vitest run --project reforged-studio on Linux (WSL 2, 8 threads),
+// 2026-11. Kept at 30 s, the budget of a test that starts processes, for the
+// windows runner (#658).
 const TIMEOUT = 30_000;
 
 /** The imported model, a cube whose one texture is found nowhere. */
