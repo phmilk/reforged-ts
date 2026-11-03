@@ -22,6 +22,7 @@ import type {
 import { api } from "./api.js";
 import type { CreateStart } from "./create.js";
 import { FieldEditor, type FieldActions } from "./edit.js";
+import { ModelThumb } from "./models.js";
 import {
   go,
   Icon,
@@ -67,7 +68,7 @@ function atBase(row: FieldRow | undefined): boolean {
   );
 }
 
-/** One cell's value: its display value, and its raw value where the two differ; an icon field's icon. */
+/** One cell's value: its display value, and its raw value where the two differ; an icon field's icon, a model field's preview. */
 function Value(props: {
   readonly row: FieldRow | undefined;
   readonly owner: string;
@@ -84,6 +85,9 @@ function Value(props: {
       {row.type === "icon" && raw !== undefined && raw !== "" && (
         <Icon path={raw} label={owner} />
       )}
+      {(row.type === "model" || row.type === "modelList") &&
+        raw !== undefined &&
+        raw !== "" && <ModelThumb path={raw} />}
       <span className="display">{display}</span>
       {raw !== undefined && raw !== display && (
         <code className="raw">{raw}</code>

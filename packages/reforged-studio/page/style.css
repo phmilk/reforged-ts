@@ -542,6 +542,105 @@ button:disabled {
 .results .name {
   flex: 1;
 }
+
+/* Models (#839): a field's thumbnail, the live preview, the picker, the art layer's switch. */
+.model-thumb {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 700;
+  vertical-align: middle;
+  cursor: zoom-in;
+}
+.model-thumb img {
+  width: 100%;
+  height: 100%;
+}
+.model-thumb.placeholder {
+  background: var(--builtin-soft);
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.live-preview {
+  margin: 0;
+}
+.preview-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1f2126;
+}
+.preview-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.live-preview figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.dialog.model-preview {
+  width: min(560px, 94vw);
+}
+.dialog.model-picker {
+  width: min(1040px, 96vw);
+  max-height: 86vh;
+}
+.picker-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin: 8px 0;
+}
+.picker-list input {
+  width: 100%;
+  font: inherit;
+}
+.model-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 56vh;
+  overflow: auto;
+}
+.model-list li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px 0;
+}
+.model-path {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.model-path[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.art-layer {
+  display: inline-flex;
+  gap: 2px;
+}
+.art-layer button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+@media (max-width: 720px) {
+  .picker-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* Creating and deleting objects (#835): the new object's dialog and the delete's confirmation. */
 .dialog.create,
 .dialog.delete {

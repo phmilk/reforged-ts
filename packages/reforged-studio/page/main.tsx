@@ -9,7 +9,9 @@
  * the setting that makes the reload automatic, and the diff (`./edit.tsx`).
  * Adoption (#838): "Adopt into code" and its toast.
  * Creating and deleting objects (#835): "New object", its dialog and the
- * delete's confirmation (`./create.tsx`).
+ * delete's confirmation (`./create.tsx`). Models (#839): the art layer's
+ * switch, SD, HD or DE as the map's Supported Modes allow, which icons and
+ * previews are read in.
  * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
@@ -17,6 +19,7 @@ import { StrictMode, useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import type {
   AdoptAnswer,
+  ArtLayerName,
   ObjectDetail,
   ObjectsAnswer,
   RawcodeAnswer,
@@ -28,7 +31,8 @@ import { CreateDialog, DeleteDialog, type CreateStart } from "./create.js";
 import { DiffDialog } from "./edit.js";
 import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
-import { go, KINDS, useRoute } from "./parts.js";
+import { ArtLayerContext, go, KINDS, useRoute } from "./parts.js";
+import { forgetThumbnails } from "./preview.js";
 import { Search } from "./search.js";
 import { Tree, type Selection } from "./tree.js";
 import "./style.css";
@@ -73,6 +77,13 @@ const countsOf = (answer: SessionCounts): SessionCounts => ({
   undo: answer.undo,
   redo: answer.redo,
 });
+
+/** The labels of the art layers, as the World Editor's Asset Mode names them. */
+const ART_LAYER_LABELS: Readonly<Record<ArtLayerName, string>> = {
+  sd: "SD",
+  hd: "HD",
+  de: "DE",
+};
 
 /** The toast after a save, an undo or a redo. */
 interface Toast {
@@ -126,6 +137,7 @@ function App() {
   const [autoReload, setAutoReload] = useState(readAutoReload);
   const [creating, setCreating] = useState<CreateStart>();
   const [deleting, setDeleting] = useState<Selection>();
+  const [artLayer, setArtLayer] = useState<ArtLayerName>();
 
   const failed = useCallback((reason: unknown) => {
     setError(reason instanceof Error ? reason.message : String(reason));
@@ -202,6 +214,7 @@ function App() {
       listen({
         reloaded: () => {
           forgetIcons();
+          forgetThumbnails();
           setBanner(
             "The map folder changed on disk: the Studio read it again.",
           );
@@ -250,6 +263,7 @@ function App() {
   useEffect(() => {
     api.session().then((answer) => {
       setSession(answer);
+      setArtLayer(answer.artLayer);
       setCounts(countsOf(answer));
     }, failed);
   }, [version, failed]);
@@ -345,235 +359,265 @@ function App() {
     );
   };
 
+  const switchArtLayer = (layer: ArtLayerName) => {
+    api.artLayer(layer).then((answer) => {
+      setArtLayer(answer.artLayer);
+    }, refused);
+  };
+
   return (
-    <div className="studio">
-      <header className="topbar">
-        <h1>Studio</h1>
-        {session !== undefined && (
-          <span className="session" title={session.mapFolder}>
-            {session.mapFolder.split(/[\\/]/).at(-1)} · Build {session.build}
+    <ArtLayerContext.Provider value={artLayer ?? "hd"}>
+      <div className="studio">
+        <header className="topbar">
+          <h1>Studio</h1>
+          {session !== undefined && (
+            <span className="session" title={session.mapFolder}>
+              {session.mapFolder.split(/[\\/]/).at(-1)} · Build {session.build}
+            </span>
+          )}
+          <span className="game-data-set">
+            Game data set:{" "}
+            <b>{session?.gameDataSet?.label ?? "not stated by war3map.w3i"}</b>
           </span>
-        )}
-        <span className="game-data-set">
-          Game data set:{" "}
-          <b>{session?.gameDataSet?.label ?? "not stated by war3map.w3i"}</b>
-        </span>
-        <label>
-          <input
-            type="checkbox"
-            checked={all}
-            onChange={(event) => {
-              setAll(event.target.checked);
-            }}
-          />{" "}
-          Show objects outside it
-        </label>
-        <button
-          type="button"
-          onClick={() => {
-            setCreating({ kind: kind as CreateStart["kind"] });
-          }}
-        >
-          New object
-        </button>
-        <button
-          type="button"
-          className="search-button"
-          onClick={() => {
-            setSearching(true);
-          }}
-        >
-          Search <kbd>Ctrl+K</kbd>
-        </button>
-        <span className="editing">
-          <span
-            className={`unsaved-count${(counts?.unsavedEdits ?? 0) > 0 ? " dirty" : ""}`}
-            data-testid="unsaved-count"
-            aria-live="polite"
-          >
-            {counts?.unsavedEdits ?? 0} unsaved
-          </span>
-          <button
-            type="button"
-            onClick={undo}
-            disabled={(counts?.undo ?? 0) === 0}
-            title="Undo (Ctrl+Z)"
-          >
-            Undo
-          </button>
-          <button
-            type="button"
-            onClick={redo}
-            disabled={(counts?.redo ?? 0) === 0}
-            title="Redo (Ctrl+Shift+Z)"
-          >
-            Redo
-          </button>
+          <label>
+            <input
+              type="checkbox"
+              checked={all}
+              onChange={(event) => {
+                setAll(event.target.checked);
+              }}
+            />{" "}
+            Show objects outside it
+          </label>
+          {session !== undefined && (
+            <span
+              className="art-layer"
+              role="group"
+              aria-label="Art layer"
+              title="The art icons and previews are read in: the World Editor's Asset Mode by default, as the map's Supported Modes allow"
+            >
+              {(["sd", "hd", "de"] as const).map((layer) => (
+                <button
+                  key={layer}
+                  type="button"
+                  aria-pressed={layer === artLayer}
+                  disabled={!session.artLayers.includes(layer)}
+                  onClick={() => {
+                    switchArtLayer(layer);
+                  }}
+                >
+                  {ART_LAYER_LABELS[layer]}
+                </button>
+              ))}
+            </span>
+          )}
           <button
             type="button"
             onClick={() => {
-              setDiffing(true);
+              setCreating({ kind: kind as CreateStart["kind"] });
             }}
           >
-            Diff
+            New object
           </button>
-          <button type="button" className="primary" onClick={save}>
-            Save <kbd>Ctrl+S</kbd>
+          <button
+            type="button"
+            className="search-button"
+            onClick={() => {
+              setSearching(true);
+            }}
+          >
+            Search <kbd>Ctrl+K</kbd>
           </button>
-          <label title="Reload the map in the World Editor after each save, when it holds the map folder without unsaved edits">
-            <input
-              type="checkbox"
-              checked={autoReload}
-              onChange={(event) => {
-                setAutoReload(event.target.checked);
-                keepAutoReload(event.target.checked);
-              }}
-            />{" "}
-            Reload the World Editor after a save
-          </label>
-        </span>
-      </header>
-      {toast !== undefined && (
-        <p
-          className={`toast${toast.refused === true ? " refused" : ""}`}
-          role="status"
-        >
-          {toast.text}{" "}
-          {toast.reload === true && (
+          <span className="editing">
+            <span
+              className={`unsaved-count${(counts?.unsavedEdits ?? 0) > 0 ? " dirty" : ""}`}
+              data-testid="unsaved-count"
+              aria-live="polite"
+            >
+              {counts?.unsavedEdits ?? 0} unsaved
+            </span>
+            <button
+              type="button"
+              onClick={undo}
+              disabled={(counts?.undo ?? 0) === 0}
+              title="Undo (Ctrl+Z)"
+            >
+              Undo
+            </button>
+            <button
+              type="button"
+              onClick={redo}
+              disabled={(counts?.redo ?? 0) === 0}
+              title="Redo (Ctrl+Shift+Z)"
+            >
+              Redo
+            </button>
             <button
               type="button"
               onClick={() => {
-                setToast(undefined);
-                reloadWorldEditor();
+                setDiffing(true);
               }}
             >
-              Reload in the World Editor
+              Diff
             </button>
-          )}{" "}
-          <button
-            type="button"
-            className="link"
-            onClick={() => {
-              setToast(undefined);
-            }}
+            <button type="button" className="primary" onClick={save}>
+              Save <kbd>Ctrl+S</kbd>
+            </button>
+            <label title="Reload the map in the World Editor after each save, when it holds the map folder without unsaved edits">
+              <input
+                type="checkbox"
+                checked={autoReload}
+                onChange={(event) => {
+                  setAutoReload(event.target.checked);
+                  keepAutoReload(event.target.checked);
+                }}
+              />{" "}
+              Reload the World Editor after a save
+            </label>
+          </span>
+        </header>
+        {toast !== undefined && (
+          <p
+            className={`toast${toast.refused === true ? " refused" : ""}`}
+            role="status"
           >
-            Dismiss
-          </button>
-        </p>
-      )}
-      {banner !== undefined && (
-        <p className="banner">
-          {banner}{" "}
-          <button
-            type="button"
-            onClick={() => {
-              setBanner(undefined);
-            }}
-          >
-            Dismiss
-          </button>
-        </p>
-      )}
-      {error !== undefined && <p className="warning">{error}</p>}
-      <nav className="tabs" role="tablist" aria-label="Object kinds">
-        {KINDS.map(([id, label]) => (
-          <button
-            type="button"
-            role="tab"
-            key={id}
-            aria-selected={id === kind}
-            className={id === kind ? "selected" : undefined}
-            onClick={() => {
-              setKind(id);
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
-      <main>
-        <aside>
-          <Tree objects={listing?.objects ?? []} selected={selection} />
-        </aside>
-        <section className="pane">
-          {detail === undefined ? (
-            <p className="notice muted">Choose an object.</p>
-          ) : selected !== undefined &&
-            (detail.status === "known" ||
-              detail.status === "not-in-game-data-set") ? (
-            <ObjectPage
-              answer={detail}
-              selected={selected}
-              compared={compared}
-              pinned={isPinned}
-              onPin={togglePin}
-              onUnpin={unpin}
-              onChanged={changed}
-              onAdopted={adopted}
-              onCreate={setCreating}
-              onDelete={() => {
-                setDeleting(selection);
+            {toast.text}{" "}
+            {toast.reload === true && (
+              <button
+                type="button"
+                onClick={() => {
+                  setToast(undefined);
+                  reloadWorldEditor();
+                }}
+              >
+                Reload in the World Editor
+              </button>
+            )}{" "}
+            <button
+              type="button"
+              className="link"
+              onClick={() => {
+                setToast(undefined);
               }}
-            />
-          ) : (
-            <NoSelection
-              answer={detail}
-              onCreate={(rawcode) => {
-                setCreating({ kind: kind as CreateStart["kind"], rawcode });
+            >
+              Dismiss
+            </button>
+          </p>
+        )}
+        {banner !== undefined && (
+          <p className="banner">
+            {banner}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setBanner(undefined);
               }}
-            />
-          )}
-        </section>
-      </main>
-      {creating !== undefined && (
-        <CreateDialog
-          start={creating}
-          onClose={() => {
-            setCreating(undefined);
-          }}
-          onCreated={(answer) => {
-            setCreating(undefined);
-            changed(answer);
-            setToast({
-              text: `Created ${answer.rawcode}: save to write it to the map folder.`,
-            });
-            go({ rawcode: answer.rawcode, kind: answer.kind });
-          }}
-        />
-      )}
-      {deleting !== undefined && (
-        <DeleteDialog
-          kind={deleting.kind as CreateStart["kind"]}
-          rawcode={deleting.rawcode}
-          onClose={() => {
-            setDeleting(undefined);
-          }}
-          onDeleted={(answer) => {
-            setDeleting(undefined);
-            changed(answer);
-            setToast({
-              text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
-            });
-            go({ rawcode: undefined, kind: undefined });
-          }}
-        />
-      )}
-      {diffing && (
-        <DiffDialog
-          onClose={() => {
-            setDiffing(false);
-          }}
-        />
-      )}
-      {searching && (
-        <Search
-          all={all}
-          onClose={() => {
-            setSearching(false);
-          }}
-        />
-      )}
-    </div>
+            >
+              Dismiss
+            </button>
+          </p>
+        )}
+        {error !== undefined && <p className="warning">{error}</p>}
+        <nav className="tabs" role="tablist" aria-label="Object kinds">
+          {KINDS.map(([id, label]) => (
+            <button
+              type="button"
+              role="tab"
+              key={id}
+              aria-selected={id === kind}
+              className={id === kind ? "selected" : undefined}
+              onClick={() => {
+                setKind(id);
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+        <main>
+          <aside>
+            <Tree objects={listing?.objects ?? []} selected={selection} />
+          </aside>
+          <section className="pane">
+            {detail === undefined ? (
+              <p className="notice muted">Choose an object.</p>
+            ) : selected !== undefined &&
+              (detail.status === "known" ||
+                detail.status === "not-in-game-data-set") ? (
+              <ObjectPage
+                answer={detail}
+                selected={selected}
+                compared={compared}
+                pinned={isPinned}
+                onPin={togglePin}
+                onUnpin={unpin}
+                onChanged={changed}
+                onAdopted={adopted}
+                onCreate={setCreating}
+                onDelete={() => {
+                  setDeleting(selection);
+                }}
+              />
+            ) : (
+              <NoSelection
+                answer={detail}
+                onCreate={(rawcode) => {
+                  setCreating({ kind: kind as CreateStart["kind"], rawcode });
+                }}
+              />
+            )}
+          </section>
+        </main>
+        {creating !== undefined && (
+          <CreateDialog
+            start={creating}
+            onClose={() => {
+              setCreating(undefined);
+            }}
+            onCreated={(answer) => {
+              setCreating(undefined);
+              changed(answer);
+              setToast({
+                text: `Created ${answer.rawcode}: save to write it to the map folder.`,
+              });
+              go({ rawcode: answer.rawcode, kind: answer.kind });
+            }}
+          />
+        )}
+        {deleting !== undefined && (
+          <DeleteDialog
+            kind={deleting.kind as CreateStart["kind"]}
+            rawcode={deleting.rawcode}
+            onClose={() => {
+              setDeleting(undefined);
+            }}
+            onDeleted={(answer) => {
+              setDeleting(undefined);
+              changed(answer);
+              setToast({
+                text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
+              });
+              go({ rawcode: undefined, kind: undefined });
+            }}
+          />
+        )}
+        {diffing && (
+          <DiffDialog
+            onClose={() => {
+              setDiffing(false);
+            }}
+          />
+        )}
+        {searching && (
+          <Search
+            all={all}
+            onClose={() => {
+              setSearching(false);
+            }}
+          />
+        )}
+      </div>
+    </ArtLayerContext.Provider>
   );
 }
 

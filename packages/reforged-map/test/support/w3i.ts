@@ -12,6 +12,8 @@ export interface TestW3i {
   version?: number;
   /** The melee map flag. */
   melee?: boolean;
+  /** The Supported Modes: 1 SD, 2 HD, 3 All Modes, 4 DE; 3 by default. */
+  modes?: number;
 }
 
 /** The bytes of a war3map.w3i's header up to its Game Data Version, then a byte of the fields after it. */
@@ -45,7 +47,7 @@ export function buildW3i(w3i: TestW3i = {}): Uint8Array {
   cString("");
   bytes.push(0, 255, 255, 255, 255); // light tileset, water colour
   int32(1); // script language: Lua
-  int32(3); // supported modes
+  int32(w3i.modes ?? 3); // supported modes
   if (format >= 31) int32(w3i.version ?? 2);
   bytes.push(0);
   return Uint8Array.from(bytes);

@@ -6,7 +6,13 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { readArtLayer, SUPPORTED_MODES } from "../src/index.js";
+import {
+  allowedArtLayers,
+  findWorldEditorPreferences,
+  readArtLayer,
+  SUPPORTED_MODES,
+  type PreferencesMachine,
+} from "../src/index.js";
 import { tempDir } from "./support/casc.js";
 
 /** A `WorldEditPreferences.txt` whose `[Misc]` section holds `misc`. */
@@ -96,5 +102,83 @@ describe("readArtLayer", () => {
     expect(await readArtLayer({ preferencesFile: sd, supportedModes: 0 })).toBe(
       "sd",
     );
+  });
+});
+
+describe("allowedArtLayers", () => {
+  it("offers the layers the map's Supported Modes allow, every layer outside 1 to 4", () => {
+    expect(allowedArtLayers(1)).toEqual(["sd"]);
+    expect(allowedArtLayers(2)).toEqual(["hd"]);
+    expect(allowedArtLayers(3)).toEqual(["sd", "hd", "de"]);
+    expect(allowedArtLayers(4)).toEqual(["de"]);
+    expect(allowedArtLayers(undefined)).toEqual(["sd", "hd", "de"]);
+    expect(allowedArtLayers(9)).toEqual(["sd", "hd", "de"]);
+  });
+});
+
+describe("findWorldEditorPreferences", () => {
+  /** A machine whose programs answer from `outputs`, by command; the commands run are kept. */
+  function machine(
+    platform: NodeJS.Platform,
+    options: {
+      wsl?: boolean;
+      env?: Record<string, string>;
+      outputs?: Record<string, string | undefined>;
+    } = {},
+  ): PreferencesMachine & { ran: string[] } {
+    const ran: string[] = [];
+    return {
+      platform,
+      wsl: options.wsl ?? false,
+      env: options.env ?? {},
+      ran,
+      run: (command, args) => {
+        ran.push([command, ...args].join(" "));
+        return Promise.resolve(options.outputs?.[command]);
+      },
+    };
+  }
+
+  it("takes the game's user folder WC3_USER_FOLDER names", async () => {
+    const found = machine("win32", {
+      env: { WC3_USER_FOLDER: "D:\\Games\\Warcraft III" },
+    });
+    expect(await findWorldEditorPreferences(found)).toBe(
+      "D:\\Games\\Warcraft III\\WorldEditPreferences.txt",
+    );
+    expect(found.ran).toEqual([]);
+  });
+
+  it("asks Windows for the Documents known folder, which OneDrive may hold", async () => {
+    const windows = machine("win32", {
+      outputs: { powershell: "C:\\Users\\night\\OneDrive\\Documentos" },
+    });
+    expect(await findWorldEditorPreferences(windows)).toBe(
+      "C:\\Users\\night\\OneDrive\\Documentos\\Warcraft III\\WorldEditPreferences.txt",
+    );
+    expect(windows.ran[0]).toContain("GetFolderPath('MyDocuments')");
+  });
+
+  it("asks Windows through interop under WSL, at the folder's WSL path", async () => {
+    const wsl = machine("linux", {
+      wsl: true,
+      outputs: {
+        "powershell.exe": "C:\\Users\\night\\Documents",
+        wslpath: "/mnt/c/Users/night/Documents",
+      },
+    });
+    expect(await findWorldEditorPreferences(wsl)).toBe(
+      "/mnt/c/Users/night/Documents/Warcraft III/WorldEditPreferences.txt",
+    );
+    expect(wsl.ran[1]).toBe("wslpath -u C:\\Users\\night\\Documents");
+  });
+
+  it("finds none elsewhere, or when Windows does not answer", async () => {
+    expect(await findWorldEditorPreferences(machine("linux"))).toBeUndefined();
+    expect(await findWorldEditorPreferences(machine("darwin"))).toBeUndefined();
+    expect(await findWorldEditorPreferences(machine("win32"))).toBeUndefined();
+    expect(
+      await findWorldEditorPreferences(machine("linux", { wsl: true })),
+    ).toBeUndefined();
   });
 });
