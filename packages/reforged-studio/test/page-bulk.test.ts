@@ -20,8 +20,10 @@ import {
   start,
 } from "./support/studio.js";
 
-// Chromium's launch and the flows' requests, kept at 30 s as
-// page-editing.test.ts, for the windows runner (#658).
+// Chromium's launch and the flows' requests. Measured 3.2 s for the file,
+// the launch included, with pnpm vitest run --project reforged-studio on
+// Linux (WSL 2, 8 threads), 2026-11. Kept at 30 s, as page-editing.test.ts,
+// for the windows runner (#658).
 const TIMEOUT = 30_000;
 
 let browser: Browser;
