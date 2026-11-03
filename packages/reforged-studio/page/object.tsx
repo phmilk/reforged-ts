@@ -7,7 +7,9 @@
  * compared objects of its kind as extra columns, and a toggle that hides
  * the fields at their base's value. Also the pages of a deep link that
  * selects nothing: a Rawcode two kinds share, an unknown one, a malformed
- * one.
+ * one, which offers to create an object with it (#835). An object's header
+ * offers a new object based on it or copying it, and a Custom object's its
+ * delete.
  */
 import { Fragment, useState } from "react";
 import type {
@@ -18,6 +20,7 @@ import type {
   SessionCounts,
 } from "../src/server/api-types.js";
 import { api } from "./api.js";
+import type { CreateStart } from "./create.js";
 import { FieldEditor, type FieldActions } from "./edit.js";
 import { ModelThumb } from "./models.js";
 import {
@@ -370,6 +373,10 @@ export function ObjectPage(props: {
   readonly onChanged: (counts: SessionCounts) => void;
   /** Told the answer of an adoption the server took. */
   readonly onAdopted: (answer: AdoptAnswer) => void;
+  /** Opens the dialog of a new object. */
+  readonly onCreate: (start: CreateStart) => void;
+  /** Opens the confirmation of this object's delete. */
+  readonly onDelete: () => void;
 }) {
   const {
     answer,
@@ -380,6 +387,8 @@ export function ObjectPage(props: {
     onUnpin,
     onChanged,
     onAdopted,
+    onCreate,
+    onDelete,
   } = props;
   const [hideAtBase, setHideAtBase] = useState(false);
   const [actionError, setActionError] = useState<string>();
@@ -522,6 +531,30 @@ export function ObjectPage(props: {
             Adopt into code
           </button>
         )}
+        {selected.origin === "builtin" || selected.origin === "modified" ? (
+          <button
+            type="button"
+            onClick={() => {
+              onCreate({ kind, base: rawcode });
+            }}
+          >
+            New object based on it
+          </button>
+        ) : selected.origin === "custom" ? (
+          <button
+            type="button"
+            onClick={() => {
+              onCreate({ kind, copyOf: rawcode });
+            }}
+          >
+            Copy
+          </button>
+        ) : null}
+        {selected.origin === "custom" && selected.readOnly === undefined && (
+          <button type="button" className="danger" onClick={onDelete}>
+            Delete
+          </button>
+        )}
         <button type="button" onClick={onPin} aria-pressed={pinned}>
           {pinned ? "Stop comparing" : "Compare"}
         </button>
@@ -558,8 +591,12 @@ export function ObjectPage(props: {
 }
 
 /** The page of a deep link that selects no object: a shared Rawcode, an unknown one, a malformed one. */
-export function NoSelection(props: { readonly answer: RawcodeAnswer }) {
-  const { answer } = props;
+export function NoSelection(props: {
+  readonly answer: RawcodeAnswer;
+  /** Opens the dialog of a new object with the unknown Rawcode. */
+  readonly onCreate: (rawcode: string) => void;
+}) {
+  const { answer, onCreate } = props;
   if (answer.status === "malformed") {
     return (
       <p className="notice">
@@ -572,7 +609,15 @@ export function NoSelection(props: { readonly answer: RawcodeAnswer }) {
     return (
       <div className="notice">
         <p>
-          <code>{answer.rawcode}</code> is neither in this map nor Built-in.
+          <code>{answer.rawcode}</code> is neither in this map nor Built-in.{" "}
+          <button
+            type="button"
+            onClick={() => {
+              onCreate(answer.rawcode);
+            }}
+          >
+            Create with this Rawcode
+          </button>
         </p>
         {answer.suggestions.length > 0 && (
           <>

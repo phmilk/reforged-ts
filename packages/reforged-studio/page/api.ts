@@ -7,13 +7,19 @@ import type {
   AdoptAnswer,
   ArtLayerAnswer,
   ArtLayerName,
+  CreateAnswer,
+  CreateRequest,
+  DeleteAnswer,
+  DeletionAnswer,
   DiffAnswer,
+  FreeRawcodeAnswer,
   Edit,
   ErrorAnswer,
   IconsAnswer,
   ModelsAnswer,
   ObjectsAnswer,
   RawcodeAnswer,
+  RawcodeCheckAnswer,
   ResetRequest,
   SaveAnswer,
   SaveRefusedAnswer,
@@ -108,6 +114,29 @@ export const api = {
   edits: (edits: readonly Edit[]) => post<SessionCounts>("/edits", { edits }),
   /** Puts a field, or a whole object, back to its base. */
   reset: (target: ResetRequest) => post<SessionCounts>("/reset", target),
+  /** The Rawcode suggested for a new object of a kind, based on `base` or copying `copyOf`. */
+  freeRawcode: (
+    kind: string,
+    from: { readonly base?: string; readonly copyOf?: string },
+  ) =>
+    get<FreeRawcodeAnswer>(
+      `/free-rawcode?kind=${encodeURIComponent(kind)}${from.copyOf === undefined ? (from.base === undefined ? "" : `&base=${encodeURIComponent(from.base)}`) : `&copyOf=${encodeURIComponent(from.copyOf)}`}`,
+    ),
+  /** Whether a new object can take a Rawcode, and what holds it. */
+  rawcodeCheck: (rawcode: string) =>
+    get<RawcodeCheckAnswer>(
+      `/rawcode-check?rawcode=${encodeURIComponent(rawcode)}`,
+    ),
+  /** Creates an object as one undo step, or throws the refusal. */
+  create: (request: CreateRequest) => post<CreateAnswer>("/create", request),
+  /** What deleting an object does, for its confirmation. */
+  deletion: (kind: string, rawcode: string) =>
+    get<DeletionAnswer>(
+      `/deletion?kind=${encodeURIComponent(kind)}&rawcode=${encodeURIComponent(rawcode)}`,
+    ),
+  /** Deletes a Custom object as one undo step, or throws the refusal. */
+  delete: (kind: string, rawcode: string) =>
+    post<DeleteAnswer>("/delete", { kind, rawcode }),
   undo: () => post<SessionCounts>("/undo", {}),
   redo: () => post<SessionCounts>("/redo", {}),
   /** Saves: the answer, or the refusal with the counts, every unsaved edit kept. */

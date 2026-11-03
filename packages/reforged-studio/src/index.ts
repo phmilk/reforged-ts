@@ -96,6 +96,18 @@ export {
   type InstallCheck,
   type InstallCheckOptions,
 } from "./check-install.js";
+export {
+  DOODADS_FILE,
+  PlacementFileError,
+  placementCount,
+  placementFile,
+  readDoodadPlacements,
+  readPlacements,
+  readUnitPlacements,
+  UNITS_FILE,
+  type PlacementCounts,
+  type Placements,
+} from "./placements.js";
 export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
@@ -107,6 +119,11 @@ export {
   type ArtLayerName,
   type ArtLayerRequest,
   type DefinitionSource,
+  type CreateAnswer,
+  type CreateRequest,
+  type DeleteAnswer,
+  type DeleteRequest,
+  type DeletionAnswer,
   type DiffAnswer,
   type Edit,
   type EditsRequest,
@@ -116,6 +133,7 @@ export {
   type FieldReference,
   type FieldRow,
   type FileDiff,
+  type FreeRawcodeAnswer,
   type IconsAnswer,
   type ListedModel,
   type ListedObject,
@@ -125,7 +143,11 @@ export {
   type ObjectOrigin,
   type ObjectsAnswer,
   type OpenInEditorAnswer,
+  type PlacementFile,
   type RawcodeAnswer,
+  type RawcodeCheckAnswer,
+  type RawcodeHolder,
+  type Referrer,
   type ReloadAnswer,
   type ReloadOffer,
   type ResetRequest,
