@@ -91,6 +91,7 @@ export interface StudioOptions {
    * The folder the thumbnails of model previews are cached in, by Build,
    * art layer and path. When left out, the user's cache folder:
    * `%LOCALAPPDATA%\reforged-studio\thumbnails` on Windows,
+   * `~/Library/Caches/reforged-studio/thumbnails` on macOS, and
    * `~/.cache/reforged-studio/thumbnails` (or under `XDG_CACHE_HOME`)
    * elsewhere.
    */

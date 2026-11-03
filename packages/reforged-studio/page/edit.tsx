@@ -10,6 +10,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { DiffAnswer, FieldRow } from "../src/server/api-types.js";
 import { api, ApiError } from "./api.js";
 import { ModelPicker, ModelThumb } from "./models.js";
+import { firstModel } from "./preview.js";
 import { go, Icon } from "./parts.js";
 
 /** What a field editor does: sets the value, or puts the field back to its base. */
@@ -368,25 +369,32 @@ export function FieldEditor(props: {
     }
     case "model": {
       const current = rawValue(row);
+      // A list of models (`modelList`) is edited as its text, and the
+      // picker adds a model to it; a single model is replaced by the pick.
+      const list = row.type === "modelList";
       input = (
         <span className="icon-field">
           {current !== "" && <ModelThumb path={current} />}
-          <code className="raw">{current === "" ? "—" : current}</code>
+          {list ? (
+            <TextInput row={row} label={label} commit={commit} />
+          ) : (
+            <code className="raw">{current === "" ? "—" : current}</code>
+          )}
           <button
             type="button"
-            aria-label={`Choose a model for ${label}`}
+            aria-label={`${list ? "Add" : "Choose"} a model for ${label}`}
             onClick={() => {
               setPicking(true);
             }}
           >
-            Choose…
+            {list ? "Add…" : "Choose…"}
           </button>
           {picking && (
             <ModelPicker
-              current={current}
+              current={list ? firstModel(current) : current}
               onPick={(path) => {
                 setPicking(false);
-                commit(path);
+                commit(list && current !== "" ? `${current},${path}` : path);
               }}
               onClose={() => {
                 setPicking(false);

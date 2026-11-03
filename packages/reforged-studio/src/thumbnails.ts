@@ -8,7 +8,7 @@
  * again. The cache is the developer's own: generated locally from their
  * install, never shipped, since it is Blizzard's art.
  */
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -150,7 +150,8 @@ export class ThumbnailCache {
     }
     const file = this.fileOf(key);
     await mkdir(path.dirname(file), { recursive: true });
-    const temporary = `${file}.${String(process.pid)}.tmp`;
+    // A name of its own, so two writes of one thumbnail never share it.
+    const temporary = `${file}.${randomUUID()}.tmp`;
     await writeFile(temporary, png);
     await rename(temporary, file);
   }

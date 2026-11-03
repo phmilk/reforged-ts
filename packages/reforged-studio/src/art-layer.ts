@@ -128,8 +128,8 @@ const DOCUMENTS_COMMAND = [
  * PowerShell, rather than built from the home folder; under WSL through
  * interop, at its WSL path.
  *
- * @param machine - The platform, the environment and how to run a program;
- *   the running process's when left out.
+ * @param machine - The platform, the environment and how to run a program:
+ *   {@link systemPreferencesMachine} for the running process's.
  * @returns The file's path, which may not exist; undefined off Windows and
  *   WSL without `WC3_USER_FOLDER`, or when Windows cannot say where the
  *   Documents folder is.

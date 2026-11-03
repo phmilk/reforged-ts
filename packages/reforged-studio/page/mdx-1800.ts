@@ -1,6 +1,6 @@
 /**
  * The patch of `mdx-m3-viewer-th`'s MDX parser for the versions after 1000,
- * up to 1800, every 3.0 model's (#481, `docs/research/studio-model-previews.md`).
+ * up to 1800, every 3.0 model's (#481).
  * The parser reads versions 800 to 1000 only, so it throws on every model of
  * 3.0, the SD ones included. The patch replaces the reading of six of its
  * parser files, in place on their classes, so that the viewer the page
@@ -21,8 +21,9 @@
  * - `animationmap.js`: the tracks of those fields.
  *
  * The layouts are those HiveWE's and WhiteoutLib's readers give, read for
- * facts only (HiveWE is AGPL: no code of it is here), and were checked by
- * parsing every model of the 3.0.1 install. Limits taken as they are: an
+ * facts only (HiveWE is AGPL: no code of it is here). The tests read
+ * synthetic models of 1800; reading the install's own models is checked on
+ * a machine with the game (#842). Limits taken as they are: an
  * SD-on-HD or crystal layer draws as SD, and a model with more than 255
  * bones keeps its bone indices only up to 255.
  *

@@ -22,7 +22,7 @@ import { ART_LAYERS } from "../art-layer.js";
 import type { CascStorage } from "../casc/storage.js";
 import type { GameData } from "../game-data.js";
 import { OBJECT_KINDS } from "../kinds.js";
-import type { ArtLayer, PathResolver } from "../paths.js";
+import type { ArtLayer, PathResolver, ResolvedPath } from "../paths.js";
 import {
   THUMBNAIL_LIMIT,
   type ThumbnailCache,
@@ -33,6 +33,7 @@ import {
   type AdoptAnswer,
   type AdoptedObject,
   type ArtLayerAnswer,
+  type ThumbnailAnswer,
   type DiffAnswer,
   type Edit,
   type ErrorAnswer,
@@ -800,6 +801,36 @@ async function openDefinition(
 }
 
 /**
+ * The file a request's `?path=` and `?layer=` name, resolved in #481's
+ * order in that art layer: the refusal of a request without a path or with
+ * a layer the map does not allow, and the 404 of a path found nowhere.
+ */
+async function resolveAsked(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<{ resolved: ResolvedPath; layer: ArtLayer } | Answer> {
+  const asked = query.get("path");
+  if (asked === null || asked.trim() === "") {
+    return refuse(
+      400,
+      "bad-request",
+      "The query is ?path=<path>[&layer=sd|hd|de].",
+    );
+  }
+  const layer = layerOf(context, query);
+  if (layer instanceof Answer) return layer;
+  const resolved = await context.paths(layer).resolve(asked);
+  if (!resolved.found) {
+    return refuse(
+      404,
+      "not-found",
+      `${resolved.path} is neither in the map folder nor in the install.`,
+    );
+  }
+  return { resolved, layer };
+}
+
+/**
  * Answers `GET /api/files?path=`: the bytes of an icon's or a model's file,
  * resolved in #481's order, the map folder's imports first; a 404 for a
  * path found nowhere, which the page shows as a placeholder.
@@ -809,31 +840,12 @@ async function serveFile(
   query: URLSearchParams,
   response: http.ServerResponse,
 ): Promise<void> {
-  const asked = query.get("path");
-  if (asked === null || asked.trim() === "") {
-    send(
-      response,
-      refuse(400, "bad-request", "The query is ?path=<path>[&layer=sd|hd|de]."),
-    );
+  const found = await resolveAsked(context, query);
+  if (found instanceof Answer) {
+    send(response, found);
     return;
   }
-  const layer = layerOf(context, query);
-  if (layer instanceof Answer) {
-    send(response, layer);
-    return;
-  }
-  const resolved = await context.paths(layer).resolve(asked);
-  if (!resolved.found) {
-    send(
-      response,
-      refuse(
-        404,
-        "not-found",
-        `${resolved.path} is neither in the map folder nor in the install.`,
-      ),
-    );
-    return;
-  }
+  const { resolved } = found;
   const bytes = await resolved.read();
   response
     .writeHead(200, {
@@ -917,24 +929,9 @@ async function thumbnailKey(
   context: ApiContext,
   query: URLSearchParams,
 ): Promise<ThumbnailKey | Answer> {
-  const asked = query.get("path");
-  if (asked === null || asked.trim() === "") {
-    return refuse(
-      400,
-      "bad-request",
-      "The query is ?path=<path>[&layer=sd|hd|de].",
-    );
-  }
-  const layer = layerOf(context, query);
-  if (layer instanceof Answer) return layer;
-  const resolved = await context.paths(layer).resolve(asked);
-  if (!resolved.found) {
-    return refuse(
-      404,
-      "not-found",
-      `${resolved.path} is neither in the map folder nor in the install.`,
-    );
-  }
+  const found = await resolveAsked(context, query);
+  if (found instanceof Answer) return found;
+  const { resolved, layer } = found;
   return {
     path: resolved.path,
     artLayer: layer,
@@ -991,7 +988,10 @@ async function writeThumbnail(
     }
     throw error;
   }
-  return new Answer(200, { path: key.path, artLayer: key.artLayer });
+  return new Answer(200, {
+    path: key.path,
+    artLayer: key.artLayer,
+  } satisfies ThumbnailAnswer);
 }
 
 async function sessionAnswer(context: ApiContext): Promise<Answer> {

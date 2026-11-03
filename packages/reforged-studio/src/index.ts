@@ -136,4 +136,5 @@ export {
   type SessionAnswer,
   type SessionCounts,
   type StudioEvents,
+  type ThumbnailAnswer,
 } from "./server/api-types.js";

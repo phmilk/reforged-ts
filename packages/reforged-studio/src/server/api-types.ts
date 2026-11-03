@@ -11,6 +11,7 @@ import type {
   RawcodeSuggestion,
   WorldEditorState,
 } from "reforged-map";
+import type { ArtLayer } from "../paths.js";
 
 /**
  * Who owns an object, as the tree groups them: `"custom"`, a Custom object
@@ -389,7 +390,7 @@ export interface IconsAnswer {
  * An art layer the previews and icons are read in: SD, the base layer
  * alone; HD (`_HD.w3mod:`) or DE (`_DE.w3mod:`) over it.
  */
-export type ArtLayerName = "sd" | "hd" | "de";
+export type ArtLayerName = ArtLayer;
 
 /** The body of `POST /api/art-layer`: the art layer the session reads in from now on. */
 export interface ArtLayerRequest {
@@ -403,6 +404,14 @@ export interface ArtLayerAnswer {
   readonly artLayer: ArtLayerName;
 }
 
+/** `PUT /api/thumbnails`' answer: the thumbnail the cache now holds. */
+export interface ThumbnailAnswer {
+  /** The model's path, as the resolver normalized it. */
+  readonly path: string;
+  /** The art layer it was drawn in. */
+  readonly artLayer: ArtLayerName;
+}
+
 /** One model's path the picker offers. */
 export interface ListedModel {
   /** The path, with backslashes as a field holds it (`Units\Human\Footman\Footman.mdx`). */
@@ -412,8 +421,8 @@ export interface ListedModel {
 }
 
 /**
- * `GET /api/models?q=[&limit=]`: the models' paths of the install, in the
- * session's art layer and the base layer, and of the map folder's imports,
+ * `GET /api/models?q=[&limit=&layer=]`: the models' paths of the install,
+ * in the session's art layer (or the one `layer` names) and the base layer, and of the map folder's imports,
  * those whose path holds the text, the imports first, then by path.
  */
 export interface ModelsAnswer {
@@ -431,7 +440,8 @@ export interface ModelsAnswer {
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`,
  * `"nothing-to-undo"`, `"nothing-to-redo"`, `"no-world-editor"`,
- * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-unreadable"`; and,
+ * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-unreadable"`,
+ * `"not-supported"`, `"not-cached"`; and,
  * for an adoption, every reason `reforged-map`'s `adoptObjects` throws,
  * each answered with a 409: its
  * {@link reforged-map#ObjectDefinitionsErrorReason}s and its
