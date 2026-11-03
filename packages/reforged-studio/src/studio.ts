@@ -35,7 +35,7 @@ import { EventStreams } from "./server/events.js";
 import { DEFAULT_PORT, listen } from "./server/listen.js";
 import type { EditorEnvironment } from "./server/open-in-editor.js";
 import { removeRuntimeFile, writeRuntimeFile } from "./server/runtime-file.js";
-import { Session } from "./server/session.js";
+import { reloadedEvent, Session } from "./server/session.js";
 import { watchFiles } from "./server/watch.js";
 import { defaultCacheFolder, ThumbnailCache } from "./thumbnails.js";
 
@@ -320,7 +320,7 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         // it): the next poll tries again.
         return false;
       }
-      events.send("reloaded", { ...session.counts(), files: names });
+      events.send("reloaded", reloadedEvent(session, names));
       return true;
     },
   );

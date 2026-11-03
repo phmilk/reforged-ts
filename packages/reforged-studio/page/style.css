@@ -738,3 +738,19 @@ button.danger {
 .studio main[hidden] {
   display: none;
 }
+/* Turns with the World Editor (#837): the conflicts dialog and the fields put back. */
+table.turns {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.turns th,
+table.turns td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--line);
+}
+.dialog.turns .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}

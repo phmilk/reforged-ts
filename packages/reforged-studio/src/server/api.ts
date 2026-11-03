@@ -42,6 +42,7 @@ import {
   type ArtLayerAnswer,
   type BulkAnswer,
   type BulkOperation,
+  type ConflictChoice,
   type CreateAnswer,
   type DeleteAnswer,
   type DeletionAnswer,
@@ -59,6 +60,7 @@ import {
   type RawcodeCheckAnswer,
   type Referrer,
   type ReloadAnswer,
+  type ReloadFromDiskAnswer,
   type ReloadOffer,
   type SaveAnswer,
   type SaveRefusedAnswer,
@@ -66,6 +68,7 @@ import {
   type SessionAnswer,
   type ThumbnailAnswer,
   type SessionCounts,
+  type TurnsChangedAnswer,
 } from "./api-types.js";
 import { bulkEdits, BulkRefusedError, tableOf } from "./bulk.js";
 import { diffFiles, headFiles } from "./diff.js";
@@ -92,7 +95,13 @@ import {
   type RawcodeSources,
 } from "./rawcodes.js";
 import { refusal } from "./requests.js";
-import { EditRefusedError, objectKey, type Session } from "./session.js";
+import {
+  EditRefusedError,
+  reloadedEvent,
+  type Replay,
+  type Session,
+} from "./session.js";
+import { objectKey } from "./states.js";
 
 /** The most objects a search answers. */
 const SEARCH_LIMIT = 50;
@@ -1000,6 +1009,98 @@ function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
 }
 
 /**
+ * Answers `POST /api/reload-from-disk`, "Reload and keep my edits on top":
+ * reads the map folder again and replays the unsaved edits on it, field by
+ * field, those the disk also changed listed as conflicts; with no unsaved
+ * edit, the map folder read again replaces the saved state. It tells every
+ * host with `reloaded`.
+ */
+function reloadFromDisk(context: ApiContext): Answer {
+  const { session } = context;
+  let replay: Replay = { replayed: 0, notReplayed: [] };
+  try {
+    if (session.counts().unsavedEdits > 0) replay = session.replayOnDisk();
+    else session.reopen();
+  } catch (error) {
+    if (error instanceof MapFolderError) {
+      return refuse(409, "map-folder-unreadable", error.message);
+    }
+    throw error;
+  }
+  context.resync();
+  context.events.send("reloaded", reloadedEvent(session, []));
+  return new Answer(200, {
+    ...session.counts(),
+    ...replay,
+    ...session.turns(),
+  } satisfies ReloadFromDiskAnswer);
+}
+
+/** The counts and the turns left, after a change of them. */
+const turnsChanged = (context: ApiContext): Answer =>
+  new Answer(200, {
+    ...context.session.counts(),
+    ...context.session.turns(),
+  } satisfies TurnsChangedAnswer);
+
+/**
+ * Answers `POST /api/conflicts`: for each conflict chosen, keeps mine or
+ * takes theirs, the values taken as one undo step.
+ */
+async function chooseConflicts(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const body = await readOptionalJson(request);
+  const { choices } = body;
+  if (
+    !Array.isArray(choices) ||
+    !(choices as unknown[]).every(
+      (choice) =>
+        typeof choice === "object" &&
+        choice !== null &&
+        typeof (choice as { id?: unknown }).id === "string" &&
+        ["mine", "theirs"].includes(
+          (choice as { take?: unknown }).take as string,
+        ),
+    )
+  ) {
+    return refuse(
+      400,
+      "bad-request",
+      'The body is { choices: [{ id, take: "mine" | "theirs" }] }.',
+    );
+  }
+  const refused = applied(context, () => {
+    context.session.chooseConflicts(choices as ConflictChoice[]);
+  });
+  return refused.status === 200 ? turnsChanged(context) : refused;
+}
+
+/**
+ * Answers `POST /api/put-back`: "Apply them again" (`"apply"`) sets the
+ * fields a World Editor save put back to what the Studio saved, as unsaved
+ * edits in one undo step; "Keep the World Editor's" (`"keep"`) leaves them.
+ */
+async function answerPutBack(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { action } = await readOptionalJson(request);
+  if (action !== "apply" && action !== "keep") {
+    return refuse(
+      400,
+      "bad-request",
+      'The body is { action: "apply" | "keep" }.',
+    );
+  }
+  const refused = applied(context, () => {
+    context.session.answerPutBack(action);
+  });
+  return refused.status === 200 ? turnsChanged(context) : refused;
+}
+
+/**
  * Answers `POST /api/save`: the editor's `save()` with the World Editor
  * check on. Saved, it offers the reload when the World Editor holds the map
  * folder without unsaved edits and files were written, or reloads at once
@@ -1013,6 +1114,17 @@ async function save(
 ): Promise<Answer> {
   const body = await readOptionalJson(request);
   const { session } = context;
+  const { conflicts } = session.turns();
+  if (conflicts.length > 0) {
+    return new Answer(409, {
+      error: {
+        reason: "conflicts",
+        message: `${String(conflicts.length)} field${conflicts.length === 1 ? "" : "s"} changed both in the Studio and on disk: choose yours or the map folder's for each, then save again.`,
+      },
+      ...session.counts(),
+      conflicts,
+    } satisfies SaveRefusedAnswer);
+  }
   let result;
   try {
     result = session.save(context.worldEditorCheck ?? true);
@@ -1021,15 +1133,21 @@ async function save(
     if (error.reason === "changed-on-disk") {
       const replay = session.replayOnDisk();
       context.resync();
+      const turns = session.turns();
+      context.events.send(
+        "reloaded",
+        reloadedEvent(session, error.file === undefined ? [] : [error.file]),
+      );
       return new Answer(409, {
         error: {
           reason: error.reason,
-          message: `${error.file ?? "A file"} changed on disk since the Studio read the map folder (a World Editor save?): nothing was written. The Studio read the map folder again and put your unsaved edits on top: review them, then save again.`,
+          message: `${error.file ?? "A file"} changed on disk since the Studio read the map folder (a World Editor save?): nothing was written. The Studio read the map folder again and put your unsaved edits on top: review them${turns.conflicts.length > 0 ? ", choose a side for each field both changed" : ""}, then save again.`,
           ...(error.file !== undefined && { file: error.file }),
         },
         ...session.counts(),
         replayed: replay.replayed,
         notReplayed: replay.notReplayed,
+        ...turns,
       } satisfies SaveRefusedAnswer);
     }
     return new Answer(409, {
@@ -1577,6 +1695,14 @@ export async function handle(
       );
     } else if (route === "POST /api/save") {
       send(response, await save(context, request));
+    } else if (route === "GET /api/turns") {
+      send(response, new Answer(200, context.session.turns()));
+    } else if (route === "POST /api/reload-from-disk") {
+      send(response, reloadFromDisk(context));
+    } else if (route === "POST /api/conflicts") {
+      send(response, await chooseConflicts(context, request));
+    } else if (route === "POST /api/put-back") {
+      send(response, await answerPutBack(context, request));
     } else if (route === "POST /api/reload-world-editor") {
       send(response, reloadRoute(context));
     } else if (route === "POST /api/adopt") {
