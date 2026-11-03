@@ -145,6 +145,7 @@ export function patchMdxParser(): void {
     tracks[tag] ??= [token, FloatAnimation];
   }
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- the parser's own reading, kept to be called on the instance with `.call(this, …)`
   const readLayer = Layer.prototype.readMdx;
   Layer.prototype.readMdx = function (
     this: Layer & TexturedLayer,
@@ -157,8 +158,11 @@ export function patchMdxParser(): void {
     }
     const start = stream.index;
     const size = stream.readUint32();
-    this.filterMode = stream.readUint32();
-    this.flags = stream.readUint32();
+    // The filter mode and the flags, numbers the parser's enums name.
+    Object.assign(this, {
+      filterMode: stream.readUint32(),
+      flags: stream.readUint32(),
+    });
     this.textureId = stream.readInt32();
     this.textureAnimationId = stream.readInt32();
     this.coordId = stream.readUint32();
@@ -181,12 +185,14 @@ export function patchMdxParser(): void {
       textures.push({ id, slot, ...(track !== undefined && { track }) });
     }
     this.textures = textures;
-    const first = textures.find((texture) => texture.slot === 0) ?? textures[0];
+    const first =
+      textures.find((texture) => texture.slot === 0) ?? textures.at(0);
     if (first !== undefined) this.textureId = first.id;
     this.readAnimations(stream, size - (stream.index - start));
     if (first?.track !== undefined) this.animations.push(first.track);
   };
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- the parser's own reading, kept to be called on the instance with `.call(this, …)`
   const readMaterial = Material.prototype.readMdx;
   Material.prototype.readMdx = function (
     this: Material,
@@ -199,7 +205,7 @@ export function patchMdxParser(): void {
     }
     stream.readUint32(); // The size.
     this.priorityPlane = stream.readInt32();
-    this.flags = stream.readUint32();
+    Object.assign(this, { flags: stream.readUint32() });
     stream.skip(4); // LAYS
     for (let i = 0, count = stream.readUint32(); i < count; i++) {
       const layer = new Layer();
@@ -209,7 +215,7 @@ export function patchMdxParser(): void {
     const [only] = this.layers as (Layer & TexturedLayer)[];
     if (
       this.layers.length === 1 &&
-      only?.shaderType === HD_SHADER_TYPE &&
+      only.shaderType === HD_SHADER_TYPE &&
       only.textures !== undefined
     ) {
       this.shader = HD_SHADER;
@@ -217,6 +223,7 @@ export function patchMdxParser(): void {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- the parser's own reading, kept to be called on the instance with `.call(this, …)`
   const readGeoset = Geoset.prototype.readMdx;
   Geoset.prototype.readMdx = function (
     this: Geoset,
@@ -245,6 +252,7 @@ export function patchMdxParser(): void {
     stream.skip(size);
   };
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- the parser's own reading, kept to be called on the instance with `.call(this, …)`
   const readCamera = Camera.prototype.readMdx;
   Camera.prototype.readMdx = function (
     this: Camera,
@@ -272,6 +280,7 @@ export function patchMdxParser(): void {
     this.readAnimations(stream, size - read);
   };
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- the parser's own reading, kept to be called on the instance with `.call(this, …)`
   const readLight = Light.prototype.readMdx;
   Light.prototype.readMdx = function (
     this: Light,
@@ -285,7 +294,7 @@ export function patchMdxParser(): void {
     const start = stream.index;
     const size = stream.readUint32();
     GenericObject.prototype.readMdx.call(this, stream);
-    this.type = stream.readUint32();
+    Object.assign(this, { type: stream.readUint32() });
     stream.readFloat32Array(this.attenuation);
     stream.readFloat32Array(this.color);
     this.intensity = stream.readFloat32();

@@ -37,14 +37,14 @@ describe("the parser patched for MDX 1800", () => {
 
   it("gives an SD layer the texture of its slot 0, with no shader name", () => {
     const [material] = read(cubeModel()).materials;
-    expect(material?.shader).toBe("");
-    expect(material?.layers.map((layer) => layer.textureId)).toEqual([0]);
+    expect(material.shader).toBe("");
+    expect(material.layers.map((layer) => layer.textureId)).toEqual([0]);
   });
 
   it("gives an HD layer's six textures as the six layers the viewer draws as HD", () => {
     const [material] = read(cubeModel({ hd: true })).materials;
-    expect(material?.shader).toBe(HD_SHADER);
-    expect(material?.layers.map((layer) => layer.textureId)).toEqual([
+    expect(material.shader).toBe(HD_SHADER);
+    expect(material.layers.map((layer) => layer.textureId)).toEqual([
       0, 1, 2, 3, 4, 5,
     ]);
   });

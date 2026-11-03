@@ -139,9 +139,8 @@ export async function findWorldEditorPreferences(
 ): Promise<string | undefined> {
   const userFolder = machine.env[USER_FOLDER_ENV];
   if (userFolder !== undefined && userFolder !== "") {
-    const join =
-      machine.platform === "win32" ? path.win32.join : path.posix.join;
-    return join(userFolder, WORLD_EDITOR_PREFERENCES);
+    const paths = machine.platform === "win32" ? path.win32 : path.posix;
+    return paths.join(userFolder, WORLD_EDITOR_PREFERENCES);
   }
   if (machine.platform === "win32") {
     const documents = await machine.run("powershell", DOCUMENTS_COMMAND);

@@ -88,7 +88,7 @@ export async function mapModels(mapFolder: string): Promise<string[]> {
       } else if (entry.isFile() && MODEL_FILE.test(entry.name)) {
         let relative = path.relative(mapFolder, file).split(path.sep).join("/");
         const [first, ...rest] = relative.split("/");
-        if (first?.toLowerCase() === MAP_HD_LAYER && rest.length > 0) {
+        if (first.toLowerCase() === MAP_HD_LAYER && rest.length > 0) {
           relative = rest.join("/");
         }
         const key = relative.toLowerCase();
