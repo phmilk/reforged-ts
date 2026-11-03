@@ -58,9 +58,7 @@ const NUMBER_INPUTS: ReadonlySet<FieldRow["input"]> = new Set([
  * so that `0.1 + 0.2` gives `0.3`.
  */
 function rounded(value: number, valueType: FieldRow["valueType"]): number {
-  return valueType === "int"
-    ? Math.round(value)
-    : Number(value.toPrecision(7));
+  return valueType === "int" ? Math.round(value) : Number(value.toPrecision(7));
 }
 
 /** What a bulk edit is computed from. */

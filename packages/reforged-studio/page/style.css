@@ -567,3 +567,75 @@ button.danger {
   border-color: var(--danger);
   color: var(--danger);
 }
+/* Bulk editing (#836): the tree's marked objects and its bar, the Table mode, the bulk edit's dialog. */
+.item.marked {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: var(--accent-soft);
+}
+.bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+.tabs .table-toggle {
+  margin-left: auto;
+}
+.tabs .table-toggle[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.studio main.table-main {
+  display: block;
+  overflow: hidden;
+}
+.table-mode {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.table-scroll {
+  overflow: auto;
+  flex: 1;
+}
+.fields.table {
+  width: auto;
+  min-width: 100%;
+}
+.fields.table th,
+.fields.table td {
+  white-space: nowrap;
+}
+.fields.table th.object {
+  position: sticky;
+  left: 0;
+  background: var(--panel);
+  font-size: inherit;
+  color: var(--ink);
+  z-index: 1;
+}
+.fields.table thead th:first-child {
+  left: 0;
+  z-index: 2;
+}
+.fields.table td.absent {
+  background: var(--bg);
+}
+.dialog.bulk {
+  display: grid;
+  gap: 8px;
+  width: min(560px, 94vw);
+}
+.dialog.bulk .operations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.studio main[hidden] {
+  display: none;
+}

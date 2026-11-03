@@ -170,9 +170,9 @@ describe("bulk edits in the Studio", () => {
     expect((await rowOf(studio, "A000", "acdn", "ability", 2))?.value).toBe(
       Number(before?.base) * 0.5,
     );
-    expect(
-      (await rowOf(studio, "A000", "acdn", "ability", 1))?.modified,
-    ).toBe(false);
+    expect((await rowOf(studio, "A000", "acdn", "ability", 1))?.modified).toBe(
+      false,
+    );
   });
 
   it("resets one field on a selection as one undo step, skipping the objects that do not modify it", async () => {

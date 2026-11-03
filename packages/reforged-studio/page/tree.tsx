@@ -5,9 +5,15 @@
  * grouping the game data model gives (race, Melee or Campaign, Units,
  * Buildings, Heroes, Special for a unit). A group renders its objects only
  * while it is open, so that the Built-in objects' groups cost nothing
- * closed.
+ * closed. Ctrl+click (Cmd+click) marks objects for a bulk edit (#836).
  */
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import type { ListedObject, ObjectOrigin } from "../src/server/api-types.js";
 import { go, Icon, OutsideChip, SharedChip } from "./parts.js";
 
@@ -27,6 +33,16 @@ export interface Selection {
   readonly kind: string;
   readonly rawcode: string;
 }
+
+/** The key of a marked object: its kind and its Rawcode. */
+export const markKey = (object: Selection): string =>
+  `${object.kind}:${object.rawcode}`;
+
+/** The objects marked for a bulk edit, and how to mark or unmark one. */
+const Marks = createContext<{
+  readonly marked: ReadonlySet<string>;
+  readonly onMark: ((object: ListedObject) => void) | undefined;
+}>({ marked: new Set(), onMark: undefined });
 
 /** One group of the tree, its subgroups nested, by its labels. */
 interface Branch {
@@ -111,14 +127,24 @@ function Item(props: {
   readonly selected: boolean;
 }) {
   const { object, selected } = props;
+  const { marked, onMark } = useContext(Marks);
+  const isMarked = marked.has(markKey(object));
+  // An Object definition is edited in its file: it is never marked.
+  const markable = onMark !== undefined && object.origin !== "definition";
   return (
     <li>
       <button
         type="button"
-        className={`item${selected ? " selected" : ""}`}
+        className={`item${selected ? " selected" : ""}${isMarked ? " marked" : ""}`}
         aria-current={selected ? "true" : undefined}
+        aria-pressed={markable ? isMarked : undefined}
         data-rawcode={object.rawcode}
-        onClick={() => {
+        title={markable ? "Ctrl+click to select it for a bulk edit" : undefined}
+        onClick={(event) => {
+          if (markable && (event.ctrlKey || event.metaKey)) {
+            onMark(object);
+            return;
+          }
           go({ rawcode: object.rawcode, kind: object.kind });
         }}
       >
@@ -175,41 +201,47 @@ function BranchItems(props: {
 export function Tree(props: {
   readonly objects: readonly ListedObject[];
   readonly selected: Selection | undefined;
+  /** The objects marked for a bulk edit, by {@link markKey}. */
+  readonly marked?: ReadonlySet<string>;
+  /** Marks or unmarks an object, on a Ctrl+click. */
+  readonly onMark?: (object: ListedObject) => void;
 }) {
-  const { objects, selected } = props;
+  const { objects, selected, marked = new Set<string>(), onMark } = props;
   return (
-    <ul className="tree" aria-label="Objects">
-      {ORIGIN_GROUPS.map(([origin, heading]) => {
-        const inGroup = objects.filter((object) => object.origin === origin);
-        if (inGroup.length === 0) return null;
-        const root = branchesOf(inGroup);
-        return (
-          <Group
-            key={origin}
-            label={heading}
-            count={inGroup.length}
-            open
-            level={0}
-          >
-            {() =>
-              origin === "builtin" ? (
-                <BranchItems branch={root} selected={selected} level={1} />
-              ) : (
-                inGroup.map((object) => (
-                  <Item
-                    key={`${object.kind}:${object.rawcode}`}
-                    object={object}
-                    selected={
-                      selected?.kind === object.kind &&
-                      selected.rawcode === object.rawcode
-                    }
-                  />
-                ))
-              )
-            }
-          </Group>
-        );
-      })}
-    </ul>
+    <Marks.Provider value={{ marked, onMark }}>
+      <ul className="tree" aria-label="Objects">
+        {ORIGIN_GROUPS.map(([origin, heading]) => {
+          const inGroup = objects.filter((object) => object.origin === origin);
+          if (inGroup.length === 0) return null;
+          const root = branchesOf(inGroup);
+          return (
+            <Group
+              key={origin}
+              label={heading}
+              count={inGroup.length}
+              open
+              level={0}
+            >
+              {() =>
+                origin === "builtin" ? (
+                  <BranchItems branch={root} selected={selected} level={1} />
+                ) : (
+                  inGroup.map((object) => (
+                    <Item
+                      key={`${object.kind}:${object.rawcode}`}
+                      object={object}
+                      selected={
+                        selected?.kind === object.kind &&
+                        selected.rawcode === object.rawcode
+                      }
+                    />
+                  ))
+                )
+              }
+            </Group>
+          );
+        })}
+      </ul>
+    </Marks.Provider>
   );
 }

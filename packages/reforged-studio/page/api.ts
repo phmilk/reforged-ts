@@ -5,6 +5,8 @@
  */
 import type {
   AdoptAnswer,
+  BulkAnswer,
+  BulkRequest,
   CreateAnswer,
   CreateRequest,
   DeleteAnswer,
@@ -24,6 +26,7 @@ import type {
   SessionAnswer,
   SessionCounts,
   StudioEvents,
+  TableAnswer,
 } from "../src/server/api-types.js";
 
 const base =
@@ -105,6 +108,20 @@ export const api = {
     post<unknown>("/open-in-editor", { kind, rawcode }),
   /** Applies edits as one undo step, or throws the editor's refusal. */
   edits: (edits: readonly Edit[]) => post<SessionCounts>("/edits", { edits }),
+  /** One kind as a spreadsheet: every object with `objects`, every column with `fields`. */
+  table: (
+    kind: string,
+    show: {
+      readonly objects: boolean;
+      readonly fields: boolean;
+      readonly all: boolean;
+    },
+  ) =>
+    get<TableAnswer>(
+      `/table?kind=${encodeURIComponent(kind)}${show.objects ? "&objects=all" : ""}${show.fields ? "&fields=all" : ""}${allOf(show.all)}`,
+    ),
+  /** Sets, adds to, multiplies or resets one field on a selection, as one undo step, or throws the refusal. */
+  bulk: (request: BulkRequest) => post<BulkAnswer>("/bulk", request),
   /** Puts a field, or a whole object, back to its base. */
   reset: (target: ResetRequest) => post<SessionCounts>("/reset", target),
   /** The Rawcode suggested for a new object of a kind, based on `base` or copying `copyOf`. */

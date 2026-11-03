@@ -29,7 +29,10 @@ function rawValue(row: FieldRow): string {
  * field that stores one when the text is one, else the text as typed, so
  * that the editor refuses it with its own reason.
  */
-function valueOf(row: FieldRow, text: string): number | string {
+export function valueOf(
+  row: Pick<FieldRow, "valueType">,
+  text: string,
+): number | string {
   if (row.valueType === "int" && /^\s*-?\d+\s*$/.test(text)) {
     return Number(text);
   }

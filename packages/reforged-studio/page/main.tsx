@@ -10,6 +10,8 @@
  * Adoption (#838): "Adopt into code" and its toast.
  * Creating and deleting objects (#835): "New object", its dialog and the
  * delete's confirmation (`./create.tsx`).
+ * Bulk editing (#836): the Table mode (`./table.tsx`), and the bulk edit of
+ * the objects Ctrl+clicked in the tree (`./bulk.tsx`).
  * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
@@ -24,13 +26,15 @@ import type {
   SessionCounts,
 } from "../src/server/api-types.js";
 import { api, listen } from "./api.js";
+import { BulkDialog, type BulkStart } from "./bulk.js";
 import { CreateDialog, DeleteDialog, type CreateStart } from "./create.js";
 import { DiffDialog } from "./edit.js";
 import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
 import { go, KINDS, useRoute } from "./parts.js";
 import { Search } from "./search.js";
-import { Tree, type Selection } from "./tree.js";
+import { TableMode } from "./table.js";
+import { markKey, Tree, type Selection } from "./tree.js";
 import "./style.css";
 
 /** The key of a selection, its kind and Rawcode. */
@@ -126,6 +130,9 @@ function App() {
   const [autoReload, setAutoReload] = useState(readAutoReload);
   const [creating, setCreating] = useState<CreateStart>();
   const [deleting, setDeleting] = useState<Selection>();
+  const [tableMode, setTableMode] = useState(false);
+  const [marked, setMarked] = useState<ReadonlySet<string>>(new Set());
+  const [bulking, setBulking] = useState<BulkStart>();
 
   const failed = useCallback((reason: unknown) => {
     setError(reason instanceof Error ? reason.message : String(reason));
@@ -256,6 +263,10 @@ function App() {
   useEffect(() => {
     api.objects(kind, all).then(setListing, failed);
   }, [kind, all, version, failed]);
+  // A bulk edit's selection is of one kind: another tab starts a new one.
+  useEffect(() => {
+    setMarked(new Set());
+  }, [kind]);
   useEffect(() => {
     if (route.rawcode === undefined) {
       setDetail(undefined);
@@ -344,6 +355,16 @@ function App() {
       ),
     );
   };
+
+  /** Marks or unmarks an object of the tree for a bulk edit. */
+  const mark = (object: Selection) => {
+    const next = new Set(marked);
+    if (!next.delete(markKey(object))) next.add(markKey(object));
+    setMarked(next);
+  };
+  const markedRawcodes = (listing?.objects ?? [])
+    .filter((object) => marked.has(markKey(object)))
+    .map((object) => object.rawcode);
 
   return (
     <div className="studio">
@@ -490,10 +511,70 @@ function App() {
             {label}
           </button>
         ))}
+        <button
+          type="button"
+          className="table-toggle"
+          aria-pressed={tableMode}
+          title="One row per object, one column per field"
+          onClick={() => {
+            setTableMode(!tableMode);
+          }}
+        >
+          Table mode
+        </button>
       </nav>
-      <main>
+      {tableMode && (
+        <main className="table-main">
+          <TableMode
+            kind={kind as BulkStart["kind"]}
+            all={all}
+            version={version}
+            onChanged={changed}
+            onBulk={setBulking}
+            onOpen={(row) => {
+              setTableMode(false);
+              go({ rawcode: row.rawcode, kind: row.kind });
+            }}
+          />
+        </main>
+      )}
+      <main hidden={tableMode}>
         <aside>
-          <Tree objects={listing?.objects ?? []} selected={selection} />
+          {markedRawcodes.length > 0 ? (
+            <p className="bulk-bar" data-testid="bulk-bar">
+              {markedRawcodes.length} selected{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setBulking({
+                    kind: kind as BulkStart["kind"],
+                    rawcodes: markedRawcodes,
+                  });
+                }}
+              >
+                Edit a field…
+              </button>{" "}
+              <button
+                type="button"
+                className="link"
+                onClick={() => {
+                  setMarked(new Set());
+                }}
+              >
+                Clear
+              </button>
+            </p>
+          ) : (
+            <p className="bulk-bar muted">
+              Ctrl+click objects to edit a field on all of them.
+            </p>
+          )}
+          <Tree
+            objects={listing?.objects ?? []}
+            selected={selection}
+            marked={marked}
+            onMark={mark}
+          />
         </aside>
         <section className="pane">
           {detail === undefined ? (
@@ -525,6 +606,24 @@ function App() {
           )}
         </section>
       </main>
+      {bulking !== undefined && (
+        <BulkDialog
+          start={bulking}
+          onClose={() => {
+            setBulking(undefined);
+          }}
+          onDone={(answer) => {
+            setBulking(undefined);
+            changed(answer);
+            setToast({
+              text:
+                answer.edited === 0
+                  ? "Nothing to change: no object modifies that field."
+                  : `Edited ${String(answer.edited)} object${answer.edited === 1 ? "" : "s"} as one step: Undo takes it back.`,
+            });
+          }}
+        />
+      )}
       {creating !== undefined && (
         <CreateDialog
           start={creating}
