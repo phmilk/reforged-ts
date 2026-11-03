@@ -5,14 +5,16 @@
  * multiplied or reset, which the session applies as one undo step.
  */
 import type { ObjectKind } from "reforged-map";
-import type {
-  BulkRequest,
-  Edit,
-  FieldRow,
-  ListedObject,
-  TableAnswer,
-  TableCell,
-  TableColumn,
+import {
+  columnKey,
+  type BulkRequest,
+  type Edit,
+  type FieldRow,
+  type ListedObject,
+  type ResetRequest,
+  type TableAnswer,
+  type TableCell,
+  type TableColumn,
 } from "./api-types.js";
 import { detailOf, type DetailSources } from "./objects.js";
 
@@ -33,10 +35,6 @@ export class BulkRefusedError extends Error {
     super(message);
   }
 }
-
-/** A field's column key: its id and its level. */
-const columnKey = (row: { readonly id: string; readonly level?: number }) =>
-  `${row.id}:${String(row.level ?? "")}`;
 
 /** A field's name in a message: its id, with its level for a field of levels. */
 const fieldName = (field: string, level: number | undefined): string =>
@@ -68,13 +66,9 @@ export interface BulkSources {
   /** What each object's field table is read from. */
   readonly details: DetailSources;
   /** The edits that reset a field of an object, the session's. */
-  readonly resetEdits: (target: {
-    readonly kind: ObjectKind;
-    readonly rawcode: string;
-    readonly field: string;
-    readonly level?: number;
-    readonly dataPointer?: number;
-  }) => Edit[];
+  readonly resetEdits: (
+    target: ResetRequest & { readonly field: string },
+  ) => Edit[];
 }
 
 /**
@@ -87,8 +81,9 @@ export interface BulkSources {
  * @param sources - The selection's objects and their field tables.
  * @returns The edits, in the selection's order.
  * @throws {@link BulkRefusedError} With the reason `"not-numeric"` when
- *   `"add"` or `"multiply"` names a field that is no number, `"no-value"`
- *   when an object holds no value of it, naming those objects.
+ *   `"add"` or `"multiply"` names a field that is no number, `"no-field"`
+ *   when an object's field table has no such field and `"no-value"` when an
+ *   object holds no number in it, naming those objects.
  */
 export function bulkEdits(request: BulkRequest, sources: BulkSources): Edit[] {
   const { op, kind, field, level, dataPointer, value } = request;
@@ -113,19 +108,25 @@ export function bulkEdits(request: BulkRequest, sources: BulkSources): Edit[] {
   }
   const operand = Number(value);
   const edits: Edit[] = [];
+  const fieldless: string[] = [];
   const valueless: string[] = [];
   for (const object of sources.objects) {
+    // A row has no data pointer: in a field table, a field and a level name it.
     const row = detailOf(object, sources.details).fields.find(
       (candidate) => candidate.id === field && candidate.level === level,
     );
-    if (row?.input !== undefined && !NUMBER_INPUTS.has(row.input)) {
+    if (row === undefined) {
+      fieldless.push(object.rawcode);
+      continue;
+    }
+    if (!NUMBER_INPUTS.has(row.input)) {
       throw new BulkRefusedError(
         422,
         "not-numeric",
-        `${fieldName(field, level)} is no number: ${op === "add" ? "add to" : "multiply"} a number field only.`,
+        `${fieldName(field, level)} is no number field: ${op === "add" ? "add to" : "multiply"} a field that holds a number.`,
       );
     }
-    const current = row === undefined ? undefined : currentOf(row);
+    const current = currentOf(row);
     const number = current === undefined ? Number.NaN : Number(current);
     if (current === "" || !Number.isFinite(number)) {
       valueless.push(object.rawcode);
@@ -137,15 +138,24 @@ export function bulkEdits(request: BulkRequest, sources: BulkSources): Edit[] {
       rawcode: object.rawcode,
       value: rounded(
         op === "add" ? number + operand : number * operand,
-        row?.valueType,
+        row.valueType,
       ),
     });
+  }
+  const list = (rawcodes: readonly string[]) =>
+    `${rawcodes.join(", ")} ${rawcodes.length === 1 ? "has" : "have"}`;
+  if (fieldless.length > 0) {
+    throw new BulkRefusedError(
+      422,
+      "no-field",
+      `${list(fieldless)} no field ${fieldName(field, level)}: its kind or its base does not give it.`,
+    );
   }
   if (valueless.length > 0) {
     throw new BulkRefusedError(
       422,
       "no-value",
-      `${valueless.join(", ")} hold${valueless.length === 1 ? "s" : ""} no number in ${fieldName(field, level)}, nor does ${valueless.length === 1 ? "its" : "their"} base: set it first.`,
+      `${list(valueless)} no number in ${fieldName(field, level)}, nor does the base: set it first.`,
     );
   }
   return edits;
@@ -192,10 +202,12 @@ export function tableOf(
   return {
     kind,
     columns: shown.map(([, entry]) => entry.column),
-    rows: details.map(({ fields, readOnly: _readOnly, ...object }) => {
+    // A row is the listed object with its cells: an Object definition's
+    // file and line stay its field table's.
+    rows: details.map(({ fields }, index) => {
       const byKey = new Map(fields.map((row) => [columnKey(row), row]));
       return {
-        ...object,
+        ...objects[index],
         cells: shown.map(([key]) => {
           const row = byKey.get(key);
           return row === undefined ? null : cellOf(row);

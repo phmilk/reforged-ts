@@ -417,6 +417,10 @@ export interface EditsRequest {
  */
 export type BulkOperation = "set" | "add" | "multiply" | "reset";
 
+/** The operations of a bulk edit that take a number: `"add"` and `"multiply"`. */
+export const isNumericOperation = (op: BulkOperation): boolean =>
+  op === "add" || op === "multiply";
+
 /** The body of `POST /api/bulk`: one field of a selection of objects of one kind, edited as one undo step. */
 export interface BulkRequest {
   /** What the edit does. */
@@ -458,6 +462,15 @@ export interface TableColumn {
   /** An enumeration's raw values and labels, for the input `"select"`. */
   readonly options?: readonly FieldOption[];
 }
+
+/**
+ * A column's key, which tells it from the other columns of a table: its
+ * field's id and its level (`acdn:2`, `uhpm:`).
+ */
+export const columnKey = (column: {
+  readonly id: string;
+  readonly level?: number;
+}): string => `${column.id}:${String(column.level ?? "")}`;
 
 /** One cell of the Table mode: an object's field. */
 export interface TableCell {

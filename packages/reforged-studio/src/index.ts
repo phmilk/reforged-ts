@@ -111,6 +111,8 @@ export {
 export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
+  columnKey,
+  isNumericOperation,
   OBJECT_ORIGINS,
   type AdoptAnswer,
   type AdoptedObject,

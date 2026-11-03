@@ -35,6 +35,7 @@ import {
   readPlacements,
 } from "../placements.js";
 import {
+  isNumericOperation,
   OBJECT_ORIGINS,
   type AdoptAnswer,
   type AdoptedObject,
@@ -71,7 +72,12 @@ import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
 import { formatDefinitionFiles } from "./format.js";
 import { installModels, mapModels, searchModels } from "./models.js";
-import { composeObjects, detailOf, definitionLine } from "./objects.js";
+import {
+  composeObjects,
+  detailOf,
+  definitionLine,
+  type DetailSources,
+} from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
 import { servePage } from "./page.js";
 import {
@@ -250,6 +256,18 @@ async function objectsOf(context: ApiContext): Promise<
   };
 }
 
+/** What an object's field table is read from: the session's states, the game data model and every object listed. */
+const detailSourcesOf = (
+  context: ApiContext,
+  listed: { readonly gameData: GameData; readonly objects: ListedObject[] },
+): DetailSources => ({
+  working: context.session.working(),
+  saved: context.session.saved,
+  gameData: listed.gameData,
+  fieldTable: context.session.fieldTable,
+  objects: listed.objects,
+});
+
 /** The Game data set base values are read from: the map's, else the fallback. */
 const baseValuesSet = (
   context: ApiContext,
@@ -370,13 +388,7 @@ async function rawcodeObjects(
     kind === null ? objects : objects.filter((object) => object.kind === kind);
   const selected =
     candidates.length === 1
-      ? detailOf(candidates[0], {
-          working: context.session.working(),
-          saved: context.session.saved,
-          gameData: listed.gameData,
-          fieldTable: context.session.fieldTable,
-          objects: listed.objects,
-        })
+      ? detailOf(candidates[0], detailSourcesOf(context, listed))
       : undefined;
   const answer: RawcodeAnswer =
     result.status === "not-in-game-data-set"
@@ -561,7 +573,8 @@ async function bulk(
   const body = await readOptionalJson(request);
   const { op, kind, rawcodes, value } = body;
   const address = fieldAddress(body);
-  const numeric = op === "add" || op === "multiply";
+  const numeric =
+    typeof op === "string" && isNumericOperation(op as BulkOperation);
   if (
     typeof op !== "string" ||
     !(BULK_OPERATIONS as readonly string[]).includes(op) ||
@@ -583,7 +596,7 @@ async function bulk(
   const listed = await objectsOf(context);
   if (listed instanceof Answer) return listed;
   const objects: ListedObject[] = [];
-  for (const rawcode of rawcodes as string[]) {
+  for (const rawcode of rawcodes) {
     const object = listed.objects.find(
       (candidate) => candidate.kind === kind && candidate.rawcode === rawcode,
     );
@@ -599,12 +612,14 @@ async function bulk(
   const { session } = context;
   let edited = 0;
   const change = () => {
+    // Refused before any value is read, and even when a reset leaves the
+    // object as it is: `session.edit` sees only the edits it is given.
     session.refuseDefinitions(objects, "edit");
     const edits = bulkEdits(
       {
         op: op as BulkOperation,
         kind,
-        rawcodes: rawcodes as string[],
+        rawcodes: rawcodes,
         ...address,
         ...((typeof value === "string" || typeof value === "number") && {
           value,
@@ -612,13 +627,7 @@ async function bulk(
       },
       {
         objects,
-        details: {
-          working: session.working(),
-          saved: session.saved,
-          gameData: listed.gameData,
-          fieldTable: session.fieldTable,
-          objects: listed.objects,
-        },
+        details: detailSourcesOf(context, listed),
         resetEdits: (target) => session.resetEdits(target),
       },
     );
@@ -669,13 +678,7 @@ async function table(
     tableOf(
       kind,
       rows,
-      {
-        working: context.session.working(),
-        saved: context.session.saved,
-        gameData: listed.gameData,
-        fieldTable: context.session.fieldTable,
-        objects: listed.objects,
-      },
+      detailSourcesOf(context, listed),
       query.get("fields") === "all",
     ),
   );

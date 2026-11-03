@@ -48,6 +48,12 @@ export class ApiError extends Error {
   }
 }
 
+/** A refusal's text as a field shows it: its message and its reason. */
+export const refusalText = (reason: unknown): string =>
+  reason instanceof ApiError
+    ? `${reason.message} (${reason.reason})`
+    : String(reason);
+
 async function get<T>(path: string, ok: readonly number[] = [200]): Promise<T> {
   const response = await fetch(base + path);
   const body = (await response.json()) as unknown;

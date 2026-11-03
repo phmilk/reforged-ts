@@ -5,13 +5,15 @@
  */
 import { useEffect, useState } from "react";
 import type { ObjectKind } from "reforged-map";
-import type {
-  BulkAnswer,
-  BulkOperation,
-  TableColumn,
+import {
+  columnKey,
+  isNumericOperation,
+  type BulkAnswer,
+  type BulkOperation,
+  type TableColumn,
 } from "../src/server/api-types.js";
-import { api, ApiError } from "./api.js";
-import { valueOf } from "./edit.js";
+import { api, refusalText } from "./api.js";
+import { optionText, valueOf } from "./edit.js";
 
 /** The operations, as the dialog names them. */
 const OPERATIONS: readonly (readonly [BulkOperation, string])[] = [
@@ -20,10 +22,6 @@ const OPERATIONS: readonly (readonly [BulkOperation, string])[] = [
   ["multiply", "Multiply by"],
   ["reset", "Reset to base"],
 ];
-
-/** A column's key in the dialog's select: its id and its level. */
-const keyOf = (column: TableColumn): string =>
-  `${column.id}:${String(column.level ?? "")}`;
 
 /** A column's name: its label, its level for a field of levels, and its id. */
 export function columnName(column: TableColumn): string {
@@ -35,6 +33,19 @@ export function columnName(column: TableColumn): string {
 /** Whether a column holds numbers, which add and multiply take. */
 const numeric = (column: TableColumn | undefined): boolean =>
   column?.input === "integer" || column?.input === "real";
+
+/** The values a select offers for a column: an enumeration's, or a toggle's two; undefined for any other input. */
+export function choicesOf(
+  column: TableColumn | undefined,
+): readonly { readonly value: string; readonly label?: string }[] | undefined {
+  if (column?.input === "toggle") {
+    return [
+      { value: "1", label: "True" },
+      { value: "0", label: "False" },
+    ];
+  }
+  return column?.input === "select" ? (column.options ?? []) : undefined;
+}
 
 /** What a bulk edit is started with. */
 export interface BulkStart {
@@ -53,15 +64,7 @@ function SetValue(props: {
   readonly onChange: (value: string) => void;
 }) {
   const { column, value, onChange } = props;
-  const options =
-    column?.input === "toggle"
-      ? [
-          { value: "1", label: "True" },
-          { value: "0", label: "False" },
-        ]
-      : column?.input === "select"
-        ? (column.options ?? [])
-        : undefined;
+  const options = choicesOf(column);
   if (options !== undefined) {
     return (
       <select
@@ -74,9 +77,7 @@ function SetValue(props: {
         <option value="">—</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label === undefined || option.label === option.value
-              ? option.value
-              : `${option.label} (${option.value})`}
+            {optionText(option)}
           </option>
         ))}
       </select>
@@ -105,14 +106,14 @@ export function BulkDialog(props: {
     start.column === undefined ? undefined : [start.column],
   );
   const [chosen, setChosen] = useState<string>(
-    start.column === undefined ? "" : keyOf(start.column),
+    start.column === undefined ? "" : columnKey(start.column),
   );
   const [op, setOp] = useState<BulkOperation>("set");
   const [value, setValue] = useState("");
   const [error, setError] = useState<string>();
   const first = rawcodes[0];
   useEffect(() => {
-    if (start.column !== undefined || first === undefined) return;
+    if (start.column !== undefined) return;
     let live = true;
     // The fields the first object's field table gives, editable ones only.
     api.rawcode(first, kind).then(
@@ -126,8 +127,7 @@ export function BulkDialog(props: {
           (row) => row.input !== undefined,
         );
         setColumns(fields);
-        const firstField = fields[0];
-        if (firstField !== undefined) setChosen(keyOf(firstField));
+        if (fields.length > 0) setChosen(columnKey(fields[0]));
       },
       (reason: unknown) => {
         if (live) setError(String(reason));
@@ -137,7 +137,7 @@ export function BulkDialog(props: {
       live = false;
     };
   }, [start.column, first, kind]);
-  const column = columns?.find((candidate) => keyOf(candidate) === chosen);
+  const column = columns?.find((candidate) => columnKey(candidate) === chosen);
   const apply = () => {
     if (column === undefined) return;
     const typed =
@@ -156,14 +156,10 @@ export function BulkDialog(props: {
         ...(typed !== undefined && { value: typed }),
       })
       .then(onDone, (reason: unknown) => {
-        setError(
-          reason instanceof ApiError
-            ? `${reason.message} (${reason.reason})`
-            : String(reason),
-        );
+        setError(refusalText(reason));
       });
   };
-  const needsNumber = op === "add" || op === "multiply";
+  const needsNumber = isNumericOperation(op);
   const ready =
     column !== undefined &&
     (op === "reset" ||
@@ -210,17 +206,17 @@ export function BulkDialog(props: {
               disabled={start.column !== undefined}
               onChange={(event) => {
                 const next = columns.find(
-                  (candidate) => keyOf(candidate) === event.target.value,
+                  (candidate) => columnKey(candidate) === event.target.value,
                 );
                 setChosen(event.target.value);
                 setValue("");
-                if (!numeric(next) && (op === "add" || op === "multiply")) {
+                if (!numeric(next) && isNumericOperation(op)) {
                   setOp("set");
                 }
               }}
             >
               {columns.map((candidate) => (
-                <option key={keyOf(candidate)} value={keyOf(candidate)}>
+                <option key={columnKey(candidate)} value={columnKey(candidate)}>
                   {columnName(candidate)} · {candidate.id}
                 </option>
               ))}
@@ -236,9 +232,7 @@ export function BulkDialog(props: {
                 name="operation"
                 value={id}
                 checked={op === id}
-                disabled={
-                  (id === "add" || id === "multiply") && !numeric(column)
-                }
+                disabled={isNumericOperation(id) && !numeric(column)}
                 onChange={() => {
                   setOp(id);
                 }}

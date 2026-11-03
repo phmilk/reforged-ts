@@ -7,36 +7,18 @@
  */
 import { useEffect, useRef, useState } from "react";
 import type { ObjectKind } from "reforged-map";
-import type {
-  SessionCounts,
-  TableAnswer,
-  TableCell,
-  TableColumn,
-  TableRow,
+import {
+  columnKey,
+  type SessionCounts,
+  type TableAnswer,
+  type TableCell,
+  type TableColumn,
+  type TableRow,
 } from "../src/server/api-types.js";
-import { api, ApiError } from "./api.js";
-import { columnName, type BulkStart } from "./bulk.js";
-import { valueOf } from "./edit.js";
+import { api, refusalText } from "./api.js";
+import { choicesOf, columnName, type BulkStart } from "./bulk.js";
+import { optionText, valueOf } from "./edit.js";
 import { Icon, OriginChip } from "./parts.js";
-
-/** The text of a refusal, as a field shows it. */
-const messageOf = (reason: unknown): string =>
-  reason instanceof ApiError
-    ? `${reason.message} (${reason.reason})`
-    : String(reason);
-
-/** The options a cell's select offers: an enumeration's, or a toggle's two. */
-function optionsOf(
-  column: TableColumn,
-): readonly { value: string; label?: string }[] | undefined {
-  if (column.input === "toggle") {
-    return [
-      { value: "1", label: "True" },
-      { value: "0", label: "False" },
-    ];
-  }
-  return column.input === "select" ? (column.options ?? []) : undefined;
-}
 
 /** The input of a cell being edited: a select for an enumeration or a toggle, else a text, committed on Enter, a change or the blur. */
 function CellInput(props: {
@@ -57,7 +39,7 @@ function CellInput(props: {
     if (text === undefined || text === current) onCancel();
     else onCommit(text);
   };
-  const options = optionsOf(column);
+  const options = choicesOf(column);
   if (options !== undefined) {
     return (
       <select
@@ -79,9 +61,7 @@ function CellInput(props: {
         )}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label === undefined || option.label === option.value
-              ? option.value
-              : `${option.label} (${option.value})`}
+            {optionText(option)}
           </option>
         ))}
       </select>
@@ -135,7 +115,7 @@ function Cell(props: {
         onChanged(counts);
       },
       (reason: unknown) => {
-        setError(messageOf(reason));
+        setError(refusalText(reason));
       },
     );
   };
@@ -231,7 +211,7 @@ export function TableMode(props: {
         }
       },
       (reason: unknown) => {
-        if (live) setError(messageOf(reason));
+        if (live) setError(refusalText(reason));
       },
     );
     return () => {
@@ -268,7 +248,7 @@ export function TableMode(props: {
         )}
       </div>
       {error !== undefined && <p className="warning">{error}</p>}
-      {answer === undefined || answer.kind !== kind ? (
+      {answer?.kind !== kind ? (
         <p className="notice muted">Reading the table…</p>
       ) : answer.rows.length === 0 ? (
         <p className="notice muted">
@@ -291,7 +271,7 @@ export function TableMode(props: {
                   return (
                     <th
                       scope="col"
-                      key={`${column.id}:${String(column.level ?? "")}`}
+                      key={columnKey(column)}
                       data-field={column.id}
                     >
                       <span className="column-name">{columnName(column)}</span>{" "}
@@ -335,7 +315,7 @@ export function TableMode(props: {
                   </th>
                   {answer.columns.map((column, index) => (
                     <Cell
-                      key={`${column.id}:${String(column.level ?? "")}`}
+                      key={columnKey(column)}
                       kind={kind}
                       row={row}
                       column={column}

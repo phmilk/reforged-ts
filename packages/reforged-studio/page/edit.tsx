@@ -51,7 +51,10 @@ export function valueOf(
 }
 
 /** A select option's text: `Heavy (large)`, its raw value alone when it has no label. */
-const optionText = (option: { value: string; label?: string }): string =>
+export const optionText = (option: {
+  value: string;
+  label?: string;
+}): string =>
   option.label === undefined || option.label === option.value
     ? option.value
     : `${option.label} (${option.value})`;

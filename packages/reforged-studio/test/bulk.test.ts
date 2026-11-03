@@ -244,6 +244,69 @@ describe("bulk edits in the Studio", () => {
     expect((await rowOf(studio, "h000", "uhpm"))?.modified).toBe(false);
   });
 
+  it("refuses to multiply a field the field table of an object of the selection does not give", async () => {
+    const studio = await start(mapProject());
+
+    // Hbz1 is Blizzard's: A000, based on it, has it; AHhb does not.
+    const answer = await request(studio, "/api/bulk", {
+      json: {
+        op: "multiply",
+        kind: "ability",
+        rawcodes: ["A000", "AHhb"],
+        field: "Hbz1",
+        level: 1,
+        value: 2,
+      },
+    });
+
+    expect(answer.status).toBe(422);
+    expect((answer.body as ErrorAnswer).error).toMatchObject({
+      reason: "no-field",
+      message: expect.stringMatching(/^AHhb has no field Hbz1/) as unknown,
+    });
+    expect((await counts(studio)).undo).toBe(0);
+  });
+
+  it("applies every edit kind together as one undo step", async () => {
+    const studio = await start(mapProject());
+
+    const answer = await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          { op: "addObject", kind: "unit", rawcode: "h009", base: "hfoo" },
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h009",
+            field: "uhpm",
+            value: 300,
+          },
+          { op: "removeField", kind: "unit", rawcode: "h000", field: "unam" },
+          { op: "removeObject", kind: "unit", rawcode: "h001" },
+        ],
+      },
+    });
+
+    expect(answer.status).toBe(200);
+    expect(answer.body).toMatchObject({ undo: 1, redo: 0 });
+    expect((await rowOf(studio, "h009", "uhpm"))?.value).toBe(300);
+    expect((await rowOf(studio, "h000", "unam"))?.modified).toBe(false);
+    expect((await request(studio, "/api/objects/h001?kind=unit")).status).toBe(
+      404,
+    );
+
+    expect((await request(studio, "/api/undo", { json: {} })).body).toEqual({
+      unsavedEdits: 0,
+      undo: 0,
+      redo: 1,
+    });
+    expect((await rowOf(studio, "h000", "unam"))?.value).toBe("Captain");
+    expect((await rowOf(studio, "h001", "unam"))?.value).toBe("Chevalier Élu");
+    expect((await request(studio, "/api/objects/h009?kind=unit")).status).toBe(
+      404,
+    );
+  });
+
   it("refuses a whole selection when the editor refuses one of its values", async () => {
     const studio = await start(mapProject());
 
@@ -284,9 +347,7 @@ describe("bulk edits in the Studio", () => {
       .body as TableAnswer;
     const row = table.rows.find((candidate) => candidate.rawcode === "h002");
     expect(row?.origin).toBe("definition");
-    expect(row?.cells.every((cell) => cell === null || !cell.editable)).toBe(
-      true,
-    );
+    expect(row?.cells.every((cell) => cell?.editable !== true)).toBe(true);
   });
 
   it("refuses an unknown object and a malformed body", async () => {
