@@ -4,6 +4,7 @@
  * a host such as a VS Code webview points it at the server.
  */
 import type {
+  AdoptAnswer,
   ArtLayerAnswer,
   ArtLayerName,
   DiffAnswer,
@@ -134,6 +135,9 @@ export const api = {
     );
   },
   reloadWorldEditor: () => post<unknown>("/reload-world-editor", {}),
+  /** Adopts a Custom object or a modified Built-in object into the code, or throws the refusal. */
+  adopt: (kind: string, rawcode: string) =>
+    post<AdoptAnswer>("/adopt", { kind, rawcode }),
   diff: (against: "saved" | "head") =>
     get<DiffAnswer>(`/diff?against=${against}`),
   icons: () => get<IconsAnswer>("/icons"),

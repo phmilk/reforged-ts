@@ -3,7 +3,8 @@
  * Chromium, driven by Playwright, over the Studio's server on its own Map
  * project, so that its edits and saves leave the other page tests' alone.
  * It holds the wiring: an inline edit and its unsaved bar, a refusal shown
- * on its field, a select, Ctrl+S and the counter, undo, and the diff.
+ * on its field, a select, Ctrl+S and the counter, undo, and the diff; and
+ * "Adopt into code" (#838), on a Map project of its own.
  *
  * It needs the page built (`pnpm build`) and Chromium installed, as
  * `page.test.ts` does.
@@ -28,6 +29,8 @@ import {
 // --project reforged-studio on Linux (WSL 2, 8 threads), 2026-10. Kept at
 // 30 s, as page.test.ts, for the windows runner (#658).
 const TIMEOUT = 30_000;
+/** How long the page waits for an adoption, which loads the Map project's Prettier. */
+const ADOPTION_TIMEOUT = 15_000;
 
 let browser: Browser;
 let studio: Studio;
@@ -129,6 +132,44 @@ describe("editing in the Studio's page", () => {
       await page.locator("body").press("Control+z");
       await expect.poll(() => unsaved(page)).toBe("1 unsaved");
       await expect.poll(() => attack.inputValue()).not.toBe("pierce");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+});
+
+describe("adopting from the Studio's page", () => {
+  it(
+    "adopts a Custom object into code and shows it as an Object definition",
+    async () => {
+      // A Map project of its own: the editing test leaves unsaved edits,
+      // which adoption refuses.
+      const own = mapProject();
+      const adopting = await start(own);
+      const page = await browser.newPage();
+      await page.goto(`${adopting.url}/objects/h000?kind=unit`);
+      const adopt = page.getByRole("button", { name: "Adopt into code" });
+      await adopt.click();
+
+      // Adoption loads the Map project's Prettier: slow on a loaded machine.
+      await expect
+        .poll(() => page.getByRole("status").textContent(), {
+          timeout: ADOPTION_TIMEOUT,
+        })
+        .toContain(
+          "Adopted the unit h000 into src/objects/unit/Captain_h000.ts.",
+        );
+      await expect
+        .poll(() => page.locator(".object-header").textContent(), {
+          timeout: ADOPTION_TIMEOUT,
+        })
+        .toContain("Read-only: defined in src/objects/unit/Captain_h000.ts");
+      expect(await adopt.count()).toBe(0);
+      expect(
+        fs.existsSync(
+          path.join(own.root, "src", "objects", "unit", "Captain_h000.ts"),
+        ),
+      ).toBe(true);
       await page.close();
     },
     TIMEOUT,
