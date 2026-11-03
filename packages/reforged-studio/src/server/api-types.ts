@@ -13,6 +13,13 @@ import type {
 } from "reforged-map";
 
 /**
+ * A placement file's name: `war3mapUnits.doo` (units and items) or
+ * `war3map.doo` (destructables and doodads). It is defined here, not in the
+ * placement reader, so that the page's types need no Node module.
+ */
+export type PlacementFile = "war3mapUnits.doo" | "war3map.doo";
+
+/**
  * Who owns an object, as the tree groups them: `"custom"`, a Custom object
  * of the map folder; `"definition"`, an object an Object definition of the
  * code defines, read-only; `"modified"`, a Built-in object the map folder
@@ -247,6 +254,131 @@ export type Edit =
       readonly rawcode: string;
     };
 
+/**
+ * One thing that holds a Rawcode, so that a new object cannot take it:
+ * `"object"`, an object of any Object kind (the map folder's, saved or not,
+ * an Object definition's, or a Built-in object); `"removed"`, the Object
+ * manifest, which records an object of that Rawcode as removed by a sync;
+ * `"placed"`, placements on the terrain that name it, in one placement file.
+ */
+export type RawcodeHolder =
+  | {
+      readonly by: "object";
+      readonly kind: ObjectKind;
+      readonly origin: ObjectOrigin;
+      /** The object's name, when one is known. */
+      readonly name?: string;
+    }
+  | { readonly by: "removed"; readonly kind: ObjectKind }
+  | {
+      readonly by: "placed";
+      readonly file: PlacementFile;
+      /** How many placements of the file name it. */
+      readonly count: number;
+    };
+
+/**
+ * `GET /api/free-rawcode?kind=&base=`: the Rawcode the Studio suggests for
+ * a new object, the World Editor's prefix (a unit's base's first letter;
+ * `I`, `A`, `B`, `B`, `D`, `R` for items, abilities, buffs, destructables,
+ * doodads and upgrades) and the lowest free number in the editor's order.
+ */
+export interface FreeRawcodeAnswer {
+  /** The new object's Object kind. */
+  readonly kind: ObjectKind;
+  /** The prefix taken. */
+  readonly prefix: string;
+  /** The free Rawcode; absent when every Rawcode of the prefix is taken. */
+  readonly rawcode?: string;
+}
+
+/**
+ * `GET /api/rawcode-check?rawcode=`: whether a new object can take a
+ * Rawcode, and what holds it when it cannot, for the live validation of
+ * the Rawcode field.
+ */
+export interface RawcodeCheckAnswer {
+  /** The Rawcode checked. */
+  readonly rawcode: string;
+  /** Whether a new object can take it: a Rawcode nothing holds. */
+  readonly free: boolean;
+  /** What holds it; empty when it is free or malformed. */
+  readonly holders: readonly RawcodeHolder[];
+  /** Why it cannot be taken, a sentence an author reads; absent when it is free. */
+  readonly message?: string;
+}
+
+/**
+ * The body of `POST /api/create`: a new Custom object, based on a Built-in
+ * object (`base`) or a copy of a Custom object of its kind (`copyOf`), with
+ * its base and every modification. One of the two is given.
+ */
+export interface CreateRequest {
+  /** The new object's Object kind. */
+  readonly kind: ObjectKind;
+  /** Its Rawcode, which nothing may hold. */
+  readonly rawcode: string;
+  /** The Built-in object it is based on. */
+  readonly base?: string;
+  /** The Custom object of its kind it copies. */
+  readonly copyOf?: string;
+}
+
+/** `POST /api/create`'s answer: the object added, as one undo step, and the counts. */
+export interface CreateAnswer extends SessionCounts {
+  /** Its Object kind. */
+  readonly kind: ObjectKind;
+  /** Its Rawcode. */
+  readonly rawcode: string;
+}
+
+/** An object whose fields name another, as a delete confirmation lists it. */
+export interface Referrer {
+  /** Its Object kind. */
+  readonly kind: ObjectKind;
+  /** Its Rawcode. */
+  readonly rawcode: string;
+  /** Its name, when one is known. */
+  readonly name?: string;
+  /** The ids of its fields that name the object, each once. */
+  readonly fields: readonly string[];
+}
+
+/**
+ * `GET /api/deletion?kind=&rawcode=`: what deleting an object does, for
+ * its confirmation. Only a Custom object of the map folder can be deleted.
+ */
+export interface DeletionAnswer {
+  /** The object's Object kind. */
+  readonly kind: ObjectKind;
+  /** Its Rawcode. */
+  readonly rawcode: string;
+  /** Whether it can be deleted: a Custom object of the map folder, which no Object definition defines. */
+  readonly deletable: boolean;
+  /** The objects of the working state whose fields name it. */
+  readonly referrers: readonly Referrer[];
+  /** How many times it is placed on the terrain. */
+  readonly placements: number;
+  /** The file that places it; absent for a kind nothing places. */
+  readonly placementFile?: PlacementFile;
+  /** What the delete does, or why it cannot be done, in sentences an author reads. */
+  readonly message: string;
+}
+
+/** The body of `POST /api/delete`: the Custom object to delete. */
+export interface DeleteRequest {
+  /** Its Object kind. */
+  readonly kind: ObjectKind;
+  /** Its Rawcode. */
+  readonly rawcode: string;
+}
+
+/** `POST /api/delete`'s answer: the object removed, as one undo step; its placements stay on disk. */
+export interface DeleteAnswer extends SessionCounts {
+  /** How many times it is placed on the terrain: the placements the game skips and the World Editor drops at its next save. */
+  readonly placements: number;
+}
+
 /** The body of `POST /api/reset`: a field to put back to its base, or, without `field`, a whole object. */
 export interface ResetRequest {
   /** The object's Object kind. */
@@ -383,9 +515,9 @@ export interface IconsAnswer {
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
  * `"forbidden-host"`, `"forbidden-origin"`, `"unavailable"`,
  * `"nothing-to-undo"`, `"nothing-to-redo"`, `"no-world-editor"`,
- * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-unreadable"`; and,
- * for an adoption, every reason `reforged-map`'s `adoptObjects` throws,
- * each answered with a 409: its
+ * `"reload-failed"`, `"unsaved-edits"`, `"map-folder-unreadable"`,
+ * `"rawcode-taken"`, `"not-custom"`; and, for an adoption, every reason
+ * `reforged-map`'s `adoptObjects` throws, each answered with a 409: its
  * {@link reforged-map#ObjectDefinitionsErrorReason}s and its
  * {@link reforged-map#ObjectDataWriterErrorReason}s.
  */

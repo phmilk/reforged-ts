@@ -20,6 +20,15 @@ export const OBJECT_KINDS: readonly ObjectKind[] = [
   "upgrade",
 ];
 
+/**
+ * Whether a text names an Object kind.
+ *
+ * @param value - The text.
+ * @returns Whether it is one of {@link OBJECT_KINDS}.
+ */
+export const isKind = (value: string): value is ObjectKind =>
+  (OBJECT_KINDS as readonly string[]).includes(value);
+
 /** Where a kind's objects and fields are, inside a layer. */
 export interface KindFiles {
   kind: ObjectKind;

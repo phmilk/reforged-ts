@@ -542,3 +542,28 @@ button:disabled {
 .results .name {
   flex: 1;
 }
+/* Creating and deleting objects (#835): the new object's dialog and the delete's confirmation. */
+.dialog.create,
+.dialog.delete {
+  display: grid;
+  gap: 8px;
+  width: min(560px, 94vw);
+}
+.dialog.create fieldset {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.dialog.create select {
+  max-width: 100%;
+}
+.dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+button.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
