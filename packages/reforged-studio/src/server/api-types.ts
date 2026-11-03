@@ -571,8 +571,8 @@ export interface NotReplayed {
 
 /**
  * `POST /api/save`'s refusal, answered with 409: `"modified-in-world-editor"`,
- * `"changed-on-disk"` or `"world-editor-check-failed"`, every unsaved edit
- * kept. After `"changed-on-disk"` the Studio has read the map folder again
+ * `"changed-on-disk"`, `"world-editor-check-failed"` or `"conflicts"` (a
+ * conflict is left to choose), every unsaved edit kept. After `"changed-on-disk"` the Studio has read the map folder again
  * and replayed its unsaved edits on top, field by field.
  */
 export interface SaveRefusedAnswer extends ErrorAnswer, SessionCounts {
@@ -580,7 +580,105 @@ export interface SaveRefusedAnswer extends ErrorAnswer, SessionCounts {
   readonly replayed?: number;
   /** After `"changed-on-disk"`: the edits the editor refused on it. */
   readonly notReplayed?: readonly NotReplayed[];
+  /** After `"changed-on-disk"`, and with `"conflicts"`: the fields both sides changed, left to choose. */
+  readonly conflicts?: readonly Conflict[];
+  /** After `"changed-on-disk"`: the fields a World Editor save put back. */
+  readonly putBack?: readonly PutBack[];
 }
+
+/**
+ * A field's or an object's value in one state, as a turn with the World
+ * Editor compares them: `"value"`, a field the map modifies, with its value
+ * (a `TRIGSTR_nnn` resolved); `"unmodified"`, a field at its base's value;
+ * `"present"` and `"absent"`, a whole object the state holds or not.
+ */
+export type TurnValue =
+  | { readonly is: "value"; readonly value: number | string }
+  | { readonly is: "unmodified" }
+  | { readonly is: "present" }
+  | { readonly is: "absent" };
+
+/**
+ * What a turn with the World Editor compares: one field of an object, at
+ * its level and data pointer when it has them, or, without `field`, the
+ * whole object, when one side adds or removes it.
+ */
+export interface TurnAddress {
+  readonly kind: ObjectKind;
+  readonly rawcode: string;
+  /** The field's id; absent for the whole object. */
+  readonly field?: string;
+  readonly level?: number;
+  readonly dataPointer?: number;
+}
+
+/**
+ * A field both sides changed, after the map folder changed on disk under
+ * unsaved edits: the Studio's unsaved edit (mine) and the map folder's new
+ * value (theirs), both changed since the edit's base. The working state
+ * holds mine until the author chooses; a save is refused with
+ * `"conflicts"` while one is left.
+ */
+export interface Conflict extends TurnAddress {
+  /** Its id, which `POST /api/conflicts` chooses by. */
+  readonly id: string;
+  /** The Studio's unsaved value. */
+  readonly mine: TurnValue;
+  /** The map folder's new value. */
+  readonly theirs: TurnValue;
+}
+
+/**
+ * A field the Studio's last save wrote that a save of the World Editor put
+ * back: the map folder now holds the value it had before the Studio's save.
+ */
+export interface PutBack extends TurnAddress {
+  /** What the Studio's save wrote. */
+  readonly studio: TurnValue;
+  /** What the map folder holds again, the value before the Studio's save. */
+  readonly worldEditor: TurnValue;
+}
+
+/** `GET /api/turns`: the conflicts left to choose and the fields a World Editor save put back. */
+export interface TurnsAnswer {
+  readonly conflicts: readonly Conflict[];
+  readonly putBack: readonly PutBack[];
+}
+
+/**
+ * `POST /api/reload-from-disk`'s answer, "Reload and keep my edits on top":
+ * the map folder read again and each unsaved edit replayed on it, field by
+ * field, those the disk also changed listed as conflicts.
+ */
+export interface ReloadFromDiskAnswer extends SessionCounts, TurnsAnswer {
+  /** How many edits were replayed on the map folder read again. */
+  readonly replayed: number;
+  /** The edits the editor refused on it. */
+  readonly notReplayed: readonly NotReplayed[];
+}
+
+/** One choice of `POST /api/conflicts`: a conflict's id, and whether to keep mine or take theirs. */
+export interface ConflictChoice {
+  readonly id: string;
+  readonly take: "mine" | "theirs";
+}
+
+/** The body of `POST /api/conflicts`: the choices, the values of theirs taken as one undo step. */
+export interface ConflictsRequest {
+  readonly choices: readonly ConflictChoice[];
+}
+
+/**
+ * The body of `POST /api/put-back`: `"apply"`, "Apply them again", sets the
+ * fields to what the Studio saved, as unsaved edits in one undo step;
+ * `"keep"`, "Keep the World Editor's", leaves the map folder's values.
+ */
+export interface PutBackRequest {
+  readonly action: "apply" | "keep";
+}
+
+/** `POST /api/conflicts`' and `POST /api/put-back`'s answer: the counts and what is left. */
+export interface TurnsChangedAnswer extends SessionCounts, TurnsAnswer {}
 
 /** `POST /api/reload-world-editor`'s answer: the World Editor was started with `-launch -loadfile <map folder>`. */
 export interface ReloadAnswer {
@@ -778,14 +876,22 @@ export interface OpenInEditorAnswer {
 /**
  * The events of `GET /api/events`, a `text/event-stream`: `session` once on
  * connecting; `reloaded` when the map folder changed on disk with no
- * unsaved edit and the Studio read it again; `changed-on-disk` when it
- * changed with unsaved edits, which it keeps and does not read over;
+ * unsaved edit and the Studio read it again, or after "Reload and keep my
+ * edits on top", with the conflicts and the fields put back it found;
+ * `changed-on-disk` when it changed with unsaved edits, which it keeps and
+ * does not read over until the author reloads;
  * `saved` when the Studio saved the map folder; `adopted` when it adopted
  * an object into the code and read the map folder again.
  */
 export interface StudioEvents {
   readonly session: SessionCounts;
-  readonly reloaded: SessionCounts & { readonly files: readonly string[] };
+  readonly reloaded: SessionCounts & {
+    readonly files: readonly string[];
+    /** The conflicts left to choose, which `GET /api/turns` lists. */
+    readonly conflicts: number;
+    /** The fields a World Editor save put back, which `GET /api/turns` lists. */
+    readonly putBack: number;
+  };
   readonly "changed-on-disk": SessionCounts & {
     readonly files: readonly string[];
   };

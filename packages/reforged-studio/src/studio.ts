@@ -320,7 +320,13 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         // it): the next poll tries again.
         return false;
       }
-      events.send("reloaded", { ...session.counts(), files: names });
+      const turns = session.turns();
+      events.send("reloaded", {
+        ...session.counts(),
+        files: names,
+        conflicts: turns.conflicts.length,
+        putBack: turns.putBack.length,
+      });
       return true;
     },
   );

@@ -14,6 +14,10 @@
  * previews are read in.
  * Bulk editing (#836): the Table mode (`./table.tsx`), and the bulk edit of
  * the objects Ctrl+clicked in the tree (`./bulk.tsx`).
+ * Turns with the World Editor (#837): the banner "Reload and keep my edits
+ * on top" after a change on disk under unsaved edits, the conflicts dialog,
+ * and the banner of the fields a World Editor save put back, with "Apply
+ * them again", "Show" and "Keep the World Editor's" (`./turns.tsx`).
  * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
@@ -27,6 +31,7 @@ import type {
   RawcodeAnswer,
   SessionAnswer,
   SessionCounts,
+  TurnsAnswer,
 } from "../src/server/api-types.js";
 import { api, listen } from "./api.js";
 import { BulkDialog, type BulkStart } from "./bulk.js";
@@ -38,6 +43,7 @@ import { ArtLayerContext, go, KINDS, useRoute } from "./parts.js";
 import { forgetThumbnails } from "./preview.js";
 import { Search } from "./search.js";
 import { TableMode } from "./table.js";
+import { addressText, ConflictsDialog, PutBackDialog } from "./turns.js";
 import { markKey, Tree, type Selection } from "./tree.js";
 import "./style.css";
 
@@ -145,6 +151,13 @@ function App() {
   const [marked, setMarked] = useState<ReadonlySet<string>>(new Set());
   const [bulking, setBulking] = useState<BulkStart>();
   const [artLayer, setArtLayer] = useState<ArtLayerName>();
+  const [turns, setTurns] = useState<TurnsAnswer>({
+    conflicts: [],
+    putBack: [],
+  });
+  const [diskChanged, setDiskChanged] = useState(false);
+  const [choosing, setChoosing] = useState(false);
+  const [showingPutBack, setShowingPutBack] = useState(false);
 
   const failed = useCallback((reason: unknown) => {
     setError(reason instanceof Error ? reason.message : String(reason));
@@ -168,6 +181,8 @@ function App() {
         return;
       }
       const { answer } = result;
+      if (answer.error.reason === "changed-on-disk") setDiskChanged(false);
+      if ((answer.conflicts ?? []).length > 0) setChoosing(true);
       const kept = (answer.notReplayed ?? [])
         .map((edit) => `${edit.edit.rawcode}: ${edit.message}`)
         .join(" ");
@@ -212,6 +227,50 @@ function App() {
       setToast({ text: "The World Editor reloads the map." });
     }, refused);
   };
+  /** "Reload and keep my edits on top": the map folder read again, the unsaved edits replayed on it. */
+  const reloadOnTop = () => {
+    api.reloadFromDisk().then((answer) => {
+      setDiskChanged(false);
+      setBanner(undefined);
+      forgetIcons();
+      forgetThumbnails();
+      changed(answer);
+      setTurns({ conflicts: answer.conflicts, putBack: answer.putBack });
+      if (answer.conflicts.length > 0) setChoosing(true);
+      const kept = answer.notReplayed
+        .map((edit) => `${edit.edit.rawcode}: ${edit.message}`)
+        .join(" ");
+      setToast({
+        text: [
+          `Reloaded the map folder and put ${String(answer.replayed)} edit${answer.replayed === 1 ? "" : "s"} on top.`,
+          ...(answer.conflicts.length > 0
+            ? [
+                `${String(answer.conflicts.length)} changed on disk too: choose a side for each.`,
+              ]
+            : []),
+          ...(kept === "" ? [] : [`Not replayed: ${kept}`]),
+        ].join(" "),
+        refused: kept !== "",
+      });
+    }, refused);
+  };
+  /** Takes the answer of a choice of conflicts or of the fields put back. */
+  const turnsChanged = (answer: TurnsAnswer & SessionCounts) => {
+    changed(answer);
+    setTurns({ conflicts: answer.conflicts, putBack: answer.putBack });
+  };
+  const answerPutBack = (action: "apply" | "keep") => {
+    setShowingPutBack(false);
+    api.answerPutBack(action).then((answer) => {
+      turnsChanged(answer);
+      setToast({
+        text:
+          action === "apply"
+            ? "Applied them again as unsaved edits: save to write them."
+            : "Kept the World Editor's values.",
+      });
+    }, refused);
+  };
   // The latest actions, for the one keyboard listener.
   const actions = useRef({ save, undo, redo });
   actions.current = { save, undo, redo };
@@ -225,12 +284,12 @@ function App() {
           setBanner(
             "The map folder changed on disk: the Studio read it again.",
           );
+          setDiskChanged(false);
           setVersion((count) => count + 1);
         },
         "changed-on-disk": () => {
-          setBanner(
-            "The map folder changed on disk; your unsaved edits are kept.",
-          );
+          setBanner(undefined);
+          setDiskChanged(true);
         },
         saved: (data) => {
           setCounts(countsOf(data));
@@ -273,6 +332,9 @@ function App() {
       setArtLayer(answer.artLayer);
       setCounts(countsOf(answer));
     }, failed);
+  }, [version, failed]);
+  useEffect(() => {
+    api.turns().then(setTurns, failed);
   }, [version, failed]);
   useEffect(() => {
     api.objects(kind, all).then(setListing, failed);
@@ -538,6 +600,61 @@ function App() {
             </button>
           </p>
         )}
+        {diskChanged && (
+          <p className="banner" data-testid="disk-changed">
+            The map folder changed on disk; your unsaved edits are kept.{" "}
+            <button type="button" className="primary" onClick={reloadOnTop}>
+              Reload and keep my edits on top
+            </button>
+          </p>
+        )}
+        {turns.conflicts.length > 0 && (
+          <p className="banner" data-testid="conflicts">
+            {turns.conflicts.length} field
+            {turns.conflicts.length === 1 ? "" : "s"} changed both here and on
+            disk: choose a side for each before saving.{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setChoosing(true);
+              }}
+            >
+              Choose
+            </button>
+          </p>
+        )}
+        {turns.putBack.length > 0 && (
+          <p className="banner" data-testid="put-back">
+            A World Editor save put back {turns.putBack.length} field
+            {turns.putBack.length === 1 ? "" : "s"} the Studio had saved:{" "}
+            {turns.putBack.map(addressText).join(", ")}.{" "}
+            <button
+              type="button"
+              className="primary"
+              onClick={() => {
+                answerPutBack("apply");
+              }}
+            >
+              Apply them again
+            </button>{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setShowingPutBack(true);
+              }}
+            >
+              Show
+            </button>{" "}
+            <button
+              type="button"
+              onClick={() => {
+                answerPutBack("keep");
+              }}
+            >
+              Keep the World Editor&apos;s
+            </button>
+          </p>
+        )}
         {error !== undefined && <p className="warning">{error}</p>}
         <nav className="tabs" role="tablist" aria-label="Object kinds">
           {KINDS.map(([id, label]) => (
@@ -697,6 +814,32 @@ function App() {
                 text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
               });
               go({ rawcode: undefined, kind: undefined });
+            }}
+          />
+        )}
+        {choosing && turns.conflicts.length > 0 && (
+          <ConflictsDialog
+            conflicts={turns.conflicts}
+            onClose={() => {
+              setChoosing(false);
+            }}
+            onChosen={(answer) => {
+              turnsChanged(answer);
+              if (answer.conflicts.length === 0) setChoosing(false);
+            }}
+          />
+        )}
+        {showingPutBack && turns.putBack.length > 0 && (
+          <PutBackDialog
+            putBack={turns.putBack}
+            onClose={() => {
+              setShowingPutBack(false);
+            }}
+            onApply={() => {
+              answerPutBack("apply");
+            }}
+            onKeep={() => {
+              answerPutBack("keep");
             }}
           />
         )}

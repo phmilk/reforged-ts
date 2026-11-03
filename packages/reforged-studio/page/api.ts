@@ -9,6 +9,7 @@ import type {
   ArtLayerName,
   BulkAnswer,
   BulkRequest,
+  ConflictChoice,
   CreateAnswer,
   CreateRequest,
   DeleteAnswer,
@@ -20,8 +21,10 @@ import type {
   IconsAnswer,
   ModelsAnswer,
   ObjectsAnswer,
+  PutBackRequest,
   RawcodeAnswer,
   RawcodeCheckAnswer,
+  ReloadFromDiskAnswer,
   ResetRequest,
   SaveAnswer,
   SaveRefusedAnswer,
@@ -30,6 +33,8 @@ import type {
   SessionCounts,
   StudioEvents,
   TableAnswer,
+  TurnsAnswer,
+  TurnsChangedAnswer,
 } from "../src/server/api-types.js";
 
 const base =
@@ -187,6 +192,16 @@ export const api = {
     );
   },
   reloadWorldEditor: () => post<unknown>("/reload-world-editor", {}),
+  /** The conflicts left to choose and the fields a World Editor save put back. */
+  turns: () => get<TurnsAnswer>("/turns"),
+  /** "Reload and keep my edits on top": the map folder read again, the unsaved edits replayed on it. */
+  reloadFromDisk: () => post<ReloadFromDiskAnswer>("/reload-from-disk", {}),
+  /** Keeps mine or takes theirs for each conflict chosen. */
+  chooseConflicts: (choices: readonly ConflictChoice[]) =>
+    post<TurnsChangedAnswer>("/conflicts", { choices }),
+  /** "Apply them again" or "Keep the World Editor's" for the fields put back. */
+  answerPutBack: (action: PutBackRequest["action"]) =>
+    post<TurnsChangedAnswer>("/put-back", { action }),
   /** Adopts a Custom object or a modified Built-in object into the code, or throws the refusal. */
   adopt: (kind: string, rawcode: string) =>
     post<AdoptAnswer>("/adopt", { kind, rawcode }),

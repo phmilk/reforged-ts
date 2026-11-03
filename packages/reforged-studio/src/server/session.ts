@@ -16,7 +16,6 @@ import {
   openObjectData,
   openRawcodeLookup,
   type FieldTable,
-  type Locale,
   type ObjectDataEditor,
   type ObjectDataField,
   type ObjectDataModification,
@@ -27,28 +26,36 @@ import {
   type RawcodeObject,
   type WorldEditorCheckOptions,
 } from "reforged-map";
-import type { Edit, NotReplayed, SessionCounts } from "./api-types.js";
+import type {
+  ConflictChoice,
+  Edit,
+  NotReplayed,
+  SessionCounts,
+  TurnsAnswer,
+} from "./api-types.js";
+import {
+  byPlace,
+  contentOf,
+  fieldRemoval,
+  modificationKey,
+  objectKey,
+  publicEdit,
+  removal,
+  restore,
+  type ObjectState,
+  type SessionEdit,
+} from "./states.js";
 
-/** An object's key in a state: its Object kind and its Rawcode. */
-export const objectKey = (kind: ObjectKind, rawcode: string): string =>
-  `${kind}:${rawcode}`;
+import {
+  editsTo,
+  findPutBack,
+  heldAt,
+  planMerge,
+  type PendingConflict,
+  type PendingPutBack,
+} from "./turns.js";
 
-/** The map folder's objects as the editor lists them, by {@link objectKey}. */
-export type ObjectState = ReadonlyMap<string, ObjectDataObject>;
-
-/** The translations of a localizable value, by locale. */
-type Translations = Readonly<Partial<Record<Locale, string>>>;
-
-/**
- * An edit as the session applies it: one of the API's, a `setField` with
- * the translations it restores. An edit of the API keeps the translations
- * the field holds: the Studio edits a localizable field's default text only.
- */
-type SessionEdit =
-  | Edit
-  | (Extract<Edit, { op: "setField" }> & {
-      readonly translations: Translations;
-    });
+export { contentOf, objectKey, type ObjectState } from "./states.js";
 
 /** One edit of an undo step, with the edits that take it back. */
 interface AppliedEdit {
@@ -127,27 +134,6 @@ function snapshot(editor: ObjectDataEditor): ObjectState {
   );
 }
 
-/** A modification's place in an object, whichever file holds it: its field, level and data pointer. */
-const placeKey = (modification: ObjectDataModification): string =>
-  [
-    modification.field,
-    String(modification.level ?? 0),
-    String(modification.dataPointer ?? 0),
-  ].join(" ");
-
-/** A modification's identity in an object: its place and its file. */
-const modificationKey = (modification: ObjectDataModification): string =>
-  `${placeKey(modification)} ${modification.file}`;
-
-/**
- * What a modification holds, to compare two states: its value, a
- * `TRIGSTR_nnn` resolved, and its translations. The number of a
- * `TRIGSTR_nnn` is left out: an undo that gives a removed name back gives it
- * the text it had, under the number the writer picks.
- */
-export const contentOf = (modification: ObjectDataModification): string =>
-  JSON.stringify([modification.value, modification.translations]);
-
 /** How many fields and objects `working` changes from `saved`. */
 function countChanges(saved: ObjectState, working: ObjectState): number {
   let changes = 0;
@@ -173,122 +159,6 @@ function countChanges(saved: ObjectState, working: ObjectState): number {
     }
   }
   return changes;
-}
-
-/** The `setField` that gives a modification's field its value and translations back. */
-function restore(
-  kind: ObjectKind,
-  rawcode: string,
-  modification: ObjectDataModification,
-): SessionEdit {
-  return {
-    op: "setField",
-    kind,
-    rawcode,
-    field: modification.field,
-    ...(modification.level !== undefined && { level: modification.level }),
-    ...(modification.dataPointer !== undefined && {
-      dataPointer: modification.dataPointer,
-    }),
-    value: modification.value,
-    translations: modification.translations ?? {},
-  };
-}
-
-/** The `removeField` of an object's field, at its level and data pointer when it has them. */
-function fieldRemoval(address: {
-  readonly kind: ObjectKind;
-  readonly rawcode: string;
-  readonly field: string;
-  readonly level?: number;
-  readonly dataPointer?: number;
-}): Extract<Edit, { op: "removeField" }> {
-  return {
-    op: "removeField",
-    kind: address.kind,
-    rawcode: address.rawcode,
-    field: address.field,
-    ...(address.level !== undefined && { level: address.level }),
-    ...(address.dataPointer !== undefined && {
-      dataPointer: address.dataPointer,
-    }),
-  };
-}
-
-/** The `removeField` of a modification's field. */
-const removal = (
-  kind: ObjectKind,
-  rawcode: string,
-  modification: ObjectDataModification,
-): Edit => fieldRemoval({ ...modification, kind, rawcode });
-
-/** Each modification of an object by its place, the last one of a place kept. */
-const byPlace = (
-  object: ObjectDataObject,
-): Map<string, ObjectDataModification> =>
-  new Map(
-    object.modifications.map((modification) => [
-      placeKey(modification),
-      modification,
-    ]),
-  );
-
-/**
- * The edits that take `saved` to `working`, field by field: each object
- * added with its fields, each object removed, and each field set, changed
- * or removed.
- */
-function editsBetween(saved: ObjectState, working: ObjectState): SessionEdit[] {
-  const edits: SessionEdit[] = [];
-  for (const [key, before] of saved) {
-    if (!working.has(key)) {
-      edits.push({
-        op: "removeObject",
-        kind: before.kind,
-        rawcode: before.rawcode,
-      });
-    }
-  }
-  for (const [key, after] of working) {
-    const { kind, rawcode } = after;
-    const before = saved.get(key);
-    if (
-      before === undefined &&
-      after.origin === "custom" &&
-      after.base !== undefined
-    ) {
-      edits.push({ op: "addObject", kind, rawcode, base: after.base });
-    }
-    const from =
-      before === undefined
-        ? new Map<string, ObjectDataModification>()
-        : byPlace(before);
-    const to = byPlace(after);
-    for (const [place, modification] of from) {
-      if (!to.has(place)) edits.push(removal(kind, rawcode, modification));
-    }
-    for (const [place, modification] of to) {
-      const was = from.get(place);
-      if (was === undefined || contentOf(was) !== contentOf(modification)) {
-        edits.push(restore(kind, rawcode, modification));
-      }
-    }
-  }
-  return edits;
-}
-
-/** An edit as the API names it: a `setField` without the translations the session keeps. */
-function publicEdit(edit: SessionEdit): Edit {
-  if (edit.op !== "setField") return edit;
-  return {
-    op: "setField",
-    kind: edit.kind,
-    rawcode: edit.rawcode,
-    field: edit.field,
-    ...(edit.level !== undefined && { level: edit.level }),
-    ...(edit.dataPointer !== undefined && { dataPointer: edit.dataPointer }),
-    value: edit.value,
-  };
 }
 
 /**
@@ -335,6 +205,10 @@ export class Session {
   /** The states before and after the Studio's last save, to tell a World Editor revert. */
   lastStudioSave:
     { readonly before: ObjectState; readonly after: ObjectState } | undefined;
+  /** The conflicts of the last merge left to choose, the unsaved value held until then. */
+  #conflicts: PendingConflict[] = [];
+  /** The fields of the Studio's last save that the saved state holds as before it, found at the last read. */
+  #putBack: PendingPutBack[] = [];
   /** The steps undo takes back, the last one last. */
   readonly undo: EditStep[] = [];
   /** The steps redo takes again, the next one last. */
@@ -392,17 +266,122 @@ export class Session {
    */
   reopen(): void {
     this.#read();
+    this.#conflicts = [];
     this.undo.length = 0;
     this.redo.length = 0;
   }
 
-  /** Opens the map folder again with a new editor, whose state is the saved state. */
+  /**
+   * Opens the map folder again with a new editor, whose state is the saved
+   * state, and finds the fields of the Studio's last save a World Editor
+   * save put back.
+   */
   #read(): void {
     this.#editor = openObjectData(this.#options.mapFolder, {
       projectRoot: this.#options.projectRoot,
     });
     this.#saved = snapshot(this.#editor);
     this.#savedFiles = undefined;
+    this.#putBack =
+      this.lastStudioSave === undefined
+        ? []
+        : findPutBack(
+            this.lastStudioSave.before,
+            this.lastStudioSave.after,
+            this.#saved,
+          );
+  }
+
+  /** The conflicts left to choose and the fields a World Editor save put back. */
+  turns(): TurnsAnswer {
+    return {
+      conflicts: this.#conflicts.map((pending) => pending.conflict),
+      putBack: this.#putBack.map((pending) => pending.putBack),
+    };
+  }
+
+  /**
+   * Chooses between the sides of conflicts: mine keeps the unsaved value the
+   * working state holds, theirs takes the map folder's, the values taken as
+   * one undo step. The conflicts chosen are no longer listed.
+   *
+   * @param choices - A conflict's id and the side to take, for each one chosen.
+   * @throws {@link EditRefusedError} With the reason `"no-conflict"` for an
+   *   id no conflict left has; nothing is changed.
+   * @throws ObjectDataWriterError The editor's refusal; nothing is changed.
+   */
+  chooseConflicts(choices: readonly ConflictChoice[]): void {
+    const pending = new Map(
+      this.#conflicts.map((conflict) => [conflict.place.id, conflict]),
+    );
+    const working = this.working();
+    const edits: SessionEdit[] = [];
+    for (const choice of choices) {
+      const conflict = pending.get(choice.id);
+      if (conflict === undefined) {
+        throw new EditRefusedError(
+          "no-conflict",
+          `No conflict is left at ${choice.id}.`,
+        );
+      }
+      if (choice.take === "theirs") {
+        edits.push(
+          ...editsTo(
+            conflict.place,
+            heldAt(working, conflict.place),
+            conflict.theirs,
+          ),
+        );
+      }
+    }
+    this.#step(edits);
+    const chosen = new Set(choices.map((choice) => choice.id));
+    this.#conflicts = this.#conflicts.filter(
+      (conflict) => !chosen.has(conflict.place.id),
+    );
+  }
+
+  /**
+   * Answers the fields a World Editor save put back: `"apply"` sets them to
+   * what the Studio's save wrote, as unsaved edits in one undo step;
+   * `"keep"` leaves the map folder's. Either way they are no longer listed,
+   * and the Studio's last save is no longer compared with.
+   *
+   * @param action - `"apply"` or `"keep"`.
+   * @throws {@link EditRefusedError} With the reason `"nothing-put-back"`
+   *   when no field is listed.
+   * @throws ObjectDataWriterError The editor's refusal; nothing is changed.
+   */
+  answerPutBack(action: "apply" | "keep"): void {
+    if (this.#putBack.length === 0) {
+      throw new EditRefusedError(
+        "nothing-put-back",
+        "No field of the Studio's last save was put back.",
+      );
+    }
+    if (action === "apply") {
+      const working = this.working();
+      this.#step(
+        this.#putBack.flatMap((pending) =>
+          editsTo(
+            pending.place,
+            heldAt(working, pending.place),
+            pending.studio,
+          ),
+        ),
+      );
+    }
+    this.#putBack = [];
+    this.lastStudioSave = undefined;
+  }
+
+  /** Applies edits as one undo step, when there is any. */
+  #step(edits: readonly SessionEdit[]): void {
+    const applied = this.#applyAll(edits);
+    if (applied.length > 0) {
+      this.undo.push({ edits: applied });
+      this.redo.length = 0;
+    }
   }
 
   /**
@@ -621,31 +600,46 @@ export class Session {
   }
 
   /**
-   * Reads the map folder again after a save refused with
-   * `"changed-on-disk"`, and replays the unsaved edits on top, field by
-   * field: each object added or removed and each field set or removed in
-   * the working state since the saved state. The undo and redo stacks stay.
+   * Reads the map folder again after it changed on disk, with unsaved edits
+   * ("Reload and keep my edits on top", or a save refused with
+   * `"changed-on-disk"`), and replays them on top, field by field: at each
+   * place the working state changes from the saved state, the unsaved value
+   * is applied on the new saved state. Where the map folder changed the
+   * place too, to another value, it is a conflict, the unsaved value held
+   * until the author chooses ({@link Session.chooseConflicts}); a conflict
+   * left from a merge before stays one. The undo and redo stacks stay.
    *
    * @returns How many edits were replayed, and those the editor refused.
    */
   replayOnDisk(): Replay {
-    const edits = editsBetween(this.#saved, this.working());
+    const saved = this.#saved;
+    const working = this.working();
+    const pending = new Set(
+      this.#conflicts.map((conflict) => conflict.place.id),
+    );
     this.#read();
     let replayed = 0;
     const notReplayed: NotReplayed[] = [];
-    for (const edit of edits) {
+    const conflicts: PendingConflict[] = [];
+    for (const step of planMerge(saved, working, this.#saved, pending)) {
       try {
-        this.#apply(edit);
-        replayed++;
+        this.#applyAll(step.edits);
       } catch (error) {
         if (!(error instanceof ObjectDataWriterError)) throw error;
-        notReplayed.push({
-          edit: publicEdit(edit),
-          reason: error.reason,
-          message: error.message,
-        });
+        const first = step.edits.at(0);
+        if (first !== undefined) {
+          notReplayed.push({
+            edit: publicEdit(first),
+            reason: error.reason,
+            message: error.message,
+          });
+        }
+        continue;
       }
+      replayed += step.edits.length;
+      if (step.conflict !== undefined) conflicts.push(step.conflict);
     }
+    this.#conflicts = conflicts;
     return { replayed, notReplayed };
   }
 
