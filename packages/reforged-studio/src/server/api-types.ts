@@ -150,11 +150,19 @@ export interface FieldRow {
 
 /**
  * The input a field edits with: a whole number, a real, a text, an
- * enumeration as a select, a toggle (0 or 1), a Rawcode list as chips, or
- * an icon's path with its picker.
+ * enumeration as a select, a toggle (0 or 1), a Rawcode list as chips, an
+ * icon's path with its picker, or a model's path with its picker and
+ * preview.
  */
 export type FieldInput =
-  "integer" | "real" | "text" | "select" | "toggle" | "rawcodes" | "icon";
+  | "integer"
+  | "real"
+  | "text"
+  | "select"
+  | "toggle"
+  | "rawcodes"
+  | "icon"
+  | "model";
 
 /** One raw value of an enumeration, as a select offers it: `Heavy (large)`. */
 export interface FieldOption {
@@ -378,6 +386,46 @@ export interface IconsAnswer {
 }
 
 /**
+ * An art layer the previews and icons are read in: SD, the base layer
+ * alone; HD (`_HD.w3mod:`) or DE (`_DE.w3mod:`) over it.
+ */
+export type ArtLayerName = "sd" | "hd" | "de";
+
+/** The body of `POST /api/art-layer`: the art layer the session reads in from now on. */
+export interface ArtLayerRequest {
+  /** One of the map's Supported Modes' layers, {@link SessionAnswer.artLayers}. */
+  readonly artLayer: ArtLayerName;
+}
+
+/** `POST /api/art-layer`'s answer: the art layer the session reads in now. */
+export interface ArtLayerAnswer {
+  /** The art layer. */
+  readonly artLayer: ArtLayerName;
+}
+
+/** One model's path the picker offers. */
+export interface ListedModel {
+  /** The path, with backslashes as a field holds it (`Units\Human\Footman\Footman.mdx`). */
+  readonly path: string;
+  /** Where it is: the map folder's imports, or the install. */
+  readonly from: "map" | "install";
+}
+
+/**
+ * `GET /api/models?q=[&limit=]`: the models' paths of the install, in the
+ * session's art layer and the base layer, and of the map folder's imports,
+ * those whose path holds the text, the imports first, then by path.
+ */
+export interface ModelsAnswer {
+  /** The text searched, trimmed. */
+  readonly query: string;
+  /** The paths found, at most `limit` (200 by default). */
+  readonly models: readonly ListedModel[];
+  /** How many paths hold the text, beyond those answered. */
+  readonly total: number;
+}
+
+/**
  * A refusal: its reason and a message an author reads. The reasons are
  * `reforged-map`'s `ObjectDataWriterError` reasons, and the Studio's own:
  * `"object-definition"`, `"no-editor"`, `"bad-request"`, `"not-found"`,
@@ -411,6 +459,14 @@ export interface SessionAnswer extends SessionCounts {
   readonly worldEditor: "no-window" | "open" | "modified" | "check-failed";
   /** The readers' warnings, each one line. */
   readonly warnings: readonly string[];
+  /**
+   * The art layer icons and previews are read in: the World Editor's Asset
+   * Mode preference, limited by the map's Supported Modes, HD when the
+   * preference cannot be read, until the header's switch changes it.
+   */
+  readonly artLayer: ArtLayerName;
+  /** The art layers the map's Supported Modes allow, which the switch offers. */
+  readonly artLayers: readonly ArtLayerName[];
 }
 
 /** `POST /api/open-in-editor`'s answer: the command run and what it opened. */

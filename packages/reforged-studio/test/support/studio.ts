@@ -114,10 +114,16 @@ export function mapProject(
   return project;
 }
 
-/** The game's executable of a synthetic install, with the Footman's icon, which the Studio finds the install from. */
-export async function syntheticGame(): Promise<string> {
+/**
+ * The game's executable of a synthetic install, with the Footman's icon and
+ * `files` by their paths in the storage, which the Studio finds the install
+ * from.
+ */
+export async function syntheticGame(
+  files: Readonly<Record<string, string | Uint8Array>> = {},
+): Promise<string> {
   const { installDir } = await writeStorage({
-    files: { ...GAME_FILES, [FOOTMAN_ICON_FILE]: FOOTMAN_ICON },
+    files: { ...GAME_FILES, [FOOTMAN_ICON_FILE]: FOOTMAN_ICON, ...files },
   });
   temporary.push(installDir);
   return path.join(installDir, "_retail_", "x86_64", "Warcraft III.exe");
@@ -126,7 +132,11 @@ export async function syntheticGame(): Promise<string> {
 /** The Studios a test started, closed by {@link closeStudios}. */
 const started: Studio[] = [];
 
-/** Starts the Studio on a Map project, on any free port and with no World Editor window, unless `options` says otherwise. */
+/**
+ * Starts the Studio on a Map project, on any free port, with no World
+ * Editor window, no World Editor preferences (so the art layer is HD) and
+ * a thumbnail cache in a temporary folder, unless `options` says otherwise.
+ */
 export async function start(
   project: Project,
   options: Partial<StudioOptions> = {},
@@ -138,6 +148,11 @@ export async function start(
     port: 0,
     open: false,
     worldEditorCheck: { readWindowTitles: () => [] },
+    worldEditorPreferences: path.join(
+      makeTempDir("preferences"),
+      "WorldEditPreferences.txt",
+    ),
+    cacheFolder: makeTempDir("cache"),
     ...options,
   });
   started.push(studio);
@@ -169,6 +184,8 @@ export interface RequestOptions {
   readonly method?: string;
   /** A JSON body. */
   readonly json?: unknown;
+  /** A body of bytes, sent as they are, in place of a JSON one. */
+  readonly body?: Uint8Array;
   /** Headers, over the Studio's own `Host` and, for a write, `Origin`. */
   readonly headers?: Readonly<Record<string, string>>;
   /** The address to connect to; 127.0.0.1 by default. */
@@ -182,14 +199,16 @@ export function request(
   options: RequestOptions = {},
 ): Promise<Answer> {
   const method =
-    options.method ?? (options.json === undefined ? "GET" : "POST");
+    options.method ??
+    (options.json === undefined && options.body === undefined ? "GET" : "POST");
   const port = portOf(studio);
   const body =
-    options.json === undefined ? undefined : JSON.stringify(options.json);
+    options.body ??
+    (options.json === undefined ? undefined : JSON.stringify(options.json));
   const headers: Record<string, string> = {
     host: `localhost:${String(port)}`,
     ...(method !== "GET" && { origin: `http://localhost:${String(port)}` }),
-    ...(body !== undefined && { "content-type": "application/json" }),
+    ...(options.json !== undefined && { "content-type": "application/json" }),
     ...options.headers,
   };
   return new Promise((resolve, reject) => {

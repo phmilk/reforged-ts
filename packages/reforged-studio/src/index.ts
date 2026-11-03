@@ -7,7 +7,7 @@
  * (`./casc/storage.ts`), the SLK tables and profile files of its object
  * data, the game data model of a Game data set (`./game-data.ts`), and
  * resolves an icon's or a model's path (`./paths.ts`). Nothing here writes
- * to disk.
+ * to disk but the thumbnail cache of model previews (`./thumbnails.ts`).
  */
 export {
   BUILD_INFO_FILE,
@@ -64,10 +64,23 @@ export {
   type ResolvedPath,
 } from "./paths.js";
 export {
+  allowedArtLayers,
+  ART_LAYERS,
+  findWorldEditorPreferences,
   readArtLayer,
   SUPPORTED_MODES,
+  USER_FOLDER_ENV,
+  WORLD_EDITOR_PREFERENCES,
   type ArtLayerOptions,
+  type PreferencesMachine,
 } from "./art-layer.js";
+export {
+  defaultCacheFolder,
+  THUMBNAIL_LIMIT,
+  ThumbnailCache,
+  type CacheMachine,
+  type ThumbnailKey,
+} from "./thumbnails.js";
 export {
   EXECUTABLE_ENV,
   findInstall,
@@ -87,6 +100,9 @@ export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
   OBJECT_ORIGINS,
+  type ArtLayerAnswer,
+  type ArtLayerName,
+  type ArtLayerRequest,
   type DefinitionSource,
   type DiffAnswer,
   type Edit,
@@ -98,7 +114,9 @@ export {
   type FieldRow,
   type FileDiff,
   type IconsAnswer,
+  type ListedModel,
   type ListedObject,
+  type ModelsAnswer,
   type NotReplayed,
   type ObjectDetail,
   type ObjectOrigin,

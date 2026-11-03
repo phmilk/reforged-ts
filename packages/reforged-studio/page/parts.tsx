@@ -3,10 +3,21 @@
  * with its placeholder, and its chips (its origin, a Rawcode another kind
  * shares, a Built-in object outside the map's Game data set).
  */
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { ObjectKind } from "reforged-map";
-import type { ListedObject } from "../src/server/api-types.js";
+import type { ArtLayerName, ListedObject } from "../src/server/api-types.js";
 import { iconUrl } from "./icons.js";
+
+/**
+ * The art layer icons and previews are read in: the session's, which the
+ * header's switch changes.
+ */
+export const ArtLayerContext = createContext<ArtLayerName>("hd");
+
+/** The art layer icons and previews are read in now. */
+export function useArtLayer(): ArtLayerName {
+  return useContext(ArtLayerContext);
+}
 
 /** The Object kinds, in the Object Editor's order, with their tabs' labels. */
 export const KINDS: readonly (readonly [ObjectKind, string])[] = [
@@ -73,7 +84,7 @@ export function useRoute(): Route {
 }
 
 /** The two letters a placeholder shows for an object or a path. */
-function initials(text: string): string {
+export function initials(text: string): string {
   const name = text.replace(/.*[\\/]/, "").replace(/^BTN/i, "");
   const capitals = name.replace(/[^A-Z]/g, "");
   return (capitals.length > 0 ? capitals : name).slice(0, 2);
@@ -89,6 +100,7 @@ export function Icon(props: {
   readonly size?: "small" | "large";
 }) {
   const { path, label, size = "small" } = props;
+  const layer = useArtLayer();
   const element = useRef<HTMLSpanElement>(null);
   const [url, setUrl] = useState<string | undefined>();
   const [state, setState] = useState<"loading" | "loaded" | "missing">(
@@ -107,7 +119,7 @@ export function Icon(props: {
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
       observer.disconnect();
-      void iconUrl(path).then((found) => {
+      void iconUrl(path, layer).then((found) => {
         if (!live) return;
         setUrl(found);
         setState(found === undefined ? "missing" : "loaded");
@@ -118,7 +130,7 @@ export function Icon(props: {
       live = false;
       observer.disconnect();
     };
-  }, [path]);
+  }, [path, layer]);
   return (
     <span
       ref={element}

@@ -8,6 +8,7 @@
  */
 import { BlpImage } from "mdx-m3-viewer-th/dist/cjs/parsers/blp/image.js";
 import { DdsImage } from "mdx-m3-viewer-th/dist/cjs/parsers/dds/image.js";
+import type { ArtLayerName } from "../src/server/api-types.js";
 import { api } from "./api.js";
 
 /** The first four bytes of a BLP1 file, `BLP1`. */
@@ -48,16 +49,20 @@ async function toUrl(pixels: ImageData): Promise<string | undefined> {
 const icons = new Map<string, Promise<string | undefined>>();
 
 /**
- * The URL of an icon's PNG, decoded once per path; undefined when the
- * path resolves nowhere or its file cannot be read.
+ * The URL of an icon's PNG, decoded once per path and art layer; undefined
+ * when the path resolves nowhere or its file cannot be read.
  *
  * @param path - The icon's path, as a field holds it.
+ * @param layer - The art layer it is read in.
  */
-export function iconUrl(path: string): Promise<string | undefined> {
-  const key = path.toLowerCase();
+export function iconUrl(
+  path: string,
+  layer: ArtLayerName,
+): Promise<string | undefined> {
+  const key = `${layer}:${path.toLowerCase()}`;
   let url = icons.get(key);
   if (url === undefined) {
-    url = api.file(path).then(
+    url = api.file(path, layer).then(
       async (bytes) => {
         if (bytes === undefined) return undefined;
         try {

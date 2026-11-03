@@ -39,6 +39,7 @@
     "/dist/**/*.d.ts",
     "/dist/page/**",
     "/LICENSE",
+    "/NOTICES.md",
     "/README.md"
   ],
   "sideEffects": false,

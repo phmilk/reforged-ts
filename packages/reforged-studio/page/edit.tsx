@@ -1,13 +1,15 @@
 /**
  * Editing in the Studio (#834): a field's inline input by its type (a
  * number, a text, an enumeration as a select, a toggle, a Rawcode list as
- * linked chips, an icon with its picker), its reset, the refusal shown on
+ * linked chips, an icon with its picker, a model with its preview and its
+ * picker, `./models.tsx`), its reset, the refusal shown on
  * the field, a localizable field's translations read-only; and the diff of
  * the unsaved changes and of the changes since the last commit.
  */
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { DiffAnswer, FieldRow } from "../src/server/api-types.js";
 import { api, ApiError } from "./api.js";
+import { ModelPicker, ModelThumb } from "./models.js";
 import { go, Icon } from "./parts.js";
 
 /** What a field editor does: sets the value, or puts the field back to its base. */
@@ -350,6 +352,37 @@ export function FieldEditor(props: {
           </button>
           {picking && (
             <IconPicker
+              current={current}
+              onPick={(path) => {
+                setPicking(false);
+                commit(path);
+              }}
+              onClose={() => {
+                setPicking(false);
+              }}
+            />
+          )}
+        </span>
+      );
+      break;
+    }
+    case "model": {
+      const current = rawValue(row);
+      input = (
+        <span className="icon-field">
+          {current !== "" && <ModelThumb path={current} />}
+          <code className="raw">{current === "" ? "—" : current}</code>
+          <button
+            type="button"
+            aria-label={`Choose a model for ${label}`}
+            onClick={() => {
+              setPicking(true);
+            }}
+          >
+            Choose…
+          </button>
+          {picking && (
+            <ModelPicker
               current={current}
               onPick={(path) => {
                 setPicking(false);

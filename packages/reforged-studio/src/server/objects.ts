@@ -376,13 +376,17 @@ const INPUTS: Readonly<
   stringList: "text",
 };
 
-/** The input of a field, by its value type and its category in the field table, an icon's by its metadata type. */
+/** The metadata types of a model's path, or of a list of them, which a model's picker edits. */
+const MODEL_TYPES: ReadonlySet<string> = new Set(["model", "modelList"]);
+
+/** The input of a field, by its value type and its category in the field table, an icon's and a model's by its metadata type. */
 function inputOf(
   valueType: NonNullable<FieldRow["valueType"]>,
   entry: FieldEntry | undefined,
   metaType: string | undefined,
 ): FieldInput {
   if (metaType === "icon" && valueType === "string") return "icon";
+  if (MODEL_TYPES.has(metaType ?? "") && valueType === "string") return "model";
   const input =
     entry?.category === undefined ? undefined : INPUTS[entry.category];
   if (input !== undefined) return input;

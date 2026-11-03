@@ -4,10 +4,13 @@
  * a host such as a VS Code webview points it at the server.
  */
 import type {
+  ArtLayerAnswer,
+  ArtLayerName,
   DiffAnswer,
   Edit,
   ErrorAnswer,
   IconsAnswer,
+  ModelsAnswer,
   ObjectsAnswer,
   RawcodeAnswer,
   ResetRequest,
@@ -78,11 +81,15 @@ export const api = {
     ),
   search: (query: string, all = false) =>
     get<SearchAnswer>(`/search?q=${encodeURIComponent(query)}${allOf(all)}`),
+  /** The URL of an icon's or a model's file, in an art layer, the session's when left out. */
+  fileUrl: (path: string, layer?: ArtLayerName): string =>
+    `${base}/files?path=${encodeURIComponent(path)}${layer === undefined ? "" : `&layer=${layer}`}`,
   /** The bytes of an icon's or a model's file; undefined when it is found nowhere. */
-  file: async (path: string): Promise<ArrayBuffer | undefined> => {
-    const response = await fetch(
-      `${base}/files?path=${encodeURIComponent(path)}`,
-    );
+  file: async (
+    path: string,
+    layer?: ArtLayerName,
+  ): Promise<ArrayBuffer | undefined> => {
+    const response = await fetch(api.fileUrl(path, layer));
     if (response.status === 404) return undefined;
     if (!response.ok) {
       throw new ApiError(response.status, "unknown", response.statusText);
@@ -130,7 +137,48 @@ export const api = {
   diff: (against: "saved" | "head") =>
     get<DiffAnswer>(`/diff?against=${against}`),
   icons: () => get<IconsAnswer>("/icons"),
+  /** The models' paths of the map's imports and the install whose path holds the text. */
+  models: (query: string, layer: ArtLayerName) =>
+    get<ModelsAnswer>(`/models?q=${encodeURIComponent(query)}&layer=${layer}`),
+  /** Sets the art layer icons and previews are read in, for the session. */
+  artLayer: (artLayer: ArtLayerName) =>
+    post<ArtLayerAnswer>("/art-layer", { artLayer }),
+  /**
+   * The thumbnail the server's cache holds for a model: its PNG, undefined
+   * when none is cached yet, `"missing"` when the model is found nowhere.
+   */
+  thumbnail: async (
+    path: string,
+    layer: ArtLayerName,
+  ): Promise<Blob | "missing" | undefined> => {
+    const response = await fetch(thumbnailPath(path, layer));
+    if (response.ok) return response.blob();
+    if (response.status === 404) {
+      const body = (await response.json()) as Partial<ErrorAnswer>;
+      return body.error?.reason === "not-found" ? "missing" : undefined;
+    }
+    throw new ApiError(response.status, "unknown", response.statusText);
+  },
+  /** Gives the server's cache a model's thumbnail the page drew. */
+  keepThumbnail: async (
+    path: string,
+    layer: ArtLayerName,
+    png: Blob,
+  ): Promise<void> => {
+    const response = await fetch(thumbnailPath(path, layer), {
+      method: "PUT",
+      headers: { "content-type": "image/png" },
+      body: png,
+    });
+    if (!response.ok) {
+      throw new ApiError(response.status, "unknown", response.statusText);
+    }
+  },
 };
+
+/** The URL of a model's thumbnail in the server's cache. */
+const thumbnailPath = (path: string, layer: ArtLayerName): string =>
+  `${base}/thumbnails?path=${encodeURIComponent(path)}&layer=${layer}`;
 
 /** Listens to the event stream; returns how to stop. */
 export function listen(handlers: {
