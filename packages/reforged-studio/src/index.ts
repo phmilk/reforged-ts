@@ -111,6 +111,8 @@ export {
 export { startStudio, type Studio, type StudioOptions } from "./studio.js";
 export { DEFAULT_PORT } from "./server/listen.js";
 export {
+  columnKey,
+  isNumericOperation,
   OBJECT_ORIGINS,
   type AdoptAnswer,
   type AdoptedObject,
@@ -118,6 +120,9 @@ export {
   type ArtLayerAnswer,
   type ArtLayerName,
   type ArtLayerRequest,
+  type BulkAnswer,
+  type BulkOperation,
+  type BulkRequest,
   type DefinitionSource,
   type CreateAnswer,
   type CreateRequest,
@@ -159,4 +164,8 @@ export {
   type SessionCounts,
   type StudioEvents,
   type ThumbnailAnswer,
+  type TableAnswer,
+  type TableCell,
+  type TableColumn,
+  type TableRow,
 } from "./server/api-types.js";

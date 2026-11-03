@@ -7,6 +7,8 @@ import type {
   AdoptAnswer,
   ArtLayerAnswer,
   ArtLayerName,
+  BulkAnswer,
+  BulkRequest,
   CreateAnswer,
   CreateRequest,
   DeleteAnswer,
@@ -27,6 +29,7 @@ import type {
   SessionAnswer,
   SessionCounts,
   StudioEvents,
+  TableAnswer,
 } from "../src/server/api-types.js";
 
 const base =
@@ -44,6 +47,12 @@ export class ApiError extends Error {
     super(message);
   }
 }
+
+/** A refusal's text as a field shows it: its message and its reason. */
+export const refusalText = (reason: unknown): string =>
+  reason instanceof ApiError
+    ? `${reason.message} (${reason.reason})`
+    : String(reason);
 
 async function get<T>(path: string, ok: readonly number[] = [200]): Promise<T> {
   const response = await fetch(base + path);
@@ -112,6 +121,20 @@ export const api = {
     post<unknown>("/open-in-editor", { kind, rawcode }),
   /** Applies edits as one undo step, or throws the editor's refusal. */
   edits: (edits: readonly Edit[]) => post<SessionCounts>("/edits", { edits }),
+  /** One kind as a spreadsheet: every object with `objects`, every column with `fields`. */
+  table: (
+    kind: string,
+    show: {
+      readonly objects: boolean;
+      readonly fields: boolean;
+      readonly all: boolean;
+    },
+  ) =>
+    get<TableAnswer>(
+      `/table?kind=${encodeURIComponent(kind)}${show.objects ? "&objects=all" : ""}${show.fields ? "&fields=all" : ""}${allOf(show.all)}`,
+    ),
+  /** Sets, adds to, multiplies or resets one field on a selection, as one undo step, or throws the refusal. */
+  bulk: (request: BulkRequest) => post<BulkAnswer>("/bulk", request),
   /** Puts a field, or a whole object, back to its base. */
   reset: (target: ResetRequest) => post<SessionCounts>("/reset", target),
   /** The Rawcode suggested for a new object of a kind, based on `base` or copying `copyOf`. */

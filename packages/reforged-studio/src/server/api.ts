@@ -35,10 +35,13 @@ import {
   readPlacements,
 } from "../placements.js";
 import {
+  isNumericOperation,
   OBJECT_ORIGINS,
   type AdoptAnswer,
   type AdoptedObject,
   type ArtLayerAnswer,
+  type BulkAnswer,
+  type BulkOperation,
   type CreateAnswer,
   type DeleteAnswer,
   type DeletionAnswer,
@@ -62,12 +65,19 @@ import {
   type SearchAnswer,
   type SessionAnswer,
   type ThumbnailAnswer,
+  type SessionCounts,
 } from "./api-types.js";
+import { bulkEdits, BulkRefusedError, tableOf } from "./bulk.js";
 import { diffFiles, headFiles } from "./diff.js";
 import type { EventStreams } from "./events.js";
 import { formatDefinitionFiles } from "./format.js";
 import { installModels, mapModels, searchModels } from "./models.js";
-import { composeObjects, detailOf, definitionLine } from "./objects.js";
+import {
+  composeObjects,
+  detailOf,
+  definitionLine,
+  type DetailSources,
+} from "./objects.js";
 import { openInEditor, type EditorEnvironment } from "./open-in-editor.js";
 import { servePage } from "./page.js";
 import {
@@ -246,6 +256,18 @@ async function objectsOf(context: ApiContext): Promise<
   };
 }
 
+/** What an object's field table is read from: the session's states, the game data model and every object listed. */
+const detailSourcesOf = (
+  context: ApiContext,
+  listed: { readonly gameData: GameData; readonly objects: ListedObject[] },
+): DetailSources => ({
+  working: context.session.working(),
+  saved: context.session.saved,
+  gameData: listed.gameData,
+  fieldTable: context.session.fieldTable,
+  objects: listed.objects,
+});
+
 /** The Game data set base values are read from: the map's, else the fallback. */
 const baseValuesSet = (
   context: ApiContext,
@@ -366,13 +388,7 @@ async function rawcodeObjects(
     kind === null ? objects : objects.filter((object) => object.kind === kind);
   const selected =
     candidates.length === 1
-      ? detailOf(candidates[0], {
-          working: context.session.working(),
-          saved: context.session.saved,
-          gameData: listed.gameData,
-          fieldTable: context.session.fieldTable,
-          objects: listed.objects,
-        })
+      ? detailOf(candidates[0], detailSourcesOf(context, listed))
       : undefined;
   const answer: RawcodeAnswer =
     result.status === "not-in-game-data-set"
@@ -517,6 +533,154 @@ async function reset(
     });
     if (edits.length > 0) context.session.edit(edits);
   });
+}
+
+/** The operations of a bulk edit. */
+const BULK_OPERATIONS: readonly BulkOperation[] = [
+  "set",
+  "add",
+  "multiply",
+  "reset",
+];
+
+/** What `field`, `level` and `dataPointer` of a body address, or undefined when they are no field. */
+function fieldAddress(
+  body: Record<string, unknown>,
+): { field: string; level?: number; dataPointer?: number } | undefined {
+  const { field, level, dataPointer } = body;
+  if (
+    typeof field !== "string" ||
+    (level !== undefined && typeof level !== "number") ||
+    (dataPointer !== undefined && typeof dataPointer !== "number")
+  ) {
+    return undefined;
+  }
+  return {
+    field,
+    ...(level !== undefined && { level }),
+    ...(dataPointer !== undefined && { dataPointer }),
+  };
+}
+
+/**
+ * Answers `POST /api/bulk`: one field of a selection of objects set, added
+ * to, multiplied or reset, as one undo step, or none of it.
+ */
+async function bulk(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const body = await readOptionalJson(request);
+  const { op, kind, rawcodes, value } = body;
+  const address = fieldAddress(body);
+  const numeric = typeof op === "string" && isNumericOperation(op);
+  if (
+    typeof op !== "string" ||
+    !(BULK_OPERATIONS as readonly string[]).includes(op) ||
+    typeof kind !== "string" ||
+    !isKind(kind) ||
+    !Array.isArray(rawcodes) ||
+    rawcodes.length === 0 ||
+    !rawcodes.every((rawcode) => typeof rawcode === "string") ||
+    address === undefined ||
+    (op === "set" && typeof value !== "string" && typeof value !== "number") ||
+    (numeric && (typeof value !== "number" || !Number.isFinite(value)))
+  ) {
+    return refuse(
+      400,
+      "bad-request",
+      "The body is { op: set | add | multiply | reset, kind, rawcodes: [...], field, level?, dataPointer?, value }, value a number for add and multiply, and none for reset.",
+    );
+  }
+  const listed = await objectsOf(context);
+  if (listed instanceof Answer) return listed;
+  const objects: ListedObject[] = [];
+  for (const rawcode of rawcodes) {
+    const object = listed.objects.find(
+      (candidate) => candidate.kind === kind && candidate.rawcode === rawcode,
+    );
+    if (object === undefined) {
+      return refuse(
+        404,
+        "unknown-object",
+        `${rawcode} is no ${kind} of this map nor a Built-in one.`,
+      );
+    }
+    objects.push(object);
+  }
+  const { session } = context;
+  let edited = 0;
+  const change = () => {
+    // Refused before any value is read, and even when a reset leaves the
+    // object as it is: `session.edit` sees only the edits it is given.
+    session.refuseDefinitions(objects, "edit");
+    const edits = bulkEdits(
+      {
+        op: op as BulkOperation,
+        kind,
+        rawcodes,
+        ...address,
+        ...((typeof value === "string" || typeof value === "number") && {
+          value,
+        }),
+      },
+      {
+        objects,
+        details: detailSourcesOf(context, listed),
+        resetEdits: (target) => session.resetEdits(target),
+      },
+    );
+    if (edits.length > 0) session.edit(edits);
+    edited = new Set(edits.map((edit) => edit.rawcode)).size;
+  };
+  let answer: Answer;
+  try {
+    answer = applied(context, change);
+  } catch (error) {
+    if (!(error instanceof BulkRefusedError)) throw error;
+    return refuse(error.status, error.reason, error.message);
+  }
+  if (answer.status !== 200) return answer;
+  return new Answer(200, {
+    ...(answer.body as SessionCounts),
+    edited,
+  } satisfies BulkAnswer);
+}
+
+/**
+ * Answers `GET /api/table`: one Object kind as a spreadsheet, the map's
+ * objects and the changed columns unless `objects=all` and `fields=all`
+ * ask for every one.
+ */
+async function table(
+  context: ApiContext,
+  query: URLSearchParams,
+): Promise<Answer> {
+  const kind = query.get("kind");
+  if (kind === null || !isKind(kind)) {
+    return refuse(
+      400,
+      "bad-request",
+      `The table needs ?kind=, one of ${OBJECT_KINDS.join(", ")}.`,
+    );
+  }
+  const filter = filterOf(query);
+  if (filter instanceof Answer) return filter;
+  const listed = await objectsOf(context);
+  if (listed instanceof Answer) return listed;
+  const allObjects = query.get("objects") === "all";
+  const rows = listed.objects.filter(
+    (object) => filter(object) && (allObjects || object.origin !== "builtin"),
+  );
+  return new Answer(
+    200,
+    tableOf(
+      kind,
+      rows,
+      detailSourcesOf(context, listed),
+      query.get("fields") === "all",
+    ),
+  );
 }
 
 /** What a new Rawcode is checked against, or the lookup's reason it cannot list the objects. */
@@ -1391,6 +1555,10 @@ export async function handle(
       send(response, deletionRoute(context, searchParams));
     } else if (route === "POST /api/delete") {
       send(response, await deleteRoute(context, request));
+    } else if (route === "GET /api/table") {
+      send(response, await table(context, searchParams));
+    } else if (route === "POST /api/bulk") {
+      send(response, await bulk(context, request));
     } else if (route === "POST /api/reset") {
       send(response, await reset(context, request));
     } else if (route === "POST /api/undo") {

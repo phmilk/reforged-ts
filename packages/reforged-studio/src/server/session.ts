@@ -416,7 +416,7 @@ export class Session {
    * @throws ObjectDataWriterError The editor's refusal.
    */
   edit(edits: readonly Edit[]): void {
-    this.#refuseDefinitions(edits, "edit");
+    this.refuseDefinitions(edits, "edit");
     const applied = this.#applyAll(edits);
     if (applied.length > 0) {
       this.undo.push({ edits: applied });
@@ -427,8 +427,13 @@ export class Session {
   /**
    * Refuses objects the code owns, before any change: `"unavailable"` when
    * the lookup cannot say which objects those are.
+   *
+   * @param objects - The objects an edit or a delete names.
+   * @param verb - What the refusal's message tells the author to do there.
+   * @throws {@link EditRefusedError} With the reason `"object-definition"`,
+   *   naming the definition's file, or `"unavailable"`.
    */
-  #refuseDefinitions(
+  refuseDefinitions(
     objects: readonly { readonly kind: ObjectKind; readonly rawcode: string }[],
     verb: "edit" | "delete",
   ): void {
@@ -511,7 +516,7 @@ export class Session {
     readonly rawcode: string;
   }): void {
     const { kind, rawcode } = object;
-    this.#refuseDefinitions([object], "delete");
+    this.refuseDefinitions([object], "delete");
     if (this.#object(kind, rawcode)?.origin !== "custom") {
       throw new EditRefusedError(
         "not-custom",
