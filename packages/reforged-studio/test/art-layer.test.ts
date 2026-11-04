@@ -44,17 +44,16 @@ describe("readArtLayer", () => {
     ).toBe("de");
   });
 
-  it("takes the preference's hd for the Asset Mode Default, and not Test Map's", async () => {
-    expect(
-      await readArtLayer({
-        preferencesFile: await preferences("assetMode=-1\r\nhd=2\r\n"),
-      }),
-    ).toBe("de");
-    expect(
-      await readArtLayer({
-        preferencesFile: await preferences("assetMode=-1\r\nhd=0\r\n"),
-      }),
-    ).toBe("sd");
+  it("is SD for the Asset Mode Default, whatever the preference's hd", async () => {
+    // #842 saw the World Editor run in SD under assetMode=-1 with hd=1:
+    // docs/research/world-editor-asset-mode.md.
+    for (const hd of ["0", "1", "2"]) {
+      expect(
+        await readArtLayer({
+          preferencesFile: await preferences(`assetMode=-1\r\nhd=${hd}\r\n`),
+        }),
+      ).toBe("sd");
+    }
   });
 
   it("defaults to HD when the preference cannot be read", async () => {

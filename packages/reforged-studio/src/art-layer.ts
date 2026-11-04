@@ -5,12 +5,12 @@
  * Supported Modes (`war3map.w3i`), and HD when the preference cannot be
  * read.
  *
- * Neither the meaning of the preference's values nor that of the Supported
- * Modes was checked in the World Editor; both are the human checks of #842.
  * The preference reads 0, 1 and 2 as SD, HD and DE, the order of the
- * editor's strings `WESTRING_PREFS_ASSETMODE_SD`, `_HD` and `_DE`, and -1
- * as Default, which takes the same section's `hd` (the research's sample
- * file holds `assetMode=-1` with `hd=1`). The Supported Modes read 1 to 4
+ * editor's strings `WESTRING_PREFS_ASSETMODE_SD`, `_HD` and `_DE`, and -1,
+ * Default, as SD: #842 saw the World Editor run in SD under 0 and under -1,
+ * whatever the same section's `hd`, which never moves
+ * (`docs/research/world-editor-asset-mode.md`). The Supported Modes, not
+ * yet checked in the World Editor, a human check of #842, read 1 to 4
  * in the order of `WESTRING_ASSET_MODE_SD`, `_HD`, `_HYBRID` ("All Modes")
  * and `_DE`: every map the 3.0 World Editor saved in the workspace's
  * fixtures stores 3.
@@ -44,8 +44,9 @@ export const SUPPORTED_MODES: Readonly<
   4: ["de"],
 };
 
-/** The art layer of each value of the Asset Mode preference and its `hd`. */
+/** The art layer of each value of the Asset Mode preference, -1 its Default. */
 const ASSET_MODES: Readonly<Partial<Record<string, ArtLayer>>> = {
+  "-1": "sd",
   "0": "sd",
   "1": "hd",
   "2": "de",
@@ -163,9 +164,10 @@ export function systemPreferencesMachine(wsl: boolean): PreferencesMachine {
 }
 
 /**
- * The art layer: the World Editor's Asset Mode preference, HD when the file
- * or its value cannot be read, limited by the map's Supported Modes. A
- * value of the Supported Modes outside 1 to 4 limits nothing.
+ * The art layer: the World Editor's Asset Mode preference, SD under its
+ * Default, HD when the file or its value cannot be read, limited by the
+ * map's Supported Modes. A value of the Supported Modes outside 1 to 4
+ * limits nothing.
  */
 export async function readArtLayer(
   options: ArtLayerOptions,
@@ -182,10 +184,7 @@ export async function readArtLayer(
       const preferences = new Profile("last");
       preferences.add(text, options.preferencesFile);
       const mode = preferences.get(PREFERENCES_SECTION, "assetMode");
-      const layer =
-        mode === "-1"
-          ? ASSET_MODES[preferences.get(PREFERENCES_SECTION, "hd") ?? ""]
-          : ASSET_MODES[mode ?? ""];
+      const layer = ASSET_MODES[mode ?? ""];
       if (layer !== undefined) preferred = layer;
     }
   }
