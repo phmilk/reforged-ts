@@ -1,8 +1,26 @@
 # reforged-studio
 
-The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). It is private and unpublished while its Spec is built; its release comes in a later Ticket.
+The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). A Map project made from the Template runs `pnpm studio` once the Template takes the package up ([reforged-ts-template#145](https://github.com/phmilk/reforged-ts-template/issues/145)); until then, any Map project runs [the bin](#starting-the-studio). Either opens `http://localhost:<port>/objects` in the browser: the Object Editor's layout, a global search, a Table mode for bulk edits, icons and live model previews read from the developer's own install, an explicit save, session-wide undo and a real diff. The guide for a Map project author is [The Studio](https://phmilk.github.io/reforged-ts/docs/next/guides/studio) on the docs site.
 
 It holds two parts: the Studio's server and page ([#831](https://github.com/phmilk/reforged-ts/issues/831)), and the reader of the developer's own Warcraft III install ([#830](https://github.com/phmilk/reforged-ts/issues/830)), which the Studio reads the game through and which the `reforged-builtins` generator imports through the workspace root's dev dependency: the workspace's one copy of each reader.
+
+**For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
+
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`, beside its peer `reforged-map`: `pnpm add -D reforged-studio@next reforged-map@next`. npm gives `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+
+**Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build. The Studio reads the game from the developer's own install of that Patch, and the install's own files only: it needs the game installed ([What needs the game](#what-needs-the-game)).
+
+## The decisions it builds on
+
+- [#467](https://github.com/phmilk/reforged-ts/issues/467), [ADR 0015](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0015-map-folder-owns-object-data-and-any-faithful-editor-may-edit-it.md) and its two amendments: the map folder owns Object data, and any faithful editor may edit it; the Studio is a local page first and a VS Code host later; it creates, edits and deletes any object, reloads on a change on disk, reloads the World Editor with `-launch -loadfile`, offers to apply again the edits a World Editor save put back, shows Object definitions read-only and holds no file open.
+- [#476](https://github.com/phmilk/reforged-ts/issues/476), the prototype: the layout (tabs per Object kind, the tree, one field table, with the global search, "Differs from <base>" and the Table mode), the flows and the turns with the World Editor.
+- [#481](https://github.com/phmilk/reforged-ts/issues/481), the research of model previews: `mdx-m3-viewer-th` with a patch for MDX 1800, the order of path resolution and its limits.
+- [#482](https://github.com/phmilk/reforged-ts/issues/482), the research of placed objects whose type was deleted: the game skips them and the World Editor drops them at its next save, so the Studio only reads the placement files.
+- [#468](https://github.com/phmilk/reforged-ts/issues/468) and [#595](https://github.com/phmilk/reforged-ts/issues/595): the hover of a Rawcode links to `/objects/<rawcode>`, which [the runtime file](#the-runtime-file) makes possible.
+- [#632](https://github.com/phmilk/reforged-ts/issues/632), the writer of `reforged-map`, in the Editor form: every edit and every save is its own, so the Studio writes no Object data file of its own.
+- [#700](https://github.com/phmilk/reforged-ts/issues/700), Object definitions and Object sync: an object the Object manifest gives to the code is read-only here, and adoption is `objects:adopt`'s.
+
+What the Spec settled on top of them: the server's binding and request rules, the runtime file's name, format and lifetime, the first port, 5476, the state shape of a session and its undo across saves, the merge field by field after a change on disk and the detection of a World Editor revert, the free-Rawcode rule across the seven kinds, the placement reader that only reads, the art layer from the World Editor's Asset Mode, and the thumbnail cache on the developer's machine. Each is described below.
 
 ## Starting the Studio
 
@@ -218,4 +236,14 @@ The Studio reads the preferences file `findWorldEditorPreferences` finds: `World
 
 ## What needs the game
 
-Every test runs on synthetic storages the tests write in a temporary folder, with no byte of Blizzard's; the previews' tests draw a synthetic MDX 1800 cube (`test/support/models.ts`), its texture found nowhere, and check that its canvas is not blank, not what it draws pixel by pixel. The page's end-to-end tests (`test/page.test.ts`, the Spec's Seam 2) drive the built page in headless Chromium with [Playwright](https://playwright.dev) over the same server: they need `pnpm build` and the browser, which `pnpm --filter reforged-studio exec playwright install --only-shell chromium` installs once per machine and CI installs in its own step. On a machine with the game, `pnpm --filter reforged-studio studio:check-install [--install <folder>]` finds the install as `pnpm builtins:generate` does and reads the Footman's base values, its icon and its HD model.
+The Studio needs the game installed: the field tables, the base values, the icons and the models are read from the developer's own install at run time, as ADR 0015 says, and never from the CDN. Without an install, `startStudio` throws `InstallNotFoundError`, naming the setting to fix. The thumbnail cache is the one file it writes from the install, on the developer's machine.
+
+Every test runs on synthetic storages the tests write in a temporary folder, with no byte of Blizzard's; the previews' tests draw a synthetic MDX 1800 cube (`test/support/models.ts`), its texture found nowhere, and check that its canvas is not blank, not what it draws pixel by pixel. The server's tests (the Spec's Seam 1) drive its HTTP API on fixture map folders. The page's end-to-end tests (the Spec's Seam 2) drive the built page in headless Chromium with [Playwright](https://playwright.dev) over the same server: they need `pnpm build` and the browser, which `pnpm --filter reforged-studio exec playwright install --only-shell chromium` installs once per machine and CI installs in its own step. They cover, end to end:
+
+- opening `/objects/<rawcode>`, a shared Rawcode and an unknown one (`test/page.test.ts`);
+- editing a field and seeing it highlighted as unsaved, Ctrl+S and the counter of unsaved changes, and undo after the save (`test/page-editing.test.ts`);
+- the banner after a change on disk, the merge and its conflicts, and a World Editor revert (`test/page-turns.test.ts`);
+- the delete confirmation with the placement count, and creating an object (`test/page-create-delete.test.ts`);
+- the Table mode and bulk edits (`test/page-bulk.test.ts`), and the model previews (`test/page-models.test.ts`).
+
+On a machine with the game, `pnpm --filter reforged-studio studio:check-install [--install <folder>]` finds the install as `pnpm builtins:generate` does and reads the Footman's base values, its icon and its HD model.

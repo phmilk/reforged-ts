@@ -19,9 +19,10 @@ export const TEMPLATE_DISPATCH_EVENT = "reforged-ts-release";
 const RAW_BASE_URL = "https://raw.githubusercontent.com/phmilk/reforged-ts";
 
 /**
- * One of the six packages of a release, which the Template depends on or
- * (`reforged-map`, until phmilk/reforged-ts-template#68, and
- * `reforged-builtins`, from the Object data slice of `reforged-map`) will.
+ * One of the seven packages of a release, which the Template depends on or
+ * (`reforged-map`, until phmilk/reforged-ts-template#68, `reforged-builtins`,
+ * from the Object data slice of `reforged-map`, and `reforged-studio`, from
+ * phmilk/reforged-ts-template#145) will.
  */
 export type ReleasedPackage = (typeof ROW_PACKAGES)[keyof typeof ROW_PACKAGES];
 
@@ -29,7 +30,7 @@ export type ReleasedPackage = (typeof ROW_PACKAGES)[keyof typeof ROW_PACKAGES];
 export interface ReleasePayload {
   /** The release's git tag: `<package>@<version>`. */
   tag: string;
-  /** The version on npm of each of the six packages, after the release. */
+  /** The version on npm of each of the seven packages, after the release. */
   versions: Record<ReleasedPackage, string>;
   /**
    * The raw URL of the glossary, `GLOSSARY.md`, at the tag. The field keeps
@@ -58,10 +59,9 @@ export class TemplateDispatchError extends Error {
  * The dispatch of the release in the `changeset pack` output `packDir`,
  * over the workspace at `root`.
  *
- * - `tag`: the git tag of the first of the six packages, in matrix order
+ * - `tag`: the git tag of the first of the seven packages, in matrix order
  *   (the library, the Typings, the harness, the plugin, the map reader, the
- *   Built-in objects),
- *   the plan publishes.
+ *   Built-in objects, the Studio), the plan publishes.
  *   A release without the library dispatches too: its versions change the
  *   Template's ranges.
  * - `versions`: the plan's version of each package it publishes, the
@@ -70,11 +70,12 @@ export class TemplateDispatchError extends Error {
  *   (`docsLabel`): its `major.minor`, or `next` for a prerelease.
  *
  * Resolves with `undefined` when the plan publishes packages, but none of
- * the six: a release of the Creation CLI alone, which no Map project
+ * the seven: a release of the Creation CLI alone, which no Map project
  * depends on, leaves the Template's ranges as they are. Throws a
- * `TemplateDispatchError` when the plan publishes no package, one of the six
- * is in neither the plan nor the workspace, or the library version names no
- * docs version, and a `PublishPlanError` on a plan that cannot be read.
+ * `TemplateDispatchError` when the plan publishes no package, one of the
+ * seven is in neither the plan nor the workspace, or the library version
+ * names no docs version, and a `PublishPlanError` on a plan that cannot be
+ * read.
  */
 export async function templateDispatch(
   packDir: string,

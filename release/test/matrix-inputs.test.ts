@@ -45,6 +45,7 @@ describe("parseMatrix", () => {
       plugin: "1.0.0",
       map: "1.0.0",
       builtins: "1.0.0",
+      studio: "1.0.0",
       patch: "3.0.0.24268",
       typescript: "6.0.2",
       typescriptToLua: "^1.37.1",
@@ -69,6 +70,14 @@ describe("parseMatrix", () => {
     delete withoutBuiltins.builtins;
     expect(() => parseMatrix({ format: 1, rows: [withoutBuiltins] })).toThrow(
       'row 0 has no valid "builtins".',
+    );
+    const withoutStudio: Partial<typeof row> = {
+      ...row,
+      cutDate: "2026-10-01",
+    };
+    delete withoutStudio.studio;
+    expect(() => parseMatrix({ format: 1, rows: [withoutStudio] })).toThrow(
+      'row 0 has no valid "studio".',
     );
   });
 });

@@ -36,6 +36,7 @@ const ON_NPM = {
   "eslint-plugin-reforged": "1.0.0-alpha.1",
   "reforged-map": "1.0.0-alpha.0",
   "reforged-builtins": "1.0.0-alpha.0",
+  "reforged-studio": "1.0.0-alpha.0",
 };
 
 describe("templateDispatch", () => {
@@ -54,6 +55,7 @@ describe("templateDispatch", () => {
           "eslint-plugin-reforged": "1.0.0-alpha.1",
           "reforged-map": "1.0.0-alpha.0",
           "reforged-builtins": "1.0.0-alpha.0",
+          "reforged-studio": "1.0.0-alpha.0",
         },
         contextUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/GLOSSARY.md`,
         matrixUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/release/compatibility/matrix.md`,
@@ -62,7 +64,7 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("dispatches a release without the library under the Typings' tag, first of the six", async () => {
+  it("dispatches a release without the library under the Typings' tag, first of the seven", async () => {
     const root = await workspace({
       "reforged-ts": "1.2.0",
       "reforged-types": "1.3.0",
@@ -70,6 +72,7 @@ describe("templateDispatch", () => {
       "eslint-plugin-reforged": "1.2.0",
       "reforged-map": "1.0.2",
       "reforged-builtins": "1.0.1",
+      "reforged-studio": "1.0.3",
     });
     const pack = await packDir(
       entry("reforged-test", "1.1.1"),
@@ -85,6 +88,7 @@ describe("templateDispatch", () => {
         "eslint-plugin-reforged": "1.2.0",
         "reforged-map": "1.0.2",
         "reforged-builtins": "1.0.1",
+        "reforged-studio": "1.0.3",
       },
       contextUrl: `${RAW}/reforged-types@1.3.0/GLOSSARY.md`,
       matrixUrl: `${RAW}/reforged-types@1.3.0/release/compatibility/matrix.md`,
@@ -92,7 +96,7 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the six", async () => {
+  it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the seven", async () => {
     const root = await workspace({
       ...ON_NPM,
       "reforged-types": "1.0.0-alpha.5",
@@ -148,6 +152,26 @@ describe("templateDispatch", () => {
     ).toMatchObject({ tag: "reforged-ts@1.0.0-alpha.2", versions: ON_NPM });
   });
 
+  it("dispatches the first release of reforged-studio with the version of each package, under its own tag when alone", async () => {
+    const root = await workspace(ON_NPM);
+    const alone = await packDir(entry("reforged-studio", "1.0.0-alpha.0"));
+
+    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
+      {
+        tag: "reforged-studio@1.0.0-alpha.0",
+        versions: ON_NPM,
+      },
+    );
+
+    const withMap = await packDir(
+      entry("reforged-studio", "1.0.0-alpha.0"),
+      entry("reforged-map", "1.0.0-alpha.0"),
+    );
+    expect(
+      (await templateDispatch(withMap, root))?.client_payload,
+    ).toMatchObject({ tag: "reforged-map@1.0.0-alpha.0", versions: ON_NPM });
+  });
+
   it("dispatches nothing for a release of create-reforged-map alone, which leaves the Template's ranges as they are", async () => {
     const root = await workspace(ON_NPM);
     const pack = await packDir(entry("create-reforged-map", "1.0.0-alpha.1"));
@@ -161,7 +185,7 @@ describe("templateDispatch", () => {
     );
   });
 
-  it("refuses a workspace without one of the six packages, naming it", async () => {
+  it("refuses a workspace without one of the seven packages, naming it", async () => {
     const root = await writeWorkspace(
       PACKAGES.filter(({ name }) => name !== "reforged-test"),
     );
@@ -333,6 +357,7 @@ describe("release:template-dispatch", () => {
       "eslint-plugin-reforged": [["1.0.0-alpha.1"]],
       "reforged-map": [["1.0.0-alpha.0"]],
       "reforged-builtins": [["1.0.0-alpha.0"]],
+      "reforged-studio": [["1.0.0-alpha.0"]],
     });
     const cwd = await tempDir("cwd");
     const args = [
@@ -370,7 +395,7 @@ describe("release:template-dispatch", () => {
     const cwd = await tempDir("cwd");
     const summary = join(cwd, "summary.md");
     const message =
-      "The release publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map, reforged-builtins: the Template has nothing to sync, and nothing is dispatched.\n";
+      "The release publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map, reforged-builtins, reforged-studio: the Template has nothing to sync, and nothing is dispatched.\n";
 
     expect(
       await runCli(

@@ -271,3 +271,7 @@ The World Editor keeps the map it loaded in memory, and its next save writes all
 3. **Edit an owned object in code, not in the Object Editor.** An edit of an owned object saved from the World Editor is a change made outside the code: the next sync refuses it and lists it, so that it is copied into the definition, or overwritten with `--force`. Edit the map's other objects in the World Editor as before, and adopt one to move it into code.
 
 A World Editor that missed a reload and saves its stale copy brings back an object a sync removed: the next sync removes it again, with a warning, since the manifest remembers what it last held. Everything else in the map folder (terrain, placed units, triggers, the map's options) changes only through the World Editor.
+
+## In the Studio
+
+[The Studio](studio.md), `pnpm studio`, edits the map's other objects beside the code: it shows each Object definition with a lock and its file, read-only, opens the file at the definition's line, and adopts a Custom object or a modified Built-in object into code as `pnpm objects:adopt` does. It takes the same turns with the World Editor as Object sync.

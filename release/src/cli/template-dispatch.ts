@@ -10,7 +10,7 @@
  * every version of the payload, asked every 15 seconds for at most
  * `<minutes>`: the Template's sync installs them as soon as it starts.
  *
- * A release that publishes none of the six packages of a matrix row (the
+ * A release that publishes none of the seven packages of a matrix row (the
  * Creation CLI alone) has nothing to dispatch: it says so and writes no
  * `<file>`, which the workflow reads as no dispatch.
  *

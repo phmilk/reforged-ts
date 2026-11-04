@@ -35,6 +35,14 @@ export const MAP_PACKAGE = "reforged-map";
 export const BUILTINS_PACKAGE = "reforged-builtins";
 
 /**
+ * The Studio, the Toolchain's local app that edits a Map project's Object
+ * data (ADR 0015). It came after the Creation CLI, peers on the map folder
+ * reader, and the Template takes it up after its first release
+ * (phmilk/reforged-ts-template#145).
+ */
+export const STUDIO_PACKAGE = "reforged-studio";
+
+/**
  * The Creation CLI, which makes a Map project from the Template (ADR 0018).
  * No Map project depends on it, so it has no field in a matrix row and no
  * version in the Template dispatch; the Template gate runs it on every
@@ -43,7 +51,7 @@ export const BUILTINS_PACKAGE = "reforged-builtins";
 export const CREATION_PACKAGE = "create-reforged-map";
 
 /**
- * The six packages of a compatibility matrix row, by row field, in matrix
+ * The seven packages of a compatibility matrix row, by row field, in matrix
  * order: the order of the row's fields, the tables' columns and the
  * Template dispatch's tag.
  */
@@ -54,4 +62,5 @@ export const ROW_PACKAGES = {
   plugin: PLUGIN_PACKAGE,
   map: MAP_PACKAGE,
   builtins: BUILTINS_PACKAGE,
+  studio: STUDIO_PACKAGE,
 } as const;
