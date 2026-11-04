@@ -63,7 +63,7 @@
     "spec:frontier": "node release/src/spec-frontier.ts",
     "spec:check": "pnpm --filter reforged-ts-release spec:check",
     "github-app": "pnpm --filter reforged-ts-release github-app",
-    "renovate:check": "pnpm --package=renovate@44.196.1 dlx renovate-config-validator --strict",
+    "renovate:check": "pnpm --package=renovate@44.216.0 dlx renovate-config-validator --strict",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run builtins:check && pnpm run diagrams:check && pnpm run test && pnpm run coverage:report && pnpm run docs:audit"
   },
   "devDependencies": {
