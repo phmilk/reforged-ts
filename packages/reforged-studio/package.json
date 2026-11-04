@@ -1,7 +1,6 @@
 {
   "name": "reforged-studio",
   "version": "0.0.0",
-  "private": true,
   "description": "The Studio of reforged-ts: a local app that edits a Map project's Object data, and the reader of the developer's own Warcraft III install it reads the game from.",
   "license": "MIT",
   "type": "module",
@@ -9,6 +8,7 @@
     "warcraft",
     "wc3",
     "reforged",
+    "typescript-to-lua",
     "casc",
     "object-editor"
   ],
@@ -24,6 +24,12 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "reforged": {
+    "patch": "3.0.1.24370"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -37,6 +43,7 @@
   "files": [
     "/dist/**/*.js",
     "/dist/**/*.d.ts",
+    "/dist/game-data-versions.json",
     "/dist/page/**",
     "/LICENSE",
     "/NOTICES.md",

@@ -19,6 +19,7 @@ import {
   LIBRARY_PACKAGE,
   MAP_PACKAGE,
   PLUGIN_PACKAGE,
+  STUDIO_PACKAGE,
   TYPINGS_PACKAGE,
 } from "./packages.js";
 
@@ -39,6 +40,7 @@ const HEADERS = [
   PLUGIN_PACKAGE,
   MAP_PACKAGE,
   BUILTINS_PACKAGE,
+  STUDIO_PACKAGE,
   "Patch",
   "TypeScript",
   "typescript-to-lua",
@@ -60,6 +62,7 @@ function table(rows: readonly MatrixRow[]): string {
       row.plugin,
       row.map,
       row.builtins,
+      row.studio,
       row.patch,
       row.typescript,
       row.typescriptToLua,
