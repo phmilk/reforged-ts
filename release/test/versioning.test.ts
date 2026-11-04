@@ -205,7 +205,7 @@ describe("changeset version", () => {
     await setVersion(root, "reforged-map", "0.0.0");
     // eslint-plugin-reforged pinned too: the release that versions it moves it on.
     await setVersion(root, "eslint-plugin-reforged", "1.0.0-alpha.5");
-    // reforged-studio pinned too: the release that publishes it moves it on.
+    // reforged-studio pinned too: the release that versions it moves it on.
     await setVersion(root, "reforged-studio", "0.0.0");
     const before = await versions(root);
     await addChangeset(root, "reforged-map", { "reforged-map": "major" });
