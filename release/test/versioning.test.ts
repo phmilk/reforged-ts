@@ -169,15 +169,16 @@ describe("changeset version", () => {
 
     await changeset(root, "version");
 
-    // reforged-map and reforged-builtins were not part of the first
-    // publish: at 0.0.0 their workspace ranges on the majored packages fall
-    // out of range, so Changesets gives them the patch of
+    // reforged-map, reforged-builtins and reforged-studio were not part of
+    // the first publish: at 0.0.0 their workspace ranges on the packages
+    // that move fall out of range, so Changesets gives them the patch of
     // updateInternalDependencies.
     expect(await versions(root)).toEqual({
       ...releaseVersions,
       ...all("1.0.0-alpha.0"),
       "reforged-builtins": "0.0.1-alpha.0",
       "reforged-map": "0.0.1-alpha.0",
+      "reforged-studio": "0.0.1-alpha.0",
     });
     // The versioned changesets wait in the pre folder for the 1.0.0
     // changelog; the ranges stay on the workspace protocol for pnpm publish.
@@ -209,13 +210,14 @@ describe("changeset version", () => {
 
     await changeset(root, "version");
 
-    // eslint-plugin-reforged peers on reforged-map since #582: the new
-    // version leaves its range, which gives it a patch, a prerelease in pre
-    // mode.
+    // eslint-plugin-reforged peers on reforged-map since #582, and
+    // reforged-studio since #831: the new version leaves their range, which
+    // gives each a patch, a prerelease in pre mode.
     expect(await versions(root)).toEqual({
       ...before,
       "eslint-plugin-reforged": "1.0.0-alpha.6",
       "reforged-map": "1.0.0-alpha.0",
+      "reforged-studio": "0.0.1-alpha.0",
     });
   });
 
@@ -268,6 +270,34 @@ describe("changeset version", () => {
     expect(await versions(root)).toEqual({
       ...before,
       "create-reforged-map": "1.0.0-alpha.0",
+    });
+  });
+
+  it("gives reforged-studio 1.0.0-alpha.0 first, entering at 0.0.0 with a major in the repository's pre mode", async () => {
+    const root = await scratchWorkspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      await readFile(join(repositoryRoot, ".changeset/pre.json"), "utf8"),
+    );
+    // Pinned, not read: the release that publishes reforged-studio has
+    // already versioned the repository's manifest past 0.0.0.
+    await setVersion(root, "reforged-studio", "0.0.0");
+    // reforged-map pinned too: the release that versions it moves it on.
+    await setVersion(root, "reforged-map", "1.0.0-alpha.9");
+    const before = await versions(root);
+    await addChangeset(root, "reforged-studio", { "reforged-studio": "major" });
+    // The split of its Spec (#829) releases a minor of its peer with it.
+    await addChangeset(root, "studio-link", { "reforged-map": "minor" });
+
+    await changeset(root, "version");
+
+    // The new version of its peer stays in the ranges on it, so nothing
+    // else moves.
+    expect(await versions(root)).toEqual({
+      ...before,
+      "reforged-map": "1.0.0-alpha.10",
+      "reforged-studio": "1.0.0-alpha.0",
     });
   });
 

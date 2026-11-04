@@ -17,7 +17,7 @@ export interface FixturePackage {
   fields?: Record<string, unknown>;
 }
 
-/** The seven packages of the real workspace, and the private release one. */
+/** The eight packages of the real workspace, and the private release one. */
 export const PACKAGES: readonly FixturePackage[] = [
   { dir: "packages/reforged-ts", name: "reforged-ts" },
   { dir: "packages/reforged-types", name: "reforged-types" },
@@ -26,6 +26,7 @@ export const PACKAGES: readonly FixturePackage[] = [
   { dir: "packages/reforged-map", name: "reforged-map" },
   { dir: "packages/reforged-builtins", name: "reforged-builtins" },
   { dir: "packages/create-reforged-map", name: "create-reforged-map" },
+  { dir: "packages/reforged-studio", name: "reforged-studio" },
   { dir: "release", name: "reforged-ts-release", private: true },
 ];
 

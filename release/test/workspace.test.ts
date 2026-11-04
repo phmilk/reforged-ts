@@ -26,7 +26,7 @@ describe("readPublishablePackages", () => {
     expect(packages[0].manifest.reforged).toEqual({ patch: "3.0.0.24268" });
   });
 
-  it("reads the seven publishable packages of this repository", async () => {
+  it("reads the eight publishable packages of this repository", async () => {
     const packages = await readPublishablePackages(repositoryRoot);
 
     expect(packages.map(({ name, dir }) => ({ name, dir }))).toEqual([
@@ -37,6 +37,7 @@ describe("readPublishablePackages", () => {
       },
       { name: "reforged-builtins", dir: "packages/reforged-builtins" },
       { name: "reforged-map", dir: "packages/reforged-map" },
+      { name: "reforged-studio", dir: "packages/reforged-studio" },
       { name: "reforged-test", dir: "packages/reforged-test" },
       { name: "reforged-ts", dir: "packages/reforged-ts" },
       { name: "reforged-types", dir: "packages/reforged-types" },
