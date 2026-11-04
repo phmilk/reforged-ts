@@ -5,7 +5,7 @@ What the World Editor's Asset Mode preference means, checked at the screen for [
 ## TL;DR
 
 - **Choosing SD, HD and DE in General, Asset Mode writes `[Misc] assetMode` 0, 1 and 2** (Observed), and the editor reopened on 0 runs in SD (Observed, run 4). That 1 and 2 run the editor in HD and DE is the list's order, not seen after a reopen (Inferred). The art layer reads them so.
-- **-1 is Default, and the editor runs in SD under it** (Observed, through the asterisk below), whatever the editor's `[Misc] hd`, the game's graphics mode and the Test Map's Asset Mode. The art layer reads -1 as `[Misc] hd`, 1 in every file seen, so it previews in HD where the editor shows SD: [#860](https://github.com/phmilk/reforged-ts/issues/860) corrects it.
+- **-1 is Default, and the editor runs in SD under it** (Observed through the star rule of runs 3 and 4, below), whatever the editor's `[Misc] hd`, the game's graphics mode and the Test Map's Asset Mode. The art layer reads -1 as `[Misc] hd`, 1 in every file seen, so it previews in HD where the editor shows SD: [#860](https://github.com/phmilk/reforged-ts/issues/860) corrects it.
 - **The list stars the choices of the asset family the editor has not loaded** (Observed): it starred SD while the terrain showed HD art (run 3), and HD and DE once the editor reopened with Classic terrain (run 4). The star marks the choices that need a restart (Inferred).
 - **The list cannot choose Default** (Observed): it holds SD, HD and DE only, and shows an empty box when the file holds -1. The editor writes -1 before the first choice: a copy of the file from 2026-10-29 holds `assetMode=-1`.
 - **`[Misc] hd` of the editor's file does not move** (Observed): it stayed 1 through every choice of General and Test Map and both graphics modes of the game.
@@ -14,17 +14,17 @@ What the World Editor's Asset Mode preference means, checked at the screen for [
 
 ## The runs
 
-2026-11-04, Build 3.0.1.24371. A screen check, which stays for a human ([`probe/README.md`](../../probe/README.md#what-stays-for-a-human)): one person chose each value at the screen and the files were read back after the editor closed; no Probe runs. The editor's mode is read from the asterisks of General, Asset Mode, after a reopen, as the TL;DR sets them from runs 3 and 4.
+2026-11-04, Build 3.0.1.24371. A screen check, which stays for a human ([`probe/README.md`](../../probe/README.md#what-stays-for-a-human)): one person chose each value at the screen and the files were read back after the editor closed; no Probe runs. Runs 4 to 7 each open the editor anew. The star rule comes from runs 3 and 4, where the terrain was seen: the list stars SD while HD art is loaded and HD and DE while Classic art is; runs 5 to 7 read the editor's mode from the stars alone.
 
-| Run | Change                                                                     | `assetMode` | Editor's `[Misc] hd` | Editor's mode                   |
-| --- | -------------------------------------------------------------------------- | ----------- | -------------------- | ------------------------------- |
-| 1   | General, Asset Mode: SD                                                    | 0           | 1                    | Not read: no reopen             |
-| 2   | General, Asset Mode: HD                                                    | 1           | 1                    | Not read: no reopen             |
-| 3   | General, Asset Mode: DE                                                    | 2           | 1                    | HD art, SD starred: as loaded   |
-| 4   | General, Asset Mode: SD, then reopen                                       | 0           | 1                    | SD: Classic art, HD, DE starred |
-| 5   | `assetMode=-1` by hand, game on Classic (`War3Preferences.txt` `hd=0`)     | -1          | 1                    | SD                              |
-| 6   | Same, game on Reforged (`War3Preferences.txt` `hd=1`), editor opened after | -1          | 1                    | SD                              |
-| 7   | Same, Test Map, Asset Mode: HD (`[Test Map] hd` 0 to 2), reopen            | -1          | 1                    | SD                              |
+| Run | Change                                                                     | `assetMode` | Editor's `[Misc] hd` | Editor's mode                    |
+| --- | -------------------------------------------------------------------------- | ----------- | -------------------- | -------------------------------- |
+| 1   | General, Asset Mode: SD                                                    | 0           | 1                    | Not read: no reopen              |
+| 2   | General, Asset Mode: HD                                                    | 1           | 1                    | Not read: no reopen              |
+| 3   | General, Asset Mode: DE                                                    | 2           | 1                    | HD art loaded (SD starred)       |
+| 4   | General, Asset Mode: SD, then reopen                                       | 0           | 1                    | SD (Classic art; HD, DE starred) |
+| 5   | `assetMode=-1` by hand, game on Classic (`War3Preferences.txt` `hd=0`)     | -1          | 1                    | SD (HD and DE starred)           |
+| 6   | Same, game on Reforged (`War3Preferences.txt` `hd=1`), editor opened after | -1          | 1                    | SD (HD and DE starred)           |
+| 7   | Same, Test Map, Asset Mode: HD (`[Test Map] hd` 0 to 2), reopen            | -1          | 1                    | SD (HD and DE starred)           |
 
 ## Not settled here
 
