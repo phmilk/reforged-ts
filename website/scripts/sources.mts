@@ -21,6 +21,7 @@ const PACKAGES = [
   "reforged-map",
   "reforged-builtins",
   "create-reforged-map",
+  "reforged-studio",
 ];
 
 export const SOURCES: readonly Source[] = [

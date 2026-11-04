@@ -220,6 +220,7 @@ No release yet.
         "reforged-map",
         "reforged-builtins",
         "create-reforged-map",
+        "reforged-studio",
       ].map((pkg) => ({
         source: `the changelog of ${pkg}`,
         reason: "Changesets writes it at the package's first release.",

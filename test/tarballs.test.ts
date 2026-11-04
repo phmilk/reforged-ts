@@ -340,7 +340,7 @@ describe("the reforged-studio tarball", () => {
     const { files, read } = result;
     const html = read("dist/page/index.html");
     const assets = [...html.matchAll(/(?:src|href)="\/(assets\/[^"]+)"/g)].map(
-      ([, path]) => `dist/page/${path}`,
+      ([, path]) => `dist/page/${path ?? ""}`,
     );
     expect(assets.some((path) => path.endsWith(".js"))).toBe(true);
     expect(assets.filter((path) => !files.includes(path))).toEqual([]);
