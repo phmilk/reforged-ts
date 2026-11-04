@@ -5,7 +5,7 @@ What the World Editor's Asset Mode preference means, checked at the screen for [
 ## TL;DR
 
 - **`[Misc] assetMode` 0, 1 and 2 are SD, HD and DE** (Observed): choosing each in General, Asset Mode wrote that value. The art layer reads them right.
-- **-1 is Default, and the editor runs in SD under it** (Observed), whatever the editor's `[Misc] hd`, the game's graphics mode and the Test Map's Asset Mode. The art layer reads -1 as `[Misc] hd`, 1 in every file seen, so it previews in HD where the editor shows SD: the follow-up corrects it.
+- **-1 is Default, and the editor runs in SD under it** (Observed), whatever the editor's `[Misc] hd`, the game's graphics mode and the Test Map's Asset Mode. The art layer reads -1 as `[Misc] hd`, 1 in every file seen, so it previews in HD where the editor shows SD: [#860](https://github.com/phmilk/reforged-ts/issues/860) corrects it.
 - **The list cannot choose Default** (Observed): it holds SD, HD and DE only, and shows an empty box when the file holds -1. The editor writes -1 before the first choice: a copy of the file from 2026-10-29 holds `assetMode=-1`.
 - **`[Misc] hd` of the editor's file does not move** (Observed): it stayed 1 through every choice of General and Test Map and both graphics modes of the game.
 - **An asterisk marks the choices that need a restart** (Inferred): the list starred SD while the editor ran in HD, and HD and DE while it ran in SD.
