@@ -1,6 +1,6 @@
 # The World Editor's Asset Mode
 
-What the World Editor's Asset Mode preference means, checked at the screen for [#842](https://github.com/phmilk/reforged-ts/issues/842), the first of its checks. The Studio's art layer (`packages/reforged-studio/src/art-layer.ts`, #845) read `[Misc] assetMode` of `Documents\Warcraft III\WorldEditPreferences.txt` as 0 SD, 1 HD, 2 DE, and -1 (Default) as the same section's `hd`, until [#860](https://github.com/phmilk/reforged-ts/issues/860) made -1 SD. Each claim is marked **Observed** (seen at the screen or read back from the file in the runs below) or **Inferred** (follows from them, not observed).
+What the World Editor's Asset Mode preference means, checked at the screen for [#842](https://github.com/phmilk/reforged-ts/issues/842), the first of its checks. The Studio's art layer (`packages/reforged-studio/src/art-layer.ts`, #845) reads `[Misc] assetMode` of `Documents\Warcraft III\WorldEditPreferences.txt` as 0 SD, 1 HD and 2 DE; it read -1 (Default) as the same section's `hd` until [#860](https://github.com/phmilk/reforged-ts/issues/860) made it SD. Each claim is marked **Observed** (seen at the screen or read back from the file in the runs below) or **Inferred** (follows from them, not observed).
 
 ## TL;DR
 

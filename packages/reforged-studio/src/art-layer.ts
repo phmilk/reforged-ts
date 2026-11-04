@@ -44,7 +44,7 @@ export const SUPPORTED_MODES: Readonly<
   4: ["de"],
 };
 
-/** The art layer of each value of the Asset Mode preference, -1 being Default. */
+/** The art layer of each value of the Asset Mode preference, -1 (Default) included. */
 const ASSET_MODES: Readonly<Partial<Record<string, ArtLayer>>> = {
   "-1": "sd",
   "0": "sd",
