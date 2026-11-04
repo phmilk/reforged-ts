@@ -10,7 +10,7 @@ What the World Editor's Asset Mode preference and a map's Supported Modes mean, 
 - **The list cannot choose Default** (Observed): it holds SD, HD and DE only, and shows an empty box when the file holds -1. The editor writes -1 before the first choice: a copy of the file from 2026-10-29 holds `assetMode=-1`.
 - **`[Misc] hd` of the editor's file does not move** (Observed): it stayed 1 through every choice of General and Test Map and both graphics modes of the game.
 - **The Test Map's Asset Mode is `[Test Map] hd`, a separate value** (Observed): Default wrote 0 and HD 2. It does not change the editor's mode.
-- **The game's graphics mode is `[Misc] hd` of `War3Preferences.txt`** (Observed): 0 with Classic chosen, 1 with Reforged.
+- **The game's graphics mode is `[Misc] hd` of `War3Preferences.txt`** (Observed): 0 with Classic chosen, 1 with Reforged and 2 with Definitive Edition ([`world-editor-screen-checks.md`](world-editor-screen-checks.md#models-only-in-de)).
 - **A map's Supported Modes are a bit mask, 1 SD, 2 HD, 4 DE** (Observed and Inferred, [below](#the-maps-supported-modes)): the Supported Modes are three boxes set each on its own, and four saves wrote 1, 4, 6 and 7. The World Editor's default, 3, is then SD and HD without DE (Inferred from the mask). The art layer reads 3 as All Modes and has no entry for 5, 6 or 7: [#864](https://github.com/phmilk/reforged-ts/issues/864) corrects it.
 
 ## The runs
