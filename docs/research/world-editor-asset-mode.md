@@ -11,7 +11,7 @@ What the World Editor's Asset Mode preference and a map's Supported Modes mean, 
 - **`[Misc] hd` of the editor's file does not move** (Observed): it stayed 1 through every choice of General and Test Map and both graphics modes of the game.
 - **The Test Map's Asset Mode is `[Test Map] hd`, a separate value** (Observed): Default wrote 0 and HD 2. It does not change the editor's mode.
 - **The game's graphics mode is `[Misc] hd` of `War3Preferences.txt`** (Observed): 0 with Classic chosen, 1 with Reforged.
-- **A map's Supported Modes are a bit mask, 1 SD, 2 HD, 4 DE** (Observed, [below](#the-maps-supported-modes)): the Supported Modes are three boxes set each on its own, and four saves wrote 1, 4, 6 and 7. The World Editor's default, 3, is then SD and HD without DE (Inferred from the mask). The art layer reads 3 as All Modes and has no entry for 5, 6 or 7: [#864](https://github.com/phmilk/reforged-ts/issues/864) corrects it.
+- **A map's Supported Modes are a bit mask, 1 SD, 2 HD, 4 DE** (Observed and Inferred, [below](#the-maps-supported-modes)): the Supported Modes are three boxes set each on its own, and four saves wrote 1, 4, 6 and 7. The World Editor's default, 3, is then SD and HD without DE (Inferred from the mask). The art layer reads 3 as All Modes and has no entry for 5, 6 or 7: [#864](https://github.com/phmilk/reforged-ts/issues/864) corrects it.
 
 ## The runs
 
@@ -29,7 +29,7 @@ What the World Editor's Asset Mode preference and a map's Supported Modes mean, 
 
 ## The map's Supported Modes
 
-Scenario, Map Options, Options shows the Supported Modes as three boxes, SD, HD and DE, each set on its own; a new map has SD and HD set (Observed). One map was saved per combination below, as a folder or as a `.w3x` archive, and the Supported Modes int32 of its `war3map.w3i` read back with `readSupportedModes` of `reforged-map`; for a `.w3x`, `war3map.w3i` was first taken out of the archive with the Probe runner's `openArchive` (`probe/src/pack.ts`) into a folder. Same day and Build as the runs above.
+Scenario, Map Options, Options shows the Supported Modes as three boxes, SD, HD and DE, each set on its own; a new map has SD and HD set (Observed). One map was saved per combination below, as a folder or as a `.w3x` archive, and the Supported Modes int32 of its `war3map.w3i` read back with `readSupportedModes` of `reforged-map`; for a `.w3x`, `war3map.w3i` was first read out of the archive with the Probe runner's `openArchive` (`probe/src/pack.ts`) and written to a folder. Same day and Build as the runs above, but for the default's row, read from a fixture.
 
 | Boxes set                | Saved as                                          | Supported Modes |
 | ------------------------ | ------------------------------------------------- | --------------- |
@@ -39,7 +39,7 @@ Scenario, Map Options, Options shows the Supported Modes as three boxes, SD, HD 
 | SD, HD, DE               | folder                                            | 7               |
 | SD, HD (new map default) | `editor-objects.w3m`, a fixture of `reforged-map` | 3               |
 
-An enumeration with 3 as All Modes would store 3 for all three boxes; 7 is the sum of 1, 2 and 4. HD alone, 2, and SD and DE, 5, were not saved (Inferred from the mask). The default's 3 is the fixture's, a map the 3.0 World Editor saved, not a save of this day.
+An enumeration with 3 as All Modes would store 3 for all three boxes; 7 is the sum of 1, 2 and 4. HD alone and SD and DE were not saved: their values, 2 and 5, are inferred from the mask. The default's 3 is the fixture's, a map the 3.0 World Editor saved.
 
 ## Not settled here
 
