@@ -44,17 +44,18 @@ describe("readArtLayer", () => {
     ).toBe("de");
   });
 
-  it("is SD for the Asset Mode Default, whatever the preference's hd", async () => {
-    // #842 saw the World Editor run in SD under assetMode=-1 with hd=1:
-    // docs/research/world-editor-asset-mode.md.
-    for (const hd of ["0", "1", "2"]) {
+  // #842 saw the World Editor run in SD under assetMode=-1 with hd=1:
+  // docs/research/world-editor-asset-mode.md.
+  it.each(["0", "1", "2"])(
+    "is SD for the Asset Mode Default, whatever the preference's hd (hd=%s)",
+    async (hd) => {
       expect(
         await readArtLayer({
           preferencesFile: await preferences(`assetMode=-1\r\nhd=${hd}\r\n`),
         }),
       ).toBe("sd");
-    }
-  });
+    },
+  );
 
   it("defaults to HD when the preference cannot be read", async () => {
     const folder = await tempDir("prefs");

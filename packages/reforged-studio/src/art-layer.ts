@@ -6,8 +6,8 @@
  * read.
  *
  * The preference reads 0, 1 and 2 as SD, HD and DE, the order of the
- * editor's strings `WESTRING_PREFS_ASSETMODE_SD`, `_HD` and `_DE`, and -1,
- * Default, as SD: #842 saw the World Editor run in SD under 0 and under -1,
+ * editor's strings `WESTRING_PREFS_ASSETMODE_SD`, `_HD` and `_DE`, and -1
+ * (Default) as SD: #842 saw the World Editor run in SD under 0 and under -1,
  * whatever the same section's `hd`, which never moves
  * (`docs/research/world-editor-asset-mode.md`). The Supported Modes, not
  * yet checked in the World Editor, a human check of #842, read 1 to 4
@@ -44,7 +44,7 @@ export const SUPPORTED_MODES: Readonly<
   4: ["de"],
 };
 
-/** The art layer of each value of the Asset Mode preference, -1 its Default. */
+/** The art layer of each value of the Asset Mode preference, -1 being Default. */
 const ASSET_MODES: Readonly<Partial<Record<string, ArtLayer>>> = {
   "-1": "sd",
   "0": "sd",
