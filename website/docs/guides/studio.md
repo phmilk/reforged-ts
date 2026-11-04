@@ -37,7 +37,7 @@ The page has one tab per Object kind, each with the tree of its objects: the map
 - **A Rawcode two kinds share**, such as a Custom buff and a Custom destructable both at `B000`, opens a page that asks which object, since `FourCC` gives it no single kind.
 - **An unknown Rawcode** shows "neither in this map nor Built-in", with the Rawcodes one edit away, the same suggestions as [the lint rule](rawcodes.md#unknown-rawcodes-the-lint-rule), and "Create with this Rawcode".
 
-The object's page shows its header, a "Differs from <base>" section with each modified field and its base's value, and its field table: each field's label, id, the value as the World Editor shows it and the raw value the file holds. A field of levels groups its rows, collapsible. Compare pins other objects of the kind as extra columns, and a toggle hides the fields at their base's value.
+The object's page shows its header, a "Differs from &lt;base&gt;" section with each modified field and its base's value, and its field table: each field's label, id, the value as the World Editor shows it and the raw value the file holds. A field of levels groups its rows, collapsible. Compare pins other objects of the kind as extra columns, and a toggle hides the fields at their base's value.
 
 ## Editing
 
