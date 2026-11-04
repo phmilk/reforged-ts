@@ -1,5 +1,11 @@
 # reforged-builtins
 
+## 1.0.0-alpha.8
+
+### Patch Changes
+
+- [#846](https://github.com/phmilk/reforged-ts/pull/846) [`28563b5`](https://github.com/phmilk/reforged-ts/commit/28563b5d5a7c61ec15ac367cfa8d7d92915b8e41) Thanks [@wyller](https://github.com/wyller)! - `reforged-map`: the Rawcode lookup lists every object it knows, with the map's Game data set (`list()`), and names the files it reads (`files()`), for a tool that shows and watches them all, such as the Studio. `reforged-builtins`: its README says the generator reaches `reforged-studio` through the workspace root; nothing changes for a Map project.
+
 ## 1.0.0-alpha.7
 
 ### Patch Changes

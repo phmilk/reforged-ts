@@ -1,6 +1,6 @@
 {
   "name": "reforged-studio",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "description": "The Studio of reforged-ts: a local app that edits a Map project's Object data, and the reader of the developer's own Warcraft III install it reads the game from.",
   "license": "MIT",
   "type": "module",
