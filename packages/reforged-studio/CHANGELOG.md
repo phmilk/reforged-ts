@@ -1,5 +1,11 @@
 # reforged-studio
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- [#862](https://github.com/phmilk/reforged-ts/pull/862) [`624034f`](https://github.com/phmilk/reforged-ts/commit/624034f04a4a562f61b647df06798ec7cb91abc7) Thanks [@wyller](https://github.com/wyller)! - The art layer is SD when the World Editor's Asset Mode is Default (`assetMode=-1`), as the editor runs then, and no longer follows the preferences' `hd`, which previewed in HD.
+
 ## 1.0.0-alpha.0
 
 ### Major Changes
