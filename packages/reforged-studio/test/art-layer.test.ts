@@ -128,6 +128,11 @@ describe("allowedArtLayers", () => {
     expect(allowedArtLayers(0)).toEqual(["sd", "hd", "de"]);
     expect(allowedArtLayers(8)).toEqual(["sd", "hd", "de"]);
   });
+
+  it("reads the three bits alone, whatever the others hold", () => {
+    expect(allowedArtLayers(9)).toEqual(["sd"]);
+    expect(allowedArtLayers(-1)).toEqual(["sd", "hd", "de"]);
+  });
 });
 
 describe("findWorldEditorPreferences", () => {
