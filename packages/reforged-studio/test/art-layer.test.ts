@@ -10,7 +10,7 @@ import {
   allowedArtLayers,
   findWorldEditorPreferences,
   readArtLayer,
-  SUPPORTED_MODES,
+  SUPPORTED_MODE_BITS,
   type PreferencesMachine,
 } from "../src/index.js";
 import { tempDir } from "./support/casc.js";
@@ -77,15 +77,20 @@ describe("readArtLayer", () => {
     const de = await preferences("assetMode=2\r\n");
     const sd = await preferences("assetMode=0\r\n");
 
-    expect(SUPPORTED_MODES).toEqual({
-      1: ["sd"],
-      2: ["hd"],
-      3: ["sd", "hd", "de"],
-      4: ["de"],
-    });
-    // All Modes, the World Editor's default: the preference as it is.
+    // A bit mask, as #842 read it back from maps the World Editor saved:
+    // docs/research/world-editor-asset-mode.md.
+    expect(SUPPORTED_MODE_BITS).toEqual({ sd: 1, hd: 2, de: 4 });
+    // SD and HD, the World Editor's default: a DE preference reads SD.
     expect(await readArtLayer({ preferencesFile: de, supportedModes: 3 })).toBe(
+      "sd",
+    );
+    // All three: the preference as it is.
+    expect(await readArtLayer({ preferencesFile: de, supportedModes: 7 })).toBe(
       "de",
+    );
+    // HD and DE: an SD preference reads HD.
+    expect(await readArtLayer({ preferencesFile: sd, supportedModes: 6 })).toBe(
+      "hd",
     );
     // HD only: a DE preference reads HD.
     expect(await readArtLayer({ preferencesFile: de, supportedModes: 2 })).toBe(
@@ -106,13 +111,22 @@ describe("readArtLayer", () => {
 });
 
 describe("allowedArtLayers", () => {
-  it("offers the layers the map's Supported Modes allow, every layer outside 1 to 4", () => {
-    expect(allowedArtLayers(1)).toEqual(["sd"]);
-    expect(allowedArtLayers(2)).toEqual(["hd"]);
-    expect(allowedArtLayers(3)).toEqual(["sd", "hd", "de"]);
-    expect(allowedArtLayers(4)).toEqual(["de"]);
+  it.each([
+    [1, ["sd"]],
+    [2, ["hd"]],
+    [3, ["sd", "hd"]],
+    [4, ["de"]],
+    [5, ["sd", "de"]],
+    [6, ["hd", "de"]],
+    [7, ["sd", "hd", "de"]],
+  ])("offers the bits of the map's Supported Modes: %i", (modes, layers) => {
+    expect(allowedArtLayers(modes)).toEqual(layers);
+  });
+
+  it("offers every layer when the Supported Modes hold none of the three bits", () => {
     expect(allowedArtLayers(undefined)).toEqual(["sd", "hd", "de"]);
-    expect(allowedArtLayers(9)).toEqual(["sd", "hd", "de"]);
+    expect(allowedArtLayers(0)).toEqual(["sd", "hd", "de"]);
+    expect(allowedArtLayers(8)).toEqual(["sd", "hd", "de"]);
   });
 });
 

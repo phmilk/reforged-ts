@@ -80,9 +80,10 @@ export function readWar3mapW3i(mapFolder: string, model: MapFolderModel): void {
  * the map allows, as the World Editor's map options store it.
  *
  * @remarks
- * The values are read in the order of the World Editor's strings, which no
- * one checked in the World Editor yet: 1 SD, 2 HD, 3 All Modes and 4 DE.
- * Every map the 3.0 World Editor saved in the workspace's fixtures stores 3.
+ * A bit mask, 1 SD, 2 HD and 4 DE, as #842 read it back from maps saved
+ * with each of the World Editor's three boxes
+ * (https://github.com/phmilk/reforged-ts/blob/master/docs/research/world-editor-asset-mode.md):
+ * a new map's default, SD and HD, is 3.
  *
  * @param mapFolder - The map folder, saved as a folder by the World Editor.
  * @returns The Supported Modes, as the file stores them; undefined when the

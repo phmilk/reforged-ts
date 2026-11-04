@@ -68,7 +68,7 @@ export {
   ART_LAYERS,
   findWorldEditorPreferences,
   readArtLayer,
-  SUPPORTED_MODES,
+  SUPPORTED_MODE_BITS,
   USER_FOLDER_ENV,
   WORLD_EDITOR_PREFERENCES,
   type ArtLayerOptions,

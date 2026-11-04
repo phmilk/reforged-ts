@@ -12,7 +12,7 @@ export interface TestW3i {
   version?: number;
   /** The melee map flag. */
   melee?: boolean;
-  /** The Supported Modes: 1 SD, 2 HD, 3 All Modes, 4 DE; 3 by default. */
+  /** The Supported Modes, a bit mask: 1 SD, 2 HD, 4 DE; 3, SD and HD, by default. */
   modes?: number;
 }
 
