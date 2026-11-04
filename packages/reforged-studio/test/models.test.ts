@@ -68,13 +68,26 @@ const INSTALL_MODELS = {
 
 describe("the art layer", () => {
   it("defaults to the World Editor's Asset Mode preference, which the session names with the layers the map allows", async () => {
-    const studio = await start(mapProject(), {
+    const project = mapProject();
+    setSupportedModes(project, 7);
+    const studio = await start(project, {
       worldEditorPreferences: preferences(2),
     });
     const session = await request(studio, "/api/session");
     expect(session.body).toMatchObject({
       artLayer: "de",
       artLayers: ["sd", "hd", "de"],
+    });
+  });
+
+  it("leaves DE out of a map with the World Editor's default Supported Modes, SD and HD", async () => {
+    const studio = await start(mapProject(), {
+      worldEditorPreferences: preferences(2),
+    });
+    const session = await request(studio, "/api/session");
+    expect(session.body).toMatchObject({
+      artLayer: "sd",
+      artLayers: ["sd", "hd"],
     });
   });
 
@@ -133,6 +146,7 @@ describe("the models' paths, /api/models", () => {
   /** A Studio over the synthetic install's models, its map folder importing two. */
   async function modelsStudio() {
     const project = mapProject();
+    setSupportedModes(project, 7);
     fs.mkdirSync(path.join(project.mapFolder, "war3mapImported"));
     fs.writeFileSync(
       path.join(project.mapFolder, "war3mapImported", "Cube.mdx"),

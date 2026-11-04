@@ -717,7 +717,8 @@ describe("the Studio's session", () => {
       gameDataSet: { id: "melee-fk", label: "Melee (Forsaken Kingdom)" },
       baseValues: "melee-fk",
       artLayer: "hd",
-      artLayers: ["sd", "hd", "de"],
+      // The map's Supported Modes, 3: SD and HD.
+      artLayers: ["sd", "hd"],
       worldEditor: "no-window",
       warnings: [],
       unsavedEdits: 0,

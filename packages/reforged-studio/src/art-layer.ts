@@ -9,11 +9,10 @@
  * editor's strings `WESTRING_PREFS_ASSETMODE_SD`, `_HD` and `_DE`, and -1
  * (Default) as SD: #842 saw the World Editor run in SD under 0 and under -1,
  * whatever the same section's `hd`, which never moves
- * (`docs/research/world-editor-asset-mode.md`). The Supported Modes, not
- * yet checked in the World Editor, a human check of #842, read 1 to 4
- * in the order of `WESTRING_ASSET_MODE_SD`, `_HD`, `_HYBRID` ("All Modes")
- * and `_DE`: every map the 3.0 World Editor saved in the workspace's
- * fixtures stores 3.
+ * (`docs/research/world-editor-asset-mode.md`). The Supported Modes are a
+ * bit mask, 1 SD, 2 HD and 4 DE, which #842 read back from maps saved with
+ * each of the World Editor's three boxes: a new map's default, 3, allows SD
+ * and HD.
  */
 import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -34,14 +33,11 @@ export const WORLD_EDITOR_PREFERENCES = "WorldEditPreferences.txt";
  */
 export const USER_FOLDER_ENV = "WC3_USER_FOLDER";
 
-/** The art layers each value of a map's Supported Modes allows. */
-export const SUPPORTED_MODES: Readonly<
-  Partial<Record<number, readonly ArtLayer[]>>
-> = {
-  1: ["sd"],
-  2: ["hd"],
-  3: ["sd", "hd", "de"],
-  4: ["de"],
+/** The bit of each art layer in a map's Supported Modes. */
+export const SUPPORTED_MODE_BITS: Readonly<Record<ArtLayer, number>> = {
+  sd: 1,
+  hd: 2,
+  de: 4,
 };
 
 /** The art layer of each value of the Asset Mode preference, -1 (Default) included. */
@@ -67,20 +63,21 @@ export interface ArtLayerOptions {
 }
 
 /**
- * The art layers a map's Supported Modes allow, in the switch's order.
+ * The art layers a map's Supported Modes allow, in the switch's order: the
+ * layers whose bit is set.
  *
  * @param supportedModes - The Supported Modes `war3map.w3i` stores; every
- *   layer when absent or outside 1 to 4.
+ *   layer when absent or when none of the three bits is set.
  * @returns The layers the switch offers.
  */
 export function allowedArtLayers(
   supportedModes: number | undefined,
 ): readonly ArtLayer[] {
-  return (
-    (supportedModes === undefined
-      ? undefined
-      : SUPPORTED_MODES[supportedModes]) ?? ART_LAYERS
+  if (supportedModes === undefined) return ART_LAYERS;
+  const allowed = ART_LAYERS.filter(
+    (layer) => (supportedModes & SUPPORTED_MODE_BITS[layer]) !== 0,
   );
+  return allowed.length > 0 ? allowed : ART_LAYERS;
 }
 
 /** What the preferences file is found from; tests answer with a fake. */
@@ -166,8 +163,8 @@ export function systemPreferencesMachine(wsl: boolean): PreferencesMachine {
 /**
  * The art layer: the World Editor's Asset Mode preference, SD under its
  * Default, HD when the file or its value cannot be read, limited by the
- * map's Supported Modes. A value of the Supported Modes outside 1 to 4
- * limits nothing.
+ * map's Supported Modes, as `allowedArtLayers` reads them; a value with
+ * none of their three bits limits nothing.
  */
 export async function readArtLayer(
   options: ArtLayerOptions,
@@ -188,10 +185,7 @@ export async function readArtLayer(
       if (layer !== undefined) preferred = layer;
     }
   }
-  const allowed =
-    options.supportedModes === undefined
-      ? undefined
-      : SUPPORTED_MODES[options.supportedModes];
-  if (allowed === undefined || allowed.includes(preferred)) return preferred;
+  const allowed = allowedArtLayers(options.supportedModes);
+  if (allowed.includes(preferred)) return preferred;
   return allowed[0] ?? preferred;
 }
