@@ -4,9 +4,10 @@ The four screen checks [#481](https://github.com/phmilk/reforged-ts/issues/481) 
 
 ## TL;DR
 
-- **The editor's previewer shows a model only while the model dialog is open** (Observed), and it follows the dialog's choice live, before OK. It animates the `Stand` sequence, in Player 1's red. Selecting an object in the Object Editor shows no preview (Observed). The Studio's previews already animate `Stand` in red (Inferred, from its README), so they stay as they are.
+- **The editor's previewer shows a model only while the model dialog is open** (Observed), and it follows the dialog's choice live, before OK. It animates the `Stand` sequence, in Player 1's red. Selecting an object in the Object Editor shows no preview (Observed). The Studio's previews already animate `Stand` in red (Inferred, from `page/preview.ts`, `TEAM_COLOR` and its `Stand` choice), so they stay as they are.
 - **An import marked DE is written under `_DE.w3mod/` of the map folder, and one marked HD under `_HD.w3mod/`** (Observed). `war3map.imp` lists the same full paths. The Studio reads `_hd.w3mod/` in DE (Inferred, from `src/paths.ts`): [#866](https://github.com/phmilk/reforged-ts/issues/866) corrects it.
-- **A model that exists only in DE shows nothing in the game in SD or HD** (Observed): in SD only the unit's shadow, in HD not even that. In DE it is drawn. The editor draws a green-and-black checkered cube in its place. The Studio reports such a model as missing in SD and HD (Inferred, from its path resolution), which matches the game.
+- **A model that exists only in DE shows nothing in the game in SD or HD** (Observed for the two tried, Inferred for the rest): in SD only the unit's shadow, in HD not even that. In DE it is drawn. The editor draws a green-and-black checkered cube in its place. The Studio reports such a model as missing in SD and HD (Inferred, from its path resolution), which matches the game.
+- **The game's `[Misc] hd` of `War3Preferences.txt` is 0 in Classic, 1 in Reforged and 2 in Definitive Edition** (Observed, [below](#models-only-in-de)), as the art layer's own values are. The art layer reads the editor's `assetMode`, not this file (Inferred, from `src/art-layer.ts`), so nothing changes.
 - **A texture missing at its path is not found in the model's own folder** (Observed), neither by the editor nor by the game: the model is drawn white. The Studio's resolution order, which does not look there (Inferred, from its README), stays.
 
 ## The runs
@@ -35,7 +36,7 @@ The four screen checks [#481](https://github.com/phmilk/reforged-ts/issues/481) 
 
 ### Models only in DE
 
-- Of the Built-in objects of the Game data set `custom-fk`, 535 name a model the storage holds in `_DE` alone (Observed): 41 units, 34 destructables, 133 doodads and 327 items, 231 models in all. That is their model field (`umdl`, `bfil`, `dfil`, `ifil`) read through the Studio's path resolution (`createPathResolver`) in each art layer, found in DE and not in SD or HD. #481 counted 170 of the models Built-in objects name; this count reads more fields and every object, so the two differ.
+- Of the Built-in objects of the Game data set `custom-fk`, 535 name a model the storage holds in `_DE` alone (Observed, computed from the install): 41 units, 34 destructables, 133 doodads and 327 items, 231 models in all. That is their model field (`umdl`, `bfil`, `dfil`, `ifil`) read through the Studio's path resolution (`createPathResolver`) in each art layer, found in DE and not in SD or HD. [#481](https://github.com/phmilk/reforged-ts/issues/481) counted 170 of the models Built-in objects name; this count reads more fields and every object, so the two differ.
 - One map with a Footman (`hfoo`), an Inquisitor (`sinq`, `ScarletInvoker`) and a Deathguard (`fdtg`), its Supported Modes 7, played in each graphics mode. `War3Preferences.txt` `[Misc] hd` read 0, 1 and 2:
 
 | Graphics mode      | Footman | Inquisitor and Deathguard  |
