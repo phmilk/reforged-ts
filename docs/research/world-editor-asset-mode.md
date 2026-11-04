@@ -1,6 +1,6 @@
 # The World Editor's Asset Mode
 
-What the World Editor's Asset Mode preference means, checked at the screen for [#842](https://github.com/phmilk/reforged-ts/issues/842), the first of its checks. The Studio's art layer (`packages/reforged-studio/src/art-layer.ts`, #845) reads `[Misc] assetMode` of `Documents\Warcraft III\WorldEditPreferences.txt` as 0 SD, 1 HD and 2 DE; it read -1 (Default) as the same section's `hd` until [#860](https://github.com/phmilk/reforged-ts/issues/860) made it SD. Each claim is marked **Observed** (seen at the screen or read back from the file in the runs below) or **Inferred** (follows from them, not observed).
+What the World Editor's Asset Mode preference and a map's Supported Modes mean, checked at the screen for [#842](https://github.com/phmilk/reforged-ts/issues/842), the first of its checks. The Studio's art layer (`packages/reforged-studio/src/art-layer.ts`, #845) reads `[Misc] assetMode` of `Documents\Warcraft III\WorldEditPreferences.txt` as 0 SD, 1 HD and 2 DE; it read -1 (Default) as the same section's `hd` until [#860](https://github.com/phmilk/reforged-ts/issues/860) made it SD. Each claim is marked **Observed** (seen at the screen or read back from the file in the runs below) or **Inferred** (follows from them, not observed).
 
 ## TL;DR
 
@@ -11,6 +11,7 @@ What the World Editor's Asset Mode preference means, checked at the screen for [
 - **`[Misc] hd` of the editor's file does not move** (Observed): it stayed 1 through every choice of General and Test Map and both graphics modes of the game.
 - **The Test Map's Asset Mode is `[Test Map] hd`, a separate value** (Observed): Default wrote 0 and HD 2. It does not change the editor's mode.
 - **The game's graphics mode is `[Misc] hd` of `War3Preferences.txt`** (Observed): 0 with Classic chosen, 1 with Reforged.
+- **A map's Supported Modes are a bit mask, 1 SD, 2 HD, 4 DE** (Observed, [below](#the-maps-supported-modes)): three independent boxes write 1, 4, 6 and 7, so the World Editor's default, 3, is SD and HD without DE. The art layer reads 3 as All Modes and 4 as DE alone: [#864](https://github.com/phmilk/reforged-ts/issues/864) corrects it.
 
 ## The runs
 
@@ -26,8 +27,22 @@ What the World Editor's Asset Mode preference means, checked at the screen for [
 | 6   | Same, game on Reforged (`War3Preferences.txt` `hd=1`), editor opened after | -1          | 1                    | SD (HD and DE starred)           |
 | 7   | Same, Test Map, Asset Mode: HD (`[Test Map] hd` 0 to 2), reopen            | -1          | 1                    | SD (HD and DE starred)           |
 
+## The map's Supported Modes
+
+Scenario, Map Options, Options shows the Supported Modes as three boxes, SD, HD and DE, each set on its own; a new map has SD and HD set. One map was saved per combination below, as a folder or as a `.w3x` archive, and the Supported Modes int32 of its `war3map.w3i` read back with `readSupportedModes` of `reforged-map`, from the archive's `war3map.w3i` for a `.w3x`. Same day and Build as the runs above.
+
+| Boxes set                | Saved as                 | Supported Modes |
+| ------------------------ | ------------------------ | --------------- |
+| SD                       | `.w3x`                   | 1               |
+| DE                       | `.w3x`                   | 4               |
+| HD, DE                   | `.w3x`                   | 6               |
+| SD, HD, DE               | folder                   | 7               |
+| SD, HD (new map default) | the workspace's fixtures | 3               |
+
+An enumeration with 3 as All Modes would store 3 for all three boxes; 7 is the sum of 1, 2 and 4. HD alone, 2, was not saved (Inferred from the mask).
+
 ## Not settled here
 
 - Whether 1 and 2 run the editor in HD and DE after a reopen.
 - The values of `[Test Map] hd` for SD and DE: 1 and 3 by the list's order (Inferred), not written back.
-- The map's Supported Modes in `war3map.w3i`, the other half of [#842](https://github.com/phmilk/reforged-ts/issues/842)'s comment: whether 3 is All Modes of an enumeration or SD and HD of a bit mask.
+- Whether the World Editor lets a map clear all three boxes, and what 0 then means.
