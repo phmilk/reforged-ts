@@ -13,10 +13,11 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps
 | [`reforged-map`](packages/reforged-map)                     | Reads a Map project's map folder at build time and writes the declarations and the Lua stub of its Editor globals.                          |
 | [`reforged-builtins`](packages/reforged-builtins)           | The Built-in objects of each Patch: `FourCC` overloads by Object kind and a constant per object, derived from the game's data.              |
 | [`create-reforged-map`](packages/create-reforged-map)       | The Creation CLI: `npx create-reforged-map@next my-map` makes a Map project from the Template, its maintenance files left out.              |
+| [`reforged-studio`](packages/reforged-studio)               | The Studio: a local app that edits a Map project's Object data through `reforged-map`, its peer, taking turns with the World Editor.        |
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.1`.
 
-**Build phase.** Until 1.0.0, every version of the seven packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to each package's first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
+**Build phase.** Until 1.0.0, every version of the eight packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to each package's first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
 
 ## Requirements
 
@@ -78,12 +79,12 @@ flowchart LR
     eslint_plugin_reforged["eslint-plugin-reforged"]
     reforged_builtins["reforged-builtins"]
     reforged_map["reforged-map"]
+    reforged_studio["reforged-studio"]
     reforged_test["reforged-test"]
     reforged_ts["reforged-ts"]
     reforged_types["reforged-types"]
   end
   subgraph private["Private packages"]
-    reforged_studio["reforged-studio"]
     reforged_ts_probe["reforged-ts-probe"]
     reforged_ts_release["reforged-ts-release"]
     reforged_ts_website["reforged-ts-website"]
@@ -123,6 +124,7 @@ The packages of the workspace and how they depend on each other, from their `pac
 | `reforged-map`                 | [packages/reforged-map/README.md](packages/reforged-map/README.md)                            |
 | `reforged-builtins`            | [packages/reforged-builtins/README.md](packages/reforged-builtins/README.md)                  |
 | `create-reforged-map`          | [packages/create-reforged-map/README.md](packages/create-reforged-map/README.md)              |
+| `reforged-studio`              | [packages/reforged-studio/README.md](packages/reforged-studio/README.md)                      |
 | `reforged-ts-release`          | [docs/release.md](docs/release.md): the release scripts under `release/`, which has no README |
 | `reforged-ts-website`          | [website/README.md](website/README.md)                                                        |
 | `reforged-ts-wrapper-coverage` | [wrapper-coverage/README.md](wrapper-coverage/README.md)                                      |

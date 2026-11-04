@@ -604,6 +604,8 @@ A computed argument, `FourCC(name)` or ``FourCC(`h00${i}`)``, a function of the 
 
 A cast number first shows the Rawcode it decodes to, "`1751543663` is the Rawcode `hfoo`.", or the bytes that are not one.
 
+While [the Studio](studio.md) runs on the map folder, the hover of a literal or a generated constant ends with "Open in the Studio", a link to the object's page (`/objects/<rawcode>`, with `?kind=` when the Rawcode names one kind). With no Studio running, it says that `pnpm studio` opens the object. The plugin reads the Studio's runtime file, `.reforged-studio.json` at the Map project's root, which a Map project git-ignores.
+
 Go to definition goes to the declaration of each object's constant: in `reforged-builtins` for a Built-in object, modified or not, in the generated module for a Custom one, both for `B000`. An object whose constant cannot be found goes to its `FourCC` overload. An unknown or malformed literal gets TypeScript's own result.
 
 ### The map folder

@@ -219,11 +219,40 @@ const PACKAGES: readonly Expected[] = [
     bin: { "create-reforged-map": "dist/cli.js" },
     runsAlone: true,
   },
+  {
+    dir: "reforged-studio",
+    // The server and the readers of the install with their declarations, the
+    // Game Data Versions they import, the page built into static files, and
+    // the notices of what the page bundles; never a test or its fixtures.
+    allowed: [
+      /^dist\/.+\.(js|d\.ts)$/,
+      /^dist\/game-data-versions\.json$/,
+      /^dist\/page\/index\.html$/,
+      /^dist\/page\/assets\/[^/]+\.(js|css)$/,
+      /^NOTICES\.md$/,
+    ],
+    required: [
+      "dist/index.js",
+      "dist/index.d.ts",
+      "dist/studio.js",
+      "dist/cli/studio.js",
+      "dist/server/api.js",
+      "dist/casc/storage.js",
+      "dist/game-data-versions.json",
+      "dist/page/index.html",
+      "NOTICES.md",
+    ],
+    sideEffectsFree: true,
+    // Required: every read and write of Object data is the map folder
+    // reader's.
+    workspacePeers: { "reforged-map": false },
+    bin: { "reforged-studio": "dist/cli/studio.js" },
+  },
 ];
 
 /** Folders and files that are sources, tests or tooling, never published. */
 const UNPUBLISHED =
-  /^(src|test|runner|scripts|templates|examples|overlay|vendor|build|dist-test|dist-examples|node_modules)\/|^tsconfig[^/]*\.json$|^AGENTS\.md$|(?<!\.d)\.ts$/;
+  /^(src|test|page|runner|scripts|templates|examples|overlay|vendor|build|dist-test|dist-examples|node_modules)\/|(^|\/)fixtures?\/|^tsconfig[^/]*\.json$|^AGENTS\.md$|(?<!\.d)\.ts$/;
 
 const KEYWORDS = ["warcraft", "wc3", "reforged", "typescript-to-lua"];
 
@@ -301,6 +330,30 @@ describe("the reforged-types tarball", () => {
     ).toEqual([]);
     // 3.0.0 is below the minimum Patch, 3.0.1.24370 (#800).
     expect(files.filter((path) => path.startsWith("3.0.0"))).toEqual([]);
+  });
+});
+
+describe("the reforged-studio tarball", () => {
+  it("ships the built page whole: every asset its index.html loads", () => {
+    const result = packed.get("reforged-studio");
+    if (result === undefined) throw new Error("reforged-studio was not packed");
+    const { files, read } = result;
+    const html = read("dist/page/index.html");
+    const assets = [...html.matchAll(/(?:src|href)="\/(assets\/[^"]+)"/g)].map(
+      ([, path]) => `dist/page/${path}`,
+    );
+    expect(assets.some((path) => path.endsWith(".js"))).toBe(true);
+    expect(assets.filter((path) => !files.includes(path))).toEqual([]);
+    // Nothing fetched from a CDN at run time.
+    expect(html).not.toMatch(/(?:src|href)="(?:https?:)?\/\//);
+  });
+
+  it("carries the notices of what the page bundles", () => {
+    const result = packed.get("reforged-studio");
+    if (result === undefined) throw new Error("reforged-studio was not packed");
+    const notices = result.read("NOTICES.md");
+    expect(notices).toContain("mdx-m3-viewer-th");
+    expect(notices).toContain("react");
   });
 });
 

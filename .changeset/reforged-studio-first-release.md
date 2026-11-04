@@ -1,0 +1,5 @@
+---
+"reforged-studio": major
+---
+
+First release of `reforged-studio`, the Studio: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor. `startStudio({ projectRoot, mapFolder, gameExecutable, worldEditorExecutable, port, open })`, or the `reforged-studio` command, serves on the loopback interface a page with the Object Editor's layout: a tab per Object kind, a search by name or Rawcode across the seven kinds, a field table edited inline, a Table mode for bulk edits, creating and deleting objects with a free Rawcode, an explicit save with undo across the session and a diff, a reload with the unsaved edits kept on top after a change on disk, the fields a stale World Editor save put back offered again, Object definitions read-only and adopted into code, and icons and live model previews read from the developer's own install. It writes `.reforged-studio.json` while it runs, which the hover of `reforged-map`'s TypeScript plugin links from. It needs `reforged-map` as a peer and the game installed. Install it with `pnpm add -D reforged-studio@next`.
