@@ -130,7 +130,9 @@ describe("allowedArtLayers", () => {
   });
 
   it("reads the three bits alone, whatever the others hold", () => {
+    // 9 is 8 | 1: SD's bit, and one the World Editor does not write.
     expect(allowedArtLayers(9)).toEqual(["sd"]);
+    // -1 sets every bit, the three among them.
     expect(allowedArtLayers(-1)).toEqual(["sd", "hd", "de"]);
   });
 });

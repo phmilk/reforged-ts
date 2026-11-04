@@ -30,7 +30,7 @@ describe("readSupportedModes", () => {
     }
   });
 
-  it("reads SD and HD, 3, from a map the 3.0 World Editor saved", () => {
+  it("reads SD and HD, 3 in the bit mask, from a map the 3.0 World Editor saved", () => {
     expect(readSupportedModes(fixtureMap("editor-objects.w3m"))).toBe(3);
   });
 

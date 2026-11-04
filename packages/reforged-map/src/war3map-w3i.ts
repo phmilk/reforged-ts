@@ -82,7 +82,7 @@ export function readWar3mapW3i(mapFolder: string, model: MapFolderModel): void {
  * @remarks
  * A bit mask, 1 SD, 2 HD and 4 DE, as #842 read it back from maps saved
  * with each of the World Editor's three boxes
- * ({@link https://github.com/phmilk/reforged-ts/blob/master/docs/research/world-editor-asset-mode.md | the research}):
+ * ({@link https://github.com/phmilk/reforged-ts/blob/master/docs/research/world-editor-asset-mode.md | the World Editor's Asset Mode research}):
  * a new map's default, SD and HD, is 3.
  *
  * @param mapFolder - The map folder, saved as a folder by the World Editor.

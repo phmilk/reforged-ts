@@ -12,7 +12,7 @@ export interface TestW3i {
   version?: number;
   /** The melee map flag. */
   melee?: boolean;
-  /** The Supported Modes, a bit mask: 1 SD, 2 HD, 4 DE; 3, SD and HD, by default. */
+  /** The Supported Modes, a bit mask (#842, docs/research/world-editor-asset-mode.md): 1 SD, 2 HD, 4 DE; 3, SD and HD, by default. */
   modes?: number;
 }
 
