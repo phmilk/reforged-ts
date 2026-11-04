@@ -1,10 +1,10 @@
 # reforged-studio
 
-The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). A Map project runs `pnpm studio`, which opens `http://localhost:<port>/objects` in the browser: the Object Editor's layout, a global search, a Table mode for bulk edits, icons and live model previews read from the developer's own install, an explicit save, session-wide undo and a real diff. The guide for a Map project author is [The Studio](https://phmilk.github.io/reforged-ts/docs/next/guides/studio) on the docs site.
+The Studio of reforged-ts: a local app that edits a Map project's Object data through `reforged-map`, taking turns with the World Editor ([#829](https://github.com/phmilk/reforged-ts/issues/829)). A Map project made from the Template runs `pnpm studio` once the Template takes the package up ([reforged-ts-template#145](https://github.com/phmilk/reforged-ts-template/issues/145)), and any Map project [the bin](#starting-the-studio) meanwhile, which opens `http://localhost:<port>/objects` in the browser: the Object Editor's layout, a global search, a Table mode for bulk edits, icons and live model previews read from the developer's own install, an explicit save, session-wide undo and a real diff. The guide for a Map project author is [The Studio](https://phmilk.github.io/reforged-ts/docs/next/guides/studio) on the docs site.
 
 It holds two parts: the Studio's server and page ([#831](https://github.com/phmilk/reforged-ts/issues/831)), and the reader of the developer's own Warcraft III install ([#830](https://github.com/phmilk/reforged-ts/issues/830)), which the Studio reads the game through and which the `reforged-builtins` generator imports through the workspace root's dev dependency: the workspace's one copy of each reader.
 
-**For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file. An agent never runs `pnpm studio` for the author, nor edits through its API without being asked: the Studio is the author's tool, and an Object definition stays the code's.
+**For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
 **Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`, beside its peer `reforged-map`: `pnpm add -D reforged-studio@next reforged-map@next`. npm gives `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
 
@@ -244,4 +244,6 @@ Every test runs on synthetic storages the tests write in a temporary folder, wit
 - editing a field and seeing it highlighted as unsaved, Ctrl+S and the counter of unsaved changes, and undo after the save (`test/page-editing.test.ts`);
 - the banner after a change on disk, the merge and its conflicts, and a World Editor revert (`test/page-turns.test.ts`);
 - the delete confirmation with the placement count, and creating an object (`test/page-create-delete.test.ts`);
-- the Table mode and bulk edits (`test/page-bulk.test.ts`), and the model previews (`test/page-models.test.ts`). On a machine with the game, `pnpm --filter reforged-studio studio:check-install [--install <folder>]` finds the install as `pnpm builtins:generate` does and reads the Footman's base values, its icon and its HD model.
+- the Table mode and bulk edits (`test/page-bulk.test.ts`), and the model previews (`test/page-models.test.ts`).
+
+On a machine with the game, `pnpm --filter reforged-studio studio:check-install [--install <folder>]` finds the install as `pnpm builtins:generate` does and reads the Footman's base values, its icon and its HD model.
