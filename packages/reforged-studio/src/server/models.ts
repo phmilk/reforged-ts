@@ -21,7 +21,7 @@ const MODEL_LAYERS: Readonly<Record<ArtLayer, readonly string[]>> = {
 /** The enUS sub-layer of a layer of the storage. */
 const LOCALE_LAYER = "_Locales/enUS.w3mod:";
 
-/** The map folder's HD and DE layers (`MAP_LAYERS`), read as its root's paths. */
+/** The folders of the map folder's art layers (`MAP_LAYERS`), whose files are listed by the path beneath them. */
 const MAP_LAYER_FOLDERS: ReadonlySet<string> = new Set(
   Object.values(MAP_LAYERS)
     .filter((layer) => layer !== undefined)
