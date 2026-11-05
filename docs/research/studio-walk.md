@@ -24,8 +24,6 @@ It ran without `--world-editor` at first. With no default for it, a save offered
 
 A Custom unit `h000` made with "New object" from the Footman, its Name set to "Studio Footman" and Hit Points Maximum (Base) to 999, then 1000, with the box ticked (Observed):
 
-Each bullet below is Observed.
-
 - The save wrote `war3map.w3u` (`h000` from `hfoo`, `uhpm` 999), `war3mapSkin.w3u` (`unam` = `TRIGSTR_007`) and `war3map.wts` (STRING 7, "Studio Footman", under the comment `// Units: h000 (Studio Footman), Name (Name)`).
 - On the second save the World Editor reloaded in the same process: a few dialogs flashed, the map's clock went back to zero, and the title changed from `[c/Users/…]` (the map opened through File, Open) to `[C:/Users/…]` (the path `-loadfile` gave). The Object Editor, open across the reload, then listed Custom Units (1), Studio Footman, 1000 hit points.
 - F5 kept the box ticked.
@@ -46,7 +44,7 @@ Each send with the World Editor holding the map without unsaved edits; the Studi
 | Studio save, the delete below         | had saved the map itself         | reloaded, no warning                               |
 | Studio save, a new object             | had just been reloaded           | the warning, no reload                             |
 
-The warning is a modal "Warning" with an OK button, naming the map folder's path as `-loadfile` gave it. The editor compares the path without case (Observed, the sixth row). Its save writes a new folder and swaps it in (ADR 0015), which would explain why a reload is accepted right after it (Inferred).
+The warning is a modal "Warning" with an OK button, naming the map folder's path as `-loadfile` gave it. The editor compares the path without case (Observed, the sixth row). Its save writes a new folder and swaps it in (ADR 0015), which would explain why a reload is accepted right after it (Inferred). How to reload reliably is [#871](https://github.com/phmilk/reforged-ts/issues/871).
 
 ## A World Editor save that reverts a Studio save
 
@@ -62,8 +60,6 @@ The World Editor placed a Studio Footman and saved. "Delete" on `h000` (Observed
 - The dialog "Delete a unit h000?" said: "Deleting h000 removes it from the map folder's Object data at the next save. It is placed 1 time on the terrain, in war3mapUnits.doo. The Studio leaves that placement there: the game already skips it, and the World Editor drops it without asking at its next save."
 - The first save was refused, since the World Editor held an unsaved placement: "Not saved: The World Editor shows unsaved edits for C:\…\reforged-ts-template.w3m (its title ends in " *]"): nothing was written. Save or discard them in the World Editor first, then save again." Nothing was written; the delete stayed as one unsaved edit.
 - The World Editor saved. The Studio, with that unsaved edit, showed "The map folder changed on disk; your unsaved edits are kept." with "Reload and keep my edits on top", and that gave "Reloaded the map folder and put 1 edit on top." The banner stayed on screen a moment after the merge ([#875](https://github.com/phmilk/reforged-ts/issues/875)).
-  Each bullet below is Observed.
-
 - The save wrote `war3map.w3u` with no Custom object, dropped STRING 7 from `war3map.wts`, and left `war3mapUnits.doo` with its placement. The World Editor reloaded (a World Editor save had come just before), and the placed Studio Footman was gone from the terrain, the two built-in units beside it still there.
 
 ## Object definitions, read-only
