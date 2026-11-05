@@ -12,7 +12,7 @@ The walk [#843](https://github.com/phmilk/reforged-ts/issues/843) left to a pers
 
 ## The run
 
-2026-11-05, Build 3.0.1.24371, Windows 11. One person at the World Editor and a browser, the files read back from disk between the steps; no Probe runs. The library at master `1c92698c`, built in a Windows clone; the Template's `main` in another, pointed at it with `pnpm use:local`. The Template's `tsconfig.base.json` names `reforged-types/3.0.0`, which master no longer ships, so the build failed until it named 3.0.1 ([reforged-ts-template#147](https://github.com/phmilk/reforged-ts-template/issues/147)). The Studio ran from the bin:
+2026-11-05, Build 3.0.1.24371, Windows 11. Screen checks, which stay for a human ([`probe/README.md`](../../probe/README.md#what-stays-for-a-human)): one person at the World Editor and a browser, the files read back from disk between the steps; no Probe runs. The library at master `1c92698c`, built in a Windows clone; the Template's `main` in another, pointed at it with `pnpm use:local`. The Template's `tsconfig.base.json` names `reforged-types/3.0.0`, which master no longer ships, so the build failed until it named 3.0.1 ([reforged-ts-template#147](https://github.com/phmilk/reforged-ts-template/issues/147)). The Studio ran from the bin:
 
 ```sh
 node <reforged-ts>/packages/reforged-studio/dist/cli/studio.js --map reforged-ts-template.w3m --project . --world-editor "C:\Program Files (x86)\Warcraft III\_retail_\x86_64\World Editor.exe"
@@ -23,6 +23,8 @@ It ran without `--world-editor` at first. With no default for it, a save offered
 ## A save, and a reload in the World Editor
 
 A Custom unit `h000` made with "New object" from the Footman, its Name set to "Studio Footman" and Hit Points Maximum (Base) to 999, then 1000, with the box ticked (Observed):
+
+Each bullet below is Observed.
 
 - The save wrote `war3map.w3u` (`h000` from `hfoo`, `uhpm` 999), `war3mapSkin.w3u` (`unam` = `TRIGSTR_007`) and `war3map.wts` (STRING 7, "Studio Footman", under the comment `// Units: h000 (Studio Footman), Name (Name)`).
 - On the second save the World Editor reloaded in the same process: a few dialogs flashed, the map's clock went back to zero, and the title changed from `[c/Users/…]` (the map opened through File, Open) to `[C:/Users/…]` (the path `-loadfile` gave). The Object Editor, open across the reload, then listed Custom Units (1), Studio Footman, 1000 hit points.
@@ -44,11 +46,11 @@ Each send with the World Editor holding the map without unsaved edits; the Studi
 | Studio save, the delete below         | had saved the map itself         | reloaded, no warning                               |
 | Studio save, a new object             | had just been reloaded           | the warning, no reload                             |
 
-The warning is a modal "Warning" with "The file 'C:/Users/wylle/reforged-ts-template-843/reforged-ts-template.w3m' is already open and active." and OK. The editor compares the path without case (Observed, the sixth row). Its save writes a new folder and swaps it in (ADR 0015), which would explain why a reload is accepted right after it (Inferred). How to reload reliably is [#871](https://github.com/phmilk/reforged-ts/issues/871).
+The warning is a modal "Warning" with an OK button, naming the map folder's path as `-loadfile` gave it. The editor compares the path without case (Observed, the sixth row). Its save writes a new folder and swaps it in (ADR 0015), which would explain why a reload is accepted right after it (Inferred).
 
 ## A World Editor save that reverts a Studio save
 
-- **Not detected, a third value** (Observed). With the World Editor holding 1000 (the reload of the 1234 save never reached it), the Studio saved 1234, then 2000 with the box unticked; the toast offered "Reload in the World Editor". The World Editor then placed a unit and saved: `uhpm` went back to 1000 on disk. The Studio said "The map folder changed on disk: the Studio read it again." and showed 1000, with no offer: 1000 is neither the value before its last save (1234) nor the one it wrote (2000), as the README's rule says.
+- **Not detected, a third value** (Observed). With the World Editor holding 1000 (the reload of the 1234 save never reached it), the Studio saved 1234, then 2000 with the box unticked; the toast offered "Reload in the World Editor". The World Editor then placed a unit and saved: `uhpm` went back to 1000 on disk. The Studio said "The map folder changed on disk: the Studio read it again." and showed 1000, with no offer: 1000 is neither the value before its last save (1234) nor the one it wrote (2000), as the rule of [the Studio's README](../../packages/reforged-studio/README.md#taking-turns-with-the-world-editor) says.
 - **Detected** (Observed). With the World Editor holding 1000 and the Studio's last save 1000 to 1234, a World Editor save put 1000 back. The Studio showed "A World Editor save put back 1 field the Studio had saved: h000 uhpm." with "Apply them again", "Show" and "Keep the World Editor's".
 - **"Apply them again"** set 1234 as one unsaved edit, "Applied them again as unsaved edits: save to write them.", and the save wrote it (Observed).
 - **"Keep the World Editor's"**, after the next revert, left 1000 and no unsaved edit, "Kept the World Editor's values." (Observed).
@@ -60,6 +62,8 @@ The World Editor placed a Studio Footman and saved. "Delete" on `h000` (Observed
 - The dialog "Delete a unit h000?" said: "Deleting h000 removes it from the map folder's Object data at the next save. It is placed 1 time on the terrain, in war3mapUnits.doo. The Studio leaves that placement there: the game already skips it, and the World Editor drops it without asking at its next save."
 - The first save was refused, since the World Editor held an unsaved placement: "Not saved: The World Editor shows unsaved edits for C:\…\reforged-ts-template.w3m (its title ends in " *]"): nothing was written. Save or discard them in the World Editor first, then save again." Nothing was written; the delete stayed as one unsaved edit.
 - The World Editor saved. The Studio, with that unsaved edit, showed "The map folder changed on disk; your unsaved edits are kept." with "Reload and keep my edits on top", and that gave "Reloaded the map folder and put 1 edit on top." The banner stayed on screen a moment after the merge ([#875](https://github.com/phmilk/reforged-ts/issues/875)).
+  Each bullet below is Observed.
+
 - The save wrote `war3map.w3u` with no Custom object, dropped STRING 7 from `war3map.wts`, and left `war3mapUnits.doo` with its placement. The World Editor reloaded (a World Editor save had come just before), and the placed Studio Footman was gone from the terrain, the two built-in units beside it still there.
 
 ## Object definitions, read-only
@@ -73,7 +77,7 @@ A Custom unit `h001` from the Rifleman, Name "Code Rifleman", saved, then "Adopt
 
 ## No map file held open
 
-Five World Editor saves while the Studio ran (19:27 to 20:04) each wrote the whole folder, and the Studio read it again after each (Observed). No save lost a file: the folder's file list stayed the same throughout, and the World Editor raised no error. ADR 0015 notes that a held file loses imports without an error, and this map has none, so the walk does not test that part (Inferred).
+Five World Editor saves while the Studio ran (19:27 to 20:04) each wrote the whole folder, and the Studio read it again after each (Observed). No save lost a file: the folder's file list stayed the same throughout, and the World Editor raised no error. ADR 0015 notes that a held file loses imports without an error, and this map has none, so the walk does not test that part (Inferred): [#876](https://github.com/phmilk/reforged-ts/issues/876) walks a map with imports.
 
 ## Compared with #476
 
@@ -91,9 +95,9 @@ As decided (Observed unless marked):
 - Model fields with a thumbnail and their path, and a model picker of 3473 paths searched by path, with a live 3D preview that follows the selection.
 - The delete's confirmation names the placements; reset to base, copy, compare and undo across saves are offered.
 
-The differences:
+The differences (Observed unless marked):
 
 - The race groups read raw `WESTRING_RACE_*` keys, and three Human units (Dragonhawk Rider, Priest, Sorceress) have no icon: [#874](https://github.com/phmilk/reforged-ts/issues/874).
 - Requirements shows `hbla` as text, not the linked chip #476 calls for; the walker missed "New object" and the Diff's second tab, the header overflows at a half-screen width, and a few labels: [#875](https://github.com/phmilk/reforged-ts/issues/875).
-- After a quiet reload, the banner says "The map folder changed on disk: the Studio read it again." with Dismiss, without #476's "Show what changed" (Observed). Not filed: the Diff since the last commit shows the same.
-- Compare, Table mode bulk edits, the Rawcode suggestion and deep links to an unknown Rawcode were not walked.
+- After a quiet reload, the banner says "The map folder changed on disk: the Studio read it again." with Dismiss, without #476's "Show what changed" (Observed). Added to [#875](https://github.com/phmilk/reforged-ts/issues/875#issuecomment-6672456535): the Diff since the last commit is no substitute while the World Editor's change is not committed.
+- Compare, Table mode bulk edits, the Rawcode suggestion and deep links to an unknown Rawcode were not walked: [#876](https://github.com/phmilk/reforged-ts/issues/876).
