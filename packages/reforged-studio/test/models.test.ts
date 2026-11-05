@@ -185,6 +185,26 @@ describe("the models' paths, /api/models", () => {
     ).toContain("Units\\Human\\Scarlet\\Scarlet.mdx");
   });
 
+  it("lists a DE import of the map folder by the path beneath _DE.w3mod/", async () => {
+    // #842 saw the World Editor write a DE import there:
+    // docs/research/world-editor-screen-checks.md.
+    const project = mapProject();
+    fs.mkdirSync(path.join(project.mapFolder, "_DE.w3mod", "war3mapImported"), {
+      recursive: true,
+    });
+    fs.writeFileSync(
+      path.join(project.mapFolder, "_DE.w3mod", "war3mapImported", "Red.mdx"),
+      cubeModel(),
+    );
+    const studio = await start(project, {
+      gameExecutable: await syntheticGame(INSTALL_MODELS),
+    });
+    const answer = await request(studio, "/api/models?q=Red.mdx");
+    expect(answer.body).toMatchObject({
+      models: [{ path: "war3mapImported\\Red.mdx", from: "map" }],
+    });
+  });
+
   it("keeps the paths that hold the text, without regard to case or separators, up to the limit", async () => {
     const studio = await modelsStudio();
     const found = await request(studio, "/api/models?q=human/FOOTMAN");

@@ -1,8 +1,8 @@
 /**
  * The models' paths the model picker searches: the install's, in an art
  * layer and the base layer beneath it, each path once whatever layer holds
- * it; and the map folder's imports, its `_hd.w3mod/` layer read as the
- * same paths. Each comes with backslashes, as a field holds it.
+ * it; and the map folder's imports, its `_hd.w3mod/` and `_de.w3mod/`
+ * layers read as the same paths. Each comes with backslashes, as a field holds it.
  */
 import { readdir } from "node:fs/promises";
 import path from "node:path";
@@ -21,8 +21,8 @@ const MODEL_LAYERS: Readonly<Record<ArtLayer, readonly string[]>> = {
 /** The enUS sub-layer of a layer of the storage. */
 const LOCALE_LAYER = "_Locales/enUS.w3mod:";
 
-/** The map folder's HD layer, read as its root's paths. */
-const MAP_HD_LAYER = "_hd.w3mod";
+/** The map folder's HD and DE layers, read as its root's paths (#842). */
+const MAP_ART_LAYERS: ReadonlySet<string> = new Set(["_hd.w3mod", "_de.w3mod"]);
 
 /** The deepest folder of the map folder the listing enters. */
 const MAP_DEPTH = 8;
@@ -65,8 +65,8 @@ export function installModels(
 
 /**
  * The map folder's imported models: every `.mdx` and `.mdl` file under it,
- * by its path from the map folder, a path under `_hd.w3mod/` as the path
- * beneath it; each once without regard to case, sorted. Each folder is
+ * by its path from the map folder, a path under `_hd.w3mod/` or
+ * `_de.w3mod/` as the path beneath it; each once without regard to case, sorted. Each folder is
  * listed and closed, and a folder that cannot be listed is passed over.
  *
  * @param mapFolder - The map folder.
@@ -88,7 +88,7 @@ export async function mapModels(mapFolder: string): Promise<string[]> {
       } else if (entry.isFile() && MODEL_FILE.test(entry.name)) {
         let relative = path.relative(mapFolder, file).split(path.sep).join("/");
         const [first, ...rest] = relative.split("/");
-        if (first.toLowerCase() === MAP_HD_LAYER && rest.length > 0) {
+        if (MAP_ART_LAYERS.has(first.toLowerCase()) && rest.length > 0) {
           relative = rest.join("/");
         }
         const key = relative.toLowerCase();

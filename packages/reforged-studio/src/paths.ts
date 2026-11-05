@@ -1,7 +1,8 @@
 /**
  * Path resolution for icons and models, as #481 measured it: a path an
  * object's field or a model names is looked for in the map folder first, layered like the
- * game (`_hd.w3mod/<path>`, as HiveWE's lookup orders a map's files), then
+ * game (`_hd.w3mod/<path>` in HD, `_de.w3mod/<path>` in DE, where the World
+ * Editor writes an import of that mode, #842), then
  * in the chosen art layer of the storage (`_HD.w3mod:` or `_DE.w3mod:`),
  * then in its base layer, each layer's enUS sub-layer
  * (`_Locales/enUS.w3mod`) before it. The tileset and `_teen` sub-layers
@@ -27,12 +28,16 @@ const ART_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
 };
 
 /**
- * The layer of the map folder the HD and DE art layers read before its
- * root, as HiveWE's lookup does. HiveWE reads no DE layer, and the folder
- * the World Editor writes a DE-only import to was not observed (#481): DE
- * reads the HD layer until a human checks it (#842).
+ * The layer of the map folder each art layer reads before its root: the
+ * folder the World Editor's Asset Manager writes an import of that mode to,
+ * `_HD.w3mod/` or `_DE.w3mod/` (#842,
+ * `docs/research/world-editor-screen-checks.md`); SD reads the root alone.
  */
-const MAP_HD_LAYER = "_hd.w3mod/";
+const MAP_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
+  sd: undefined,
+  hd: "_hd.w3mod/",
+  de: "_de.w3mod/",
+};
 
 /** The enUS sub-layer each layer of the map folder reads first, as HiveWE's lookup does. */
 const MAP_LOCALE_LAYER = "_Locales/enUS.w3mod/";
@@ -98,7 +103,7 @@ export function createPathResolver(
     STORAGE_LOCALE_LAYER,
   );
   const mapLayers = withLocale(
-    options.artLayer === "sd" ? [""] : [MAP_HD_LAYER, ""],
+    [MAP_LAYERS[options.artLayer], ""].filter((layer) => layer !== undefined),
     MAP_LOCALE_LAYER,
   );
 
