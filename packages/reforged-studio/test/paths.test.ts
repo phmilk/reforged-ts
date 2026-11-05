@@ -50,6 +50,9 @@ async function mapFolder(): Promise<string> {
   const files: Record<string, string> = {
     "war3mapImported/Hero.mdx": "map hero",
     "_hd.w3mod/war3mapImported/Hero.mdx": "map hd hero",
+    "_DE.w3mod/war3mapImported/Hero.mdx": "map de hero",
+    "_DE.w3mod/war3mapImported/Scarlet.mdx": "map de scarlet",
+    "_hd.w3mod/war3mapImported/HdOnly.mdx": "map hd only",
     "units/human/footman/footman.mdx": "map footman",
     "war3mapImported/Note.mdx": "map note",
     "_Locales/enUS.w3mod/war3mapImported/Note.mdx": "map enUS note",
@@ -160,6 +163,31 @@ describe("createPathResolver", () => {
     // Matched without regard to case, before the storage.
     expect((await found(hd, "Units\\Human\\Footman\\Footman.mdx")).text).toBe(
       "map footman",
+    );
+  });
+
+  it("reads a DE import from the map folder's _DE.w3mod/, where the World Editor writes it", async () => {
+    // #842: docs/research/world-editor-screen-checks.md, "Imports by mode".
+    const de = await resolver("de", true);
+    const hd = await resolver("hd", true);
+    const sd = await resolver("sd", true);
+
+    expect((await found(de, "war3mapImported\\Hero.mdx")).text).toBe(
+      "map de hero",
+    );
+    expect((await found(de, "war3mapImported\\Scarlet.mdx")).text).toBe(
+      "map de scarlet",
+    );
+    expect((await hd.resolve("war3mapImported\\Scarlet.mdx")).found).toBe(
+      false,
+    );
+    expect((await sd.resolve("war3mapImported\\Scarlet.mdx")).found).toBe(
+      false,
+    );
+    // DE does not read the HD layer of the map folder.
+    expect((await de.resolve("war3mapImported\\HdOnly.mdx")).found).toBe(false);
+    expect((await found(hd, "war3mapImported\\HdOnly.mdx")).text).toBe(
+      "map hd only",
     );
   });
 

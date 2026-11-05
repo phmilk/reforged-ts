@@ -1,14 +1,14 @@
 /**
  * The models' paths the model picker searches: the install's, in an art
  * layer and the base layer beneath it, each path once whatever layer holds
- * it; and the map folder's imports, its `_hd.w3mod/` layer read as the
- * same paths. Each comes with backslashes, as a field holds it.
+ * it; and the map folder's imports, its `_hd.w3mod/` and `_de.w3mod/`
+ * layers read as the same paths. Each comes with backslashes, as a field holds it.
  */
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import type { CascStorage } from "../casc/storage.js";
 import { BASE_LAYER } from "../layers.js";
-import type { ArtLayer } from "../paths.js";
+import { MAP_LAYERS, type ArtLayer } from "../paths.js";
 import type { ListedModel } from "./api-types.js";
 
 /** The layers of the storage each art layer's models are listed from, the enUS sub-layer of each with it. */
@@ -21,8 +21,12 @@ const MODEL_LAYERS: Readonly<Record<ArtLayer, readonly string[]>> = {
 /** The enUS sub-layer of a layer of the storage. */
 const LOCALE_LAYER = "_Locales/enUS.w3mod:";
 
-/** The map folder's HD layer, read as its root's paths. */
-const MAP_HD_LAYER = "_hd.w3mod";
+/** The folders of the map folder's art layers (`MAP_LAYERS`), whose files are listed by the path beneath them. */
+const MAP_LAYER_FOLDERS: ReadonlySet<string> = new Set(
+  Object.values(MAP_LAYERS)
+    .filter((layer) => layer !== undefined)
+    .map((layer) => layer.replace(/\/$/, "")),
+);
 
 /** The deepest folder of the map folder the listing enters. */
 const MAP_DEPTH = 8;
@@ -65,8 +69,8 @@ export function installModels(
 
 /**
  * The map folder's imported models: every `.mdx` and `.mdl` file under it,
- * by its path from the map folder, a path under `_hd.w3mod/` as the path
- * beneath it; each once without regard to case, sorted. Each folder is
+ * by its path from the map folder, a path under `_hd.w3mod/` or
+ * `_de.w3mod/` as the path beneath it; each once without regard to case, sorted. Each folder is
  * listed and closed, and a folder that cannot be listed is passed over.
  *
  * @param mapFolder - The map folder.
@@ -88,7 +92,7 @@ export async function mapModels(mapFolder: string): Promise<string[]> {
       } else if (entry.isFile() && MODEL_FILE.test(entry.name)) {
         let relative = path.relative(mapFolder, file).split(path.sep).join("/");
         const [first, ...rest] = relative.split("/");
-        if (first.toLowerCase() === MAP_HD_LAYER && rest.length > 0) {
+        if (MAP_LAYER_FOLDERS.has(first.toLowerCase()) && rest.length > 0) {
           relative = rest.join("/");
         }
         const key = relative.toLowerCase();
