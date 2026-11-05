@@ -1,5 +1,17 @@
 # reforged-studio
 
+## 1.0.0-alpha.2
+
+### Patch Changes
+
+- [#870](https://github.com/phmilk/reforged-ts/pull/870) [`5e92fad`](https://github.com/phmilk/reforged-ts/commit/5e92fad7049c00b323f41189a904f1dc9fd7ed01) Thanks [@wyller](https://github.com/wyller)! - In DE, the map folder's imports are read from `_de.w3mod/`, where the World Editor writes an import marked DE, instead of `_hd.w3mod/`. The model picker lists an import under `_de.w3mod/` by the path beneath it.
+
+- [#867](https://github.com/phmilk/reforged-ts/pull/867) [`35ae60c`](https://github.com/phmilk/reforged-ts/commit/35ae60cce2cd7911cb06cde6af83f7a89b7c84c2) Thanks [@wyller](https://github.com/wyller)! - A map's Supported Modes are read as the bit mask the World Editor writes, 1 SD, 2 HD and 4 DE. `allowedArtLayers` offers the layers whose bit is set, so a new map's default, 3, offers SD and HD without DE, and 5, 6 and 7 now limit the switch. `SUPPORTED_MODES` becomes `SUPPORTED_MODE_BITS`, the bit of each art layer. `readSupportedModes`'s docs say the bit mask.
+
+- [#869](https://github.com/phmilk/reforged-ts/pull/869) [`fd20ab7`](https://github.com/phmilk/reforged-ts/commit/fd20ab7b0e953296b194fd6015946e646e88bc5c) Thanks [@wyller](https://github.com/wyller)! - The README no longer leaves the reading of the install's models to [#842](https://github.com/phmilk/reforged-ts/issues/842), and links what [#842](https://github.com/phmilk/reforged-ts/issues/842) checked in the game.
+- Updated dependencies [[`35ae60c`](https://github.com/phmilk/reforged-ts/commit/35ae60cce2cd7911cb06cde6af83f7a89b7c84c2)]:
+  - reforged-map@1.0.0-alpha.10
+
 ## 1.0.0-alpha.1
 
 ### Patch Changes

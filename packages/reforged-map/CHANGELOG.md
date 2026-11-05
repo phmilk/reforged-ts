@@ -1,5 +1,11 @@
 # reforged-map
 
+## 1.0.0-alpha.10
+
+### Patch Changes
+
+- [#867](https://github.com/phmilk/reforged-ts/pull/867) [`35ae60c`](https://github.com/phmilk/reforged-ts/commit/35ae60cce2cd7911cb06cde6af83f7a89b7c84c2) Thanks [@wyller](https://github.com/wyller)! - A map's Supported Modes are read as the bit mask the World Editor writes, 1 SD, 2 HD and 4 DE. `allowedArtLayers` offers the layers whose bit is set, so a new map's default, 3, offers SD and HD without DE, and 5, 6 and 7 now limit the switch. `SUPPORTED_MODES` becomes `SUPPORTED_MODE_BITS`, the bit of each art layer. `readSupportedModes`'s docs say the bit mask.
+
 ## 1.0.0-alpha.9
 
 ### Minor Changes
