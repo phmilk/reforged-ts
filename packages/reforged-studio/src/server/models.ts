@@ -8,7 +8,7 @@ import { readdir } from "node:fs/promises";
 import path from "node:path";
 import type { CascStorage } from "../casc/storage.js";
 import { BASE_LAYER } from "../layers.js";
-import type { ArtLayer } from "../paths.js";
+import { MAP_LAYERS, type ArtLayer } from "../paths.js";
 import type { ListedModel } from "./api-types.js";
 
 /** The layers of the storage each art layer's models are listed from, the enUS sub-layer of each with it. */
@@ -21,8 +21,12 @@ const MODEL_LAYERS: Readonly<Record<ArtLayer, readonly string[]>> = {
 /** The enUS sub-layer of a layer of the storage. */
 const LOCALE_LAYER = "_Locales/enUS.w3mod:";
 
-/** The map folder's HD and DE layers, read as its root's paths (#842). */
-const MAP_ART_LAYERS: ReadonlySet<string> = new Set(["_hd.w3mod", "_de.w3mod"]);
+/** The map folder's HD and DE layers (`MAP_LAYERS`), read as its root's paths. */
+const MAP_LAYER_FOLDERS: ReadonlySet<string> = new Set(
+  Object.values(MAP_LAYERS)
+    .filter((layer) => layer !== undefined)
+    .map((layer) => layer.replace(/\/$/, "")),
+);
 
 /** The deepest folder of the map folder the listing enters. */
 const MAP_DEPTH = 8;
@@ -88,7 +92,7 @@ export async function mapModels(mapFolder: string): Promise<string[]> {
       } else if (entry.isFile() && MODEL_FILE.test(entry.name)) {
         let relative = path.relative(mapFolder, file).split(path.sep).join("/");
         const [first, ...rest] = relative.split("/");
-        if (MAP_ART_LAYERS.has(first.toLowerCase()) && rest.length > 0) {
+        if (MAP_LAYER_FOLDERS.has(first.toLowerCase()) && rest.length > 0) {
           relative = rest.join("/");
         }
         const key = relative.toLowerCase();

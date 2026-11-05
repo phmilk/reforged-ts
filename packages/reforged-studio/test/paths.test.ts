@@ -52,6 +52,7 @@ async function mapFolder(): Promise<string> {
     "_hd.w3mod/war3mapImported/Hero.mdx": "map hd hero",
     "_DE.w3mod/war3mapImported/Hero.mdx": "map de hero",
     "_DE.w3mod/war3mapImported/Scarlet.mdx": "map de scarlet",
+    "_hd.w3mod/war3mapImported/HdOnly.mdx": "map hd only",
     "units/human/footman/footman.mdx": "map footman",
     "war3mapImported/Note.mdx": "map note",
     "_Locales/enUS.w3mod/war3mapImported/Note.mdx": "map enUS note",
@@ -184,8 +185,9 @@ describe("createPathResolver", () => {
       false,
     );
     // DE does not read the HD layer of the map folder.
-    expect((await found(de, "war3mapImported\\Note.mdx")).text).toBe(
-      "map enUS note",
+    expect((await de.resolve("war3mapImported\\HdOnly.mdx")).found).toBe(false);
+    expect((await found(hd, "war3mapImported\\HdOnly.mdx")).text).toBe(
+      "map hd only",
     );
   });
 

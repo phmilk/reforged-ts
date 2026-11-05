@@ -33,7 +33,7 @@ const ART_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
  * `_HD.w3mod/` or `_DE.w3mod/` (#842,
  * `docs/research/world-editor-screen-checks.md`); SD reads the root alone.
  */
-const MAP_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
+export const MAP_LAYERS: Readonly<Record<ArtLayer, string | undefined>> = {
   sd: undefined,
   hd: "_hd.w3mod/",
   de: "_de.w3mod/",
