@@ -84,6 +84,7 @@ export {
 export {
   EXECUTABLE_ENV,
   findInstall,
+  findWorldEditor,
   INSTALL_OPTION,
   InstallNotFoundError,
   isWsl,

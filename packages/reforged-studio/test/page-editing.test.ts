@@ -4,7 +4,8 @@
  * project, so that its edits and saves leave the other page tests' alone.
  * It holds the wiring: an inline edit and its unsaved bar, a refusal shown
  * on its field, a select, Ctrl+S and the counter, undo, and the diff; and
- * "Adopt into code" (#838), on a Map project of its own.
+ * "Adopt into code" (#838), on a Map project of its own; and the automatic
+ * reload's box, disabled without a World Editor executable (#873).
  *
  * It needs the page built (`pnpm build`) and Chromium installed, as
  * `page.test.ts` does.
@@ -18,6 +19,7 @@ import { PAGE_FOLDER } from "../src/server/page.js";
 import type { Studio } from "../src/index.js";
 import {
   closeStudios,
+  makeTempDir,
   mapProject,
   removeTemporary,
   start,
@@ -132,6 +134,50 @@ describe("editing in the Studio's page", () => {
       await page.locator("body").press("Control+z");
       await expect.poll(() => unsaved(page)).toBe("1 unsaved");
       await expect.poll(() => attack.inputValue()).not.toBe("pierce");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+});
+
+describe("the automatic reload's box", () => {
+  it(
+    "is disabled with the reason beside it when the Studio has no World Editor executable (#873)",
+    async () => {
+      // The synthetic install holds no World Editor.exe, and none was given.
+      const page = await open("/objects/h001?kind=unit");
+      const box = page.getByRole("checkbox", {
+        name: "Reload the World Editor after a save",
+      });
+      await expect.poll(() => box.isDisabled()).toBe(true);
+      expect(await box.isChecked()).toBe(false);
+      expect(
+        await page.locator("#no-world-editor-reason").textContent(),
+      ).toContain("--world-editor");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "is enabled when the Studio has one",
+    async () => {
+      const executable = path.join(
+        makeTempDir("world-editor"),
+        "World Editor.exe",
+      );
+      fs.writeFileSync(executable, "");
+      const other = await start(mapProject(), {
+        worldEditorExecutable: executable,
+      });
+      const page = await browser.newPage();
+      await page.goto(`${other.url}/objects/h001?kind=unit`);
+      await page.locator("table.fields").waitFor();
+      const box = page.getByRole("checkbox", {
+        name: "Reload the World Editor after a save",
+      });
+      expect(await box.isDisabled()).toBe(false);
+      expect(await page.locator("#no-world-editor-reason").count()).toBe(0);
       await page.close();
     },
     TIMEOUT,

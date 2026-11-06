@@ -133,7 +133,7 @@ export interface ApiContext {
   /** The Game data set base values are read from when the map's is unknown. */
   readonly fallbackGameDataSet: string;
   readonly worldEditorCheck: WorldEditorCheckOptions | undefined;
-  /** The World Editor's executable, which the reload after a save starts; undefined when the Studio was given none. */
+  /** The World Editor's executable, which the reload after a save starts: the one given, else `World Editor.exe` beside the game's; undefined when there is neither. */
   readonly worldEditorExecutable: string | undefined;
   /** The reload's options, such as a stand-in launcher in tests. */
   readonly worldEditorReload: WorldEditorReloadOptions | undefined;
@@ -994,7 +994,7 @@ function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
     return {
       reason: "no-world-editor",
       message:
-        "The Studio was started without the World Editor's executable: start it with worldEditorExecutable (--world-editor) to reload the map there.",
+        "The Studio has no World Editor executable: none was given and the game's install holds no _retail_/x86_64/World Editor.exe. Start it with worldEditorExecutable (--world-editor) to reload the map there.",
     };
   }
   try {
@@ -1605,6 +1605,7 @@ async function sessionAnswer(context: ApiContext): Promise<Answer> {
     gameDataSet,
     baseValues,
     worldEditor,
+    worldEditorExecutable: context.worldEditorExecutable,
     warnings: [
       ...session.warnings,
       ...(listing.status === "unavailable" ? [listing.reason] : []),

@@ -105,6 +105,31 @@ export function findInstall(
   );
 }
 
+/** Where the World Editor's executable sits in an install, beside the game's. */
+const WORLD_EDITOR_PATH: readonly string[] = [
+  "_retail_",
+  "x86_64",
+  "World Editor.exe",
+];
+
+/**
+ * The World Editor's executable of an install: `World Editor.exe` beside
+ * the game's, in `<install>/_retail_/x86_64`.
+ *
+ * @param installDir - The install folder, as {@link findInstall} gives it.
+ * @param machine - The machine whose paths name it and whose files are looked at.
+ * @returns The executable's path, named with the machine's paths; undefined
+ *   when the install holds no such file.
+ */
+export function findWorldEditor(
+  installDir: string,
+  machine: Pick<InstallMachine, "platform" | "isFile">,
+): string | undefined {
+  const pathOf = machine.platform === "win32" ? path.win32 : path.posix;
+  const executable = pathOf.join(installDir, ...WORLD_EDITOR_PATH);
+  return machine.isFile(executable) ? executable : undefined;
+}
+
 /** The nearest folder at or above `start` that holds `.build.info`. */
 function installAbove(
   start: string,

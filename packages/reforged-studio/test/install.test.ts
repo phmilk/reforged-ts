@@ -1,10 +1,12 @@
 /**
  * The install lookup, on a fake machine: the argument, then the Probe
- * runner's WC3_EXECUTABLE, then the well-known folders.
+ * runner's WC3_EXECUTABLE, then the well-known folders; and the World
+ * Editor's executable beside the game's.
  */
 import { describe, expect, it } from "vitest";
 import {
   findInstall,
+  findWorldEditor,
   InstallNotFoundError,
   type InstallMachine,
 } from "../src/index.js";
@@ -122,5 +124,36 @@ describe("findInstall", () => {
         'Warcraft III was not found. Pass --install <folder> or set the WC3_EXECUTABLE environment variable to the game\'s executable. Looked at: "/opt/game.exe", "/mnt/c/Program Files (x86)/Warcraft III", "/mnt/c/Program Files/Warcraft III".',
       ),
     );
+  });
+});
+
+describe("findWorldEditor", () => {
+  it("takes World Editor.exe beside the game's executable", () => {
+    expect(
+      findWorldEditor(
+        "/games/wc3",
+        machine(["/games/wc3/_retail_/x86_64/World Editor.exe"]),
+      ),
+    ).toBe("/games/wc3/_retail_/x86_64/World Editor.exe");
+  });
+
+  it("names it with the paths of Windows on Windows", () => {
+    expect(
+      findWorldEditor(
+        "C:\\Program Files (x86)\\Warcraft III",
+        machine(
+          [
+            "C:\\Program Files (x86)\\Warcraft III\\_retail_\\x86_64\\World Editor.exe",
+          ],
+          { platform: "win32" },
+        ),
+      ),
+    ).toBe(
+      "C:\\Program Files (x86)\\Warcraft III\\_retail_\\x86_64\\World Editor.exe",
+    );
+  });
+
+  it("finds none when the install has no World Editor", () => {
+    expect(findWorldEditor("/games/wc3", machine([]))).toBeUndefined();
   });
 });

@@ -17,6 +17,7 @@ import type {
   FieldRow,
   RawcodeAnswer,
   SaveAnswer,
+  SessionAnswer,
   SessionCounts,
 } from "../src/index.js";
 import {
@@ -27,6 +28,7 @@ import {
   removeTemporary,
   request,
   start,
+  syntheticGame,
   type Project,
 } from "./support/studio.js";
 
@@ -486,11 +488,53 @@ describe("saving in the Studio", () => {
     const studio = await start(project, {
       worldEditorCheck: { readWindowTitles: () => [title(project, false)] },
     });
+    const session = (await request(studio, "/api/session"))
+      .body as SessionAnswer;
+    expect(session.worldEditorExecutable).toBeUndefined();
     await setUnitFields(studio, [["h001", "uhpm", 700]]);
 
     const saved = await request(studio, "/api/save", { json: {} });
 
     expect((saved.body as SaveAnswer).reload).toBe("no-executable");
+  });
+
+  it("reloads with World Editor.exe beside the game's when started without its executable (#873)", async () => {
+    const project = mapProject();
+    const editor = worldEditor(project);
+    const game = await syntheticGame();
+    const executable = path.join(path.dirname(game), "World Editor.exe");
+    fs.mkdirSync(path.dirname(executable), { recursive: true });
+    fs.writeFileSync(executable, "");
+    const studio = await start(project, {
+      gameExecutable: game,
+      worldEditorCheck: editor.options.worldEditorCheck,
+      worldEditorReload: editor.options.worldEditorReload,
+    });
+    const session = (await request(studio, "/api/session"))
+      .body as SessionAnswer;
+    expect(session.worldEditorExecutable).toBe(executable);
+    editor.open();
+    await setUnitFields(studio, [["h001", "uhpm", 700]]);
+
+    const saved = await request(studio, "/api/save", {
+      json: { reloadWorldEditor: true },
+    });
+
+    expect((saved.body as SaveAnswer).reload).toBe("sent");
+    expect(editor.state.launched).toEqual([
+      [executable, ["-launch", "-loadfile", path.resolve(project.mapFolder)]],
+    ]);
+  });
+
+  it("names the executable it was given in the session", async () => {
+    const project = mapProject();
+    const editor = worldEditor(project);
+    const studio = await start(project, editor.options);
+
+    const session = (await request(studio, "/api/session"))
+      .body as SessionAnswer;
+
+    expect(session.worldEditorExecutable).toBe(editor.state.executable);
   });
 });
 
