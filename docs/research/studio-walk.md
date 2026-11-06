@@ -4,9 +4,9 @@ The walk [#843](https://github.com/phmilk/reforged-ts/issues/843) left to a pers
 
 ## TL;DR
 
-- **The World Editor reloads the map it holds on `-launch -loadfile` only right after it saved that map itself** (Observed, eight sends). Otherwise it shows "The file '<path>' is already open and active." and keeps the map as it loaded it, while the Studio's toast says "The World Editor reloads the map." [#871](https://github.com/phmilk/reforged-ts/issues/871).
-- **A World Editor save that puts back the Studio's last save is detected** (Observed): "A World Editor save put back 1 field the Studio had saved", with "Apply them again", "Show" and "Keep the World Editor's", each of which works. When the World Editor never loaded the Studio's save before the last one, its value is a third one and nothing is offered (Observed). Together with the reload above, an edit can be lost without a word (Inferred).
-- **The rest of ADR 0015's behaviour holds** (Observed): the Studio creates, edits and deletes objects, reloads on a change on disk, refuses to save while the World Editor's title ends in ` *]`, merges its unsaved edits on top of a World Editor save, shows Object definitions read-only, and loses nothing across five World Editor saves while it runs.
+- **The World Editor reloads the map it holds on `-launch -loadfile` only right after it saved that map itself** (Observed, eight sends). Otherwise it shows "The file '<path>' is already open and active." and keeps the map as it loaded it, while the Studio's toast says "The World Editor reloads the map.": [#871](https://github.com/phmilk/reforged-ts/issues/871).
+- **A World Editor save that puts back the Studio's last save is detected** (Observed): "A World Editor save put back 1 field the Studio had saved", with "Apply them again", "Show" and "Keep the World Editor's", each of which works. When the World Editor never loaded the Studio's save before the last one, its value is a third one and nothing is offered (Observed). Together with the reload above, an edit is lost without a word (Observed, the 2000 below).
+- **The rest of ADR 0015's behaviour holds** (Observed), the offer to reapply aside: the Studio creates, edits and deletes objects, reloads on a change on disk, refuses to save while the World Editor's title ends in ` *]`, merges its unsaved edits on top of a World Editor save, shows Object definitions read-only, and loses nothing across five World Editor saves while it runs.
 - **An Object definition shows its base's values** (Observed), not its own: [#872](https://github.com/phmilk/reforged-ts/issues/872).
 - **The layout is #476's** (Observed): A's tabs, tree and field table, C's global search and "Differs from", B's Table mode, the Diff of unsaved changes and since the last commit, icon and model pickers with a live preview. The differences that matter are [#873](https://github.com/phmilk/reforged-ts/issues/873), [#874](https://github.com/phmilk/reforged-ts/issues/874) and [#875](https://github.com/phmilk/reforged-ts/issues/875).
 
@@ -22,7 +22,7 @@ It ran without `--world-editor` at first. With no default for it, a save offered
 
 ## A save, and a reload in the World Editor
 
-A Custom unit `h000` made with "New object" from the Footman, its Name set to "Studio Footman" and Hit Points Maximum (Base) to 999, then 1000, with the box ticked (Observed):
+A Custom object `h000`, a unit made with "New object" from the Footman, its Name set to "Studio Footman" and Hit Points Maximum (Base) (`uhpm`) to 999, then 1000, with the box ticked (Observed):
 
 - The save wrote `war3map.w3u` (`h000` from `hfoo`, `uhpm` 999), `war3mapSkin.w3u` (`unam` = `TRIGSTR_007`) and `war3map.wts` (STRING 7, "Studio Footman", under the comment `// Units: h000 (Studio Footman), Name (Name)`).
 - On the second save the World Editor reloaded in the same process: a few dialogs flashed, the map's clock went back to zero, and the title changed from `[c/Users/…]` (the map opened through File, Open) to `[C:/Users/…]` (the path `-loadfile` gave). The Object Editor, open across the reload, then listed Custom Units (1), Studio Footman, 1000 hit points.
@@ -64,7 +64,7 @@ The World Editor placed a Studio Footman and saved. "Delete" on `h000` (Observed
 
 ## Object definitions, read-only
 
-A Custom unit `h001` from the Rifleman, Name "Code Rifleman", saved, then "Adopt into code" (Observed):
+A Custom object `h001`, a unit from the Rifleman, Name "Code Rifleman", saved, then "Adopt into code" (Observed):
 
 - "Adopted the unit h001 into src/objects/unit/CodeRifleman_h001.ts.": `defineUnit({ rawcode: "h001", base: FourCC("hrif"), fields: { unam: "Code Rifleman" } })`, and an `object-manifest.json` that owns it. The map folder was not written.
 - The tree moved it under Object definitions (1), with a lock. Its header reads "🔒 Object definition · src/objects/unit/CodeRifleman_h001.ts" and "Read-only: defined in src/objects/unit/CodeRifleman_h001.ts, line 4.", with "Open in editor" and only Compare left of the actions. Values are text with no picker, and a click edits nothing.
@@ -77,7 +77,7 @@ Five World Editor saves while the Studio ran (19:27 to 20:04) each wrote the who
 
 ## Compared with #476
 
-As decided (Observed unless marked):
+What #476 decided and the Studio does (Observed unless marked):
 
 - A's layout: tabs per Object kind, a tree, a field table of Field, Id and Value, with display and raw values side by side ("Code Rifleman TRIGSTR_007", "Large (large)").
 - The tree groups by origin first (Custom objects, Object definitions, Built-in objects), then the World Editor's grouping within a race: Campaign and Melee, then Heroes, Buildings and Units.
@@ -89,11 +89,13 @@ As decided (Observed unless marked):
 - The Diff of unsaved changes, and since the last commit in the text `git diff` gives with the textconv driver.
 - Icons in the tree, the header and the icon fields; the icon picker, a grid filtered by path with "Use this path".
 - Model fields with a thumbnail and their path, and a model picker of 3473 paths searched by path, with a live 3D preview that follows the selection.
-- The delete's confirmation names the placements; reset to base, copy, compare and undo across saves are offered.
+- The delete's confirmation names the placements; reset to base, copy, compare and undo across saves are offered (the buttons seen; Compare not walked, below).
+- "Open in editor" is shown on an Object definition; that it runs `code -g` was not walked.
 
 The differences (Observed unless marked):
 
 - The race groups read raw `WESTRING_RACE_*` keys, and three Human units (Dragonhawk Rider, Priest, Sorceress) have no icon: [#874](https://github.com/phmilk/reforged-ts/issues/874).
-- Requirements shows `hbla` as text, not the linked chip #476 calls for; the walker missed "New object" and the Diff's second tab, the header overflows at a half-screen width, and a few labels: [#875](https://github.com/phmilk/reforged-ts/issues/875).
-- After a quiet reload, the banner says "The map folder changed on disk: the Studio read it again." with Dismiss, without #476's "Show what changed" (Observed). Added to [#875](https://github.com/phmilk/reforged-ts/issues/875#issuecomment-6672456535): the Diff since the last commit is no substitute while the World Editor's change is not committed.
-- Compare, Table mode bulk edits, the Rawcode suggestion and deep links to an unknown Rawcode were not walked: [#876](https://github.com/phmilk/reforged-ts/issues/876).
+- Requirements shows `hbla` as text, not the linked chip #476 calls for; "New object" is hard to find, the Diff's two tabs read as plain buttons, the header overflows at a half-screen width, the Save button's `Ctrl+S` hint is nearly invisible, and the Table mode counts "1 objects": [#875](https://github.com/phmilk/reforged-ts/issues/875).
+- After a quiet reload, the banner quoted above says the folder was read again, with Dismiss, without #476's "Show what changed". Added to [#875](https://github.com/phmilk/reforged-ts/issues/875#issuecomment-6672456535): the Diff since the last commit is no substitute while the World Editor's change is not committed.
+- #476 has a save warn while the World Editor holds unsaved edits; the Studio refuses it instead, as Spec [#829](https://github.com/phmilk/reforged-ts/issues/829) settled (Observed, the delete above).
+- Compare, Table mode bulk edits, the Rawcode suggestion and deep links to an unknown Rawcode were not walked, nor were per-level field rows ("Cooldown · level 2"), the Modified Built-in chip and its reset, the `B000` shared-Rawcode chip and its `?kind=` page, the dialog for a field both sides changed, the counter of unsaved changes and "Open in editor" running `code -g`: [#876](https://github.com/phmilk/reforged-ts/issues/876).
