@@ -526,7 +526,7 @@ describe("saving in the Studio", () => {
     ]);
   });
 
-  it("names the executable it was given in the session", async () => {
+  it("names the executable it was given in the session (#873)", async () => {
     const project = mapProject();
     const editor = worldEditor(project);
     const studio = await start(project, editor.options);

@@ -5,7 +5,9 @@
  * folders. The install is the folder that holds `.build.info`: the nearest
  * one at or above the argument or the executable (the executable sits in
  * `<install>/_retail_/x86_64`). The `reforged-builtins` generator and the
- * real-install check (`./check-install.ts`) find it so.
+ * real-install check (`./check-install.ts`) find it so. The World Editor's
+ * executable, `World Editor.exe`, sits beside the game's: the Studio's
+ * reload after a save defaults to it (`findWorldEditor`).
  *
  * `isWsl` mirrors the Probe runner's (`probe/src/machine.ts`): the packages
  * share no code, and `reforged-builtins`' `test/probe-parity.test.ts` pins
