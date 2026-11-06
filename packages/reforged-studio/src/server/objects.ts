@@ -420,7 +420,6 @@ export function detailOf(
   const base = baseRawcode(object);
   const baseValues = kind.objects.get(base)?.values;
   const entries = fieldTable?.fields[object.kind];
-  // A Built-in object the map does not modify has no modification.
   const inMap = object.origin !== "builtin";
   const key = objectKey(object.kind, object.rawcode);
   const modifications = inMap ? (working.get(key)?.modifications ?? []) : [];

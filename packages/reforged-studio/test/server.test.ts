@@ -1022,11 +1022,11 @@ describe("the Studio's Object adoption", () => {
     });
     const found = (await request(studio, "/api/objects/hfoo?kind=unit"))
       .body as RawcodeAnswer;
+    if (found.status !== "known") throw new Error(found.status);
     expect(found).toMatchObject({
       selected: { origin: "definition", builtinName: "Footman" },
     });
     // Its rows differ from the Built-in object it changes.
-    if (found.status !== "known") throw new Error(found.status);
     expect(
       found.selected?.fields.find((row) => row.id === "unam"),
     ).toMatchObject({ base: "Footman", display: "Militia", modified: true });
