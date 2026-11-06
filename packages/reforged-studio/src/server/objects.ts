@@ -406,8 +406,10 @@ const rawcodesOf = (value: string): string[] =>
  * One object's field table: each field of its kind the install knows (but a
  * field specific to other bases), one row per level for a field of levels,
  * with its base's value and the working state's modification; then each
- * modification of a field the install does not know. Each row says the
- * input it edits with, from the field table.
+ * modification of a field the install does not know. An Object
+ * definition's modifications are the map folder's, as Object sync wrote
+ * them, and its rows are read-only. Each row says the input it edits with,
+ * from the field table.
  */
 export function detailOf(
   object: ListedObject,
@@ -418,7 +420,9 @@ export function detailOf(
   const base = baseRawcode(object);
   const baseValues = kind.objects.get(base)?.values;
   const entries = fieldTable?.fields[object.kind];
-  const inMap = object.origin === "custom" || object.origin === "modified";
+  // An Object definition's fields are the ones Object sync wrote to the map
+  // folder; a Built-in object the map does not modify has none.
+  const inMap = object.origin !== "builtin";
   const key = objectKey(object.kind, object.rawcode);
   const modifications = inMap ? (working.get(key)?.modifications ?? []) : [];
   const savedModifications = inMap ? (saved.get(key)?.modifications ?? []) : [];

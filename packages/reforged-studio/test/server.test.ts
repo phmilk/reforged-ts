@@ -21,6 +21,7 @@ import {
   type RawcodeAnswer,
   type SearchAnswer,
   type SessionAnswer,
+  type TableAnswer,
 } from "../src/index.js";
 import {
   closeStudios,
@@ -1022,6 +1023,38 @@ describe("the Studio's Object adoption", () => {
     const found = (await request(studio, "/api/objects/hfoo?kind=unit"))
       .body as RawcodeAnswer;
     expect(found).toMatchObject({ selected: { origin: "definition" } });
+  });
+
+  it("shows an adopted object's fields as the map folder holds them, modified and read-only, and counts them in the Table mode", async () => {
+    const studio = await start(mapProject());
+    await adopt(studio, "unit", "h000");
+
+    const found = (await request(studio, "/api/objects/h000?kind=unit"))
+      .body as RawcodeAnswer;
+    if (found.status !== "known") throw new Error(found.status);
+    const name = found.selected?.fields.find((row) => row.id === "unam");
+    expect(name).toMatchObject({
+      base: "Footman",
+      value: "Captain",
+      display: "Captain",
+      modified: true,
+      unsaved: false,
+    });
+    expect(name?.input).toBeUndefined();
+    expect(
+      found.selected?.fields.filter((row) => row.modified).map((row) => row.id),
+    ).toEqual(["unam"]);
+
+    const table = (await request(studio, "/api/table?kind=unit"))
+      .body as TableAnswer;
+    expect(table.columns.map((column) => column.id)).toEqual(["unam"]);
+    const row = table.rows.find((candidate) => candidate.rawcode === "h000");
+    expect(row?.origin).toBe("definition");
+    expect(row?.cells[0]).toMatchObject({
+      display: "Captain",
+      modified: true,
+      editable: false,
+    });
   });
 
   it("formats the definition file with the Map project's Prettier, as objects:adopt does", async () => {
