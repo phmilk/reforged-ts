@@ -72,9 +72,9 @@ function keepAutoReload(on: boolean): void {
   }
 }
 
-/** Why the automatic reload is disabled when the Studio has no World Editor executable. */
+/** Why the Studio cannot reload the World Editor, without its executable: beside the disabled box, and after a save. */
 const NO_WORLD_EDITOR_REASON =
-  "No World Editor.exe beside the game's: start the Studio with worldEditorExecutable (--world-editor) to reload the map there.";
+  "No World Editor.exe beside the game's: start the Studio with --world-editor <executable> (worldEditorExecutable) to reload the map there.";
 
 /** Whether a key press goes to a field the author types in, which keeps its own undo. */
 function typing(target: EventTarget | null): boolean {
