@@ -23,7 +23,9 @@ import type {
   GameField,
   GameKind,
 } from "../game-data.js";
+import { ART_LAYERS } from "../art-layer.js";
 import { OBJECT_KINDS } from "../kinds.js";
+import type { ArtLayer } from "../paths.js";
 import {
   OBJECT_ORIGINS,
   type DefinitionSource,
@@ -134,10 +136,16 @@ function groupOf(
     .filter((label) => label !== "");
 }
 
+/** A base value's first level as a path: none when it is empty. */
+const pathOf = (value: FieldValue | undefined): string | undefined =>
+  firstValue(value) || undefined;
+
 /**
- * The path of an object's icon: the working state's modification of its
- * kind's icon field, else its base's value (a Custom object's base, else
- * its own Built-in object's); undefined when neither holds one.
+ * The paths of an object's icon (`ListedObject.icon` and `layerIcons`):
+ * the working state's modification of its kind's icon field, in every
+ * art layer; else its base's value (a Custom object's base, else its own
+ * Built-in object's), each layer's own over the shared one. Empty when
+ * neither holds one.
  */
 function iconOf(
   kind: ObjectKind,
@@ -145,9 +153,9 @@ function iconOf(
   baseRawcode: string,
   working: ObjectState,
   gameData: GameData,
-): string | undefined {
+): Pick<ListedObject, "icon" | "layerIcons"> {
   const field = iconField(gameData.kinds[kind]);
-  if (field === undefined) return undefined;
+  if (field === undefined) return {};
   const modification = working
     .get(objectKey(kind, rawcode))
     ?.modifications.find(
@@ -155,12 +163,21 @@ function iconOf(
         candidate.field === field.id && (candidate.level ?? 1) === 1,
     );
   if (modification !== undefined) {
-    return String(modification.value) || undefined;
+    const icon = String(modification.value) || undefined;
+    return icon === undefined ? {} : { icon };
   }
-  const first = firstValue(
-    gameData.kinds[kind].objects.get(baseRawcode)?.values.get(field.id),
-  );
-  return first === undefined || first === "" ? undefined : first;
+  const base = gameData.kinds[kind].objects.get(baseRawcode);
+  const icon = pathOf(base?.values.get(field.id));
+  const layerIcons: Partial<Record<ArtLayer, string>> = {};
+  for (const layer of ART_LAYERS) {
+    const path = pathOf(base?.layerValues[layer].get(field.id)) ?? icon;
+    if (path !== undefined) layerIcons[layer] = path;
+  }
+  const differs = ART_LAYERS.some((layer) => layerIcons[layer] !== icon);
+  return {
+    ...(icon !== undefined && { icon }),
+    ...(differs && { layerIcons }),
+  };
 }
 
 /** The Object definition of a listed object, when one defines it. */
@@ -311,7 +328,7 @@ export function composeObjects(sources: ObjectSources): ListedObject[] {
       return {
         ...object,
         ...(group !== undefined && { group }),
-        ...(icon !== undefined && { icon }),
+        ...icon,
         shared: (kindsOf.get(object.rawcode)?.size ?? 0) > 1,
       };
     })

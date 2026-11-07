@@ -55,5 +55,12 @@ export const FOOTMAN_ICON = dds(0xf800);
 export const FOOTMAN_ICON_FILE =
   "War3.w3mod:_HD.w3mod:ReplaceableTextures/CommandButtons/BTNFootman.dds";
 
+/** The Town Hall's icon in HD of the synthetic install, pure green: its skin file names it under `Art:hd` only. */
+export const TOWN_HALL_ICON = dds(0x07e0);
+
+/** The path the synthetic install holds the Town Hall's HD icon at, in its HD layer. */
+export const TOWN_HALL_ICON_FILE =
+  "War3.w3mod:_HD.w3mod:ReplaceableTextures/CommandButtons/BTNTownHallV1.dds";
+
 /** An icon a map imports, pure blue. */
 export const IMPORTED_ICON = blp([0, 0, 255]);

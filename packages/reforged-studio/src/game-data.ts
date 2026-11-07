@@ -24,6 +24,8 @@ import {
   WORLD_EDIT_SECTION,
   type LayeredGameDataSet,
 } from "./layers.js";
+import { ART_LAYERS } from "./art-layer.js";
+import type { ArtLayer } from "./paths.js";
 import { Profile } from "./profile.js";
 import { parseSlk } from "./slk.js";
 
@@ -112,6 +114,13 @@ export interface GameObject {
    * specific to other objects has none.
    */
   values: ReadonlyMap<string, FieldValue>;
+  /**
+   * The values the profile files give it under an art layer's own keys, by
+   * art layer and field id, which that layer reads over `values`: the
+   * Priest's icon is `Art:sd=` and `Art:hd=` only, with no `Art=`. A field
+   * with no such key in a layer has none there.
+   */
+  layerValues: Readonly<Record<ArtLayer, ReadonlyMap<string, FieldValue>>>;
 }
 
 /** One Object kind of the model. */
@@ -135,7 +144,10 @@ export interface GameData {
   kinds: Readonly<Record<ObjectKind, GameKind>>;
   /**
    * The text `value` shows: a `WESTRING_` key resolved through the editor
-   * strings, `undefined` when they do not hold it; any other value as it is.
+   * strings, through each key a value is in turn
+   * (`WESTRING_UE_UNITRACE_HUMAN` is `WESTRING_RACE_HUMAN`, which is
+   * "Human"), `undefined` when they do not hold one or one leads back to
+   * itself; any other value as it is.
    */
   text(value: string): string | undefined;
   /**
@@ -177,10 +189,16 @@ export async function readGameData(
       editorStrings.add(await read(path), path);
     }
   }
-  const text = (value: string): string | undefined =>
-    value.startsWith("WESTRING_")
-      ? editorStrings.get(WORLD_EDIT_SECTION, value)
-      : value;
+  const text = (value: string): string | undefined => {
+    const seen = new Set<string>();
+    let shown: string | undefined = value;
+    while (shown?.startsWith("WESTRING_") === true) {
+      if (seen.has(shown.toLowerCase())) return undefined;
+      seen.add(shown.toLowerCase());
+      shown = editorStrings.get(WORLD_EDIT_SECTION, shown);
+    }
+    return shown;
+  };
 
   const editorData = new Profile();
   const editorDataPath = BASE_LAYER + EDITOR_DATA;
@@ -264,15 +282,41 @@ export async function readGameData(
         continue;
       }
       const values = new Map<string, FieldValue>();
+      const layerValues = {
+        sd: new Map<string, FieldValue>(),
+        hd: new Map<string, FieldValue>(),
+        de: new Map<string, FieldValue>(),
+      };
       for (const field of fields.values()) {
         if (field.specific !== undefined && !field.specific.includes(rawcode)) {
           continue;
         }
-        const value =
-          field.table === "Profile"
-            ? profileValue(profile, rawcode, field, gameDataSet.qualifier)
-            : tableValue(tables.get(field.table), rawcode, field);
+        if (field.table !== "Profile") {
+          const value = tableValue(tables.get(field.table), rawcode, field);
+          if (value !== undefined) values.set(field.id, value);
+          continue;
+        }
+        const value = profileValue(
+          profile,
+          rawcode,
+          field,
+          gameDataSet.qualifier,
+        );
         if (value !== undefined) values.set(field.id, value);
+        for (const layer of ART_LAYERS) {
+          const layered = LAYER_KEYS[layer]
+            .map((suffix) =>
+              profileValue(
+                profile,
+                rawcode,
+                field,
+                gameDataSet.qualifier,
+                suffix,
+              ),
+            )
+            .find((found) => found !== undefined);
+          if (layered !== undefined) layerValues[layer].set(field.id, layered);
+        }
       }
       const cell = (table: string, column: string) =>
         tables.get(table)?.rows.get(rawcode)?.get(column) ?? "";
@@ -286,6 +330,7 @@ export async function readGameData(
           cell,
         ),
         values,
+        layerValues,
       });
     }
 
@@ -336,23 +381,45 @@ async function objectProfile(
 }
 
 /**
+ * The suffixes of the keys an art layer reads in the profile files, the
+ * first found winning: its own (`Art:hd`), and for DE then HD's. DE takes
+ * HD's because the install gives `Art:de` only where DE's icon is not HD's:
+ * the Priest (`hmpr`) has `Art:sd` and `Art:hd=…BTNPriestV1.blp`, no
+ * `Art:de`, and `BTNPriestV1` is a file of the HD and DE layers only; the
+ * Dragonhawk Rider (`hdhw`), whose DE icon is another, has its `Art:de`.
+ * The rule is read from the install's files (#874); no Probe run has
+ * measured it in the game.
+ */
+const LAYER_KEYS: Readonly<Record<ArtLayer, readonly string[]>> = {
+  sd: ["sd"],
+  hd: ["hd"],
+  de: ["de", "hd"],
+};
+
+/**
  * A field's value in the profile files: the set's own (`Name:custom,V1`)
- * over the shared one (`Name`). A field of levels gives each item of its
- * list, or, with `appendIndex`, each key of a level (`Requires`,
- * `Requires1`…); a field of an `index` the item it names; else the whole
- * value.
+ * over the shared one (`Name`); under an art layer's key with `layer`
+ * (`Art:hd:custom,V0` over `Art:hd`), and none when the layer has no key
+ * of its own. A field of levels gives each item of its list, or, with
+ * `appendIndex`, each key of a level (`Requires`, `Requires1`…); a field
+ * of an `index` the item it names; else the whole value.
  */
 function profileValue(
   profile: Profile,
   rawcode: string,
   field: GameField,
   qualifier: string | undefined,
+  layer?: string,
 ): FieldValue | undefined {
-  const items = (key: string) =>
-    (qualifier === undefined
-      ? undefined
-      : profile.items(rawcode, `${key}:${qualifier}`)) ??
-    profile.items(rawcode, key);
+  const items = (name: string) => {
+    const key = layer === undefined ? name : `${name}:${layer}`;
+    return (
+      (qualifier === undefined
+        ? undefined
+        : profile.items(rawcode, `${key}:${qualifier}`)) ??
+      profile.items(rawcode, key)
+    );
+  };
   if (field.appendIndex) {
     const levels: string[] = [];
     for (let level = 0; ; level++) {

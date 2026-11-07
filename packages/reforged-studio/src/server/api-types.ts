@@ -75,6 +75,14 @@ export interface ListedObject {
    * absent when it has none. `GET /api/files?path=` serves it.
    */
   readonly icon?: string;
+  /**
+   * The path of its icon in each art layer, by layer, when its base's value
+   * is another in one of them: the install gives the Priest's (`hmpr`)
+   * under the layers' keys only (`Art:sd`, `Art:hd`), so it has no `icon`.
+   * A layer with no path has no entry; absent when the path is `icon` in
+   * every layer, and for its own modification, which every layer shows.
+   */
+  readonly layerIcons?: Readonly<Partial<Record<ArtLayerName, string>>>;
   /** Whether the map's Game data set holds it: false for a Built-in object outside it. */
   readonly inGameDataSet: boolean;
   /** Whether an object of another Object kind has its Rawcode (`B000`). */

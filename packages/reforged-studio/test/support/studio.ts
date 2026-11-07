@@ -19,7 +19,12 @@ import {
 } from "../../src/index.js";
 import { writeStorage } from "./casc.js";
 import { GAME_FILES } from "./game.js";
-import { FOOTMAN_ICON, FOOTMAN_ICON_FILE } from "./images.js";
+import {
+  FOOTMAN_ICON,
+  FOOTMAN_ICON_FILE,
+  TOWN_HALL_ICON,
+  TOWN_HALL_ICON_FILE,
+} from "./images.js";
 
 const require = createRequire(import.meta.url);
 
@@ -115,7 +120,7 @@ export function mapProject(
 }
 
 /**
- * The game's executable of a synthetic install, with the Footman's icon and
+ * The game's executable of a synthetic install, with the Footman's and the Town Hall's icons and
  * `files` by their paths in the storage, which the Studio finds the install
  * from.
  */
@@ -123,7 +128,12 @@ export async function syntheticGame(
   files: Readonly<Record<string, string | Uint8Array>> = {},
 ): Promise<string> {
   const { installDir } = await writeStorage({
-    files: { ...GAME_FILES, [FOOTMAN_ICON_FILE]: FOOTMAN_ICON, ...files },
+    files: {
+      ...GAME_FILES,
+      [FOOTMAN_ICON_FILE]: FOOTMAN_ICON,
+      [TOWN_HALL_ICON_FILE]: TOWN_HALL_ICON,
+      ...files,
+    },
   });
   temporary.push(installDir);
   return path.join(installDir, "_retail_", "x86_64", "Warcraft III.exe");
