@@ -184,6 +184,10 @@ function fillable(answer: TableAnswer, index: number): string[] {
     .map((row) => row.rawcode);
 }
 
+/** A count and its noun, in the singular for one: `1 object`, `3 objects`. */
+const counted = (count: number, noun: string): string =>
+  `${String(count)} ${noun}${count === 1 ? "" : "s"}`;
+
 /** The Table mode of one kind. */
 export function TableMode(props: {
   readonly kind: ObjectKind;
@@ -242,8 +246,9 @@ export function TableMode(props: {
           Show every field
         </label>
         {answer !== undefined && (
-          <span className="muted">
-            {answer.rows.length} objects · {answer.columns.length} fields
+          <span className="muted" data-testid="table-count">
+            {counted(answer.rows.length, "object")} ·{" "}
+            {counted(answer.columns.length, "field")}
           </span>
         )}
       </div>
@@ -280,7 +285,7 @@ export function TableMode(props: {
                         type="button"
                         className="link"
                         aria-label={`Fill ${columnName(column)}`}
-                        title={`Set, add to, multiply or reset it on the ${String(rawcodes.length)} objects shown, as one step`}
+                        title={`Set, add to, multiply or reset it on the ${counted(rawcodes.length, "object")} shown, as one step`}
                         disabled={rawcodes.length === 0}
                         onClick={() => {
                           onBulk({ kind, rawcodes, column });

@@ -36,13 +36,23 @@ export interface Watch {
   resync(): void;
 }
 
+/** Whether two polls read the same stamps for the same files. */
+function same(a: ReadonlyMap<string, string>, b: ReadonlyMap<string, string>) {
+  return (
+    a.size === b.size && [...a].every(([file, stamp]) => b.get(file) === stamp)
+  );
+}
+
 /**
  * Polls the files `list` gives, listed again at each poll, once every
  * {@link POLL_INTERVAL}; calls `changed` with the files whose stamp
  * changed, appeared or disappeared since the last poll that `changed`
- * accepted. When `changed` returns false (the change could not be read yet,
- * such as a map folder a World Editor save is replacing), the next poll
- * reports the change again.
+ * accepted, once two polls in a row read the same stamps: a World Editor
+ * save writes its files one after another, and is reported once, when it
+ * is done, so that what the change offers (a reload, a merge) reads the
+ * whole save. When `changed` returns false (the change could not be read
+ * yet, such as a map folder a World Editor save is replacing), the next
+ * poll reports the change again.
  *
  * @param list - The files to watch, absolute.
  * @param changed - Told the files that changed; returns whether it took the change.
@@ -53,8 +63,13 @@ export function watchFiles(
   changed: (files: readonly string[]) => boolean,
 ): Watch {
   let known = stamps(list());
+  // The stamps the last poll read, to tell a save still writing.
+  let last = known;
   const timer = setInterval(() => {
     const now = stamps(list());
+    const settled = same(now, last);
+    last = now;
+    if (!settled) return;
     const files = [...new Set([...known.keys(), ...now.keys()])].filter(
       (file) => known.get(file) !== now.get(file),
     );
@@ -67,6 +82,7 @@ export function watchFiles(
     },
     resync() {
       known = stamps(list());
+      last = known;
     },
   };
 }

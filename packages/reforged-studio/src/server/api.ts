@@ -1020,7 +1020,7 @@ function reloadFromDisk(context: ApiContext): Answer {
   let replay: Replay = { replayed: 0, notReplayed: [] };
   try {
     if (session.counts().unsavedEdits > 0) replay = session.replayOnDisk();
-    else session.reopen();
+    else session.reload();
   } catch (error) {
     if (error instanceof MapFolderError) {
       return refuse(409, "map-folder-unreadable", error.message);
@@ -1304,14 +1304,37 @@ async function adopt(
 }
 
 /**
- * Answers `GET /api/diff?against=saved|head`: the unsaved changes, or the
- * changes since the last commit, in the text of `reforged-map`'s
- * `textconv` function.
+ * Answers `GET /api/diff?against=saved|head|reload`: the unsaved changes,
+ * the changes since the last commit, or what the last change on disk the
+ * Studio read brought, in the text of `reforged-map`'s `textconv` function.
  */
 function diff(context: ApiContext, query: URLSearchParams): Answer {
   const against = query.get("against") ?? "saved";
-  if (against !== "saved" && against !== "head") {
-    return refuse(400, "bad-request", "The query is ?against=saved|head.");
+  if (against !== "saved" && against !== "head" && against !== "reload") {
+    return refuse(
+      400,
+      "bad-request",
+      "The query is ?against=saved|head|reload.",
+    );
+  }
+  if (against === "reload") {
+    const reload = context.session.lastReload;
+    if (reload === undefined) {
+      return new Answer(200, {
+        against,
+        available: false,
+        reason:
+          "The Studio has not read the map folder again since it started: no change on disk to show.",
+      } satisfies DiffAnswer);
+    }
+    return new Answer(200, {
+      against,
+      available: true,
+      files: diffFiles((file) => reload.before.get(file), reload.after, [
+        ...reload.before.keys(),
+        ...reload.after.keys(),
+      ]),
+    } satisfies DiffAnswer);
   }
   const files = context.session.files();
   const names = [...files.saved.keys(), ...files.working.keys()];

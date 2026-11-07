@@ -205,7 +205,7 @@ export const api = {
   /** Adopts a Custom object or a modified Built-in object into the code, or throws the refusal. */
   adopt: (kind: string, rawcode: string) =>
     post<AdoptAnswer>("/adopt", { kind, rawcode }),
-  diff: (against: "saved" | "head") =>
+  diff: (against: DiffAnswer["against"]) =>
     get<DiffAnswer>(`/diff?against=${against}`),
   icons: () => get<IconsAnswer>("/icons"),
   /** The models' paths of the map's imports and the install whose path holds the text. */

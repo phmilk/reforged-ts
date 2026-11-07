@@ -14,7 +14,8 @@
  * previews are read in.
  * Bulk editing (#836): the Table mode (`./table.tsx`), and the bulk edit of
  * the objects Ctrl+clicked in the tree (`./bulk.tsx`).
- * Turns with the World Editor (#837): the banner "Reload and keep my edits
+ * Turns with the World Editor (#837): the banner of a change on disk read
+ * quietly, with "Show what changed" (#875), the banner "Reload and keep my edits
  * on top" after a change on disk under unsaved edits, the conflicts dialog,
  * and the banner of the fields a World Editor save put back, with "Apply
  * them again", "Show" and "Keep the World Editor's" (`./turns.tsx`).
@@ -26,6 +27,7 @@ import { createRoot } from "react-dom/client";
 import type {
   AdoptAnswer,
   ArtLayerName,
+  DiffAnswer,
   ObjectDetail,
   ObjectsAnswer,
   RawcodeAnswer,
@@ -106,6 +108,8 @@ interface Toast {
   readonly reload?: boolean;
   /** Whether it reports a refusal. */
   readonly refused?: boolean;
+  /** Whether it offers "Show what changed", the diff of the change on disk the Studio read. */
+  readonly changes?: boolean;
 }
 
 /** The toast's text after a save. */
@@ -147,7 +151,8 @@ function App() {
   const [version, setVersion] = useState(0);
   const [counts, setCounts] = useState<SessionCounts>();
   const [toast, setToast] = useState<Toast>();
-  const [diffing, setDiffing] = useState(false);
+  /** The Diff's tab while it is open. */
+  const [diffing, setDiffing] = useState<DiffAnswer["against"]>();
   const [autoReload, setAutoReload] = useState(readAutoReload);
   const [creating, setCreating] = useState<CreateStart>();
   const [deleting, setDeleting] = useState<Selection>();
@@ -260,6 +265,7 @@ function App() {
           ...(kept === "" ? [] : [`Not replayed: ${kept}`]),
         ].join(" "),
         refused: kept !== "",
+        changes: true,
       });
     }, refused);
   };
@@ -505,15 +511,16 @@ function App() {
           )}
           <button
             type="button"
+            className="create-button"
+            title="Create a Custom object of the kind shown, as the World Editor's Object Editor does"
             onClick={() => {
               setCreating({ kind: kind as CreateStart["kind"] });
             }}
           >
-            New object
+            <span aria-hidden="true">+</span> New object
           </button>
           <button
             type="button"
-            className="search-button"
             onClick={() => {
               setSearching(true);
             }}
@@ -547,7 +554,7 @@ function App() {
             <button
               type="button"
               onClick={() => {
-                setDiffing(true);
+                setDiffing("saved");
               }}
             >
               Diff
@@ -594,6 +601,16 @@ function App() {
                 Reload in the World Editor
               </button>
             )}{" "}
+            {toast.changes === true && (
+              <button
+                type="button"
+                onClick={() => {
+                  setDiffing("reload");
+                }}
+              >
+                Show what changed
+              </button>
+            )}{" "}
             <button
               type="button"
               className="link"
@@ -606,8 +623,16 @@ function App() {
           </p>
         )}
         {banner !== undefined && (
-          <p className="banner">
+          <p className="banner" data-testid="reloaded">
             {banner}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                setDiffing("reload");
+              }}
+            >
+              Show what changed
+            </button>{" "}
             <button
               type="button"
               onClick={() => {
@@ -861,10 +886,11 @@ function App() {
             }}
           />
         )}
-        {diffing && (
+        {diffing !== undefined && (
           <DiffDialog
+            against={diffing}
             onClose={() => {
-              setDiffing(false);
+              setDiffing(undefined);
             }}
           />
         )}

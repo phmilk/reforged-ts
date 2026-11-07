@@ -4,7 +4,8 @@
  * linked chips, an icon with its picker, a model with its preview and its
  * picker, `./models.tsx`), its reset, the refusal shown on
  * the field, a localizable field's translations read-only; and the diff of
- * the unsaved changes and of the changes since the last commit.
+ * the unsaved changes, of the changes since the last commit and of the
+ * last change on disk the Studio read.
  */
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { DiffAnswer, FieldRow } from "../src/server/api-types.js";
@@ -453,10 +454,32 @@ export function FieldEditor(props: {
   );
 }
 
-/** The diff of the unsaved changes, or of the changes since the last commit, as `git diff` shows it with the textconv driver. */
-export function DiffDialog(props: { readonly onClose: () => void }) {
+/** The Diff's tabs: what each compares, its label, and what it says when nothing differs. */
+const DIFF_TABS: readonly (readonly [DiffAnswer["against"], string, string])[] =
+  [
+    ["saved", "Unsaved changes", "No unsaved change."],
+    ["head", "Since the last commit", "No change since the last commit."],
+    [
+      "reload",
+      "Last reload from disk",
+      "The last reload read no change of the objects.",
+    ],
+  ];
+
+/**
+ * The diff of the unsaved changes, of the changes since the last commit,
+ * or of what the last quiet reload read from disk, as `git diff` shows it
+ * with the textconv driver.
+ */
+export function DiffDialog(props: {
+  /** The tab it opens on: the unsaved changes when left out. */
+  readonly against?: DiffAnswer["against"];
+  readonly onClose: () => void;
+}) {
   const { onClose } = props;
-  const [against, setAgainst] = useState<"saved" | "head">("saved");
+  const [against, setAgainst] = useState<DiffAnswer["against"]>(
+    props.against ?? "saved",
+  );
   const [answer, setAnswer] = useState<DiffAnswer>();
   const [error, setError] = useState<string>();
   useEffect(() => {
@@ -487,26 +510,19 @@ export function DiffDialog(props: { readonly onClose: () => void }) {
       <div className="dialog diff">
         <header>
           <div role="tablist" aria-label="Compare with">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={against === "saved"}
-              onClick={() => {
-                setAgainst("saved");
-              }}
-            >
-              Unsaved changes
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={against === "head"}
-              onClick={() => {
-                setAgainst("head");
-              }}
-            >
-              Since the last commit
-            </button>
+            {DIFF_TABS.map(([tab, label]) => (
+              <button
+                type="button"
+                role="tab"
+                key={tab}
+                aria-selected={against === tab}
+                onClick={() => {
+                  setAgainst(tab);
+                }}
+              >
+                {label}
+              </button>
+            ))}
           </div>
           <button type="button" className="link" onClick={onClose}>
             Close
@@ -519,9 +535,7 @@ export function DiffDialog(props: { readonly onClose: () => void }) {
           <p className="muted">{answer.reason}</p>
         ) : answer.files.length === 0 ? (
           <p className="muted">
-            {against === "saved"
-              ? "No unsaved change."
-              : "No change since the last commit."}
+            {DIFF_TABS.find(([tab]) => tab === against)?.[2]}
           </p>
         ) : (
           answer.files.map((file) => (

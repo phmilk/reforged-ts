@@ -14,6 +14,7 @@ import { openObjectData } from "reforged-map";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import type {
   Conflict,
+  DiffAnswer,
   ReloadFromDiskAnswer,
   RawcodeAnswer,
   TurnsAnswer,
@@ -174,6 +175,13 @@ describe("a change on disk", () => {
     expect(await shown(studio, "h001", "umvs")).toBe(400);
     expect(await shown(studio, "h001", "uhpm")).toBe(700);
     expect(await shown(studio, "h000", "unam")).toBe("Major");
+    // What the change on disk brought, without the edits put on top.
+    const brought = (await request(studio, "/api/diff?against=reload"))
+      .body as DiffAnswer;
+    if (!brought.available) throw new Error(brought.reason);
+    const text = brought.files.map((file) => file.diff).join("");
+    expect(text).toContain("+  umvs");
+    expect(text).not.toContain("uhpm");
 
     expect((await request(studio, "/api/save", { json: {} })).status).toBe(200);
     expect(onDisk(project, "h001", "umvs")).toBe(400);

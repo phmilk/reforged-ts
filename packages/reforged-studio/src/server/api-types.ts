@@ -696,25 +696,27 @@ export interface FileDiff {
 }
 
 /**
- * `GET /api/diff?against=saved|head`: the working state against the saved
- * state (`saved`, the unsaved changes), or against the files at `HEAD`
- * (`head`, the changes since the last commit), each Object data file in the
- * text of `reforged-map`'s `textconv` function, `war3map.wts` and the
- * locales' tables in their own text.
+ * `GET /api/diff?against=saved|head|reload`: the working state against the
+ * saved state (`saved`, the unsaved changes), or against the files at
+ * `HEAD` (`head`, the changes since the last commit), or the saved state
+ * before the last change on disk the Studio read against the one it read
+ * (`reload`, what the change brought), each Object data file in the text of
+ * `reforged-map`'s `textconv` function, `war3map.wts` and the locales'
+ * tables in their own text.
  */
 export type DiffAnswer =
   | {
-      /** What the working state is compared with. */
-      readonly against: "saved" | "head";
+      /** What is compared. */
+      readonly against: "saved" | "head" | "reload";
       /** The diff could be made. */
       readonly available: true;
       /** Each file that differs, in the order a save writes them. */
       readonly files: readonly FileDiff[];
     }
   | {
-      /** `head` only. */
-      readonly against: "head";
-      /** The map folder is not in a git repository. */
+      /** `head` or `reload` only. */
+      readonly against: "head" | "reload";
+      /** The map folder is not in a git repository (`head`), or the Studio has not read it again since it started (`reload`). */
       readonly available: false;
       /** Why, a message an author reads. */
       readonly reason: string;

@@ -316,7 +316,7 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
         return true;
       }
       try {
-        session.reopen();
+        session.reload();
       } catch {
         // The map folder cannot be read yet (a World Editor save replacing
         // it): the next poll tries again.

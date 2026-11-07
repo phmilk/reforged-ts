@@ -420,3 +420,36 @@ describe("the Studio's page, /objects/<rawcode>", () => {
     TIMEOUT,
   );
 });
+
+describe("the Studio's header", () => {
+  it(
+    "fits half a 1920-pixel screen, every control inside the window and on one line",
+    async () => {
+      // Half a 1920-pixel screen, less a scroll bar.
+      const page = await browser.newPage({
+        viewport: { width: 945, height: 800 },
+      });
+      await page.goto(studio.url + "/objects");
+      const header = page.locator("header.topbar");
+      // The session's name and the art layer's switch come with its answer.
+      await header.getByRole("group", { name: "Art layer" }).waitFor();
+
+      const misfits = await header.evaluate((element) => {
+        const width = document.documentElement.clientWidth;
+        const line = [...element.querySelectorAll("button")]
+          .find((button) => button.textContent === "Diff")
+          ?.getBoundingClientRect().height;
+        if (line === undefined) return ["no Diff button"];
+        return [...element.querySelectorAll("button, label")]
+          .filter((control) => {
+            const box = control.getBoundingClientRect();
+            return box.right > width || box.height > line + 1;
+          })
+          .map((control) => control.textContent);
+      });
+      expect(misfits).toEqual([]);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+});

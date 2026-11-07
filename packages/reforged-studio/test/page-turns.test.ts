@@ -157,4 +157,35 @@ describe("turns with the World Editor in the Studio's page", () => {
     },
     TIMEOUT,
   );
+
+  it(
+    "shows what a change on disk read quietly brought, from its banner",
+    async () => {
+      const { project, page } = await open("/objects/h001?kind=unit");
+      await page.locator('table.fields tr[data-field="uhpm"]').waitFor();
+
+      // Another editor saves with no unsaved edit in the Studio.
+      const other = openObjectData(project.mapFolder, {
+        projectRoot: project.root,
+      });
+      other.setField({ kind: "unit", rawcode: "h001", field: "uhpm" }, 800);
+      other.save(undefined, { worldEditorCheck: false });
+
+      const banner = page.getByTestId("reloaded");
+      await banner
+        .getByRole("button", { name: "Show what changed" })
+        .click({ timeout: WATCH_TIMEOUT });
+      const dialog = page.getByRole("dialog", { name: "Diff" });
+      expect(
+        await dialog
+          .getByRole("tab", { name: "Last reload from disk" })
+          .getAttribute("aria-selected"),
+      ).toBe("true");
+      await expect
+        .poll(() => dialog.locator(".diff-file").textContent())
+        .toContain("+  uhpm int = 800");
+      await page.close();
+    },
+    TIMEOUT,
+  );
 });

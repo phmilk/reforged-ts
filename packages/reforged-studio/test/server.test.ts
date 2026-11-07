@@ -15,6 +15,7 @@ import {
   InstallNotFoundError,
   startStudio,
   type AdoptAnswer,
+  type DiffAnswer,
   type ErrorAnswer,
   type ListedObject,
   type ObjectsAnswer,
@@ -845,6 +846,45 @@ describe("the Studio's watch of the map folder", () => {
       .body as RawcodeAnswer;
     if (found.status !== "known") throw new Error(found.status);
     expect(found.selected?.name).toBe("Commander");
+  });
+
+  it("shows what a quiet reload changed, until the next one", async () => {
+    const project = mapProject();
+    const studio = await start(project);
+    const stream = await events(studio);
+    await stream.next("session");
+    expect((await request(studio, "/api/diff?against=reload")).body).toEqual({
+      against: "reload",
+      available: false,
+      reason: expect.stringContaining(
+        "has not read the map folder again",
+      ) as unknown,
+    });
+
+    saveOnDisk(project, "Commander");
+    await stream.next("reloaded");
+    stream.close();
+    // An edit after the reload is not part of what it changed.
+    await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "unit",
+            rawcode: "h001",
+            field: "uhpm",
+            value: 700,
+          },
+        ],
+      },
+    });
+
+    const answer = (await request(studio, "/api/diff?against=reload"))
+      .body as DiffAnswer;
+    if (!answer.available) throw new Error(answer.reason);
+    expect(answer.against).toBe("reload");
+    expect(answer.files.map((file) => file.file)).toEqual(["war3map.wts"]);
+    expect(answer.files[0]?.diff).toContain("+Commander");
   });
 
   it("keeps its unsaved edits when the map folder changes, and says so", async () => {
