@@ -455,16 +455,23 @@ export function FieldEditor(props: {
 }
 
 /** The Diff's tabs: what each compares, its label, and what it says when nothing differs. */
-const DIFF_TABS: readonly (readonly [DiffAnswer["against"], string, string])[] =
-  [
-    ["saved", "Unsaved changes", "No unsaved change."],
-    ["head", "Since the last commit", "No change since the last commit."],
-    [
-      "reload",
-      "Last reload from disk",
-      "The last reload read no change of the objects.",
-    ],
-  ];
+const DIFF_TABS: readonly {
+  readonly against: DiffAnswer["against"];
+  readonly label: string;
+  readonly empty: string;
+}[] = [
+  { against: "saved", label: "Unsaved changes", empty: "No unsaved change." },
+  {
+    against: "head",
+    label: "Since the last commit",
+    empty: "No change since the last commit.",
+  },
+  {
+    against: "reload",
+    label: "Last reload from disk",
+    empty: "The last reload read no change of the objects.",
+  },
+];
 
 /**
  * The diff of the unsaved changes, of the changes since the last commit,
@@ -510,17 +517,17 @@ export function DiffDialog(props: {
       <div className="dialog diff">
         <header>
           <div role="tablist" aria-label="Compare with">
-            {DIFF_TABS.map(([tab, label]) => (
+            {DIFF_TABS.map((tab) => (
               <button
                 type="button"
                 role="tab"
-                key={tab}
-                aria-selected={against === tab}
+                key={tab.against}
+                aria-selected={against === tab.against}
                 onClick={() => {
-                  setAgainst(tab);
+                  setAgainst(tab.against);
                 }}
               >
-                {label}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -535,7 +542,7 @@ export function DiffDialog(props: {
           <p className="muted">{answer.reason}</p>
         ) : answer.files.length === 0 ? (
           <p className="muted">
-            {DIFF_TABS.find(([tab]) => tab === against)?.[2]}
+            {DIFF_TABS.find((tab) => tab.against === against)?.empty}
           </p>
         ) : (
           answer.files.map((file) => (

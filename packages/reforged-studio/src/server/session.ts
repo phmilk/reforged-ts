@@ -307,7 +307,7 @@ export class Session {
    * after in {@link Session.lastReload}, for the diff of what the change
    * brought.
    */
-  reload(): void {
+  readChangeOnDisk(): void {
     const before = this.files().saved;
     this.reopen();
     this.lastReload = { before, after: this.files().saved };

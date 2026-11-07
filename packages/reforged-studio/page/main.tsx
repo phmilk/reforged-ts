@@ -38,6 +38,7 @@ import type {
 import { api, listen } from "./api.js";
 import { BulkDialog, type BulkStart } from "./bulk.js";
 import { CreateDialog, DeleteDialog, type CreateStart } from "./create.js";
+import { counted } from "./counted.js";
 import { DiffDialog } from "./edit.js";
 import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
@@ -121,7 +122,7 @@ function savedText(answer: {
   if (answer.written.length === 0) {
     return "Nothing to save: the map folder already holds every edit.";
   }
-  const files = `Saved ${String(answer.written.length)} file${answer.written.length === 1 ? "" : "s"}: ${answer.written.join(", ")}.`;
+  const files = `Saved ${counted(answer.written.length, "file")}: ${answer.written.join(", ")}.`;
   switch (answer.reload) {
     case "sent":
       return `${files} The World Editor reloads the map.`;
@@ -256,7 +257,7 @@ function App() {
         .join(" ");
       setToast({
         text: [
-          `Reloaded the map folder and put ${String(answer.replayed)} edit${answer.replayed === 1 ? "" : "s"} on top.`,
+          `Reloaded the map folder and put ${counted(answer.replayed, "edit")} on top.`,
           ...(answer.conflicts.length > 0
             ? [
                 `${String(answer.conflicts.length)} changed on disk too: choose a side for each.`,
@@ -293,12 +294,17 @@ function App() {
   useEffect(
     () =>
       listen({
-        reloaded: () => {
+        reloaded: (data) => {
           forgetIcons();
           forgetThumbnails();
-          setBanner(
-            "The map folder changed on disk: the Studio read it again.",
-          );
+          // A read the author asked for ("Reload and keep my edits on
+          // top") names no file, and its toast says it: its event, which may
+          // come after the answer, raises no banner (#875).
+          if (data.files.length > 0) {
+            setBanner(
+              "The map folder changed on disk: the Studio read it again.",
+            );
+          }
           setDiskChanged(false);
           setVersion((count) => count + 1);
         },
@@ -822,7 +828,7 @@ function App() {
                 text:
                   answer.edited === 0
                     ? "Nothing to change: no object modifies that field."
-                    : `Edited ${String(answer.edited)} object${answer.edited === 1 ? "" : "s"} as one step: Undo takes it back.`,
+                    : `Edited ${counted(answer.edited, "object")} as one step: Undo takes it back.`,
               });
             }}
           />

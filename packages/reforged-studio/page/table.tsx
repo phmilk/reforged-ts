@@ -17,6 +17,7 @@ import {
 } from "../src/server/api-types.js";
 import { api, refusalText } from "./api.js";
 import { choicesOf, columnName, type BulkStart } from "./bulk.js";
+import { counted } from "./counted.js";
 import { optionText, valueOf } from "./edit.js";
 import { Icon, OriginChip } from "./parts.js";
 
@@ -183,10 +184,6 @@ function fillable(answer: TableAnswer, index: number): string[] {
     .filter((row) => row.cells[index]?.editable === true)
     .map((row) => row.rawcode);
 }
-
-/** A count and its noun, in the singular for one: `1 object`, `3 objects`. */
-const counted = (count: number, noun: string): string =>
-  `${String(count)} ${noun}${count === 1 ? "" : "s"}`;
 
 /** The Table mode of one kind. */
 export function TableMode(props: {

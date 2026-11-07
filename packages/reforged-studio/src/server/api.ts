@@ -1020,7 +1020,7 @@ function reloadFromDisk(context: ApiContext): Answer {
   let replay: Replay = { replayed: 0, notReplayed: [] };
   try {
     if (session.counts().unsavedEdits > 0) replay = session.replayOnDisk();
-    else session.reload();
+    else session.readChangeOnDisk();
   } catch (error) {
     if (error instanceof MapFolderError) {
       return refuse(409, "map-folder-unreadable", error.message);

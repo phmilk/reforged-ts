@@ -495,10 +495,11 @@ export function detailOf(
         : shown(modification.value, enumeration);
     const entry = entries?.[head.id];
     const valueType = modification?.type ?? entry?.type;
+    const metaType = head.type ?? entry?.metaType;
     const input =
       valueType === undefined || object.origin === "definition"
         ? undefined
-        : inputOf(valueType, entry, head.type ?? entry?.metaType);
+        : inputOf(valueType, entry, metaType);
     const enumerated = fieldTable?.enumerations?.[entry?.metaType ?? ""];
     const options =
       input !== "select"
@@ -534,10 +535,7 @@ export function detailOf(
       ...(input === "rawcodes" &&
         current !== undefined && {
           references: rawcodesOf(current).map((rawcode) =>
-            named(
-              rawcode,
-              (head.type ?? entry?.metaType) === TECH_LIST ? TECH_KINDS : of,
-            ),
+            named(rawcode, metaType === TECH_LIST ? TECH_KINDS : of),
           ),
         }),
       ...(entry?.localizable === true && { localizable: true }),

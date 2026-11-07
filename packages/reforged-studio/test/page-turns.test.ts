@@ -120,6 +120,9 @@ describe("turns with the World Editor in the Studio's page", () => {
         .poll(() => row.locator("td.value").first().textContent())
         .toContain("800");
       await expect.poll(() => unsaved(page)).toBe("0 unsaved");
+      // The merge's own event raised no banner of a change read quietly.
+      expect(await page.getByTestId("disk-changed").count()).toBe(0);
+      expect(await page.getByTestId("reloaded").count()).toBe(0);
       await page.close();
     },
     TIMEOUT,

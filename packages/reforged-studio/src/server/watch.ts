@@ -50,7 +50,8 @@ function same(a: ReadonlyMap<string, string>, b: ReadonlyMap<string, string>) {
  * accepted, once two polls in a row read the same stamps: a World Editor
  * save writes its files one after another, and is reported once, when it
  * is done, so that what the change offers (a reload, a merge) reads the
- * whole save. When `changed` returns false (the change could not be read
+ * whole save; a file that changes at every poll is reported only once it
+ * stops. When `changed` returns false (the change could not be read
  * yet, such as a map folder a World Editor save is replacing), the next
  * poll reports the change again.
  *
