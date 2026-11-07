@@ -156,7 +156,7 @@ describe("a change on disk", () => {
     expect(await shown(studio, "h001", "umvs")).toBeUndefined();
 
     const reloaded = await request(studio, "/api/reload-from-disk", {
-      json: {},
+      json: { host: "tab-1" },
     });
     const event = await stream.next("reloaded");
     stream.close();
@@ -171,7 +171,13 @@ describe("a change on disk", () => {
       conflicts: [],
       putBack: [],
     } satisfies ReloadFromDiskAnswer);
-    expect(event.data).toMatchObject({ unsavedEdits: 2, conflicts: 0 });
+    // The event names the host that asked, which tells its own read.
+    expect(event.data).toMatchObject({
+      unsavedEdits: 2,
+      conflicts: 0,
+      files: [],
+      host: "tab-1",
+    });
     expect(await shown(studio, "h001", "umvs")).toBe(400);
     expect(await shown(studio, "h001", "uhpm")).toBe(700);
     expect(await shown(studio, "h000", "unam")).toBe("Major");

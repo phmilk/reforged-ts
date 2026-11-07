@@ -91,6 +91,10 @@ describe("turns with the World Editor in the Studio's page", () => {
       const row = page.locator('table.fields tr[data-field="uhpm"]');
       await row.waitFor();
       await setHitPoints(studio, 700);
+      // A second page of the same Studio, which did not ask for the merge.
+      const second = await browser.newPage();
+      await second.goto(studio.url + "/objects");
+      await second.getByTestId("unsaved-count").waitFor();
 
       // Another editor saves the same field.
       const other = openObjectData(project.mapFolder, {
@@ -120,9 +124,13 @@ describe("turns with the World Editor in the Studio's page", () => {
         .poll(() => row.locator("td.value").first().textContent())
         .toContain("800");
       await expect.poll(() => unsaved(page)).toBe("0 unsaved");
-      // The merge's own event raised no banner of a change read quietly.
+      // The merge's own event raised no banner of a change read quietly on
+      // the page that asked, whose toast says it; the other page says so.
       expect(await page.getByTestId("disk-changed").count()).toBe(0);
       expect(await page.getByTestId("reloaded").count()).toBe(0);
+      await expect.poll(() => second.getByTestId("reloaded").count()).toBe(1);
+      expect(await second.getByTestId("disk-changed").count()).toBe(0);
+      await second.close();
       await page.close();
     },
     TIMEOUT,

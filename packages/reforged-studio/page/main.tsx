@@ -35,7 +35,7 @@ import type {
   SessionCounts,
   TurnsAnswer,
 } from "../src/server/api-types.js";
-import { api, listen } from "./api.js";
+import { api, HOST, listen } from "./api.js";
 import { BulkDialog, type BulkStart } from "./bulk.js";
 import { CreateDialog, DeleteDialog, type CreateStart } from "./create.js";
 import { counted } from "./counted.js";
@@ -297,10 +297,11 @@ function App() {
         reloaded: (data) => {
           forgetIcons();
           forgetThumbnails();
-          // A read the author asked for ("Reload and keep my edits on
-          // top") names no file, and its toast says it: its event, which may
-          // come after the answer, raises no banner (#875).
-          if (data.files.length > 0) {
+          // A read this page asked for ("Reload and keep my edits on top",
+          // a save refused) is told by its toast: its event, which may come
+          // after the answer, raises no banner (#875). Another host's read,
+          // or the watch's, does.
+          if (data.host !== HOST) {
             setBanner(
               "The map folder changed on disk: the Studio read it again.",
             );

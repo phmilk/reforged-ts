@@ -1013,9 +1013,13 @@ function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
  * reads the map folder again and replays the unsaved edits on it, field by
  * field, those the disk also changed listed as conflicts; with no unsaved
  * edit, the map folder read again replaces the saved state. It tells every
- * host with `reloaded`.
+ * host with `reloaded`, which names the host that asked.
  */
-function reloadFromDisk(context: ApiContext): Answer {
+async function reloadFromDisk(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { host } = await readOptionalJson(request);
   const { session } = context;
   let replay: Replay = { replayed: 0, notReplayed: [] };
   try {
@@ -1028,7 +1032,10 @@ function reloadFromDisk(context: ApiContext): Answer {
     throw error;
   }
   context.resync();
-  context.events.send("reloaded", reloadedEvent(session, []));
+  context.events.send(
+    "reloaded",
+    reloadedEvent(session, [], typeof host === "string" ? host : undefined),
+  );
   return new Answer(200, {
     ...session.counts(),
     ...replay,
@@ -1136,7 +1143,11 @@ async function save(
       const turns = session.turns();
       context.events.send(
         "reloaded",
-        reloadedEvent(session, error.file === undefined ? [] : [error.file]),
+        reloadedEvent(
+          session,
+          error.file === undefined ? [] : [error.file],
+          typeof body.host === "string" ? body.host : undefined,
+        ),
       );
       return new Answer(409, {
         error: {
@@ -1722,7 +1733,7 @@ export async function handle(
     } else if (route === "GET /api/turns") {
       send(response, new Answer(200, context.session.turns()));
     } else if (route === "POST /api/reload-from-disk") {
-      send(response, reloadFromDisk(context));
+      send(response, await reloadFromDisk(context, request));
     } else if (route === "POST /api/conflicts") {
       send(response, await chooseConflicts(context, request));
     } else if (route === "POST /api/put-back") {

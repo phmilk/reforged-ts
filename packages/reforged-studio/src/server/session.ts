@@ -196,16 +196,19 @@ function encodedFiles(editor: ObjectDataEditor): Map<string, Uint8Array> {
  *
  * @param session - The session.
  * @param files - The files that changed, as the event names them.
+ * @param host - The host whose request read the map folder again, as its body named it; none for the watch.
  * @returns The event's data.
  */
 export function reloadedEvent(
   session: Session,
   files: readonly string[],
+  host?: string,
 ): StudioEvents["reloaded"] {
   const turns = session.turns();
   return {
     ...session.counts(),
     files,
+    ...(host !== undefined && { host }),
     conflicts: turns.conflicts.length,
     putBack: turns.putBack.length,
   };
@@ -302,8 +305,9 @@ export class Session {
   }
 
   /**
-   * Reads the map folder again after a change on disk with no unsaved
-   * edit, as {@link Session.reopen} does, and keeps its files before and
+   * Reads the map folder again with no unsaved edit, after a change on disk
+   * the watch saw or on the author's "Reload and keep my edits on top",
+   * as {@link Session.reopen} does, and keeps its files before and
    * after in {@link Session.lastReload}, for the diff of what the change
    * brought.
    */

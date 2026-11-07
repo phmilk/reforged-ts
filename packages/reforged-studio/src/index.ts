@@ -161,6 +161,7 @@ export {
   type Referrer,
   type ReloadAnswer,
   type ReloadFromDiskAnswer,
+  type ReloadFromDiskRequest,
   type ReloadOffer,
   type ResetRequest,
   type SaveAnswer,

@@ -535,6 +535,18 @@ export interface SaveRequest {
    * the page's setting. False when left out.
    */
   readonly reloadWorldEditor?: boolean;
+  /** The host that asks, which the `reloaded` event after a save refused with `"changed-on-disk"` names as {@link ReloadFromDiskRequest.host} does. */
+  readonly host?: string;
+}
+
+/** The body of `POST /api/reload-from-disk`. */
+export interface ReloadFromDiskRequest {
+  /**
+   * The host that asks, any text it chose: the `reloaded` event the read
+   * sends names it, so that the host tells its own read, which its answer
+   * reports, from a read another host asked for.
+   */
+  readonly host?: string;
 }
 
 /**
@@ -896,7 +908,10 @@ export interface OpenInEditorAnswer {
 export interface StudioEvents {
   readonly session: SessionCounts;
   readonly reloaded: SessionCounts & {
+    /** The files that changed, as far as the read knows them: empty after "Reload and keep my edits on top". */
     readonly files: readonly string[];
+    /** The host whose request read the map folder again, as its body named it; absent after a change the watch read. */
+    readonly host?: string;
     /** The conflicts left to choose, which `GET /api/turns` lists. */
     readonly conflicts: number;
     /** The fields a World Editor save put back, which `GET /api/turns` lists. */
