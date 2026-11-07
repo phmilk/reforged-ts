@@ -72,6 +72,10 @@ function keepAutoReload(on: boolean): void {
   }
 }
 
+/** Why the Studio cannot reload the World Editor, without its executable: beside the disabled box, and after a save. */
+const NO_WORLD_EDITOR_REASON =
+  "No World Editor.exe beside the game's: start the Studio with --world-editor <executable> (worldEditorExecutable) to reload the map there.";
+
 /** Whether a key press goes to a field the author types in, which keeps its own undo. */
 function typing(target: EventTarget | null): boolean {
   return (
@@ -118,7 +122,7 @@ function savedText(answer: {
     case "sent":
       return `${files} The World Editor reloads the map.`;
     case "no-executable":
-      return `${files} The World Editor holds the map folder: start the Studio with its executable to reload the map there.`;
+      return `${files} The World Editor holds the map folder. ${NO_WORLD_EDITOR_REASON}`;
     case "offered":
       return answer.reloadError === undefined
         ? `${files} The World Editor holds the map folder without unsaved edits.`
@@ -169,8 +173,13 @@ function App() {
     setVersion((count) => count + 1);
   }, []);
 
+  // The automatic reload needs the World Editor's executable: without one
+  // the box is disabled, its setting kept for a Studio that has one.
+  const noWorldEditor =
+    session !== undefined && session.worldEditorExecutable === undefined;
+  const reloadAfterSave = autoReload && !noWorldEditor;
   const save = useCallback(() => {
-    api.save(autoReload).then((result) => {
+    api.save(reloadAfterSave).then((result) => {
       changed(result.answer);
       if (result.saved) {
         forgetIcons();
@@ -191,7 +200,7 @@ function App() {
         refused: true,
       });
     }, failed);
-  }, [autoReload, changed, failed]);
+  }, [reloadAfterSave, changed, failed]);
   /** Shows a refusal of the API in the toast. */
   const refused = useCallback((reason: unknown) => {
     setToast({
@@ -549,7 +558,11 @@ function App() {
             <label title="Reload the map in the World Editor after each save, when it holds the map folder without unsaved edits">
               <input
                 type="checkbox"
-                checked={autoReload}
+                checked={reloadAfterSave}
+                disabled={noWorldEditor}
+                aria-describedby={
+                  noWorldEditor ? "no-world-editor-reason" : undefined
+                }
                 onChange={(event) => {
                   setAutoReload(event.target.checked);
                   keepAutoReload(event.target.checked);
@@ -557,6 +570,11 @@ function App() {
               />{" "}
               Reload the World Editor after a save
             </label>
+            {noWorldEditor && (
+              <span id="no-world-editor-reason" className="muted">
+                {NO_WORLD_EDITOR_REASON}
+              </span>
+            )}
           </span>
         </header>
         {toast !== undefined && (

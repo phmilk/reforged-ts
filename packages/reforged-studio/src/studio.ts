@@ -23,7 +23,7 @@ import {
 } from "./art-layer.js";
 import { openStorage } from "./casc/storage.js";
 import { readGameData, type GameData } from "./game-data.js";
-import { findInstall, systemMachine } from "./install.js";
+import { findInstall, findWorldEditor, systemMachine } from "./install.js";
 import { GAME_DATA_SETS } from "./layers.js";
 import {
   createPathResolver,
@@ -58,8 +58,10 @@ export interface StudioOptions {
   /**
    * The World Editor's executable, which the reload after a save starts
    * (`-launch -loadfile`), with `reforged-map`'s `reloadWorldEditor`. When
-   * left out, a save that would offer the reload says the executable is
-   * missing.
+   * left out, `World Editor.exe` beside the game's, in
+   * `<install>/_retail_/x86_64`; when the install holds none, the page's
+   * automatic reload is disabled and a save that would offer the reload
+   * says the executable is missing.
    */
   worldEditorExecutable?: string;
   /** The first port tried, {@link DEFAULT_PORT} when left out: the next free one above it is taken when it is not free; 0 takes any free port. */
@@ -254,7 +256,7 @@ export async function startStudio(options: StudioOptions): Promise<Studio> {
   let resync = (): void => undefined;
   const worldEditorExecutable =
     options.worldEditorExecutable === undefined
-      ? undefined
+      ? findWorldEditor(installDir, systemMachine)
       : path.resolve(options.worldEditorExecutable);
   const server = http.createServer((request, response) => {
     void handle(

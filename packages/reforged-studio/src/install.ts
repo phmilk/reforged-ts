@@ -5,7 +5,9 @@
  * folders. The install is the folder that holds `.build.info`: the nearest
  * one at or above the argument or the executable (the executable sits in
  * `<install>/_retail_/x86_64`). The `reforged-builtins` generator and the
- * real-install check (`./check-install.ts`) find it so.
+ * real-install check (`./check-install.ts`) find it so. The World Editor's
+ * executable, `World Editor.exe`, sits beside the game's: the Studio's
+ * reload after a save defaults to it (`findWorldEditor`).
  *
  * `isWsl` mirrors the Probe runner's (`probe/src/machine.ts`): the packages
  * share no code, and `reforged-builtins`' `test/probe-parity.test.ts` pins
@@ -103,6 +105,31 @@ export function findInstall(
   throw new InstallNotFoundError(
     `Warcraft III was not found. Pass ${INSTALL_OPTION} <folder> or set the ${EXECUTABLE_ENV} environment variable to the game's executable.${where}`,
   );
+}
+
+/** Where the World Editor's executable sits in an install, beside the game's. */
+const WORLD_EDITOR_PATH: readonly string[] = [
+  "_retail_",
+  "x86_64",
+  "World Editor.exe",
+];
+
+/**
+ * The World Editor's executable of an install: `World Editor.exe` beside
+ * the game's, in `<install>/_retail_/x86_64`.
+ *
+ * @param installDir - The install folder, as {@link findInstall} gives it.
+ * @param machine - The machine whose paths name it and whose files are looked at.
+ * @returns The executable's path, named with the machine's paths; undefined
+ *   when the install holds no such file.
+ */
+export function findWorldEditor(
+  installDir: string,
+  machine: Pick<InstallMachine, "platform" | "isFile">,
+): string | undefined {
+  const pathOf = machine.platform === "win32" ? path.win32 : path.posix;
+  const executable = pathOf.join(installDir, ...WORLD_EDITOR_PATH);
+  return machine.isFile(executable) ? executable : undefined;
 }
 
 /** The nearest folder at or above `start` that holds `.build.info`. */

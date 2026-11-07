@@ -550,7 +550,7 @@ export interface SaveRequest {
  * map folder without unsaved edits (`"open"`) and the save wrote files, so
  * the page offers "Reload in the World Editor"; `"sent"` when the save
  * reloaded it at once, as the request asked; `"no-executable"` when it
- * would be offered but the Studio was given no World Editor executable;
+ * would be offered but the Studio has no World Editor executable;
  * `"none"` otherwise.
  */
 export type ReloadOffer = "offered" | "sent" | "no-executable" | "none";
@@ -860,6 +860,13 @@ export interface SessionAnswer extends SessionCounts {
   readonly baseValues: string;
   /** What the World Editor shows of the map folder, or `"check-failed"`. */
   readonly worldEditor: "no-window" | "open" | "modified" | "check-failed";
+  /**
+   * The World Editor's executable the reload starts, an absolute path: the
+   * one the Studio was given, else `World Editor.exe` beside the game's;
+   * undefined when there is neither, and the page then disables its
+   * automatic reload.
+   */
+  readonly worldEditorExecutable: string | undefined;
   /** The readers' warnings, each one line. */
   readonly warnings: readonly string[];
   /**
