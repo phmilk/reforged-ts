@@ -282,11 +282,9 @@ export async function readGameData(
         continue;
       }
       const values = new Map<string, FieldValue>();
-      const layerValues = {
-        sd: new Map<string, FieldValue>(),
-        hd: new Map<string, FieldValue>(),
-        de: new Map<string, FieldValue>(),
-      };
+      const layerValues = Object.fromEntries(
+        ART_LAYERS.map((layer) => [layer, new Map<string, FieldValue>()]),
+      ) as Record<ArtLayer, Map<string, FieldValue>>;
       for (const field of fields.values()) {
         if (field.specific !== undefined && !field.specific.includes(rawcode)) {
           continue;
@@ -398,7 +396,7 @@ const LAYER_KEYS: Readonly<Record<ArtLayer, readonly string[]>> = {
 
 /**
  * A field's value in the profile files: the set's own (`Name:custom,V1`)
- * over the shared one (`Name`); under an art layer's key with `layer`
+ * over the shared one (`Name`); under the key of an art layer's `suffix`
  * (`Art:hd:custom,V0` over `Art:hd`), and none when the layer has no key
  * of its own. A field of levels gives each item of its list, or, with
  * `appendIndex`, each key of a level (`Requires`, `Requires1`…); a field
@@ -409,10 +407,10 @@ function profileValue(
   rawcode: string,
   field: GameField,
   qualifier: string | undefined,
-  layer?: string,
+  suffix?: string,
 ): FieldValue | undefined {
   const items = (name: string) => {
-    const key = layer === undefined ? name : `${name}:${layer}`;
+    const key = suffix === undefined ? name : `${name}:${suffix}`;
     return (
       (qualifier === undefined
         ? undefined

@@ -120,9 +120,9 @@ export function mapProject(
 }
 
 /**
- * The game's executable of a synthetic install, with the Footman's and the Town Hall's icons and
- * `files` by their paths in the storage, which the Studio finds the install
- * from.
+ * The game's executable of a synthetic install, with the Footman's and the
+ * Town Hall's icons and `files` by their paths in the storage, which the
+ * Studio finds the install from.
  */
 export async function syntheticGame(
   files: Readonly<Record<string, string | Uint8Array>> = {},

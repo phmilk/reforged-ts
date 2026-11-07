@@ -137,8 +137,10 @@ function groupOf(
 }
 
 /** A base value's first level as a path: none when it is empty. */
-const pathOf = (value: FieldValue | undefined): string | undefined =>
-  firstValue(value) || undefined;
+const pathOf = (value: FieldValue | undefined): string | undefined => {
+  const first = firstValue(value);
+  return first === "" ? undefined : first;
+};
 
 /**
  * The paths of an object's icon (`ListedObject.icon` and `layerIcons`):

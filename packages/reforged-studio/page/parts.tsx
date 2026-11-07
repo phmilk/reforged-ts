@@ -93,7 +93,8 @@ export function initials(text: string): string {
 /**
  * An icon, read when it scrolls into view: its PNG once decoded, else a
  * placeholder with the initials of `label`. Its path is the art layer's
- * own in `layers` (`ListedObject.layerIcons`), else `path`.
+ * own in `layers` (`ListedObject.layerIcons`), else `path`, the
+ * shared one.
  */
 export function Icon(props: {
   readonly path: string | undefined;
@@ -103,7 +104,7 @@ export function Icon(props: {
 }) {
   const { label, size = "small" } = props;
   const layer = useArtLayer();
-  const path = props.layers === undefined ? props.path : props.layers[layer];
+  const path = props.layers?.[layer] ?? props.path;
   const element = useRef<HTMLSpanElement>(null);
   const [url, setUrl] = useState<string | undefined>();
   const [state, setState] = useState<"loading" | "loaded" | "missing">(
