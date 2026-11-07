@@ -16,6 +16,7 @@ import {
   startStudio,
   type AdoptAnswer,
   type ErrorAnswer,
+  type IconsAnswer,
   type ListedObject,
   type ObjectsAnswer,
   type RawcodeAnswer,
@@ -431,6 +432,35 @@ describe("the Studio's tree", () => {
     );
     expect(await iconOf("Hpal")).toBeUndefined();
 
+    const layerIconsOf = async (rawcode: string) =>
+      (
+        (await request(studio, "/api/objects?kind=unit")).body as ObjectsAnswer
+      ).objects.find((object) => object.rawcode === rawcode)?.layerIcons;
+    // An icon under the art layers' keys only, as the Priest's (`hmpr`).
+    expect(await iconOf("htow")).toBeUndefined();
+    expect(await layerIconsOf("htow")).toEqual({
+      sd: "ReplaceableTextures\\CommandButtons\\BTNTownHall.blp",
+      hd: "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+      de: "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+    });
+    const footman = {
+      sd: "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+      hd: "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+      de: "ReplaceableTextures\\CommandButtons\\BTNFootmanDE.blp",
+    };
+    expect(await layerIconsOf("hfoo")).toEqual(footman);
+    expect(await layerIconsOf("h000")).toEqual(footman);
+    expect(await layerIconsOf("Hpal")).toBeUndefined();
+    expect(
+      ((await request(studio, "/api/icons")).body as IconsAnswer).icons,
+    ).toEqual(
+      expect.arrayContaining([
+        "ReplaceableTextures\\CommandButtons\\BTNTownHall.blp",
+        "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+        "ReplaceableTextures\\CommandButtons\\BTNFootmanDE.blp",
+      ]),
+    );
+
     await request(studio, "/api/edits", {
       json: {
         edits: [
@@ -445,6 +475,8 @@ describe("the Studio's tree", () => {
       },
     });
     expect(await iconOf("h000")).toBe("war3mapImported\\BTNCaptain.blp");
+    // Its own modification holds in every art layer.
+    expect(await layerIconsOf("h000")).toBeUndefined();
     const detail = (await request(studio, "/api/objects/h000"))
       .body as RawcodeAnswer;
     expect(detail).toMatchObject({

@@ -75,7 +75,9 @@ export const EDITOR_STRINGS = {
   WESTRING_UE_ATTACKTYPE_NORMAL: "Normal",
   WESTRING_UE_ATTACKTYPE_PIERCE: "Pierce",
   WESTRING_AEVAL_ACDN: "Stats - Cooldown",
-  WESTRING_UE_UNITRACE_HUMAN: "Human",
+  // A key whose value is another key, as the install labels its races.
+  WESTRING_UE_UNITRACE_HUMAN: "WESTRING_RACE_HUMAN",
+  WESTRING_RACE_HUMAN: "Human",
   WESTRING_UE_UNITRACE_OTHER: "Other",
   WESTRING_ITEMCLASS_PERMANENT: "Permanent",
 } as const;
@@ -207,7 +209,18 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
     hfoo: { Missileart: "Footman1.mdl,Footman2.mdl" },
   }),
   [base("Units/UnitSkin.txt")]: profile({
-    hfoo: { Art: "ReplaceableTextures\\CommandButtons\\BTNFootman.blp" },
+    hfoo: {
+      Art: "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+      "Art:de": "ReplaceableTextures\\CommandButtons\\BTNFootmanDE.blp",
+    },
+    // Its icon under the art layers' keys only, as the install holds the
+    // Priest's (`hmpr`): no `Art`, no `Art:de`.
+    htow: {
+      "Art:sd": "ReplaceableTextures\\CommandButtons\\BTNTownHall.blp",
+      "Art:hd": "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+      "Art:hd:custom,V0":
+        "ReplaceableTextures\\CommandButtons\\BTNTownHallV0.blp",
+    },
   }),
   [strings("HumanUnitStrings.txt")]: profile({
     hfoo: { Name: "Footman", "Name:custom,V1": "Footman (TFT)" },
