@@ -376,6 +376,16 @@ const INPUTS: Readonly<
   stringList: "text",
 };
 
+/**
+ * The metadata type of a list of requirements (`ureq`, `areq`, `greq`):
+ * Rawcodes of units and upgrades both, which the field table files as a
+ * list of strings, without the one kind a Rawcode list names.
+ */
+const TECH_LIST = "techList";
+
+/** The kinds a list of requirements names. */
+const TECH_KINDS: ReadonlySet<ObjectKind> = new Set(["unit", "upgrade"]);
+
 /** The metadata types of a model's path, or of a list of them, which a model's picker edits. */
 const MODEL_TYPES: ReadonlySet<string> = new Set(["model", "modelList"]);
 
@@ -387,6 +397,7 @@ function inputOf(
 ): FieldInput {
   if (metaType === "icon" && valueType === "string") return "icon";
   if (MODEL_TYPES.has(metaType ?? "") && valueType === "string") return "model";
+  if (metaType === TECH_LIST && valueType === "string") return "rawcodes";
   const input =
     entry?.category === undefined ? undefined : INPUTS[entry.category];
   if (input !== undefined) return input;
@@ -442,10 +453,15 @@ export function detailOf(
         modification.field === field &&
         (level === undefined || modification.level === level),
     );
-  const named = (rawcode: string, of: ObjectKind | undefined) => {
+  const named = (
+    rawcode: string,
+    of: ObjectKind | ReadonlySet<ObjectKind> | undefined,
+  ) => {
     const found = sources.objects.find(
       (other) =>
-        other.rawcode === rawcode && (of === undefined || other.kind === of),
+        other.rawcode === rawcode &&
+        (of === undefined ||
+          (typeof of === "string" ? other.kind === of : of.has(other.kind))),
     );
     return found === undefined
       ? { rawcode }
@@ -479,10 +495,11 @@ export function detailOf(
         : shown(modification.value, enumeration);
     const entry = entries?.[head.id];
     const valueType = modification?.type ?? entry?.type;
+    const metaType = head.type ?? entry?.metaType;
     const input =
       valueType === undefined || object.origin === "definition"
         ? undefined
-        : inputOf(valueType, entry, head.type ?? entry?.metaType);
+        : inputOf(valueType, entry, metaType);
     const enumerated = fieldTable?.enumerations?.[entry?.metaType ?? ""];
     const options =
       input !== "select"
@@ -517,7 +534,9 @@ export function detailOf(
       ...(of !== undefined && { of }),
       ...(input === "rawcodes" &&
         current !== undefined && {
-          references: rawcodesOf(current).map((rawcode) => named(rawcode, of)),
+          references: rawcodesOf(current).map((rawcode) =>
+            named(rawcode, metaType === TECH_LIST ? TECH_KINDS : of),
+          ),
         }),
       ...(entry?.localizable === true && { localizable: true }),
       ...(modification?.translations !== undefined && {

@@ -37,6 +37,13 @@ import type {
   TurnsChangedAnswer,
 } from "../src/server/api-types.js";
 
+/**
+ * This page's name as a host of the Studio, which its reads of the map
+ * folder send, so that it tells the `reloaded` event of its own read from
+ * one another host asked for.
+ */
+export const HOST = `page-${Math.random().toString(36).slice(2)}`;
+
 const base =
   document
     .querySelector<HTMLMetaElement>('meta[name="reforged-studio-api"]')
@@ -177,7 +184,7 @@ export const api = {
     const response = await fetch(`${base}/save`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ reloadWorldEditor }),
+      body: JSON.stringify({ reloadWorldEditor, host: HOST }),
     });
     const body = (await response.json()) as unknown;
     if (response.ok) return { saved: true, answer: body as SaveAnswer };
@@ -195,7 +202,8 @@ export const api = {
   /** The conflicts left to choose and the fields a World Editor save put back. */
   turns: () => get<TurnsAnswer>("/turns"),
   /** "Reload and keep my edits on top": the map folder read again, the unsaved edits replayed on it. */
-  reloadFromDisk: () => post<ReloadFromDiskAnswer>("/reload-from-disk", {}),
+  reloadFromDisk: () =>
+    post<ReloadFromDiskAnswer>("/reload-from-disk", { host: HOST }),
   /** Keeps mine or takes theirs for each conflict chosen. */
   chooseConflicts: (choices: readonly ConflictChoice[]) =>
     post<TurnsChangedAnswer>("/conflicts", { choices }),
@@ -205,7 +213,7 @@ export const api = {
   /** Adopts a Custom object or a modified Built-in object into the code, or throws the refusal. */
   adopt: (kind: string, rawcode: string) =>
     post<AdoptAnswer>("/adopt", { kind, rawcode }),
-  diff: (against: "saved" | "head") =>
+  diff: (against: DiffAnswer["against"]) =>
     get<DiffAnswer>(`/diff?against=${against}`),
   icons: () => get<IconsAnswer>("/icons"),
   /** The models' paths of the map's imports and the install whose path holds the text. */

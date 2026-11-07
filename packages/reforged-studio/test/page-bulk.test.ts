@@ -17,6 +17,7 @@ import {
   closeStudios,
   mapProject,
   removeTemporary,
+  request,
   start,
 } from "./support/studio.js";
 
@@ -122,6 +123,28 @@ describe("bulk editing in the Studio's page", () => {
       // One undo takes the fill back, the cell's edit stays.
       await page.locator("body").press("Control+z");
       await expect.poll(() => unsaved(page)).toBe("1 unsaved");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "counts the table's objects and fields, one in the singular",
+    async () => {
+      const studio = await start(mapProject());
+      // The map's Custom ability deleted: its modified Built-in one is left.
+      const deleted = await request(studio, "/api/delete", {
+        json: { kind: "ability", rawcode: "A000" },
+      });
+      expect(deleted.status).toBe(200);
+      const page = await browser.newPage();
+      await page.goto(studio.url + "/objects");
+      await page.getByRole("button", { name: "Table mode" }).click();
+      const count = page.getByTestId("table-count");
+      await expect.poll(() => count.textContent()).toBe("3 objects · 1 field");
+
+      await page.getByRole("tab", { name: "Abilities" }).click();
+      await expect.poll(() => count.textContent()).toMatch(/^1 object · /);
       await page.close();
     },
     TIMEOUT,

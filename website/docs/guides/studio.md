@@ -52,7 +52,7 @@ A click on a value edits it by its type: a number or a text, committed on Enter;
 
 Nothing is written before a save. Ctrl+S, or Save, writes the unsaved edits to the map folder, and its message says what was written. Undo and Redo (Ctrl+Z, Ctrl+Shift+Z or Ctrl+Y) span the whole session, saves included: an undo after a save makes the map unsaved again, so no edit is final until the Studio closes. The undo is never kept on disk.
 
-Diff shows the unsaved changes as text, the text `git diff` shows for the map's Object data files, or every change since the last commit.
+Diff shows the unsaved changes as text, the text `git diff` shows for the map's Object data files, every change since the last commit, or what the last change on disk brought.
 
 ## Taking turns with the World Editor
 
@@ -60,7 +60,7 @@ The World Editor keeps the map it loaded in memory, and its next save writes all
 
 1. **A save waits for the World Editor's unsaved edits.** While the World Editor's window shows unsaved edits for the map folder, the Studio refuses to save, keeping every edit: save or discard them in the World Editor first.
 2. **After a save, the World Editor reloads.** When the World Editor holds the map folder without unsaved edits, the save's message offers "Reload in the World Editor", so that its next save keeps what the Studio wrote. A setting makes the reload follow every save.
-3. **A change on disk reloads the Studio.** With no unsaved edit, the Studio reads the map folder again when a file changes, and says so in a banner; Diff then shows what changed since the last commit. With unsaved edits, a banner offers "Reload and keep my edits on top": each edit is applied again on the new map folder, and a field both sides changed is a conflict, listed with your value and the map folder's to choose. Nothing is dropped without a choice, and a save waits until each conflict has one.
+3. **A change on disk reloads the Studio.** With no unsaved edit, the Studio reads the map folder again when a file changes, and says so in a banner whose "Show what changed" opens Diff on what the change brought, committed or not. With unsaved edits, a banner offers "Reload and keep my edits on top": each edit is applied again on the new map folder, and a field both sides changed is a conflict, listed with your value and the map folder's to choose. Nothing is dropped without a choice, and a save waits until each conflict has one.
 4. **A stale World Editor's save is caught.** A World Editor that missed the reload and saves its old copy puts back fields the Studio had saved. The Studio names them, and offers "Apply them again" (as unsaved edits), "Show" or "Keep the World Editor's".
 
 The Studio holds no file of the map folder open beyond one read or write, so a World Editor save while it runs never fails on a locked file.

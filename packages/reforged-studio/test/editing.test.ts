@@ -201,6 +201,23 @@ describe("editing in the Studio", () => {
     });
   });
 
+  it("gives a list of requirements its objects, units and upgrades alike", async () => {
+    const studio = await start(mapProject());
+
+    await setUnitFields(studio, [["h000", "ureq", "h001,Rhme,Zzzz"]]);
+
+    const row = await rowOf(studio, "h000", "ureq");
+    expect(row).toMatchObject({
+      input: "rawcodes",
+      references: [
+        { rawcode: "h001", kind: "unit" },
+        { rawcode: "Rhme", kind: "upgrade" },
+        { rawcode: "Zzzz" },
+      ],
+    });
+    expect(row?.of).toBeUndefined();
+  });
+
   it("undoes a step by applying its edits' inverses in reverse, and redoes it", async () => {
     const studio = await start(mapProject());
     await setUnitFields(studio, [

@@ -196,16 +196,19 @@ function encodedFiles(editor: ObjectDataEditor): Map<string, Uint8Array> {
  *
  * @param session - The session.
  * @param files - The files that changed, as the event names them.
+ * @param host - The host whose request read the map folder again, as its body named it; none for the watch.
  * @returns The event's data.
  */
 export function reloadedEvent(
   session: Session,
   files: readonly string[],
+  host?: string,
 ): StudioEvents["reloaded"] {
   const turns = session.turns();
   return {
     ...session.counts(),
     files,
+    ...(host !== undefined && { host }),
     conflicts: turns.conflicts.length,
     putBack: turns.putBack.length,
   };
@@ -226,6 +229,13 @@ export class Session {
   /** The states before and after the Studio's last save, to tell a World Editor revert. */
   lastStudioSave:
     { readonly before: ObjectState; readonly after: ObjectState } | undefined;
+  /** The bytes of the saved state's files before and after the last read of a change on disk, quiet or merged, for the diff of what it brought; undefined before one. */
+  lastReload:
+    | {
+        readonly before: ReadonlyMap<string, Uint8Array>;
+        readonly after: ReadonlyMap<string, Uint8Array>;
+      }
+    | undefined;
   /** The conflicts of the last merge left to choose, the unsaved value held until then. */
   #conflicts: PendingConflict[] = [];
   /** The edit the last {@link Session.#applyAll} that failed was applying, to name it. */
@@ -292,6 +302,19 @@ export class Session {
     this.#conflicts = [];
     this.undo.length = 0;
     this.redo.length = 0;
+  }
+
+  /**
+   * Reads the map folder again with no unsaved edit, after a change on disk
+   * the watch saw or on the author's "Reload and keep my edits on top",
+   * as {@link Session.reopen} does, and keeps its files before and
+   * after in {@link Session.lastReload}, for the diff of what the change
+   * brought.
+   */
+  readChangeOnDisk(): void {
+    const before = this.files().saved;
+    this.reopen();
+    this.lastReload = { before, after: this.files().saved };
   }
 
   /**
@@ -658,7 +681,13 @@ export class Session {
     const pending = new Set(
       this.#conflicts.map((conflict) => conflict.place.id),
     );
+    const before = this.files().saved;
     this.#read();
+    // The new saved state's files, before the replay: what the change on
+    // disk brought, and the base of the diff of unsaved changes.
+    const after = encodedFiles(this.#editor);
+    this.#savedFiles = after;
+    this.lastReload = { before, after };
     let replayed = 0;
     const notReplayed: NotReplayed[] = [];
     const conflicts: PendingConflict[] = [];

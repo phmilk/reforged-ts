@@ -17,6 +17,7 @@ import {
 } from "../src/server/api-types.js";
 import { api, refusalText } from "./api.js";
 import { choicesOf, columnName, type BulkStart } from "./bulk.js";
+import { counted } from "./counted.js";
 import { optionText, valueOf } from "./edit.js";
 import { Icon, OriginChip } from "./parts.js";
 
@@ -242,8 +243,9 @@ export function TableMode(props: {
           Show every field
         </label>
         {answer !== undefined && (
-          <span className="muted">
-            {answer.rows.length} objects · {answer.columns.length} fields
+          <span className="muted" data-testid="table-count">
+            {counted(answer.rows.length, "object")} ·{" "}
+            {counted(answer.columns.length, "field")}
           </span>
         )}
       </div>
@@ -280,7 +282,7 @@ export function TableMode(props: {
                         type="button"
                         className="link"
                         aria-label={`Fill ${columnName(column)}`}
-                        title={`Set, add to, multiply or reset it on the ${String(rawcodes.length)} objects shown, as one step`}
+                        title={`Set, add to, multiply or reset it on the ${counted(rawcodes.length, "object")} shown, as one step`}
                         disabled={rawcodes.length === 0}
                         onClick={() => {
                           onBulk({ kind, rawcodes, column });

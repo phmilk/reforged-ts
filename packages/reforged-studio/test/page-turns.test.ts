@@ -91,6 +91,10 @@ describe("turns with the World Editor in the Studio's page", () => {
       const row = page.locator('table.fields tr[data-field="uhpm"]');
       await row.waitFor();
       await setHitPoints(studio, 700);
+      // A second page of the same Studio, which did not ask for the merge.
+      const second = await browser.newPage();
+      await second.goto(studio.url + "/objects");
+      await second.getByTestId("unsaved-count").waitFor();
 
       // Another editor saves the same field.
       const other = openObjectData(project.mapFolder, {
@@ -120,6 +124,13 @@ describe("turns with the World Editor in the Studio's page", () => {
         .poll(() => row.locator("td.value").first().textContent())
         .toContain("800");
       await expect.poll(() => unsaved(page)).toBe("0 unsaved");
+      // The merge's own event raised no banner of a change read quietly on
+      // the page that asked, whose toast says it; the other page says so.
+      expect(await page.getByTestId("disk-changed").count()).toBe(0);
+      expect(await page.getByTestId("reloaded").count()).toBe(0);
+      await expect.poll(() => second.getByTestId("reloaded").count()).toBe(1);
+      expect(await second.getByTestId("disk-changed").count()).toBe(0);
+      await second.close();
       await page.close();
     },
     TIMEOUT,
@@ -153,6 +164,37 @@ describe("turns with the World Editor in the Studio's page", () => {
       await expect.poll(() => unsaved(page)).toBe("1 unsaved");
       expect(await banner.count()).toBe(0);
       expect(await dialog.count()).toBe(0);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "shows what a change on disk read quietly brought, from its banner",
+    async () => {
+      const { project, page } = await open("/objects/h001?kind=unit");
+      await page.locator('table.fields tr[data-field="uhpm"]').waitFor();
+
+      // Another editor saves with no unsaved edit in the Studio.
+      const other = openObjectData(project.mapFolder, {
+        projectRoot: project.root,
+      });
+      other.setField({ kind: "unit", rawcode: "h001", field: "uhpm" }, 800);
+      other.save(undefined, { worldEditorCheck: false });
+
+      const banner = page.getByTestId("reloaded");
+      await banner
+        .getByRole("button", { name: "Show what changed" })
+        .click({ timeout: WATCH_TIMEOUT });
+      const dialog = page.getByRole("dialog", { name: "Diff" });
+      expect(
+        await dialog
+          .getByRole("tab", { name: "Last reload from disk" })
+          .getAttribute("aria-selected"),
+      ).toBe("true");
+      await expect
+        .poll(() => dialog.locator(".diff-file").textContent())
+        .toContain("+  uhpm int = 800");
       await page.close();
     },
     TIMEOUT,

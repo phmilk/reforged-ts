@@ -1013,14 +1013,18 @@ function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
  * reads the map folder again and replays the unsaved edits on it, field by
  * field, those the disk also changed listed as conflicts; with no unsaved
  * edit, the map folder read again replaces the saved state. It tells every
- * host with `reloaded`.
+ * host with `reloaded`, which names the host that asked.
  */
-function reloadFromDisk(context: ApiContext): Answer {
+async function reloadFromDisk(
+  context: ApiContext,
+  request: http.IncomingMessage,
+): Promise<Answer> {
+  const { host } = await readOptionalJson(request);
   const { session } = context;
   let replay: Replay = { replayed: 0, notReplayed: [] };
   try {
     if (session.counts().unsavedEdits > 0) replay = session.replayOnDisk();
-    else session.reopen();
+    else session.readChangeOnDisk();
   } catch (error) {
     if (error instanceof MapFolderError) {
       return refuse(409, "map-folder-unreadable", error.message);
@@ -1028,7 +1032,10 @@ function reloadFromDisk(context: ApiContext): Answer {
     throw error;
   }
   context.resync();
-  context.events.send("reloaded", reloadedEvent(session, []));
+  context.events.send(
+    "reloaded",
+    reloadedEvent(session, [], typeof host === "string" ? host : undefined),
+  );
   return new Answer(200, {
     ...session.counts(),
     ...replay,
@@ -1136,7 +1143,11 @@ async function save(
       const turns = session.turns();
       context.events.send(
         "reloaded",
-        reloadedEvent(session, error.file === undefined ? [] : [error.file]),
+        reloadedEvent(
+          session,
+          error.file === undefined ? [] : [error.file],
+          typeof body.host === "string" ? body.host : undefined,
+        ),
       );
       return new Answer(409, {
         error: {
@@ -1304,14 +1315,37 @@ async function adopt(
 }
 
 /**
- * Answers `GET /api/diff?against=saved|head`: the unsaved changes, or the
- * changes since the last commit, in the text of `reforged-map`'s
- * `textconv` function.
+ * Answers `GET /api/diff?against=saved|head|reload`: the unsaved changes,
+ * the changes since the last commit, or what the last change on disk the
+ * Studio read brought, in the text of `reforged-map`'s `textconv` function.
  */
 function diff(context: ApiContext, query: URLSearchParams): Answer {
   const against = query.get("against") ?? "saved";
-  if (against !== "saved" && against !== "head") {
-    return refuse(400, "bad-request", "The query is ?against=saved|head.");
+  if (against !== "saved" && against !== "head" && against !== "reload") {
+    return refuse(
+      400,
+      "bad-request",
+      "The query is ?against=saved|head|reload.",
+    );
+  }
+  if (against === "reload") {
+    const reload = context.session.lastReload;
+    if (reload === undefined) {
+      return new Answer(200, {
+        against,
+        available: false,
+        reason:
+          "The Studio has not read the map folder again since it started: no change on disk to show.",
+      } satisfies DiffAnswer);
+    }
+    return new Answer(200, {
+      against,
+      available: true,
+      files: diffFiles((file) => reload.before.get(file), reload.after, [
+        ...reload.before.keys(),
+        ...reload.after.keys(),
+      ]),
+    } satisfies DiffAnswer);
   }
   const files = context.session.files();
   const names = [...files.saved.keys(), ...files.working.keys()];
@@ -1699,7 +1733,7 @@ export async function handle(
     } else if (route === "GET /api/turns") {
       send(response, new Answer(200, context.session.turns()));
     } else if (route === "POST /api/reload-from-disk") {
-      send(response, reloadFromDisk(context));
+      send(response, await reloadFromDisk(context, request));
     } else if (route === "POST /api/conflicts") {
       send(response, await chooseConflicts(context, request));
     } else if (route === "POST /api/put-back") {
