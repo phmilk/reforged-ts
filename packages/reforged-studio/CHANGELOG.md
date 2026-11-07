@@ -1,5 +1,17 @@
 # reforged-studio
 
+## 1.0.0-alpha.3
+
+### Minor Changes
+
+- [#879](https://github.com/phmilk/reforged-ts/pull/879) [`671cd9b`](https://github.com/phmilk/reforged-ts/commit/671cd9b59d45e65ca0f6ad619d41f2deb7a4710a) Thanks [@wyller](https://github.com/wyller)! - The World Editor executable defaults to `World Editor.exe` beside the game's (`<install>/_retail_/x86_64`), so the reload after a save works with no `--world-editor`; `findWorldEditor` finds it. When the install holds none and none is given, the page disables "Reload the World Editor after a save" with the reason beside it, and `GET /api/session` names the executable as `worldEditorExecutable`.
+
+- [#882](https://github.com/phmilk/reforged-ts/pull/882) [`ebf8187`](https://github.com/phmilk/reforged-ts/commit/ebf8187ab074b8a086b69091ea49859031a233a9) Thanks [@wyller](https://github.com/wyller)! - The Studio's small fixes from its walk beside the World Editor: the header wraps instead of cutting off Diff and the reload box at a half-screen width; "New object" stands out beside Search; the Save button's `Ctrl+S` hint reads on its blue; the Table mode counts "1 object"; a list of requirements (`ureq`, `areq`, `greq`) shows linked chips, as the other Rawcode lists do; the Diff's tabs look like tabs; the banner of a change on disk read quietly, and the toast after "Reload and keep my edits on top", offer "Show what changed", a new Diff tab (`GET /api/diff?against=reload`) of what the change on disk brought; and the watch reports a World Editor save once its files settle, so that the "changed on disk" banner no longer comes back after its merge.
+
+### Patch Changes
+
+- [#878](https://github.com/phmilk/reforged-ts/pull/878) [`1ea85d5`](https://github.com/phmilk/reforged-ts/commit/1ea85d56dc98647c1166288d69d78562ed9d1ae9) Thanks [@wyller](https://github.com/wyller)! - An Object definition's field table shows its fields as Object sync wrote them to the map folder, highlighted as modified and read-only, with its "Differs from" section, and the Table mode counts them: it no longer shows its base's values.
+
 ## 1.0.0-alpha.2
 
 ### Patch Changes
