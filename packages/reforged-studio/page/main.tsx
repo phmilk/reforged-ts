@@ -44,6 +44,11 @@ import { forgetIcons } from "./icons.js";
 import { NoSelection, ObjectPage } from "./object.js";
 import { ArtLayerContext, go, KINDS, useRoute } from "./parts.js";
 import { forgetThumbnails } from "./preview.js";
+import {
+  NO_WORLD_EDITOR_REASON,
+  reloadText,
+  savedText,
+} from "./reload-text.js";
 import { Search } from "./search.js";
 import { TableMode } from "./table.js";
 import { addressText, ConflictsDialog, PutBackDialog } from "./turns.js";
@@ -74,10 +79,6 @@ function keepAutoReload(on: boolean): void {
     // A webview or a private window without storage: the setting lasts the page.
   }
 }
-
-/** Why the Studio cannot reload the World Editor, without its executable: beside the disabled box, and after a save. */
-const NO_WORLD_EDITOR_REASON =
-  "No World Editor.exe beside the game's: start the Studio with --world-editor <executable> (worldEditorExecutable) to reload the map there.";
 
 /** Whether a key press goes to a field the author types in, which keeps its own undo. */
 function typing(target: EventTarget | null): boolean {
@@ -111,30 +112,6 @@ interface Toast {
   readonly refused?: boolean;
   /** Whether it offers "Show what changed", the diff of the change on disk the Studio read. */
   readonly changes?: boolean;
-}
-
-/** The toast's text after a save. */
-function savedText(answer: {
-  readonly written: readonly string[];
-  readonly reload: string;
-  readonly reloadError?: string;
-}): string {
-  if (answer.written.length === 0) {
-    return "Nothing to save: the map folder already holds every edit.";
-  }
-  const files = `Saved ${counted(answer.written.length, "file")}: ${answer.written.join(", ")}.`;
-  switch (answer.reload) {
-    case "sent":
-      return `${files} The World Editor reloads the map.`;
-    case "no-executable":
-      return `${files} The World Editor holds the map folder. ${NO_WORLD_EDITOR_REASON}`;
-    case "offered":
-      return answer.reloadError === undefined
-        ? `${files} The World Editor holds the map folder without unsaved edits.`
-        : `${files} The reload failed: ${answer.reloadError}`;
-    default:
-      return files;
-  }
 }
 
 function App() {
@@ -238,8 +215,11 @@ function App() {
     api.redo().then(changed, refused);
   }, [changed, refused]);
   const reloadWorldEditor = () => {
-    api.reloadWorldEditor().then(() => {
-      setToast({ text: "The World Editor reloads the map." });
+    api.reloadWorldEditor().then((answer) => {
+      setToast({
+        text: reloadText(answer.worldEditorReload),
+        refused: !answer.reloaded,
+      });
     }, refused);
   };
   /** "Reload and keep my edits on top": the map folder read again, the unsaved edits replayed on it. */

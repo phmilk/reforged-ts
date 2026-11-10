@@ -17,6 +17,7 @@ import {
   type GameDataSet,
   type ObjectKind,
   type WorldEditorCheckOptions,
+  type WorldEditorReload,
   type WorldEditorReloadOptions,
 } from "reforged-map";
 import { ART_LAYERS } from "../art-layer.js";
@@ -987,25 +988,47 @@ async function deleteRoute(
   } satisfies DeleteAnswer);
 }
 
-/** Starts the World Editor on the map folder with `-launch -loadfile`; the reason it could not, or undefined. */
-function reloadNow(context: ApiContext): ErrorAnswer["error"] | undefined {
+/**
+ * Reloads the map folder in the World Editor, `reforged-map`'s
+ * `reloadWorldEditor` (Close Map on the window that holds it, then
+ * `-launch -loadfile`): what it did, or the reason it could not run. Once
+ * the World Editor was seen to reload the map, the session compares a
+ * later World Editor save with what it holds now, not with the Studio's
+ * saves before.
+ */
+function reloadNow(
+  context: ApiContext,
+):
+  | { readonly reload: WorldEditorReload }
+  | { readonly error: ErrorAnswer["error"] } {
   const executable = context.worldEditorExecutable;
   if (executable === undefined) {
     return {
-      reason: "no-world-editor",
-      message:
-        "The Studio has no World Editor executable: none was given and the game's install holds no _retail_/x86_64/World Editor.exe. Start it with worldEditorExecutable (--world-editor) to reload the map there.",
+      error: {
+        reason: "no-world-editor",
+        message:
+          "The Studio has no World Editor executable: none was given and the game's install holds no _retail_/x86_64/World Editor.exe. Start it with worldEditorExecutable (--world-editor) to reload the map there.",
+      },
     };
   }
+  let reload: WorldEditorReload;
   try {
-    reloadWorldEditor(context.mapFolder, executable, context.worldEditorReload);
+    reload = reloadWorldEditor(
+      context.mapFolder,
+      executable,
+      context.worldEditorReload,
+    );
   } catch (error) {
     return {
-      reason: "reload-failed",
-      message: error instanceof Error ? error.message : String(error),
+      error: {
+        reason: "reload-failed",
+        message: error instanceof Error ? error.message : String(error),
+      },
     };
   }
-  return undefined;
+  // Only a reload seen to happen: "opened" waits for nothing.
+  if (reload.status === "reloaded") context.session.worldEditorLoaded();
+  return { reload };
 }
 
 /**
@@ -1169,12 +1192,18 @@ async function save(
   context.resync();
   let reload: ReloadOffer = "none";
   let reloadError: string | undefined;
+  let worldEditorReload: WorldEditorReload | undefined;
   if (result.worldEditor === "open" && result.written.length > 0) {
     if (context.worldEditorExecutable === undefined) reload = "no-executable";
     else if (body.reloadWorldEditor === true) {
-      const failed = reloadNow(context);
-      reload = failed === undefined ? "sent" : "offered";
-      reloadError = failed?.message;
+      const ran = reloadNow(context);
+      if ("error" in ran) {
+        reload = "offered";
+        reloadError = ran.error.message;
+      } else {
+        worldEditorReload = ran.reload;
+        reload = ran.reload.status === "not-reloaded" ? "not-reloaded" : "sent";
+      }
     } else reload = "offered";
   }
   const counts = session.counts();
@@ -1184,6 +1213,7 @@ async function save(
     worldEditor: result.worldEditor,
     reload,
     ...(reloadError !== undefined && { reloadError }),
+    ...(worldEditorReload !== undefined && { worldEditorReload }),
     ...counts,
   } satisfies SaveAnswer);
 }
@@ -1191,7 +1221,8 @@ async function save(
 /**
  * Answers `POST /api/reload-world-editor`: `reloadWorldEditor(mapFolder,
  * worldEditorExecutable)`, refused while the World Editor shows unsaved
- * edits for the map folder, which the reload would drop.
+ * edits for the map folder; the answer says whether the World Editor
+ * reloaded the map, and why not.
  */
 function reloadRoute(context: ApiContext): Answer {
   let state;
@@ -1211,15 +1242,18 @@ function reloadRoute(context: ApiContext): Answer {
       `The World Editor shows unsaved edits for ${context.mapFolder}: reloading would drop them. Save or discard them there first.`,
     );
   }
-  const failed = reloadNow(context);
-  if (failed !== undefined) {
+  const ran = reloadNow(context);
+  if ("error" in ran) {
     return refuse(
-      failed.reason === "no-world-editor" ? 409 : 500,
-      failed.reason,
-      failed.message,
+      ran.error.reason === "no-world-editor" ? 409 : 500,
+      ran.error.reason,
+      ran.error.message,
     );
   }
-  return new Answer(200, { reloaded: true } satisfies ReloadAnswer);
+  return new Answer(200, {
+    reloaded: ran.reload.status !== "not-reloaded",
+    worldEditorReload: ran.reload,
+  } satisfies ReloadAnswer);
 }
 
 /**

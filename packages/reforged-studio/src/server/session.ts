@@ -226,9 +226,16 @@ export class Session {
   #saved: ObjectState;
   /** The bytes of the saved state's files, encoded before the first edit after a read; undefined until then. */
   #savedFiles: Map<string, Uint8Array> | undefined;
-  /** The states before and after the Studio's last save, to tell a World Editor revert. */
-  lastStudioSave:
-    { readonly before: ObjectState; readonly after: ObjectState } | undefined;
+  /**
+   * The states the Studio saved since the World Editor last loaded the map,
+   * to tell a World Editor revert: the saved state before the first of those
+   * saves, then what each save wrote, read back, the last one last, with the
+   * saved state before a save in between when the map folder changed on
+   * disk since the save before. Undefined before a save, once the World
+   * Editor loaded the map ({@link Session.worldEditorLoaded}) and once the
+   * author answered a revert.
+   */
+  #studioSaves: readonly ObjectState[] | undefined;
   /** The bytes of the saved state's files before and after the last read of a change on disk, quiet or merged, for the diff of what it brought; undefined before one. */
   lastReload:
     | {
@@ -319,23 +326,33 @@ export class Session {
 
   /**
    * Opens the map folder again with a new editor, whose state is the saved
-   * state, and finds the fields of the Studio's last save a World Editor
-   * save put back.
+   * state, and finds the fields the Studio saved since the World Editor
+   * last loaded the map that a World Editor save put back.
    */
   #read(): void {
+    this.#open();
+    this.#putBack =
+      this.#studioSaves === undefined
+        ? []
+        : findPutBack(this.#studioSaves, this.#saved);
+  }
+
+  /** Opens the map folder again with a new editor, whose state is the saved state. */
+  #open(): void {
     this.#editor = openObjectData(this.#options.mapFolder, {
       projectRoot: this.#options.projectRoot,
     });
     this.#saved = snapshot(this.#editor);
     this.#savedFiles = undefined;
-    this.#putBack =
-      this.lastStudioSave === undefined
-        ? []
-        : findPutBack(
-            this.lastStudioSave.before,
-            this.lastStudioSave.after,
-            this.#saved,
-          );
+  }
+
+  /**
+   * Records that the World Editor loaded the map folder as it is now, after
+   * a reload: a later World Editor save is no longer compared with the
+   * states the Studio saved before, which it no longer holds.
+   */
+  worldEditorLoaded(): void {
+    this.#studioSaves = undefined;
   }
 
   /**
@@ -434,7 +451,7 @@ export class Session {
       );
     }
     this.#putBack = [];
-    this.lastStudioSave = undefined;
+    this.#studioSaves = undefined;
   }
 
   /** Applies edits as one undo step, when there is any. */
@@ -652,11 +669,19 @@ export class Session {
    */
   save(worldEditorCheck: true | WorldEditorCheckOptions): ObjectDataSaveResult {
     const before = this.#saved;
-    const after = this.working();
     const result = this.#editor.save(undefined, { worldEditorCheck });
     if (result.written.length > 0) {
-      this.lastStudioSave = { before, after };
-      this.#read();
+      this.#open();
+      // The saved state before this save is the last one recorded unless
+      // the map folder changed on disk since: a World Editor save, a state
+      // the World Editor may hold, kept beside the Studio's.
+      const saves = this.#studioSaves ?? [];
+      this.#studioSaves = [
+        ...saves,
+        ...(saves.at(-1) === before ? [] : [before]),
+        this.#saved,
+      ];
+      this.#putBack = [];
     }
     return result;
   }

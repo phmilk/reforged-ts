@@ -42,8 +42,13 @@ export {
   type WorldEditorState,
 } from "./world-editor.js";
 export {
+  CLOSE_MAP_COMMAND,
   reloadWorldEditor,
+  type WorldEditorNotReloadedReason,
+  type WorldEditorReload,
   type WorldEditorReloadOptions,
+  type WorldEditorWindow,
+  type WorldEditorWindows,
 } from "./world-editor-reload.js";
 export {
   ObjectDataWriterError,
