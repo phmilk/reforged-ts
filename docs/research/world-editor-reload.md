@@ -34,6 +34,7 @@ None of the four Close Map cycles wrote a file to the map folder (Observed).
 
 - **A write nobody asked for.** Once, at 17:10:16, the World Editor rewrote the whole map folder with nobody saving: it recreated `conversation.json` and wrote `_Locales/` and `war3mapImported/` (Observed). The write came near the junction send, while two documents were open; what set it off is not known. No send of the Close Map cycles wrote anything.
 - How long a large map takes to show again after `-loadfile`: the test map is small, and nothing was timed. `reloadWorldEditor` waits up to 10 seconds by default (`loadTimeout`) and says `"not-loaded"` past it.
+- How late a `Warning` can follow the title showing the map again: `reloadWorldEditor` reads the windows once more a poll (250 milliseconds) after the title, and a later `Warning` is not caught, the result staying `"reloaded"`. None showed after a Close Map cycle.
 - Whether a World Editor dialog other than `Warning` can follow `-loadfile` on a map closed first: none showed in the four cycles.
 - Whether the title `Warning` and the control ids hold under every Windows language: here the title was `Warning` while the buttons followed the Windows language, Portuguese (Observed); other languages were not checked.
 - Whether the World Editor's own dialogs ever show a title other than `Warning` for these two prompts, and whether the "already open" box's one button is control 1 or 2: `reloadWorldEditor` presses control 2, else control 1 (Inferred from the standard message box ids, not read).

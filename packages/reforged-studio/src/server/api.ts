@@ -992,8 +992,9 @@ async function deleteRoute(
  * Reloads the map folder in the World Editor, `reforged-map`'s
  * `reloadWorldEditor` (Close Map on the window that holds it, then
  * `-launch -loadfile`): what it did, or the reason it could not run. Once
- * the World Editor was seen to reload the map, the session compares a later World
- * Editor save with what it holds now, not with the Studio's saves before.
+ * the World Editor was seen to reload the map, the session compares a
+ * later World Editor save with what it holds now, not with the Studio's
+ * saves before.
  */
 function reloadNow(
   context: ApiContext,
