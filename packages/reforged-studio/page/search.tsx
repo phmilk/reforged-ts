@@ -105,6 +105,7 @@ export function Search(props: {
               >
                 <Icon
                   path={object.icon}
+                  layers={object.layerIcons}
                   label={object.name ?? object.rawcode}
                 />
                 <span className="name">{object.name ?? "(unnamed)"}</span>

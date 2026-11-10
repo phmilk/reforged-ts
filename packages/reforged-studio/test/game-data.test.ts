@@ -105,6 +105,22 @@ describe("readGameData's fields", () => {
     expect(data.text("Footman")).toBe("Footman");
     expect(data.text("WESTRING_NOWHERE")).toBeUndefined();
   });
+
+  it("resolves a WESTRING_ key whose value is another key through that key, as the races are labelled", async () => {
+    const data = await gameData("custom-fk", {
+      [base("_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt")]:
+        "[WorldEditStrings]\r\nWESTRING_LOOP_A=WESTRING_LOOP_B\r\nWESTRING_LOOP_B=WESTRING_LOOP_A\r\nWESTRING_DANGLING=WESTRING_NOWHERE\r\n",
+    });
+
+    expect(data.text("WESTRING_UE_UNITRACE_HUMAN")).toBe("Human");
+    expect(data.enumeration("unitRace")?.[0]).toEqual({
+      value: "human",
+      label: "Human",
+    });
+    // A key that leads back to itself, or to no key, has no text.
+    expect(data.text("WESTRING_LOOP_A")).toBeUndefined();
+    expect(data.text("WESTRING_DANGLING")).toBeUndefined();
+  });
 });
 
 describe("readGameData's Built-in objects", () => {
@@ -233,6 +249,42 @@ describe("readGameData's layers of a Game data set", () => {
     expect(fk.kinds.unit.objects.get("hfoo")?.values.get("unam")).toBe(
       "Footman",
     );
+  });
+
+  it("gives an art layer the values of its own keys in the profile files, DE taking HD's where it has none", async () => {
+    const fk = await gameData("custom-fk");
+    const roc = await gameData("custom-roc");
+    const icon = (data: typeof fk, rawcode: string) => {
+      const object = data.kinds.unit.objects.get(rawcode);
+      return {
+        all: object?.values.get("uico"),
+        sd: object?.layerValues.sd.get("uico"),
+        hd: object?.layerValues.hd.get("uico"),
+        de: object?.layerValues.de.get("uico"),
+      };
+    };
+
+    // The Town Hall's icon is under the layers' keys only, as the Priest's is.
+    expect(icon(fk, "htow")).toEqual({
+      all: undefined,
+      sd: "ReplaceableTextures\\CommandButtons\\BTNTownHall.blp",
+      hd: "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+      de: "ReplaceableTextures\\CommandButtons\\BTNTownHallV1.blp",
+    });
+    // A set's own value under a layer's key comes first in that layer.
+    expect(icon(roc, "htow").hd).toBe(
+      "ReplaceableTextures\\CommandButtons\\BTNTownHallV0.blp",
+    );
+    expect(icon(roc, "htow").de).toBe(
+      "ReplaceableTextures\\CommandButtons\\BTNTownHallV0.blp",
+    );
+    // A layer's key over the plain one, in that layer only.
+    expect(icon(fk, "hfoo")).toEqual({
+      all: "ReplaceableTextures\\CommandButtons\\BTNFootman.blp",
+      sd: undefined,
+      hd: undefined,
+      de: "ReplaceableTextures\\CommandButtons\\BTNFootmanDE.blp",
+    });
   });
 
   it("leaves out the units, items and abilities of a later Game Data Version", async () => {

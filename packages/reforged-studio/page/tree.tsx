@@ -148,7 +148,11 @@ function Item(props: {
           go({ rawcode: object.rawcode, kind: object.kind });
         }}
       >
-        <Icon path={object.icon} label={object.name ?? object.rawcode} />
+        <Icon
+          path={object.icon}
+          layers={object.layerIcons}
+          label={object.name ?? object.rawcode}
+        />
         <span className="name">{object.name ?? "(unnamed)"}</span>
         {object.origin === "definition" && (
           <span aria-label="read-only">🔒</span>

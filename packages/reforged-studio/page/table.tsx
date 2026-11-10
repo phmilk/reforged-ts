@@ -309,7 +309,11 @@ export function TableMode(props: {
                         onOpen(row);
                       }}
                     >
-                      <Icon path={row.icon} label={row.name ?? row.rawcode} />{" "}
+                      <Icon
+                        path={row.icon}
+                        layers={row.layerIcons}
+                        label={row.name ?? row.rawcode}
+                      />{" "}
                       {row.name ?? "(unnamed)"}
                     </button>{" "}
                     <code className="rawcode">{row.rawcode}</code>{" "}

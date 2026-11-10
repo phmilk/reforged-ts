@@ -1378,6 +1378,7 @@ async function icons(context: ApiContext): Promise<Answer> {
   const paths = new Set<string>();
   for (const object of listed.objects) {
     if (object.icon !== undefined) paths.add(object.icon);
+    for (const path of Object.values(object.layerIcons ?? {})) paths.add(path);
   }
   return new Answer(200, {
     icons: [...paths].sort(),

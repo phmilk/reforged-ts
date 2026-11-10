@@ -454,6 +454,7 @@ export function ObjectPage(props: {
       <header className="object-header">
         <Icon
           path={selected.icon}
+          layers={selected.layerIcons}
           label={selected.name ?? selected.rawcode}
           size="large"
         />
@@ -667,7 +668,11 @@ export function NoSelection(props: {
                 go({ rawcode: object.rawcode, kind: object.kind });
               }}
             >
-              <Icon path={object.icon} label={object.name ?? object.rawcode} />{" "}
+              <Icon
+                path={object.icon}
+                layers={object.layerIcons}
+                label={object.name ?? object.rawcode}
+              />{" "}
               {object.name ?? "(unnamed)"}, {KIND_NOUNS[object.kind]}{" "}
               <OriginChip object={object} />
             </button>

@@ -376,6 +376,20 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "shows the icon an art layer's own key gives, as the Priest's is given",
+    async () => {
+      const page = await open("/objects/htow");
+
+      // The Town Hall's icon is `Art:hd` only, the session's layer HD: green.
+      expect(await pixelOf(page.locator(".object-header .icon"))).toEqual([
+        0, 255, 0,
+      ]);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "asks which object a Rawcode two kinds share names, saying FourCC has no typed overload for it",
     async () => {
       const page = await open("/objects/B000");
