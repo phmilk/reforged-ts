@@ -1,5 +1,11 @@
 # reforged-map
 
+## 1.0.0-alpha.11
+
+### Minor Changes
+
+- [#886](https://github.com/phmilk/reforged-ts/pull/886) [`129d8c1`](https://github.com/phmilk/reforged-ts/commit/129d8c1050e7bd8033f693d6aebaa67cbffc7fcd) Thanks [@wyller](https://github.com/wyller)! - The World Editor reload now reloads, and says when it did not ([#871](https://github.com/phmilk/reforged-ts/issues/871)). `-launch -loadfile` alone does not reload a map the World Editor holds: it answers "The file is already open and active." `reloadWorldEditor(mapFolder, executable, options)` now posts File, Close Map to the World Editor window that holds the map folder without unsaved edits, waits for it to close, runs `-launch -loadfile`, and returns what it saw instead of nothing: `{ status: "reloaded" }`, `{ status: "opened" }` when no window held the map, or `{ status: "not-reloaded", reason, message }`, a `Warning` dialog after either step pressed away (control 2). It never closes a window that shows another map or unsaved edits, and runs synchronously for a few seconds. Its options gain `windows`, a stand-in window system for tests (`list`, `closeMap`, `cancel`), and `closeTimeout`, `loadTimeout` and `pollInterval`; a test that passed `launch` alone now passes `windows` too. Object sync and release warn to reload by hand when the reload did not happen. In the Studio, a save that reloads at once answers `reload: "not-reloaded"` with `worldEditorReload` when the World Editor did not reload, `POST /api/reload-world-editor` answers `{ reloaded, worldEditorReload }`, and the toast says "The World Editor reloaded the map." only when it did, else to close the map there and open it again. The revert detection compares a World Editor save with every state the Studio saved since the World Editor last loaded the map, not only the last save.
+
 ## 1.0.0-alpha.10
 
 ### Patch Changes
