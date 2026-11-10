@@ -202,9 +202,11 @@ finish() {
 #
 #   bash release/first-publish.sh --package reforged-map [--dry-run]
 #
-# It checks that npm does not hold the package yet and that the publish
-# plan's entry for it is 1.0.0-alpha.0 under `next`, and publishes that entry
-# alone: the other packages the plan holds are the release workflow's, whose
+# It publishes the version the package holds on master, a 1.0.0-alpha.N of
+# pre mode whatever N is: a Version Packages pull request can bump the
+# package again before its first publish (#885). It checks that npm does not
+# hold the package yet and that the publish plan's entry for it is that
+# version under `next`, and publishes that entry alone: the other packages the plan holds are the release workflow's, whose
 # failed publish job is re-run afterwards. When a peer or dependency packed
 # in the package is a version npm does not hold yet (reforged-types bumped by
 # the same release), it says so and publishes only once the maintainer
@@ -215,8 +217,8 @@ finish() {
 # check, saying what to fix. What only npmjs.com shows (the trusted
 # publisher, the package's publishing access, the token's 2FA setting and
 # its revocation) it asks the maintainer to confirm. It is safe to re-run: a
-# package npm already holds with `next` at 1.0.0-alpha.0 is not published
-# again, and its local tag is pushed when origin lacks it. A version npm
+# package npm already holds with `next` at the version it publishes is not
+# published again, and its local tag is pushed when origin lacks it. A version npm
 # does not show five minutes after a successful publish is waited for again
 # while the maintainer asks to. It never stores or prints the token: the token goes into the user
 # npm config for the run and is removed from it when the wizard exits.
@@ -228,9 +230,12 @@ finish() {
 
 # The packages of the first publish, without --package.
 readonly FIRST_FOUR=(reforged-ts reforged-types reforged-test eslint-plugin-reforged)
-readonly VERSION=1.0.0-alpha.0
+# The version of the first four. The one-package mode publishes the version
+# the package's manifest holds instead, any 1.0.0-alpha.N.
+readonly FIRST_VERSION=1.0.0-alpha.0
 readonly DIST_TAG=next
 readonly PRE_TAG=alpha
+readonly FIRST_MAJOR_ALPHA="^1\\.0\\.0-$PRE_TAG\\.(0|[1-9][0-9]*)\$"
 readonly REPO_OWNER=phmilk
 readonly REPO_NAME=reforged-ts
 readonly WORKFLOW=release.yml
@@ -240,9 +245,10 @@ RERUN="bash release/first-publish.sh"
 
 usage() {
   printf 'Usage: %s [--dry-run] [--package <name>]\n' "$RERUN"
-  printf '  The first publish of %s: docs/release.md, "Human steps".\n' "$VERSION"
+  printf '  The first publish of %s: docs/release.md, "Human steps".\n' "$FIRST_VERSION"
   printf '  --package <name>  publish only <name>, a package npm does not hold yet,\n'
-  printf '                    the others being on npm already\n'
+  printf '                    at the 1.0.0-%s.N master holds, the others being on\n' "$PRE_TAG"
+  printf '                    npm already\n'
 }
 
 DRY_RUN=false
@@ -261,13 +267,18 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+# VERSION is the version this run publishes: FIRST_VERSION for the first
+# four, and the package's own version in the one-package mode, read from its
+# manifest by the checks of the first stage.
 if [[ -n "$ONE_PACKAGE" ]]; then
   PACKAGES=("$ONE_PACKAGE")
   RERUN="$RERUN --package $ONE_PACKAGE"
   WHAT="$ONE_PACKAGE is"
+  VERSION=""
 else
   PACKAGES=("${FIRST_FOUR[@]}")
   WHAT="the four packages are"
+  VERSION=$FIRST_VERSION
 fi
 readonly PACKAGES WHAT
 
@@ -454,7 +465,13 @@ PENDING=()      # the packages npm does not hold with next at VERSION yet
 PUBLISHED=false # changeset publish ran and exited 0
 
 TITLE="First publish of $VERSION"
-[[ -z "$ONE_PACKAGE" ]] || TITLE="First publish of $ONE_PACKAGE@$VERSION"
+if [[ -n "$ONE_PACKAGE" ]]; then
+  # The banner comes before the checks: its version is read as best it can
+  # be, and the first stage reads it again and checks it.
+  TITLE="First publish of $ONE_PACKAGE"
+  title_version=$(manifest_field "$(git rev-parse --show-toplevel 2>/dev/null)/packages/$ONE_PACKAGE/package.json" version 2>/dev/null || true)
+  [[ -z "$title_version" ]] || TITLE="$TITLE@$title_version"
+fi
 if $DRY_RUN; then
   banner "$TITLE (dry run: nothing is published)"
 else
@@ -516,14 +533,17 @@ for pkg in "${PACKAGES[@]}"; do
   private=$(manifest_field "$manifest" private)
   [[ "$name" == "$pkg" ]] || fail "$manifest names the package $name, not $pkg."
   [[ "$private" != true ]] || fail "$pkg is private: it is never published." "Remove \"private\": true from $manifest first."
+  if [[ -n "$ONE_PACKAGE" ]]; then
+    [[ "$version" =~ $FIRST_MAJOR_ALPHA ]] ||
+      fail "The first version of $ONE_PACKAGE is not applied: it must be at 1.0.0-$PRE_TAG.N." \
+        "$pkg is at ${version:-no version}" \
+        "Merge the Version Packages pull request that gives it 1.0.0-$PRE_TAG.0; then pull master."
+    VERSION=$version
+  fi
   [[ "$version" == "$VERSION" ]] || UNVERSIONED+=("$pkg is at $version")
 done
+readonly VERSION
 if ((${#UNVERSIONED[@]})); then
-  if [[ -n "$ONE_PACKAGE" ]]; then
-    fail "The first version of $ONE_PACKAGE is not applied: it must be at $VERSION." \
-      "${UNVERSIONED[@]}" \
-      "Merge the Version Packages pull request that gives it $VERSION; then pull master."
-  fi
   fail "The versions of the first alpha are not applied: every package must be at $VERSION." \
     "${UNVERSIONED[@]}" \
     "Merge the pull request that applies them (branch release/first-alpha-versions)," \
