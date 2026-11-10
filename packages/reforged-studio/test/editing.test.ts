@@ -9,13 +9,14 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { openObjectData } from "reforged-map";
+import { openObjectData, type WorldEditorWindows } from "reforged-map";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import type {
   DiffAnswer,
   ErrorAnswer,
   FieldRow,
   RawcodeAnswer,
+  ReloadAnswer,
   SaveAnswer,
   SessionAnswer,
   SessionCounts,
@@ -91,14 +92,45 @@ function onDisk(
 const title = (project: Project, modified: boolean): string =>
   `Warcraft III World Editor - [${project.mapFolder}${modified ? " *" : ""}]`;
 
-/** A World Editor stand-in: the titles the check reads, and the reloads launched. */
+/**
+ * A World Editor stand-in: the titles the check and the reload read, the
+ * reloads launched, and what `-loadfile` does once Close Map took the map
+ * away: `"load"` shows it again, `"warn"` opens a `Warning` dialog, as "The
+ * file '<path>' is already open and active." does (#871).
+ */
 function worldEditor(project: Project) {
   const state = {
     titles: [] as string[],
+    dialogs: [] as string[],
+    onLoad: "load" as "load" | "warn",
     launched: [] as (readonly [string, readonly string[]])[],
+    cancelled: [] as string[],
     executable: path.join(makeTempDir("world-editor"), "World Editor.exe"),
   };
   fs.writeFileSync(state.executable, "");
+  const windows: WorldEditorWindows = {
+    list: () => [
+      ...state.titles.map((shown, index) => ({
+        handle: String(index),
+        title: shown,
+        kind: "main" as const,
+      })),
+      ...state.dialogs.map((handle) => ({
+        handle,
+        title: "Warning",
+        kind: "warning" as const,
+      })),
+    ],
+    closeMap: (handle) => {
+      state.titles = state.titles.map((shown, index) =>
+        String(index) === handle ? "Warcraft III World Editor" : shown,
+      );
+    },
+    cancel: (handle) => {
+      state.cancelled.push(handle);
+      state.dialogs = state.dialogs.filter((dialog) => dialog !== handle);
+    },
+  };
   return {
     state,
     options: {
@@ -106,8 +138,14 @@ function worldEditor(project: Project) {
       worldEditorExecutable: state.executable,
       worldEditorReload: {
         system: "windows" as const,
+        windows,
+        pollInterval: 1,
+        closeTimeout: 200,
+        loadTimeout: 200,
         launch: (executable: string, args: readonly string[]) => {
           state.launched.push([executable, args]);
+          if (state.onLoad === "warn") state.dialogs.push("already-open");
+          else state.titles = [title(project, false)];
         },
       },
     },
@@ -441,7 +479,10 @@ describe("saving in the Studio", () => {
     const reloaded = await request(studio, "/api/reload-world-editor", {
       json: {},
     });
-    expect(reloaded.body).toEqual({ reloaded: true });
+    expect(reloaded.body).toEqual({
+      reloaded: true,
+      worldEditorReload: { status: "reloaded" },
+    } satisfies ReloadAnswer);
     expect(editor.state.launched).toEqual([
       [
         editor.state.executable,
@@ -461,8 +502,40 @@ describe("saving in the Studio", () => {
       json: { reloadWorldEditor: true },
     });
 
-    expect((saved.body as SaveAnswer).reload).toBe("sent");
+    expect(saved.body).toMatchObject({
+      reload: "sent",
+      worldEditorReload: { status: "reloaded" },
+    } satisfies Partial<SaveAnswer>);
     expect(editor.state.launched).toHaveLength(1);
+  });
+
+  it("says the World Editor did not reload when it answers -loadfile with a Warning, pressed away (#871)", async () => {
+    const project = mapProject();
+    const editor = worldEditor(project);
+    const studio = await start(project, editor.options);
+    editor.open();
+    editor.state.onLoad = "warn";
+    await setUnitFields(studio, [["h001", "uhpm", 700]]);
+
+    const saved = await request(studio, "/api/save", {
+      json: { reloadWorldEditor: true },
+    });
+
+    expect(saved.body).toMatchObject({
+      reload: "not-reloaded",
+      worldEditorReload: { status: "not-reloaded", reason: "warning" },
+    } satisfies Partial<SaveAnswer>);
+    expect(editor.state.cancelled).toEqual(["already-open"]);
+
+    editor.open();
+    const again = await request(studio, "/api/reload-world-editor", {
+      json: {},
+    });
+    expect(again.status).toBe(200);
+    expect(again.body).toMatchObject({
+      reloaded: false,
+      worldEditorReload: { status: "not-reloaded", reason: "warning" },
+    });
   });
 
   it("never reloads while the World Editor shows unsaved edits", async () => {

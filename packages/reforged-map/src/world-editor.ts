@@ -140,20 +140,29 @@ export function checkWorldEditor(
 
 /** The state the windows' titles give a map folder's path. */
 function stateOf(folder: string, titles: readonly string[]): WorldEditorState {
-  const wanted = comparable(folder);
   let state: WorldEditorState = "no-window";
   for (const title of titles) {
-    if (!title.startsWith(TITLE_PREFIX) || !title.endsWith("]")) continue;
-    const shown = title.slice(TITLE_PREFIX.length, -1);
-    const modified = shown.endsWith(MODIFIED_SUFFIX);
-    const shownPath = modified
-      ? shown.slice(0, -MODIFIED_SUFFIX.length)
-      : shown;
-    if (comparable(shownPath) !== wanted) continue;
-    if (modified) return "modified";
-    state = "open";
+    const shown = titleState(title, folder);
+    if (shown === "modified") return "modified";
+    if (shown === "open") state = "open";
   }
   return state;
+}
+
+/**
+ * What one window's title shows of a map folder's path: `"modified"` when it
+ * is a World Editor main window holding the folder with unsaved edits,
+ * `"open"` when it holds it without, `"no-window"` otherwise.
+ */
+export function titleState(title: string, folder: string): WorldEditorState {
+  if (!title.startsWith(TITLE_PREFIX) || !title.endsWith("]")) {
+    return "no-window";
+  }
+  const shown = title.slice(TITLE_PREFIX.length, -1);
+  const modified = shown.endsWith(MODIFIED_SUFFIX);
+  const shownPath = modified ? shown.slice(0, -MODIFIED_SUFFIX.length) : shown;
+  if (comparable(shownPath) !== comparable(folder)) return "no-window";
+  return modified ? "modified" : "open";
 }
 
 /** A path as the check compares it: `\` read as `/`, in lower case, without a trailing separator. */
@@ -198,6 +207,19 @@ export function windowsPath(folder: string, timeout: number): string {
 
 /** The titles of the top-level windows that start with {@link TITLE_PREFIX}, read by powershell.exe. */
 function systemWindowTitles(timeout: number): string[] {
+  return powershell(SCRIPT, END_LINE, timeout);
+}
+
+/**
+ * The lines a PowerShell script prints, run by a short-lived powershell.exe
+ * from its `-EncodedCommand`, without the end line it must print last: a
+ * cut-off output throws.
+ */
+export function powershell(
+  script: string,
+  endLine: string,
+  timeout: number,
+): string[] {
   const output = run(
     "powershell.exe",
     [
@@ -207,13 +229,13 @@ function systemWindowTitles(timeout: number): string[] {
       "-ExecutionPolicy",
       "Bypass",
       "-EncodedCommand",
-      Buffer.from(SCRIPT, "utf16le").toString("base64"),
+      Buffer.from(script, "utf16le").toString("base64"),
     ],
     timeout,
   );
   const lines = output.split(/\r?\n/);
   while (lines.at(-1) === "") lines.pop();
-  if (lines.pop() !== END_LINE) {
+  if (lines.pop() !== endLine) {
     throw new Error("powershell.exe stopped before listing every window");
   }
   return lines;

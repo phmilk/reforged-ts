@@ -17,6 +17,7 @@ import {
   syncObjectDefinitions,
   type ObjectDataObject,
   type ObjectReleaseOptions,
+  type WorldEditorWindows,
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
@@ -54,6 +55,13 @@ export const Paladin = defineUnit({ rawcode: "Hpal", fields: { uhpm: 700 } });
 
 const NO_WINDOW: ObjectReleaseOptions = {
   worldEditorCheck: { readWindowTitles: () => [] },
+};
+
+/** A window system with no World Editor window, for the reload: it starts the executable and returns `"opened"`. */
+const NO_WINDOWS: WorldEditorWindows = {
+  list: () => [],
+  closeMap: () => undefined,
+  cancel: () => undefined,
 };
 
 /** The window titles of a World Editor holding a folder, saved or not. */
@@ -472,7 +480,7 @@ describe("releaseObjects and a World Editor holding the map", () => {
     const report = release(project, ["h002"], {
       ...titles(project.mapFolder, false),
       worldEditorExecutable: executable,
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(report.worldEditorReloaded).toBe(true);
@@ -491,7 +499,7 @@ describe("releaseObjects and a World Editor holding the map", () => {
     const report = release(project, ["h002"], {
       ...titles(project.mapFolder, false),
       worldEditorExecutable: "World Editor.exe",
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(report.written).toEqual([]);

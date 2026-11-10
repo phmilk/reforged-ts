@@ -15,6 +15,8 @@ import {
   openObjectData,
   type ObjectDataObject,
   type ObjectSyncOptions,
+  type WorldEditorWindow,
+  type WorldEditorWindows,
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
@@ -40,6 +42,13 @@ const IMPORT = `import { defineAbility, defineUnit } from "reforged-map/objects"
 const UNITS = "src/objects/units.ts";
 
 const MANIFEST = "object-manifest.json";
+
+/** A window system with no World Editor window, for the reload: it starts the executable and returns `"opened"`. */
+const NO_WINDOWS: WorldEditorWindows = {
+  list: () => [],
+  closeMap: () => undefined,
+  cancel: () => undefined,
+};
 
 /** The window titles of a World Editor holding a folder, saved or not. */
 function titles(folder: string, modified: boolean): ObjectSyncOptions {
@@ -309,7 +318,7 @@ describe("syncObjectDefinitions", () => {
     const report = sync(project, {
       ...titles(project.mapFolder, false),
       worldEditorExecutable: executable,
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(report.worldEditor).toBe("open");
@@ -331,7 +340,7 @@ describe("syncObjectDefinitions", () => {
     const report = sync(project, {
       ...titles(project.mapFolder, false),
       worldEditorExecutable: missing,
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(launch).not.toHaveBeenCalled();
@@ -347,13 +356,60 @@ describe("syncObjectDefinitions", () => {
     );
   });
 
+  it("warns to reload by hand, naming why, when the World Editor answers the reload with a Warning", () => {
+    const project = mapProject(FIXTURE, { [UNITS]: FIRST });
+    const shown = `Warcraft III World Editor - [${path.resolve(project.mapFolder)}]`;
+    let windows: WorldEditorWindow[] = [
+      { handle: "1", title: shown, kind: "main" },
+    ];
+    const launch = vi.fn(() => {
+      windows = [
+        ...windows,
+        { handle: "2", title: "Warning", kind: "warning" },
+      ];
+    });
+
+    const report = sync(project, {
+      ...titles(project.mapFolder, false),
+      worldEditorExecutable: editorExecutable(),
+      worldEditorReload: {
+        system: "windows",
+        launch,
+        pollInterval: 1,
+        windows: {
+          list: () => windows,
+          // Close Map takes the path away; -loadfile shows the Warning.
+          closeMap: () => {
+            windows = windows.map((window) => ({
+              ...window,
+              title: "Warcraft III World Editor",
+            }));
+          },
+          cancel: (handle) => {
+            windows = windows.filter((window) => window.handle !== handle);
+          },
+        },
+      },
+    });
+
+    expect(launch).toHaveBeenCalledOnce();
+    expect(report.worldEditorReloaded).toBe(false);
+    expect(report.warnings).toHaveLength(1);
+    expect(report.warnings[0]).toContain(
+      `The World Editor has ${project.mapFolder} open and was not reloaded (`,
+    );
+    expect(report.warnings[0]).toContain(
+      "reload the map there (close it without saving and open it again)",
+    );
+  });
+
   it("neither reloads nor warns when the World Editor does not hold the map", () => {
     const project = mapProject(FIXTURE, { [UNITS]: FIRST });
     const launch = vi.fn();
 
     const report = sync(project, {
       worldEditorExecutable: editorExecutable(),
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(report.worldEditor).toBe("no-window");
@@ -371,7 +427,7 @@ describe("syncObjectDefinitions", () => {
     const report = sync(project, {
       ...titles(project.mapFolder, false),
       worldEditorExecutable: editorExecutable(),
-      worldEditorReload: { system: "windows", launch },
+      worldEditorReload: { system: "windows", launch, windows: NO_WINDOWS },
     });
 
     expect(report.written).toEqual([]);

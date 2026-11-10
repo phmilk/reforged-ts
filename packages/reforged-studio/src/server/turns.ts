@@ -3,8 +3,9 @@
  * the session's states: the merge of the unsaved edits on a map folder that
  * changed on disk (the saved state, the working state and the new saved
  * state), and the detection of a World Editor save that put back fields the
- * Studio's last save wrote (the states before and after that save, and the
- * new saved state). Pure: the session applies what they plan.
+ * Studio saved (the states the Studio saved since the World Editor last
+ * loaded the map, and the new saved state). Pure: the session applies what
+ * they plan.
  */
 import type {
   ObjectDataModification,
@@ -265,37 +266,46 @@ export function planMerge(
   return plan;
 }
 
-/** A field a World Editor save put back, with what the Studio's save wrote there, so that it can be applied again. */
+/** A field a World Editor save put back, with what the Studio's last save left there, so that it can be applied again. */
 export interface PendingPutBack {
   readonly putBack: PutBack;
   readonly place: Place;
-  /** What the Studio's save wrote there. */
+  /** What the Studio's last save left there. */
   readonly studio: Held;
 }
 
 /**
- * The places the Studio's last save wrote that the new saved state holds
- * as they were before that save: each place where the states before and
- * after the save differ, and the new saved state differs from the one after
- * and equals the one before. A field of an object the new saved state no
- * longer holds as the save left it (removed, or another base) is not put
- * back: the whole object is compared instead.
+ * The places the Studio saved that the new saved state holds as one of the
+ * states before: each place where the new saved state differs from what
+ * the Studio's last save left and equals what an earlier state held there,
+ * the state before the first save or any save since. A World Editor that
+ * loaded the earliest state and missed every reload since saves it back so
+ * ([#871](https://github.com/phmilk/reforged-ts/issues/871): 1000, then
+ * 1234 and 2000 saved, the World Editor saving 1000). A field of an object
+ * the new saved state no longer holds as the save left it (removed, or
+ * another base) is not put back: the whole object is compared instead.
  *
- * @param before - The state before the Studio's last save.
- * @param after - The state that save wrote.
+ * @param saves - The states the Studio saved since the World Editor last
+ *   loaded the map: the state before the first save, then each save's, the
+ *   last one last.
  * @param next - The new saved state.
  * @returns The places put back, in order.
  */
 export function findPutBack(
-  before: ObjectState,
-  after: ObjectState,
+  saves: readonly ObjectState[],
   next: ObjectState,
 ): PendingPutBack[] {
   const found: PendingPutBack[] = [];
-  for (const { place, held, contents } of compare([before, after, next])) {
-    const [was, wrote, now] = contents;
-    if (was === wrote || now === wrote || now !== was) continue;
-    const [, wroteHeld, nowHeld] = held;
+  const last = saves.length - 1;
+  if (last < 1) return found;
+  for (const { place, held, contents } of compare([...saves, next])) {
+    const wrote = contents[last];
+    const now = contents[last + 1];
+    if (now === wrote || !contents.slice(0, last).includes(now)) {
+      continue;
+    }
+    const wroteHeld = held[last];
+    const nowHeld = held[last + 1];
     found.push({
       place,
       studio: wroteHeld,

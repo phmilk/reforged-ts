@@ -61,3 +61,9 @@ Amendment record: https://github.com/phmilk/reforged-ts/issues/475
 The editors that take turns on the map folder are the 3.0 World Editor and the Studio. HiveWE is not a target for now, since no HiveWE release reads a 3.0.0 map (ADR 0014, third amendment). The writer's round-trip contract covers maps saved by the World Editor, and Object sync makes objects visible in the World Editor and the Studio. Ownership still lives in the Object manifest and never in a field of the object: a marker field would have to survive every World Editor save, which nothing has checked.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/485
+
+## Third amendment (2026-11-10)
+
+`-launch -loadfile` alone does not reload a map the World Editor holds: it answers "The file '<path>' is already open and active." and keeps what it loaded ([`docs/research/world-editor-reload.md`](../research/world-editor-reload.md)). The reload after a save therefore closes the map first, posting File, Close Map to the World Editor window whose title shows the map folder without ` *`, then runs `-launch -loadfile`, and reports whether the World Editor showed the map again; a `Warning` dialog after either step means it did not, and the Studio says so instead of claiming a reload. The Studio keeps every state it saved since the World Editor last loaded the map, not only the last save's, so that a World Editor save of a state older than the last one is still offered to apply again.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/871

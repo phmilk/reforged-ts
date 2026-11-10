@@ -55,8 +55,8 @@ export interface ObjectSyncOptions extends ObjectDefinitionsOptions {
    */
   worldEditorExecutable?: string;
   /**
-   * How to run the World Editor reload: an injected launcher, the system.
-   * For tests.
+   * How to run the World Editor reload: an injected launcher, the system,
+   * the window system, the waits. For tests.
    */
   worldEditorReload?: WorldEditorReloadOptions;
 }
@@ -91,7 +91,7 @@ export interface ObjectSyncReport {
   readonly manifestWritten: boolean;
   /** What the World Editor showed of the map folder before the first write. */
   readonly worldEditor: WorldEditorState | undefined;
-  /** Whether it reloaded the map folder in the World Editor that held it, with `-launch -loadfile`. */
+  /** Whether it reloaded the map folder in the World Editor that held it: Close Map, then `-launch -loadfile` ({@link reloadWorldEditor}), not refused. */
   readonly worldEditorReloaded: boolean;
   /** Author-facing warnings, each one line. */
   readonly warnings: readonly string[];
@@ -140,8 +140,8 @@ export interface ObjectSyncReport {
  * showing unsaved edits for it (` *]`) refuses the save. One holding it
  * without unsaved edits is reloaded after the write, given the World
  * Editor's executable ({@link reloadWorldEditor}), else its next save puts
- * back what it loaded: without the executable, or when the reload fails,
- * the sync warns to reload the map there by hand. Then the written objects are
+ * back what it loaded: without the executable, or when the reload fails or
+ * does not happen, the sync warns to reload the map there by hand. Then the written objects are
  * read back and the manifest records each defined object's snapshot: base
  * and Skin files merged, strings as their text and their text per locale,
  * each modification as field id, level, data pointer, value type and value. The manifest is written
@@ -318,8 +318,16 @@ export function reloadOrWarn(
     return false;
   }
   try {
-    reloadWorldEditor(mapFolder, executable, options.worldEditorReload);
-    return true;
+    const reload = reloadWorldEditor(
+      mapFolder,
+      executable,
+      options.worldEditorReload,
+    );
+    if (reload.status !== "not-reloaded") return true;
+    warnings.push(
+      `The World Editor has ${mapFolder} open and was not reloaded (${reload.message}): ${byHand}`,
+    );
+    return false;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     warnings.push(
