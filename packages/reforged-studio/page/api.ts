@@ -24,6 +24,7 @@ import type {
   PutBackRequest,
   RawcodeAnswer,
   RawcodeCheckAnswer,
+  ReloadAnswer,
   ReloadFromDiskAnswer,
   ResetRequest,
   SaveAnswer,
@@ -198,7 +199,8 @@ export const api = {
       error?.message ?? response.statusText,
     );
   },
-  reloadWorldEditor: () => post<unknown>("/reload-world-editor", {}),
+  /** Reloads the map in the World Editor: whether it did, and why not. */
+  reloadWorldEditor: () => post<ReloadAnswer>("/reload-world-editor", {}),
   /** The conflicts left to choose and the fields a World Editor save put back. */
   turns: () => get<TurnsAnswer>("/turns"),
   /** "Reload and keep my edits on top": the map folder read again, the unsaved edits replayed on it. */

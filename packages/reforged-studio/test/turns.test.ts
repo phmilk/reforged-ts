@@ -456,6 +456,102 @@ describe("a World Editor save that puts back what the Studio saved", () => {
     ).toMatchObject({ error: { reason: "nothing-put-back" } });
   });
 
+  it("is detected across every Studio save the World Editor never loaded (#871)", async () => {
+    const project = mapProject();
+    saveOnDisk(project, [["h001", "uhpm", 1000]]);
+    const studio = await start(project);
+    const stream = await events(studio);
+    await stream.next("session");
+    // The World Editor loaded 1000, then missed the reload of both saves.
+    const stale = objectFiles(project);
+    await setUnitFields(studio, [["h001", "uhpm", 1234]]);
+    expect((await request(studio, "/api/save", { json: {} })).status).toBe(200);
+    await setUnitFields(studio, [["h001", "uhpm", 2000]]);
+    expect((await request(studio, "/api/save", { json: {} })).status).toBe(200);
+
+    writeBack(project, stale);
+    const reloaded = await stream.next("reloaded");
+    stream.close();
+
+    expect(reloaded.data).toMatchObject({ putBack: 1 });
+    expect(
+      ((await request(studio, "/api/turns")).body as TurnsAnswer).putBack,
+    ).toEqual([
+      {
+        kind: "unit",
+        rawcode: "h001",
+        field: "uhpm",
+        studio: { is: "value", value: 2000 },
+        worldEditor: { is: "value", value: 1000 },
+      },
+    ]);
+    await request(studio, "/api/put-back", { json: { action: "apply" } });
+    expect(await shown(studio, "h001", "uhpm")).toBe(2000);
+  });
+
+  it("is detected for a state saved in between that the World Editor holds, and not for one before its last reload (#871)", async () => {
+    const project = mapProject();
+    const executable = path.join(project.root, "World Editor.exe");
+    fs.writeFileSync(executable, "");
+    let titles: string[] = [];
+    const holding = `Warcraft III World Editor - [${project.mapFolder}]`;
+    const studio = await start(project, {
+      worldEditorCheck: { readWindowTitles: () => titles },
+      worldEditorExecutable: executable,
+      worldEditorReload: {
+        system: "windows",
+        pollInterval: 1,
+        windows: {
+          list: () =>
+            titles.map((title) => ({ handle: "1", title, kind: "main" })),
+          closeMap: () => {
+            titles = ["Warcraft III World Editor"];
+          },
+          cancel: () => undefined,
+        },
+        launch: () => {
+          titles = [holding];
+        },
+      },
+    });
+    const stream = await events(studio);
+    await stream.next("session");
+    titles = [holding];
+    const beforeReload = objectFiles(project);
+    // The first save reloads the World Editor, which then holds 700; the
+    // second one does not.
+    await setUnitFields(studio, [["h001", "uhpm", 700]]);
+    expect(
+      (
+        await request(studio, "/api/save", {
+          json: { reloadWorldEditor: true },
+        })
+      ).body,
+    ).toMatchObject({ reload: "sent" });
+    const loaded = objectFiles(project);
+    await setUnitFields(studio, [["h001", "uhpm", 900]]);
+    expect((await request(studio, "/api/save", { json: {} })).status).toBe(200);
+
+    // What the map folder held before the reload is the World Editor's
+    // no longer: saving it is an edit there, not a revert.
+    writeBack(project, beforeReload);
+    expect((await stream.next("reloaded")).data).toMatchObject({ putBack: 0 });
+    // What it loaded is.
+    writeBack(project, loaded);
+    expect((await stream.next("reloaded")).data).toMatchObject({ putBack: 1 });
+    stream.close();
+    expect(
+      ((await request(studio, "/api/turns")).body as TurnsAnswer).putBack,
+    ).toMatchObject([
+      {
+        rawcode: "h001",
+        field: "uhpm",
+        studio: { is: "value", value: 900 },
+        worldEditor: { is: "value", value: 700 },
+      },
+    ]);
+  });
+
   it("is not detected when the World Editor sets a field the Studio saved to a third value", async () => {
     const project = mapProject();
     const studio = await start(project);

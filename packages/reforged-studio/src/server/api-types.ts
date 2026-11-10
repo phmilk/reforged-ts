@@ -9,6 +9,7 @@ import type {
   Locale,
   ObjectKind,
   RawcodeSuggestion,
+  WorldEditorReload,
   WorldEditorState,
 } from "reforged-map";
 import type { ArtLayer } from "../paths.js";
@@ -561,11 +562,14 @@ export interface ReloadFromDiskRequest {
  * What a save does about the World Editor: `"offered"` when it holds the
  * map folder without unsaved edits (`"open"`) and the save wrote files, so
  * the page offers "Reload in the World Editor"; `"sent"` when the save
- * reloaded it at once, as the request asked; `"no-executable"` when it
- * would be offered but the Studio has no World Editor executable;
+ * reloaded it at once, as the request asked, and the World Editor showed
+ * the map again (or opened it); `"not-reloaded"` when that reload ran and
+ * did not happen, `worldEditorReload` saying why; `"no-executable"` when
+ * it would be offered but the Studio has no World Editor executable;
  * `"none"` otherwise.
  */
-export type ReloadOffer = "offered" | "sent" | "no-executable" | "none";
+export type ReloadOffer =
+  "offered" | "sent" | "not-reloaded" | "no-executable" | "none";
 
 /** `POST /api/save`'s answer, once the map folder is written. */
 export interface SaveAnswer extends SessionCounts {
@@ -575,8 +579,10 @@ export interface SaveAnswer extends SessionCounts {
   readonly worldEditor: WorldEditorState | undefined;
   /** What the save does about the World Editor. */
   readonly reload: ReloadOffer;
-  /** Why the reload the request asked for failed, when it did: it is then offered. */
+  /** Why the reload the request asked for failed, when it threw: it is then offered. */
   readonly reloadError?: string;
+  /** What the reload the request asked for did, `reforged-map`'s `reloadWorldEditor`, when it ran without throwing. */
+  readonly worldEditorReload?: WorldEditorReload;
 }
 
 /** An unsaved edit the editor refused to replay on a map folder read again, with its reason. */
@@ -701,10 +707,16 @@ export interface PutBackRequest {
 /** `POST /api/conflicts`' and `POST /api/put-back`'s answer: the counts and what is left. */
 export interface TurnsChangedAnswer extends SessionCounts, TurnsAnswer {}
 
-/** `POST /api/reload-world-editor`'s answer: the World Editor was started with `-launch -loadfile <map folder>`. */
+/**
+ * `POST /api/reload-world-editor`'s answer: what `reforged-map`'s
+ * `reloadWorldEditor` did, Close Map on the World Editor window that holds
+ * the map folder, then `-launch -loadfile <map folder>`.
+ */
 export interface ReloadAnswer {
-  /** Always true. */
-  readonly reloaded: true;
+  /** Whether the World Editor reloaded the map, or opened it when no window held it. */
+  readonly reloaded: boolean;
+  /** What the reload did, and why not when it did not happen. */
+  readonly worldEditorReload: WorldEditorReload;
 }
 
 /** One file of a diff: its path in the map folder and its text's unified diff. */

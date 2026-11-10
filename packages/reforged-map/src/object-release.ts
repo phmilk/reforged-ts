@@ -49,7 +49,7 @@ export interface ObjectReleaseReport {
   readonly manifestWritten: boolean;
   /** What the World Editor showed of the map folder before the first write; undefined when nothing was released. */
   readonly worldEditor: WorldEditorState | undefined;
-  /** Whether it reloaded the map folder in the World Editor that held it, with `-launch -loadfile`. */
+  /** Whether it reloaded the map folder in the World Editor that held it: Close Map, then `-launch -loadfile` ({@link reloadWorldEditor}), not refused. */
   readonly worldEditorReloaded: boolean;
   /** Author-facing warnings, each one line. */
   readonly warnings: readonly string[];
