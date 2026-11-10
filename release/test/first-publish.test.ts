@@ -22,14 +22,15 @@ const FIRST_FOUR = [
 ];
 
 // npm: `view <pkg> dist-tags.next` answers FAKE_NPM_NEXT ("pkg=version ...")
-// or E404; `view <pkg>@<x> version` answers nothing; whoami answers once the
-// token is set; every call is logged.
+// and what the fake publish published, or E404; `view <pkg>@<x> version`
+// answers nothing; whoami answers once the token is set, and refuses it as
+// revoked afterwards; every call is logged.
 const FAKE_NPM = `#!/usr/bin/env bash
 printf 'npm %s\\n' "$*" >>"$FAKE_LOG"
 case "$1" in
   view)
     if [[ "$3" == dist-tags.next ]]; then
-      for pair in $FAKE_NPM_NEXT; do
+      for pair in $FAKE_NPM_NEXT $(cat "$FAKE_STATE/published" 2>/dev/null); do
         [[ "\${pair%%=*}" == "$2" ]] && { printf '%s\\n' "\${pair#*=}"; exit 0; }
       done
       echo "npm error code E404" >&2
@@ -38,7 +39,11 @@ case "$1" in
     exit 0
     ;;
   whoami)
-    [[ -f "$FAKE_STATE/token" ]] && { echo paulo; exit 0; }
+    if [[ -f "$FAKE_STATE/token" && ! -f "$FAKE_STATE/revoked" ]]; then
+      touch "$FAKE_STATE/revoked"
+      echo paulo
+      exit 0
+    fi
     echo "npm error code E401" >&2
     exit 1
     ;;
@@ -49,11 +54,19 @@ esac
 exit 0
 `;
 
-// pnpm: `changeset pack --out-dir <dir>` copies FAKE_PLAN there; every call
-// is logged, `changeset publish` among them.
+// pnpm: `changeset pack --out-dir <dir>` copies FAKE_PLAN there, and
+// `changeset publish` publishes each entry of the plan it is given (npm then
+// answers its version as `next`) and tags it locally; every call is logged.
 const FAKE_PNPM = `#!/usr/bin/env bash
 printf 'pnpm %s\\n' "$*" >>"$FAKE_LOG"
 if [[ "$1 $2" == "changeset pack" ]]; then cp "$FAKE_PLAN" "$4/publish-plan.json"; fi
+if [[ "$1 $2" == "changeset publish" ]]; then
+  node -e '
+    const plan = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+    for (const e of plan.plan.flat()) console.log(e.name + "=" + e.version);
+  ' "$4/publish-plan.json" >>"$FAKE_STATE/published"
+  while IFS== read -r name version; do git tag "$name@$version"; done <"$FAKE_STATE/published"
+fi
 exit 0
 `;
 
@@ -101,7 +114,10 @@ async function wizard(fixture: Fixture, args: string[], input = "") {
   git("init", "-q", "-b", "master");
   git("add", "-A");
   git("commit", "-qm", "master");
-  git("remote", "add", "origin", checkout);
+  const origin = join(root, "origin.git");
+  execFileSync("git", ["init", "-q", "--bare", origin]);
+  git("remote", "add", "origin", origin);
+  git("push", "-q", "origin", "master");
 
   for (const [name, text] of [
     ["npm", FAKE_NPM],
@@ -139,7 +155,22 @@ async function wizard(fixture: Fixture, args: string[], input = "") {
     status: result.status,
     output: `${result.stdout}${result.stderr}`,
     log: await readFile(join(state, "log"), "utf8"),
+    originTags: execFileSync("git", ["ls-remote", "--tags", origin], {
+      encoding: "utf8",
+    }),
   };
+}
+
+/** `entry` with a tarball holding its package.json, which has no peer. */
+async function packed(entry: ReturnType<typeof publishEntry>) {
+  const pack = await tempDir("first-publish-pack");
+  await writeText(
+    pack,
+    "package/package.json",
+    `${JSON.stringify({ name: entry.name, version: entry.version })}\n`,
+  );
+  execFileSync("tar", ["-czf", "package.tgz", "package"], { cwd: pack });
+  return { ...entry, tarball: { path: join(pack, "package.tgz") } };
 }
 
 const firstFour = (version = "1.0.0-alpha.0") =>
@@ -249,19 +280,10 @@ describe.skipIf(process.platform === "win32")(
       ])(
         "refuses a publish plan entry at %s, and publishes nothing",
         async (_, entry, found) => {
-          const pack = await tempDir("first-publish-pack");
-          await writeText(
-            pack,
-            "package/package.json",
-            `${JSON.stringify({ name: "reforged-studio", version: entry.version })}\n`,
-          );
-          execFileSync("tar", ["-czf", "studio.tgz", "package"], { cwd: pack });
           const result = await wizard(
             {
               ...laterPackage("1.0.0-alpha.3"),
-              plan: publishPlan([
-                { ...entry, tarball: { path: join(pack, "studio.tgz") } },
-              ]),
+              plan: publishPlan([await packed(entry)]),
             },
             ["--package", "reforged-studio"],
             // The banner, stage 1, the npm username, the token, its 2FA.
@@ -274,6 +296,36 @@ describe.skipIf(process.platform === "win32")(
           expect(result.status).toBe(1);
         },
       );
+
+      it("publishes alpha.3, waits for npm's next at it and pushes its tag", async () => {
+        const result = await wizard(
+          {
+            ...laterPackage("1.0.0-alpha.3"),
+            plan: publishPlan([
+              await packed(
+                publishEntry("reforged-studio", "1.0.0-alpha.3", "next"),
+              ),
+            ]),
+          },
+          ["--package", "reforged-studio"],
+          // Every pause, prompt and confirmation answered, yes to each.
+          "y\n".repeat(20),
+        );
+        expect(result.output).toContain(
+          "the publish plan: reforged-studio at 1.0.0-alpha.3 under 'next'",
+        );
+        expect(result.log).toContain("changeset publish");
+        expect(result.output).toContain(
+          "reforged-studio: next is 1.0.0-alpha.3",
+        );
+        expect(result.originTags).toContain(
+          "refs/tags/reforged-studio@1.0.0-alpha.3",
+        );
+        expect(result.output).toContain(
+          "reforged-studio is on npm with next at 1.0.0-alpha.3",
+        );
+        expect(result.status).toBe(0);
+      });
     });
 
     describe("without --package", () => {

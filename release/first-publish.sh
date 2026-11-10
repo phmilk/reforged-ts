@@ -206,8 +206,9 @@ finish() {
 # pre mode whatever N is: a Version Packages pull request can bump the
 # package again before its first publish (#885). It checks that npm does not
 # hold the package yet and that the publish plan's entry for it is that
-# version under `next`, and publishes that entry alone: the other packages the plan holds are the release workflow's, whose
-# failed publish job is re-run afterwards. When a peer or dependency packed
+# version under `next`, and publishes that entry alone: the other packages
+# the plan holds are the release workflow's, whose failed publish job is
+# re-run afterwards. When a peer or dependency packed
 # in the package is a version npm does not hold yet (reforged-types bumped by
 # the same release), it says so and publishes only once the maintainer
 # confirms re-running that job right after. Then it walks through that
@@ -218,8 +219,8 @@ finish() {
 # publisher, the package's publishing access, the token's 2FA setting and
 # its revocation) it asks the maintainer to confirm. It is safe to re-run: a
 # package npm already holds with `next` at the version it publishes is not
-# published again, and its local tag is pushed when origin lacks it. A version npm
-# does not show five minutes after a successful publish is waited for again
+# published again, and its local tag is pushed when origin lacks it. A
+# version npm does not show five minutes after a successful publish is waited for again
 # while the maintainer asks to. It never stores or prints the token: the token goes into the user
 # npm config for the run and is removed from it when the wizard exits.
 #
@@ -235,7 +236,7 @@ readonly FIRST_FOUR=(reforged-ts reforged-types reforged-test eslint-plugin-refo
 readonly FIRST_VERSION=1.0.0-alpha.0
 readonly DIST_TAG=next
 readonly PRE_TAG=alpha
-readonly FIRST_MAJOR_ALPHA="^1\\.0\\.0-$PRE_TAG\\.(0|[1-9][0-9]*)\$"
+readonly ALPHA_VERSION_PATTERN="^1\\.0\\.0-$PRE_TAG\\.(0|[1-9][0-9]*)\$"
 readonly REPO_OWNER=phmilk
 readonly REPO_NAME=reforged-ts
 readonly WORKFLOW=release.yml
@@ -534,10 +535,10 @@ for pkg in "${PACKAGES[@]}"; do
   [[ "$name" == "$pkg" ]] || fail "$manifest names the package $name, not $pkg."
   [[ "$private" != true ]] || fail "$pkg is private: it is never published." "Remove \"private\": true from $manifest first."
   if [[ -n "$ONE_PACKAGE" ]]; then
-    [[ "$version" =~ $FIRST_MAJOR_ALPHA ]] ||
+    [[ "$version" =~ $ALPHA_VERSION_PATTERN ]] ||
       fail "The first version of $ONE_PACKAGE is not applied: it must be at 1.0.0-$PRE_TAG.N." \
         "$pkg is at ${version:-no version}" \
-        "Merge the Version Packages pull request that gives it 1.0.0-$PRE_TAG.0; then pull master."
+        "Merge the Version Packages pull request that gives it a 1.0.0-$PRE_TAG.N; then pull master."
     VERSION=$version
   fi
   [[ "$version" == "$VERSION" ]] || UNVERSIONED+=("$pkg is at $version")
