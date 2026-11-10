@@ -385,8 +385,12 @@ async function objectProfile(
  * the Priest (`hmpr`) has `Art:sd` and `Art:hd=…BTNPriestV1.blp`, no
  * `Art:de`, and `BTNPriestV1` is a file of the HD and DE layers only; the
  * Dragonhawk Rider (`hdhw`), whose DE icon is another, has its `Art:de`.
- * The rule is read from the install's files (#874); no Probe run has
- * measured it in the game.
+ * The rule, read from the install's files (#874), is the game's: the Probe
+ * `unit-icon-layers` (`probe/probes/unit-icon-layers.ts`), run on
+ * 3.0.1.24371 in each graphics mode, saw `BlzGetAbilityIcon` give
+ * `BTNPriestV1.blp` to `hmpr` and `BTNSorceressV1.blp` to `hsor` in HD and
+ * DE, `BTNDragonHawk.blp` to `hdhw` in SD and DE and
+ * `BTNDragonHawkRiderV1.blp` in HD: each the path these keys give.
  */
 const LAYER_KEYS: Readonly<Record<ArtLayer, readonly string[]>> = {
   sd: ["sd"],
