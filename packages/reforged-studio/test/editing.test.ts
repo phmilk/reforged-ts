@@ -524,7 +524,7 @@ describe("saving in the Studio", () => {
     expect(saved.body).toMatchObject({
       reload: "not-reloaded",
       worldEditorReload: { status: "not-reloaded", reason: "warning" },
-    } satisfies Partial<SaveAnswer>);
+    });
     expect(editor.state.cancelled).toEqual(["already-open"]);
 
     editor.open();

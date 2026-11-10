@@ -15,7 +15,7 @@ export const NO_WORLD_EDITOR_REASON =
  * reloaded, and then what the author does about it.
  *
  * @param reload - What the reload did; undefined for a Studio that did not say.
- * @returns The text.
+ * @returns The toast's sentence about the reload.
  */
 export function reloadText(
   reload: ReloadAnswer["worldEditorReload"] | undefined,
@@ -33,7 +33,7 @@ export function reloadText(
  * The toast's text after a save.
  *
  * @param answer - The save's answer.
- * @returns The text.
+ * @returns The toast's line: the files saved, then what the World Editor did.
  */
 export function savedText(
   answer: Pick<

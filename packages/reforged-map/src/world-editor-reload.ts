@@ -153,7 +153,7 @@ export type WorldEditorReload =
  * [`docs/research/world-editor-reload.md`](https://github.com/phmilk/reforged-ts/blob/master/docs/research/world-editor-reload.md)
  * found reliable ([#871](https://github.com/phmilk/reforged-ts/issues/871)):
  *
- * 1. It lists the World Editor's main windows. A window whose title shows
+ * 1. It lists the World Editor's windows. A main window whose title shows
  *    the map folder (`Warcraft III World Editor - [<path>]`, compared as
  *    {@link checkWorldEditor} compares it) with ` *]` stops the reload
  *    (`"modified"`), and so does a `Warning` dialog already open
@@ -167,9 +167,10 @@ export type WorldEditorReload =
  *    the World Editor asking to save changes: it is cancelled and the
  *    reload stops (`"save-prompt"`), the map and its edits kept.
  * 4. It starts the executable, then reads the windows until one shows the
- *    map again (`"reloaded"`), for up to `loadTimeout` (`"not-loaded"`). A
- *    `Warning` dialog meanwhile is pressed away, control 2 or else 1, and
- *    the reload did not happen (`"warning"`).
+ *    map again (`"reloaded"`), for up to `loadTimeout` (`"not-loaded"`),
+ *    and once more a poll later. A `Warning` dialog meanwhile is pressed
+ *    away, control 2 or else 1, and the reload did not happen
+ *    (`"warning"`).
  *
  * It runs synchronously: each read of the windows is a short-lived
  * `powershell.exe`, as the World Editor check's, and a reload takes a few
@@ -193,7 +194,8 @@ export type WorldEditorReload =
  *   the reason and a message.
  * @throws Error When the map folder is not a folder, the executable is not
  *   a file, the system is neither Windows nor WSL, `wslpath -w` fails, or
- *   the World Editor's windows cannot be read or driven.
+ *   the World Editor's windows cannot be read or driven. Nothing is started
+ *   when it throws; a failure after Close Map leaves the map closed.
  */
 export function reloadWorldEditor(
   mapFolder: string,
@@ -251,35 +253,47 @@ export function reloadWorldEditor(
       `The World Editor shows unsaved edits for ${mapFolder}: it was not reloaded, so that they are kept.`,
     );
   }
-  if (holding.length === 0) {
-    start();
-    return { status: "opened" };
-  }
   if (listed.some((window) => window.kind === "warning")) {
     return notReloaded(
       "dialog-open",
       `A World Editor dialog titled Warning is open: ${mapFolder} was neither closed nor reloaded. Answer the dialog there.`,
     );
   }
+  if (holding.length === 0) {
+    start();
+    return { status: "opened" };
+  }
+  /** Whether a main window, or one of those given, shows the map folder. */
+  const shows = (
+    now: readonly WorldEditorWindow[],
+    among: readonly WorldEditorWindow[] = now,
+  ) =>
+    now.some(
+      (window) =>
+        window.kind === "main" &&
+        among.some((each) => each.handle === window.handle) &&
+        titleState(window.title, loadPath) !== "no-window",
+    );
+  /** Reads the windows until they are done, or a Warning shows, pressed away; for up to the timeout. */
+  const watch = (
+    timeout: number,
+    done: (now: readonly WorldEditorWindow[]) => boolean,
+  ) =>
+    waitFor(timeout, pollInterval, () => {
+      const now = windows.list();
+      const warning = now.find((window) => window.kind === "warning");
+      if (warning !== undefined) {
+        windows.cancel(warning.handle);
+        return "warning" as const;
+      }
+      return done(now) ? ("done" as const) : undefined;
+    });
 
   for (const window of holding) windows.closeMap(window.handle);
   const closeTimeout = options.closeTimeout ?? 5_000;
-  const closed = waitFor(closeTimeout, pollInterval, () => {
-    const now = windows.list();
-    const prompt = now.find((window) => window.kind === "warning");
-    if (prompt !== undefined) {
-      windows.cancel(prompt.handle);
-      return "save-prompt";
-    }
-    const shown = now.some(
-      (window) =>
-        window.kind === "main" &&
-        holding.some((held) => held.handle === window.handle) &&
-        titleState(window.title, loadPath) !== "no-window",
-    );
-    return shown ? undefined : "closed";
-  });
-  if (closed === "save-prompt") {
+  // A Warning now is Close Map asking to save changes.
+  const closed = watch(closeTimeout, (now) => !shows(now, holding));
+  if (closed === "warning") {
     return notReloaded(
       "save-prompt",
       `The World Editor asked to save changes to ${mapFolder} on Close Map: it holds unsaved edits, so the prompt was cancelled and the map kept, not reloaded.`,
@@ -294,20 +308,12 @@ export function reloadWorldEditor(
 
   start();
   const loadTimeout = options.loadTimeout ?? 10_000;
-  const loaded = waitFor(loadTimeout, pollInterval, () => {
-    const now = windows.list();
-    const warning = now.find((window) => window.kind === "warning");
-    if (warning !== undefined) {
-      windows.cancel(warning.handle);
-      return "warning";
-    }
-    const shown = now.some(
-      (window) =>
-        window.kind === "main" &&
-        titleState(window.title, loadPath) !== "no-window",
-    );
-    return shown ? "reloaded" : undefined;
-  });
+  let loaded = watch(loadTimeout, (now) => shows(now));
+  if (loaded === "done") {
+    // A Warning may follow the title: one more read, a poll later.
+    sleep(pollInterval);
+    loaded = watch(0, () => true);
+  }
   if (loaded === "warning") {
     return notReloaded(
       "warning",

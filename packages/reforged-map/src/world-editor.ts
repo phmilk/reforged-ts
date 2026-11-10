@@ -236,7 +236,7 @@ export function powershell(
   const lines = output.split(/\r?\n/);
   while (lines.at(-1) === "") lines.pop();
   if (lines.pop() !== endLine) {
-    throw new Error("powershell.exe stopped before listing every window");
+    throw new Error("powershell.exe stopped before the end of its output");
   }
   return lines;
 }

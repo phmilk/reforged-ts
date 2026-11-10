@@ -265,14 +265,14 @@ A World Editor that holds the map folder without unsaved edits when a tool write
 1. It lists the World Editor's windows. A main window whose title shows the map folder (compared as the check compares it) with ` *]` stops it, `"modified"`, and so does a `Warning` dialog already open, `"dialog-open"`: nothing is closed or started. A window holding another map is never touched.
 2. With no window holding the map, it starts the executable with `-launch -loadfile <map folder>` and returns `{ status: "opened" }`, without waiting.
 3. Else it posts File, Close Map (`WM_COMMAND` `CLOSE_MAP_COMMAND`, 64189) to each window that holds the map, and waits, up to `closeTimeout` (5 seconds), for none to show it. A `Warning` meanwhile is the World Editor asking to save changes: it is cancelled, the map and its edits kept, and the reload stops, `"save-prompt"`; a window still showing the map at the timeout is `"not-closed"`.
-4. It starts the executable with `-launch -loadfile <map folder>`, then waits, up to `loadTimeout` (10 seconds), for a window to show the map again: `{ status: "reloaded" }`. A `Warning` meanwhile, such as "already open and active", is pressed away (control 2, else control 1), `"warning"`; no window showing the map at the timeout is `"not-loaded"`.
+4. It starts the executable with `-launch -loadfile <map folder>`, then waits, up to `loadTimeout` (10 seconds), for a window to show the map again, and reads once more a poll later: `{ status: "reloaded" }`. A `Warning` meanwhile, such as "already open and active", is pressed away (control 2, else control 1), `"warning"`; no window showing the map at the timeout is `"not-loaded"`.
 
 A reload that did not happen returns `{ status: "not-reloaded", reason, message }`, `reason` one of those above and `message` a line for the author. It runs synchronously and takes a few seconds: each read of the windows is a short-lived `powershell.exe`, as the check's.
 
 - The caller finds the executable, `World Editor.exe` beside the game's: the Template from the game discovery of `pnpm test:map`, the Studio from its own. Under WSL it is the WSL path of that file (`/mnt/c/...`).
 - The map folder is passed by its Windows path: on Windows its resolved path, under WSL the one `wslpath -w` gives.
 - The executable is started detached, with no standard input or output; an error it meets after starting is not reported.
-- It throws an `Error`, starting nothing, when the map folder is not a folder, the executable is not a file, the system is neither Windows nor WSL, `wslpath -w` fails, or the windows cannot be read.
+- It throws an `Error`, starting nothing, when the map folder is not a folder, the executable is not a file, the system is neither Windows nor WSL, `wslpath -w` fails, or the windows cannot be read or driven; a failure after Close Map leaves the map closed.
 
 Its options replace the system, for tests: `launch(executable, args)` starts the program, `system` is `"windows"` or `"wsl"`, `windowsPath(folder)` converts a WSL path, and `windows` reads and drives the World Editor's windows (`list()`, `closeMap(handle)`, `cancel(handle)`); `closeTimeout`, `loadTimeout` and `pollInterval` (250 milliseconds) set the waits.
 

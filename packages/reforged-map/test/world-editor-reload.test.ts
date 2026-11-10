@@ -363,6 +363,8 @@ describe("reloadWorldEditor and a World Editor that holds the map", () => {
       "list",
       `launch -launch -loadfile ${folder}`,
       "list",
+      // One more read a poll later, for a Warning after the title.
+      "list",
     ]);
     expect(editor.titles()).toEqual([
       holding(folder),
@@ -402,6 +404,19 @@ describe("reloadWorldEditor and a World Editor that holds the map", () => {
       reason: "modified",
     });
     expect(editor.log).toEqual(["list"]);
+  });
+
+  it("starts nothing while a World Editor Warning is open, even with no window holding the map", () => {
+    const folder = path.resolve(mapFolder({}));
+    const editor = fakeEditor([["9", "Warning"]]);
+
+    const result = reloadWorldEditor(folder, executable(), editor.options);
+
+    expect(result).toMatchObject({
+      status: "not-reloaded",
+      reason: "dialog-open",
+    });
+    expect(editor.launch).not.toHaveBeenCalled();
   });
 
   it("starts nothing while a World Editor Warning is already open", () => {
