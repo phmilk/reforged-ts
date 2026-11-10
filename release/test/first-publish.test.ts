@@ -24,7 +24,9 @@ const FIRST_FOUR = [
 // npm: `view <pkg> dist-tags.next` answers FAKE_NPM_NEXT ("pkg=version ...")
 // and what the fake publish published, or E404; `view <pkg>@<x> version`
 // answers nothing; whoami answers once the token is set, and refuses it as
-// revoked afterwards; every call is logged.
+// revoked afterwards: the wizard asks once to check the token and then
+// waits for its revocation, so a second check before it would read as
+// revoked; every call is logged.
 const FAKE_NPM = `#!/usr/bin/env bash
 printf 'npm %s\\n' "$*" >>"$FAKE_LOG"
 case "$1" in
@@ -142,6 +144,9 @@ async function wizard(fixture: Fixture, args: string[], input = "") {
     input,
     env: {
       ...process.env,
+      // No npm config of the machine's is read or written.
+      HOME: root,
+      NPM_CONFIG_USERCONFIG: join(root, "npmrc"),
       PATH: `${bin}:${process.env.PATH ?? ""}`,
       FAKE_LOG: join(state, "log"),
       FAKE_STATE: state,

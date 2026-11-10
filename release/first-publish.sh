@@ -220,9 +220,10 @@ finish() {
 # its revocation) it asks the maintainer to confirm. It is safe to re-run: a
 # package npm already holds with `next` at the version it publishes is not
 # published again, and its local tag is pushed when origin lacks it. A
-# version npm does not show five minutes after a successful publish is waited for again
-# while the maintainer asks to. It never stores or prints the token: the token goes into the user
-# npm config for the run and is removed from it when the wizard exits.
+# version npm does not show five minutes after a successful publish is
+# waited for again while the maintainer asks to. It never stores or prints
+# the token: the token goes into the user npm config for the run and is
+# removed from it when the wizard exits.
 #
 # The dry run still runs the read-only checks (git, the pre mode state, the
 # versions, what npm holds). It only warns about the branch and the working
