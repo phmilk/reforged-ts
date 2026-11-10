@@ -34,10 +34,10 @@ export default defineConfig({
           name: "reforged-studio",
           root: "packages/reforged-studio",
           // The turn-taking tests wait for the server to see a file written
-          // under it: 5.1 to 6.0 s each on the windows CI leg of the merge of
-          // #886 (run 42905865729), which failed them at the 5 s default,
-          // well under 1 s on Linux. Kept at 30 s, the budget of a test that
-          // waits on the system, as the projects below.
+          // under it. Measured 6.0 s at most with pnpm test on the windows
+          // CI leg of the merge of #886 (run 42905865729), 2026-11, which
+          // failed them at the 5 s default. Kept at 30 s, the budget of a
+          // test that waits on the system, as the projects below.
           testTimeout: 30_000,
           include: ["test/**/*.test.ts"],
           environment: "node",
