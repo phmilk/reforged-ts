@@ -13,6 +13,18 @@ const UNSAVED =
   "The World Editor did not reload the map: it holds unsaved edits for it. Close the map there and open it again once they are saved or discarded.";
 
 describe("the toast after a save", () => {
+  it("says there was nothing to save only when the save wrote no file", () => {
+    expect(savedText({ written: [], reload: "none" })).toBe(
+      "Nothing to save: the map folder already holds every edit.",
+    );
+    expect(
+      savedText({
+        written: ["war3map.w3u", "war3mapSkin.w3u", "war3map.wts"],
+        reload: "none",
+      }),
+    ).toBe("Saved 3 files: war3map.w3u, war3mapSkin.w3u, war3map.wts.");
+  });
+
   it("says the World Editor reloaded the map when the reload saw it", () => {
     expect(
       savedText({

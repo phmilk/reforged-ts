@@ -460,6 +460,26 @@ describe("saving in the Studio", () => {
     expect(onDisk(project, "h000", "unam")).toBe("Major");
   });
 
+  it("lists the files it writes after a World Editor save that left the files it read as they were (#892)", async () => {
+    const project = mapProject();
+    const studio = await start(project);
+    await setUnitFields(studio, [["h001", "uhpm", 700]]);
+    // The World Editor's save writes the file again, byte for byte.
+    const w3u = path.join(project.mapFolder, "war3map.w3u");
+    fs.writeFileSync(w3u, fs.readFileSync(w3u));
+
+    const saved = await request(studio, "/api/save", { json: {} });
+
+    expect(saved.status).toBe(200);
+    expect(saved.body).toMatchObject({
+      written: ["war3map.w3u"],
+      unsavedEdits: 0,
+    } satisfies Partial<SaveAnswer>);
+    expect(onDisk(project, "h001", "uhpm")).toBe(700);
+    const again = await request(studio, "/api/save", { json: {} });
+    expect((again.body as SaveAnswer).written).toEqual([]);
+  });
+
   it("offers the reload when the World Editor holds the map folder without unsaved edits, and reloads it on request", async () => {
     const project = mapProject();
     const editor = worldEditor(project);

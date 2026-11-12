@@ -161,28 +161,42 @@ function App() {
   const noWorldEditor =
     session !== undefined && session.worldEditorExecutable === undefined;
   const reloadAfterSave = autoReload && !noWorldEditor;
+  // A save in flight: the World Editor's reload holds the answer for
+  // seconds, and a second save sent meanwhile writes nothing, its "Nothing
+  // to save" then replacing the first's toast (#892).
+  const saving = useRef(false);
   const save = useCallback(() => {
-    api.save(reloadAfterSave).then((result) => {
-      changed(result.answer);
-      if (result.saved) {
-        forgetIcons();
+    if (saving.current) return;
+    saving.current = true;
+    api
+      .save(reloadAfterSave)
+      .finally(() => {
+        saving.current = false;
+      })
+      .then((result) => {
+        changed(result.answer);
+        if (result.saved) {
+          // The save read the map folder again: the change on disk is read,
+          // and the edits kept on top of it are saved.
+          setDiskChanged(false);
+          forgetIcons();
+          setToast({
+            text: savedText(result.answer),
+            reload: result.answer.reload === "offered",
+          });
+          return;
+        }
+        const { answer } = result;
+        if (answer.error.reason === "changed-on-disk") setDiskChanged(false);
+        if ((answer.conflicts ?? []).length > 0) setChoosing(true);
+        const kept = (answer.notReplayed ?? [])
+          .map((edit) => `${edit.edit.rawcode}: ${edit.message}`)
+          .join(" ");
         setToast({
-          text: savedText(result.answer),
-          reload: result.answer.reload === "offered",
+          text: `Not saved: ${answer.error.message}${kept === "" ? "" : ` Not replayed: ${kept}`}`,
+          refused: true,
         });
-        return;
-      }
-      const { answer } = result;
-      if (answer.error.reason === "changed-on-disk") setDiskChanged(false);
-      if ((answer.conflicts ?? []).length > 0) setChoosing(true);
-      const kept = (answer.notReplayed ?? [])
-        .map((edit) => `${edit.edit.rawcode}: ${edit.message}`)
-        .join(" ");
-      setToast({
-        text: `Not saved: ${answer.error.message}${kept === "" ? "" : ` Not replayed: ${kept}`}`,
-        refused: true,
-      });
-    }, failed);
+      }, failed);
   }, [reloadAfterSave, changed, failed]);
   /** Shows a refusal of the API in the toast. */
   const refused = useCallback((reason: unknown) => {
@@ -294,6 +308,8 @@ function App() {
           setDiskChanged(true);
         },
         saved: (data) => {
+          // Another host's save read the map folder again too.
+          setDiskChanged(false);
           setCounts(countsOf(data));
         },
         adopted: (data) => {
@@ -312,7 +328,8 @@ function App() {
         setSearching(true);
       } else if (key === "s") {
         event.preventDefault();
-        actions.current.save();
+        // A held Ctrl+S repeats: one save.
+        if (!event.repeat) actions.current.save();
       } else if (typing(event.target)) {
         // A field the author types in keeps its own undo.
       } else if (key === "z" && !event.shiftKey) {

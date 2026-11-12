@@ -170,6 +170,43 @@ describe("turns with the World Editor in the Studio's page", () => {
   );
 
   it(
+    "clears the banner of a change on disk once a save writes the edits, and names the files (#892)",
+    async () => {
+      const { project, studio, page } = await open("/objects/h001?kind=unit");
+      await page.locator('table.fields tr[data-field="uhpm"]').waitFor();
+      await setHitPoints(studio, 700);
+      // A World Editor save that rewrites the files the Studio read, byte
+      // for byte: a change on disk the save then writes over.
+      const w3u = path.join(project.mapFolder, "war3map.w3u");
+      fs.writeFileSync(w3u, fs.readFileSync(w3u));
+      const banner = page.getByTestId("disk-changed");
+      await banner.waitFor({ timeout: WATCH_TIMEOUT });
+
+      // A save that takes seconds (the World Editor's reload, run
+      // synchronously): a second Ctrl+S meanwhile sends no second save,
+      // whose "Nothing to save" would replace the toast.
+      const saves: string[] = [];
+      await page.route("**/api/save", async (route) => {
+        saves.push(route.request().method());
+        const response = await route.fetch();
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        await route.fulfill({ response });
+      });
+      await page.locator("body").press("Control+s");
+      await page.locator("body").press("Control+s");
+
+      await expect
+        .poll(() => page.getByRole("status").textContent())
+        .toContain("Saved 1 file: war3map.w3u.");
+      await expect.poll(() => unsaved(page)).toBe("0 unsaved");
+      expect(await banner.count()).toBe(0);
+      expect(saves).toEqual(["POST"]);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "shows what a change on disk read quietly brought, from its banner",
     async () => {
       const { project, page } = await open("/objects/h001?kind=unit");
