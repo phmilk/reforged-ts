@@ -185,9 +185,9 @@ describe("turns with the World Editor in the Studio's page", () => {
       // A save that takes seconds (the World Editor's reload, run
       // synchronously): a second Ctrl+S meanwhile sends no second save,
       // whose "Nothing to save" would replace the toast.
-      const saves: string[] = [];
+      const saveRequests: string[] = [];
       await page.route("**/api/save", async (route) => {
-        saves.push(route.request().method());
+        saveRequests.push(route.request().method());
         const response = await route.fetch();
         await new Promise((resolve) => setTimeout(resolve, 500));
         await route.fulfill({ response });
@@ -200,7 +200,7 @@ describe("turns with the World Editor in the Studio's page", () => {
         .toContain("Saved 1 file: war3map.w3u.");
       await expect.poll(() => unsaved(page)).toBe("0 unsaved");
       expect(await banner.count()).toBe(0);
-      expect(saves).toEqual(["POST"]);
+      expect(saveRequests).toEqual(["POST"]);
       await page.close();
     },
     TIMEOUT,

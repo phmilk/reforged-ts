@@ -170,15 +170,13 @@ function App() {
     saving.current = true;
     api
       .save(reloadAfterSave)
-      .finally(() => {
-        saving.current = false;
-      })
       .then((result) => {
         changed(result.answer);
         if (result.saved) {
-          // The save read the map folder again: the change on disk is read,
-          // and the edits kept on top of it are saved.
-          setDiskChanged(false);
+          // A save that wrote read the map folder again: the change on disk
+          // is read, and the edits kept on top of it are saved. One that
+          // wrote nothing read nothing.
+          if (result.answer.written.length > 0) setDiskChanged(false);
           forgetIcons();
           setToast({
             text: savedText(result.answer),
@@ -196,7 +194,10 @@ function App() {
           text: `Not saved: ${answer.error.message}${kept === "" ? "" : ` Not replayed: ${kept}`}`,
           refused: true,
         });
-      }, failed);
+      }, failed)
+      .finally(() => {
+        saving.current = false;
+      });
   }, [reloadAfterSave, changed, failed]);
   /** Shows a refusal of the API in the toast. */
   const refused = useCallback((reason: unknown) => {
@@ -308,8 +309,8 @@ function App() {
           setDiskChanged(true);
         },
         saved: (data) => {
-          // Another host's save read the map folder again too.
-          setDiskChanged(false);
+          // Another host's save that wrote read the map folder again too.
+          if (data.written.length > 0) setDiskChanged(false);
           setCounts(countsOf(data));
         },
         adopted: (data) => {
