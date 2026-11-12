@@ -173,9 +173,9 @@ function App() {
       .then((result) => {
         changed(result.answer);
         if (result.saved) {
-          // A save that wrote read the map folder again: the change on disk
-          // is read, and the edits kept on top of it are saved. One that
-          // wrote nothing read nothing.
+          // A save that writes files reads the map folder again, as the
+          // session's save does: the change on disk is read, and the edits
+          // kept on top of it are saved. One that writes none reads nothing.
           if (result.answer.written.length > 0) setDiskChanged(false);
           forgetIcons();
           setToast({
@@ -309,7 +309,7 @@ function App() {
           setDiskChanged(true);
         },
         saved: (data) => {
-          // Another host's save that wrote read the map folder again too.
+          // Another host's save that writes files reads it again too.
           if (data.written.length > 0) setDiskChanged(false);
           setCounts(countsOf(data));
         },
