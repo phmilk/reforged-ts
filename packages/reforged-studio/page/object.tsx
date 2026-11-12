@@ -11,7 +11,7 @@
  * offers a new object based on it or copying it, and a Custom object's its
  * delete.
  */
-import { Fragment, useState } from "react";
+import { Fragment, useState, type CSSProperties } from "react";
 import type {
   AdoptAnswer,
   FieldRow,
@@ -237,124 +237,137 @@ function FieldTable(props: {
   );
   const hidden = (key: string) =>
     hideAtBase && byKey.every((rows) => atBase(rows.get(key)));
+  const comparing = columns.length > 1;
   return (
-    <table className="fields">
-      <thead>
-        <tr>
-          <th>Field</th>
-          <th>Id</th>
-          {columns.map((column, i) => (
-            <th key={`${column.kind}:${column.rawcode}`}>
-              {i === 0 ? (
-                "Value"
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="link"
-                    onClick={() => {
-                      go({ rawcode: column.rawcode, kind: column.kind });
-                    }}
-                  >
-                    {column.name ?? "(unnamed)"} <code>{column.rawcode}</code>
-                  </button>{" "}
-                  <button
-                    type="button"
-                    className="link"
-                    aria-label={`Stop comparing ${column.rawcode}`}
-                    onClick={() => {
-                      onUnpin(column);
-                    }}
-                  >
-                    ✕
-                  </button>
-                </>
-              )}
-            </th>
+    <div className={`fields-scroll${comparing ? " comparing" : ""}`}>
+      <table
+        className="fields object-fields"
+        style={{ "--columns": columns.length } as CSSProperties}
+      >
+        <colgroup>
+          <col className="field-column" />
+          <col className="id-column" />
+          {columns.map((column) => (
+            <col key={`${column.kind}:${column.rawcode}`} />
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tableRows(columns).map((row) => {
-          if (row.kind === "single") {
-            if (hidden(row.key)) return null;
-            return (
-              <tr key={row.key} data-field={row.head.id}>
-                <td>{label(row.head)}</td>
-                <td>
-                  <code>{row.head.id}</code>
-                </td>
-                {columns.map((column, i) => (
-                  <Cell
-                    key={`${column.kind}:${column.rawcode}`}
-                    row={byKey[i]?.get(row.key)}
-                    object={column}
-                    actions={i === 0 ? actions : undefined}
-                  />
-                ))}
-              </tr>
-            );
-          }
-          const shown = row.keys.filter((key) => !hidden(key));
-          if (shown.length === 0) return null;
-          const open = !collapsed.has(row.id);
-          return (
-            <Fragment key={row.id}>
-              <tr className="levels" data-field={row.id}>
-                <td>
-                  <button
-                    type="button"
-                    className="link"
-                    aria-expanded={open}
-                    onClick={() => {
-                      const next = new Set(collapsed);
-                      if (open) next.add(row.id);
-                      else next.delete(row.id);
-                      setCollapsed(next);
-                    }}
-                  >
-                    {open ? "▾" : "▸"} {label(row.head)}
-                  </button>{" "}
-                  <span className="muted">· {row.keys.length} levels</span>
-                </td>
-                <td>
-                  <code>{row.id}</code>
-                </td>
-                {columns.map((column, i) => (
-                  <td
-                    key={`${column.kind}:${column.rawcode}`}
-                    className="muted"
-                  >
-                    {row.keys
-                      .map((key) => byKey[i]?.get(key)?.display ?? "—")
-                      .join(", ")}
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Id</th>
+            {columns.map((column, i) => (
+              <th key={`${column.kind}:${column.rawcode}`}>
+                {i === 0 ? (
+                  "Value"
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="link"
+                      onClick={() => {
+                        go({ rawcode: column.rawcode, kind: column.kind });
+                      }}
+                    >
+                      {column.name ?? "(unnamed)"} <code>{column.rawcode}</code>
+                    </button>{" "}
+                    <button
+                      type="button"
+                      className="link"
+                      aria-label={`Stop comparing ${column.rawcode}`}
+                      onClick={() => {
+                        onUnpin(column);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </>
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableRows(columns).map((row) => {
+            if (row.kind === "single") {
+              if (hidden(row.key)) return null;
+              return (
+                <tr key={row.key} data-field={row.head.id}>
+                  <td>{label(row.head)}</td>
+                  <td>
+                    <code>{row.head.id}</code>
                   </td>
-                ))}
-              </tr>
-              {open &&
-                shown.map((key) => (
-                  <tr key={key} className="level" data-field={row.id}>
-                    <td className="level-label">
-                      Level {byKey[0]?.get(key)?.level ?? key.split(":")[1]}
+                  {columns.map((column, i) => (
+                    <Cell
+                      key={`${column.kind}:${column.rawcode}`}
+                      row={byKey[i]?.get(row.key)}
+                      object={column}
+                      actions={i === 0 ? actions : undefined}
+                    />
+                  ))}
+                </tr>
+              );
+            }
+            const shown = row.keys.filter((key) => !hidden(key));
+            if (shown.length === 0) return null;
+            const open = !collapsed.has(row.id);
+            return (
+              <Fragment key={row.id}>
+                <tr className="levels" data-field={row.id}>
+                  <td>
+                    <button
+                      type="button"
+                      className="link"
+                      aria-expanded={open}
+                      onClick={() => {
+                        const next = new Set(collapsed);
+                        if (open) next.add(row.id);
+                        else next.delete(row.id);
+                        setCollapsed(next);
+                      }}
+                    >
+                      {open ? "▾" : "▸"} {label(row.head)}
+                    </button>{" "}
+                    <span className="muted">· {row.keys.length} levels</span>
+                  </td>
+                  <td>
+                    <code>{row.id}</code>
+                  </td>
+                  {columns.map((column, i) => (
+                    <td
+                      key={`${column.kind}:${column.rawcode}`}
+                      className="muted"
+                    >
+                      {row.keys
+                        .map((key) => byKey[i]?.get(key)?.display ?? "—")
+                        .join(", ")}
                     </td>
-                    <td>
-                      <code>{row.id}</code>
-                    </td>
-                    {columns.map((column, i) => (
-                      <Cell
-                        key={`${column.kind}:${column.rawcode}`}
-                        row={byKey[i]?.get(key)}
-                        object={column}
-                        actions={i === 0 ? actions : undefined}
-                      />
-                    ))}
-                  </tr>
-                ))}
-            </Fragment>
-          );
-        })}
-      </tbody>
-    </table>
+                  ))}
+                </tr>
+                {open &&
+                  shown.map((key) => (
+                    <tr key={key} className="level" data-field={row.id}>
+                      <td className="level-label">
+                        Level {byKey[0]?.get(key)?.level ?? key.split(":")[1]}
+                      </td>
+                      <td>
+                        <code>{row.id}</code>
+                      </td>
+                      {columns.map((column, i) => (
+                        <Cell
+                          key={`${column.kind}:${column.rawcode}`}
+                          row={byKey[i]?.get(key)}
+                          object={column}
+                          actions={i === 0 ? actions : undefined}
+                        />
+                      ))}
+                    </tr>
+                  ))}
+              </Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -581,6 +594,12 @@ export function ObjectPage(props: {
           <span className="muted">Comparing {compared.length + 1} objects</span>
         )}
       </div>
+      {pinned && compared.length === 0 && (
+        <p className="compare-hint muted">
+          To compare, open another object of this kind from the tree or the
+          search: this one stays beside it as a column.
+        </p>
+      )}
       <FieldTable
         columns={[selected, ...compared]}
         hideAtBase={hideAtBase}

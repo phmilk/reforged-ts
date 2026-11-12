@@ -509,6 +509,48 @@ button:disabled {
   padding-left: 2rem;
   color: var(--muted);
 }
+/*
+ * The object's field table (#890): the Field and Id columns at a set width
+ * and kept in view, each object's column at least 16rem. While comparing,
+ * the table scrolls in its own box, at most the pane's height so its head
+ * stays at its top: the object's header never leaves for a sideways scroll.
+ */
+.fields-scroll.comparing {
+  overflow: auto;
+  max-height: calc(100vh - 6rem);
+}
+.object-fields {
+  table-layout: fixed;
+  min-width: calc(24rem + var(--columns) * 16rem);
+}
+.object-fields .field-column {
+  width: 18rem;
+}
+.object-fields .id-column {
+  width: 6rem;
+}
+.object-fields td {
+  overflow-wrap: anywhere;
+}
+.object-fields tr > :nth-child(-n + 2) {
+  position: sticky;
+  z-index: 1;
+  background: var(--panel);
+}
+.object-fields tr > :first-child {
+  left: 0;
+}
+.object-fields tr > :nth-child(2) {
+  left: 18rem;
+  box-shadow: inset -1px 0 0 var(--line);
+}
+.object-fields thead th {
+  z-index: 2;
+}
+.object-fields thead th:nth-child(-n + 2) {
+  z-index: 3;
+  background: var(--bg);
+}
 .notice {
   margin: 1.5rem 18px;
 }
