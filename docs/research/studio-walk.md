@@ -7,6 +7,8 @@ The walk [#843](https://github.com/phmilk/reforged-ts/issues/843) left to a pers
 - **The World Editor reloads the map it holds on `-launch -loadfile` only right after it saved that map itself** (Observed, eight sends). Otherwise it shows "The file '<path>' is already open and active." and keeps the map as it loaded it, while the Studio's toast says "The World Editor reloads the map.": [#871](https://github.com/phmilk/reforged-ts/issues/871).
 - **A World Editor save that puts back the Studio's last save is detected** (Observed): "A World Editor save put back 1 field the Studio had saved", with "Apply them again", "Show" and "Keep the World Editor's", each of which works. When the World Editor never loaded the Studio's save before the last one, its value is a third one and nothing is offered (Observed). An edit is then lost with no offer to apply it again (Observed, the 2000 below); the failed reload above led to it (Inferred).
 - **The rest of ADR 0015's behaviour holds** (Observed), save the third value above: the Studio creates, edits and deletes objects, reloads on a change on disk, refuses to save while the World Editor's title ends in ` *]`, merges its unsaved edits on top of a World Editor save, shows Object definitions read-only, and loses nothing across five World Editor saves while it runs. It sends `-launch -loadfile` after its save, as the first bullet records.
+- **A map with imports keeps them across World Editor saves with the Studio running** (Observed, [#876](https://github.com/phmilk/reforged-ts/issues/876)): three imports and `war3map.imp` came through three World Editor saves and two Studio saves with a reload, byte for byte.
+- **Compare, the bulk edits, the Rawcode suggestion and the deep link to an unknown Rawcode work** (Observed, [#876](https://github.com/phmilk/reforged-ts/issues/876)); what they get wrong is [#890](https://github.com/phmilk/reforged-ts/issues/890) to [#893](https://github.com/phmilk/reforged-ts/issues/893).
 - **An Object definition shows its base's values** (Observed), not its own: [#872](https://github.com/phmilk/reforged-ts/issues/872).
 - **The layout is #476's** (Observed): A's tabs, tree and field table, C's global search and "Differs from", B's Table mode, the Diff of unsaved changes and since the last commit, icon and model pickers with a live preview. The differences that matter are [#873](https://github.com/phmilk/reforged-ts/issues/873), [#874](https://github.com/phmilk/reforged-ts/issues/874) and [#875](https://github.com/phmilk/reforged-ts/issues/875).
 
@@ -73,7 +75,34 @@ A Custom object `h001`, a unit from the Rifleman, Name "Code Rifleman", saved, t
 
 ## No map file held open
 
-Five World Editor saves while the Studio ran (19:27 to 20:04) each wrote the whole folder, and the Studio read it again after each (Observed). No save lost a file: the folder's file list stayed the same throughout, and the World Editor raised no error. ADR 0015 notes that a held file loses imports without an error, and this map has none, so the walk does not test that part (Inferred): [#876](https://github.com/phmilk/reforged-ts/issues/876) walks a map with imports.
+Five World Editor saves while the Studio ran (19:27 to 20:04) each wrote the whole folder, and the Studio read it again after each (Observed). No save lost a file: the folder's file list stayed the same throughout, and the World Editor raised no error. ADR 0015 notes that a held file loses imports without an error, and this map has none, so the walk does not test that part (Inferred): [#876](https://github.com/phmilk/reforged-ts/issues/876) walks a map with imports, below.
+
+### A map with imports
+
+[#876](https://github.com/phmilk/reforged-ts/issues/876), 2026-11-12, Build 3.0.1.24371, Windows 11: the library at master `a571fc51` (the reload of [#871](https://github.com/phmilk/reforged-ts/issues/871) included), the Template's `main` at `14af6a1` with its own dependencies from npm (`reforged-builtins` 1.0.0-alpha.7), the Studio run from the bin with `--world-editor`. After each step a script listed the map folder's files with their size and SHA-1 and read `war3map.imp`, compared with the step before (Observed throughout):
+
+| Step                                                                                            | The map folder after it                                                                                                       |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| The World Editor imports three files in the Asset Manager and saves, the Studio not running     | `war3map.imp` (version 1, three entries of flag 29), `war3mapImported/Walk876Beep.wav`, `Walk876Icon.tga`, `Walk876Notes.txt` |
+| With the Studio running, the World Editor places a unit and saves                               | the three imports and `war3map.imp` unchanged, byte for byte; the unit's files changed                                        |
+| The Studio creates a unit `s000` and saves; the World Editor reloads (its title `c:/` to `C:/`) | `war3map.w3u`, `war3mapSkin.w3u` and `war3map.wts` written; the imports unchanged                                             |
+| The World Editor places that unit and saves                                                     | the imports unchanged; the Studio showed "The map folder changed on disk: the Studio read it again." with "Show what changed" |
+| The World Editor saves a placement; the Studio then saves the bulk edits below and reloads it   | the imports unchanged; `war3map.w3u` holds `s000` and `s001` at `uhpm` 800                                                    |
+
+No save lost an import, and neither the World Editor nor the Studio showed an error: the Studio holds no map file open across a World Editor save, as ADR 0015 requires.
+
+Beside the imports (Observed): "New object" offers two Built-in objects named Footman, `hfoo` and `sfoo` (the Forsaken Kingdom's, in the `melee-fk` and `custom-fk` sets only); the walk picked `sfoo`, and the Studio suggested `s000`. The World Editor in SD drew `s000` as the missing-model cube ("Could not load file: units\human\ScarletFootman\ScarletFootman.mdl") with a green placeholder icon, while the Studio's tree shows a Footman icon for it: [#893](https://github.com/phmilk/reforged-ts/issues/893).
+
+## The flows of #476 walked by #876
+
+The same run as [A map with imports](#a-map-with-imports), the objects `s000` and `s001` (Observed throughout):
+
+- **Compare.** "Compare" pins the open object and turns into "Stop comparing"; a pinned object shows as an extra column of every other object of its kind opened after, with its name, Rawcode and a ✕, and the toolbar counts "Comparing 2 objects". A differing value is highlighted in its column (Name: "Walk Footman" against "Footman"). With three objects the third column is off the right edge, reached by scrolling the whole pane sideways, header and field labels included, and nothing says how to add an object after the first click: [#890](https://github.com/phmilk/reforged-ts/issues/890).
+- **Bulk edits in the tree.** Ctrl+click marks objects; "Edit a field…" opens "Edit 2 objects at once", "s000, s001: one step, which one undo takes back", with Set to, Add, Multiply by and Reset to base. Set to 777 on `uhpm` gave "Edited 2 objects as one step: Undo takes it back." and both at 777 ("was 750"). The open object is highlighted like a marked one but is not in the count ("1 selected") until it is Ctrl+clicked too: [#891](https://github.com/phmilk/reforged-ts/issues/891).
+- **A column filled in the Table mode.** The Table mode showed "2 objects · 2 fields", Name and Hit Points Maximum (Base), each column with "Fill…", which opens the same dialog with its field fixed; Add 23 gave 800 on both.
+- **Their save.** Refused while the World Editor's title ended in ` *]`, then written after a World Editor save, without a click on "Reload and keep my edits on top": `war3map.w3u` with both objects at 800, and the World Editor reloaded with both in its palette. The page then read "0 unsaved" and "Nothing to save: the map folder already holds every edit.", although the save wrote three files, and the banner with "Reload and keep my edits on top" stayed; clicking it gave "Reloaded the map folder and put 0 edits on top.": [#892](https://github.com/phmilk/reforged-ts/issues/892).
+- **The Rawcode suggestion and its live validation.** "New object" from Footman (`hfoo`) suggested `h000`, "h000 is free in all seven Object kinds." (from `sfoo`, `s000`: the base's first letter, as the World Editor does). Typing `s000` turned it, as typed, into "s000 is taken by the Custom unit Walk Footman (s000), 2 placements on the terrain in war3mapUnits.doo.", Create disabled and "Suggest a free one" offered. `GET /api/rawcode-check` gave for `hfoo` "taken by the Built-in unit Footman (hfoo)", for `ab` and `h0é0` "is not a Rawcode: a Rawcode is four printable ASCII characters", and `x123` free.
+- **A deep link to an unknown Rawcode.** `/objects/zzzz?kind=unit` showed "zzzz is neither in this map nor Built-in." with "Create with this Rawcode", which opened "New object" with Units, `zzzz` ("free in all seven Object kinds") and the base list's first entry, Demigod (`Ecen`): [#893](https://github.com/phmilk/reforged-ts/issues/893).
 
 ## Compared with #476
 
@@ -89,7 +118,7 @@ What #476 decided and the Studio does (Observed unless marked):
 - The Diff of unsaved changes, and since the last commit in the text `git diff` gives with the textconv driver.
 - Icons in the tree, the header and the icon fields; the icon picker, a grid filtered by path with "Use this path".
 - Model fields with a thumbnail and their path, and a model picker of 3473 paths searched by path, with a live 3D preview that follows the selection.
-- The delete's confirmation names the placements; reset to base, copy, compare and undo across saves are offered (the buttons seen; Compare not walked, below).
+- The delete's confirmation names the placements; reset to base, copy, compare and undo across saves are offered (the buttons seen; Compare walked by #876, above).
 
 The differences (Observed unless marked):
 
@@ -97,5 +126,5 @@ The differences (Observed unless marked):
 - Requirements shows `hbla` as text, not the linked chip #476 calls for; "New object" is hard to find, the Diff's two tabs read as plain buttons, the header overflows at a half-screen width, the Save button's `Ctrl+S` hint is nearly invisible, and the Table mode counts "1 objects": [#875](https://github.com/phmilk/reforged-ts/issues/875).
 - After a quiet reload, the banner quoted above says the folder was read again, with Dismiss, without #476's "Show what changed". Added to [#875](https://github.com/phmilk/reforged-ts/issues/875#issuecomment-6672456535): the Diff since the last commit is no substitute while the World Editor's change is not committed.
 - #476 has a save warn while the World Editor holds unsaved edits; the Studio refuses it instead, as Spec [#829](https://github.com/phmilk/reforged-ts/issues/829) settled (Observed, the delete above).
-- Compare, Table mode bulk edits, the Rawcode suggestion and deep links to an unknown Rawcode were not walked: [#876](https://github.com/phmilk/reforged-ts/issues/876).
-- Nor were per-level field rows ("Cooldown · level 2"), the chip of a modified Built-in object and its reset, the `B000` shared-Rawcode chip and its `?kind=` page, the dialog for a field both sides changed, the counter of unsaved changes, and "Open in editor" running `code -g` (only its button was seen). #876 does not list them yet.
+- Compare, the bulk edits, the Rawcode suggestion and the deep link to an unknown Rawcode were walked by [#876](https://github.com/phmilk/reforged-ts/issues/876), [above](#the-flows-of-476-walked-by-876).
+- Not walked: per-level field rows ("Cooldown · level 2"), the chip of a modified Built-in object and its reset, the `B000` shared-Rawcode chip and its `?kind=` page, the dialog for a field both sides changed, and "Open in editor" running `code -g` (only its button was seen).
