@@ -24,6 +24,11 @@ export interface CreateStart {
   readonly rawcode?: string;
   /** The Built-in object to base it on. */
   readonly base?: string;
+  /**
+   * Whether the author picks the base, none chosen for them: Create waits
+   * for one. Without it, and with no `base`, the kind's first one is chosen.
+   */
+  readonly pickBase?: boolean;
   /** The Custom object to copy. */
   readonly copyOf?: string;
 }
@@ -78,18 +83,21 @@ export function CreateDialog(props: {
   const customs = (objects ?? []).filter(
     (object) => object.origin === "custom",
   );
-  // A base or a copy of this kind, else the first one the kind has.
+  // A base or a copy of this kind, else the first one the kind has, but
+  // for a base the author picks.
   const from =
     mode === "base"
       ? bases.some((object) => object.rawcode === base)
         ? base
-        : (bases[0]?.rawcode ?? "")
+        : start.pickBase === true
+          ? ""
+          : (bases[0]?.rawcode ?? "")
       : customs.some((object) => object.rawcode === copyOf)
         ? copyOf
         : (customs[0]?.rawcode ?? "");
 
   useEffect(() => {
-    if (chosen || objects === undefined) return;
+    if (chosen || objects === undefined || from === "") return;
     let live = true;
     api
       .freeRawcode(kind, mode === "base" ? { base: from } : { copyOf: from })
@@ -211,6 +219,11 @@ export function CreateDialog(props: {
                   setBase(event.target.value);
                 }}
               >
+                {from === "" && (
+                  <option value="" disabled>
+                    Pick a base
+                  </option>
+                )}
                 {bases.map((object) => (
                   <option key={object.rawcode} value={object.rawcode}>
                     {optionText(object)}

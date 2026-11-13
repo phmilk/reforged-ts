@@ -790,7 +790,11 @@ function App() {
               <NoSelection
                 answer={detail}
                 onCreate={(rawcode) => {
-                  setCreating({ kind: kind as CreateStart["kind"], rawcode });
+                  setCreating({
+                    kind: kind as CreateStart["kind"],
+                    rawcode,
+                    pickBase: true,
+                  });
                 }}
               />
             )}

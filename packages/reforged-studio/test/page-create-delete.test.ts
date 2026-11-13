@@ -2,8 +2,9 @@
  * Seam 2 for creating and deleting objects (#835): the built page in
  * headless Chromium, driven by Playwright, over the Studio's server on its
  * own Map project. It holds the wiring: an unknown Rawcode's "Create with
- * this Rawcode", the live check naming what holds a taken Rawcode, the new
- * object selected, and the delete confirmation with its placement count.
+ * this Rawcode", with no base chosen until the author picks one, the live
+ * check naming what holds a taken Rawcode, the new object selected, and
+ * the delete confirmation with its placement count.
  *
  * It needs the page built (`pnpm build`) and Chromium installed, as
  * `page.test.ts` does.
@@ -87,9 +88,17 @@ describe("creating and deleting in the Studio's page", () => {
         await dialog.getByRole("button", { name: "Create" }).isDisabled(),
       ).toBe(true);
 
+      // No base is chosen for the author (#893): Create waits for one.
       await dialog.getByRole("textbox", { name: "Rawcode" }).fill("hQ07");
-      await dialog.getByLabel("Based on").selectOption("hfoo");
       await expect.poll(() => check.textContent()).toContain("is free");
+      expect(await dialog.getByLabel("Based on").inputValue()).toBe("");
+      expect(
+        await dialog.getByRole("button", { name: "Create" }).isDisabled(),
+      ).toBe(true);
+      await dialog.getByLabel("Based on").selectOption("hfoo");
+      await expect
+        .poll(() => dialog.getByRole("button", { name: "Create" }).isEnabled())
+        .toBe(true);
       await dialog.getByRole("button", { name: "Create" }).click();
 
       await expect
@@ -97,6 +106,26 @@ describe("creating and deleting in the Studio's page", () => {
         .toContain("hQ07");
       expect(page.url()).toContain("/objects/hQ07?kind=unit");
       await expect.poll(() => unsaved(page)).toBe("1 unsaved");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "opens New object from its button with the first base chosen, as before (#893)",
+    async () => {
+      const page = await open("/objects?kind=unit");
+      await page.getByRole("button", { name: "New object" }).click();
+      const dialog = page.getByRole("dialog", { name: "New object" });
+      const based = dialog.getByLabel("Based on");
+      await based.waitFor();
+      expect(await based.inputValue()).not.toBe("");
+      await expect
+        .poll(() => dialog.getByTestId("rawcode-check").textContent())
+        .toContain("is free in all seven Object kinds.");
+      expect(
+        await dialog.getByRole("button", { name: "Create" }).isEnabled(),
+      ).toBe(true);
       await page.close();
     },
     TIMEOUT,

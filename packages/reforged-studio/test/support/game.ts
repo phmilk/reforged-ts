@@ -161,7 +161,7 @@ export const UNIT_META: readonly MetaRow[] = [
   },
 ];
 
-/** The units: a footman, a hero, a building, a campaign unit and a special one; `hgry` is of The Frozen Throne. */
+/** The units: a footman, a hero, a building, a campaign unit and a special one; `hgry` is of The Frozen Throne; `Hpb1` is the campaign's Paladin, named as `Hpal` is (#893). */
 export const UNIT_FILES: Readonly<Record<string, string>> = {
   [base("Units/UnitMetaData.slk")]: metaData(UNIT_META),
   [base("Units/UnitData.slk")]: slkTable(
@@ -173,6 +173,7 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
       ["hgry", "human", "1"],
       ["nmrl", "naga", "1"],
       ["zcso", "other", "0"],
+      ["Hpb1", "human", "0"],
     ],
   ),
   [base("Units/UnitBalance.slk")]: slkTable(
@@ -184,6 +185,7 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
       ["hgry", "875", "0"],
       ["nmrl", "200", "0"],
       ["zcso", "100", "0"],
+      ["Hpb1", "650", "0"],
     ],
   ),
   [base("Units/unitUI.slk")]: slkTable(
@@ -195,6 +197,7 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
       ["hgry", "0", "0"],
       ["nmrl", "0", "1"],
       ["zcso", "1", "0"],
+      ["Hpb1", "0", "1"],
     ],
   ),
   [base("Units/UnitWeapons.slk")]: slkTable(
@@ -227,6 +230,7 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
     Hpal: { Name: "Paladin" },
     htow: { Name: "Town Hall" },
     hgry: { Name: "Gryphon Rider" },
+    Hpb1: { Name: "Paladin" },
   }),
 };
 
