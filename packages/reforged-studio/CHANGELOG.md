@@ -1,5 +1,11 @@
 # reforged-studio
 
+## 1.0.0-alpha.7
+
+### Patch Changes
+
+- [#901](https://github.com/phmilk/reforged-ts/pull/901) [`ce1712a`](https://github.com/phmilk/reforged-ts/commit/ce1712a13344a3789dc9d140af3dc0ea91230735) Thanks [@wyller](https://github.com/wyller)! - The Studio's tree marks the open object together with the first object Ctrl+clicked, so the bulk bar counts and "Edit a field…" edits every object that looks selected. A Ctrl+click on a marked object, the open one included, unmarks it; an open Object definition stays out.
+
 ## 1.0.0-alpha.6
 
 ### Patch Changes
