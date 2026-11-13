@@ -367,6 +367,24 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       // Field, Id, and the three objects.
       expect(await page.locator("table.fields thead th").count()).toBe(5);
 
+      /** The most lines a Field label wraps on, over every row. */
+      const labelLines = () =>
+        page
+          .locator("table.fields tbody tr > td:first-child")
+          .evaluateAll((cells) =>
+            Math.max(
+              ...cells.map((cell) => {
+                const range = document.createRange();
+                range.selectNodeContents(cell);
+                const lineHeight = parseFloat(
+                  getComputedStyle(cell).lineHeight,
+                );
+                return Math.round(
+                  range.getBoundingClientRect().height / lineHeight,
+                );
+              }),
+            ),
+          );
       /** How far each box overflows its own width, in pixels. */
       const overflow = (selector: string) =>
         page
@@ -374,17 +392,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
           .evaluate((element) => element.scrollWidth - element.clientWidth);
       expect(await overflow(".pane")).toBe(0);
       expect(await overflow(".fields-scroll")).toBe(0);
-      // The longest label of the fixture, on two lines at most.
-      const lines = await page
-        .locator('table.fields tr[data-field="uhpm"] td')
-        .first()
-        .evaluate((cell) => {
-          const range = document.createRange();
-          range.selectNodeContents(cell);
-          const lineHeight = parseFloat(getComputedStyle(cell).lineHeight);
-          return Math.round(range.getBoundingClientRect().height / lineHeight);
-        });
-      expect(lines).toBeLessThanOrEqual(2);
+      expect(await labelLines()).toBeLessThanOrEqual(2);
 
       await compare.click();
       await pin("h002");
@@ -397,6 +405,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       expect(await page.locator("table.fields thead th").count()).toBe(8);
       expect(await overflow(".pane")).toBe(0);
       expect(await overflow(".fields-scroll")).toBeGreaterThan(0);
+      expect(await labelLines()).toBeLessThanOrEqual(2);
 
       /** The left edge of a box on the screen. */
       const left = async (locator: Locator) =>
