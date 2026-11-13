@@ -1,5 +1,11 @@
 # reforged-studio
 
+## 1.0.0-alpha.6
+
+### Patch Changes
+
+- [#899](https://github.com/phmilk/reforged-ts/pull/899) [`c62fec3`](https://github.com/phmilk/reforged-ts/commit/c62fec3ed3e51d7e8bd54ee861b5f92f6d4a0ebb) Thanks [@wyller](https://github.com/wyller)! - The Studio's search shows a Built-in object's group in the World Editor's tree beside its name, so two of one name, such as the melee Footman (`hfoo`) and the campaign one (`sfoo`), differ by more than their Rawcode; and "Create with this Rawcode", from a link to an unknown Rawcode, opens "New object" with no base chosen, "Create" waiting until you pick one.
+
 ## 1.0.0-alpha.5
 
 ### Patch Changes
