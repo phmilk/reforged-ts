@@ -196,7 +196,9 @@ describe("turns with the World Editor in the Studio's page", () => {
       await page.locator("body").press("Control+s");
 
       await expect
-        .poll(() => page.getByRole("status").textContent())
+        .poll(() => page.getByRole("status").textContent(), {
+          timeout: WATCH_TIMEOUT,
+        })
         .toContain("Saved 1 file: war3map.w3u.");
       await expect.poll(() => unsaved(page)).toBe("0 unsaved");
       expect(await banner.count()).toBe(0);
