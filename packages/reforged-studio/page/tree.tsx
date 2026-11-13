@@ -38,6 +38,13 @@ export interface Selection {
 export const markKey = (object: Selection): string =>
   `${object.kind}:${object.rawcode}`;
 
+/**
+ * Whether an object can be marked: an Object definition is edited in its
+ * file, never marked.
+ */
+export const markable = (object: ListedObject): boolean =>
+  object.origin !== "definition";
+
 /** The objects marked for a bulk edit, and how to mark or unmark one. */
 const Marks = createContext<{
   readonly marked: ReadonlySet<string>;
@@ -129,19 +136,18 @@ function Item(props: {
   const { object, selected } = props;
   const { marked, onMark } = useContext(Marks);
   const isMarked = marked.has(markKey(object));
-  // An Object definition is edited in its file: it is never marked.
-  const markable = onMark !== undefined && object.origin !== "definition";
+  const canMark = onMark !== undefined && markable(object);
   return (
     <li>
       <button
         type="button"
         className={`item${selected ? " selected" : ""}${isMarked ? " marked" : ""}`}
         aria-current={selected ? "true" : undefined}
-        aria-pressed={markable ? isMarked : undefined}
+        aria-pressed={canMark ? isMarked : undefined}
         data-rawcode={object.rawcode}
-        title={markable ? "Ctrl+click to select it for a bulk edit" : undefined}
+        title={canMark ? "Ctrl+click to select it for a bulk edit" : undefined}
         onClick={(event) => {
-          if (markable && (event.ctrlKey || event.metaKey)) {
+          if (canMark && (event.ctrlKey || event.metaKey)) {
             onMark(object);
             return;
           }

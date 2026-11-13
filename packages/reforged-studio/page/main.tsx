@@ -52,7 +52,7 @@ import {
 import { Search } from "./search.js";
 import { TableMode } from "./table.js";
 import { addressText, ConflictsDialog, PutBackDialog } from "./turns.js";
-import { markKey, Tree, type Selection } from "./tree.js";
+import { markable, markKey, Tree, type Selection } from "./tree.js";
 import "./style.css";
 
 /** The key of a selection, its kind and Rawcode. */
@@ -458,10 +458,23 @@ function App() {
     }, refused);
   };
 
-  /** Marks or unmarks an object of the tree for a bulk edit. */
+  /**
+   * Marks or unmarks an object of the tree for a bulk edit. As in a file
+   * manager, the first Ctrl+click on another object marks the open object
+   * too, so that what looks selected is what the bulk edit touches (#891);
+   * an Object definition, never marked, does not join.
+   */
   const mark = (object: Selection) => {
     const next = new Set(marked);
-    if (!next.delete(markKey(object))) next.add(markKey(object));
+    const key = markKey(object);
+    const openKey = selection === undefined ? undefined : markKey(selection);
+    if (next.size === 0 && openKey !== undefined && openKey !== key) {
+      const open = listing?.objects.find(
+        (listed) => markKey(listed) === openKey,
+      );
+      if (open !== undefined && markable(open)) next.add(openKey);
+    }
+    if (!next.delete(key)) next.add(key);
     setMarked(next);
   };
   const markedRawcodes = (listing?.objects ?? [])

@@ -3,7 +3,7 @@
  * Chromium, driven by Playwright, over the Studio's server on a Map project
  * of each test. It holds the wiring: the Table mode with its toggles, a
  * cell edited, a column filled as one undo step, and a field multiplied on
- * the objects Ctrl+clicked in the tree.
+ * the objects Ctrl+clicked in the tree, the open object among them (#891).
  *
  * It needs the page built (`pnpm build`) and Chromium installed, as
  * `page.test.ts` does.
@@ -44,9 +44,15 @@ afterAll(async () => {
   removeTemporary();
 });
 
-/** A new page on a path of a Studio started on a Map project of its own. */
-async function open(pathname: string): Promise<Page> {
-  const studio = await start(mapProject());
+/**
+ * A new page on a path of a Studio started on a Map project of its own,
+ * `files` under its root.
+ */
+async function open(
+  pathname: string,
+  files: Readonly<Record<string, string>> = {},
+): Promise<Page> {
+  const studio = await start(mapProject(files));
   const page = await browser.newPage();
   await page.goto(studio.url + pathname);
   return page;
@@ -55,6 +61,29 @@ async function open(pathname: string): Promise<Page> {
 /** The unsaved changes the counter shows. */
 async function unsaved(page: Page): Promise<string> {
   return ((await page.getByTestId("unsaved-count").textContent()) ?? "").trim();
+}
+
+/** Ctrl+clicks (Cmd+clicks) an object of the tree. */
+async function ctrlClick(page: Page, rawcode: string): Promise<void> {
+  await page
+    .getByRole("list", { name: "Objects" })
+    .locator(`[data-rawcode="${rawcode}"]`)
+    .click({ modifiers: ["ControlOrMeta"] });
+}
+
+/** Waits until the bulk bar reads `count` selected. */
+async function expectSelected(page: Page, count: number): Promise<void> {
+  await expect
+    .poll(() => page.getByTestId("bulk-bar").textContent())
+    .toContain(`${String(count)} selected`);
+}
+
+/** Whether a tree item shows as marked, by its `aria-pressed`. */
+async function pressed(page: Page, rawcode: string): Promise<string | null> {
+  return page
+    .getByRole("list", { name: "Objects" })
+    .locator(`[data-rawcode="${rawcode}"]`)
+    .getAttribute("aria-pressed");
 }
 
 describe("bulk editing in the Studio's page", () => {
@@ -155,15 +184,9 @@ describe("bulk editing in the Studio's page", () => {
     async () => {
       const page = await open("/objects");
       const tree = page.getByRole("list", { name: "Objects" });
-      await tree.locator('[data-rawcode="h000"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await tree.locator('[data-rawcode="hfoo"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await expect
-        .poll(() => page.getByTestId("bulk-bar").textContent())
-        .toContain("2 selected");
+      await ctrlClick(page, "h000");
+      await ctrlClick(page, "hfoo");
+      await expectSelected(page, 2);
 
       await page.getByRole("button", { name: "Edit a field…" }).click();
       const dialog = page.getByRole("dialog", { name: "Bulk edit" });
@@ -187,6 +210,83 @@ describe("bulk editing in the Studio's page", () => {
             .textContent(),
         )
         .toContain("840");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "marks the open object with the first object Ctrl+clicked, and unmarks it alone",
+    async () => {
+      const page = await open("/objects/h000");
+      await page.locator(".object-header").waitFor();
+      await ctrlClick(page, "hfoo");
+      await expectSelected(page, 2);
+      expect(await pressed(page, "h000")).toBe("true");
+      expect(await pressed(page, "hfoo")).toBe("true");
+
+      // A Ctrl+click on the open object, marked, unmarks it only.
+      await ctrlClick(page, "h000");
+      await expectSelected(page, 1);
+      expect(await pressed(page, "h000")).toBe("false");
+      expect(await pressed(page, "hfoo")).toBe("true");
+
+      // Cleared, a Ctrl+click on the open object marks it alone.
+      await page.getByRole("button", { name: "Clear" }).click();
+      await ctrlClick(page, "h000");
+      await expectSelected(page, 1);
+      expect(await pressed(page, "h000")).toBe("true");
+      expect(await pressed(page, "hfoo")).toBe("false");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "edits the open object and the one Ctrl+clicked as one undo step",
+    async () => {
+      const page = await open("/objects/h000");
+      await page.locator(".object-header").waitFor();
+      await ctrlClick(page, "hfoo");
+      await page.getByRole("button", { name: "Edit a field…" }).click();
+      const dialog = page.getByRole("dialog", { name: "Bulk edit" });
+      await dialog
+        .getByLabel("Field")
+        .selectOption({ label: "Stats - Hit Points Maximum (Base) · uhpm" });
+      await dialog.getByLabel("Multiply by").check();
+      await dialog.getByLabel("Number").fill("2");
+      await dialog.getByRole("button", { name: "Apply" }).click();
+      await expect.poll(() => unsaved(page)).toBe("2 unsaved");
+      await expect
+        .poll(() => page.getByRole("status").textContent())
+        .toContain("Edited 2 objects as one step");
+
+      // One undo takes both back.
+      await page.locator("body").press("Control+z");
+      await expect.poll(() => unsaved(page)).toBe("0 unsaved");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "leaves an open Object definition out of the marks",
+    async () => {
+      const page = await open("/objects/h002", {
+        "src/objects/units.ts": `import { defineUnit } from "reforged-map/objects";
+
+export const Sergeant = defineUnit({
+  rawcode: "h002",
+  base: FourCC("hfoo"),
+  fields: { unam: "Sergeant", uhpm: 500 },
+});
+`,
+      });
+      await page.locator(".object-header .chip.definition").waitFor();
+      await ctrlClick(page, "hfoo");
+      await expectSelected(page, 1);
+      expect(await pressed(page, "hfoo")).toBe("true");
+      expect(await pressed(page, "h002")).toBeNull();
       await page.close();
     },
     TIMEOUT,
