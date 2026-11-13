@@ -1,7 +1,9 @@
 /**
  * The global search, Ctrl+K: by name or Rawcode across the seven Object
- * kinds, through `GET /api/search`. Arrow keys move through the results,
- * Enter opens one, Escape closes the search.
+ * kinds, through `GET /api/search`. A Built-in object's result shows its
+ * group in the World Editor's tree beside its name, which tells two of one
+ * name apart, such as the melee and the campaign Footman (#893). Arrow
+ * keys move through the results, Enter opens one, Escape closes the search.
  */
 import { useEffect, useRef, useState } from "react";
 import type { ListedObject, SearchAnswer } from "../src/server/api-types.js";
@@ -109,6 +111,11 @@ export function Search(props: {
                   label={object.name ?? object.rawcode}
                 />
                 <span className="name">{object.name ?? "(unnamed)"}</span>
+                {object.group !== undefined && object.group.length > 0 && (
+                  <span className="result-group muted">
+                    {object.group.join(" · ")}
+                  </span>
+                )}
                 <code>{object.rawcode}</code>
                 <span className="muted">{KIND_LABELS[object.kind]}</span>
                 <OriginChip object={object} />

@@ -32,10 +32,10 @@ pnpm exec reforged-studio --map my-map.w3m
 
 The page has one tab per Object kind, each with the tree of its objects: the map's Custom objects first, then its Object definitions, the Built-in objects it modifies, and the Built-in objects grouped as the World Editor groups them (race, Melee or Campaign, then Units, Buildings, Heroes or Special for a unit). Each object shows its icon and chips for its origin.
 
-- **The search**, Ctrl+K, finds an object by name or Rawcode across the seven kinds.
+- **The search**, Ctrl+K, finds an object by name or Rawcode across the seven kinds. A Built-in object's result shows its group in the World Editor's tree, such as "Human · Campaign · Units", which tells apart two of one name: the melee Footman `hfoo` and the campaign one `sfoo`.
 - **The map's Game data set** is named at the top. The Built-in objects outside it are hidden, and a toggle shows them, marked.
 - **A Rawcode two kinds share**, such as a Custom buff and a Custom destructable both at `B000`, opens a page that asks which object, since `FourCC` gives it no single kind.
-- **An unknown Rawcode** shows "neither in this map nor Built-in", with the Rawcodes one edit away, the same suggestions as [the lint rule](rawcodes.md#unknown-rawcodes-the-lint-rule), and "Create with this Rawcode".
+- **An unknown Rawcode** shows "neither in this map nor Built-in", with the Rawcodes one edit away, the same suggestions as [the lint rule](rawcodes.md#unknown-rawcodes-the-lint-rule), and "Create with this Rawcode", which opens "New object" with that Rawcode and no base chosen: "Create" waits until you pick one.
 
 The object's page shows its header, a "Differs from &lt;base&gt;" section with each modified field and its base's value, and its field table: each field's label, id, the value as the World Editor shows it and the raw value the file holds. A field of levels groups its rows, collapsible. Compare pins other objects of the kind as extra columns, and a toggle hides the fields at their base's value.
 
