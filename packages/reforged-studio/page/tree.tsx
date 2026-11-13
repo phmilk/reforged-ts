@@ -38,7 +38,10 @@ export interface Selection {
 export const markKey = (object: Selection): string =>
   `${object.kind}:${object.rawcode}`;
 
-/** Whether an object can be marked: an Object definition is edited in its file, never marked. */
+/**
+ * Whether an object can be marked: an Object definition is edited in its
+ * file, never marked.
+ */
 export const markable = (object: ListedObject): boolean =>
   object.origin !== "definition";
 

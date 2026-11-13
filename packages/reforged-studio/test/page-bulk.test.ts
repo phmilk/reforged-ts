@@ -71,8 +71,8 @@ async function ctrlClick(page: Page, rawcode: string): Promise<void> {
     .click({ modifiers: ["ControlOrMeta"] });
 }
 
-/** The bulk bar's text, once it reads `count` selected. */
-async function selectedCount(page: Page, count: number): Promise<void> {
+/** Waits until the bulk bar reads `count` selected. */
+async function expectSelected(page: Page, count: number): Promise<void> {
   await expect
     .poll(() => page.getByTestId("bulk-bar").textContent())
     .toContain(`${String(count)} selected`);
@@ -186,7 +186,7 @@ describe("bulk editing in the Studio's page", () => {
       const tree = page.getByRole("list", { name: "Objects" });
       await ctrlClick(page, "h000");
       await ctrlClick(page, "hfoo");
-      await selectedCount(page, 2);
+      await expectSelected(page, 2);
 
       await page.getByRole("button", { name: "Edit a field…" }).click();
       const dialog = page.getByRole("dialog", { name: "Bulk edit" });
@@ -221,20 +221,20 @@ describe("bulk editing in the Studio's page", () => {
       const page = await open("/objects/h000");
       await page.locator(".object-header").waitFor();
       await ctrlClick(page, "hfoo");
-      await selectedCount(page, 2);
+      await expectSelected(page, 2);
       expect(await pressed(page, "h000")).toBe("true");
       expect(await pressed(page, "hfoo")).toBe("true");
 
       // A Ctrl+click on the open object, marked, unmarks it only.
       await ctrlClick(page, "h000");
-      await selectedCount(page, 1);
+      await expectSelected(page, 1);
       expect(await pressed(page, "h000")).toBe("false");
       expect(await pressed(page, "hfoo")).toBe("true");
 
       // Cleared, a Ctrl+click on the open object marks it alone.
       await page.getByRole("button", { name: "Clear" }).click();
       await ctrlClick(page, "h000");
-      await selectedCount(page, 1);
+      await expectSelected(page, 1);
       expect(await pressed(page, "h000")).toBe("true");
       expect(await pressed(page, "hfoo")).toBe("false");
       await page.close();
@@ -284,8 +284,9 @@ export const Sergeant = defineUnit({
       });
       await page.locator(".object-header .chip.definition").waitFor();
       await ctrlClick(page, "hfoo");
-      await selectedCount(page, 1);
+      await expectSelected(page, 1);
       expect(await pressed(page, "hfoo")).toBe("true");
+      expect(await pressed(page, "h002")).toBeNull();
       await page.close();
     },
     TIMEOUT,

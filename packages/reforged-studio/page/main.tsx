@@ -466,18 +466,15 @@ function App() {
    */
   const mark = (object: Selection) => {
     const next = new Set(marked);
+    const key = markKey(object);
     const openKey = selection === undefined ? undefined : markKey(selection);
-    if (
-      next.size === 0 &&
-      openKey !== undefined &&
-      openKey !== markKey(object)
-    ) {
+    if (next.size === 0 && openKey !== undefined && openKey !== key) {
       const open = listing?.objects.find(
         (listed) => markKey(listed) === openKey,
       );
       if (open !== undefined && markable(open)) next.add(openKey);
     }
-    if (!next.delete(markKey(object))) next.add(markKey(object));
+    if (!next.delete(key)) next.add(key);
     setMarked(next);
   };
   const markedRawcodes = (listing?.objects ?? [])
