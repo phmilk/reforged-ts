@@ -147,7 +147,7 @@ Editing ([#834](https://github.com/phmilk/reforged-ts/issues/834)) adds to it:
 Bulk editing ([#836](https://github.com/phmilk/reforged-ts/issues/836)) adds:
 
 - the Table mode of each Object kind, "Table mode" beside the tabs: one row per object and one column per field, showing the map's objects and the columns they change, with "Show every object" and "Show every field"; a cell edits on a click as the field table does, and resets with ↺; a row's name opens its field table;
-- "Fill…" on a column, and "Edit a field…" on the objects Ctrl+clicked (Cmd+click) in the tree: a dialog that sets, adds to, multiplies or resets one field on all of them, as one undo step. An Object definition is never selected, and a column's fill edits the rows that can edit it.
+- "Fill…" on a column, and "Edit a field…" on the objects Ctrl+clicked (Cmd+click) in the tree, the open object among them from the first Ctrl+click: a dialog that sets, adds to, multiplies or resets one field on all of them, as one undo step. An Object definition is never selected, and a column's fill edits the rows that can edit it.
 
 Adoption ([#838](https://github.com/phmilk/reforged-ts/issues/838)) adds "Adopt into code" to the header of a Custom object or a modified Built-in object: its toast names the definition file written, or the refusal, and the object then shows as an Object definition, read-only.
 

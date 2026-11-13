@@ -458,9 +458,26 @@ function App() {
     }, refused);
   };
 
-  /** Marks or unmarks an object of the tree for a bulk edit. */
+  /**
+   * Marks or unmarks an object of the tree for a bulk edit. As in a file
+   * manager, the first Ctrl+click on another object marks the open object
+   * too, so that what looks selected is what the bulk edit touches (#891);
+   * an Object definition, never marked, does not join.
+   */
   const mark = (object: Selection) => {
     const next = new Set(marked);
+    if (
+      next.size === 0 &&
+      selection !== undefined &&
+      markKey(selection) !== markKey(object)
+    ) {
+      const open = listing?.objects.find(
+        (listed) => markKey(listed) === markKey(selection),
+      );
+      if (open !== undefined && open.origin !== "definition") {
+        next.add(markKey(open));
+      }
+    }
     if (!next.delete(markKey(object))) next.add(markKey(object));
     setMarked(next);
   };
