@@ -1,5 +1,13 @@
 # reforged-studio
 
+## 1.0.0-alpha.5
+
+### Patch Changes
+
+- [#898](https://github.com/phmilk/reforged-ts/pull/898) [`14f78b4`](https://github.com/phmilk/reforged-ts/commit/14f78b4885e33d621c6e655654057871921157ac) Thanks [@wyller](https://github.com/wyller)! - The Studio's Compare keeps every compared object on screen: at three objects on a 1920 px screen all columns fit, past that only the compared columns scroll while the object's header and the Field and Id columns stay in view, and a line under the toolbar tells how to add an object while none is beside the open one.
+
+- [#896](https://github.com/phmilk/reforged-ts/pull/896) [`ffb520c`](https://github.com/phmilk/reforged-ts/commit/ffb520cdc53ab7443bdb0002f62ceee9d30c802b) Thanks [@wyller](https://github.com/wyller)! - A save after a World Editor save clears the banner "The map folder changed on disk", and the toast names the files it wrote: a second Ctrl+S, or a held one, while a save waits on the World Editor's reload sends no second save, whose "Nothing to save" replaced the first's toast.
+
 ## 1.0.0-alpha.4
 
 ### Minor Changes
