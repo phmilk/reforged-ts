@@ -272,7 +272,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       await search.locator("input").fill("paladin");
       await search.locator('[data-rawcode="Hpb1"]').waitFor();
       const groupOf = (rawcode: string) =>
-        textOf(search.locator(`[data-rawcode="${rawcode}"] .group`));
+        textOf(search.locator(`[data-rawcode="${rawcode}"] .result-group`));
       expect(await groupOf("Hpal")).toBe("Human · Melee · Heroes");
       expect(await groupOf("Hpb1")).toBe("Human · Campaign · Heroes");
       await page.close();

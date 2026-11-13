@@ -78,6 +78,14 @@ describe("creating and deleting in the Studio's page", () => {
       await expect
         .poll(() => check.textContent())
         .toBe("hQ07 is free in all seven Object kinds.");
+      // The link's Rawcode, and no base chosen for the author (#893).
+      expect(
+        await dialog.getByRole("textbox", { name: "Rawcode" }).inputValue(),
+      ).toBe("hQ07");
+      expect(await dialog.getByLabel("Based on").inputValue()).toBe("");
+      expect(
+        await dialog.getByRole("button", { name: "Create" }).isDisabled(),
+      ).toBe(true);
 
       // A taken Rawcode: the check names what holds it, and Create waits.
       await dialog.getByRole("textbox", { name: "Rawcode" }).fill("h000");

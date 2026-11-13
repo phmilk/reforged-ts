@@ -130,7 +130,7 @@ Its Objects area, read-only ([#832](https://github.com/phmilk/reforged-ts/issues
 
 - one tab per Object kind, and the tree of the kind's objects, grouped by origin first (Custom objects, Object definitions, modified Built-in objects, Built-in objects), the Built-in objects by the World Editor's grouping; a group renders its objects only while it is open;
 - chips: the origin (an Object definition's with its lock and its file), a warning on a Rawcode another kind shares, and "not in this map's Game data set";
-- the global search, Ctrl+K, by name or Rawcode across the seven kinds;
+- the global search, Ctrl+K, by name or Rawcode across the seven kinds, a Built-in object's group in the World Editor's tree beside its name, so that two of one name, such as the melee Footman `hfoo` and the campaign one `sfoo`, differ by more than their Rawcode;
 - the map's Game data set named at the top, the objects outside it hidden, and a toggle that shows them;
 - one object's header, its "Differs from <base>" section with each modified field's base value, and its field table: each field's label, id, display and raw values, the levels of a field grouped and collapsible, the objects pinned with Compare as extra columns of the same kind, and a toggle that hides the fields at their base's value;
 - icons in the tree, the header and every icon field, decoded in the page from the BLP and DDS files `GET /api/files` serves, with the readers of `mdx-m3-viewer-th`, the previews' viewer; a placeholder for one found nowhere;
@@ -154,7 +154,7 @@ Adoption ([#838](https://github.com/phmilk/reforged-ts/issues/838)) adds "Adopt 
 Creating and deleting objects ([#835](https://github.com/phmilk/reforged-ts/issues/835)) adds:
 
 - "New object", and on an object's header "New object based on it" (a Built-in object) or "Copy" (a Custom object): a dialog that bases the new object on a Built-in object of its kind or copies a Custom object with its base and modifications, its Rawcode suggested free across the seven kinds, editable, and checked as it is typed, naming what holds a taken one;
-- "Create with this Rawcode" on the page of an unknown Rawcode;
+- "Create with this Rawcode" on the page of an unknown Rawcode, which opens that dialog with the Rawcode and no base chosen: "Create" waits until the author picks one;
 - "Delete" on a Custom object only, after a confirmation that lists the objects whose fields name it and how many times it is placed on the terrain, saying that the game already skips those placements and the World Editor drops them without asking at its next save.
 
 Taking turns with the World Editor ([#837](https://github.com/phmilk/reforged-ts/issues/837)) adds:
