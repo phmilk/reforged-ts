@@ -327,6 +327,111 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "tells how to add an object to Compare, shows three compared columns on a 1920 px screen, and scrolls only the compared columns past that (#890)",
+    async () => {
+      const page = await browser.newPage({
+        viewport: { width: 1920, height: 1080 },
+      });
+      await page.goto(studio.url + "/objects/h000");
+      const compare = page.getByRole("button", {
+        name: "Compare",
+        exact: true,
+      });
+      const hint = page.locator(".compare-hint");
+      /** Opens an object as the page's own links do, the pins kept. */
+      const visit = async (rawcode: string) => {
+        await page.evaluate((path) => {
+          history.pushState(null, "", path);
+          dispatchEvent(new PopStateEvent("popstate"));
+        }, `/objects/${rawcode}`);
+        await page
+          .locator(".object-header h2 > code", { hasText: rawcode })
+          .waitFor();
+      };
+      /** Opens an object, then pins it for Compare. */
+      const pin = async (rawcode: string) => {
+        await visit(rawcode);
+        await compare.click();
+      };
+
+      await compare.click();
+      expect(await textOf(hint)).toContain(
+        "open another object of this kind from the tree or the search",
+      );
+      await pin("h001");
+      await visit("hfoo");
+      await page
+        .locator("table.fields thead th", { hasText: "h001" })
+        .waitFor();
+      expect(await hint.count()).toBe(0);
+      // Field, Id, and the three objects.
+      expect(await page.locator("table.fields thead th").count()).toBe(5);
+
+      /** The most lines a Field label wraps on, over every row. */
+      const labelLines = () =>
+        page
+          .locator("table.fields tbody tr > td:first-child")
+          .evaluateAll((cells) =>
+            Math.max(
+              ...cells.map((cell) => {
+                const range = document.createRange();
+                range.selectNodeContents(cell);
+                const lineHeight = parseFloat(
+                  getComputedStyle(cell).lineHeight,
+                );
+                return Math.round(
+                  range.getBoundingClientRect().height / lineHeight,
+                );
+              }),
+            ),
+          );
+      /** How far each box overflows its own width, in pixels. */
+      const overflow = (selector: string) =>
+        page
+          .locator(selector)
+          .evaluate((element) => element.scrollWidth - element.clientWidth);
+      expect(await overflow(".pane")).toBe(0);
+      expect(await overflow(".fields-scroll")).toBe(0);
+      expect(await labelLines()).toBeLessThanOrEqual(2);
+
+      await compare.click();
+      await pin("h002");
+      await pin("Hpal");
+      await visit("htow");
+      await page
+        .locator("table.fields thead th", { hasText: "Hpal" })
+        .waitFor();
+      // Field, Id, and the six objects.
+      expect(await page.locator("table.fields thead th").count()).toBe(8);
+      expect(await overflow(".pane")).toBe(0);
+      expect(await overflow(".fields-scroll")).toBeGreaterThan(0);
+      expect(await labelLines()).toBeLessThanOrEqual(2);
+
+      /** The left edge of a box on the screen. */
+      const left = async (locator: Locator) =>
+        (await locator.boundingBox())?.x ?? Number.NaN;
+      const header = page.locator(".object-header");
+      const field = page.locator("table.fields thead th").nth(0);
+      const id = page.locator("table.fields thead th").nth(1);
+      const before = [await left(header), await left(field), await left(id)];
+      await page.locator(".fields-scroll").evaluate((element) => {
+        element.scrollLeft = element.scrollWidth;
+      });
+      expect(await overflow(".fields-scroll")).toBeGreaterThan(0);
+      expect(
+        await page
+          .locator(".fields-scroll")
+          .evaluate((element) => element.scrollLeft),
+      ).toBeGreaterThan(0);
+      expect([await left(header), await left(field), await left(id)]).toEqual(
+        before,
+      );
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "names the map's Game data set, hides the objects outside it, and shows them marked on request",
     async () => {
       const page = await open("/objects/Asa2");
