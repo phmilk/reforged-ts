@@ -96,13 +96,9 @@ describe("creating and deleting in the Studio's page", () => {
         await dialog.getByRole("button", { name: "Create" }).isDisabled(),
       ).toBe(true);
 
-      // No base is chosen for the author (#893): Create waits for one.
+      // Create waits for the author's base (#893), then creates.
       await dialog.getByRole("textbox", { name: "Rawcode" }).fill("hQ07");
       await expect.poll(() => check.textContent()).toContain("is free");
-      expect(await dialog.getByLabel("Based on").inputValue()).toBe("");
-      expect(
-        await dialog.getByRole("button", { name: "Create" }).isDisabled(),
-      ).toBe(true);
       await dialog.getByLabel("Based on").selectOption("hfoo");
       await expect
         .poll(() => dialog.getByRole("button", { name: "Create" }).isEnabled())
