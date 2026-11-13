@@ -188,6 +188,7 @@ describe("readGameData's Built-in objects", () => {
       hgry: ["human", "melee", "units"],
       nmrl: ["naga", "campaign", "units"],
       zcso: ["other", "melee", "special"],
+      Hpb1: ["human", "campaign", "heroes"],
     });
     expect(groups("item")).toEqual({ ratf: ["Permanent"] });
     expect(groups("ability")).toEqual({
@@ -296,6 +297,7 @@ describe("readGameData's layers of a Game data set", () => {
       "Hpal",
       "htow",
       "zcso",
+      "Hpb1",
     ]);
     expect(tft.kinds.unit.objects.has("hgry")).toBe(true);
   });

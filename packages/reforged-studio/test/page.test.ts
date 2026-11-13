@@ -262,6 +262,25 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "tells two Built-in objects of one name apart by their group in the search (#893)",
+    async () => {
+      const page = await open("/objects/hfoo");
+      await page.locator(".object-header").waitFor();
+
+      await page.keyboard.press("Control+K");
+      const search = page.getByRole("dialog", { name: "Search" });
+      await search.locator("input").fill("paladin");
+      await search.locator('[data-rawcode="Hpb1"]').waitFor();
+      const groupOf = (rawcode: string) =>
+        textOf(search.locator(`[data-rawcode="${rawcode}"] .result-group`));
+      expect(await groupOf("Hpal")).toBe("Human · Melee · Heroes");
+      expect(await groupOf("Hpb1")).toBe("Human · Campaign · Heroes");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "groups the rows of a field of levels, collapsible",
     async () => {
       const page = await open("/objects/A000");
