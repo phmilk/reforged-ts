@@ -52,7 +52,7 @@ import {
 import { Search } from "./search.js";
 import { TableMode } from "./table.js";
 import { addressText, ConflictsDialog, PutBackDialog } from "./turns.js";
-import { markKey, Tree, type Selection } from "./tree.js";
+import { markable, markKey, Tree, type Selection } from "./tree.js";
 import "./style.css";
 
 /** The key of a selection, its kind and Rawcode. */
@@ -466,17 +466,16 @@ function App() {
    */
   const mark = (object: Selection) => {
     const next = new Set(marked);
+    const openKey = selection === undefined ? undefined : markKey(selection);
     if (
       next.size === 0 &&
-      selection !== undefined &&
-      markKey(selection) !== markKey(object)
+      openKey !== undefined &&
+      openKey !== markKey(object)
     ) {
       const open = listing?.objects.find(
-        (listed) => markKey(listed) === markKey(selection),
+        (listed) => markKey(listed) === openKey,
       );
-      if (open !== undefined && open.origin !== "definition") {
-        next.add(markKey(open));
-      }
+      if (open !== undefined && markable(open)) next.add(openKey);
     }
     if (!next.delete(markKey(object))) next.add(markKey(object));
     setMarked(next);

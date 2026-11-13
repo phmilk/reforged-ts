@@ -44,7 +44,10 @@ afterAll(async () => {
   removeTemporary();
 });
 
-/** A new page on a path of a Studio started on a Map project of its own, `files` under its root. */
+/**
+ * A new page on a path of a Studio started on a Map project of its own,
+ * `files` under its root.
+ */
 async function open(
   pathname: string,
   files: Readonly<Record<string, string>> = {},
@@ -58,6 +61,21 @@ async function open(
 /** The unsaved changes the counter shows. */
 async function unsaved(page: Page): Promise<string> {
   return ((await page.getByTestId("unsaved-count").textContent()) ?? "").trim();
+}
+
+/** Ctrl+clicks (Cmd+clicks) an object of the tree. */
+async function ctrlClick(page: Page, rawcode: string): Promise<void> {
+  await page
+    .getByRole("list", { name: "Objects" })
+    .locator(`[data-rawcode="${rawcode}"]`)
+    .click({ modifiers: ["ControlOrMeta"] });
+}
+
+/** The bulk bar's text, once it reads `count` selected. */
+async function selectedCount(page: Page, count: number): Promise<void> {
+  await expect
+    .poll(() => page.getByTestId("bulk-bar").textContent())
+    .toContain(`${String(count)} selected`);
 }
 
 /** Whether a tree item shows as marked, by its `aria-pressed`. */
@@ -166,15 +184,9 @@ describe("bulk editing in the Studio's page", () => {
     async () => {
       const page = await open("/objects");
       const tree = page.getByRole("list", { name: "Objects" });
-      await tree.locator('[data-rawcode="h000"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await tree.locator('[data-rawcode="hfoo"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await expect
-        .poll(() => page.getByTestId("bulk-bar").textContent())
-        .toContain("2 selected");
+      await ctrlClick(page, "h000");
+      await ctrlClick(page, "hfoo");
+      await selectedCount(page, 2);
 
       await page.getByRole("button", { name: "Edit a field…" }).click();
       const dialog = page.getByRole("dialog", { name: "Bulk edit" });
@@ -208,25 +220,23 @@ describe("bulk editing in the Studio's page", () => {
     async () => {
       const page = await open("/objects/h000");
       await page.locator(".object-header").waitFor();
-      const tree = page.getByRole("list", { name: "Objects" });
-      await tree.locator('[data-rawcode="hfoo"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await expect
-        .poll(() => page.getByTestId("bulk-bar").textContent())
-        .toContain("2 selected");
+      await ctrlClick(page, "hfoo");
+      await selectedCount(page, 2);
       expect(await pressed(page, "h000")).toBe("true");
       expect(await pressed(page, "hfoo")).toBe("true");
 
       // A Ctrl+click on the open object, marked, unmarks it only.
-      await tree.locator('[data-rawcode="h000"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await expect
-        .poll(() => page.getByTestId("bulk-bar").textContent())
-        .toContain("1 selected");
+      await ctrlClick(page, "h000");
+      await selectedCount(page, 1);
       expect(await pressed(page, "h000")).toBe("false");
       expect(await pressed(page, "hfoo")).toBe("true");
+
+      // Cleared, a Ctrl+click on the open object marks it alone.
+      await page.getByRole("button", { name: "Clear" }).click();
+      await ctrlClick(page, "h000");
+      await selectedCount(page, 1);
+      expect(await pressed(page, "h000")).toBe("true");
+      expect(await pressed(page, "hfoo")).toBe("false");
       await page.close();
     },
     TIMEOUT,
@@ -237,10 +247,7 @@ describe("bulk editing in the Studio's page", () => {
     async () => {
       const page = await open("/objects/h000");
       await page.locator(".object-header").waitFor();
-      const tree = page.getByRole("list", { name: "Objects" });
-      await tree.locator('[data-rawcode="hfoo"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
+      await ctrlClick(page, "hfoo");
       await page.getByRole("button", { name: "Edit a field…" }).click();
       const dialog = page.getByRole("dialog", { name: "Bulk edit" });
       await dialog
@@ -276,13 +283,8 @@ export const Sergeant = defineUnit({
 `,
       });
       await page.locator(".object-header .chip.definition").waitFor();
-      const tree = page.getByRole("list", { name: "Objects" });
-      await tree.locator('[data-rawcode="hfoo"]').click({
-        modifiers: ["ControlOrMeta"],
-      });
-      await expect
-        .poll(() => page.getByTestId("bulk-bar").textContent())
-        .toContain("1 selected");
+      await ctrlClick(page, "hfoo");
+      await selectedCount(page, 1);
       expect(await pressed(page, "hfoo")).toBe("true");
       await page.close();
     },
