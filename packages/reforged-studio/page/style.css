@@ -520,14 +520,19 @@ button:disabled {
   max-height: calc(100vh - 6rem);
 }
 .object-fields {
+  --field-width: 18rem;
+  --id-width: 6rem;
+  --column-min: 16rem;
   table-layout: fixed;
-  min-width: calc(24rem + var(--columns) * 16rem);
+  min-width: calc(
+    var(--field-width) + var(--id-width) + var(--columns) * var(--column-min)
+  );
 }
 .object-fields .field-column {
-  width: 18rem;
+  width: var(--field-width);
 }
 .object-fields .id-column {
-  width: 6rem;
+  width: var(--id-width);
 }
 .object-fields td {
   overflow-wrap: anywhere;
@@ -541,7 +546,7 @@ button:disabled {
   left: 0;
 }
 .object-fields tr > :nth-child(2) {
-  left: 18rem;
+  left: var(--field-width);
   box-shadow: inset -1px 0 0 var(--line);
 }
 .object-fields thead th {

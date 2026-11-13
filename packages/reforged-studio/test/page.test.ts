@@ -364,6 +364,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
         .locator("table.fields thead th", { hasText: "h001" })
         .waitFor();
       expect(await hint.count()).toBe(0);
+      // Field, Id, and the three objects.
       expect(await page.locator("table.fields thead th").count()).toBe(5);
 
       /** How far each box overflows its own width, in pixels. */
@@ -373,6 +374,17 @@ describe("the Studio's page, /objects/<rawcode>", () => {
           .evaluate((element) => element.scrollWidth - element.clientWidth);
       expect(await overflow(".pane")).toBe(0);
       expect(await overflow(".fields-scroll")).toBe(0);
+      // The longest label of the fixture, on two lines at most.
+      const lines = await page
+        .locator('table.fields tr[data-field="uhpm"] td')
+        .first()
+        .evaluate((cell) => {
+          const range = document.createRange();
+          range.selectNodeContents(cell);
+          const lineHeight = parseFloat(getComputedStyle(cell).lineHeight);
+          return Math.round(range.getBoundingClientRect().height / lineHeight);
+        });
+      expect(lines).toBeLessThanOrEqual(2);
 
       await compare.click();
       await pin("h002");
@@ -381,6 +393,7 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       await page
         .locator("table.fields thead th", { hasText: "Hpal" })
         .waitFor();
+      // Field, Id, and the six objects.
       expect(await page.locator("table.fields thead th").count()).toBe(8);
       expect(await overflow(".pane")).toBe(0);
       expect(await overflow(".fields-scroll")).toBeGreaterThan(0);
