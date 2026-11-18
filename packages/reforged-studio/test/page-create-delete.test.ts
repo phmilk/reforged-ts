@@ -20,6 +20,7 @@ import {
   closeStudios,
   mapProject,
   removeTemporary,
+  request,
   start,
 } from "./support/studio.js";
 
@@ -157,6 +158,54 @@ describe("creating and deleting in the Studio's page", () => {
           .filter({ hasText: "Deleted h000" })
           .count(),
       ).toBe(1);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "keeps the dialog's width with a long base's name, Create in view (#905)",
+    async () => {
+      // A base named as long as the game's longest abilities, and longer.
+      const answer = await request(studio, "/api/edits", {
+        json: {
+          edits: [
+            {
+              op: "setField",
+              kind: "ability",
+              rawcode: "AHbz",
+              field: "anam",
+              value: "Blizzard ".repeat(30).trim(),
+            },
+          ],
+        },
+      });
+      expect(answer.status, answer.text).toBe(200);
+      const page = await open("/objects?kind=unit");
+      await page.getByRole("button", { name: "New object" }).click();
+      const dialog = page.getByRole("dialog", { name: "New object" });
+      await dialog.getByLabel("Object kind").selectOption("ability");
+      await expect
+        .poll(() => dialog.getByLabel("Based on").textContent())
+        .toContain("Blizzard Blizzard");
+
+      const form = dialog.locator("form.dialog");
+      const overflow = await form.evaluate(
+        (element) => element.scrollWidth - element.clientWidth,
+      );
+      expect(overflow).toBe(0);
+      const create = await dialog
+        .getByRole("button", { name: "Create" })
+        .boundingBox();
+      const box = await form.boundingBox();
+      expect(create).not.toBeNull();
+      expect(box).not.toBeNull();
+      expect(create!.x + create!.width).toBeLessThanOrEqual(
+        box!.x + box!.width,
+      );
+      expect(create!.x + create!.width).toBeLessThanOrEqual(
+        page.viewportSize()!.width,
+      );
       await page.close();
     },
     TIMEOUT,
