@@ -160,7 +160,7 @@ Creating and deleting objects ([#835](https://github.com/phmilk/reforged-ts/issu
 Taking turns with the World Editor ([#837](https://github.com/phmilk/reforged-ts/issues/837)) adds:
 
 - the banner "Reload and keep my edits on top" after a change on disk under unsaved edits, and its toast saying how many edits were put on top and which the editor refused;
-- the conflicts dialog, one row per field both sides changed with yours and the map folder's value to choose, "All mine" and "All on disk", and a banner that reopens it while a conflict is left; each row names the object, its Object kind and Rawcode, then the field's label and id, as "Avatar (buff B000) · Tooltip (ftip)";
+- the conflicts dialog, one row per field both sides changed with yours and the map folder's value to choose, "All mine" and "All on disk", and a banner that reopens it while a conflict is left; each row names the object, its Object kind and Rawcode, then the field's label and id, as "Avatar (buff B000) · Tooltip (ftip)", with " · level N" and " · data N" for a level and a data pointer, and "(the object)" for a whole object;
 - the banner naming the fields a World Editor save put back, as the conflicts dialog names them, with "Apply them again", "Show" (a dialog of each field, what the Studio saved and what the World Editor saved) and "Keep the World Editor's".
 
 Models ([#839](https://github.com/phmilk/reforged-ts/issues/839)) add to it:
