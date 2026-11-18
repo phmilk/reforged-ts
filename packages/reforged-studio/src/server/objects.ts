@@ -425,6 +425,16 @@ function inputOf(
   return "real";
 }
 
+/**
+ * The field that holds an object's Levels, per Object kind that has them: a
+ * field of levels gets one row per level of it, as the World Editor shows
+ * (#906).
+ */
+const LEVELS_FIELDS: Partial<Record<ObjectKind, string>> = {
+  ability: "alev",
+  upgrade: "glvl",
+};
+
 /** The Rawcodes of a Rawcode list's value: `Adef,A000`. */
 const rawcodesOf = (value: string): string[] =>
   value
@@ -434,7 +444,7 @@ const rawcodesOf = (value: string): string[] =>
 
 /**
  * One object's field table: each field of its kind the install knows (but a
- * field specific to other bases), one row per level for a field of levels,
+ * field specific to other bases), one row per level of the object's Levels for a field of levels,
  * with its base's value and the working state's modification; then each
  * modification of a field the install does not know. An Object
  * definition's modifications are the map folder's, as Object sync wrote
@@ -564,6 +574,21 @@ export function detailOf(
     };
   };
 
+  const levelsField = LEVELS_FIELDS[object.kind];
+  /** The object's Levels: its modification, or its base's value; undefined for a kind without them. */
+  const objectLevels = (() => {
+    if (levelsField === undefined) return undefined;
+    const modification = modifications.find(
+      (candidate) => candidate.field === levelsField,
+    );
+    const value = Number(
+      modification === undefined
+        ? firstValue(baseValues?.get(levelsField))
+        : modification.value,
+    );
+    return Number.isInteger(value) && value > 0 ? value : undefined;
+  })();
+
   const fields: FieldRow[] = [];
   for (const field of kind.fields.values()) {
     if (field.specific !== undefined && !field.specific.includes(base))
@@ -580,7 +605,7 @@ export function detailOf(
       const modified = modifications
         .filter((modification) => modification.field === field.id)
         .map((modification) => modification.level ?? 0);
-      const count = Math.max(levels.length, ...modified);
+      const count = Math.max(objectLevels ?? levels.length, ...modified);
       for (let level = 1; level <= count; level++) {
         fields.push(
           row(
