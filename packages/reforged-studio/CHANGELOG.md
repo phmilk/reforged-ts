@@ -1,5 +1,15 @@
 # reforged-studio
 
+## 1.0.0-alpha.8
+
+### Patch Changes
+
+- [#910](https://github.com/phmilk/reforged-ts/pull/910) [`4f05f51`](https://github.com/phmilk/reforged-ts/commit/4f05f515baa056cb5bfc0c7e54a84d086dfc227e) Thanks [@wyller](https://github.com/wyller)! - The "New object" dialog keeps its width when a base has a long name, as many Abilities do: the "Based on" select fits inside it, a long option cut short, and Cancel and Create stay on screen.
+
+- [#911](https://github.com/phmilk/reforged-ts/pull/911) [`ef23a60`](https://github.com/phmilk/reforged-ts/commit/ef23a60bbdf16405e4463d1e9283fca315dbfe57) Thanks [@wyller](https://github.com/wyller)! - A row of the conflicts dialog and of the put-back dialog and banner names its object and field as the rest of the page does, "Avatar (buff B000) · Tooltip (ftip)", not "B000 ftip": `GET /api/turns` and the answers that carry turns give each its object's `name`, of its own Object kind where a Rawcode is shared, and its field's `label`.
+
+- [#913](https://github.com/phmilk/reforged-ts/pull/913) [`0d46e91`](https://github.com/phmilk/reforged-ts/commit/0d46e9107a2d8b730eb3bdb35368dd983edc2a5a) Thanks [@wyller](https://github.com/wyller)! - A field of levels gets one row per level of the object's level count (`alev` for an ability, `glvl` for an upgrade), as the World Editor shows it, not as many as its base's data holds: a Custom object from Storm Bolt shows 3 levels of Cooldown, not 6. A modification at a level past that count stays shown.
+
 ## 1.0.0-alpha.7
 
 ### Patch Changes
