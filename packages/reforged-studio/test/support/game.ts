@@ -236,7 +236,7 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
 
 /**
  * The abilities: one hero ability with three levels of cooldown and a data
- * field, and one item ability whose level count (`alev`, 2) are fewer than its
+ * field, and one item ability whose level count (`alev`, 2) is fewer than its
  * data's three levels of cooldown, as Storm Bolt's are (#906).
  */
 export const ABILITY_FILES: Readonly<Record<string, string>> = {
