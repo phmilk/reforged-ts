@@ -633,8 +633,12 @@ export type TurnValue =
 export interface TurnAddress {
   readonly kind: ObjectKind;
   readonly rawcode: string;
+  /** The object's name, from its listing; absent when it has none. */
+  readonly name?: string;
   /** The field's id; absent for the whole object. */
   readonly field?: string;
+  /** The field's label, from the install; absent when the install does not label it. */
+  readonly label?: string;
   readonly level?: number;
   readonly dataPointer?: number;
 }

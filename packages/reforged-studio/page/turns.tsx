@@ -30,10 +30,21 @@ export function turnText(value: TurnValue): string {
   }
 }
 
-/** What a turn compares, as the dialogs and banners name it: the Rawcode, then the field and its level. */
+/**
+ * What a turn compares, as the dialogs and banners name it, as the rest of
+ * the page does: the object's name, its Object kind and Rawcode, then the
+ * field's label and id, its level and data pointer (#909).
+ */
 export function addressText(address: TurnAddress): string {
-  if (address.field === undefined) return `${address.rawcode} (the object)`;
-  return `${address.rawcode} ${address.field}${address.level === undefined ? "" : ` level ${String(address.level)}`}${address.dataPointer === undefined ? "" : ` data ${String(address.dataPointer)}`}`;
+  const object = `${address.kind} ${address.rawcode}`;
+  const named =
+    address.name === undefined ? object : `${address.name} (${object})`;
+  if (address.field === undefined) return `${named} (the object)`;
+  const field =
+    address.label === undefined
+      ? address.field
+      : `${address.label} (${address.field})`;
+  return `${named} · ${field}${address.level === undefined ? "" : ` · level ${String(address.level)}`}${address.dataPointer === undefined ? "" : ` · data ${String(address.dataPointer)}`}`;
 }
 
 /** The cell that opens a turn's object. */

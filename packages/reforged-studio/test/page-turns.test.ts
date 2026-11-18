@@ -110,7 +110,9 @@ describe("turns with the World Editor in the Studio's page", () => {
       const dialog = page.getByRole("dialog", { name: "Conflicts" });
       await expect
         .poll(() => dialog.locator("tbody tr").textContent())
-        .toContain("h001 uhpm");
+        .toContain(
+          "Chevalier Élu (unit h001) · Stats - Hit Points Maximum (Base) (uhpm)",
+        );
       expect(await dialog.locator("tbody tr").textContent()).toContain("800");
       await expect
         .poll(() => page.getByTestId("conflicts").textContent())
@@ -153,7 +155,9 @@ describe("turns with the World Editor in the Studio's page", () => {
       const banner = page.getByTestId("put-back");
       await expect
         .poll(() => banner.textContent(), { timeout: WATCH_TIMEOUT })
-        .toContain("put back 1 field the Studio had saved: h001 uhpm");
+        .toContain(
+          "put back 1 field the Studio had saved: Chevalier Élu (unit h001) · Stats - Hit Points Maximum (Base) (uhpm).",
+        );
 
       await banner.getByRole("button", { name: "Show" }).click();
       const dialog = page.getByRole("dialog", {
