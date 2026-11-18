@@ -202,14 +202,16 @@ describe("creating and deleting in the Studio's page", () => {
       };
       const formBox = await form.boundingBox();
       const viewport = page.viewportSize();
-      if (formBox === null || viewport === null) throw new Error("no box");
+      if (formBox === null) throw new Error("the form has no box");
+      if (viewport === null) throw new Error("the page has no viewport");
       for (const button of ["Cancel", "Create"]) {
         const right = await rightOf(button);
         expect(right).toBeLessThanOrEqual(formBox.x + formBox.width);
         expect(right).toBeLessThanOrEqual(viewport.width);
       }
       // The long name is an unsaved edit of the Studio the file shares.
-      await request(studio, "/api/undo", { json: {} });
+      const undone = await request(studio, "/api/undo", { json: {} });
+      expect(undone.status, undone.text).toBe(200);
       await page.close();
     },
     TIMEOUT,
