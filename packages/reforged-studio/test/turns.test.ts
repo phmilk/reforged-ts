@@ -239,14 +239,18 @@ describe("a conflict", () => {
         id: expect.any(String) as string,
         kind: "unit",
         rawcode: "h001",
+        name: "Chevalier Élu",
         field: "uhpm",
+        label: "Stats - Hit Points Maximum (Base)",
         mine: { is: "value", value: 700 },
         theirs: { is: "value", value: 800 },
       },
       {
+        // A field the install does not label.
         id: expect.any(String) as string,
         kind: "unit",
         rawcode: "h001",
+        name: "Chevalier Élu",
         field: "umvs",
         mine: { is: "value", value: 300 },
         theirs: { is: "value", value: 400 },
@@ -350,6 +354,42 @@ describe("a conflict", () => {
     expect(await shown(studio, "h000", "umvs")).toBe(250);
   });
 
+  it("names the object of its own kind where a Rawcode is shared (#909)", async () => {
+    const project = mapProject();
+    const studio = await start(project);
+    // B000 is both a Custom buff, Holy Fire, and a Custom destructable, Gate.
+    const edited = await request(studio, "/api/edits", {
+      json: {
+        edits: [
+          {
+            op: "setField",
+            kind: "destructable",
+            rawcode: "B000",
+            field: "bhps",
+            value: 100,
+          },
+        ],
+      },
+    });
+    expect(edited.status).toBe(200);
+    const other = openObjectData(project.mapFolder, {
+      projectRoot: project.root,
+    });
+    other.setField(
+      { kind: "destructable", rawcode: "B000", field: "bhps" },
+      200,
+    );
+    other.save(undefined, { worldEditorCheck: false });
+
+    const reloaded = (
+      await request(studio, "/api/reload-from-disk", { json: {} })
+    ).body as ReloadFromDiskAnswer;
+
+    expect(reloaded.conflicts).toMatchObject([
+      { kind: "destructable", rawcode: "B000", name: "Gate", field: "bhps" },
+    ]);
+  });
+
   it("is listed by a save refused for a change on disk", async () => {
     const project = mapProject();
     const studio = await start(project);
@@ -407,7 +447,9 @@ describe("a World Editor save that puts back what the Studio saved", () => {
         {
           kind: "unit",
           rawcode: "h001",
+          name: "Chevalier Élu",
           field: "uhpm",
+          label: "Stats - Hit Points Maximum (Base)",
           studio: { is: "value", value: 700 },
           worldEditor: { is: "unmodified" },
         },
@@ -480,7 +522,9 @@ describe("a World Editor save that puts back what the Studio saved", () => {
       {
         kind: "unit",
         rawcode: "h001",
+        name: "Chevalier Élu",
         field: "uhpm",
+        label: "Stats - Hit Points Maximum (Base)",
         studio: { is: "value", value: 2000 },
         worldEditor: { is: "value", value: 1000 },
       },
@@ -589,6 +633,7 @@ describe("a World Editor save that puts back what the Studio saved", () => {
       {
         kind: "unit",
         rawcode: "h000",
+        name: "Captain",
         studio: { is: "absent" },
         worldEditor: { is: "present" },
       },

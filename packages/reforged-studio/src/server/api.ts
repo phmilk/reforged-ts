@@ -69,6 +69,8 @@ import {
   type SessionAnswer,
   type ThumbnailAnswer,
   type SessionCounts,
+  type TurnAddress,
+  type TurnsAnswer,
   type TurnsChangedAnswer,
 } from "./api-types.js";
 import { bulkEdits, BulkRefusedError, tableOf } from "./bulk.js";
@@ -263,6 +265,37 @@ async function objectsOf(context: ApiContext): Promise<
       working: session.working(),
       gameData,
     }),
+  };
+}
+
+/**
+ * The session's turns, each named for the page: its object's name, of its
+ * own Object kind where a Rawcode is shared, and its field's label (#909).
+ * Unnamed when the objects cannot be listed.
+ */
+async function turnsOf(context: ApiContext): Promise<TurnsAnswer> {
+  const turns = context.session.turns();
+  if (turns.conflicts.length === 0 && turns.putBack.length === 0) return turns;
+  const listed = await objectsOf(context);
+  if (listed instanceof Answer) return turns;
+  const named = <T extends TurnAddress>(address: T): T => {
+    const name = listed.objects.find(
+      (object) =>
+        object.kind === address.kind && object.rawcode === address.rawcode,
+    )?.name;
+    const label =
+      address.field === undefined
+        ? undefined
+        : listed.gameData.kinds[address.kind].fields.get(address.field)?.label;
+    return {
+      ...address,
+      ...(name !== undefined && { name }),
+      ...(label !== undefined && { label }),
+    };
+  };
+  return {
+    conflicts: turns.conflicts.map(named),
+    putBack: turns.putBack.map(named),
   };
 }
 
@@ -1062,15 +1095,15 @@ async function reloadFromDisk(
   return new Answer(200, {
     ...session.counts(),
     ...replay,
-    ...session.turns(),
+    ...(await turnsOf(context)),
   } satisfies ReloadFromDiskAnswer);
 }
 
 /** The counts and the turns left, after a change of them. */
-const turnsChanged = (context: ApiContext): Answer =>
+const turnsChanged = async (context: ApiContext): Promise<Answer> =>
   new Answer(200, {
     ...context.session.counts(),
-    ...context.session.turns(),
+    ...(await turnsOf(context)),
   } satisfies TurnsChangedAnswer);
 
 /**
@@ -1144,7 +1177,7 @@ async function save(
 ): Promise<Answer> {
   const body = await readOptionalJson(request);
   const { session } = context;
-  const { conflicts } = session.turns();
+  const { conflicts } = await turnsOf(context);
   if (conflicts.length > 0) {
     return new Answer(409, {
       error: {
@@ -1163,7 +1196,7 @@ async function save(
     if (error.reason === "changed-on-disk") {
       const replay = session.replayOnDisk();
       context.resync();
-      const turns = session.turns();
+      const turns = await turnsOf(context);
       context.events.send(
         "reloaded",
         reloadedEvent(
@@ -1766,7 +1799,7 @@ export async function handle(
     } else if (route === "POST /api/save") {
       send(response, await save(context, request));
     } else if (route === "GET /api/turns") {
-      send(response, new Answer(200, context.session.turns()));
+      send(response, new Answer(200, await turnsOf(context)));
     } else if (route === "POST /api/reload-from-disk") {
       send(response, await reloadFromDisk(context, request));
     } else if (route === "POST /api/conflicts") {
