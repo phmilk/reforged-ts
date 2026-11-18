@@ -194,18 +194,22 @@ describe("creating and deleting in the Studio's page", () => {
         (element) => element.scrollWidth - element.clientWidth,
       );
       expect(overflow).toBe(0);
-      const create = await dialog
-        .getByRole("button", { name: "Create" })
-        .boundingBox();
-      const box = await form.boundingBox();
-      expect(create).not.toBeNull();
-      expect(box).not.toBeNull();
-      expect(create!.x + create!.width).toBeLessThanOrEqual(
-        box!.x + box!.width,
-      );
-      expect(create!.x + create!.width).toBeLessThanOrEqual(
-        page.viewportSize()!.width,
-      );
+      /** A box's right edge, failing the test when the element has none. */
+      const rightOf = async (name: string): Promise<number> => {
+        const box = await dialog.getByRole("button", { name }).boundingBox();
+        if (box === null) throw new Error(`${name} has no box`);
+        return box.x + box.width;
+      };
+      const formBox = await form.boundingBox();
+      const viewport = page.viewportSize();
+      if (formBox === null || viewport === null) throw new Error("no box");
+      for (const button of ["Cancel", "Create"]) {
+        const right = await rightOf(button);
+        expect(right).toBeLessThanOrEqual(formBox.x + formBox.width);
+        expect(right).toBeLessThanOrEqual(viewport.width);
+      }
+      // The long name is an unsaved edit of the Studio the file shares.
+      await request(studio, "/api/undo", { json: {} });
       await page.close();
     },
     TIMEOUT,
