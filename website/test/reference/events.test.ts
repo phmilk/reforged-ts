@@ -5,7 +5,7 @@
 // Runs on the library's sources; no page is written.
 import {
   Application,
-  type DeclarationReflection,
+  DeclarationReflection,
   type ProjectReflection,
   ReflectionKind,
 } from "typedoc";
@@ -47,8 +47,9 @@ function commentOf(member: DeclarationReflection) {
 
 function namespace(name: string): DeclarationReflection {
   const reflection = project.getChildByName(name);
-  if (reflection === undefined) throw new Error(`No ${name} in the project.`);
-  return reflection as DeclarationReflection;
+  if (!(reflection instanceof DeclarationReflection))
+    throw new Error(`No ${name} in the project.`);
+  return reflection;
 }
 
 describe("an events namespace", () => {
@@ -83,7 +84,7 @@ describe("an events namespace", () => {
   it("gives a UnitEvents twin its own comment and the Native it registers through", () => {
     const twin = namespace("UnitEvents").getChildByName("attackedOf");
     const comment =
-      twin === undefined ? undefined : commentOf(twin as DeclarationReflection);
+      twin instanceof DeclarationReflection ? commentOf(twin) : undefined;
 
     expect(comment?.summary.map((part) => part.text).join("")).toContain(
       "The event of `attacked` on one Unit",
