@@ -731,6 +731,11 @@ button:disabled {
   gap: 8px;
   width: min(560px, 94vw);
 }
+/* A fieldset and a grid's item are as wide as their widest content by default: at 0, a long option no longer widens the dialog (#905). */
+.dialog.create fieldset,
+.dialog.create label {
+  min-width: 0;
+}
 .dialog.create fieldset {
   display: grid;
   gap: 6px;

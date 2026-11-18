@@ -20,6 +20,7 @@ import {
   closeStudios,
   mapProject,
   removeTemporary,
+  request,
   start,
 } from "./support/studio.js";
 
@@ -157,6 +158,60 @@ describe("creating and deleting in the Studio's page", () => {
           .filter({ hasText: "Deleted h000" })
           .count(),
       ).toBe(1);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "keeps the dialog's width with a long base's name, Create in view (#905)",
+    async () => {
+      // A base named as long as the game's longest abilities, and longer.
+      const answer = await request(studio, "/api/edits", {
+        json: {
+          edits: [
+            {
+              op: "setField",
+              kind: "ability",
+              rawcode: "AHbz",
+              field: "anam",
+              value: "Blizzard ".repeat(30).trim(),
+            },
+          ],
+        },
+      });
+      expect(answer.status, answer.text).toBe(200);
+      const page = await open("/objects?kind=unit");
+      await page.getByRole("button", { name: "New object" }).click();
+      const dialog = page.getByRole("dialog", { name: "New object" });
+      await dialog.getByLabel("Object kind").selectOption("ability");
+      await expect
+        .poll(() => dialog.getByLabel("Based on").textContent())
+        .toContain("Blizzard Blizzard");
+
+      const form = dialog.locator("form.dialog");
+      const overflow = await form.evaluate(
+        (element) => element.scrollWidth - element.clientWidth,
+      );
+      expect(overflow).toBe(0);
+      /** A box's right edge, failing the test when the element has none. */
+      const rightOf = async (name: string): Promise<number> => {
+        const box = await dialog.getByRole("button", { name }).boundingBox();
+        if (box === null) throw new Error(`${name} has no box`);
+        return box.x + box.width;
+      };
+      const formBox = await form.boundingBox();
+      const viewport = page.viewportSize();
+      if (formBox === null) throw new Error("the form has no box");
+      if (viewport === null) throw new Error("the page has no viewport");
+      for (const button of ["Cancel", "Create"]) {
+        const right = await rightOf(button);
+        expect(right).toBeLessThanOrEqual(formBox.x + formBox.width);
+        expect(right).toBeLessThanOrEqual(viewport.width);
+      }
+      // The long name is an unsaved edit of the Studio the file shares.
+      const undone = await request(studio, "/api/undo", { json: {} });
+      expect(undone.status, undone.text).toBe(200);
       await page.close();
     },
     TIMEOUT,
