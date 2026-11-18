@@ -234,6 +234,17 @@ export default defineConfig(
       },
     },
   },
+  // The negative declaration fixtures pass a raw Handle where a Wrapper is
+  // expected on purpose: each such line is a compile error the declaration
+  // test asserts, not a value created outside its constructor.
+  {
+    files: [
+      "packages/reforged-ts/test/node/fixtures/declarations/negative/**/*.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-unsafe-class-instance-assignment": "off",
+    },
+  },
   // reforged-map's Map project fixtures import `reforged-ts` as a Map project
   // does, through the same kind of mapping.
   {
