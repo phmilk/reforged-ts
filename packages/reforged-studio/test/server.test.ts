@@ -332,6 +332,60 @@ describe("the Studio's deep links, /objects/<rawcode>", () => {
     ]);
   });
 
+  it("gives a field of levels one row per level of the object's level count, not of its base's data", async () => {
+    const studio = await start(mapProject());
+    /** The levels of a field's rows in an object's field table. */
+    const levelsOf = async (rawcode: string, field: string, kind: string) => {
+      const found = (
+        await request(studio, `/api/objects/${rawcode}?kind=${kind}`)
+      ).body as RawcodeAnswer;
+      if (found.status !== "known") throw new Error(found.status);
+      return found.selected?.fields
+        .filter((row) => row.id === field)
+        .map((row) => row.level);
+    };
+    const edit = (
+      kind: string,
+      rawcode: string,
+      field: string,
+      value: number,
+      level?: number,
+    ) =>
+      request(studio, "/api/edits", {
+        json: {
+          edits: [
+            {
+              op: "setField",
+              kind,
+              rawcode,
+              field,
+              value,
+              ...(level !== undefined && { level }),
+            },
+          ],
+        },
+      });
+
+    // AIat's data holds three levels of cooldown, its level count two.
+    expect(await levelsOf("AIat", "acdn", "ability")).toEqual([1, 2]);
+
+    // Its own level count, fewer or more than its base's.
+    await edit("ability", "A000", "alev", 2);
+    expect(await levelsOf("A000", "acdn", "ability")).toEqual([1, 2]);
+    await edit("ability", "A000", "alev", 5);
+    expect(await levelsOf("A000", "acdn", "ability")).toEqual([1, 2, 3, 4, 5]);
+
+    // A modification at a level past its level count stays shown.
+    await edit("ability", "A000", "alev", 1);
+    await edit("ability", "A000", "acdn", 4, 3);
+    expect(await levelsOf("A000", "acdn", "ability")).toEqual([1, 2, 3]);
+
+    // An upgrade's level count is its `glvl`.
+    expect(await levelsOf("Rhme", "gnam", "upgrade")).toEqual([1, 2, 3]);
+    await edit("upgrade", "Rhme", "glvl", 2);
+    expect(await levelsOf("Rhme", "gnam", "upgrade")).toEqual([1, 2]);
+  });
+
   it("answers both objects of a shared Rawcode without ?kind=, and selects one with it", async () => {
     const studio = await start(mapProject());
 

@@ -234,7 +234,11 @@ export const UNIT_FILES: Readonly<Record<string, string>> = {
   }),
 };
 
-/** The abilities: one hero ability with three levels of cooldown and a data field, and one item ability. */
+/**
+ * The abilities: one hero ability with three levels of cooldown and a data
+ * field, and one item ability whose level count (`alev`, 2) is fewer than its
+ * data's three levels of cooldown, as Storm Bolt's are (#906).
+ */
 export const ABILITY_FILES: Readonly<Record<string, string>> = {
   [base("Units/AbilityMetaData.slk")]: metaData([
     {
@@ -244,6 +248,14 @@ export const ABILITY_FILES: Readonly<Record<string, string>> = {
       index: "0",
       type: "string",
       category: "text",
+    },
+    {
+      ID: "alev",
+      field: "levels",
+      slk: "AbilityData",
+      index: "-1",
+      type: "int",
+      category: "stats",
     },
     {
       ID: "acdn",
@@ -274,6 +286,7 @@ export const ABILITY_FILES: Readonly<Record<string, string>> = {
       "hero",
       "item",
       "version",
+      "levels",
       "Cool1",
       "DataA1",
       "Cool2",
@@ -282,8 +295,8 @@ export const ABILITY_FILES: Readonly<Record<string, string>> = {
       "DataA3",
     ],
     [
-      ["AHbz", "human", "1", "0", "0", "6", "6", "6", "8", "6", "10"],
-      ["AIat", "other", "0", "1", "0", "0", "-", "0", "-", "0", "-"],
+      ["AHbz", "human", "1", "0", "0", "3", "6", "6", "6", "8", "6", "10"],
+      ["AIat", "other", "0", "1", "0", "2", "0", "-", "0", "-", "0", "-"],
     ],
   ),
   [strings("HumanAbilityStrings.txt")]: profile({

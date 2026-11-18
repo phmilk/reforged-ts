@@ -425,6 +425,39 @@ function inputOf(
   return "real";
 }
 
+/**
+ * The field that holds an object's level count, per Object kind that has
+ * one: a field of levels gets one row per level of it, as the World Editor
+ * shows (#906).
+ */
+const LEVELS_FIELDS: Partial<Record<ObjectKind, string>> = {
+  ability: "alev",
+  upgrade: "glvl",
+};
+
+/**
+ * An object's level count: its modification of its kind's {@link
+ * LEVELS_FIELDS} field, else its base's value; undefined for a kind without
+ * one, or a count that is not a positive integer.
+ */
+function levelCountOf(
+  kind: ObjectKind,
+  modifications: readonly ObjectDataModification[],
+  baseValues: ReadonlyMap<string, FieldValue> | undefined,
+): number | undefined {
+  const field = LEVELS_FIELDS[kind];
+  if (field === undefined) return undefined;
+  const modification = modifications.find(
+    (candidate) => candidate.field === field,
+  );
+  const count = Number(
+    modification === undefined
+      ? firstValue(baseValues?.get(field))
+      : modification.value,
+  );
+  return Number.isInteger(count) && count > 0 ? count : undefined;
+}
+
 /** The Rawcodes of a Rawcode list's value: `Adef,A000`. */
 const rawcodesOf = (value: string): string[] =>
   value
@@ -435,6 +468,7 @@ const rawcodesOf = (value: string): string[] =>
 /**
  * One object's field table: each field of its kind the install knows (but a
  * field specific to other bases), one row per level for a field of levels,
+ * as many as the object's level count ({@link levelCountOf}),
  * with its base's value and the working state's modification; then each
  * modification of a field the install does not know. An Object
  * definition's modifications are the map folder's, as Object sync wrote
@@ -564,6 +598,8 @@ export function detailOf(
     };
   };
 
+  const objectLevels = levelCountOf(object.kind, modifications, baseValues);
+
   const fields: FieldRow[] = [];
   for (const field of kind.fields.values()) {
     if (field.specific !== undefined && !field.specific.includes(base))
@@ -580,7 +616,7 @@ export function detailOf(
       const modified = modifications
         .filter((modification) => modification.field === field.id)
         .map((modification) => modification.level ?? 0);
-      const count = Math.max(levels.length, ...modified);
+      const count = Math.max(objectLevels ?? levels.length, ...modified);
       for (let level = 1; level <= count; level++) {
         fields.push(
           row(
