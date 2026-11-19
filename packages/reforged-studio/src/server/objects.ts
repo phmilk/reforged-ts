@@ -92,9 +92,9 @@ const GROUP_WORDS: Readonly<Record<string, string>> = {
 };
 
 /**
- * The enumeration of the game data that labels each kind's outermost
- * group: the race of a unit, an ability, a buff or an upgrade, the class
- * of an item, the category of a destructable or a doodad.
+ * The enumeration of the game data model that labels each kind's
+ * outermost group: the race of a unit, an ability, a buff or an upgrade,
+ * the class of an item, the category of a destructable or a doodad.
  */
 const GROUP_ENUMERATIONS: Readonly<Record<ObjectKind, string>> = {
   unit: "unitRace",
@@ -112,7 +112,7 @@ const firstValue = (value: FieldValue | undefined): string | undefined =>
 
 /**
  * A Built-in object's group in the World Editor's tree, each level
- * labelled: the outermost through the enumeration of the game data
+ * labelled: the outermost through the enumeration of the game data model
  * {@link GROUP_ENUMERATIONS} names, the tree's words through
  * {@link GROUP_WORDS}, a value with no label as it
  * is; empty levels left out. Undefined when the install does not hold it.
