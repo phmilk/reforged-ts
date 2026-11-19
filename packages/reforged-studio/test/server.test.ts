@@ -598,6 +598,17 @@ describe("the Studio's field table", () => {
       baseDisplay: "Trees/Destructibles",
       display: "Trees/Destructibles",
     });
+
+    const torch = (await request(studio, "/api/objects/YOtf"))
+      .body as RawcodeAnswer;
+    if (torch.status !== "known") throw new Error(torch.status);
+    expect(
+      torch.selected?.fields.find((row) => row.id === "dcat"),
+    ).toMatchObject({
+      base: "O",
+      baseDisplay: "Props",
+      display: "Props",
+    });
   });
 });
 
