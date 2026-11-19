@@ -447,7 +447,7 @@ function App() {
    */
   const showKind = (id: string) => {
     const rawcode = lastOpen.get(id);
-    if (id === route.kind && route.rawcode === rawcode) return;
+    if (id === (route.kind ?? kind) && route.rawcode === rawcode) return;
     tabClicks.current += 1;
     const click = tabClicks.current;
     const open = (found: string | undefined) => {

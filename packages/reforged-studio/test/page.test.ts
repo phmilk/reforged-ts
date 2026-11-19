@@ -594,6 +594,23 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "pushes no history entry for a click on the tab already shown (#907)",
+    async () => {
+      const page = await open("/objects/hfoo");
+      expect(await textOf(page.locator(".object-header h2"))).toContain(
+        "Militia",
+      );
+      const length = () => page.evaluate(() => history.length);
+      const before = await length();
+      await page.getByRole("tab", { name: "Units" }).click();
+      expect(await length()).toBe(before);
+      expect(new URL(page.url()).pathname).toBe("/objects/hfoo");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "says an unknown Rawcode is neither in this map nor Built-in, with the lint rule's suggestions",
     async () => {
       const page = await open("/objects/h00Z");
