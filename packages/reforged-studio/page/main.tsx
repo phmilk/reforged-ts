@@ -19,7 +19,9 @@
  * on top" after a change on disk under unsaved edits, the conflicts dialog,
  * and the banner of the fields a World Editor save put back, with "Apply
  * them again", "Show" and "Keep the World Editor's" (`./turns.tsx`).
- * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
+ * Each kind's tab shows its own kind on the right: the object last open in
+ * it, else none (#907).
+ * It reads its route from the path, `/objects[/<rawcode>][?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
 import { StrictMode, useCallback, useEffect, useRef, useState } from "react";
@@ -364,11 +366,11 @@ function App() {
     setMarked(new Set());
   }, [kind]);
   useEffect(() => {
+    if (route.kind !== undefined) setKind(route.kind);
     if (route.rawcode === undefined) {
       setDetail(undefined);
       return;
     }
-    if (route.kind !== undefined) setKind(route.kind);
     let live = true;
     api.rawcode(route.rawcode, route.kind).then((answer) => {
       if (!live) return;
@@ -395,6 +397,22 @@ function App() {
     selected === undefined
       ? undefined
       : { kind: selected.kind, rawcode: selected.rawcode };
+
+  // The object last open in each kind, which its tab opens again (#907).
+  const lastOpen = useRef(new Map<string, string>());
+  useEffect(() => {
+    if (selection !== undefined) {
+      lastOpen.current.set(selection.kind, selection.rawcode);
+    }
+  }, [selection?.kind, selection?.rawcode]);
+  /** Shows a kind's tab: the object last open in it, else none. */
+  const showKind = (id: string) => {
+    const rawcode = lastOpen.current.get(id);
+    setKind(id);
+    if (route.rawcode !== rawcode || route.kind !== id) {
+      go({ rawcode, kind: id });
+    }
+  };
 
   // The compared objects: those pinned of the selected object's kind, but itself.
   const comparedKeys = pinned
@@ -726,7 +744,7 @@ function App() {
               aria-selected={id === kind}
               className={id === kind ? "selected" : undefined}
               onClick={() => {
-                setKind(id);
+                showKind(id);
               }}
             >
               {label}
@@ -878,7 +896,10 @@ function App() {
               setToast({
                 text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
               });
-              go({ rawcode: undefined, kind: undefined });
+              if (lastOpen.current.get(deleting.kind) === deleting.rawcode) {
+                lastOpen.current.delete(deleting.kind);
+              }
+              go({ rawcode: undefined, kind: deleting.kind });
             }}
           />
         )}

@@ -151,7 +151,8 @@ describe("creating and deleting in the Studio's page", () => {
       await dialog.getByRole("button", { name: "Delete" }).click();
 
       await expect.poll(() => unsaved(page)).not.toBe(before);
-      await expect.poll(() => page.url()).toMatch(/\/objects$/);
+      // The tab of the deleted object's kind stays, with no object open (#907).
+      await expect.poll(() => page.url()).toMatch(/\/objects\?kind=unit$/);
       expect(
         await page
           .getByRole("status")

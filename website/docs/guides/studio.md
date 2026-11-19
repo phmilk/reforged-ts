@@ -30,7 +30,7 @@ pnpm exec reforged-studio --map my-map.w3m
 
 ## Finding an object
 
-The page has one tab per Object kind, each with the tree of its objects: the map's Custom objects first, then its Object definitions, the Built-in objects it modifies, and the Built-in objects grouped as the World Editor groups them (race, Melee or Campaign, then Units, Buildings, Heroes or Special for a unit). Each object shows its icon and chips for its origin.
+The page has one tab per Object kind, each with the tree of its objects: the map's Custom objects first, then its Object definitions, the Built-in objects it modifies, and the Built-in objects grouped as the World Editor groups them (race, Melee or Campaign, then Units, Buildings, Heroes or Special for a unit). Each object shows its icon and chips for its origin. A tab opens again the object last open in its kind, else none, and the address names what it shows, so a link or the browser's Back returns to it.
 
 - **The search**, Ctrl+K, finds an object by name or Rawcode across the seven kinds. A Built-in object's result shows its group in the World Editor's tree, such as "Human · Campaign · Units", which tells apart two of one name: the melee Footman `hfoo` and the campaign one `sfoo`.
 - **The map's Game data set** is named at the top. The Built-in objects outside it are hidden, and a toggle shows them, marked.

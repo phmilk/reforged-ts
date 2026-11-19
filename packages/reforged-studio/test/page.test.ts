@@ -539,6 +539,61 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "shows a tab's own kind on the right, the object last open in it or none, with the URL to match (#907)",
+    async () => {
+      const page = await open("/objects/hfoo");
+      const header = page.locator(".object-header h2");
+      expect(await textOf(header)).toContain("Militia");
+      const tab = (name: string) => page.getByRole("tab", { name });
+      const pathOf = () => {
+        const url = new URL(page.url());
+        return url.pathname + url.search;
+      };
+
+      // A kind with no object open yet: the placeholder, not the Footman.
+      await tab("Buffs/Effects").click();
+      expect(await textOf(page.locator(".pane .notice"))).toBe(
+        "Choose an object.",
+      );
+      expect(await page.locator(".object-header").count()).toBe(0);
+      expect(pathOf()).toBe("/objects?kind=buff");
+
+      await page.locator('.tree .item[data-rawcode="B000"]').click();
+      expect(await textOf(header)).toContain("Holy Fire");
+      expect(pathOf()).toBe("/objects/B000?kind=buff");
+
+      // The destructable B000 is not the buff open in the other tab.
+      await tab("Destructibles").click();
+      expect(await textOf(page.locator(".pane .notice"))).toBe(
+        "Choose an object.",
+      );
+      expect(pathOf()).toBe("/objects?kind=destructable");
+
+      // Each kind's tab opens its object last open again.
+      await tab("Units").click();
+      expect(await textOf(header)).toContain("Militia");
+      expect(pathOf()).toBe("/objects/hfoo?kind=unit");
+      await tab("Buffs/Effects").click();
+      expect(await textOf(header)).toContain("Holy Fire");
+      expect(pathOf()).toBe("/objects/B000?kind=buff");
+
+      // The browser's Back goes through the tabs as they were shown.
+      await page.goBack();
+      expect(await textOf(header)).toContain("Militia");
+      expect(await tab("Units").getAttribute("aria-selected")).toBe("true");
+      await page.goBack();
+      expect(await textOf(page.locator(".pane .notice"))).toBe(
+        "Choose an object.",
+      );
+      expect(await tab("Destructibles").getAttribute("aria-selected")).toBe(
+        "true",
+      );
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "says an unknown Rawcode is neither in this map nor Built-in, with the lint rule's suggestions",
     async () => {
       const page = await open("/objects/h00Z");

@@ -41,7 +41,10 @@ export const KIND_NOUNS: Readonly<Record<ObjectKind, string>> = {
   upgrade: "an upgrade",
 };
 
-/** The route the path names: `/objects/<rawcode>?kind=<kind>`. */
+/**
+ * The route the path names: `/objects/<rawcode>?kind=<kind>`, or
+ * `/objects?kind=<kind>` for a kind's tab with no object open.
+ */
 export interface Route {
   readonly rawcode: string | undefined;
   readonly kind: string | undefined;
@@ -60,10 +63,12 @@ export function readRoute(): Route {
 
 /** Goes to a route, as a link from the hover would. */
 export function go(route: Route): void {
+  const kind =
+    route.kind === undefined ? "" : `?kind=${encodeURIComponent(route.kind)}`;
   const path =
     route.rawcode === undefined
-      ? "/objects"
-      : `/objects/${encodeURIComponent(route.rawcode)}${route.kind === undefined ? "" : `?kind=${encodeURIComponent(route.kind)}`}`;
+      ? `/objects${kind}`
+      : `/objects/${encodeURIComponent(route.rawcode)}${kind}`;
   history.pushState(null, "", path);
   dispatchEvent(new PopStateEvent("popstate"));
 }

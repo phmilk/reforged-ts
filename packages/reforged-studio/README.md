@@ -128,7 +128,7 @@ The page is built at the package's build into `dist/page/`, static files shipped
 
 Its Objects area, read-only ([#832](https://github.com/phmilk/reforged-ts/issues/832)), has the layout of the prototype of [#476](https://github.com/phmilk/reforged-ts/issues/476):
 
-- one tab per Object kind, and the tree of the kind's objects, grouped by origin first (Custom objects, Object definitions, modified Built-in objects, Built-in objects), the Built-in objects by the World Editor's grouping; a group renders its objects only while it is open;
+- one tab per Object kind, which shows its own kind on the right too, the object last open in it, else "Choose an object.", the URL naming it (`/objects/<rawcode>?kind=<kind>`, `/objects?kind=<kind>` with none open), and the tree of the kind's objects, grouped by origin first (Custom objects, Object definitions, modified Built-in objects, Built-in objects), the Built-in objects by the World Editor's grouping; a group renders its objects only while it is open;
 - chips: the origin (an Object definition's with its lock and its file), a warning on a Rawcode another kind shares, and "not in this map's Game data set";
 - the global search, Ctrl+K, by name or Rawcode across the seven kinds; a Built-in object's result shows its group in the World Editor's tree beside its name, so that two of one name, such as the melee Footman `hfoo` and the campaign one `sfoo`, differ by more than their Rawcode;
 - the map's Game data set named at the top, the objects outside it hidden, and a toggle that shows them;
