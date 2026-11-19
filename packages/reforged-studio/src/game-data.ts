@@ -37,6 +37,9 @@ type Rows = ReadonlyMap<string, ReadonlyMap<string, string>>;
 /** The World Editor's data of the enumerations, in the base layer. */
 export const EDITOR_DATA = "UI/UnitEditorData.txt";
 
+/** The metadata types of the categories, which the World Editor's own data lists. */
+export type CategoryType = "destructableCategory" | "doodadCategory";
+
 /** The World Editor's own data, in the base layer, which lists the categories. */
 const WORLD_EDIT_DATA = "UI/WorldEditData.txt";
 
@@ -48,10 +51,14 @@ const WORLD_EDIT_DATA = "UI/WorldEditData.txt";
  * (`D=WESTRING_DTYPE_DESTRUCTABLE,ReplaceableTextures\WorldEditUI\Doodad-Destructible`),
  * as the install of 3.0.1.24371 holds them (#908).
  */
-const CATEGORY_SECTIONS: Readonly<Partial<Record<string, string>>> = {
+const CATEGORY_SECTIONS: Readonly<Record<CategoryType, string>> = {
   destructableCategory: "DestructibleCategories",
   doodadCategory: "DoodadCategories",
 };
+
+/** Whether a metadata type is a category's, listed in {@link CATEGORY_SECTIONS}. */
+const isCategoryType = (type: string): type is CategoryType =>
+  Object.hasOwn(CATEGORY_SECTIONS, type);
 
 /**
  * The key of each kind's label in the editor strings: its tab in the
@@ -235,12 +242,11 @@ export async function readGameData(
   const enumerations = new Map<string, EnumerationValue[] | undefined>();
   const enumeration = (type: string): EnumerationValue[] | undefined => {
     if (!enumerations.has(type)) {
-      const section = CATEGORY_SECTIONS[type];
       enumerations.set(
         type,
-        section === undefined
-          ? enumerationOf(editorData, type, text)
-          : categoriesOf(worldEditData, section, text),
+        isCategoryType(type)
+          ? categoriesOf(worldEditData, CATEGORY_SECTIONS[type], text)
+          : enumerationOf(editorData, type, text),
       );
     }
     return enumerations.get(type);

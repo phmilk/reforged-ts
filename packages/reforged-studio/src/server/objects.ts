@@ -18,6 +18,7 @@ import type {
   RawcodeObject,
 } from "reforged-map";
 import type {
+  CategoryType,
   FieldValue,
   GameData,
   GameField,
@@ -96,7 +97,9 @@ const GROUP_WORDS: Readonly<Record<string, string>> = {
  * outermost group: the race of a unit, an ability, a buff or an upgrade,
  * the class of an item, the category of a destructable or a doodad.
  */
-const GROUP_ENUMERATIONS: Readonly<Record<ObjectKind, string>> = {
+const GROUP_ENUMERATIONS: Readonly<
+  Record<ObjectKind, "unitRace" | "itemClass" | CategoryType>
+> = {
   unit: "unitRace",
   item: "itemClass",
   ability: "unitRace",
