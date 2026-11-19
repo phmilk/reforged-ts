@@ -223,16 +223,15 @@ export async function readGameData(
     return shown;
   };
 
-  const editorData = new Profile();
-  const editorDataPath = BASE_LAYER + EDITOR_DATA;
-  if (listed.has(editorDataPath.toLowerCase())) {
-    editorData.add(await read(editorDataPath), editorDataPath);
-  }
-  const worldEditData = new Profile();
-  const worldEditDataPath = BASE_LAYER + WORLD_EDIT_DATA;
-  if (listed.has(worldEditDataPath.toLowerCase())) {
-    worldEditData.add(await read(worldEditDataPath), worldEditDataPath);
-  }
+  /** The profile file `file` of the base layer, empty when the install lacks it. */
+  const profileOf = async (file: string): Promise<Profile> => {
+    const profile = new Profile();
+    const path = BASE_LAYER + file;
+    if (listed.has(path.toLowerCase())) profile.add(await read(path), path);
+    return profile;
+  };
+  const editorData = await profileOf(EDITOR_DATA);
+  const worldEditData = await profileOf(WORLD_EDIT_DATA);
   const enumerations = new Map<string, EnumerationValue[] | undefined>();
   const enumeration = (type: string): EnumerationValue[] | undefined => {
     if (!enumerations.has(type)) {
