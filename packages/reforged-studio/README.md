@@ -128,7 +128,8 @@ The page is built at the package's build into `dist/page/`, static files shipped
 
 Its Objects area, read-only ([#832](https://github.com/phmilk/reforged-ts/issues/832)), has the layout of the prototype of [#476](https://github.com/phmilk/reforged-ts/issues/476):
 
-- one tab per Object kind, which shows its own kind on the right too, the object last open in it, else "Choose an object.", the URL naming it (`/objects/<rawcode>?kind=<kind>`, `/objects?kind=<kind>` with none open), and the tree of the kind's objects, grouped by origin first (Custom objects, Object definitions, modified Built-in objects, Built-in objects), the Built-in objects by the World Editor's grouping; a group renders its objects only while it is open;
+- one tab per Object kind, and the tree of the kind's objects, grouped by origin first (Custom objects, Object definitions, modified Built-in objects, Built-in objects), the Built-in objects by the World Editor's grouping; a group renders its objects only while it is open;
+- each tab's own kind on the right too: the object last open in that kind, else "Choose an object.", one removed since (deleted, undone, dropped by a World Editor save) opening none; the page remembers it while it stays open, a reload forgetting it. The URL names what it shows, `/objects/<rawcode>?kind=<kind>`, or `/objects?kind=<kind>` with no object open, so Back goes through the tabs as they were shown, and `/objects` shows the Units tab;
 - chips: the origin (an Object definition's with its lock and its file), a warning on a Rawcode another kind shares, and "not in this map's Game data set";
 - the global search, Ctrl+K, by name or Rawcode across the seven kinds; a Built-in object's result shows its group in the World Editor's tree beside its name, so that two of one name, such as the melee Footman `hfoo` and the campaign one `sfoo`, differ by more than their Rawcode;
 - the map's Game data set named at the top, the objects outside it hidden, and a toggle that shows them;
@@ -241,10 +242,10 @@ The Studio needs the game installed: the field tables, the base values, the icon
 
 Every test runs on synthetic storages the tests write in a temporary folder, with no byte of Blizzard's; the previews' tests draw a synthetic MDX 1800 cube (`test/support/models.ts`), its texture found nowhere, and check that its canvas is not blank, not what it draws pixel by pixel. The server's tests (the Spec's Seam 1) drive its HTTP API on fixture map folders. The page's end-to-end tests (the Spec's Seam 2) drive the built page in headless Chromium with [Playwright](https://playwright.dev) over the same server: they need `pnpm build` and the browser, which `pnpm --filter reforged-studio exec playwright install --only-shell chromium` installs once per machine and CI installs in its own step. They cover, end to end:
 
-- opening `/objects/<rawcode>`, a shared Rawcode and an unknown one (`test/page.test.ts`);
+- opening `/objects/<rawcode>`, a shared Rawcode and an unknown one, and the tabs: each one's object last open or none, the URL that names it, and Back through them (`test/page.test.ts`);
 - editing a field and seeing it highlighted as unsaved, Ctrl+S and the counter of unsaved changes, and undo after the save (`test/page-editing.test.ts`);
 - the banner after a change on disk, the merge and its conflicts, and a World Editor revert (`test/page-turns.test.ts`);
-- the delete confirmation with the placement count, and creating an object (`test/page-create-delete.test.ts`);
+- the delete confirmation with the placement count, creating an object, and a tab whose object an undo removed (`test/page-create-delete.test.ts`);
 - the Table mode and bulk edits (`test/page-bulk.test.ts`), and the model previews (`test/page-models.test.ts`).
 
 On a machine with the game, `pnpm --filter reforged-studio studio:check-install [--install <folder>]` finds the install as `pnpm builtins:generate` does and reads the Footman's base values, its icon and its HD model.
