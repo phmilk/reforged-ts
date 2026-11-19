@@ -468,6 +468,16 @@ describe("the Studio's tree", () => {
     expect(groupOf("ability", "AHbz")).toEqual(["Human", "Heroes"]);
     expect(groupOf("buff", "BHbz")).toEqual(["Human", "Effects"]);
     expect(groupOf("upgrade", "Rhme")).toEqual(["Human"]);
+    // A destructable's and a doodad's category, from the World Editor's
+    // data; `LTlt` is modified, a Built-in object all the same.
+    const modified = (
+      (await request(studio, "/api/objects?origin=modified"))
+        .body as ObjectsAnswer
+    ).objects.find((object) => object.rawcode === "LTlt");
+    expect(modified?.group).toEqual(["Trees/Destructibles"]);
+    expect(groupOf("doodad", "YOtf")).toEqual(["Props"]);
+    // A category the editor strings do not label keeps its raw value.
+    expect(groupOf("destructable", "YTpb")).toEqual(["P"]);
     // `hkni` is Built-in, but the synthetic install does not hold it.
     expect(groupOf("unit", "hkni")).toBeUndefined();
   });
@@ -580,6 +590,13 @@ describe("the Studio's field table", () => {
       base: "WESTRING_DEST_TREE",
       baseDisplay: "Lordaeron Summer Tree Wall",
       display: "Lordaeron Summer Tree Wall",
+    });
+    expect(
+      tree.selected?.fields.find((row) => row.id === "bcat"),
+    ).toMatchObject({
+      base: "D",
+      baseDisplay: "Trees/Destructibles",
+      display: "Trees/Destructibles",
     });
   });
 });

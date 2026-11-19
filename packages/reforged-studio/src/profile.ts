@@ -41,6 +41,8 @@ export class Profile {
   readonly #keep: Keep;
   /** Each section's values by lower-cased key, as the line spells them, by lower-cased section. */
   readonly #sections = new Map<string, Map<string, string>>();
+  /** Each key as the first line that set it spells it, by lower-cased key, by lower-cased section. */
+  readonly #spellings = new Map<string, Map<string, string>>();
   readonly overrides: Override[] = [];
 
   constructor(keep: Keep = "first") {
@@ -50,6 +52,7 @@ export class Profile {
   /** Merges the text of the profile file `file` into the profile. */
   add(text: string, file: string): void {
     let section: Map<string, string> | undefined;
+    let spellings: Map<string, string> | undefined;
     let name = "";
     for (const raw of text.replace(/^\uFEFF/, "").split(/\r?\n/)) {
       const line = raw.trim();
@@ -59,9 +62,12 @@ export class Profile {
         name = header[1].trim();
         const lower = name.toLowerCase();
         section = this.#sections.get(lower);
-        if (section === undefined) {
+        spellings = this.#spellings.get(lower);
+        if (section === undefined || spellings === undefined) {
           section = new Map<string, string>();
+          spellings = new Map<string, string>();
           this.#sections.set(lower, section);
+          this.#spellings.set(lower, spellings);
         }
         continue;
       }
@@ -70,6 +76,7 @@ export class Profile {
       const key = line.slice(0, at).trim();
       const value = line.slice(at + 1).trim();
       const previous = section.get(key.toLowerCase());
+      if (previous === undefined) spellings?.set(key.toLowerCase(), key);
       if (previous === undefined || this.#keep === "last") {
         section.set(key.toLowerCase(), value);
       }
@@ -114,6 +121,17 @@ export class Profile {
   items(section: string, key: string): string[] | undefined {
     const value = this.#raw(section, key);
     return value === undefined ? undefined : unquoteItems(value);
+  }
+
+  /**
+   * The keys of section `section`, matched without regard to case, each as
+   * the first line that set it spells it, in the order first set: the
+   * categories of `[DestructibleCategories]` (`D`, `P`, `B`); `undefined`
+   * when no file has the section.
+   */
+  keys(section: string): string[] | undefined {
+    const spellings = this.#spellings.get(section.toLowerCase());
+    return spellings === undefined ? undefined : [...spellings.values()];
   }
 
   /** The value of `key` in section `section` as its line spells it, both matched without regard to case. */

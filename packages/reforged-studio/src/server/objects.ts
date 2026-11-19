@@ -92,17 +92,17 @@ const GROUP_WORDS: Readonly<Record<string, string>> = {
 };
 
 /**
- * The enumeration of the editor data that labels each kind's outermost
+ * The enumeration of the game data that labels each kind's outermost
  * group: the race of a unit, an ability, a buff or an upgrade, the class
- * of an item; a destructable's or a doodad's category has none.
+ * of an item, the category of a destructable or a doodad.
  */
-const GROUP_ENUMERATIONS: Readonly<Record<ObjectKind, string | undefined>> = {
+const GROUP_ENUMERATIONS: Readonly<Record<ObjectKind, string>> = {
   unit: "unitRace",
   item: "itemClass",
   ability: "unitRace",
   buff: "unitRace",
-  destructable: undefined,
-  doodad: undefined,
+  destructable: "destructableCategory",
+  doodad: "doodadCategory",
   upgrade: "unitRace",
 };
 
@@ -112,7 +112,7 @@ const firstValue = (value: FieldValue | undefined): string | undefined =>
 
 /**
  * A Built-in object's group in the World Editor's tree, each level
- * labelled: the outermost through the enumeration of the editor data
+ * labelled: the outermost through the enumeration of the game data
  * {@link GROUP_ENUMERATIONS} names, the tree's words through
  * {@link GROUP_WORDS}, a value with no label as it
  * is; empty levels left out. Undefined when the install does not hold it.
@@ -127,7 +127,7 @@ function groupOf(
   const outermost = GROUP_ENUMERATIONS[kind];
   return object.group
     .map((value, level) =>
-      level === 0 && outermost !== undefined
+      level === 0
         ? (gameData
             .enumeration(outermost)
             ?.find((entry) => entry.value === value)?.label ?? value)
