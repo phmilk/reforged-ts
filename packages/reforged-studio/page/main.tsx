@@ -112,6 +112,9 @@ const ART_LAYER_LABELS: Readonly<Record<ArtLayerName, string>> = {
   de: "DE",
 };
 
+/** The Object kind of `/objects`, a route that names none: the first tab's. */
+const DEFAULT_KIND = "unit";
+
 /** What the tabs remember of each Object kind: the object last open in it. */
 interface LastOpen {
   /** The Rawcode of the object last open in a kind, if any. */
@@ -158,7 +161,7 @@ interface Toast {
 function App() {
   const route = useRoute();
   const [session, setSession] = useState<SessionAnswer>();
-  const [kind, setKind] = useState<string>(route.kind ?? "unit");
+  const [kind, setKind] = useState<string>(route.kind ?? DEFAULT_KIND);
   const [all, setAll] = useState(false);
   const [listing, setListing] = useState<ObjectsAnswer>();
   const [detail, setDetail] = useState<RawcodeAnswer>();
@@ -405,7 +408,9 @@ function App() {
     setMarked(new Set());
   }, [kind]);
   useEffect(() => {
+    // The kind the route names; `/objects` names none, the first tab's.
     if (route.kind !== undefined) setKind(route.kind);
+    else if (route.rawcode === undefined) setKind(DEFAULT_KIND);
     if (route.rawcode === undefined) {
       setDetail(undefined);
       return;

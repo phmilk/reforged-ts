@@ -611,6 +611,23 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "goes Back to the Units tab from another kind's on /objects (#907)",
+    async () => {
+      const page = await open("/objects");
+      const tab = (name: string) => page.getByRole("tab", { name });
+      await page.locator('.tree .item[data-rawcode="h000"]').waitFor();
+      await tab("Buffs/Effects").click();
+      await page.locator('.tree .item[data-rawcode="B000"]').waitFor();
+      await page.goBack();
+      await page.locator('.tree .item[data-rawcode="h000"]').waitFor();
+      expect(await tab("Units").getAttribute("aria-selected")).toBe("true");
+      expect(new URL(page.url()).search).toBe("");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "says an unknown Rawcode is neither in this map nor Built-in, with the lint rule's suggestions",
     async () => {
       const page = await open("/objects/h00Z");
