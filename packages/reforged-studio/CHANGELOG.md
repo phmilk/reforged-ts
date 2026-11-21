@@ -1,5 +1,13 @@
 # reforged-studio
 
+## 1.0.0-alpha.9
+
+### Patch Changes
+
+- [#916](https://github.com/phmilk/reforged-ts/pull/916) [`c688e47`](https://github.com/phmilk/reforged-ts/commit/c688e4766a0853ea336283087c12d68ce25f27d8) Thanks [@wyller](https://github.com/wyller)! - The Destructibles and Doodads trees group their objects under the World Editor's labels, Trees/Destructibles, Bridges/Ramps, Pathing Blockers, Props and the others, instead of the raw category codes (`D`, `B`, `P`, `O`), and the field table's Category (`bcat`, `dcat`) shows the same label. The labels come from `[DestructibleCategories]` and `[DoodadCategories]` of the install's `UI/WorldEditData.txt`. The Category field is still edited as text.
+
+- [#915](https://github.com/phmilk/reforged-ts/pull/915) [`368c5a7`](https://github.com/phmilk/reforged-ts/commit/368c5a7ff2c8c8f5f4fb2ceb38fffef9cd99efff) Thanks [@wyller](https://github.com/wyller)! - A tab of another Object kind shows its own kind on the right: the object last open in that kind, else "Choose an object." (also when an undo or a World Editor save removed that object since), and the URL matches it (`/objects/<rawcode>?kind=<kind>`, or `/objects?kind=<kind>` with no object open). It no longer keeps the object of the last kind beside the tree of the new one, and the browser's Back goes through the tabs as they were shown, back to the Units tab at `/objects`.
+
 ## 1.0.0-alpha.8
 
 ### Patch Changes
