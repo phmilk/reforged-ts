@@ -408,13 +408,13 @@ function App() {
     setMarked(new Set());
   }, [kind]);
   /**
-   * The latest tab click or route change, so that an earlier click's answer
+   * The turn of the latest tab click or route change, so that an earlier click's answer
    * goes nowhere once the page moved on: another click, a search result, a
    * link or Back.
    */
-  const tabClicks = useRef(0);
+  const tabTurns = useRef(0);
   useEffect(() => {
-    tabClicks.current += 1;
+    tabTurns.current += 1;
   }, [route.rawcode, route.kind]);
   useEffect(() => {
     // The kind the route names; `/objects` names none, the first tab's.
@@ -457,22 +457,22 @@ function App() {
    * the route, which sets the kind shown. An object gone since, by an undo
    * or a World Editor save, is forgotten and opens none.
    */
-  const showKind = (shown: string) => {
-    const rawcode = lastOpen.get(shown);
-    if (shown === (route.kind ?? kind) && route.rawcode === rawcode) return;
-    tabClicks.current += 1;
-    const click = tabClicks.current;
+  const showKind = (tabKind: string) => {
+    const rawcode = lastOpen.get(tabKind);
+    if (tabKind === (route.kind ?? kind) && route.rawcode === rawcode) return;
+    tabTurns.current += 1;
+    const click = tabTurns.current;
     const open = (found: string | undefined) => {
-      if (click === tabClicks.current) go({ rawcode: found, kind: shown });
+      if (click === tabTurns.current) go({ rawcode: found, kind: tabKind });
     };
     if (rawcode === undefined) {
       open(undefined);
       return;
     }
-    api.rawcode(rawcode, shown).then((answer) => {
+    api.rawcode(rawcode, tabKind).then((answer) => {
       const known =
         answer.status === "known" || answer.status === "not-in-game-data-set";
-      if (!known) lastOpen.forget(shown, rawcode);
+      if (!known) lastOpen.forget(tabKind, rawcode);
       open(known ? rawcode : undefined);
     }, failed);
   };
