@@ -19,10 +19,19 @@
  * on top" after a change on disk under unsaved edits, the conflicts dialog,
  * and the banner of the fields a World Editor save put back, with "Apply
  * them again", "Show" and "Keep the World Editor's" (`./turns.tsx`).
- * It reads its route from the path, `/objects/<rawcode>[?kind=]`, and talks
+ * Each kind's tab shows its own kind on the right: the object last open in
+ * it, else none (#907).
+ * It reads its route from the path, `/objects[/<rawcode>][?kind=]`, and talks
  * to the server only through `./api.ts`.
  */
-import { StrictMode, useCallback, useEffect, useRef, useState } from "react";
+import {
+  StrictMode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createRoot } from "react-dom/client";
 import type {
   AdoptAnswer,
@@ -103,6 +112,41 @@ const ART_LAYER_LABELS: Readonly<Record<ArtLayerName, string>> = {
   de: "DE",
 };
 
+/** The Object kind of `/objects`, a route that names none: the first tab's. */
+const DEFAULT_KIND = "unit";
+
+/** What the tabs remember of each Object kind: the object last open in it. */
+interface LastOpen {
+  /** The Rawcode of the object last open in a kind, if any. */
+  readonly get: (kind: string) => string | undefined;
+  /** Forgets the object last open in a kind when it is `rawcode`: one deleted or gone. */
+  readonly forget: (kind: string, rawcode: string) => void;
+}
+
+/**
+ * The object last open in each Object kind, which its tab opens again
+ * (#907): the open object, remembered as it changes while the page is open.
+ */
+function useLastOpen(selection: Selection | undefined): LastOpen {
+  const objects = useRef(new Map<string, string>());
+  const kind = selection?.kind;
+  const rawcode = selection?.rawcode;
+  useEffect(() => {
+    if (kind !== undefined && rawcode !== undefined) {
+      objects.current.set(kind, rawcode);
+    }
+  }, [kind, rawcode]);
+  return useMemo(
+    () => ({
+      get: (of) => objects.current.get(of),
+      forget: (of, gone) => {
+        if (objects.current.get(of) === gone) objects.current.delete(of);
+      },
+    }),
+    [],
+  );
+}
+
 /** The toast after a save, an undo or a redo. */
 interface Toast {
   readonly text: string;
@@ -117,7 +161,7 @@ interface Toast {
 function App() {
   const route = useRoute();
   const [session, setSession] = useState<SessionAnswer>();
-  const [kind, setKind] = useState<string>(route.kind ?? "unit");
+  const [kind, setKind] = useState<string>(route.kind ?? DEFAULT_KIND);
   const [all, setAll] = useState(false);
   const [listing, setListing] = useState<ObjectsAnswer>();
   const [detail, setDetail] = useState<RawcodeAnswer>();
@@ -363,12 +407,23 @@ function App() {
   useEffect(() => {
     setMarked(new Set());
   }, [kind]);
+  /**
+   * The turn of the latest tab click or route change, so that an earlier click's answer
+   * goes nowhere once the page moved on: another click, a search result, a
+   * link or Back.
+   */
+  const tabTurns = useRef(0);
   useEffect(() => {
+    tabTurns.current += 1;
+  }, [route.rawcode, route.kind]);
+  useEffect(() => {
+    // The kind the route names; `/objects` names none, the first tab's.
+    if (route.kind !== undefined) setKind(route.kind);
+    else if (route.rawcode === undefined) setKind(DEFAULT_KIND);
     if (route.rawcode === undefined) {
       setDetail(undefined);
       return;
     }
-    if (route.kind !== undefined) setKind(route.kind);
     let live = true;
     api.rawcode(route.rawcode, route.kind).then((answer) => {
       if (!live) return;
@@ -395,6 +450,32 @@ function App() {
     selected === undefined
       ? undefined
       : { kind: selected.kind, rawcode: selected.rawcode };
+
+  const lastOpen = useLastOpen(selection);
+  /**
+   * Shows a kind's tab: the object last open in it, else none, through
+   * the route, which sets the kind shown. An object gone since, by an undo
+   * or a World Editor save, is forgotten and opens none.
+   */
+  const showKind = (tabKind: string) => {
+    const rawcode = lastOpen.get(tabKind);
+    if (tabKind === (route.kind ?? kind) && route.rawcode === rawcode) return;
+    tabTurns.current += 1;
+    const click = tabTurns.current;
+    const open = (found: string | undefined) => {
+      if (click === tabTurns.current) go({ rawcode: found, kind: tabKind });
+    };
+    if (rawcode === undefined) {
+      open(undefined);
+      return;
+    }
+    api.rawcode(rawcode, tabKind).then((answer) => {
+      const known =
+        answer.status === "known" || answer.status === "not-in-game-data-set";
+      if (!known) lastOpen.forget(tabKind, rawcode);
+      open(known ? rawcode : undefined);
+    }, failed);
+  };
 
   // The compared objects: those pinned of the selected object's kind, but itself.
   const comparedKeys = pinned
@@ -726,7 +807,7 @@ function App() {
               aria-selected={id === kind}
               className={id === kind ? "selected" : undefined}
               onClick={() => {
-                setKind(id);
+                showKind(id);
               }}
             >
               {label}
@@ -878,7 +959,8 @@ function App() {
               setToast({
                 text: `Deleted ${deleting.rawcode}: save to remove it from the map folder.`,
               });
-              go({ rawcode: undefined, kind: undefined });
+              lastOpen.forget(deleting.kind, deleting.rawcode);
+              go({ rawcode: undefined, kind: deleting.kind });
             }}
           />
         )}

@@ -539,6 +539,97 @@ describe("the Studio's page, /objects/<rawcode>", () => {
   );
 
   it(
+    "shows a tab's own kind on the right, the object last open in it or none, with the URL to match (#907)",
+    async () => {
+      const page = await open("/objects/hfoo");
+      const header = page.locator(".object-header h2");
+      await expect.poll(() => textOf(header)).toContain("Militia");
+      const tab = (name: string) => page.getByRole("tab", { name });
+      const pathOf = () => {
+        const url = new URL(page.url());
+        return url.pathname + url.search;
+      };
+
+      // A kind with no object open yet: the placeholder, not the Footman.
+      await tab("Buffs/Effects").click();
+      await expect
+        .poll(() => textOf(page.locator(".pane .notice")))
+        .toBe("Choose an object.");
+      await expect.poll(() => page.locator(".object-header").count()).toBe(0);
+      await expect.poll(pathOf).toBe("/objects?kind=buff");
+
+      await page.locator('.tree .item[data-rawcode="B000"]').click();
+      await expect.poll(() => textOf(header)).toContain("Holy Fire");
+      await expect.poll(pathOf).toBe("/objects/B000?kind=buff");
+
+      // The destructable B000 is not the buff open in the other tab.
+      await tab("Destructibles").click();
+      await expect
+        .poll(() => textOf(page.locator(".pane .notice")))
+        .toBe("Choose an object.");
+      await expect.poll(pathOf).toBe("/objects?kind=destructable");
+
+      // Each kind's tab opens its object last open again.
+      await tab("Units").click();
+      await expect.poll(() => textOf(header)).toContain("Militia");
+      await expect.poll(pathOf).toBe("/objects/hfoo?kind=unit");
+      await tab("Buffs/Effects").click();
+      await expect.poll(() => textOf(header)).toContain("Holy Fire");
+      await expect.poll(pathOf).toBe("/objects/B000?kind=buff");
+
+      // The browser's Back goes through the tabs as they were shown.
+      await page.goBack();
+      await expect.poll(() => textOf(header)).toContain("Militia");
+      await expect
+        .poll(() => tab("Units").getAttribute("aria-selected"))
+        .toBe("true");
+      await page.goBack();
+      await expect
+        .poll(() => textOf(page.locator(".pane .notice")))
+        .toBe("Choose an object.");
+      await expect
+        .poll(() => tab("Destructibles").getAttribute("aria-selected"))
+        .toBe("true");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "pushes no history entry for a click on the tab already shown (#907)",
+    async () => {
+      const page = await open("/objects/hfoo");
+      expect(await textOf(page.locator(".object-header h2"))).toContain(
+        "Militia",
+      );
+      const length = () => page.evaluate(() => history.length);
+      const before = await length();
+      await page.getByRole("tab", { name: "Units" }).click();
+      expect(await length()).toBe(before);
+      expect(new URL(page.url()).pathname).toBe("/objects/hfoo");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "goes Back to the Units tab from another kind's on /objects (#907)",
+    async () => {
+      const page = await open("/objects");
+      const tab = (name: string) => page.getByRole("tab", { name });
+      await page.locator('.tree .item[data-rawcode="h000"]').waitFor();
+      await tab("Buffs/Effects").click();
+      await page.locator('.tree .item[data-rawcode="B000"]').waitFor();
+      await page.goBack();
+      await page.locator('.tree .item[data-rawcode="h000"]').waitFor();
+      expect(await tab("Units").getAttribute("aria-selected")).toBe("true");
+      expect(new URL(page.url()).search).toBe("");
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
     "says an unknown Rawcode is neither in this map nor Built-in, with the lint rule's suggestions",
     async () => {
       const page = await open("/objects/h00Z");

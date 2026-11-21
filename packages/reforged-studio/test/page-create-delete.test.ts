@@ -151,7 +151,8 @@ describe("creating and deleting in the Studio's page", () => {
       await dialog.getByRole("button", { name: "Delete" }).click();
 
       await expect.poll(() => unsaved(page)).not.toBe(before);
-      await expect.poll(() => page.url()).toMatch(/\/objects$/);
+      // The tab of the deleted object's kind stays, with no object open (#907).
+      await expect.poll(() => page.url()).toMatch(/\/objects\?kind=unit$/);
       expect(
         await page
           .getByRole("status")
@@ -212,6 +213,39 @@ describe("creating and deleting in the Studio's page", () => {
       // The long name is an unsaved edit of the Studio the file shares.
       const undone = await request(studio, "/api/undo", { json: {} });
       expect(undone.status, undone.text).toBe(200);
+      await page.close();
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "opens no object in a tab whose object last open an undo removed (#907)",
+    async () => {
+      const page = await open("/objects?kind=unit");
+      await page.getByRole("button", { name: "New object" }).click();
+      const dialog = page.getByRole("dialog", { name: "New object" });
+      const create = dialog.getByRole("button", { name: "Create" });
+      await expect.poll(() => create.isEnabled()).toBe(true);
+      const rawcode = await dialog
+        .getByRole("textbox", { name: "Rawcode" })
+        .inputValue();
+      await create.click();
+      await expect
+        .poll(() => page.locator(".object-header h2").textContent())
+        .toContain(rawcode);
+
+      await page.getByRole("tab", { name: "Items" }).click();
+      await expect.poll(() => new URL(page.url()).search).toBe("?kind=item");
+      const before = await unsaved(page);
+      await page.getByRole("button", { name: "Undo", exact: true }).click();
+      await expect.poll(() => unsaved(page)).not.toBe(before);
+
+      await page.getByRole("tab", { name: "Units" }).click();
+      await expect
+        .poll(() => page.locator(".pane .notice").textContent())
+        .toBe("Choose an object.");
+      const url = new URL(page.url());
+      expect(url.pathname + url.search).toBe("/objects?kind=unit");
       await page.close();
     },
     TIMEOUT,
