@@ -407,6 +407,15 @@ function App() {
   useEffect(() => {
     setMarked(new Set());
   }, [kind]);
+  /**
+   * The latest tab click or route change, so that an earlier click's answer
+   * goes nowhere once the page moved on: another click, a search result, a
+   * link or Back.
+   */
+  const tabClicks = useRef(0);
+  useEffect(() => {
+    tabClicks.current += 1;
+  }, [route.rawcode, route.kind]);
   useEffect(() => {
     // The kind the route names; `/objects` names none, the first tab's.
     if (route.kind !== undefined) setKind(route.kind);
@@ -443,29 +452,27 @@ function App() {
       : { kind: selected.kind, rawcode: selected.rawcode };
 
   const lastOpen = useLastOpen(selection);
-  /** The latest tab clicked, so that an earlier click's answer goes nowhere. */
-  const tabClicks = useRef(0);
   /**
    * Shows a kind's tab: the object last open in it, else none, through
    * the route, which sets the kind shown. An object gone since, by an undo
    * or a World Editor save, is forgotten and opens none.
    */
-  const showKind = (id: string) => {
-    const rawcode = lastOpen.get(id);
-    if (id === (route.kind ?? kind) && route.rawcode === rawcode) return;
+  const showKind = (shown: string) => {
+    const rawcode = lastOpen.get(shown);
+    if (shown === (route.kind ?? kind) && route.rawcode === rawcode) return;
     tabClicks.current += 1;
     const click = tabClicks.current;
     const open = (found: string | undefined) => {
-      if (click === tabClicks.current) go({ rawcode: found, kind: id });
+      if (click === tabClicks.current) go({ rawcode: found, kind: shown });
     };
     if (rawcode === undefined) {
       open(undefined);
       return;
     }
-    api.rawcode(rawcode, id).then((answer) => {
+    api.rawcode(rawcode, shown).then((answer) => {
       const known =
         answer.status === "known" || answer.status === "not-in-game-data-set";
-      if (!known) lastOpen.forget(id, rawcode);
+      if (!known) lastOpen.forget(shown, rawcode);
       open(known ? rawcode : undefined);
     }, failed);
   };
