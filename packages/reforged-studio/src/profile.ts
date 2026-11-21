@@ -131,9 +131,8 @@ export class Profile {
 
   /**
    * The keys of section `section`, matched without regard to case, each as
-   * the first line that set it spells it, in the order first set: the
-   * categories of `[DestructibleCategories]` (`D`, `P`, `B`); `undefined`
-   * when no file has the section.
+   * the first line that set it spells it, in the order first set;
+   * `undefined` when no file has the section.
    */
   keys(section: string): string[] | undefined {
     const entries = this.#sections.get(section.toLowerCase());

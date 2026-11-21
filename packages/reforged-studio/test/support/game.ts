@@ -399,7 +399,12 @@ export const OTHER_FILES: Readonly<Record<string, string>> = {
  * The editor's strings and data: labels and four enumerations, two the
  * fields read and two the World Editor's tree groups by; and the
  * categories of destructables and doodads, as `UI/WorldEditData.txt` lists
- * them, one the editor strings do not label.
+ * them, one the editor strings do not label. The install of 3.0.1.24371,
+ * read through its CASC storage for #908, holds them there, not in
+ * `UI/UnitEditorData.txt`: `[DestructibleCategories]` lists `D`, `P` and
+ * `B` (enUS Trees/Destructibles, Pathing Blockers, Bridges/Ramps),
+ * `[DoodadCategories]` `O`, `S`, `W`, `C`, `E` and `Z` (Props, Structures,
+ * Water, Cliff/Terrain, Environment, Cinematic), and no other key.
  */
 export const EDITOR_FILES: Readonly<Record<string, string>> = {
   [WORLD_EDIT_GAME_STRINGS]: profile({
