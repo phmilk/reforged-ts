@@ -94,6 +94,25 @@ describe("readGameData's fields", () => {
     expect(data.enumeration("noSuchType")).toBeUndefined();
   });
 
+  it("gives the categories of destructables and doodads from the World Editor's data, as their category fields read them", async () => {
+    const data = await gameData();
+
+    expect(data.enumeration("destructableCategory")).toEqual([
+      { value: "D", label: "Trees/Destructibles" },
+      // No label in the editor strings: none.
+      { value: "P" },
+    ]);
+    expect(data.enumeration("doodadCategory")).toEqual([
+      { value: "O", label: "Props" },
+    ]);
+    expect(data.kinds.destructable.fields.get("bcat")?.enumeration).toEqual(
+      data.enumeration("destructableCategory"),
+    );
+    expect(data.kinds.doodad.fields.get("dcat")?.enumeration).toEqual(
+      data.enumeration("doodadCategory"),
+    );
+  });
+
   it("resolves a WESTRING_ key through the editor strings, the second file's value winning", async () => {
     const data = await gameData("custom-fk", {
       [base("_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt")]:
@@ -199,7 +218,7 @@ describe("readGameData's Built-in objects", () => {
       BHbz: ["human", "effects"],
       Binf: ["human", "buffs"],
     });
-    expect(groups("destructable")).toEqual({ LTlt: ["D"] });
+    expect(groups("destructable")).toEqual({ LTlt: ["D"], YTpb: ["P"] });
     expect(groups("doodad")).toEqual({ YOtf: ["O"] });
     expect(groups("upgrade")).toEqual({ Rhme: ["human"] });
   });

@@ -2,7 +2,9 @@
  * The game data model of a Game data set, read from the install for the
  * Studio: each Object kind's fields, with their metadata, their enUS labels
  * (`UI/WorldEditStrings.txt`, `UI/WorldEditGameStrings.txt`) and the raw
- * values and labels of the enumerations they read (`UI/UnitEditorData.txt`);
+ * values and labels of the enumerations they read (`UI/UnitEditorData.txt`,
+ * and `UI/WorldEditData.txt` for the categories of destructables and
+ * doodads);
  * each Built-in object the set holds, with its base values and the World
  * Editor's group, from the kinds' SLK tables and the profile files under
  * the layers the set reads (`./layers.ts`).
@@ -34,6 +36,29 @@ type Rows = ReadonlyMap<string, ReadonlyMap<string, string>>;
 
 /** The World Editor's data of the enumerations, in the base layer. */
 export const EDITOR_DATA = "UI/UnitEditorData.txt";
+
+/** The metadata types of the categories, which the World Editor's own data lists. */
+export type CategoryType = "destructableCategory" | "doodadCategory";
+
+/** The World Editor's own data, in the base layer, which lists the categories. */
+const WORLD_EDIT_DATA = "UI/WorldEditData.txt";
+
+/**
+ * The section of {@link WORLD_EDIT_DATA} that lists the values of each
+ * category's metadata type, which `UI/UnitEditorData.txt` does not hold:
+ * each key a raw value (`D`), its value the `WESTRING_` key of its label
+ * then the path of the editor's icon for it
+ * (`D=WESTRING_DTYPE_DESTRUCTABLE,ReplaceableTextures\WorldEditUI\Doodad-Destructible`),
+ * as the install of 3.0.1.24371 holds them (#908).
+ */
+const CATEGORY_SECTIONS: Readonly<Record<CategoryType, string>> = {
+  destructableCategory: "DestructibleCategories",
+  doodadCategory: "DoodadCategories",
+};
+
+/** Whether a metadata type is a category's, listed in {@link CATEGORY_SECTIONS}. */
+const isCategoryType = (type: string): type is CategoryType =>
+  Object.hasOwn(CATEGORY_SECTIONS, type);
 
 /**
  * The key of each kind's label in the editor strings: its tab in the
@@ -86,7 +111,10 @@ export interface GameField {
   sort: string;
   /** The base Rawcodes it is specific to (`useSpecific`), as the metadata writes them. */
   specific?: string[];
-  /** The raw values of the enumeration its type is, when the editor data has one. */
+  /**
+   * The raw values of the enumeration its type is, when the editor data
+   * has one, or the World Editor's data for a category (`bcat`, `dcat`).
+   */
   enumeration?: EnumerationValue[];
 }
 
@@ -152,8 +180,10 @@ export interface GameData {
   text(value: string): string | undefined;
   /**
    * The raw values and labels of the enumeration `type` in the editor data
-   * (`unitRace`), whether a field reads it or not: the World Editor labels
-   * its tree's groups with some; `undefined` when the data has none.
+   * (`unitRace`), whether a field reads it or not, and of a category in
+   * the World Editor's data (`destructableCategory`, `doodadCategory`): the
+   * World Editor labels its tree's groups with some; `undefined` when the
+   * data has none.
    */
   enumeration(type: string): readonly EnumerationValue[] | undefined;
 }
@@ -200,15 +230,24 @@ export async function readGameData(
     return shown;
   };
 
-  const editorData = new Profile();
-  const editorDataPath = BASE_LAYER + EDITOR_DATA;
-  if (listed.has(editorDataPath.toLowerCase())) {
-    editorData.add(await read(editorDataPath), editorDataPath);
-  }
+  /** The profile file `file` of the base layer, empty when the install lacks it. */
+  const profileOf = async (file: string): Promise<Profile> => {
+    const profile = new Profile();
+    const path = BASE_LAYER + file;
+    if (listed.has(path.toLowerCase())) profile.add(await read(path), path);
+    return profile;
+  };
+  const editorData = await profileOf(EDITOR_DATA);
+  const worldEditData = await profileOf(WORLD_EDIT_DATA);
   const enumerations = new Map<string, EnumerationValue[] | undefined>();
   const enumeration = (type: string): EnumerationValue[] | undefined => {
     if (!enumerations.has(type)) {
-      enumerations.set(type, enumerationOf(editorData, type, text));
+      enumerations.set(
+        type,
+        isCategoryType(type)
+          ? categoriesOf(worldEditData, CATEGORY_SECTIONS[type], text)
+          : enumerationOf(editorData, type, text),
+      );
     }
     return enumerations.get(type);
   };
@@ -545,6 +584,24 @@ function enumerationOf(
     const label = key === undefined ? undefined : text(key);
     values.push({ value, ...(label !== undefined && { label }) });
   }
+  return values.length === 0 ? undefined : values;
+}
+
+/**
+ * The values of the categories `section` of the World Editor's data
+ * lists: each key a raw value, its value's first item the `WESTRING_` key
+ * of its label.
+ */
+function categoriesOf(
+  worldEditData: Profile,
+  section: string,
+  text: (value: string) => string | undefined,
+): EnumerationValue[] | undefined {
+  const values = (worldEditData.keys(section) ?? []).map((value) => {
+    const key = worldEditData.first(section, value);
+    const label = key === undefined || key === "" ? undefined : text(key);
+    return { value, ...(label !== undefined && { label }) };
+  });
   return values.length === 0 ? undefined : values;
 }
 

@@ -80,6 +80,8 @@ export const EDITOR_STRINGS = {
   WESTRING_RACE_HUMAN: "Human",
   WESTRING_UE_UNITRACE_OTHER: "Other",
   WESTRING_ITEMCLASS_PERMANENT: "Permanent",
+  WESTRING_DTYPE_PROPS: "Props",
+  WESTRING_DTYPE_DESTRUCTABLE: "Trees/Destructibles",
 } as const;
 
 /** The units' metadata: a profile name and icon, a stat, an enumeration and the editor's flags. */
@@ -322,13 +324,32 @@ export const OTHER_FILES: Readonly<Record<string, string>> = {
   ),
   [base("Units/DestructableMetaData.slk")]: metaData([
     { ID: "bnam", field: "Name", slk: "DestructableData", type: "string" },
+    {
+      ID: "bcat",
+      field: "category",
+      slk: "DestructableData",
+      index: "0",
+      type: "destructableCategory",
+      category: "editor",
+    },
   ]),
   [base("Units/DestructableData.slk")]: slkTable(
     ["DestructableID", "category", "Name"],
-    [["LTlt", "D", "WESTRING_DEST_TREE"]],
+    [
+      ["LTlt", "D", "WESTRING_DEST_TREE"],
+      ["YTpb", "P", "Pathing Blocker"],
+    ],
   ),
   [base("Doodads/DoodadMetaData.slk")]: metaData([
     { ID: "dnam", field: "Name", slk: "DoodadData", type: "string" },
+    {
+      ID: "dcat",
+      field: "category",
+      slk: "DoodadData",
+      index: "0",
+      type: "doodadCategory",
+      category: "editor",
+    },
   ]),
   [base("Doodads/Doodads.slk")]: slkTable(
     ["doodID", "category", "Name"],
@@ -374,7 +395,17 @@ export const OTHER_FILES: Readonly<Record<string, string>> = {
   }),
 };
 
-/** The editor's strings and data: labels and four enumerations, two the fields read and two the World Editor's tree groups by. */
+/**
+ * The editor's strings and data: labels and four enumerations, two the
+ * fields read and two the World Editor's tree groups by; and the
+ * categories of destructables and doodads, as `UI/WorldEditData.txt` lists
+ * them, one the editor strings do not label. The install of 3.0.1.24371,
+ * read through its CASC storage for #908, holds them there, not in
+ * `UI/UnitEditorData.txt`: `[DestructibleCategories]` lists `D`, `P` and
+ * `B` (enUS Trees/Destructibles, Pathing Blockers, Bridges/Ramps),
+ * `[DoodadCategories]` `O`, `S`, `W`, `C`, `E` and `Z` (Props, Structures,
+ * Water, Cliff/Terrain, Environment, Cinematic), and no other key.
+ */
 export const EDITOR_FILES: Readonly<Record<string, string>> = {
   [WORLD_EDIT_GAME_STRINGS]: profile({
     WorldEditStrings: { WESTRING_DEST_TREE: "Lordaeron Summer Tree Wall" },
@@ -397,6 +428,15 @@ export const EDITOR_FILES: Readonly<Record<string, string>> = {
     itemClass: {
       "00": "Permanent,WESTRING_ITEMCLASS_PERMANENT",
       NumValues: "1",
+    },
+  }),
+  [base("UI/WorldEditData.txt")]: profile({
+    DoodadCategories: {
+      O: "WESTRING_DTYPE_PROPS,ReplaceableTextures\\WorldEditUI\\Doodad-Prop",
+    },
+    DestructibleCategories: {
+      D: "WESTRING_DTYPE_DESTRUCTABLE,ReplaceableTextures\\WorldEditUI\\Doodad-Destructible",
+      P: "WESTRING_DTYPE_PATHING,ReplaceableTextures\\WorldEditUI\\Doodad-Destructible",
     },
   }),
 };

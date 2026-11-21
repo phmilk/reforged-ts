@@ -35,12 +35,22 @@ export interface Override {
 /** Which of a key's values a profile keeps when a later line sets it again. */
 export type Keep = "first" | "last";
 
+/** One key of a section: the key as its first line spells it, and the value it keeps. */
+interface Entry {
+  readonly spelling: string;
+  value: string;
+}
+
 /** Each section's keys and values, merged over every file read. */
 export class Profile {
   /** The value a key set twice keeps: the first, as the game's names files, by default. */
   readonly #keep: Keep;
-  /** Each section's values by lower-cased key, as the line spells them, by lower-cased section. */
-  readonly #sections = new Map<string, Map<string, string>>();
+  /**
+   * Each section's entries by lower-cased key, by lower-cased section: the
+   * key as the first line that set it spells it, and the value as the line
+   * spells it.
+   */
+  readonly #sections = new Map<string, Map<string, Entry>>();
   readonly overrides: Override[] = [];
 
   constructor(keep: Keep = "first") {
@@ -49,7 +59,7 @@ export class Profile {
 
   /** Merges the text of the profile file `file` into the profile. */
   add(text: string, file: string): void {
-    let section: Map<string, string> | undefined;
+    let section: Map<string, Entry> | undefined;
     let name = "";
     for (const raw of text.replace(/^\uFEFF/, "").split(/\r?\n/)) {
       const line = raw.trim();
@@ -60,7 +70,7 @@ export class Profile {
         const lower = name.toLowerCase();
         section = this.#sections.get(lower);
         if (section === undefined) {
-          section = new Map<string, string>();
+          section = new Map<string, Entry>();
           this.#sections.set(lower, section);
         }
         continue;
@@ -69,9 +79,12 @@ export class Profile {
       if (section === undefined || at === -1) continue;
       const key = line.slice(0, at).trim();
       const value = line.slice(at + 1).trim();
-      const previous = section.get(key.toLowerCase());
-      if (previous === undefined || this.#keep === "last") {
-        section.set(key.toLowerCase(), value);
+      const entry = section.get(key.toLowerCase());
+      const previous = entry?.value;
+      if (entry === undefined) {
+        section.set(key.toLowerCase(), { spelling: key, value });
+      } else if (this.#keep === "last") {
+        entry.value = value;
       }
       if (previous !== undefined && unquote(previous) !== unquote(value)) {
         this.overrides.push({
@@ -116,9 +129,22 @@ export class Profile {
     return value === undefined ? undefined : unquoteItems(value);
   }
 
+  /**
+   * The keys of section `section`, matched without regard to case, each as
+   * the first line that set it spells it, in the order first set;
+   * `undefined` when no file has the section.
+   */
+  keys(section: string): string[] | undefined {
+    const entries = this.#sections.get(section.toLowerCase());
+    return entries === undefined
+      ? undefined
+      : [...entries.values()].map((entry) => entry.spelling);
+  }
+
   /** The value of `key` in section `section` as its line spells it, both matched without regard to case. */
   #raw(section: string, key: string): string | undefined {
-    return this.#sections.get(section.toLowerCase())?.get(key.toLowerCase());
+    return this.#sections.get(section.toLowerCase())?.get(key.toLowerCase())
+      ?.value;
   }
 }
 
