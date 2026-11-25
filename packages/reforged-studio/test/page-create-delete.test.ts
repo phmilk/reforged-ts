@@ -241,11 +241,19 @@ describe("creating and deleting in the Studio's page", () => {
       await expect.poll(() => unsaved(page)).not.toBe(before);
 
       await page.getByRole("tab", { name: "Units" }).click();
+      // The Items tab shows the same notice: wait for the Units tab first.
+      await expect
+        .poll(() => {
+          const url = new URL(page.url());
+          return url.pathname + url.search;
+        })
+        .toBe("/objects?kind=unit");
       await expect
         .poll(() => page.locator(".pane .notice").textContent())
         .toBe("Choose an object.");
-      const url = new URL(page.url());
-      expect(url.pathname + url.search).toBe("/objects?kind=unit");
+      await expect
+        .poll(() => page.locator(".object-header h2").count())
+        .toBe(0);
       await page.close();
     },
     TIMEOUT,
