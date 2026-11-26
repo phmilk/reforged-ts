@@ -3,7 +3,7 @@
 // `docs:start` and `docs:build`, docusaurus.check.config.ts, strict, for
 // `docs:check`, the CI gate. A configuration file exports its configuration
 // and nothing else: Docusaurus rejects any other export as an unknown field.
-import { dirname, relative } from "node:path";
+import { dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
@@ -82,7 +82,7 @@ export function siteConfig(options: SiteOptions): Config {
           ? expandIncludes(
               fileContent,
               dirname(filePath),
-              relative(SITE, filePath),
+              relative(SITE, filePath).split(sep).join("/"),
             )
           : fileContent,
     },

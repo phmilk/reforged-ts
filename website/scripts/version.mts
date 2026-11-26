@@ -14,7 +14,7 @@ import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { main as collect, type Output, PROCESS_OUTPUT } from "./collect.mts";
-import { IncludeCodeError } from "../../packages/reforged-ts/scripts/include-code.mts";
+import { IncludeCodeError } from "../../packages/reforged-ts/scripts/include-code-reader.mts";
 import { freezeIncludes } from "./includes.mts";
 import { pruneAndReport, SITE } from "./prune.mts";
 import {

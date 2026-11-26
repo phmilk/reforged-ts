@@ -14,7 +14,7 @@ import { dirname, join, relative, sep } from "node:path";
 import {
   IncludeCodeError,
   includedCode,
-} from "../../packages/reforged-ts/scripts/include-code.mts";
+} from "../../packages/reforged-ts/scripts/include-code-reader.mts";
 import { forEachLine, normalizeNewlines } from "./markdown.mts";
 
 /**
