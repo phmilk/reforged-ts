@@ -299,12 +299,13 @@ export interface Game {
    * owner and `EVENT_UNIT_DEATH`, in that order.
    * @remarks
    * - In a handler the unit is already dead: `UnitAlive` is false and its
-   *   life reads 0. `GetTriggerUnit` and `GetDyingUnit` answer it, and
-   *   `GetTriggerPlayer` its owner.
-   * - `GetKillingUnit` answers `by`, or nil without it. A killer already
-   *   dead is accepted, as a unit that dies before its missile lands still
-   *   kills. The widget death answers no killer and no dying unit, as in
-   *   the game.
+   *   life reads 0.
+   * - In the player unit death and the unit death, `GetTriggerUnit` and
+   *   `GetDyingUnit` answer the unit, `GetTriggerPlayer` its owner, and
+   *   `GetKillingUnit` answers `by`, or nil without it. A killer already
+   *   dead is accepted.
+   * - In the widget death only `GetTriggerUnit` answers, the unit: no
+   *   dying unit, no player and no killer, as the game answers there.
    * - It writes the death and nothing derived: no bounty, no experience, no
    *   corpse, and the killer is unchanged. It is not `KillUnit`, which
    *   records no call here.
@@ -410,11 +411,17 @@ function displayed(): DisplayedText[] {
 const NOT_A_PLAYER =
   "game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)";
 
+/**
+ * The Handle a Game action or a Test control was given: the value itself,
+ * or its `.handle` when it has one, as a Wrapper of the library does.
+ */
+function handleOf(value: unknown): unknown {
+  if (type(value) !== "table") return value;
+  return (value as { handle?: unknown }).handle ?? value;
+}
+
 function setLocalPlayer(player: player | { readonly handle: player }): void {
-  let handle: unknown = player;
-  if (type(handle) === "table") {
-    handle = (handle as { handle?: unknown }).handle ?? handle;
-  }
+  const handle = handleOf(player);
   // What the Shipped stubs keep on a player they made: its kind and its
   // slot. A Handle of newHandle("player") has no slot, so it is refused.
   const made = handle as { __kind?: unknown; number?: unknown };
@@ -442,10 +449,7 @@ interface UnitState {
  * `.handle`; undefined for anything else, a bare number included.
  */
 function unitOf(value: unknown): UnitState | undefined {
-  let handle = value;
-  if (type(handle) === "table") {
-    handle = (handle as { handle?: unknown }).handle ?? handle;
-  }
+  const handle = handleOf(value);
   if (type(handle) !== "table") return undefined;
   return (handle as UnitState).__kind === "unit"
     ? (handle as UnitState)
