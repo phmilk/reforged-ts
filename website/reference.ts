@@ -124,6 +124,11 @@ export const TEST_REFERENCE: Reference = {
     "ItemOf",
     // beforeEach: the function it takes, which may return a cleanup.
     "BeforeEachCallback",
+    // fn and calls: the runner's own, whose type the /map exports take.
+    "fn",
+    "calls",
+    // GameMatchers' spy matchers: the parameters of the function under test.
+    "ArgumentsOf",
   ],
 };
 
