@@ -7,7 +7,10 @@
 // and the Agent told to run /ship-branch or say why it stops. The stop after
 // that passes, since its stop hook is already active, so a false alarm costs
 // one look and never a loop; and so does any stop when the transcript, `git`
-// or `gh` cannot be read, so a network failure never traps a session.
+// or `gh` cannot be read, so a network failure never traps a session. A stop
+// with work in flight (a running Subagent or background command, or a wakeup
+// the session scheduled) passes before any read, since the work has not ended
+// (#953): the stop after it finishes meets the check again.
 //
 // The decision is verdict(), a pure function from the hook input and three
 // facts: whether an implement (/implement or /implement-spec, typed or a
@@ -35,6 +38,10 @@ import { fileURLToPath } from "node:url";
  * @property {boolean} [stop_hook_active]
  * @property {string} [transcript_path]
  * @property {string} [cwd]
+ * @property {readonly unknown[]} [background_tasks] The running Subagents
+ *   and background commands.
+ * @property {readonly unknown[]} [session_crons] The wakeups the session
+ *   scheduled.
  */
 
 /**
@@ -185,13 +192,21 @@ export function pullRequestStateOf(answer) {
 
 /**
  * Whether the check looks at a hook input at all: a Stop whose stop hook is
- * not already active.
+ * not already active, with no work in flight. A Stop that lists a running
+ * Subagent or background command, or a wakeup the session scheduled, is not
+ * the end of the work: the Stop after that work finishes meets the check
+ * again (#953).
  *
  * @param {HookInput} input
  * @returns {boolean}
  */
 function applies(input) {
-  return input.hook_event_name === "Stop" && input.stop_hook_active !== true;
+  return (
+    input.hook_event_name === "Stop" &&
+    input.stop_hook_active !== true &&
+    (input.background_tasks ?? []).length === 0 &&
+    (input.session_crons ?? []).length === 0
+  );
 }
 
 /**
