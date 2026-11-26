@@ -62,6 +62,16 @@ describe("the background-wait check, on a tool call", () => {
     expect(reason).toMatch(/split/);
   });
 
+  // Measured for #942 (Claude Code 2.1.332, 2026-11-26): the harness moved
+  // a Subagent's foreground `sleep 200` to the background after 120 s
+  // without `timeout` and after 180 s with `timeout: 600000`.
+  it("says in its denial when a Subagent's foreground command is moved to the background all the same", () => {
+    const reason = blocked(verdict(call("Bash", background, subagent)));
+    expect(reason).toMatch(/180 s/);
+    expect(reason).toMatch(/120 s/);
+    expect(reason).toMatch(/output file/);
+  });
+
   it("denies a Subagent's background PowerShell command", () => {
     blocked(verdict(call("PowerShell", background, subagent)));
   });

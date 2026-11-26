@@ -29,7 +29,10 @@ export default defineConfig({
         // The Studio's server, through its HTTP API, and the reader of the
         // game's install, in Node, on synthetic CASC storages and map
         // folders the tests write in a temporary folder; its built page in
-        // headless Chromium, through Playwright, over the same server.
+        // headless Chromium, through Playwright, over the same server. The
+        // global setup launches that browser once before any test file, and
+        // fails the run with the command that installs it when it is
+        // missing.
         test: {
           name: "reforged-studio",
           root: "packages/reforged-studio",
@@ -41,6 +44,7 @@ export default defineConfig({
           testTimeout: 30_000,
           include: ["test/**/*.test.ts"],
           environment: "node",
+          globalSetup: ["test/support/chromium.ts"],
         },
       },
       {

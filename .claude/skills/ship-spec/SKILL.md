@@ -107,10 +107,8 @@ A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the T
 
 Every removal of a worktree of the run, at a merge, a stop or the run's end, goes through its repository's checkout (the Template's for a Template Ticket):
 
-1. `git worktree remove <path>`. When it succeeds, go to step 3.
-2. When it fails, read `git worktree list`, whatever the error said:
-   - **It no longer names `<path>`:** the remove unregistered the worktree and failed to delete its folder, as it did on Windows for every worktree of the first run ("Directory not empty", with `core.longpaths` set). `rm -rf <path>`.
-   - **It still names `<path>`,** a dirty worktree among the causes: leave the folder and the branch as they are, since uncommitted work may be in it. Put the path and the error in the ledger, and end this removal here.
+1. Remove the worktree by the development loop doc's recipe ([Removing a worktree](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#removing-a-worktree)), which says what to run, what to do when the remove fails and why it fails on Windows.
+2. When the recipe leaves the worktree in place, its folder and its branch stay: put the path and the error in the ledger, and end this removal here.
 3. After a merge only, `git branch -D <branch>`. Then remove the check lock when its holder names this Ticket ([The check lock](#the-check-lock)).
 
 ## A red CI
@@ -138,7 +136,7 @@ echo "<spec> <ticket>" > "$lock/holder"                                         
 rm -rf "$lock"                                                                                # release it
 ```
 
-The wait is a series of short tries, each its own foreground command within the Bash tool's default timeout of 120 s: a try that ends on its timeout (exit 124) took nothing, and is run again. Another worktree's check holds the lock for many minutes, and a single wait that long outlasts the tool's timeout: in the [first run](https://github.com/phmilk/reforged-ts/issues/814), one was moved to the background after about three minutes, and its implementer ended its turn waiting on it, idle until a message resumed it. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
+The wait is a series of short tries, each its own foreground command within the Bash tool's default timeout of 120 s: a try that ends on its timeout (exit 124) took nothing, and is run again. Another worktree's check holds the lock for many minutes, and a single wait that long does not stay in the foreground: the harness moves a Subagent's foreground command to the background after 120 s without a `timeout` on the tool call and after 180 s with `timeout: 600000`, as measured on 2026-11-26 with Claude Code 2.1.332 ([When the harness moves a foreground command to the background](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#when-the-harness-moves-a-foreground-command-to-the-background)). A try of 100 s fits under both. In the [first run](https://github.com/phmilk/reforged-ts/issues/814), one long wait was moved so, and its implementer ended its turn waiting on it, idle until a message resumed it. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
 
 - its holder names this run's Spec and a Ticket of it not in flight now (at step 2, none is): remove it when you remove that Ticket's worktree, or at step 2;
 - its folder is older than the longest check: the `check` script's commands at ten minutes each, with a margin, two hours: `find "$lock" -maxdepth 0 -mmin +120` prints it. A lock with no holder file yet, between its `mkdir` and its `echo`, is judged by the folder's age alone.

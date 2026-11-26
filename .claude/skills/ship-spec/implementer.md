@@ -21,7 +21,7 @@ You may: push your branch, open its pull request and turn on its auto-merge (`/s
 
 Stop and report, without guessing, at: a criterion open to more than one reading (give the options); `pnpm check` red after one fix; a merge conflict you cannot resolve by intent (`<skill>/SKILL.md`, "Merge conflicts"); a fact only the game can settle on a machine without it; in the Template, a library change the work needs that no published version carries (name it). Commit what you have first.
 
-Commands in the foreground, each with a timeout of at most ten minutes; never end a turn waiting on a background command. Report once, when done: the pull request and whether auto-merge is on, or why you stopped, with the branch's last commit and whether you posted a "Stopping" comment.
+Commands in the foreground, each with a timeout of at most ten minutes (`timeout: 600000` on the tool call). The harness moves a command to the background after 180 s all the same: keep your turn and read its output file with short foreground commands until it ends. Never end a turn waiting on a background command. Report once, when done: the pull request and whether auto-merge is on, or why you stopped, with the branch's last commit and whether you posted a "Stopping" comment.
 ```
 
 When `ship-spec` continues an implementer by its id (a `DIRTY` pull request), its message names the pull request and asks for `origin/<default>` merged by intent, the checks the merge touches run under the check lock, and the push.
@@ -49,5 +49,5 @@ You may push your branch and post the "Stopping" comment on the Ticket. Nothing 
 
 Stop and report, without guessing, when the diagnosis finds no fix, or the checks the fix touches stay red. Commit what you have first.
 
-Commands in the foreground, each with a timeout of at most ten minutes; never end a turn waiting on a background command. Report once, when done: the fix's commit and that it is pushed, or why you stopped and whether you posted a "Stopping" comment.
+Commands in the foreground, each with a timeout of at most ten minutes (`timeout: 600000` on the tool call). The harness moves a command to the background after 180 s all the same: keep your turn and read its output file with short foreground commands until it ends. Never end a turn waiting on a background command. Report once, when done: the fix's commit and that it is pushed, or why you stopped and whether you posted a "Stopping" comment.
 ```
