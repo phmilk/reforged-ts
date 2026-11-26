@@ -101,17 +101,17 @@ The repository's rules name where a human is needed; there, the Ticket stops ([S
 
 ## Stopping
 
-A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree ([Removing a worktree](#removing-a-worktree); its branch stays, for the next run), and add the stop to the ledger.
+A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree ([Removing a worktree](#removing-a-worktree); its branch stays, for the next run), and add the stop to the ledger. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
 
 ## Removing a worktree
 
 Every removal of a worktree of the run, at a merge, a stop or the run's end, goes through its repository's checkout (the Template's for a Template Ticket):
 
 1. `git worktree remove <path>`. When it succeeds, go to step 3.
-2. When it fails, read why:
-   - **"Directory not empty":** it unregistered the worktree and left the folder behind, as it does on Windows. Check that `git worktree list` no longer names `<path>`, then `rm -rf <path>`.
-   - **Any other failure,** a dirty worktree among the causes: leave the folder and the branch as they are, since uncommitted work may be in it. Put the path and the error in the ledger, and end this removal here.
-3. `git worktree prune`, then, after a merge only, `git branch -D <branch>`. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
+2. When it fails, read `git worktree list`, whatever the error said:
+   - **It no longer names `<path>`:** the remove unregistered the worktree and failed to delete its folder, as it did on Windows for every worktree of the first run ("Directory not empty", with `core.longpaths` set). `rm -rf <path>`.
+   - **It still names `<path>`,** a dirty worktree among the causes: leave the folder and the branch as they are, since uncommitted work may be in it. Put the path and the error in the ledger, and end this removal here.
+3. After a merge only, `git branch -D <branch>`. Then remove the check lock when its holder names this Ticket ([The check lock](#the-check-lock)).
 
 ## A red CI
 
@@ -138,7 +138,7 @@ echo "<spec> <ticket>" > "$lock/holder"                                         
 rm -rf "$lock"                                                                                # release it
 ```
 
-The wait is a series of short tries, each its own foreground command within the Bash tool's default timeout of 120 s: a try that ends on its timeout (exit 124) took nothing, and is run again. Another worktree's check holds the lock for many minutes, and a single wait that long outlasts the tool's timeout and can end in the background, where an implementer ends its turn waiting on it and idles until a message resumes it. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
+The wait is a series of short tries, each its own foreground command within the Bash tool's default timeout of 120 s: a try that ends on its timeout (exit 124) took nothing, and is run again. Another worktree's check holds the lock for many minutes, and a single wait that long outlasts the tool's timeout: in the [first run](https://github.com/phmilk/reforged-ts/issues/814), one was moved to the background after about three minutes, and its implementer ended its turn waiting on it, idle until a message resumed it. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
 
 - its holder names this run's Spec and a Ticket of it not in flight now (at step 2, none is): remove it when you remove that Ticket's worktree, or at step 2;
 - its folder is older than the longest check: the `check` script's commands at ten minutes each, with a margin, two hours: `find "$lock" -maxdepth 0 -mmin +120` prints it. A lock with no holder file yet, between its `mkdir` and its `echo`, is judged by the folder's age alone.

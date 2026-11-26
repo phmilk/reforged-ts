@@ -25,7 +25,7 @@ git -C "$template" worktree add --no-track "$template-worktrees/<ticket>" -b <ty
 git -C "$template-worktrees/<ticket>" merge-base --is-ancestor origin/main HEAD
 ```
 
-`--no-track`, as for a library worktree, keeps the branch from tracking `main`.
+`--no-track`, as for a library worktree, keeps the branch from tracking `origin/main`.
 
 It is removed as a library worktree is ([Removing a worktree](SKILL.md#removing-a-worktree)), through the Template's checkout: every `git` command there takes `-C "$template"`.
 
