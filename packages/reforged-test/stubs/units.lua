@@ -252,19 +252,18 @@ end
 -- events inside the call (docs/research/unit-event-timing.md), so the stubs
 -- dispatch them through the Event dispatch (__stub_dispatch, triggers.lua).
 
--- The unit keeps dead or alive, and no hit points. KillUnit marks a live
--- unit dead, then dispatches the widget death (the registrations of
+-- The unit keeps dead or alive, and no hit points. A death marks the unit
+-- dead, then dispatches the widget death (the registrations of
 -- TriggerRegisterDeathEvent), the player unit death of its owner and the
 -- unit death, in that order, the unit already dead in every handler. The
 -- widget death answers GetTriggerUnit and GetTriggerWidget, the two others
--- GetTriggerUnit, GetDyingUnit and GetTriggerPlayer (the owner); nothing
--- answers GetKillingUnit, as the game answers nil under KillUnit. A unit
--- already dead fires nothing.
-function KillUnit(whichUnit)
-  __stub_record("KillUnit", whichUnit)
-  if whichUnit.dead then
-    return
-  end
+-- GetTriggerUnit, GetDyingUnit, GetTriggerPlayer (the owner) and, as
+-- GetKillingUnit, `killer`: the widget death answers no killer in the game,
+-- whatever killed the unit. It is the death under KillUnit, which has no
+-- killer, and under game.kill of reforged-test/map, which may name one. It
+-- checks nothing: the caller decides what a dead unit means. Not a Native,
+-- so it adds no call-log line.
+function __stub_kill_unit(whichUnit, killer)
   whichUnit.dead = true
   __stub_dispatch(EVENT_WIDGET_DEATH, whichUnit, {
     GetTriggerUnit = whichUnit,
@@ -274,7 +273,19 @@ function KillUnit(whichUnit)
     GetTriggerUnit = whichUnit,
     GetTriggerPlayer = whichUnit.owner,
     GetDyingUnit = whichUnit,
+    GetKillingUnit = killer,
   })
+end
+
+-- KillUnit kills a live unit with no killer: nothing answers
+-- GetKillingUnit, as the game answers nil under KillUnit. A unit already
+-- dead fires nothing.
+function KillUnit(whichUnit)
+  __stub_record("KillUnit", whichUnit)
+  if whichUnit.dead then
+    return
+  end
+  __stub_kill_unit(whichUnit, nil)
 end
 
 -- Whether the unit is alive: true until it died. A removed unit is not
