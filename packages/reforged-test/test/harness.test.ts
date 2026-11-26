@@ -105,7 +105,7 @@ describe("unstubbed Natives", () => {
         "leaves the functions of blizzard.j and common.ai undefined",
         "gives _G no metatable",
         "reports a function that is no Native as the VM does",
-        "names the line that called the function a tail call of the Native is in",
+        "names, for a Native called in a tail call, the nearest caller still on the stack",
       ].map((name) => ({ suite: [], name, status: "pass" })),
     );
   });

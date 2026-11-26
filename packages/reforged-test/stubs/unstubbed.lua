@@ -1732,9 +1732,9 @@ for i = 1, #natives do
   if rawget(_G, name) == nil then
     local function throwUnstubbed()
       -- Level 2 names the line that called the Native. A tail call
-      -- (`return GetUnitName(unit)`, as a Wrapper compiles) leaves no
-      -- frame of its caller, so the line is then the nearest caller's
-      -- still on the stack: the one that called the Wrapper.
+      -- (`return GetUnitLevel(unit)`) leaves no frame of its caller, so
+      -- the line is then the nearest caller's still on the stack, and
+      -- none when that caller is not Lua (pcall).
       error(
         name
           .. " is a Native reforged-test does not stub: give it an answer with stubNative(\""

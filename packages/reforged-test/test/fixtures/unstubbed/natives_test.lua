@@ -33,10 +33,10 @@ end)
 
 -- A tail call leaves no frame of its caller: the line is the nearest
 -- caller's still on the stack, as for a map that calls a Wrapper.
-it("names the line that called the function a tail call of the Native is in", function()
-  local function name() return GetUnitName(nil) end
+it("names, for a Native called in a tail call, the nearest caller still on the stack", function()
+  local function tailCalls() return GetUnitName(nil) end
   local function caller()
-    local answer = name() -- line 39
+    local answer = tailCalls() -- line 39
     return answer
   end
   local ok, message = pcall(caller)
