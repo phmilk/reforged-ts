@@ -103,11 +103,8 @@ declare function __stub_dispatch_damage(damage: StubDamage): number;
 /** Sets what `os.clock` answers from now on; returns what it answered before. */
 declare function __stub_set_clock(seconds: number): number;
 
-/**
- * Makes the player in slot `slot`, or the player given in its place, the
- * local player; returns the slot local before.
- */
-declare function __stub_set_local_player(slot: number | player): number;
+/** Makes the player in slot `slot` the local player; returns the slot local before. */
+declare function __stub_set_local_player(slot: number): number;
 
 /** The local player's handle, without a call-log line. */
 declare function __stub_local_player(): player;

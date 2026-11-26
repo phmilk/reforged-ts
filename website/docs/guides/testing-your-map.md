@@ -57,16 +57,16 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## A Native without a Stub
 
-The harness answers the Natives a map most often calls with its Stubs, and not every one: it holds no object data, so nothing answers `GetUnitName`. A test gives such a Native its answer with `stubNative`:
+The harness answers the Natives a map most often calls with its Shipped stubs, and not every one: it holds no object data, so nothing answers `GetUnitName`. A test gives such a Native its answer with `stubNative`:
 
 {@includeCode ../../../packages/reforged-test/examples/stub-native.test.ts}
 
 - **Typed from the Typings.** The name is a Native of `common.j`, and the answer has that Native's signature: its parameters need no annotation, and a wrong return is a compile error. The answer may be left out only for a Native that returns nothing: `stubNative("PauseGame")`.
-- **Recorded.** Every call is recorded before the answer runs, as a Stub of the harness records its own.
+- **Recorded.** Every call is recorded before the answer runs, as a Shipped stub records its own.
 - **Anywhere, for this test.** Call it at the top of the file, for every test of it, or inside one test, before or after `startGame()`. The last call for a name wins, and an answer lives in its test's game only.
-- **A `stubNative` replacement is whole: over a Native the harness already answers, its Stub no longer runs, so the state it kept and the events it fired are gone; keep `stubNative` for the Natives that answer a value.**
+- **A `stubNative` replacement is whole: over a Native a Shipped stub covers, the Shipped stub no longer runs, so the state it kept and its Event dispatch are gone; keep `stubNative` for the Natives that answer a value.**
 
-An answer that creates a Handle returns one made with `newHandle(kind)`, the kind being the Handle type's name in the Typings. It takes the next handle id of the test's game, as a Handle of the harness does:
+An answer that creates a Handle returns one made with `newHandle(kind)`, the kind being the Handle type's name in the Typings. It takes the next handle id of the test's game, as a Handle a Shipped stub creates does:
 
 {@includeCode ../../../packages/reforged-test/examples/new-handle.test.ts}
 

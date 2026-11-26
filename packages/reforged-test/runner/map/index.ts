@@ -180,8 +180,9 @@ export interface Game {
    * {@includeCode ../../examples/set-local-player.test.ts}
    * @param player - The player whose client the test acts as: its Handle,
    * or anything with `.handle`, as a `MapPlayer` of the library.
-   * @throws When `player` is not a player:
-   * `game.setLocalPlayer: expected a player, its Handle or anything with .handle, such as Player(1)`.
+   * @throws When `player` is not a player the Test game made, a Handle of
+   * `newHandle("player")` included:
+   * `game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)`.
    */
   setLocalPlayer(player: player | { readonly handle: player }): void;
 }
@@ -199,19 +200,22 @@ function displayed(): DisplayedText[] {
   return records;
 }
 
+const NOT_A_PLAYER =
+  "game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)";
+
 function setLocalPlayer(player: player | { readonly handle: player }): void {
   let handle: unknown = player;
   if (type(handle) === "table") {
     handle = (handle as { handle?: unknown }).handle ?? handle;
   }
-  const [start] = string.find(tostring(handle), "player: ", 1, true);
-  if (type(handle) !== "table" || start !== 1) {
-    error(
-      "game.setLocalPlayer: expected a player, its Handle or anything with .handle, such as Player(1)",
-      2,
-    );
+  if (type(handle) !== "table") error(NOT_A_PLAYER, 2);
+  // What the Shipped stubs keep on a player they made: its kind and its
+  // slot. A Handle of newHandle("player") has no slot, so it is refused.
+  const made = handle as { __kind?: unknown; number?: unknown };
+  if (made.__kind !== "player" || type(made.number) !== "number") {
+    error(NOT_A_PLAYER, 2);
   }
-  __stub_set_local_player(handle as player);
+  __stub_set_local_player(made.number as number);
 }
 
 // printed and displayed are read at each access, so each read is a copy and
@@ -310,7 +314,8 @@ export function stubNative<N extends NativeName>(
     ...args: unknown[]
   ): unknown => {
     __stub_record(name, ...args);
-    if (answer === undefined) return undefined;
+    // A bare return: a Native that returns nothing returns no value.
+    if (answer === undefined) return;
     return answer(...args);
   };
 }

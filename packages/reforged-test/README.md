@@ -350,7 +350,7 @@ The two playing slots are state the stubs hold, not a game rule: a test relies o
 
 The controls a test uses to observe what a Map project observes, beyond firing triggers and timers. None is a Native, so none adds a call-log line. `reforged-test/stubs` declares them, as it does the firing helpers.
 
-**The local player.** `GetLocalPlayer` answers the player in slot 0 until `__stub_set_local_player(slot)` makes another slot the local player; it takes a player handle in place of the slot, and returns the slot it replaced, so a test puts it back. `__stub_local_player()` returns the local player's handle. A test runs the same code as the matching client and as another one:
+**The local player.** `GetLocalPlayer` answers the player in slot 0 until `__stub_set_local_player(slot)` makes another slot the local player; it returns the slot it replaced, so a test puts it back. `__stub_local_player()` returns the local player's handle. A test runs the same code as the matching client and as another one:
 
 ```ts
 const previous = __stub_set_local_player(1); // run as the client of slot 1

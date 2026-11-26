@@ -51,7 +51,7 @@ describe("a Native without a Stub", function()
 
   it("answers nothing without an answer, for a Native that returns nothing", function()
     stubNative("PauseGame")
-    expect(PauseGame(true)).toBeUndefined()
+    expect(select("#", PauseGame(true))).toEqual(0)
     expect(runner.stubCalls()).toContainCall("PauseGame(true)")
   end)
 
