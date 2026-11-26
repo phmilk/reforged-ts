@@ -179,7 +179,7 @@ describe("implementPending", () => {
 });
 
 /** The hash of the branch's last commit in these tests. */
-const HEAD = "835a4c7d00000000000000000000000000000000";
+const LAST_COMMIT = "835a4c7d00000000000000000000000000000000";
 
 /** The hash of a commit before it: the head of a pull request merged earlier. */
 const OLDER = "135187aa00000000000000000000000000000000";
@@ -189,7 +189,7 @@ const pullRequest = (more: Record<string, unknown> = {}) => ({
   state: "OPEN",
   isDraft: false,
   autoMergeRequest: null,
-  headRefOid: HEAD,
+  headRefOid: LAST_COMMIT,
   ...more,
 });
 
@@ -231,7 +231,7 @@ describe("pullRequestStateOf", () => {
       "draft",
     ],
   ])("reads %s", (_, answer, state) => {
-    expect(pullRequestStateOf(answer, HEAD)).toBe(state);
+    expect(pullRequestStateOf(answer, LAST_COMMIT)).toBe(state);
   });
 
   it.each([
@@ -242,7 +242,7 @@ describe("pullRequestStateOf", () => {
     '[{"isDraft":false,"autoMergeRequest":null,"headRefOid":"835a4c7d"}]',
     '[{"state":"MERGED","isDraft":false,"autoMergeRequest":null}]',
   ])("throws on %j, which is no answer of gh pr list", (answer) => {
-    expect(() => pullRequestStateOf(answer, HEAD)).toThrow();
+    expect(() => pullRequestStateOf(answer, LAST_COMMIT)).toThrow();
   });
 });
 
@@ -408,7 +408,7 @@ function readers(answers: {
       transcript: () => answer("transcript", answers.transcript),
       ahead: () => answer("ahead", answers.ahead),
       pullRequest: () => answer("pullRequest", answers.pullRequest),
-      lastCommit: () => answer("lastCommit", answers.lastCommit ?? HEAD),
+      lastCommit: () => answer("lastCommit", answers.lastCommit ?? LAST_COMMIT),
     },
   };
 }

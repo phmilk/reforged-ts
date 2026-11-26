@@ -46,7 +46,7 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    - Does the granularity feel right? (too coarse / too fine)
    - Are the blocking edges correct: does each Ticket depend only on Tickets that genuinely gate it?
    - Should any Tickets be merged or split further?
-   - Does the table meet each part of the coverage rule: every item with its row, both outcomes of each "check whether…", a Ticket of its own for one that can stop the Spec, and where each consequence sits?
+   - Does the table meet each part of the coverage rule: every item with its row, both outcomes of each "check whether…", a Ticket of its own, blocking those that depend on its answer, for one that can stop the Spec or change who does the work, and where each consequence sits?
 
    Iterate through steps 3 and 4 until the human approves. Done when the human approves the Tickets and the table, with no item left without a row.
 

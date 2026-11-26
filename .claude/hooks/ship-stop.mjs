@@ -22,10 +22,10 @@
 // branch has ahead of the remote default, read with `git`; and the state of
 // the branch's pull request, read with `gh` and, to tell a merged one that
 // shipped the branch as it stands, the branch's last commit
-// (pullRequestStateOf()). run()
-// reads the facts in that order, each only when the ones before it call for
-// it, through readers the script gives it; the rest is those readers and the
-// printing of the output after reading stdin. The hook never fails a stop on
+// (pullRequestStateOf()). run() reads the facts in that order, each only
+// when the ones before it call for it, through readers the script gives it;
+// the rest is those readers and the printing of the output after reading
+// stdin. The hook never fails a stop on
 // its own error and always exits 0.
 //
 // Dependency-free: it runs on the Node that runs the session, before any
