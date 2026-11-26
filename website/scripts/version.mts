@@ -6,15 +6,16 @@
 // The include markers of the frozen pages are written out as the code they
 // stand for (scripts/includes.mts), so the version keeps its code and no
 // marker resolves against the copy's folder. Then it applies the retention
-// rule, as docs:prune does, so that a local cut
-// ends as the one CI makes. Exit code 0 when cut, 1 when a step fails or the
-// label cannot be cut, 2 on arguments.
+// rule, as docs:prune does, so that a local cut ends as the one CI makes.
+// Exit code 0 when cut, 1 when a step fails or the label cannot be cut, 2 on
+// arguments.
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { main as collect, type Output, PROCESS_OUTPUT } from "./collect.mts";
-import { freezeIncludes, IncludeCodeError } from "./includes.mts";
+import { IncludeCodeError } from "../../packages/reforged-ts/scripts/include-code.mts";
+import { freezeIncludes } from "./includes.mts";
 import { pruneAndReport, SITE } from "./prune.mts";
 import {
   isLabel,

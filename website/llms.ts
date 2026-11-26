@@ -146,7 +146,7 @@ const MDX_COMMENT = /\{\/\*[\s\S]*?\*\/\}\n*/g;
  * stands for, from `blocks` (`includeBlocks` of the target's docs folder).
  * Returns a problem for each marker with no block, one line each.
  */
-function tidy(
+function finishFiles(
   outDir: string,
   siteUrl: string,
   target: LlmsTarget,
@@ -224,7 +224,7 @@ function llmsFiles(
         );
         problems.push(
           ...(found.length === 0
-            ? tidy(
+            ? finishFiles(
                 props.outDir,
                 siteUrl,
                 target,

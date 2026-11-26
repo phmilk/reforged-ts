@@ -6,10 +6,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { IncludeCodeError } from "../../packages/reforged-ts/scripts/include-code.mts";
 import {
   expandIncludes,
   freezeIncludes,
-  IncludeCodeError,
   includeBlocks,
   replaceIncludes,
 } from "../scripts/includes.mts";

@@ -17,8 +17,6 @@ import {
 } from "../../packages/reforged-ts/scripts/include-code.mts";
 import { forEachLine, normalizeNewlines } from "./markdown.mts";
 
-export { IncludeCodeError };
-
 /**
  * An include marker alone on its line, indented by up to three spaces or
  * inside a list item: the indentation is group 1, the target group 2.
@@ -46,9 +44,49 @@ function fencedBlock(
     ...(code.match(/`+/g) ?? []).map((run) => run.length),
   );
   const fence = "`".repeat(longestRun + 1);
-  return [fence + language, ...code.trimEnd().split("\n"), fence].map((line) =>
-    line === "" ? "" : indent + line,
+  return indented(
+    [fence + language, ...code.trimEnd().split("\n"), fence],
+    indent,
   );
+}
+
+/** `lines` each indented by `indent`, a blank line left blank. */
+const indented = (lines: readonly string[], indent: string): string[] =>
+  lines.map((line) => (line === "" ? "" : indent + line));
+
+/** One include marker of a page. */
+interface Marker {
+  /** Its indentation. */
+  readonly indent: string;
+  /** The tag's text after `@includeCode`: `file.ts#region`. */
+  readonly target: string;
+  /** The marker's line without its indentation. */
+  readonly text: string;
+  /** Its line of the page, 1-based. */
+  readonly line: number;
+}
+
+/**
+ * The lines of `markdown` with each include marker outside a code block
+ * replaced by what `replace` gives for it, or kept when it gives nothing.
+ */
+function mapMarkers(
+  markdown: string,
+  replace: (marker: Marker) => readonly string[] | undefined,
+): string[] {
+  const lines: string[] = [];
+  let number = 0;
+  forEachLine(normalizeNewlines(markdown), (line, inCode) => {
+    number += 1;
+    const found = inCode ? null : MARKER.exec(line);
+    const [, indent = "", target = ""] = found ?? [];
+    const replaced =
+      found === null
+        ? undefined
+        : replace({ indent, target, text: line.trim(), line: number });
+    lines.push(...(replaced ?? [line]));
+  });
+  return lines;
 }
 
 /**
@@ -64,21 +102,9 @@ export function expandIncludes(
   label: string,
 ): string {
   if (!mayInclude(markdown)) return markdown;
-  const lines: string[] = [];
-  let number = 0;
-  forEachLine(normalizeNewlines(markdown), (line, inCode) => {
-    number += 1;
-    const marker = inCode ? null : MARKER.exec(line);
-    if (marker === null) {
-      lines.push(line);
-      return;
-    }
-    const [, indent = "", target = ""] = marker;
-    lines.push(
-      ...fencedBlock(target, pageDir, `${label}:${String(number)}`, indent),
-    );
-  });
-  return lines.join("\n");
+  return mapMarkers(markdown, ({ indent, target, line }) =>
+    fencedBlock(target, pageDir, `${label}:${String(line)}`, indent),
+  ).join("\n");
 }
 
 /** A Markdown page of a docs tree. */
@@ -137,26 +163,18 @@ export async function includeBlocks(
   const blocks = new Map<string, string>();
   for (const page of await pagesWithMarkers(docs)) {
     const path = join(docs, page);
-    let number = 0;
-    forEachLine(
-      normalizeNewlines(await readFile(path, "utf8")),
-      (line, inCode) => {
-        number += 1;
-        const marker = inCode ? null : MARKER.exec(line);
-        if (marker === null) return;
-        const [, , target = ""] = marker;
-        const where = `${page}:${String(number)}`;
-        const text = line.trim();
-        const block = fencedBlock(target, dirname(path), where, "").join("\n");
-        const known = blocks.get(text);
-        if (known !== undefined && known !== block) {
-          throw new IncludeCodeError(
-            `${where}: ${text} includes other code than the same marker on another page: give one of them another path`,
-          );
-        }
-        blocks.set(text, block);
-      },
-    );
+    mapMarkers(await readFile(path, "utf8"), ({ target, text, line }) => {
+      const where = `${page}:${String(line)}`;
+      const block = fencedBlock(target, dirname(path), where, "").join("\n");
+      const known = blocks.get(text);
+      if (known !== undefined && known !== block) {
+        throw new IncludeCodeError(
+          `${where}: ${text} includes other code than the same marker on another page: give one of them another path`,
+        );
+      }
+      blocks.set(text, block);
+      return undefined;
+    });
   }
   return blocks;
 }
@@ -171,19 +189,12 @@ export function replaceIncludes(
   blocks: ReadonlyMap<string, string>,
 ): { text: string; missing: string[] } {
   const missing: string[] = [];
-  const lines: string[] = [];
-  forEachLine(normalizeNewlines(markdown), (line, inCode) => {
-    const marker = inCode ? null : MARKER.exec(line);
-    const block = marker === null ? undefined : blocks.get(line.trim());
-    if (marker !== null && block === undefined) missing.push(line.trim());
-    if (marker === null || block === undefined) {
-      lines.push(line);
-      return;
-    }
-    const [, indent = ""] = marker;
-    lines.push(
-      ...block.split("\n").map((each) => (each === "" ? "" : indent + each)),
-    );
+  const lines = mapMarkers(markdown, ({ indent, text }) => {
+    const block = blocks.get(text);
+    if (block === undefined) missing.push(text);
+    return block === undefined
+      ? undefined
+      : indented(block.split("\n"), indent);
   });
   return { text: lines.join("\n"), missing };
 }

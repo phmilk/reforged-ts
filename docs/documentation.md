@@ -177,6 +177,7 @@ What checks them:
 
 - `pnpm test` compiles the folder with typescript-to-lua in the global setup of the `reforged-test` vitest project, after the runner, and runs each file through the glue, as `reforged-test/examples/<name>.test.ts > <its test>`; a compile error fails the run. On its own: `pnpm vitest run --project reforged-test packages/reforged-test/test/examples.test.ts`. `pnpm typecheck` type-checks the folder too.
 - `pnpm docs:check` resolves every `{@includeCode}` of the `reforged-test` section of the API reference.
+- `pnpm build` expands every `{@includeCode}` of `map/index.d.ts`, the declarations `reforged-test/map` ships, with the library's include-code script, so the hover shows the code as the library's does.
 
 ### In a guide page
 
@@ -186,4 +187,3 @@ What checks them:
 
 - `pnpm docs:build` and `pnpm docs:check` expand every marker before MDX reads the page; a missing file, region or line fails them, naming the page and line. The LLM files carry the code, and a Docs version's cut writes it into the frozen page.
 - `pnpm test` runs the expansion's own tests (`website/test/includes.test.mts`) and the examples themselves, as above.
-- `pnpm build` expands every `{@includeCode}` of `map/index.d.ts`, the declarations `reforged-test/map` ships, with the library's include-code script, so the hover shows the code as the library's does.
