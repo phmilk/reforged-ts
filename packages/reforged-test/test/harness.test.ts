@@ -576,6 +576,69 @@ describe("matchers", () => {
   });
 });
 
+describe("focus and skip", () => {
+  it("runs no skip or todo body on reforged-test/lua, and no hook for one", () => {
+    const [onLua] = runLuaTestFiles({ outDir: outDir("focus") });
+    expect(onLua.testFile).toBe("on-lua/skip.test.ts");
+    expect(onLua.tests).toEqual([
+      { suite: [], name: "runs", status: "pass" },
+      { suite: [], name: "is skipped", status: "skip", mode: "skip" },
+      { suite: [], name: "is still to write", status: "skip", mode: "todo" },
+      {
+        suite: ["a skipped describe"],
+        name: "is skipped with its describe",
+        status: "skip",
+        suiteModes: ["skip"],
+      },
+      {
+        suite: [],
+        name: "ran no skipped body and no hook for one",
+        status: "pass",
+      },
+    ]);
+  });
+
+  it("opens no Test game for a skip or todo test on reforged-test/map", () => {
+    const counter = join(
+      mkdtempSync(join(tmpdir(), "reforged-test-count-")),
+      "counter.lua",
+    );
+    writeFileSync(
+      counter,
+      `__fixture_loads_path = "/reforged-test-loads-${String(Date.now())}-${String(Math.random())}"\n`,
+    );
+    const files = runLuaTestFiles({
+      outDir: outDir("focus"),
+      stubs: [counter],
+    });
+    expect(file(files, "on-map/skip.test.ts").tests).toEqual([
+      { suite: [], name: "runs in the second load", status: "pass" },
+      { suite: [], name: "opens no game", status: "skip", mode: "skip" },
+      { suite: [], name: "is still to write", status: "skip", mode: "todo" },
+      {
+        suite: ["a skipped describe"],
+        name: "opens no game either",
+        status: "skip",
+        suiteModes: ["skip"],
+      },
+      {
+        suite: ["a describe"],
+        name: "runs in the third load",
+        status: "pass",
+      },
+    ]);
+    rmSync(dirname(counter), { recursive: true, force: true });
+  });
+
+  it("runs every test of a file with an only on reforged-test/lua, and reports its mode", () => {
+    const files = runLuaTestFiles({ outDir: outDir("only") });
+    expect(file(files, "on-lua/only.test.ts").tests).toEqual([
+      { suite: [], name: "is out of focus", status: "pass" },
+      { suite: [], name: "is focused", status: "pass", mode: "only" },
+    ]);
+  });
+});
+
 describe("the JSON contract", () => {
   it("is all the glue needs from a module", () => {
     const [norunner, raw] = runLuaTestFiles({ outDir: outDir("contract") });
@@ -601,6 +664,12 @@ describe("the JSON contract", () => {
     expect(() => runLuaTestFiles({ outDir: outDir("malformed") })).toThrow(
       /^garbage_test: malformed runner results \(bad test entry/,
     );
+  });
+
+  it("rejects suite modes that are not one per describe", () => {
+    expect(() =>
+      runLuaTestFiles({ outDir: outDir("malformed-modes") }),
+    ).toThrow(/^modes_test: malformed runner results \(bad test entry/);
   });
 });
 

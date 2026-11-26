@@ -24,8 +24,18 @@ export interface LuaTestOptions {
   readonly stubs?: readonly string[];
 }
 
-/** pass: every expectation held; fail: one did not; error: anything else threw. */
-export type LuaTestStatus = "pass" | "fail" | "error";
+/**
+ * pass: every expectation held; fail: one did not; error: anything else
+ * threw; skip: the body did not run, the test being skip or todo or in a
+ * skipped `describe`.
+ */
+export type LuaTestStatus = "pass" | "fail" | "error" | "skip";
+
+/** How an `it` was registered: `it`, `it.skip`, `it.only` or `it.todo`. */
+export type LuaTestMode = "run" | "skip" | "only" | "todo";
+
+/** How a `describe` was registered: `describe`, `describe.skip` or `describe.only`. */
+export type LuaSuiteMode = "run" | "skip" | "only";
 
 /** One `it`, as the runner reported it. */
 export interface LuaTestResult {
@@ -35,6 +45,13 @@ export interface LuaTestResult {
   readonly status: LuaTestStatus;
   /** The Lua message, on "fail" and "error". */
   readonly message?: string;
+  /** How the test was registered; absent for a plain `it`. */
+  readonly mode?: Exclude<LuaTestMode, "run">;
+  /**
+   * How each enclosing `describe` was registered, one per `suite` name;
+   * absent when every one is a plain `describe`.
+   */
+  readonly suiteModes?: readonly LuaSuiteMode[];
 }
 
 /**
@@ -119,11 +136,8 @@ interface TestModule {
   readonly testFile: string;
 }
 
-/** A test's place in its file: its `describe` names and its name. */
-interface TestName {
-  readonly suite: readonly string[];
-  readonly name: string;
-}
+/** A test's place in its file: its `describe` names and its name, with their modes. */
+type TestName = Pick<LuaTestResult, "suite" | "name" | "mode" | "suiteModes">;
 
 /** A test of a loaded module, with what gives its result. */
 interface PlannedTest extends TestName {
@@ -178,7 +192,10 @@ class Harness {
       return {
         tests: parsed.tests.map((listed, position) => ({
           ...listed,
-          result: () => this.#runAt(module, position, listed),
+          result: () =>
+            bodySkipped(listed)
+              ? { ...listed, status: "skip" }
+              : this.#runAt(module, position, listed),
         })),
       };
     }
@@ -186,6 +203,7 @@ class Harness {
       tests: parsed.tests.map((result) => ({
         suite: result.suite,
         name: result.name,
+        ...modesOf(result),
         result: () => result,
       })),
     };
@@ -233,6 +251,27 @@ class Harness {
   }
 }
 
+/**
+ * Whether the runner does not run the test's body: skip or todo, or in a
+ * skipped `describe`. Such a test opens no Lua state.
+ */
+function bodySkipped({ mode, suiteModes }: TestName): boolean {
+  return (
+    mode === "skip" || mode === "todo" || (suiteModes ?? []).includes("skip")
+  );
+}
+
+/** The modes of a test, each key left out when it is absent. */
+function modesOf({
+  mode,
+  suiteModes,
+}: TestName): Pick<TestName, "mode" | "suiteModes"> {
+  return {
+    ...(mode === undefined ? {} : { mode }),
+    ...(suiteModes === undefined ? {} : { suiteModes }),
+  };
+}
+
 /** A test's full name, as vitest shows it: `describe > it`. */
 function fullName({ suite, name }: TestName): string {
   return [...suite, name].join(" > ");
@@ -266,7 +305,40 @@ function rewrite(message: string): string {
   return message.replace(UNSTUBBED, "Native $1 is not stubbed");
 }
 
-const STATUSES: readonly string[] = ["pass", "fail", "error"];
+const STATUSES: readonly string[] = ["pass", "fail", "error", "skip"];
+const TEST_MODES: readonly string[] = ["skip", "only", "todo"];
+const SUITE_MODES: readonly string[] = ["run", "skip", "only"];
+
+/**
+ * The modes of a test entry, or undefined when they are malformed: a
+ * `suiteModes` must have one mode per `suite` name.
+ */
+function parseModes(
+  entry: Record<string, unknown>,
+  suite: readonly string[],
+): Pick<TestName, "mode" | "suiteModes"> | undefined {
+  const { mode, suiteModes } = entry;
+  if (
+    mode !== undefined &&
+    (typeof mode !== "string" || !TEST_MODES.includes(mode))
+  ) {
+    return undefined;
+  }
+  if (
+    suiteModes !== undefined &&
+    (!isSuite(suiteModes) ||
+      suiteModes.length !== suite.length ||
+      !suiteModes.every((each) => SUITE_MODES.includes(each)))
+  ) {
+    return undefined;
+  }
+  return modesOf({
+    suite,
+    name: "",
+    mode: mode as LuaTestResult["mode"],
+    suiteModes: suiteModes as LuaSuiteMode[] | undefined,
+  });
+}
 
 /** What one run of the runner answered: the results, or the tests listed. */
 type RunnerAnswer =
@@ -288,11 +360,13 @@ function parseRun(json: string, moduleName: string): RunnerAnswer {
     return {
       isolated: true,
       tests: tests.map((entry: unknown): TestName => {
-        const { suite, name } = (entry ?? {}) as Record<string, unknown>;
-        if (!isSuite(suite) || typeof name !== "string") {
+        const record = (entry ?? {}) as Record<string, unknown>;
+        const { suite, name } = record;
+        const modes = isSuite(suite) ? parseModes(record, suite) : undefined;
+        if (!isSuite(suite) || typeof name !== "string" || !modes) {
           throw malformed(`bad test entry ${JSON.stringify(entry)}`);
         }
-        return { suite, name };
+        return { suite, name, ...modes };
       }),
     };
   }
@@ -311,12 +385,12 @@ function parseResults(
   malformed: (why: string) => Error,
 ): LuaTestResult[] {
   return tests.map((entry: unknown): LuaTestResult => {
-    const { suite, name, status, message } = (entry ?? {}) as Record<
-      string,
-      unknown
-    >;
+    const record = (entry ?? {}) as Record<string, unknown>;
+    const { suite, name, status, message } = record;
+    const modes = isSuite(suite) ? parseModes(record, suite) : undefined;
     if (
       !isSuite(suite) ||
+      !modes ||
       typeof name !== "string" ||
       typeof status !== "string" ||
       !STATUSES.includes(status) ||
@@ -329,6 +403,7 @@ function parseResults(
       name,
       status: status as LuaTestStatus,
       ...(message === undefined ? {} : { message: rewrite(message) }),
+      ...modes,
     };
   });
 }
@@ -338,21 +413,27 @@ function parseResults(
 
 interface SuiteNode {
   readonly name: string;
+  /** The mode of the first `describe` of this name the file registered. */
+  readonly mode: LuaSuiteMode;
   readonly children: (SuiteNode | PlannedTest)[];
 }
 
 /** Nests the flat tests under their `describe` names, in first-seen order. */
 function suiteTree(tests: readonly PlannedTest[]): SuiteNode["children"] {
-  const root: SuiteNode = { name: "", children: [] };
+  const root: SuiteNode = { name: "", mode: "run", children: [] };
   for (const result of tests) {
     let node = root;
-    for (const name of result.suite) {
+    for (const [depth, name] of result.suite.entries()) {
       let child = node.children.find(
         (candidate): candidate is SuiteNode =>
           "children" in candidate && candidate.name === name,
       );
       if (child === undefined) {
-        child = { name, children: [] };
+        child = {
+          name,
+          mode: result.suiteModes?.[depth] ?? "run",
+          children: [],
+        };
         node.children.push(child);
       }
       node = child;
@@ -362,19 +443,35 @@ function suiteTree(tests: readonly PlannedTest[]): SuiteNode["children"] {
   return root.children;
 }
 
+/** Vitest's `describe` of each mode. */
+const DESCRIBES = {
+  run: describe,
+  skip: describe.skip,
+  only: describe.only,
+} as const;
+
 function register(children: SuiteNode["children"], inSuite32 = false): void {
   for (const child of children) {
     const marked = inSuite32 || child.name.includes(MARKER_32_BIT);
     if ("children" in child) {
-      describe(child.name, () => {
+      DESCRIBES[child.mode](child.name, () => {
         register(child.children, marked);
       });
     } else if (marked) {
       test.skip(child.name, () => undefined);
+    } else if (child.mode === "todo") {
+      test.todo(child.name);
+    } else if (child.mode === "skip") {
+      test.skip(child.name, () => undefined);
     } else {
-      test(child.name, () => {
+      (child.mode === "only" ? test.only : test)(child.name, (context) => {
         const result = child.result();
         if (result.status === "pass") return;
+        // Vitest runs no test the runner skipped; kept true if it did.
+        if (result.status === "skip") {
+          context.skip();
+          return;
+        }
         throw luaError(
           result.status === "fail" ? "AssertionError" : "LuaError",
           result.message ?? "(no message)",
