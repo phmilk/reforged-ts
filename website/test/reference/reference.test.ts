@@ -173,14 +173,14 @@ describe("the reference", () => {
 describe("the site's references", () => {
   it("are the library, reforged-test from its map entry point alone, then the Typings", () => {
     const references = siteReferences();
-    const [library, test, ...typings] = references;
+    const [library, harness, ...typings] = references;
 
     expect(library.id).toBe("reforged-ts");
-    expect(test).toMatchObject({
+    expect(harness).toMatchObject({
       id: "reforged-test",
       dir: "api/reforged-test",
     });
-    expect(test.entryPoints).toEqual([
+    expect(harness.entryPoints).toEqual([
       fileURLToPath(
         new URL(
           "../../../packages/reforged-test/runner/map/index.ts",
