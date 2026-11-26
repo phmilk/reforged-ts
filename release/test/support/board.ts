@@ -12,9 +12,11 @@ import {
   BOARD_VIEWS,
   STATUS_OPTIONS,
   type BoardIssue,
+  type BoardPullRequest,
   type BoardState,
   type ProjectItem,
   type ProjectState,
+  type SubIssue,
 } from "../../src/board.js";
 import { gitHubApi } from "../../src/cli/common.js";
 import { operationName } from "../../src/github-graphql.js";
@@ -216,6 +218,29 @@ export function item(
     ...more,
   };
 }
+
+/** A pull request that references the issue as closed by it. */
+export function pullRequest(
+  state: BoardPullRequest["state"],
+  draft = false,
+): BoardPullRequest {
+  return { number: 40, state, draft, author: "alice" };
+}
+
+/** An open sub-issue of the library. */
+export const sub = (number: number, repository = LIBRARY): SubIssue => ({
+  repository,
+  number,
+  state: "OPEN",
+});
+
+/** A wayfinder map and a Spec of the library, as the parent of an issue. */
+export const MAP = {
+  repository: LIBRARY,
+  number: 518,
+  labels: ["wayfinder:map"],
+};
+export const SPEC = { repository: LIBRARY, number: 529, labels: ["spec"] };
 
 /**
  * `issue` as the `BoardIssue` fragment answers it, by `author`: by default
