@@ -9,6 +9,7 @@
 
 import {
   afterEach as luaAfterEach,
+  type BeforeEachCallback,
   beforeEach as luaBeforeEach,
   describe as luaDescribe,
   expect as luaExpect,
@@ -54,9 +55,7 @@ export const it: (name: string, fn: () => void) => void = luaIt;
  * @throws When called inside a test:
  * `beforeEach: called inside a test; register it in a describe or at the top of the file`.
  */
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- Vitest's own hook type
-export const beforeEach: (fn: () => void | (() => void)) => void =
-  luaBeforeEach;
+export const beforeEach: (fn: BeforeEachCallback) => void = luaBeforeEach;
 
 /**
  * Registers a function that runs after each test of the current

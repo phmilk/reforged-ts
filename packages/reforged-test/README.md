@@ -14,13 +14,13 @@ The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/
 
 The package has five parts:
 
-| Part                                 | Reached as            | What it is                                                                                                                             |
-| ------------------------------------ | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect` and the hooks for the test files, compiled to Lua.                                                          |
-| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, the hooks and `startGame` for a Map project's tests, each in a Test game of its own, over the runner.      |
-| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
-| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
-| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                          |
+| Part                                 | Reached as            | What it is                                                                                                                                        |
+| ------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach` and `afterEach` for the test files, compiled to Lua.                                                     |
+| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach` and `startGame` for a Map project's tests, each in a Test game of its own, over the runner. |
+| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.            |
+| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                       |
+| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                     |
 
 ## Writing a test
 
@@ -53,7 +53,8 @@ The runner exports:
   - the `afterEach` hooks run even when the body or a `beforeEach` failed; one that throws fails a test that had passed, and the remaining `afterEach` hooks are skipped;
   - a function a `beforeEach` returns runs after the `afterEach` hooks, the last returned first, as Vitest's cleanup does, unless an `afterEach` threw;
   - the test reports its first error;
-  - a hook registered inside a running test throws. There is no `beforeAll` or `afterAll`.
+  - a `beforeEach` or `afterEach` called inside a running test throws. There is no `beforeAll` or `afterAll`.
+  - `BeforeEachCallback` is the type of the function `beforeEach` takes.
 - `expect(value)`, with Vitest's matchers where typescript-to-lua compiles them. `.not` negates each one: `expect(n).not.toBe(0)`.
   - `toEqual(expected)`: strict equality (`==`) on primitives, deep equality on tables. Metatables are ignored.
   - `toBe(expected)`: identity (`rawequal`), so two equal tables are not the same.

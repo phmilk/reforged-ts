@@ -76,6 +76,21 @@ it("notes the cleanups after the afterEach hooks, the last returned first", func
   expect(notes()).toEqual({ "body", "after", "cleanup 2", "cleanup 1" })
 end)
 
+describe("a beforeEach that returns a function, then one that throws", function()
+  beforeEach(function() return note("cleanup") end)
+  beforeEach(function() error("before broke", 0) end)
+  it("runs the cleanup all the same", note("body"))
+end)
+
+it("notes the cleanup of the beforeEach that ran", function()
+  expect(notes()).toEqual({ "cleanup" })
+end)
+
+describe("a cleanup that throws", function()
+  beforeEach(function() return function() error("cleanup broke", 0) end end)
+  it("fails a test that had passed", function() end)
+end)
+
 describe("an afterEach whose expectation fails", function()
   afterEach(function() expect(1).toEqual(2) end)
   it("fails the test with the expectation's message", function() end)

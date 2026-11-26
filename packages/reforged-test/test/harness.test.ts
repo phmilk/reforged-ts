@@ -303,6 +303,23 @@ describe("beforeEach and afterEach, scoped by describe", () => {
         status: "pass",
       },
       {
+        suite: ["a beforeEach that returns a function, then one that throws"],
+        name: "runs the cleanup all the same",
+        status: "error",
+        message: "before broke",
+      },
+      {
+        suite: [],
+        name: "notes the cleanup of the beforeEach that ran",
+        status: "pass",
+      },
+      {
+        suite: ["a cleanup that throws"],
+        name: "fails a test that had passed",
+        status: "error",
+        message: "cleanup broke",
+      },
+      {
         suite: ["an afterEach whose expectation fails"],
         name: "fails the test with the expectation's message",
         status: "fail",

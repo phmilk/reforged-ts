@@ -42,17 +42,20 @@ interface Block {
  */
 interface Scope {
   parent?: Scope;
-  beforeEach: BeforeEachHook[];
+  beforeEach: BeforeEachCallback[];
   afterEach: (() => void)[];
 }
 
 /**
- * A `beforeEach` hook: what it returns, when a function, runs after the
- * test's `afterEach` hooks, as Vitest's cleanup does.
+ * The function `beforeEach` runs before each test, which may return a
+ * cleanup.
+ * @remarks
+ * A function it returns runs after the test's `afterEach` functions, as
+ * Vitest's cleanup does.
  * @noSelf
  */
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- Vitest's own hook type
-export type BeforeEachHook = () => void | (() => void);
+export type BeforeEachCallback = () => void | (() => void);
 
 interface Result {
   suite: string[];
@@ -127,7 +130,7 @@ function refuseInsideTest(kind: "beforeEach" | "afterEach"): void {
  * @throws When called inside a test:
  * `beforeEach: called inside a test; register it in a describe or at the top of the file`.
  */
-export function beforeEach(fn: BeforeEachHook): void {
+export function beforeEach(fn: BeforeEachCallback): void {
   refuseInsideTest("beforeEach");
   table.insert(scope.beforeEach, fn);
 }
@@ -939,7 +942,7 @@ function scopesOf(block: Block): Scope[] {
 }
 
 /** A hook's run: whether it returned without throwing, and what it returned. */
-type Attempt = (fn: BeforeEachHook) => LuaMultiReturn<[boolean, unknown]>;
+type Attempt = (fn: () => unknown) => LuaMultiReturn<[boolean, unknown]>;
 
 /**
  * Runs the `beforeEach` hooks, outer scope first, each scope's in order,
