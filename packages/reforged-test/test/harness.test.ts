@@ -595,6 +595,11 @@ describe("focus and skip", () => {
         name: "ran no skipped body and no hook for one",
         status: "pass",
       },
+      {
+        suite: ["a skipped describe"],
+        name: "runs in a plain describe of the same name",
+        status: "pass",
+      },
     ]);
   });
 
@@ -607,10 +612,12 @@ describe("focus and skip", () => {
       counter,
       `__fixture_loads_path = "/reforged-test-loads-${String(Date.now())}-${String(Math.random())}"\n`,
     );
-    const files = runLuaTestFiles({
-      outDir: outDir("focus"),
-      stubs: [counter],
-    });
+    let files: LuaTestFile[];
+    try {
+      files = runLuaTestFiles({ outDir: outDir("focus"), stubs: [counter] });
+    } finally {
+      rmSync(dirname(counter), { recursive: true, force: true });
+    }
     expect(file(files, "on-map/skip.test.ts").tests).toEqual([
       { suite: [], name: "runs in the second load", status: "pass" },
       { suite: [], name: "opens no game", status: "skip", mode: "skip" },
@@ -627,7 +634,6 @@ describe("focus and skip", () => {
         status: "pass",
       },
     ]);
-    rmSync(dirname(counter), { recursive: true, force: true });
   });
 
   it("runs every test of a file with an only on reforged-test/lua, and reports its mode", () => {

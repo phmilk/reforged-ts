@@ -68,6 +68,8 @@ async function runInner(
 }
 
 const runs: InnerRun[] = [];
+/** The first inner run, on every fixture but the only one. */
+let main: InnerRun;
 let module: TestModule;
 let logs: UserConsoleLog[];
 
@@ -79,6 +81,7 @@ beforeAll(async () => {
     true,
   );
   runs.push(run);
+  main = run;
   ({ module, logs } = run);
 }, 30_000);
 
@@ -188,7 +191,7 @@ describe("runLuaTests", () => {
   });
 
   it("never reaches emscripten's uncaught-exception handler", () => {
-    expect(runs[0]?.vitest.state.getUnhandledErrors()).toEqual([]);
+    expect(main.vitest.state.getUnhandledErrors()).toEqual([]);
   });
 });
 
@@ -235,6 +238,10 @@ describe("runLuaTests on focus and skip", () => {
       "is still to write": ["skipped", "todo"],
       "a skipped describe > is skipped with its describe": ["skipped", "skip"],
       "ran no skipped body and no hook for one": ["passed", "run"],
+      "a skipped describe > runs in a plain describe of the same name": [
+        "passed",
+        "run",
+      ],
     });
     expect(report("on-map/skip.test.ts")).toEqual({
       "runs in the second load": ["passed", "run"],

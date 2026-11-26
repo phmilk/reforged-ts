@@ -22,3 +22,8 @@ end)
 it("ran no skipped body and no hook for one", function()
   expect(log).toEqual({ "before", "runs", "after", "before" })
 end)
+
+-- A plain describe of a skipped one's name runs: it is a group of its own.
+describe("a skipped describe", function()
+  it("runs in a plain describe of the same name", function() end)
+end)

@@ -86,17 +86,7 @@ A Lua stub file listed in the `stubs` option of the harness still loads, after t
 
 - **Skip.** `it.skip` and `describe.skip` keep a test that is not ready in the file: Vitest reports it as skipped, and it opens no Test game and runs no `beforeEach` or `afterEach`.
 - **Todo.** `it.todo(name)` names a test still to write. It takes no body: passing one is a type error.
-- **Only.** `it.only` and `describe.only` focus on the tests you are writing:
-
-  ```ts
-  import { it, startGame } from "reforged-test/map";
-
-  it.only("announces the first wave", () => {
-    startGame();
-  });
-  ```
-
-  `only` reaches every Lua test of the Map project: the tests of every other test file are reported as skipped too, and open no Test game.
+- **Only.** `it.only` and `describe.only` focus on the tests you are writing: `it.only("announces the first wave", () => { … })`. `only` reaches every Lua test of the Map project: the tests of every other test file are reported as skipped too, and open no Test game.
 
 - **A forgotten `only` fails in CI.** Under `CI`, Vitest refuses `only` and fails the run, so a focus never hides the other tests of a pull request.
 

@@ -261,11 +261,11 @@ function bodySkipped({ mode, suiteModes }: TestName): boolean {
   );
 }
 
+/** The modes of a test or result. */
+type Modes = Pick<TestName, "mode" | "suiteModes">;
+
 /** The modes of a test, each key left out when it is absent. */
-function modesOf({
-  mode,
-  suiteModes,
-}: TestName): Pick<TestName, "mode" | "suiteModes"> {
+function modesOf({ mode, suiteModes }: Modes): Modes {
   return {
     ...(mode === undefined ? {} : { mode }),
     ...(suiteModes === undefined ? {} : { suiteModes }),
@@ -316,7 +316,7 @@ const SUITE_MODES: readonly string[] = ["run", "skip", "only"];
 function parseModes(
   entry: Record<string, unknown>,
   suite: readonly string[],
-): Pick<TestName, "mode" | "suiteModes"> | undefined {
+): Modes | undefined {
   const { mode, suiteModes } = entry;
   if (
     mode !== undefined &&
@@ -333,8 +333,6 @@ function parseModes(
     return undefined;
   }
   return modesOf({
-    suite,
-    name: "",
     mode: mode as LuaTestResult["mode"],
     suiteModes: suiteModes as LuaSuiteMode[] | undefined,
   });
@@ -413,27 +411,30 @@ function parseResults(
 
 interface SuiteNode {
   readonly name: string;
-  /** The mode of the first `describe` of this name the file registered. */
+  /** Its mode: `describe`s of one name and one mode are one node. */
   readonly mode: LuaSuiteMode;
   readonly children: (SuiteNode | PlannedTest)[];
 }
 
-/** Nests the flat tests under their `describe` names, in first-seen order. */
+/**
+ * Nests the flat tests under their `describe` names, in first-seen order;
+ * a `describe.skip` or `describe.only` of a name a plain `describe` has is
+ * a node of its own.
+ */
 function suiteTree(tests: readonly PlannedTest[]): SuiteNode["children"] {
   const root: SuiteNode = { name: "", mode: "run", children: [] };
   for (const result of tests) {
     let node = root;
     for (const [depth, name] of result.suite.entries()) {
+      const mode = result.suiteModes?.[depth] ?? "run";
       let child = node.children.find(
         (candidate): candidate is SuiteNode =>
-          "children" in candidate && candidate.name === name,
+          "children" in candidate &&
+          candidate.name === name &&
+          candidate.mode === mode,
       );
       if (child === undefined) {
-        child = {
-          name,
-          mode: result.suiteModes?.[depth] ?? "run",
-          children: [],
-        };
+        child = { name, mode, children: [] };
         node.children.push(child);
       }
       node = child;
@@ -457,11 +458,9 @@ function register(children: SuiteNode["children"], inSuite32 = false): void {
       DESCRIBES[child.mode](child.name, () => {
         register(child.children, marked);
       });
-    } else if (marked) {
-      test.skip(child.name, () => undefined);
-    } else if (child.mode === "todo") {
+    } else if (child.mode === "todo" && !marked) {
       test.todo(child.name);
-    } else if (child.mode === "skip") {
+    } else if (marked || child.mode === "skip") {
       test.skip(child.name, () => undefined);
     } else {
       (child.mode === "only" ? test.only : test)(child.name, (context) => {
