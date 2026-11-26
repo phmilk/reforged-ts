@@ -68,16 +68,17 @@ export class Timer extends Handle<timer> {
    *   other: during the countdown a `resume` continues, `elapsed` goes on
    *   from what it read at the `pause`.
    * - A paused Timer reads `timeout` minus what was left at the `pause`,
-   *   which is what it read then, but in a periodic Timer's handler: paused
-   *   there, it reads 0, its next countdown not begun. A one-shot Timer
-   *   reads `timeout` from its handler on.
+   *   which is what it read then.
+   * - Paused in a periodic Timer's handler, it reads 0: the next countdown
+   *   has not begun.
+   * - A one-shot Timer reads `timeout` from its handler on.
    * - A Timer never started reads 0.
    * @returns The elapsed time, in seconds.
    * @native TimerGetElapsed
    * @native TimerGetRemaining
    */
   public get elapsed(): number {
-    const countdown = this.tracked();
+    const countdown = this.storedCountdown();
     if (countdown === undefined) {
       return TimerGetElapsed(this.handle);
     }
@@ -121,7 +122,7 @@ export class Timer extends Handle<timer> {
    * @native TimerGetTimeout
    */
   public get timeout(): number {
-    return this.tracked()?.timeout ?? TimerGetTimeout(this.handle);
+    return this.storedCountdown()?.timeout ?? TimerGetTimeout(this.handle);
   }
 
   /**
@@ -279,11 +280,13 @@ export class Timer extends Handle<timer> {
   }
 
   /**
-   * The countdown the readings answer from, or undefined when they read the
-   * Natives: before the first start through this Wrapper, and while an
-   * ordinary start runs, where the Natives are right.
+   * The countdown `elapsed` and `timeout` answer from, or undefined when they
+   * read the Natives: before the first start through this Wrapper, and while
+   * an ordinary start runs, where the Natives are right. `remaining` reads
+   * the Native while resumed too, since the restart for what was left counts
+   * down to the next expiry.
    */
-  private tracked(): Countdown | undefined {
+  private storedCountdown(): Countdown | undefined {
     const countdown = this.countdown;
     return countdown?.state === "running" ? undefined : countdown;
   }
