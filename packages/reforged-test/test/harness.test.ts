@@ -262,6 +262,63 @@ describe("a Native without a Stub, on reforged-test/map", () => {
   });
 });
 
+describe("game.fire and the Event dispatch, on reforged-test/map", () => {
+  const [dispatch] = runLuaTestFiles({ outDir: outDir("dispatch") });
+
+  /** The names of the tests of one describe of the fixture. */
+  function suite(name: string): { name: string; status: string }[] {
+    return dispatch.tests
+      .filter((test) => test.suite[0] === name)
+      .map((test) => ({ name: test.name, status: test.status }));
+  }
+
+  /** The tests of one describe, each passing. */
+  function passing(...names: string[]): { name: string; status: string }[] {
+    return names.map((name) => ({ name, status: "pass" }));
+  }
+
+  it("runs every Trigger of the event in registration order, the disabled and destroyed skipped", () => {
+    expect(suite("the Event dispatch")).toEqual(
+      passing(
+        "runs every Trigger in registration order, each condition before its action",
+        "skips a disabled or destroyed Trigger, and a failed condition runs no action",
+        "checks a Trigger disabled by an earlier one's action when its turn comes",
+        "evaluates a registration's filter on the triggering unit, before the condition",
+        "runs a Trigger once per matching registration",
+        "is no error with no Trigger registered",
+        "answers GetTriggeringTrigger and GetTriggerEventId",
+        "leaves __stub_fire_trigger as it was: one Trigger the test holds",
+      ),
+    );
+  });
+
+  it("derives the subject by the event's family, naming a missing response", () => {
+    expect(suite("the subject, by the event's family")).toEqual(
+      passing(
+        "reaches the owner of GetTriggerUnit for a playerunitevent",
+        "reaches GetTriggerUnit for a unitevent, a filtered registration included",
+        "reaches GetTriggerPlayer for a playerevent",
+        "needs no subject for a gameevent",
+        "names the response a context lacks",
+        "refuses what is not an event of the four families",
+      ),
+    );
+  });
+
+  it("answers the Firing context during the dispatch only, writing no state", () => {
+    expect(suite("the Firing context")).toEqual(
+      passing(
+        "answers every response it names during the dispatch and nil outside it",
+        "answers a Native without a response Stub too, nil after the dispatch",
+        "gives a Native of another Stub its own answer back after the dispatch",
+        "writes no state and records no call of its own",
+        "lets a handler's error out of game.fire, the context put back",
+        "gives the game no emit",
+      ),
+    );
+  });
+});
+
 describe("beforeEach and afterEach, scoped by describe", () => {
   const log = join(
     mkdtempSync(join(tmpdir(), "reforged-test-hooks-")),
