@@ -315,7 +315,7 @@ describe("verdict", () => {
   // Work in flight is not the end of the work (#953): the Stop after it
   // finishes meets the check again.
   it.each(Object.entries(inFlight))(
-    "passes a stop while %s, whatever the facts",
+    "passes a stop while %s, even with an implement pending, commits ahead and no pull request",
     (_, rest) => {
       expect(
         verdict(stop(rest), { pending: true, ahead: 3, pullRequest: "none" }),
