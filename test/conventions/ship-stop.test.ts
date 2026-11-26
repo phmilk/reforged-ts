@@ -207,6 +207,50 @@ function blocked(result: ReturnType<typeof verdict>): string {
 
 const PASS = { verdict: "pass" };
 
+// Work in flight, as a Stop lists it: the two /code-review Subagents of #953,
+// a background command, and a wakeup the session scheduled.
+const inFlight = {
+  "two Subagents run": {
+    background_tasks: [
+      {
+        id: "a051049f07c3b73df",
+        type: "subagent",
+        status: "running",
+        description: "Standards review",
+        agent_type: "general-purpose",
+      },
+      {
+        id: "a6f2c9e1d04b8a7c3",
+        type: "subagent",
+        status: "running",
+        description: "Spec review",
+        agent_type: "general-purpose",
+      },
+    ],
+  },
+  "a background command runs": {
+    background_tasks: [
+      {
+        id: "bql96inc8",
+        type: "shell",
+        status: "running",
+        description: "Watch the pull request's checks",
+        command: "gh pr checks --watch",
+      },
+    ],
+  },
+  "a wakeup is scheduled": {
+    session_crons: [
+      {
+        id: "a7ca1007",
+        schedule: "18 3 27 10 *",
+        recurring: false,
+        prompt: "check the review",
+      },
+    ],
+  },
+};
+
 describe("verdict", () => {
   it.each([
     ["none", /no pull request/],
@@ -267,6 +311,17 @@ describe("verdict", () => {
       }),
     ).toEqual(PASS);
   });
+
+  // Work in flight is not the end of the work (#953): the Stop after it
+  // finishes meets the check again.
+  it.each(Object.entries(inFlight))(
+    "passes a stop while %s, whatever the facts",
+    (_, rest) => {
+      expect(
+        verdict(stop(rest), { pending: true, ahead: 3, pullRequest: "none" }),
+      ).toEqual(PASS);
+    },
+  );
 
   it("passes any other event", () => {
     expect(
@@ -332,6 +387,19 @@ describe("run", () => {
     expect(run(stop({ stop_hook_active: true }), read)).toEqual(PASS);
     expect(calls).toEqual([]);
   });
+
+  it.each(Object.entries(inFlight))(
+    "reads nothing on a stop while %s",
+    (_, rest) => {
+      const { calls, read } = readers({
+        transcript: IMPLEMENTED,
+        ahead: 2,
+        pullRequest: "[]",
+      });
+      expect(run(stop(rest), read)).toEqual(PASS);
+      expect(calls).toEqual([]);
+    },
+  );
 
   it("reads neither git nor gh when no implement is pending", () => {
     const { calls, read } = readers({
