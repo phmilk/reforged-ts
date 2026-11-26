@@ -8,12 +8,13 @@
  * Frontier. `frontierQuery` is pure: the fetched Spec and the login in, the
  * three lists out. `main` reads the Spec through the GitHub GraphQL API, the
  * login being the token's (the `gh` login's unless the environment sets
- * one), and prints them.
+ * one), and prints them: as text for a human, or with `--json` as one JSON
+ * object, `answerJson`, for an Agent to read by its fields.
  *
  * Self-contained on purpose, as the claim check: Node built-ins only and
  * erasable syntax only (no enum, no namespace, no parameter property), so
  * that Node 24 runs it from a checkout with no install and no build, as the
- * hook does: `node release/src/spec-frontier.ts <spec> [owner/name]`.
+ * hook does: `node release/src/spec-frontier.ts <spec> [owner/name] [--json]`.
  * Nothing is imported from the other release scripts, since Node maps no
  * `.js` specifier to a `.ts` file: `isRecord`, `errorMessage`, the GraphQL
  * call and the "started directly" test are copied from them.
@@ -177,6 +178,58 @@ export function renderAnswer(
         `${head(ticket)}: ${ticket.assignees.map((assignee) => `@${assignee}`).join(", ")}`,
     )
   );
+}
+
+/** A Ticket of the JSON form: what an Agent reads of it. */
+export interface TicketJson extends IssueRef {
+  title: string;
+  /** The logins assigned to it, in GitHub's order. */
+  assignees: string[];
+  /** Its open pull requests, as `IssueRef`s. */
+  pullRequests: IssueRef[];
+}
+
+/**
+ * The JSON form of the answer, as `main` prints it with `--json`: the
+ * Spec, the login and the three lists in the order the text prints them.
+ * A contract of `ship-spec` and `next-step`, which read it: a change to
+ * its shape changes them in the same pull request.
+ */
+export interface AnswerJson {
+  spec: IssueRef & { title: string };
+  login: string;
+  takeable: TicketJson[];
+  held: TicketJson[];
+  heldByOthers: TicketJson[];
+}
+
+/** `ref` as a plain `IssueRef`, whatever else it carries. */
+function refJson(ref: IssueRef): IssueRef {
+  return { repository: ref.repository, number: ref.number };
+}
+
+/** `ticket` as the JSON form holds it. */
+function ticketJson(ticket: FetchedTicket): TicketJson {
+  return {
+    ...refJson(ticket),
+    title: ticket.title,
+    assignees: [...ticket.assignees],
+    pullRequests: ticket.pullRequests.map(refJson),
+  };
+}
+
+/** The answer on `spec` as its JSON form, `AnswerJson`. */
+export function answerJson(
+  spec: FetchedSpec,
+  answer: FrontierAnswer,
+): AnswerJson {
+  return {
+    spec: { ...refJson(spec), title: spec.title },
+    login: answer.login,
+    takeable: answer.takeable.map(ticketJson),
+    held: answer.held.map(ticketJson),
+    heldByOthers: answer.heldByOthers.map(ticketJson),
+  };
 }
 
 // The GitHub API: reading the Spec.
@@ -515,27 +568,41 @@ async function tokenOf(context: Context): Promise<string> {
 /** The library: the repository of a Spec when none is named. */
 const DEFAULT_REPOSITORY = BOARD_REPOSITORIES[0];
 
-/** The Spec and its repository named by `args`, or `null` when they are no usage. */
+/** The flag that prints the answer as JSON, anywhere among the arguments. */
+const JSON_FLAG = "--json";
+
+/**
+ * The Spec, its repository and whether `--json` is among `args`, or
+ * `null` when they are no usage: any other flag is none.
+ */
 function argumentsOf(
   args: readonly string[],
-): { number: number; repository: string } | null {
-  const [spec, repository = DEFAULT_REPOSITORY] = args;
+): { number: number; repository: string; json: boolean } | null {
+  const positional = args.filter((arg) => arg !== JSON_FLAG);
+  const [spec, repository = DEFAULT_REPOSITORY] = positional;
   if (
-    args.length < 1 ||
-    args.length > 2 ||
+    positional.length < 1 ||
+    positional.length > 2 ||
+    positional.some((arg) => arg.startsWith("-")) ||
     !/^#?[1-9]\d*$/.test(spec) ||
     !/^[\w.-]+\/[\w.-]+$/.test(repository)
   ) {
     return null;
   }
-  return { number: Number(spec.replace("#", "")), repository };
+  return {
+    number: Number(spec.replace("#", "")),
+    repository,
+    json: positional.length < args.length,
+  };
 }
 
 /**
  * Prints the Frontier query's answer on Spec `args[0]` (`737` or `#737`)
  * of repository `args[1]` (`owner/name`, the library when absent) for
  * the login of the token: `GH_TOKEN`, else `GITHUB_TOKEN`, else `gh auth
- * token`, through the API at `GITHUB_API_URL`. Exit codes: 0 an answer, 1
+ * token`, through the API at `GITHUB_API_URL`. With `--json` among
+ * `args`, it prints `answerJson`'s object and a final newline in place of
+ * the text; errors stay text on stderr. Exit codes: 0 an answer, 1
  * a state it cannot read (no token, GitHub's error, an issue that is not a
  * Spec), 2 usage.
  */
@@ -567,7 +634,13 @@ export async function main(
         `${fullRef(spec)} is not a Spec: it is not labelled ${SPEC_LABEL}.`,
       );
     }
-    output.stdout(renderAnswer(spec, frontierQuery(spec, login)));
+    const answer = frontierQuery(spec, login);
+    output.stdout(
+      target.json
+        ? `${JSON.stringify(answerJson(spec, answer), null, 2)}
+`
+        : renderAnswer(spec, answer),
+    );
     return 0;
   } catch (error) {
     output.stderr(`${errorMessage(error)}\n`);
