@@ -27,7 +27,7 @@ export class BoardError extends Error {
   }
 }
 
-/** The mutations the plan sends, each named after what it does. */
+/** The mutations the plans send, each named after what it does. */
 export const BOARD_MUTATIONS = {
   createProject: `mutation CreateProject($ownerId: ID!, $title: String!) {
   createProjectV2(input: { ownerId: $ownerId, title: $title }) {

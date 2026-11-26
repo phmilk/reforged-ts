@@ -234,12 +234,14 @@ export const sub = (number: number, repository = LIBRARY): SubIssue => ({
   state: "OPEN",
 });
 
-/** A wayfinder map and a Spec of the library, as the parent of an issue. */
+/** A wayfinder map of the library, as the parent of an issue. */
 export const MAP = {
   repository: LIBRARY,
   number: 518,
   labels: ["wayfinder:map"],
 };
+
+/** A Spec of the library, as the parent of an issue. */
 export const SPEC = { repository: LIBRARY, number: 529, labels: ["spec"] };
 
 /**

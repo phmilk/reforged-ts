@@ -1,8 +1,8 @@
 /**
  * The Claim board, the entry point of its modules: every importer outside
- * them (the three board CLIs, `spec-check`, `spec-verdict`, the tests)
- * reads the board here, and this file holds re-exports only. One module per
- * subject, none of which imports this one:
+ * them (the CLIs, `spec-check`, `spec-verdict`, the tests) reads the board
+ * here, and this file holds re-exports only. One module per subject, none
+ * of which imports this one:
  *
  * - `board-definition.ts`: the board as code, one Projects (v2) project on
  *   the owner's account over both repositories (ADR 0016), and
