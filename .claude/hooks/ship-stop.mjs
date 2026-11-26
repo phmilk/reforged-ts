@@ -20,7 +20,9 @@
 // Skill tool call) ran after the last /ship-branch, read from the transcript by
 // implementPending(), a pure function over its lines; how many commits the
 // branch has ahead of the remote default, read with `git`; and the state of
-// the branch's pull request, read with `gh` (pullRequestStateOf()). run()
+// the branch's pull request, read with `gh` and, to tell a merged one that
+// shipped the branch as it stands, the branch's last commit
+// (pullRequestStateOf()). run()
 // reads the facts in that order, each only when the ones before it call for
 // it, through readers the script gives it; the rest is those readers and the
 // printing of the output after reading stdin. The hook never fails a stop on
@@ -75,7 +77,8 @@ import { fileURLToPath } from "node:url";
  * @property {() => readonly string[]} transcript
  * @property {() => number} ahead
  * @property {() => string} pullRequest
- * @property {() => string} head The hash of the branch's last commit.
+ * @property {() => string} lastCommit The hash of the branch's last
+ *   commit, read with the pull request.
  */
 
 /**
@@ -171,17 +174,17 @@ export function implementPending(lines) {
 /**
  * The state of the branch's pull request from the answer of
  * `gh pr list --head <branch> --state all --json
- * state,isDraft,autoMergeRequest,headRefOid`, given `head`, the hash of the
- * branch's last commit: the open one's when there is one; else merged, when
- * one was merged with `head` as its head, so that commits made after a
- * merge are still unshipped; else none, a closed one included. Throws on
- * any other answer.
+ * state,isDraft,autoMergeRequest,headRefOid`, given `lastCommit`, the hash
+ * of the branch's last commit: the open one's when there is one; else
+ * merged, when one was merged with `lastCommit` as its head, so that
+ * commits made after a merge are still unshipped; else none, a closed one
+ * included. Throws on any other answer.
  *
  * @param {string} answer
- * @param {string} head
+ * @param {string} lastCommit
  * @returns {PullRequestState}
  */
-export function pullRequestStateOf(answer, head) {
+export function pullRequestStateOf(answer, lastCommit) {
   /** @type {unknown} */
   const list = JSON.parse(answer);
   if (!Array.isArray(list)) throw new Error("gh pr list: not a list");
@@ -204,7 +207,7 @@ export function pullRequestStateOf(answer, head) {
     return open.autoMergeRequest === null ? "open" : "auto-merge";
   }
   return pullRequests.some(
-    ({ state, headRefOid }) => state === "MERGED" && headRefOid === head,
+    ({ state, headRefOid }) => state === "MERGED" && headRefOid === lastCommit,
   )
     ? "merged"
     : "none";
@@ -272,7 +275,10 @@ export function run(input, read) {
     if (!facts.pending) return decide();
     facts.ahead = read.ahead();
     if (facts.ahead <= 0) return decide();
-    facts.pullRequest = pullRequestStateOf(read.pullRequest(), read.head());
+    facts.pullRequest = pullRequestStateOf(
+      read.pullRequest(),
+      read.lastCommit(),
+    );
   } catch {
     return { verdict: "pass" };
   }
@@ -366,7 +372,7 @@ function readersOf(input) {
         GH_TIMEOUT_MS,
       );
     },
-    head: () => git("rev-parse", "HEAD"),
+    lastCommit: () => git("rev-parse", "HEAD"),
   };
 }
 

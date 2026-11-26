@@ -537,9 +537,11 @@ On a branch, then: the release's dry run runs, its jobs of their own doing witho
 
 One environment, `app`, serves every job that mints the App's token, rather than one per workflow: the key is the same in each, and one copy is one secret to rotate. It is not the environment `board`, so the jobs that hold the App never hold the board's token, nor the board's `reconcile` job the App's key: `board.yml`'s `labels` job, which writes the labels of an open Spec with the App, runs in `app` and never holds `PROJECT_TOKEN`. Until the maintainer deletes it, the repository secret `APP_PRIVATE_KEY` from before the environment is still there, readable by a workflow of any branch, but no workflow reads it: each job's `secrets.APP_PRIVATE_KEY` resolves to the environment's copy first.
 
-**What each token may write.** Measured, since a scope's name does not say it, and an Agent holds neither token to try: a Spec that adds a write to GitHub names the token that makes it from this list, or measures it first.
+#### What each token may write
 
-- `PROJECT_TOKEN` (classic, `project` alone) writes the project and nothing in a repository, though it reads public issues: a label is refused (#740, [ADR 0025](adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)), and so is `setIssueStatus`, `INSUFFICIENT_SCOPES`, which names `public_repo` (#959). `viewerCanSetStatus` answers `true` to it all the same, so that field predicts nothing. Widening it to `public_repo` was turned down (ADR 0025).
+Measured, since a scope's name does not say it, and an Agent holds neither token to try.
+
+- `PROJECT_TOKEN` (classic, `project` alone) writes the project and nothing in a repository, though it reads public issues: a label is refused (#740), and so is `setIssueStatus`, `INSUFFICIENT_SCOPES`, which names `public_repo` (#959). `viewerCanSetStatus` answers `true` to it all the same, so that field predicts nothing. Widening it to `public_repo` was turned down ([ADR 0025](adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)).
 - The App's installation token, minted with `issues: write`, writes labels, comments and `setIssueStatus` in both Board repositories (#740, #796, #959), and does not reach the user-owned project.
 
 No npm token exists anywhere. A job that needs a missing one fails at its first step, naming it: the App steps name `APP_CLIENT_ID` or `APP_PRIVATE_KEY`, and the board's run names `PROJECT_TOKEN` at its first read. The Template is public, so the Template clone needs no token.
@@ -703,7 +705,7 @@ The rules are `statusOf` in `release/src/board.ts`, a pure function of the issue
 
 **The labels.** `pnpm board:labels` gives every open Spec of both repositories its pair of labels ([ADR 0025](adr/0025-only-a-split-specs-unblocked-tickets-are-worked.md)): with no sub-issue, open or closed, it is unsplit, so `needs-split` in and `ready-for-agent` out; with one or more, the reverse. A Spec carrying another triage label (`ready-for-human`, `needs-triage`, `needs-info`, `wontfix`) keeps it and gets or loses `needs-split` alone. A split made by any skill, or by hand, flips the pair within the hour. The rule is `specLabelsOf` in `release/src/board.ts`, pure, which the Status rules read too, so that a Status never waits on a label write; `planBoardLabels` turns it into one add and one removal at most per Spec, in that repository's own labels; a Spec already right draws no request. It stops, naming it, on a label missing from a repository: `pnpm repo:settings` creates `needs-split` in this one, and the Template's was created by hand. The token is `LABELS_TOKEN`, else, locally, the `gh` login's (it says which); `PROJECT_TOKEN` writes no label.
 
-**The Issue status.** Between the labels and the coverage check, `pnpm board:labels` mirrors each Status into the Issue status, the status GitHub shows on the issue itself (#958): every open Member ("Members and archiving" above), whether or not it has an item yet, gets the Issue status its Status maps to, the Status `statusOf` derives, as the reconcile does.
+**The Issue status.** Between the labels and the coverage check, `pnpm board:labels` mirrors each Status into the Issue status, the status GitHub shows on the issue itself (#958): every open Member ("Members and archiving" above) gets the Issue status its Status maps to, the Status `statusOf` derives, as the reconcile does.
 
 | Status on the Claim board | Issue status |
 | ------------------------- | ------------ |

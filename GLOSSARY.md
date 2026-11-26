@@ -186,7 +186,7 @@ _Avoid_: eject, release (a library release is something else)
 
 **Collaborator**:
 A person with push access to one of the two repositories, `phmilk/reforged-ts` or `phmilk/reforged-ts-template`; the maintainer is one.
-_Avoid_: contributor (anyone who opens a pull request, push access or not), member, dev
+_Avoid_: contributor (anyone who opens a pull request, push access or not), member (a Member is an issue of the Claim board), dev
 
 **Agent**:
 An AI coding agent a Collaborator runs; GitHub sees it as that Collaborator's login, so everything it writes, a Claim included, is the Collaborator's.
@@ -221,7 +221,7 @@ The one Projects board of the project, over every Board repository, where each o
 _Avoid_: project board (any Projects board), kanban, the board of reforged-ts (it is the project's)
 
 **Member**:
-An issue the Claim board holds or is to hold: every open issue of a Board repository that no bot but the repositories' GitHub App authored, from the moment it opens, whether or not the board has made its item yet.
+An issue the Claim board holds or is to hold: every issue of a Board repository that no bot but the repositories' GitHub App authored, from the moment it opens, whether or not the board has made its item yet, and once closed for as long as its item stays.
 _Avoid_: item (the board's record of a Member, which a new Member lacks until the next run), card (how an item shows)
 
 **Issue status**:

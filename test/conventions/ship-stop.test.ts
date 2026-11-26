@@ -178,8 +178,10 @@ describe("implementPending", () => {
   });
 });
 
-/** The hash of the branch's last commit in these tests, and an older one. */
+/** The hash of the branch's last commit in these tests. */
 const HEAD = "835a4c7d00000000000000000000000000000000";
+
+/** The hash of a commit before it: the head of a pull request merged earlier. */
 const OLDER = "135187aa00000000000000000000000000000000";
 
 /** One pull request as `gh pr list` answers it, open and not a draft unless told otherwise. */
@@ -228,16 +230,20 @@ describe("pullRequestStateOf", () => {
       ),
       "draft",
     ],
-  ])("reads %s as such", (_, answer, state) => {
+  ])("reads %s", (_, answer, state) => {
     expect(pullRequestStateOf(answer, HEAD)).toBe(state);
   });
 
-  it.each(["", "{ not json", '{"isDraft":false}', "[1]"])(
-    "throws on %j, which is no answer of gh pr list",
-    (answer) => {
-      expect(() => pullRequestStateOf(answer, HEAD)).toThrow();
-    },
-  );
+  it.each([
+    "",
+    "{ not json",
+    '{"isDraft":false}',
+    "[1]",
+    '[{"isDraft":false,"autoMergeRequest":null,"headRefOid":"835a4c7d"}]',
+    '[{"state":"MERGED","isDraft":false,"autoMergeRequest":null}]',
+  ])("throws on %j, which is no answer of gh pr list", (answer) => {
+    expect(() => pullRequestStateOf(answer, HEAD)).toThrow();
+  });
 });
 
 // The reason of a verdict that blocks; fails on a pass.
@@ -387,7 +393,7 @@ function readers(answers: {
   transcript: readonly string[] | Error;
   ahead?: number | Error;
   pullRequest?: string | Error;
-  head?: string | Error;
+  lastCommit?: string | Error;
 }) {
   const calls: string[] = [];
   const answer = <T>(name: string, value: T | Error | undefined): T => {
@@ -402,7 +408,7 @@ function readers(answers: {
       transcript: () => answer("transcript", answers.transcript),
       ahead: () => answer("ahead", answers.ahead),
       pullRequest: () => answer("pullRequest", answers.pullRequest),
-      head: () => answer("head", answers.head ?? HEAD),
+      lastCommit: () => answer("lastCommit", answers.lastCommit ?? HEAD),
     },
   };
 }
@@ -420,7 +426,7 @@ describe("run", () => {
     expect(result).toEqual(
       verdict(stop(), { pending: true, ahead: 2, pullRequest: "none" }),
     );
-    expect(calls).toEqual(["transcript", "ahead", "pullRequest", "head"]);
+    expect(calls).toEqual(["transcript", "ahead", "pullRequest", "lastCommit"]);
   });
 
   it("passes an open pull request with auto-merge", () => {
