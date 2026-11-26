@@ -34,11 +34,11 @@ The **ledger** is the end comment in the making: one line per merged pull reques
 
       ```sh
       git fetch origin master
-      git worktree add .claude/worktrees/<ticket> -b <type>/<ticket>-<slug> origin/master
+      git worktree add --no-track .claude/worktrees/<ticket> -b <type>/<ticket>-<slug> origin/master
       git -C .claude/worktrees/<ticket> merge-base --is-ancestor origin/master HEAD
       ```
 
-      `<type>` is the Conventional Commits type of the work, `<slug>` a few kebab-case words of the Ticket's title.
+      `<type>` is the Conventional Commits type of the work, `<slug>` a few kebab-case words of the Ticket's title. `--no-track` leaves the branch without an upstream: made from `origin/master` without it, the branch tracks `master`, and a bare `git push` or `git pull` in the worktree aims at the default branch. The implementer pushes it by name, `git push -u origin <branch>`.
 
    5. **Spawn its implementer**, an unnamed Subagent with the prompt of [`implementer.md`](implementer.md), its placeholders filled. Keep its id.
 
@@ -51,7 +51,14 @@ The **ledger** is the end comment in the making: one line per merged pull reques
    Before relaying anything, check the real state: the worktree's commits, `gh pr view <pr> --json state,isDraft,autoMergeRequest`. Done when each report is matched to the state it claims.
 
 7. **Watch each pull request** until it merges or stops, with a Monitor (or a background command with a bounded runtime) on `gh pr view <pr> --json state,mergeStateStatus,statusCheckRollup`, never a turn ended on a wait with nothing to wake you:
-   - **Merged:** put it in the ledger, remove its worktree and branch (`git worktree remove .claude/worktrees/<ticket>`, `git branch -D <branch>`, through the Template's checkout for a Template Ticket), and go to step 3: the Tickets its merge unblocked start from the new default branch.
+   - **Merged:** put it in the ledger, remove its worktree and branch, and go to step 3: the Tickets its merge unblocked start from the new default branch. The removal is three commands, each run whatever the one before it printed, through the Template's checkout for a Template Ticket:
+
+     ```sh
+     git worktree remove .claude/worktrees/<ticket>
+     rm -rf .claude/worktrees/<ticket>   # on Windows, the remove unregisters it but leaves the folder: "Directory not empty"
+     git branch -D <branch>
+     ```
+
    - **`DIRTY`:** another merge conflicts with it. Continue its implementer by its id: merge `origin/master` (the Template's `origin/main` for a Template Ticket) into the branch, resolved by intent ([Merge conflicts](#merge-conflicts)), run the checks the merge touches, push.
    - **A required check red:** settle it as [A red CI](#a-red-ci) says: one rerun of a known flake, or one fix, then a stop.
    - **Auto-merge off,** its body naming what waits for a human: stop the Ticket.
@@ -123,11 +130,12 @@ The full `pnpm check` of every worktree, the Template's included, runs one at a 
 
 ```sh
 lock="$(git rev-parse --path-format=absolute --git-common-dir)/ship-spec-check.lock"          # in the library's clone
-until mkdir "$lock" 2>/dev/null; do sleep 15; done; echo "<spec> <ticket>" > "$lock/holder"   # take it
+timeout 150 sh -c 'until mkdir "$1" 2>/dev/null; do sleep 10; done' _ "$lock"                 # one try to take it
+echo "<spec> <ticket>" > "$lock/holder"                                                       # once a try took it
 rm -rf "$lock"                                                                                # release it
 ```
 
-A wait that reaches its ten-minute timeout is run again. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
+The wait is a series of short tries: a try that ends on its timeout (exit 124) took nothing, and is run again, as its own foreground command. Another worktree's check holds the lock for many minutes, and a single wait that long is moved to the background by the harness after about three minutes, where the implementer ends its turn waiting on it and idles until a message resumes it (#814's run). Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
 
 - its holder names this run's Spec and a Ticket of it not in flight now (at step 2, none is): remove it when you remove that Ticket's worktree, or at step 2;
 - its folder is older than the longest check: the `check` script's commands at ten minutes each, with a margin, two hours: `find "$lock" -maxdepth 0 -mmin +120` prints it. A lock with no holder file yet, between its `mkdir` and its `echo`, is judged by the folder's age alone.
