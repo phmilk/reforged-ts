@@ -8,7 +8,8 @@ import { tempDir } from "./support/workspace.js";
 const SCRIPT = join(repositoryRoot, "release", "src", "spec-frontier.ts");
 const LIBRARY = "phmilk/reforged-ts";
 const TEMPLATE = "phmilk/reforged-ts-template";
-const USAGE = "Usage: node release/src/spec-frontier.ts <spec> [owner/name]\n";
+const USAGE =
+  "Usage: node release/src/spec-frontier.ts <spec> [owner/name] [--json]\n";
 
 interface Received {
   authorization: string | undefined;
@@ -360,6 +361,192 @@ describe("spec-frontier", () => {
     expect(result.stderr).toBe(
       "#11 is blocked by 51 issues, more than the 0 read: the query cannot say whether one is open.\n",
     );
+  });
+
+  describe("--json", () => {
+    /** The Spec as `--json` prints it. */
+    const SPEC = { repository: LIBRARY, number: 10, title: "The Spec" };
+
+    /**
+     * Tickets in every list for @alice: one she holds with @dave, with an
+     * open pull request in each repository and a merged one, and a closed
+     * Ticket, in no list.
+     */
+    function everyListTickets(): unknown[] {
+      return [
+        ticketNode(11),
+        ticketNode(12, {
+          assignees: ["alice", "dave"],
+          pullRequests: [
+            { repository: LIBRARY, number: 40, state: "OPEN" },
+            { repository: TEMPLATE, number: 7, state: "OPEN" },
+            { repository: LIBRARY, number: 39, state: "MERGED" },
+          ],
+        }),
+        ticketNode(13, { assignees: ["bob"] }),
+        ticketNode(14, {
+          blockers: [{ repository: LIBRARY, number: 11, state: "OPEN" }],
+        }),
+        ticketNode(117, { repository: TEMPLATE, assignees: ["alice"] }),
+        ticketNode(15, { state: "CLOSED" }),
+      ];
+    }
+
+    /** The JSON object `--json` prints for `everyListTickets()`, for @alice. */
+    const OBJECT = {
+      spec: SPEC,
+      login: "alice",
+      takeable: [
+        {
+          repository: LIBRARY,
+          number: 11,
+          title: "Ticket 11",
+          assignees: [],
+          pullRequests: [],
+        },
+        {
+          repository: TEMPLATE,
+          number: 117,
+          title: "Ticket 117",
+          assignees: ["alice"],
+          pullRequests: [],
+        },
+      ],
+      held: [
+        {
+          repository: LIBRARY,
+          number: 12,
+          title: "Ticket 12",
+          assignees: ["alice", "dave"],
+          pullRequests: [
+            { repository: LIBRARY, number: 40 },
+            { repository: TEMPLATE, number: 7 },
+          ],
+        },
+        {
+          repository: TEMPLATE,
+          number: 117,
+          title: "Ticket 117",
+          assignees: ["alice"],
+          pullRequests: [],
+        },
+      ],
+      heldByOthers: [
+        {
+          repository: LIBRARY,
+          number: 13,
+          title: "Ticket 13",
+          assignees: ["bob"],
+          pullRequests: [],
+        },
+      ],
+    };
+
+    it("prints the answer as one JSON object and a final newline, and exits 0", async () => {
+      answer = specData(everyListTickets());
+
+      const result = await run(["10", "--json"]);
+
+      expect(result.code).toBe(0);
+      expect(result.stderr).toBe("");
+      expect(result.stdout.endsWith("}\n")).toBe(true);
+      expect(JSON.parse(result.stdout)).toEqual(OBJECT);
+      expect(Object.keys(JSON.parse(result.stdout) as object)).toEqual([
+        "spec",
+        "login",
+        "takeable",
+        "held",
+        "heldByOthers",
+      ]);
+    });
+
+    it.each([
+      ["before the Spec", ["--json", "10"]],
+      ["between the Spec and its repository", ["10", "--json", LIBRARY]],
+      ["after the repository", ["#10", LIBRARY, "--json"]],
+    ])("takes the flag %s", async (_, args) => {
+      answer = specData(everyListTickets());
+
+      const result = await run(args);
+
+      expect(result.code).toBe(0);
+      expect(JSON.parse(result.stdout)).toEqual(OBJECT);
+      expect(variables()).toEqual({
+        owner: "phmilk",
+        name: "reforged-ts",
+        number: 10,
+      });
+    });
+
+    it("prints empty lists for a Spec with no Ticket", async () => {
+      answer = specData([]);
+
+      const result = await run(["10", "--json"]);
+
+      expect(result).toEqual({
+        code: 0,
+        stdout: `${JSON.stringify(
+          {
+            spec: SPEC,
+            login: "alice",
+            takeable: [],
+            held: [],
+            heldByOthers: [],
+          },
+          null,
+          2,
+        )}\n`,
+        stderr: "",
+      });
+    });
+
+    it("keeps errors as text on stderr, exit 1 and nothing on stdout", async () => {
+      answer = specData([ticketNode(11)], { labels: ["ticket"] });
+
+      const result = await run(["--json", "10"]);
+
+      expect(result).toEqual({
+        code: 1,
+        stdout: "",
+        stderr: `${LIBRARY}#10 is not a Spec: it is not labelled spec.\n`,
+      });
+    });
+
+    it.each([
+      ["an unknown flag", ["10", "--jsno"]],
+      ["an unknown flag with --json", ["--json", "-v", "10"]],
+      ["--json alone", ["--json"]],
+      ["one argument too many beside --json", ["10", TEMPLATE, "x", "--json"]],
+    ])("exits 2 on %s, with the usage and no request", async (_, args) => {
+      const result = await run(args);
+
+      expect(result).toEqual({ code: 2, stdout: "", stderr: USAGE });
+      expect(received).toEqual([]);
+    });
+
+    it("leaves the text output unchanged without the flag", async () => {
+      answer = specData(everyListTickets());
+
+      const result = await run(["10"]);
+
+      expect(result).toEqual({
+        code: 0,
+        stdout:
+          `Spec #10 of ${LIBRARY}, "The Spec", for @alice.\n` +
+          "\n" +
+          "Takeable now (open, no open blocker, no assignee but @alice):\n" +
+          "- #11 Ticket 11\n" +
+          `- ${TEMPLATE}#117 Ticket 117 (held by @alice)\n` +
+          "\n" +
+          "Held by @alice:\n" +
+          `- #12 Ticket 12: pull request #40, pull request ${TEMPLATE}#7\n` +
+          `- ${TEMPLATE}#117 Ticket 117: no open pull request\n` +
+          "\n" +
+          "Held by other logins:\n" +
+          "- #13 Ticket 13: @bob\n",
+        stderr: "",
+      });
+    });
   });
 
   it("exits 1 with no token and no gh to ask one of", async () => {
