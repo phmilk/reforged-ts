@@ -1,5 +1,11 @@
 # reforged-test
 
+## 1.0.0-alpha.11
+
+### Patch Changes
+
+- [#1010](https://github.com/phmilk/reforged-ts/pull/1010) [`533f444`](https://github.com/phmilk/reforged-ts/commit/533f444a5b987c8481d47d3563ee4e6133b64162) Thanks [@wyller](https://github.com/wyller)! - The README splits into "Testing a map", which sends a Map project to the guide "Testing your map", and "Testing a library", the harness level of the library's own tests. A helper a map's test needs that `reforged-test/map` does not export is a gap of the package, to file as an issue.
+
 ## 1.0.0-alpha.10
 
 ### Patch Changes
