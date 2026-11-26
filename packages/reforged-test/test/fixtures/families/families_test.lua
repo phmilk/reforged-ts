@@ -744,3 +744,25 @@ describe("the constant families of the 3.0.0 members", function()
     expect(since(mark)).toEqual({ "BlzCreateDestructableWithColor(1, 0, 0, 0, 1, 0, PLAYER_COLOR_BLACK)" })
   end)
 end)
+
+describe("the Dispatching Natives", function()
+  -- The same Shipped stubs on reforged-test/lua: KillUnit fires the death
+  -- Triggers inside the call (docs/research/unit-event-timing.md).
+  it("dispatch on reforged-test/lua too: KillUnit fires the death inside the call", function()
+    local unit = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
+    local dying
+    local trigger = CreateTrigger()
+    TriggerAddAction(trigger, function() dying = GetDyingUnit() end)
+    TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DEATH)
+    local ref = __stub_format(unit)
+    local mark = #runner.stubCalls()
+    KillUnit(unit)
+    expect(dying).toBe(unit)
+    expect(UnitAlive(unit)).toBe(false)
+    expect(since(mark)).toEqual({
+      "KillUnit(" .. ref .. ")",
+      "GetDyingUnit()",
+      "UnitAlive(" .. ref .. ")",
+    })
+  end)
+end)

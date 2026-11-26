@@ -1,10 +1,11 @@
 -- reforged-test stubs for the triggers family. CreateTrigger is in base.lua,
 -- the baseline every test can rely on (the library's globals stage creates
 -- the sync Trigger with it). A trigger never fires on its own: it stores its
--- actions and conditions, and fires only on the test's order. A test fires
--- one trigger it holds with __stub_fire_trigger and the context the response
--- Natives answer from, or one event with __stub_dispatch, which reaches every
--- trigger registered for it. Registrations are remembered where a delivery
+-- actions and conditions, and fires only on the test's order, or inside a
+-- Dispatching Native (KillUnit, SetUnitOwner and the item ones, units.lua).
+-- A test fires one trigger it holds with __stub_fire_trigger and the context
+-- the response Natives answer from, or one event with __stub_dispatch, which
+-- reaches every trigger registered for it. Registrations are remembered where a delivery
 -- needs them: the ones that name their event (__stub_dispatch), the damage
 -- ones (__stub_dispatch_damage) and the sync ones (__stub_deliver_sync).
 
@@ -233,14 +234,14 @@ local responses = {
   -- the trigger and the event
   "GetTriggeringTrigger", "GetTriggerEventId", "GetTriggerWidget", "GetTriggerDestructable",
   -- units
-  "GetTriggerUnit", "GetKillingUnit", "GetAttacker",
+  "GetTriggerUnit", "GetDyingUnit", "GetKillingUnit", "GetAttacker",
   "GetEventDamageSource", "BlzGetEventDamageTarget", "GetEventDamage",
   "BlzGetEventAttackType", "BlzGetEventDamageType", "BlzGetEventWeaponType", "BlzGetEventIsAttack",
   "GetSpellAbilityUnit", "GetSpellAbilityId", "GetSpellTargetUnit", "GetSpellTargetItem",
   "GetSpellTargetDestructable", "GetSpellTargetX", "GetSpellTargetY",
   "GetOrderedUnit", "GetIssuedOrderId", "GetOrderPointX", "GetOrderPointY",
   "GetOrderTargetUnit", "GetOrderTarget",
-  "GetManipulatedItem", "GetEquippedItem", "BlzGetEquippedItem", "GetUnequippedItem", "BlzGetUnequippedItem",
+  "GetManipulatingUnit", "GetManipulatedItem", "GetEquippedItem", "BlzGetEquippedItem", "GetUnequippedItem", "BlzGetUnequippedItem",
   "GetSoldItem",
   "GetTrainedUnit", "GetConstructedStructure", "GetResearched", "GetLevelingUnit", "GetLearnedSkill",
   "GetChangingUnit", "GetChangingUnitPrevOwner", "GetSummoningUnit", "GetSummonedUnit",
