@@ -1,5 +1,11 @@
 # reforged-test
 
+## 1.0.0-alpha.10
+
+### Patch Changes
+
+- [#1006](https://github.com/phmilk/reforged-ts/pull/1006) [`898ccc5`](https://github.com/phmilk/reforged-ts/commit/898ccc577bdb83d219d3792ed9c3a6f4741f471d) Thanks [@wyller](https://github.com/wyller)! - Every export of `reforged-test/map` now carries an example in its doc comment, which the editor shows on hover: a complete test file the package compiles and runs. The docs site gains a `reforged-test` section in its API reference, generated from `reforged-test/map` alone.
+
 ## 1.0.0-alpha.9
 
 ### Minor Changes
