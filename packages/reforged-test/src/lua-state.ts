@@ -1,4 +1,5 @@
-// One Lua 5.3 state per compiled test file, on lua-wasm-bindings.
+// One Lua 5.3 state per compiled test file, or per test of a file that
+// loads reforged-test/map, on lua-wasm-bindings.
 //
 // Every call into the VM that can raise goes through lua_pcall, so a Lua
 // error comes back as a status code and a message on the stack; it never
@@ -74,13 +75,14 @@ export const RUN_GLOBAL = "__reforged_test_run";
 /**
  * Runs one test module in a fresh state: the standard libraries, the stub
  * chunks in order, every module in `package.preload`, then
- * `require(testModule)` and the runner's global. Returns the runner's JSON;
- * throws LuaError when any step raises.
+ * `require(testModule)` and the runner's global, given `position` when it
+ * is set. Returns the runner's JSON; throws LuaError when any step raises.
  */
 export function runTestModule(
   stubs: readonly Chunk[],
   modules: readonly LuaModule[],
   testModule: string,
+  position?: number,
 ): string {
   const { lua, lauxlib, lualib } = vm();
   const L = lauxlib.luaL_newstate();
@@ -114,7 +116,12 @@ export function runTestModule(
         `${testModule} did not load the reforged-test runner: the global ${RUN_GLOBAL} is not a function`,
       );
     }
-    call(L, 0, 1);
+    if (position === undefined) {
+      call(L, 0, 1);
+    } else {
+      lua.lua_pushstring(L, String(position));
+      call(L, 1, 1);
+    }
     if (lua.lua_type(L, -1) !== LUA_TSTRING) {
       throw new LuaError(
         `${RUN_GLOBAL} returned a ${typeName(L, -1)}, expected a JSON string`,

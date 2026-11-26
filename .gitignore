@@ -111,6 +111,7 @@ packages/reforged-types/build/
 
 # reforged-test build output: the glue in dist/ (ignored above) and the runner's Lua
 packages/reforged-test/lua/
+packages/reforged-test/map/
 
 # reforged-ts test build output: the library and its tests compiled to Lua,
 # and the library and its examples

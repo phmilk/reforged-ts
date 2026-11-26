@@ -38,6 +38,8 @@
     "/dist/**/*.d.ts",
     "/lua/**/*.lua",
     "/lua/**/*.d.ts",
+    "/map/**/*.lua",
+    "/map/**/*.d.ts",
     "/stubs/**/*.lua",
     "/stubs/**/*.d.ts",
     "/LICENSE",

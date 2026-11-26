@@ -88,6 +88,38 @@ What the test relies on:
 - **One Lua state per file.** Each test file runs in a fresh Lua state: the stubs load, then the file, then its `it`s in order. The `it`s of one file share the state, its Handles and its call log.
 - **Nothing fires on its own.** No time passes and no event happens: the test enters an Init stage by calling the editor's entry point, and fires triggers and timers with the helpers below.
 
+## A game per test
+
+A test that imports from `reforged-test/map` runs in a game of its own, and starts that game itself:
+
+```ts title="tests/lua/welcome.test.ts"
+import { expect, it, startGame } from "reforged-test/map";
+import { Init, MapPlayer } from "reforged-ts";
+
+Init.onGameStart(() => {
+  print("Welcome!");
+  const host = MapPlayer.fromIndex(0);
+  if (host !== undefined) host.displayTimedText(0, 0, 10, "You are the host");
+});
+
+it("greets the players when the game starts", () => {
+  const game = startGame();
+  expect(game.printed).toEqual(["Welcome!"]);
+  expect(game.displayed).toMatchObject([
+    { text: "You are the host", duration: 10 },
+  ]);
+});
+
+it("starts from nothing", () => {
+  const game = startGame();
+  expect(game.printed).toEqual(["Welcome!"]);
+});
+```
+
+- **A fresh game for each test.** The file is loaded again for each test, in a Lua state of its own, so its top-level code runs once per test, and no test sees the units, the Native calls or the printed lines of another. The order of the tests changes nothing.
+- **`startGame()`** runs the map's initialization as the game does, through the Init stages, and returns the test's `game`. Call it once per test, in the test or at the top of the file; a second call in the same test throws, saying the game already started.
+- **What the player observes.** `game.printed` holds every line printed since the game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` holds every message shown on a player's screen, as `{ text, player, duration }`. Each read is a copy, taken at the moment you read it.
+
 ## Driving the game
 
 The shipped stubs record every Native call and give the test these helpers. They are Lua globals, not Natives; the Template declares the first three in `tests/lua/stubs.d.ts`, and a test declares any other it calls, as the test above declares `__stub_args`.

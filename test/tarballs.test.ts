@@ -119,6 +119,7 @@ const PACKAGES: readonly Expected[] = [
     allowed: [
       /^dist\/[^/]+\.(js|d\.ts)$/,
       /^lua\/[^/]+\.(lua|d\.ts)$/,
+      /^map\/[^/]+\.(lua|d\.ts)$/,
       /^stubs\/[^/]+\.(lua|d\.ts)$/,
     ],
     required: [
@@ -126,6 +127,8 @@ const PACKAGES: readonly Expected[] = [
       "dist/index.d.ts",
       "lua/index.lua",
       "lua/index.d.ts",
+      "map/index.lua",
+      "map/index.d.ts",
       "stubs/base.lua",
       "stubs/index.d.ts",
     ],
