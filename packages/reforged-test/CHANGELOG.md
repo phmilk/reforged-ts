@@ -1,5 +1,13 @@
 # reforged-test
 
+## 1.0.0-alpha.13
+
+### Minor Changes
+
+- [#1019](https://github.com/phmilk/reforged-ts/pull/1019) [`376198c`](https://github.com/phmilk/reforged-ts/commit/376198ca7e3e3693fd319e1eba007a2e7e91a744) Thanks [@wyller](https://github.com/wyller)! - Focus and skip on `reforged-test/map` and `reforged-test/lua`: `it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only`, registered in Vitest's native form by `runLuaTests`, so Vitest reports each and a forgotten `only` fails the run under `CI`. A test skipped, todo or out of focus opens no Test game and runs no `beforeEach` or `afterEach`; `only` reaches every Lua test of the Map project. On `reforged-test/lua` the body of a skip or todo test does not run, and `only` hides the report only. The results contract gains the status `skip` and the keys `mode` and `suiteModes`.
+
+- [#1016](https://github.com/phmilk/reforged-ts/pull/1016) [`1fccd2f`](https://github.com/phmilk/reforged-ts/commit/1fccd2f96870739dd901324f293afba06cd1b28b) Thanks [@wyller](https://github.com/wyller)! - On `reforged-test/map`, `game.fire(event, context)` fires one event as the game would: every Trigger registered for it runs, in registration order, a disabled or destroyed Trigger skipped and a registration's filter evaluated, with `context` as the Firing context. The subject comes from the context by the event's family (the owner of `GetTriggerUnit`, `GetTriggerUnit`, `GetTriggerPlayer`, or none for a game event); a context without it is an error naming the Native. It is the way to fire any event no Game action covers, a spell among them. The entry point exports the type `FiringContext`. The triggers stub now remembers every registration that names its event, and `__stub_dispatch(event, subject, context)` of `reforged-test/stubs` makes the same Event dispatch on `reforged-test/lua`; `__stub_fire_trigger` is unchanged.
+
 ## 1.0.0-alpha.12
 
 ### Minor Changes
