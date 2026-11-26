@@ -102,6 +102,10 @@ describe("reforged-test/map", () => {
     }
   });
 
+  // Each call of errorsOf type-checks a program with the Typings: about a
+  // second here, and the windows CI leg took 5.4 s for four (#1013).
+  const TYPED = { timeout: 30_000 };
+
   /**
    * The messages of the errors a test file holding `code` has, compiled as
    * a Map project compiles it, the entry point imported as `map`.
@@ -127,7 +131,7 @@ describe("reforged-test/map", () => {
       );
   }
 
-  it("types stubNative's answer by the Native's signature", () => {
+  it("types stubNative's answer by the Native's signature", TYPED, () => {
     expect(
       errorsOf(`
         map.stubNative("GetUnitName", (whichUnit) => {
@@ -148,27 +152,31 @@ describe("reforged-test/map", () => {
     ]);
   });
 
-  it("makes the answer optional only for a Native that returns nothing", () => {
-    expect(errorsOf(`map.stubNative("GetUnitName");`)).toEqual([
-      expect.stringContaining("Expected 2 arguments, but got 1"),
-    ]);
-  });
+  it(
+    "makes the answer optional only for a Native that returns nothing",
+    TYPED,
+    () => {
+      expect(errorsOf(`map.stubNative("GetUnitName");`)).toEqual([
+        expect.stringContaining("Expected 2 arguments, but got 1"),
+      ]);
+    },
+  );
 
-  it("takes the name of a Native of common.j only", () => {
-    for (const name of [
-      "GetUnitNam",
-      "BJDebugMsg",
-      "print",
-      "bj_MAX_PLAYERS",
-    ]) {
-      expect(
-        errorsOf(`map.stubNative("${name}", () => undefined);`),
-        name,
-      ).toEqual([expect.stringContaining(`Argument of type '"${name}"'`)]);
+  it("takes the name of a Native of common.j only", TYPED, () => {
+    const names = ["GetUnitNam", "BJDebugMsg", "print", "bj_MAX_PLAYERS"];
+    // One program for the four calls: each is its own error.
+    const errors = errorsOf(
+      names
+        .map((name) => `map.stubNative("${name}", () => undefined);`)
+        .join("\n"),
+    );
+    expect(errors).toHaveLength(names.length);
+    for (const [index, name] of names.entries()) {
+      expect(errors[index]).toContain(`Argument of type '"${name}"'`);
     }
   });
 
-  it("types newHandle's Handle from its kind", () => {
+  it("types newHandle's Handle from its kind", TYPED, () => {
     expect(
       errorsOf(`
         const unit: unit = map.newHandle("unit");
@@ -184,18 +192,22 @@ describe("reforged-test/map", () => {
     ]);
   });
 
-  it("types game.setLocalPlayer for a player Handle or anything with .handle", () => {
-    expect(
-      errorsOf(`
+  it(
+    "types game.setLocalPlayer for a player Handle or anything with .handle",
+    TYPED,
+    () => {
+      expect(
+        errorsOf(`
         declare const handle: player;
         const game = map.startGame();
         const nothing: void = game.setLocalPlayer(handle);
         game.setLocalPlayer({ handle });
         print(nothing);
       `),
-    ).toEqual([]);
-    expect(errorsOf(`map.startGame().setLocalPlayer(1);`)).toEqual([
-      expect.stringContaining("Argument of type 'number'"),
-    ]);
-  });
+      ).toEqual([]);
+      expect(errorsOf(`map.startGame().setLocalPlayer(1);`)).toEqual([
+        expect.stringContaining("Argument of type 'number'"),
+      ]);
+    },
+  );
 });
