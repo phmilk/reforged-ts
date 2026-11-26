@@ -28,5 +28,6 @@ We adopt one Claim protocol for both repositories, GitHub-only: the assignee is 
 - The Template carries only the thin caller workflow and the tracker doc's Claim section, both Template maintenance, deleted in a generated Map project.
 - The board's writer runs on the library's events, so the Template's cards waited for the hourly run; ADR 0017 has every other Board repository dispatch the reconcile on its own events.
 - The board writes more than Status, each derived like it and written only when it differs: the label pair of an open Spec (ADR 0025), and one comment of the coverage check's verdict on an open Spec whose Tickets are all closed (ADR 0023, #796). It still closes no issue.
+- The board mirrors the Status into the Issue status, the status GitHub shows on the issue itself (#958): on open issues only, with the App's token, as a write that may fail, since the feature is a preview; a refused write is a warning and never a red run.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/518

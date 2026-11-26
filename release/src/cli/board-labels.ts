@@ -6,24 +6,37 @@
  * differences; Specs already right draw no request. Then it comments the
  * coverage check's verdict on every open Spec whose Tickets are all closed,
  * by `spec-verdict.ts`, and closes nothing (#796); a Spec that fails is
- * reported and the others are still commented. Neither pass stops the
- * other: a label missing or a label request refused still leaves the
- * verdicts commented, and either failing exits 1. The token is
- * `LABELS_TOKEN`, the App's installation token over both repositories that
- * `board.yml` mints, since `PROJECT_TOKEN` writes no label, else, locally,
- * the `gh` login's; it says which. `--dry-run` prints the plan and sends
- * none. Exit codes: 0 applied (or planned), 1 the state cannot be read, a
- * label missing from a repository, no token, a request failed or a Spec's
- * check could not run, 2 usage.
+ * reported and the others are still commented. Between the two it writes
+ * the Issue status of every open issue the board holds or will hold, the
+ * mirror of its Status (#958): `planIssueStatuses` maps the Status
+ * `statusOf` derives, and only the differences are sent, on the issues
+ * still open when the Issue statuses are read. That mirror may fail: Issue
+ * statuses GitHub will not let it read, a refused write, a repository
+ * without Issue statuses or a value it lacks is a warning, on standard
+ * output and in the job summary, and never an exit code. No pass stops another: a label
+ * missing or a label request refused still leaves the Issue statuses
+ * written and the verdicts commented, and the labels or the verdicts
+ * failing exits 1. The token is `LABELS_TOKEN`, the App's installation
+ * token over both repositories that `board.yml` mints, since
+ * `PROJECT_TOKEN` writes no label and is refused `setIssueStatus` (it needs
+ * `public_repo`), else, locally, the `gh` login's; it says which.
+ * `--dry-run` prints the plan and sends none. Exit codes: 0 applied (or
+ * planned), an Issue status not written included, 1 the state cannot be
+ * read, a label missing from a repository, no token, a label or comment
+ * request failed or a Spec's check could not run, 2 usage.
  */
 import {
   applyBoardLabels,
+  applyIssueStatuses,
   BOARD_REPOSITORIES,
   describeRequest,
   planBoardLabels,
+  planIssueStatuses,
+  readIssueStatuses,
   readLabelState,
   type BoardIssue,
   type BoardLabelPlan,
+  type IssueStatusState,
   type LabelState,
 } from "../board.js";
 import type { GitHubApi } from "../repo-settings.js";
@@ -76,11 +89,18 @@ export async function main(
     const api = gitHubApi(context.fetcher, token, "reforged-ts-board-labels");
     output.stdout(`Token: ${source}.\n`);
     const state = await readLabelState(api);
-    // Neither pass stops the other: each says what failed, and either
-    // failing exits 1.
+    // No pass stops another: each says what failed, and the labels or the
+    // verdicts failing exits 1. The Issue statuses only warn.
     const labels = await writeLabels(
       api,
       state,
+      parsed.dryRun,
+      output,
+      context.env,
+    );
+    await writeIssueStatuses(
+      api,
+      state.issues,
       parsed.dryRun,
       output,
       context.env,
@@ -145,6 +165,62 @@ async function writeLabels(
         `${done.map((summary) => `\n- ${summary}`).join("")}${done.length === 0 ? "" : "\n"}`,
     );
   }
+}
+
+/**
+ * The Issue status of each open issue of `issues` the board holds or will
+ * hold, written,
+ * or printed only on a dry run. Nothing here fails the run: what cannot be
+ * read (the preview's fields changed) or written (a repository without
+ * Issue statuses, a value it lacks, a request GitHub refuses) is a warning,
+ * printed and in the job summary.
+ */
+async function writeIssueStatuses(
+  api: GitHubApi,
+  issues: readonly BoardIssue[],
+  dryRun: boolean,
+  output: Output,
+  env: Readonly<Record<string, string | undefined>>,
+): Promise<void> {
+  const warn = (warning: string) => {
+    output.stdout(`Warning: ${warning}\n`);
+  };
+  let statuses: IssueStatusState;
+  try {
+    statuses = await readIssueStatuses(api);
+  } catch (error) {
+    const warning = `The Issue statuses could not be read, so none is written: ${errorMessage(error)}`;
+    output.stdout("Issue statuses: not read.\n");
+    warn(warning);
+    if (!dryRun) {
+      await appendSummary(
+        env,
+        `## Issue statuses\n\nNot read; 1 warning.\n\n- Warning: ${warning}\n`,
+      );
+    }
+    return;
+  }
+  const plan = planIssueStatuses(issues, statuses);
+  const found = `${plural(plan.issues, "open issue", "open issues")}, ${String(plan.kept)} as their Status reads`;
+  output.stdout(`Issue statuses: ${found}.\n`);
+  plan.warnings.forEach(warn);
+  printPlan(output, plan, describeRequest, dryRun);
+  if (dryRun) return;
+  const done: string[] = [];
+  const refused = await applyIssueStatuses(api, plan, ({ summary }) => {
+    done.push(summary);
+    output.stdout(`Done: ${summary}\n`);
+  });
+  refused.forEach(warn);
+  const warnings = [...plan.warnings, ...refused];
+  const lines = [...done, ...warnings.map((warning) => `Warning: ${warning}`)];
+  await appendSummary(
+    env,
+    `## Issue statuses\n\n${found}; ` +
+      `${plural(plan.requests.length, "request", "requests")}, ${String(done.length)} done; ` +
+      `${plural(warnings.length, "warning", "warnings")}.\n` +
+      `${lines.map((line) => `\n- ${line}`).join("")}${lines.length === 0 ? "" : "\n"}`,
+  );
 }
 
 /**

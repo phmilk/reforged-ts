@@ -11,8 +11,12 @@
  * pure function of an issue and its context) and `planBoardReconcile`,
  * which turns the project's items and the open issues of both repositories
  * into the writes that make the board agree with GitHub, membership and
- * archiving included, on the same state reader. The GraphQL transport and
- * the pager are `github-graphql.ts`.
+ * archiving included, on the same state reader. The third is what
+ * `board:labels` writes with the App's token: the label pair of an open
+ * Spec (`planBoardLabels`) and the Issue status of every open issue the
+ * board holds or will hold, the mirror of its Status
+ * (`planIssueStatuses`). The GraphQL transport and the pager are
+ * `github-graphql.ts`.
  */
 import { graphql, readNodes } from "./github-graphql.js";
 import type { GitHubApi } from "./repo-settings.js";
@@ -167,6 +171,10 @@ Precedence top-down; the first rule that matches wins.
 - **Backlog**: \`needs-split\`, a spec with no ticket yet, whatever its other labels. The same workflow gives every open spec \`needs-split\` with no sub-issue and \`ready-for-agent\` with one or more.
 - **Ready**: \`ready-for-agent\`, \`ready-for-human\`, or an open child of a \`wayfinder:map\` (a frontier ticket); takeable now.
 - **Backlog**: everything else: \`needs-triage\`, \`needs-info\`, no label, a parent with no open child.
+
+## Issue status
+
+The Issue status, the status GitHub shows on an issue's own page, follows the Status here: the same workflow writes it on every open issue, and nobody sets it by hand. Backlog reads Backlog, Ready and Blocked read Todo, In progress reads In progress and In review reads In review; a closed issue keeps the one GitHub gave it. A value picked by hand on an issue may move its card, and the next run restores both.
 
 ## Members
 
@@ -331,6 +339,17 @@ export const BOARD_MUTATIONS = {
     clientMutationId
   }
 }`,
+  // The Issue status is a public preview, "subject to change": GitHub's
+  // changelog of 2026-11-23, "Issue statuses and repository boards are in
+  // public preview". The mutation closes or reopens the issue when the
+  // value calls for it, so the plan sends an open value to an open issue
+  // only (`ISSUE_STATUS_OF`). It needs `public_repo` of a classic token, so
+  // the App's token sends it and the board's (`project` alone) cannot (#959).
+  setIssueStatus: `mutation SetIssueStatus($issueId: ID!, $statusId: ID!) {
+  setIssueStatus(input: { issueId: $issueId, statusId: $statusId }) {
+    issue { id }
+  }
+}`,
 } as const;
 
 /**
@@ -339,7 +358,10 @@ export const BOARD_MUTATIONS = {
  * repository, since a ticket of the Template may be the child of a library
  * spec. `closedByPullRequestsReferences(includeClosedPrs: false)` still
  * returns merged pull requests, so In review is read from each pull
- * request's own `state`, never from the presence of a reference.
+ * request's own `state`, never from the presence of a reference. The
+ * Issue status is not read here: it is a preview, and a field GitHub
+ * changes must not fail this fragment, which the reconcile reads too
+ * (`readIssueStatuses`).
  */
 const BOARD_ISSUE_FRAGMENT = `fragment BoardIssue on Issue {
   id number state updatedAt
@@ -1399,7 +1421,12 @@ export function planBoardReconcile(
 
 // The labels: the pair an open Spec carries by ADR 0025.
 
-/** What `board:labels` needs to know, as the API answers it. */
+/** Node ids by repository (`owner/name`), then by the name of what each one is the id of. */
+export type IdsByRepository = Readonly<
+  Partial<Record<string, Readonly<Partial<Record<string, string>>>>>
+>;
+
+/** What `board:labels` needs to know to write the labels, as the API answers it. */
 export interface LabelState {
   /** The open issues of both repositories. */
   issues: readonly BoardIssue[];
@@ -1407,9 +1434,7 @@ export interface LabelState {
    * The node id of each label the plan may write, by repository
    * (`owner/name`) then name; a label missing from a repository is absent.
    */
-  labelIds: Readonly<
-    Partial<Record<string, Readonly<Partial<Record<string, string>>>>>
-  >;
+  labelIds: IdsByRepository;
 }
 
 /** What `board:labels` will write, and what it found. */
@@ -1474,6 +1499,125 @@ export function planBoardLabels(state: LabelState): BoardLabelPlan {
     }
   }
   return { requests, specs, kept };
+}
+
+// The Issue status: the mirror of the Status on the issue itself (#958).
+
+/** The values of the Issue status an open issue takes; GitHub's closed ones (Done, Not planned, Duplicate) are never written. */
+export type OpenIssueStatus = "Backlog" | "Todo" | "In progress" | "In review";
+
+/**
+ * The Issue status of each Status an open issue takes. GitHub moves a card
+ * when its issue's Issue status takes a value the board's Status has too
+ * (measured in #959: Backlog moved a Blocked card to Backlog at once, Todo
+ * left it), so Blocked reads Todo, which the board lacks, and every other
+ * value is one that moves the card where the reconcile puts it anyway. No
+ * Done: a closed issue keeps the Issue status GitHub gave it.
+ */
+export const ISSUE_STATUS_OF: Readonly<
+  Record<Exclude<Status, "Done">, OpenIssueStatus>
+> = {
+  Backlog: "Backlog",
+  Blocked: "Todo",
+  Ready: "Todo",
+  "In progress": "In progress",
+  "In review": "In review",
+};
+
+/**
+ * The Issue statuses of both Board repositories, as the API answers them:
+ * read apart from the issues (`readIssueStatuses`), since the feature is a
+ * preview and its fields may change.
+ */
+export interface IssueStatusState {
+  /**
+   * The node id of each Issue status a repository has, by repository then
+   * name; a repository without Issue statuses has none.
+   */
+  ids: IdsByRepository;
+  /**
+   * The Issue status of each issue this read saw open, by its key
+   * (`issueKey`): its name, or `null` when it has none. An issue absent was
+   * not open at this read, and is never written.
+   */
+  current: Readonly<Partial<Record<string, string | null>>>;
+}
+
+/** What `board:labels` will write of the Issue statuses, and what it found. */
+export interface IssueStatusPlan {
+  /** The requests to send, in order. */
+  requests: BoardRequest[];
+  /** How many open issues it looked at: the ones the board holds or will hold. */
+  issues: number;
+  /** How many of them already read as their Status maps. */
+  kept: number;
+  /** What it cannot write, one sentence each: a repository or a value without Issue statuses. */
+  warnings: string[];
+}
+
+/**
+ * The requests that give every open issue the board holds or will hold (an
+ * open issue of a Board repository that no bot but the App authored,
+ * whether or not it has an item yet) the Issue status `ISSUE_STATUS_OF`
+ * maps its Status to, the Status `statusOf` derives among `read`, the open
+ * issues of both repositories as the labels read them, as the reconcile
+ * does; nothing for one that already reads so, and never anything for a
+ * closed issue. `statuses` is a later read: an issue it did not see open
+ * (closed in between) gets nothing, since an open value would reopen it. A
+ * repository without Issue statuses plans none and is named once in
+ * `warnings`, as is each value a repository lacks.
+ */
+export function planIssueStatuses(
+  read: readonly BoardIssue[],
+  statuses: IssueStatusState,
+): IssueStatusPlan {
+  const lookup = issueLookup(read);
+  const requests: BoardRequest[] = [];
+  const warnings = new Set<string>();
+  let issues = 0;
+  let kept = 0;
+  for (const issue of read) {
+    if (
+      issue.bot ||
+      issue.state !== "OPEN" ||
+      !BOARD_REPOSITORIES.includes(issue.repository)
+    ) {
+      continue;
+    }
+    const key = issueKey(issue);
+    const current = statuses.current[key];
+    // Not open any more when the Issue statuses were read: the next run's.
+    if (current === undefined) continue;
+    const status = statusOf(issue, lookup);
+    // An open issue is never Done.
+    if (status === "Done") continue;
+    issues++;
+    const value = ISSUE_STATUS_OF[status];
+    if (current !== null && sameName(current, value)) {
+      kept++;
+      continue;
+    }
+    const ids = Object.entries(statuses.ids[issue.repository] ?? {});
+    if (ids.length === 0) {
+      warnings.add(
+        `${issue.repository} has no Issue statuses: none is written there.`,
+      );
+      continue;
+    }
+    const statusId = ids.find(([name]) => sameName(name, value))?.[1];
+    if (statusId === undefined) {
+      warnings.add(
+        `${issue.repository} has no Issue status named ${value}: it is written on no issue there.`,
+      );
+      continue;
+    }
+    requests.push({
+      query: BOARD_MUTATIONS.setIssueStatus,
+      variables: { issueId: issue.id, statusId },
+      summary: `Set the Issue status of ${key} to ${value}${current === null ? "" : ` (was ${current})`}.`,
+    });
+  }
+  return { requests, issues, kept, warnings: [...warnings] };
 }
 
 /** The `nodes` of a connection, or none. */
@@ -1695,8 +1839,76 @@ ${Object.entries(LABEL_ALIASES)
 }`;
 
 /**
- * What `board:labels` reads through `api`: the open issues of both
- * repositories and, in each, the ids of the two labels of an open Spec.
+ * The queries of the Issue status, a public preview: kept out of every
+ * other document, so that a field GitHub renames or removes fails these
+ * two and nothing else.
+ */
+const ISSUE_STATUS_QUERIES = {
+  // In display order; `null` where the repository has none. They are few
+  // (seven on 2026-11-26) and the API has no mutation that adds one.
+  statuses: `query IssueStatuses($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    planningStatuses(first: 50) { nodes { id name } }
+  }
+}`,
+  // `status` is `null` on an issue that has none.
+  open: `query OpenIssueStatuses($owner: String!, $name: String!, $first: Int!, $cursor: String) {
+  repository(owner: $owner, name: $name) {
+    issues(states: OPEN, first: $first, after: $cursor, orderBy: { field: CREATED_AT, direction: ASC }) {
+      pageInfo { hasNextPage endCursor }
+      nodes { number status { name } }
+    }
+  }
+}`,
+} as const;
+
+/**
+ * The Issue statuses, read through `api`: in each Board repository, the
+ * ids of its Issue statuses by name and the Issue status of each open
+ * issue, `null` for one that has none. Rejects when GitHub refuses a
+ * query, as it would once the preview's fields change: the caller warns
+ * and writes none.
+ */
+export async function readIssueStatuses(
+  api: GitHubApi,
+): Promise<IssueStatusState> {
+  const ids: Record<string, Record<string, string>> = {};
+  const current: Record<string, string | null> = {};
+  for (const repository of BOARD_REPOSITORIES) {
+    const variables = ownerAndName(repository);
+    const data = await graphql(api, ISSUE_STATUS_QUERIES.statuses, variables);
+    ids[repository] = Object.fromEntries(
+      nodesOf(
+        isRecord(data.repository)
+          ? data.repository.planningStatuses
+          : undefined,
+      ).flatMap((status) =>
+        isRecord(status) &&
+        typeof status.id === "string" &&
+        typeof status.name === "string"
+          ? [[status.name, status.id]]
+          : [],
+      ),
+    );
+    const nodes = await readNodes(api, ISSUE_STATUS_QUERIES.open, variables, [
+      "repository",
+      "issues",
+    ]);
+    for (const node of nodes) {
+      if (!isRecord(node) || typeof node.number !== "number") continue;
+      current[issueKey({ repository, number: node.number })] =
+        isRecord(node.status) && typeof node.status.name === "string"
+          ? node.status.name
+          : null;
+    }
+  }
+  return { ids, current };
+}
+
+/**
+ * What `board:labels` reads through `api` for the labels: the open issues
+ * of both repositories and, in each, the ids of the two labels of an open
+ * Spec.
  */
 export async function readLabelState(api: GitHubApi): Promise<LabelState> {
   const issues: BoardIssue[] = [];
@@ -1728,6 +1940,31 @@ export async function applyBoardLabels(
   sent: (request: BoardRequest) => void = () => undefined,
 ): Promise<void> {
   await send(api, plan.requests, sent);
+}
+
+/**
+ * Sends the Issue status plan's requests in order through `api`, calling
+ * `sent` after each one that succeeds. The Issue status is a mirror on a
+ * preview API: a refused request stops nothing, the ones after it are still
+ * sent, and it resolves with one warning per refusal, naming the issue and
+ * the value not written.
+ */
+export async function applyIssueStatuses(
+  api: GitHubApi,
+  plan: IssueStatusPlan,
+  sent: (request: BoardRequest) => void = () => undefined,
+): Promise<string[]> {
+  const refused: string[] = [];
+  for (const request of plan.requests) {
+    try {
+      await sendOne(api, request);
+    } catch (error) {
+      refused.push(errorMessage(error));
+      continue;
+    }
+    sent(request);
+  }
+  return refused;
 }
 
 /**

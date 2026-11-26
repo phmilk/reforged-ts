@@ -9,6 +9,7 @@ import {
   graphQlApi,
   graphQlFetch,
   issue,
+  ISSUE_STATUS_IDS,
   LABEL_IDS,
   LIBRARY,
   mutations,
@@ -60,6 +61,12 @@ const FOUND =
   `3 open Specs of ${LIBRARY} and ${TEMPLATE}.\n` +
   "As they should be: 1 Spec.\n";
 
+/** What the Issue status pass prints where no repository has Issue statuses: the fake's default. */
+const NO_STATUSES =
+  "Issue statuses: 4 open issues, 0 as their Status reads.\n" +
+  `Warning: ${LIBRARY} has no Issue statuses: none is written there.\n` +
+  `Warning: ${TEMPLATE} has no Issue statuses: none is written there.\n`;
+
 describe("board:labels", () => {
   it("prints the plan and sends nothing on a dry run, with the token of LABELS_TOKEN", async () => {
     const sent: Sent[] = [];
@@ -82,7 +89,8 @@ describe("board:labels", () => {
         '{\n  "labelableId": "I_10",\n  "labelIds": [\n    "LA_ready"\n  ]\n}\n' +
         `\nAdd needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.\n` +
         "mutation AddLabels($labelableId: ID!, $labelIds: [ID!]!)\n" +
-        '{\n  "labelableId": "I_t30",\n  "labelIds": [\n    "LA_t_split"\n  ]\n}\n',
+        '{\n  "labelableId": "I_t30",\n  "labelIds": [\n    "LA_t_split"\n  ]\n}\n' +
+        `${NO_STATUSES}Dry run, 0 requests, none sent:\n`,
     );
   });
 
@@ -136,13 +144,17 @@ describe("board:labels", () => {
         '{\n  "labelableId": "I_t30",\n  "labelIds": [\n    "LA_t_split"\n  ]\n}\n' +
         `Done: Add needs-split to ${LIBRARY}#10: a Spec with no sub-issue.\n` +
         `Done: Remove ready-for-agent from ${LIBRARY}#10: a Spec with no sub-issue.\n` +
-        `Done: Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.\n`,
+        `Done: Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.\n` +
+        `${NO_STATUSES}0 requests:\n`,
     );
     expect(await readFile(join(dir, "summary.md"), "utf8")).toBe(
       "## Board labels\n\n1 Spec as it should be; 3 requests, 3 done.\n\n" +
         `- Add needs-split to ${LIBRARY}#10: a Spec with no sub-issue.\n` +
         `- Remove ready-for-agent from ${LIBRARY}#10: a Spec with no sub-issue.\n` +
-        `- Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.\n`,
+        `- Add needs-split to ${TEMPLATE}#30: a Spec with no sub-issue.\n` +
+        "## Issue statuses\n\n4 open issues, 0 as their Status reads; 0 requests, 0 done; 2 warnings.\n\n" +
+        `- Warning: ${LIBRARY} has no Issue statuses: none is written there.\n` +
+        `- Warning: ${TEMPLATE} has no Issue statuses: none is written there.\n`,
     );
   });
 
@@ -176,6 +188,254 @@ describe("board:labels", () => {
     expect(result.exitCode).toBe(2);
     expect(result.stderr).toMatch(/^Usage: board:labels \[--dry-run\]\n/);
     expect(sent).toEqual([]);
+  });
+});
+
+describe("board:labels, the Issue status of every open issue (#958)", () => {
+  const BOTH = { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: ISSUE_STATUS_IDS };
+
+  /** #1 Ready and reading Backlog, #2 claimed and reading Todo, #3 Backlog with none, #4 claimed and right; no Spec. */
+  const OPEN = [
+    issue(1, { labels: ["ready-for-agent"] }),
+    issue(2, { assignees: ["alice"] }),
+    issue(3, { repository: TEMPLATE }),
+    issue(4, { assignees: ["alice"] }),
+  ];
+  const READ = {
+    [`${LIBRARY}#1`]: "Backlog",
+    [`${LIBRARY}#2`]: "Todo",
+    [`${LIBRARY}#4`]: "In progress",
+  };
+
+  const answers = (): Answers =>
+    reading(STATE, { issues: OPEN, issueStatusIds: BOTH, issueStatuses: READ });
+
+  const write = (
+    key: string,
+    issueId: string,
+    value: string,
+    statusId: string,
+  ) =>
+    `\nSet the Issue status of ${key} to ${value}.\n` +
+    "mutation SetIssueStatus($issueId: ID!, $statusId: ID!)\n" +
+    `{\n  "issueId": "${issueId}",\n  "statusId": "${statusId}"\n}\n`;
+
+  it("lists the Issue status writes on a dry run and sends none", async () => {
+    const sent: Sent[] = [];
+    const result = await run(["--dry-run"], graphQlFetch(answers(), sent));
+
+    expect(result.stderr).toBe("");
+    expect(result.exitCode).toBe(0);
+    expect(mutations(sent)).toEqual([]);
+    expect(result.stdout).toBe(
+      "Token: LABELS_TOKEN.\n" +
+        `0 open Specs of ${LIBRARY} and ${TEMPLATE}.\n` +
+        "As they should be: 0 Specs.\n" +
+        "Dry run, 0 requests, none sent:\n" +
+        "Issue statuses: 4 open issues, 1 as their Status reads.\n" +
+        "Dry run, 3 requests, none sent:\n" +
+        write(`${LIBRARY}#1`, "I_1", "Todo (was Backlog)", "IS_todo") +
+        write(
+          `${LIBRARY}#2`,
+          "I_2",
+          "In progress (was Todo)",
+          "IS_in_progress",
+        ) +
+        write(`${TEMPLATE}#3`, "I_t3", "Backlog", "IS_backlog"),
+    );
+  });
+
+  it("writes the differences with the App's token and says so in the job summary", async () => {
+    const sent: Sent[] = [];
+    const dir = await tempDir("board-labels");
+    await writeText(dir, "summary.md", "");
+    const result = await run([], graphQlFetch(answers(), sent), {
+      env: {
+        LABELS_TOKEN: "app",
+        GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+      },
+    });
+
+    expect(result.stderr).toBe("");
+    expect(result.exitCode).toBe(0);
+    expect(mutations(sent)).toEqual([
+      ["SetIssueStatus", { issueId: "I_1", statusId: "IS_todo" }],
+      ["SetIssueStatus", { issueId: "I_2", statusId: "IS_in_progress" }],
+      ["SetIssueStatus", { issueId: "I_t3", statusId: "IS_backlog" }],
+    ]);
+    expect(
+      sent
+        .filter(({ kind }) => kind === "mutation")
+        .map((one) => one.authorization),
+    ).toEqual(["Bearer app", "Bearer app", "Bearer app"]);
+    expect(await readFile(join(dir, "summary.md"), "utf8")).toContain(
+      "## Issue statuses\n\n4 open issues, 1 as their Status reads; 3 requests, 3 done; 0 warnings.\n\n" +
+        `- Set the Issue status of ${LIBRARY}#1 to Todo (was Backlog).\n` +
+        `- Set the Issue status of ${LIBRARY}#2 to In progress (was Todo).\n` +
+        `- Set the Issue status of ${TEMPLATE}#3 to Backlog.\n`,
+    );
+  });
+
+  it("sends nothing when every Issue status agrees", async () => {
+    const sent: Sent[] = [];
+    const result = await run(
+      [],
+      graphQlFetch(
+        reading(STATE, {
+          issues: [OPEN[3]],
+          issueStatusIds: BOTH,
+          issueStatuses: READ,
+        }),
+        sent,
+      ),
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(mutations(sent)).toEqual([]);
+    expect(result.stdout).toContain(
+      "Issue statuses: 1 open issue, 1 as their Status reads.\n0 requests:\n",
+    );
+  });
+
+  it("exits 0 when GitHub refuses an Issue status write: the others are sent, and the warning is in the output and the job summary", async () => {
+    const sent: Sent[] = [];
+    const dir = await tempDir("board-labels");
+    await writeText(dir, "summary.md", "");
+    const base = answers();
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          variables.issueId === "I_1"
+            ? {
+                errors: [{ message: "Resource not accessible by integration" }],
+              }
+            : base(operation, variables),
+        sent,
+      ),
+      {
+        env: {
+          LABELS_TOKEN: "app",
+          GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+        },
+      },
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(mutations(sent).map(([, variables]) => variables)).toEqual([
+      { issueId: "I_1", statusId: "IS_todo" },
+      { issueId: "I_2", statusId: "IS_in_progress" },
+      { issueId: "I_t3", statusId: "IS_backlog" },
+    ]);
+    const warning = result.stdout
+      .split("\n")
+      .find((line) => line.startsWith("Warning: "));
+    expect(warning).toContain("Resource not accessible by integration");
+    expect(warning).toContain(
+      `Not done: Set the Issue status of ${LIBRARY}#1 to Todo (was Backlog).`,
+    );
+    expect(result.stdout).toContain(
+      `Done: Set the Issue status of ${TEMPLATE}#3 to Backlog.\n`,
+    );
+    const summary = await readFile(join(dir, "summary.md"), "utf8");
+    expect(summary).toContain(
+      "4 open issues, 1 as their Status reads; 3 requests, 2 done; 1 warning.\n",
+    );
+    expect(summary).toContain(`- ${String(warning)}\n`);
+  });
+
+  it("still exits 1 when GitHub refuses a label write, the Issue statuses written all the same", async () => {
+    const sent: Sent[] = [];
+    const base = reading(STATE, {
+      issues: [issue(10, { labels: ["spec", "ready-for-agent"] })],
+      issueStatusIds: BOTH,
+    });
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          operation === "AddLabels"
+            ? {
+                errors: [{ message: "Resource not accessible by integration" }],
+              }
+            : base(operation, variables),
+        sent,
+      ),
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain(
+      `Not done: Add needs-split to ${LIBRARY}#10: a Spec with no sub-issue.`,
+    );
+    expect(mutations(sent)).toEqual([
+      ["AddLabels", { labelableId: "I_10", labelIds: ["LA_split"] }],
+      ["SetIssueStatus", { issueId: "I_10", statusId: "IS_backlog" }],
+    ]);
+  });
+
+  it("says once per repository that it has no Issue statuses, and exits 0", async () => {
+    const sent: Sent[] = [];
+    const result = await run(
+      [],
+      graphQlFetch(reading(STATE, { issues: OPEN }), sent),
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(mutations(sent)).toEqual([]);
+    expect(result.stdout).toContain(
+      "Issue statuses: 4 open issues, 0 as their Status reads.\n" +
+        `Warning: ${LIBRARY} has no Issue statuses: none is written there.\n` +
+        `Warning: ${TEMPLATE} has no Issue statuses: none is written there.\n` +
+        "0 requests:\n",
+    );
+  });
+
+  it("exits 0 when GitHub refuses the read of the Issue statuses: none is written, the warning is in the output and the job summary, and the labels are written all the same", async () => {
+    const sent: Sent[] = [];
+    const dir = await tempDir("board-labels");
+    await writeText(dir, "summary.md", "");
+    const base = reading(STATE, {
+      issues: [issue(10, { labels: ["spec", "ready-for-agent"] })],
+      issueStatusIds: BOTH,
+    });
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          operation === "OpenIssueStatuses"
+            ? {
+                errors: [
+                  { message: "Field 'status' doesn't exist on type 'Issue'" },
+                ],
+              }
+            : base(operation, variables),
+        sent,
+      ),
+      {
+        env: {
+          LABELS_TOKEN: "app",
+          GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+        },
+      },
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(mutations(sent).map(([operation]) => operation)).toEqual([
+      "AddLabels",
+      "RemoveLabels",
+    ]);
+    const warning = result.stdout
+      .split("\n")
+      .find((line) => line.startsWith("Warning: "));
+    expect(warning).toContain(
+      "The Issue statuses could not be read, so none is written: ",
+    );
+    expect(warning).toContain("Field 'status' doesn't exist on type 'Issue'");
+    expect(await readFile(join(dir, "summary.md"), "utf8")).toContain(
+      `## Issue statuses\n\nNot read; 1 warning.\n\n- ${String(warning)}\n`,
+    );
   });
 });
 
