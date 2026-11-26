@@ -238,25 +238,24 @@ describe("the Studio's page, /objects/<rawcode>", () => {
         );
       expect(kinds).toEqual(["unit h000", "item I000", "doodad D000"]);
 
+      // The previous Object's header stays up until the page moves: poll it.
+      const header = page.locator(".object-header h2");
       await search.locator('[data-rawcode="I000"]').click();
-      // The header of hfoo is still up until the page moves to I000: poll it.
+      await expect.poll(() => textOf(header)).toContain("Captain's Claws");
       await expect
-        .poll(() => textOf(page.locator(".object-header h2")))
-        .toContain("Captain's Claws");
-      expect(
-        await page
-          .getByRole("tab", { name: "Items" })
-          .getAttribute("aria-selected"),
-      ).toBe("true");
+        .poll(() =>
+          page
+            .getByRole("tab", { name: "Items" })
+            .getAttribute("aria-selected"),
+        )
+        .toBe("true");
 
       await page.keyboard.press("Control+K");
       await search.locator("input").fill("B000");
       await search.locator('[data-kind="destructable"]').waitFor();
       expect(await search.locator('[data-rawcode="B000"]').count()).toBe(2);
       await page.keyboard.press("Enter");
-      expect(await textOf(page.locator(".object-header h2"))).toContain(
-        "Holy Fire",
-      );
+      await expect.poll(() => textOf(header)).toContain("Holy Fire");
       expect(await textOf(page.locator(".object-header .chip.warn"))).toContain(
         "B000 is also a destructable",
       );
