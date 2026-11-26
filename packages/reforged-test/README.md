@@ -42,7 +42,7 @@ Every export of `reforged-test/map` carries its doc comment, shown on hover and 
 
 A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative("GetUnitName", (unit) => "Footman")`, typed from the Typings and recorded as a Shipped stub records its calls, with `newHandle(kind)` for an answer that creates a Handle. `game.setLocalPlayer(player)` makes the test act as another client. A Lua stub file listed in the `stubs` option still loads, after the shipped ones.
 
-`stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. `test/natives.test.ts` is its Drift check: it fails, naming the command, when the committed file is not what the generator emits, as on a new Patch.
+`stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. The same command generates `stubs/unstubbed.lua`, the Shipped stub that makes a Native without a Stub throw a message naming `stubNative`. `test/natives.test.ts` is the Drift check of both: it fails, naming the command, when a committed file is not what the generator emits, as on a new Patch.
 
 `it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only` are Vitest's: the glue registers each in Vitest's native form, so a test skipped, todo or out of focus opens no Test game, and a forgotten `only` fails the run under `CI`. `only` reaches every Lua test of the Map project, not its file's only.
 
@@ -142,7 +142,7 @@ Relative paths in both options resolve against the current working directory.
 Each compiled test file runs in a fresh Lua state, in this order:
 
 1. The standard libraries are opened.
-2. The shipped stub files run: `base.lua` first, then the others by name.
+2. The shipped stub files run: `base.lua` first, then the others by name, then `unstubbed.lua`, which defines every Native of `common.j` the others left out as a function that throws (under Error messages).
 3. The stub files listed in `stubs` run, in the order given.
 4. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
 5. The test module is required, which registers its tests.
@@ -162,13 +162,15 @@ Other exports of the glue:
 
 #### Error messages
 
-The glue rewrites the VM's `attempt to call a nil value (global 'X')` into `Native X is not stubbed`:
+A Native without a Stub throws a message that names it and `stubNative`, at the line that called it:
 
 ```text
-LuaError: handles/unit_test.lua:12: Native SetUnitX is not stubbed
+LuaError: handles/unit_test.lua:12: GetUnitName is a Native reforged-test does not stub: give it an answer with stubNative("GetUnitName", …)
 ```
 
-The fix is a stub for `X` in a stub file. Every error the VM raises is caught and reported with its Lua message only.
+The fix in a Map project's test is `stubNative`, from `reforged-test/map`; in the library's tests, a stub for the Native in a stub file. The function that throws is defined for every Native of `common.j` in the Typings that no Shipped stub covers, by `stubs/unstubbed.lua`, which `pnpm --filter reforged-test natives:generate` generates from the Typings of their newest Patch and `test/natives.test.ts` holds to them, as it does `runner/map/natives.ts`. So a Native without a Stub is a function, not `nil`: `__stub_unstubbed(name)` tells whether the global `name` still is that function. A stub file of the `stubs` option defines over it. `_G` gets no metatable, and a function of `blizzard.j` or `common.ai` stays undefined: the glue rewrites the VM's `attempt to call a nil value (global 'X')` for it into `Native X is not stubbed`.
+
+Every error the VM raises is caught and reported with its Lua message only.
 
 ### The module naming contract
 

@@ -65,7 +65,13 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## A Native without a Stub
 
-The harness answers the Natives a map most often calls with its Shipped stubs, and not every one: it holds no object data, so nothing answers `GetUnitName`. A test gives such a Native its answer with `stubNative`:
+The harness answers the Natives a map most often calls with its Shipped stubs, and not every one: it holds no object data, so nothing answers `GetUnitName`. Calling a Native without a Stub fails the test with a message that says what to write:
+
+```text
+GetUnitName is a Native reforged-test does not stub: give it an answer with stubNative("GetUnitName", …)
+```
+
+A test gives such a Native its answer with `stubNative`:
 
 {@includeCode ../../../packages/reforged-test/examples/stub-native.test.ts}
 

@@ -166,7 +166,7 @@ describe("runLuaTests", () => {
       "natives.test.ts > calls a Native no stub defines",
     ).result();
     expect(result.errors?.map((e) => e.message)).toEqual([
-      "natives_test.lua:5: Native PauseGame is not stubbed",
+      'natives_test.lua:5: PauseGame is a Native reforged-test does not stub: give it an answer with stubNative("PauseGame", …)',
     ]);
   });
 
@@ -177,7 +177,10 @@ describe("runLuaTests", () => {
     const result = testCase(`load.test.ts > ${LOAD_TEST_NAME}`).result();
     expect(result.state).toBe("failed");
     expect(result.errors?.map((e) => [e.name, e.message])).toEqual([
-      ["LuaError", "load_test.lua:3: Native BlzGetLocale is not stubbed"],
+      [
+        "LuaError",
+        'load_test.lua:3: BlzGetLocale is a Native reforged-test does not stub: give it an answer with stubNative("BlzGetLocale", …)',
+      ],
     ]);
     expect(module.errors()).toEqual([]);
   });

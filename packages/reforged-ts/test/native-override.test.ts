@@ -55,12 +55,16 @@ describe("withNative", () => {
     expect(GetHandleId).toBe(stub);
   });
 
-  it("leaves a Native no stub defines undefined again", () => {
+  it("puts back what a Native no stub defines was: the function that names stubNative", () => {
+    const unstubbed = PauseGame;
     withNative(
       "PauseGame",
       () => undefined,
       () => undefined,
     );
-    expect(PauseGame).toBeUndefined();
+    expect(PauseGame).toBe(unstubbed);
+    expect(() => {
+      PauseGame(true);
+    }).toThrow("PauseGame is a Native reforged-test does not stub");
   });
 });

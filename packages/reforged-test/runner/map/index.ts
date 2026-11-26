@@ -390,7 +390,9 @@ function fire(
   const globals = _G as unknown as Record<string, unknown>;
   const replaced: [string, unknown][] = [];
   for (const [name] of pairs(answers)) {
-    const previous = rawget(globals, name);
+    // The function that throws for a Native without a Stub is no answer to
+    // put back.
+    const previous = __stub_unstubbed(name) ? undefined : rawget(globals, name);
     __stub_response(name);
     if (previous !== undefined) table.insert(replaced, [name, previous]);
   }
