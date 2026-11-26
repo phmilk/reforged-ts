@@ -54,14 +54,26 @@ it("notes the afterEach hooks, run after a failing body", function()
 end)
 
 describe("an afterEach that throws", function()
+  beforeEach(function() return note("cleanup") end)
   afterEach(note("outer after"))
   afterEach(function() error("after broke", 0) end)
   afterEach(note("first after"))
   it("fails a test that had passed", note("body"))
 end)
 
-it("notes the afterEach hooks, the ones after the failing one skipped", function()
+it("notes the afterEach hooks, the ones after the failing one and the cleanup skipped", function()
   expect(notes()).toEqual({ "body", "first after" })
+end)
+
+describe("a beforeEach that returns a function", function()
+  beforeEach(function() return note("cleanup 1") end)
+  beforeEach(function() return note("cleanup 2") end)
+  afterEach(note("after"))
+  it("runs it after the afterEach hooks", note("body"))
+end)
+
+it("notes the cleanups after the afterEach hooks, the last returned first", function()
+  expect(notes()).toEqual({ "body", "after", "cleanup 2", "cleanup 1" })
 end)
 
 describe("an afterEach whose expectation fails", function()

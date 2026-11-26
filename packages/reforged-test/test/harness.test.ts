@@ -289,7 +289,17 @@ describe("beforeEach and afterEach, scoped by describe", () => {
       },
       {
         suite: [],
-        name: "notes the afterEach hooks, the ones after the failing one skipped",
+        name: "notes the afterEach hooks, the ones after the failing one and the cleanup skipped",
+        status: "pass",
+      },
+      {
+        suite: ["a beforeEach that returns a function"],
+        name: "runs it after the afterEach hooks",
+        status: "pass",
+      },
+      {
+        suite: [],
+        name: "notes the cleanups after the afterEach hooks, the last returned first",
         status: "pass",
       },
       {

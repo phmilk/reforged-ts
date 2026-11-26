@@ -46,14 +46,17 @@ export const it: (name: string, fn: () => void) => void = luaIt;
  * - One that throws fails the test with its error, and the remaining
  *   `beforeEach` hooks and the test's body are skipped; the `afterEach`
  *   hooks still run.
- * - A function it returns is not run: clean up in an `afterEach`.
+ * - A function it returns runs after the test's `afterEach` hooks, the last
+ *   returned first, as Vitest's cleanup does.
  * - There is no `beforeAll`: each test is a game of its own, so the file's
  *   top level runs once per test already.
  * @param fn - The function to run before each test.
  * @throws When called inside a test:
  * `beforeEach: called inside a test; register it in a describe or at the top of the file`.
  */
-export const beforeEach: (fn: () => void) => void = luaBeforeEach;
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- Vitest's own hook type
+export const beforeEach: (fn: () => void | (() => void)) => void =
+  luaBeforeEach;
 
 /**
  * Registers a function that runs after each test of the current
@@ -63,8 +66,8 @@ export const beforeEach: (fn: () => void) => void = luaBeforeEach;
  * - The hooks run from the inner `describe` outwards, the last registered
  *   first within one.
  * - One that throws fails a test that had passed, and the remaining
- *   `afterEach` hooks are skipped, as Vitest's; a test that had failed
- *   keeps its first error.
+ *   `afterEach` hooks and the cleanups `beforeEach` returned are skipped, as
+ *   Vitest's; a test that had failed keeps its first error.
  * - There is no `afterAll`: each test is a game of its own, and nothing of
  *   one reaches the next.
  * @param fn - The function to run after each test.
