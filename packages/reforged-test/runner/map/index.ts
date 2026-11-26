@@ -278,13 +278,60 @@ export interface DisplayedText {
 }
 
 /**
- * The Test game of one test, which `startGame` returns: what the player
- * observed of it.
+ * The Test game of one test, which `startGame` returns: the Game actions,
+ * which say what happens in it, and what the player observed of it.
+ * @remarks
+ * A Game action (`kill`) takes its subject, a unit as its Handle or
+ * anything with `.handle`, then an options object in the game's words. It
+ * fires every event the game would fire, with every response the game
+ * gives, writes the state its name states and nothing derived, refuses what
+ * the game refuses with an error, and returns nothing. There is no
+ * `createUnit`: a test creates its units with the map's own API.
  * @example What the players see when the game starts
  * {@includeCode ../../examples/welcome.test.ts}
  * @noSelf
  */
 export interface Game {
+  /**
+   * Kills `unit`, as the game kills it: the unit is dead, then every death
+   * Trigger the game would fire runs, the widget death
+   * (`TriggerRegisterDeathEvent`), `EVENT_PLAYER_UNIT_DEATH` of the unit's
+   * owner and `EVENT_UNIT_DEATH`, in that order.
+   * @remarks
+   * - In a handler the unit is already dead: `UnitAlive` is false and its
+   *   life reads 0.
+   * - In the player unit death and the unit death, `GetTriggerUnit` and
+   *   `GetDyingUnit` answer the unit, `GetTriggerPlayer` its owner, and
+   *   `GetKillingUnit` answers `by`, or nil without it. A killer already
+   *   dead is accepted.
+   * - In the widget death `GetTriggerUnit` answers the unit, and
+   *   `GetDyingUnit`, `GetTriggerPlayer` and `GetKillingUnit` answer nil, as
+   *   in the game.
+   * - It writes the death and nothing derived: no bounty, no experience, no
+   *   corpse, and the killer is unchanged. It is not `KillUnit`, which
+   *   records no call here.
+   * - A handler's error is thrown out of the action when nothing caught it.
+   * @example A bounty paid to the killer's owner
+   * {@includeCode ../../examples/kill.test.ts}
+   * @param unit - The unit that dies: its Handle, or anything with
+   * `.handle`, as a `Unit` of the library.
+   * @param options - What else the death needs: `by`, the unit that killed
+   * it, as its Handle or anything with `.handle`.
+   * @throws When `unit` is not a unit, a bare number included:
+   * `game.kill: expected a unit, its Handle or anything with .handle, such as a Unit of the library`.
+   * @throws When `unit` was removed from the game, naming it:
+   * `game.kill: unit#1048579 was removed from the game`.
+   * @throws When `unit` is already dead, naming it:
+   * `game.kill: unit#1048579 is already dead, and the game kills no unit twice`.
+   * @throws When `by` is not a unit:
+   * `game.kill: expected "by" to be a unit, its Handle or anything with .handle, such as a Unit of the library`.
+   * @throws When `by` was removed from the game, naming it:
+   * `game.kill: the killer, unit#1048580, was removed from the game`.
+   */
+  kill(
+    unit: unit | { readonly handle: unit },
+    options?: { readonly by?: unit | { readonly handle: unit } },
+  ): void;
   /**
    * Every line printed since the Test game began, the library's included,
    * oldest first: one entry per `print` call, its arguments joined by a
@@ -365,11 +412,17 @@ function displayed(): DisplayedText[] {
 const NOT_A_PLAYER =
   "game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)";
 
+/**
+ * The Handle a Game action or a Test control was given: the value itself,
+ * or its `.handle` when it has one, as a Wrapper of the library does.
+ */
+function handleOf(value: unknown): unknown {
+  if (type(value) !== "table") return value;
+  return (value as { handle?: unknown }).handle ?? value;
+}
+
 function setLocalPlayer(player: player | { readonly handle: player }): void {
-  let handle: unknown = player;
-  if (type(handle) === "table") {
-    handle = (handle as { handle?: unknown }).handle ?? handle;
-  }
+  const handle = handleOf(player);
   // What the Shipped stubs keep on a player they made: its kind and its
   // slot. A Handle of newHandle("player") has no slot, so it is refused.
   const made = handle as { __kind?: unknown; number?: unknown };
@@ -381,6 +434,64 @@ function setLocalPlayer(player: player | { readonly handle: player }): void {
     error(NOT_A_PLAYER, 2);
   }
   __stub_set_local_player(made.number as number);
+}
+
+/** What the units stub keeps on a unit it made, as a Game action reads it. */
+interface UnitState {
+  readonly __kind?: unknown;
+  /** Set by a death. */
+  readonly dead?: boolean;
+  /** Set by `RemoveUnit`. */
+  readonly destroyed?: boolean;
+}
+
+/**
+ * The unit a Game action was given, as its Handle or anything with
+ * `.handle`; undefined for anything else, a bare number included.
+ */
+function unitOf(value: unknown): UnitState | undefined {
+  const handle = handleOf(value);
+  if (type(handle) !== "table") return undefined;
+  return (handle as UnitState).__kind === "unit"
+    ? (handle as UnitState)
+    : undefined;
+}
+
+const A_UNIT =
+  "a unit, its Handle or anything with .handle, such as a Unit of the library";
+
+function kill(
+  unit: unit | { readonly handle: unit },
+  options?: { readonly by?: unit | { readonly handle: unit } },
+): void {
+  const dying = unitOf(unit);
+  if (dying === undefined) error(`game.kill: expected ${A_UNIT}`, 2);
+  // Removed before dead: a unit killed, then removed, is no longer there.
+  if (dying.destroyed === true) {
+    error(`game.kill: ${__stub_format(dying)} was removed from the game`, 2);
+  }
+  if (dying.dead === true) {
+    error(
+      `game.kill: ${__stub_format(dying)} is already dead, and the game kills no unit twice`,
+      2,
+    );
+  }
+  let killer: UnitState | undefined = undefined;
+  if (options?.by !== undefined) {
+    killer = unitOf(options.by);
+    if (killer === undefined) {
+      error(`game.kill: expected "by" to be ${A_UNIT}`, 2);
+    }
+    if (killer.destroyed === true) {
+      error(
+        `game.kill: the killer, ${__stub_format(killer)}, was removed from the game`,
+        2,
+      );
+    }
+  }
+  // The death KillUnit fires (docs/research/unit-event-timing.md), with the
+  // killer the test named.
+  __stub_kill_unit(dying as unit, killer as unit | undefined);
 }
 
 // The response each event family derives its subject from.
@@ -449,7 +560,7 @@ function fire(
 
 // printed and displayed are read at each access, so each read is a copy and
 // the map's later lines show.
-const game = setmetatable({ fire, setLocalPlayer } as Game, {
+const game = setmetatable({ kill, fire, setLocalPlayer } as Game, {
   __index: (_: Game, key: unknown): unknown => {
     if (key === "printed") return __stub_printed();
     if (key === "displayed") return displayed();

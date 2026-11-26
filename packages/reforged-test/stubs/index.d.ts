@@ -117,6 +117,17 @@ declare function __stub_deliver_sync(
  */
 declare function __stub_dispatch_damage(damage: StubDamage): number;
 
+/**
+ * The death of a unit, as the game fires it inside `KillUnit` (which calls
+ * it for a live unit, with no killer): marks the unit dead, then dispatches
+ * the widget death, the player unit death of its owner and the unit death,
+ * in that order, the unit already dead in every handler. `killer` is what
+ * `GetKillingUnit` answers in the player unit death and the unit death; the
+ * widget death answers none. It checks nothing, a unit already dead
+ * included, and records no call.
+ */
+declare function __stub_kill_unit(whichUnit: unit, killer?: unit): void;
+
 // The test controls.
 
 /** Sets what `os.clock` answers from now on; returns what it answered before. */
