@@ -100,17 +100,25 @@ local function carry(whichUnit, whichItem)
   whichUnit.inventory[slot] = whichItem
 end
 
--- Dispatches one item event of the unit: the player unit event `playerEvent`
--- of its owner, then the unit event `unitEvent`.
+-- Dispatches one event of the unit with `context`: the player unit event
+-- `playerEvent` to the registrations of `player`, then the unit event
+-- `unitEvent` to the unit's, the order the Probe measured for every
+-- Dispatching Native (docs/research/unit-event-timing.md, "Limits": it could
+-- not tell that order from registration order, as the Probe registered the
+-- player Triggers first).
+local function dispatchUnitEvent(whichUnit, player, playerEvent, unitEvent, context)
+  __stub_dispatch(playerEvent, player, context)
+  __stub_dispatch(unitEvent, whichUnit, context)
+end
+
+-- Dispatches one item event of the unit, to its owner then to the unit.
 local function dispatchItemEvent(whichUnit, whichItem, playerEvent, unitEvent)
-  local context = {
+  dispatchUnitEvent(whichUnit, whichUnit.owner, playerEvent, unitEvent, {
     GetTriggerUnit = whichUnit,
     GetTriggerPlayer = whichUnit.owner,
     GetManipulatingUnit = whichUnit,
     GetManipulatedItem = whichItem,
-  }
-  __stub_dispatch(playerEvent, whichUnit.owner, context)
-  __stub_dispatch(unitEvent, whichUnit, context)
+  })
 end
 
 local function dispatchPickup(whichUnit, whichItem)
@@ -136,6 +144,8 @@ end
 
 UnitInventorySize = shippedInventorySize
 
+-- Asking the shipped stub adds no call-log line, as the map made no such
+-- call; a test's own answer is asked, and records its call.
 local function hasInventory(whichUnit)
   local inventorySize = UnitInventorySize
   if rawequal(inventorySize, shippedInventorySize) then
@@ -188,6 +198,7 @@ function UnitRemoveItem(whichUnit, whichItem)
     return
   end
   dispatchDrop(whichUnit, whichItem)
+  -- Read again: a drop handler may have moved or removed the item.
   local slot = slotOf(whichUnit, whichItem)
   if slot ~= nil then
     whichUnit.inventory[slot] = nil
@@ -259,13 +270,11 @@ function KillUnit(whichUnit)
     GetTriggerUnit = whichUnit,
     GetTriggerWidget = whichUnit,
   })
-  local context = {
+  dispatchUnitEvent(whichUnit, whichUnit.owner, EVENT_PLAYER_UNIT_DEATH, EVENT_UNIT_DEATH, {
     GetTriggerUnit = whichUnit,
     GetTriggerPlayer = whichUnit.owner,
     GetDyingUnit = whichUnit,
-  }
-  __stub_dispatch(EVENT_PLAYER_UNIT_DEATH, whichUnit.owner, context)
-  __stub_dispatch(EVENT_UNIT_DEATH, whichUnit, context)
+  })
 end
 
 -- Whether the unit is alive: true until it died. A removed unit is not
@@ -279,7 +288,7 @@ end
 -- points, so a live unit's life, or any other widget's, is an error, as it
 -- was before the stubs knew death: the test gives it with stubNative, or a
 -- stub of its own.
-local function deadLife(name, whichWidget)
+local function lifeOrError(name, whichWidget)
   if whichWidget.__kind == "unit" and whichWidget.dead then
     return 0.0
   end
@@ -289,7 +298,7 @@ end
 
 function GetWidgetLife(whichWidget)
   __stub_record("GetWidgetLife", whichWidget)
-  return deadLife("GetWidgetLife", whichWidget)
+  return lifeOrError("GetWidgetLife", whichWidget)
 end
 
 function GetUnitState(whichUnit, whichUnitState)
@@ -298,7 +307,7 @@ function GetUnitState(whichUnit, whichUnitState)
     error("GetUnitState: the stubs keep no unit state; give "
       .. __stub_format(whichUnitState) .. " with stubNative", 2)
   end
-  return deadLife("GetUnitState", whichUnit)
+  return lifeOrError("GetUnitState", whichUnit)
 end
 
 -- SetUnitOwner gives the unit to another player, then dispatches the player
@@ -314,14 +323,12 @@ function SetUnitOwner(whichUnit, whichPlayer, changeColor)
     return
   end
   whichUnit.owner = whichPlayer
-  local context = {
+  dispatchUnitEvent(whichUnit, whichPlayer, EVENT_PLAYER_UNIT_CHANGE_OWNER, EVENT_UNIT_CHANGE_OWNER, {
     GetTriggerUnit = whichUnit,
     GetTriggerPlayer = whichPlayer,
     GetChangingUnit = whichUnit,
     GetChangingUnitPrevOwner = previous,
-  }
-  __stub_dispatch(EVENT_PLAYER_UNIT_CHANGE_OWNER, whichPlayer, context)
-  __stub_dispatch(EVENT_UNIT_CHANGE_OWNER, whichUnit, context)
+  })
 end
 
 function RemoveUnit(whichUnit)

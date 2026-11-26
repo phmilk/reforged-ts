@@ -90,6 +90,7 @@ local function footman(slot)
   return CreateUnit(Player(slot or 0), FourCC("hfoo"), 0, 0, 0)
 end
 
+-- The cases KillUnit(live), KillUnit(dead) and RemoveUnit(live) of docs/research/unit-event-timing.md.
 describe("KillUnit", function()
   it("dispatches the widget death, the player unit death and the unit death, the unit already dead", function()
     startGame()
@@ -162,6 +163,7 @@ describe("KillUnit", function()
   end)
 end)
 
+-- The cases SetUnitOwner(footman, Player(1)) and SetUnitOwner(footman, Player(0)), its owner, of docs/research/unit-event-timing.md.
 describe("SetUnitOwner", function()
   it("dispatches the change of owner of the new owner, then the unit's, the owner already changed", function()
     startGame()
@@ -189,6 +191,8 @@ describe("SetUnitOwner", function()
   end)
 end)
 
+-- The cases UnitAddItem(paladin, claws), the item it carries, no inventory, and
+-- UnitAddItemById(paladin, 'ratc') of docs/research/unit-event-timing.md.
 describe("UnitAddItem and UnitAddItemById", function()
   it("dispatch the pickup, the item already carried in the handler", function()
     startGame()
@@ -246,6 +250,7 @@ describe("UnitAddItem and UnitAddItemById", function()
   end)
 end)
 
+-- The case UnitRemoveItem(paladin, claws) of docs/research/unit-event-timing.md.
 describe("UnitRemoveItem", function()
   it("dispatches the drop, the item still carried in the handler and gone after", function()
     startGame()

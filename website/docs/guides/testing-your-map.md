@@ -41,7 +41,7 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 {/* The table of Game actions, written with game.kill (#983) and game.chat, game.select, game.deselect and game.leave (#984). */}
 
-**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner, before the unit's own event:
+**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, as the game fired them:
 
 | Native                           | Fires, in this order                                                                                               | A handler reads                                                                                                                 | Fires nothing for                                            |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -52,7 +52,7 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 - **Dead or alive, no hit points.** A unit is alive until it dies; after its death `UnitAlive` is false and its life reads 0. The harness keeps no life for a live unit: a test that reads one gives it with `stubNative`.
 - **An inventory for every unit.** The harness holds no object data, so every unit has one; a test makes a unit without one by answering `UnitInventorySize` with 0.
-- **Nothing else fires on its own.** `RemoveUnit` fires nothing, and a lethal `UnitDamageTarget` fires its damage events but no death. A Dispatching Native replaced with `stubNative` fires nothing either.
+- **Nothing else fires on its own.** `RemoveUnit` and `UnitRemoveItemFromSlot` fire nothing, and a lethal `UnitDamageTarget` fires its damage events but no death. A Dispatching Native replaced with `stubNative` fires nothing either.
 
 **Every other event goes through `game.fire`.** An event no Game action and no Dispatching Native covers (a spell, an order, a construction, a hero's level) is fired with `game.fire`, the one way to fire it. It takes the event and its Firing context: what each response Native answers while the event's Triggers run, by name. Every Trigger the game would fire for the event runs, the map's handlers among them, and the test never picks one:
 
