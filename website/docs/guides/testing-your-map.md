@@ -51,7 +51,7 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 {@includeCode ../../../packages/reforged-test/examples/expect.test.ts}
 
-**Every Native is already a Spy.** Hand the Native itself to `expect`, and the spy matchers, which [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) lists, read the calls its Stub recorded. The arguments are typed from the Native's parameters, so a wrong one is a compile error, and nothing is replaced to watch the Native, so there is nothing to restore:
+**Every Native is already a Spy.** Hand the Native itself to `expect`, and the spy matchers (`toHaveBeenCalled`, `toHaveBeenCalledTimes`, `toHaveBeenCalledWith`, `toHaveBeenLastCalledWith` and `toHaveBeenNthCalledWith`, which [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) describes) read the calls its Stub recorded. The arguments are typed from the Native's parameters, so a wrong one is a compile error, and nothing is replaced to watch the Native, so there is nothing to restore:
 
 {@includeCode ../../../packages/reforged-test/examples/spies.test.ts}
 

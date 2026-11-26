@@ -674,12 +674,22 @@ describe("spies, on reforged-test/map", () => {
     });
   });
 
+  it("draw no diff of a call never made", () => {
+    expect(results("fail")["the nth call"]).toMatchObject({
+      actual: undefined,
+      expected: undefined,
+    });
+    expect(
+      spies.tests.find((test) => test.name === "the nth call"),
+    ).not.toHaveProperty("actual");
+  });
+
   it("raise on a value calls cannot read, and read a thrown table's .message", () => {
     expect(results("raise")).toEqual({
       "calls of a value that is no Spy": {
         status: "error",
         message:
-          "spies_test.lua:135: calls: expected a Native or a Spy made by fn(), got 3",
+          "spies_test.lua:137: calls: expected a Native or a Spy made by fn(), got 3",
       },
       "a thrown table with a message": {
         status: "error",

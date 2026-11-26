@@ -666,14 +666,14 @@ const spies = new LuaMap<Procedure, Packed[]>();
  * @returns The Spy, typed as `impl`.
  */
 export function fn<F extends Procedure = Procedure>(impl?: F): F {
-  const own: Packed[] = [];
+  const recordedCalls: Packed[] = [];
   const spy = (...args: unknown[]): unknown => {
-    table.insert(own, table.pack(...args));
+    table.insert(recordedCalls, table.pack(...args));
     // A bare return: a Spy without impl returns no value.
     if (impl === undefined) return;
     return impl(...args);
   };
-  spies.set(spy, own);
+  spies.set(spy, recordedCalls);
   return spy as F;
 }
 
@@ -995,8 +995,9 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
   };
   /**
    * Fails a matcher that compares arguments: its sentence, the calls
-   * received, and, not negated, the diff of `call` (every call when
-   * omitted) and the expected arguments.
+   * received, and, not negated, the diff of the expected arguments with
+   * `call`, or with every call for `"every"`; there is none when `call` is
+   * undefined, a call never made.
    */
   const failCalledWith = (
     spy: Recorded,
