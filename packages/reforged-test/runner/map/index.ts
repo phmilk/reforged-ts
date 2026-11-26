@@ -214,7 +214,7 @@ export interface Game {
    * `game.fire: EVENT_PLAYER_UNIT_SPELL_EFFECT is a playerunitevent, so its Firing context needs GetTriggerUnit`.
    * @throws When the `GetTriggerUnit` of a `playerunitevent` has no owner,
    * a Handle of `newHandle("unit")` included:
-   * `game.fire: the GetTriggerUnit of EVENT_PLAYER_UNIT_SPELL_EFFECT has no owner; give it a unit the Test game created, such as one of CreateUnit`.
+   * `game.fire: the GetTriggerUnit of EVENT_PLAYER_UNIT_SPELL_EFFECT has no owner; give it a unit the Test game created, such as one CreateUnit returns`.
    */
   fire(
     event: playerunitevent | unitevent | playerevent | gameevent,
@@ -310,7 +310,7 @@ function fire(
       subject = (subject as { owner?: unknown }).owner;
       if (subject === undefined) {
         error(
-          `game.fire: the GetTriggerUnit of ${constant.__name as string} has no owner; give it a unit the Test game created, such as one of CreateUnit`,
+          `game.fire: the GetTriggerUnit of ${constant.__name as string} has no owner; give it a unit the Test game created, such as one CreateUnit returns`,
           2,
         );
       }
