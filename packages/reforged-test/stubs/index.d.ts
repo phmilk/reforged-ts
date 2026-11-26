@@ -135,6 +135,13 @@ declare function __stub_init_globals(): void;
  */
 declare function __stub_args(name: string): (unknown[] & { n: number })[];
 
+/**
+ * The name of the Native whose Stub is `value`: a global function a stub
+ * file defined, or one `__stub_define` defined. Undefined when `value` is no
+ * Stub, a Lua standard function or a function of the map included.
+ */
+declare function __stub_native_name(value: unknown): string | undefined;
+
 /** The frame stub's "not found" frame, whose handle id is 0. */
 declare function __stub_frame_not_found(): framehandle;
 
@@ -152,6 +159,22 @@ declare function __stub_record(name: string, ...args: unknown[]): void;
  * by its name, a string quoted, a function as `<function>`.
  */
 declare function __stub_format(value: unknown): string;
+
+/**
+ * Takes every global function the stub files defined, but the standard
+ * library's and the `__stub_*` helpers, as the Stub of the Native it is named
+ * after. The glue calls it after the last stub file.
+ */
+declare function __stub_seal(): void;
+
+/**
+ * Defines the global Native `name` as `stub`, a Stub `__stub_native_name`
+ * knows. `stub` records its own calls with `__stub_record`.
+ */
+declare function __stub_define(
+  name: string,
+  stub: (...args: never[]) => unknown,
+): void;
 
 /** A new stub handle of the type `kind`, with the next handle id. */
 declare function __stub_new_handle(kind: string): handle;

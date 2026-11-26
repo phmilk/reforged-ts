@@ -5,6 +5,7 @@ import {
   describe,
   expect,
   it,
+  type TestError,
   type UserConsoleLog,
 } from "vitest";
 import type { TestCase, TestModule, TestSuite, Vitest } from "vitest/node";
@@ -47,7 +48,9 @@ beforeAll(async () => {
     {
       test: {
         include: ["*.spec.ts"],
-        provide: { outDir: outDir("results", "unstubbed", "per-test") },
+        provide: {
+          outDir: outDir("results", "unstubbed", "per-test", "diff"),
+        },
       },
     },
   );
@@ -80,9 +83,17 @@ function testCase(fullName: string): TestCase {
   return found;
 }
 
+/** The first error the test of `fullName` failed with. */
+function firstError(fullName: string): TestError {
+  const error = testCase(fullName).result().errors?.at(0);
+  if (error === undefined) throw new Error(`${fullName} did not fail`);
+  return error;
+}
+
 describe("runLuaTests", () => {
   it("registers one describe per compiled test file, under its TypeScript name", () => {
     expect([...module.children.suites()].map((s) => s.name)).toEqual([
+      "diff.test.ts",
       "game.test.ts",
       "handles/unit.test.ts",
       "load.test.ts",
@@ -160,6 +171,24 @@ describe("runLuaTests", () => {
         "results.test.ts > arithmetic > wraps around at 2^31 [32-bit]",
       ).result().state,
     ).toBe("skipped");
+  });
+
+  it("hands Vitest the actual and expected values, for its diff", () => {
+    const deep = firstError("diff.test.ts > a deep difference");
+    expect(deep).toMatchObject({
+      name: "AssertionError",
+      actual: '{\n  units = {\n    "hfoo",\n  },\n  wave = 2,\n}',
+      expected: '{\n  units = {\n    "hfoo",\n  },\n  wave = 3,\n}',
+    });
+    expect(deep.diff).toContain("-   wave = 3,");
+    expect(deep.diff).toContain("+   wave = 2,");
+    const call = firstError("diff.test.ts > a call with other arguments");
+    expect(call).toMatchObject({
+      actual: '(1, "a")',
+      expected: '(1, "b")',
+    });
+    expect(call.diff).toContain('Expected: "(1, "b")"');
+    expect(call.diff).toContain('Received: "(1, "a")"');
   });
 
   it("never reaches emscripten's uncaught-exception handler", () => {
