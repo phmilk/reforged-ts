@@ -1,28 +1,18 @@
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import * as ts from "typescript";
 import { describe, expect, it } from "vitest";
 import { RUN_GLOBAL, runTestModule } from "../src/lua-state.js";
+import { shippedStubs } from "../src/shipped-stubs.js";
 
 // reforged-test/stubs declares every `__stub_*` global the Shipped stubs
 // define, and nothing else: the helpers the Lua defines are read from a Lua
 // state that ran the Shipped stubs, the names the declarations give from
 // stubs/index.d.ts.
 
-const stubsDir = fileURLToPath(new URL("../stubs/", import.meta.url));
-const declarations = join(stubsDir, "index.d.ts");
-
-/** The Shipped stubs in the order the glue runs them: base.lua first. */
-function shippedStubs(): { name: string; source: string }[] {
-  const files = readdirSync(stubsDir)
-    .filter((file) => file.endsWith(".lua") && file !== "base.lua")
-    .sort();
-  return ["base.lua", ...files].map((file) => ({
-    name: `reforged-test/stubs/${file}`,
-    source: readFileSync(join(stubsDir, file), "utf8"),
-  }));
-}
+const declarations = fileURLToPath(
+  new URL("../stubs/index.d.ts", import.meta.url),
+);
 
 // A module that answers, in place of the runner, the sorted names of the
 // `__stub_*` globals.
