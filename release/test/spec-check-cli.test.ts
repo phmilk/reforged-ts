@@ -6,7 +6,7 @@ import { graphQlFetch, type Sent } from "./support/board.js";
 const LIBRARY = "phmilk/reforged-ts";
 const TEMPLATE = "phmilk/reforged-ts-template";
 
-const USAGE = "Usage: spec:check <spec> [owner/name]\n";
+const USAGE = "Usage: spec:check <spec> [owner/name] [--json]\n";
 
 const gh: Gh = (args) =>
   args.join(" ") === "auth token"
@@ -246,11 +246,152 @@ describe("spec:check", () => {
     expect(result.stderr).toContain("not logged in");
   });
 
+  describe("--json", () => {
+    it("prints a delivered Spec as one JSON object, and exits 0", async () => {
+      const result = await run(
+        ["10", "--json"],
+        specAnswer([subIssue(LIBRARY, 11), subIssue(TEMPLATE, 5)]),
+      );
+
+      expect(result.stderr).toBe("");
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout.endsWith("}\n")).toBe(true);
+      expect(JSON.parse(result.stdout)).toEqual({
+        spec: { repository: LIBRARY, number: 10, title: "The Spec" },
+        delivered: true,
+        counts: { items: 2, rows: 2, tickets: 2 },
+        gaps: [],
+      });
+    });
+
+    it("prints each gap with its kind, its fields and its sentence, and exits 1", async () => {
+      const result = await run(
+        ["#10", "--json"],
+        specAnswer(
+          [
+            subIssue(LIBRARY, 11, {
+              state: "OPEN",
+              stateReason: null,
+              assignees: { nodes: [{ login: "wyller" }] },
+              body: "## Acceptance criteria\n\n- [ ] It reads the body.\n",
+            }),
+            subIssue(TEMPLATE, 5, {
+              stateReason: "NOT_PLANNED",
+              body: "## Acceptance criteria\n\n- [ ] It reads the body.\n- [x] Check whether it can. If so, yes; if not, no.\n",
+            }),
+          ],
+          {
+            body: BODY.replace(
+              "- It prints",
+              "- It counts.\n- It prints",
+            ).replace("| #11 |", "| #12 |"),
+          },
+        ),
+      );
+
+      expect(result.stderr).toBe("");
+      expect(result.exitCode).toBe(1);
+      expect(JSON.parse(result.stdout)).toEqual({
+        spec: { repository: LIBRARY, number: 10, title: "The Spec" },
+        delivered: false,
+        counts: { items: 3, rows: 2, tickets: 2 },
+        gaps: [
+          {
+            kind: "no-row",
+            item: "It counts.",
+            sentence: 'No row for the item "It counts.".',
+          },
+          {
+            kind: "not-sub-issue",
+            item: "It reads the body.",
+            ticket: { repository: LIBRARY, number: 12 },
+            sentence:
+              'The row of "It reads the body." names #12, which is not a sub-issue of the Spec.',
+          },
+          {
+            kind: "open",
+            ticket: { repository: LIBRARY, number: 11 },
+            assignees: ["wyller"],
+            unchecked: 1,
+            sentence:
+              "#11 is open, held by @wyller, with 1 criterion unchecked.",
+          },
+          {
+            kind: "not-completed",
+            ticket: { repository: TEMPLATE, number: 5 },
+            reason: "NOT_PLANNED",
+            sentence: `${TEMPLATE}#5 closed as NOT_PLANNED, not as completed.`,
+          },
+          {
+            kind: "unchecked",
+            ticket: { repository: TEMPLATE, number: 5 },
+            criterion: "It reads the body.",
+            sentence: `${TEMPLATE}#5 leaves a criterion unchecked: "It reads the body.".`,
+          },
+          {
+            kind: "no-outcome",
+            ticket: { repository: TEMPLATE, number: 5 },
+            criterion: "Check whether it can. If so, yes; if not, no.",
+            sentence: `${TEMPLATE}#5 has a "check whether…" without its Outcome: line: "Check whether it can. If so, yes; if not, no.".`,
+          },
+        ],
+      });
+    });
+
+    it("keeps errors as text on stderr, with nothing on stdout", async () => {
+      const result = await run(
+        ["10", "--json"],
+        specAnswer([], { labels: ["ticket"] }),
+      );
+
+      expect(result.exitCode).toBe(1);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toBe(
+        `${LIBRARY}#10 is not a Spec: it is not labelled spec.\n`,
+      );
+    });
+
+    it.each([
+      [["--json", "10"], LIBRARY, 10],
+      [["--json", "5", TEMPLATE], TEMPLATE, 5],
+      [["5", "--json", TEMPLATE], TEMPLATE, 5],
+      [["#5", TEMPLATE, "--json"], TEMPLATE, 5],
+    ])(
+      "reads the flag anywhere among the arguments, as in %j",
+      async (args, repository, number) => {
+        const sent: Sent[] = [];
+        const result = await run(
+          args,
+          specAnswer([subIssue(LIBRARY, 11), subIssue(TEMPLATE, 5)]),
+          sent,
+        );
+
+        expect(result.stderr).toBe("");
+        expect(sent.map(({ variables }) => variables)).toEqual([
+          {
+            owner: "phmilk",
+            name: repository.replace("phmilk/", ""),
+            number,
+          },
+        ]);
+        expect(JSON.parse(result.stdout)).toMatchObject({
+          spec: { repository, number, title: "The Spec" },
+        });
+      },
+    );
+  });
+
   it.each([
     [[]],
     [["ten"]],
     [["10", "not-a-repository"]],
     [["10", LIBRARY, "extra"]],
+    [["10", "--yaml"]],
+    [["--jsn", "10"]],
+    [["10", "--x/y"]],
+    [["10", "-j"]],
+    [["--json"]],
+    [["10", LIBRARY, "extra", "--json"]],
   ])("exits 2 with the usage on %j", async (args) => {
     const sent: Sent[] = [];
     const result = await run(args, specAnswer([]), sent);

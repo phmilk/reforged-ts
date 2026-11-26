@@ -1,5 +1,5 @@
 /**
- * The coverage check, `pnpm spec:check <spec> [owner/name]`: whether a Spec
+ * The coverage check, `pnpm spec:check <spec> [owner/name] [--json]`: whether a Spec
  * is fully delivered, on evidence, before it closes (ADR 0023). It has the
  * board's shape: `readSpec` reads the Spec's body and every sub-issue
  * (state and close reason, assignees, body) through the GitHub GraphQL
@@ -460,6 +460,51 @@ export function renderVerdict(spec: FetchedSpec, verdict: Verdict): string {
       .map((gap) => `- ${describeGap(spec.repository, gap)}\n`)
       .join("")
   );
+}
+
+/** A gap as `pnpm spec:check --json` prints it: its fields and its line of the text. */
+export type GapReport = Gap & {
+  /** The sentence the text form prints for it, without its `- ` marker. */
+  sentence: string;
+};
+
+/**
+ * The verdict as `pnpm spec:check --json` prints it, a contract that
+ * `ship-spec` and `next-step` read: a change to it changes them too.
+ */
+export interface VerdictReport {
+  /** The Spec checked. */
+  spec: IssueRef & { title: string };
+  /** Whether the verdict holds no gap, and so the Spec may close. */
+  delivered: boolean;
+  /** The counts of the verdict. */
+  counts: { items: number; rows: number; tickets: number };
+  /** Every gap, in the verdict's order. */
+  gaps: GapReport[];
+}
+
+/** The verdict on `spec`, as `pnpm spec:check --json` prints it. */
+export function verdictReport(
+  spec: FetchedSpec,
+  verdict: Verdict,
+): VerdictReport {
+  return {
+    spec: {
+      repository: spec.repository,
+      number: spec.number,
+      title: spec.title,
+    },
+    delivered: verdict.gaps.length === 0,
+    counts: {
+      items: verdict.items,
+      rows: verdict.rows,
+      tickets: verdict.tickets,
+    },
+    gaps: verdict.gaps.map((gap) => ({
+      ...gap,
+      sentence: describeGap(spec.repository, gap),
+    })),
+  };
 }
 
 // Reading the Spec from GitHub.
