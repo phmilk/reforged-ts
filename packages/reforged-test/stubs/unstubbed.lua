@@ -1730,8 +1730,11 @@ local unstubbed = {}
 for i = 1, #natives do
   local name = natives[i]
   if rawget(_G, name) == nil then
-    -- Level 2: the error names the line that called the Native.
-    local function native()
+    local function throwUnstubbed()
+      -- Level 2 names the line that called the Native. A tail call
+      -- (`return GetUnitName(unit)`, as a Wrapper compiles) leaves no
+      -- frame of its caller, so the line is then the nearest caller's
+      -- still on the stack: the one that called the Wrapper.
       error(
         name
           .. " is a Native reforged-test does not stub: give it an answer with stubNative(\""
@@ -1740,8 +1743,8 @@ for i = 1, #natives do
         2
       )
     end
-    unstubbed[name] = native
-    _G[name] = native
+    unstubbed[name] = throwUnstubbed
+    _G[name] = throwUnstubbed
   end
 end
 
@@ -1749,6 +1752,6 @@ end
 -- file defined, which nothing replaced since. Not a Native, so it adds no
 -- call-log line.
 function __stub_unstubbed(name)
-  local native = unstubbed[name]
-  return native ~= nil and rawget(_G, name) == native
+  local thrower = unstubbed[name]
+  return thrower ~= nil and rawget(_G, name) == thrower
 end

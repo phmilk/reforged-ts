@@ -30,3 +30,18 @@ end)
 it("reports a function that is no Native as the VM does", function()
   expect(function() BJDebugMsg("hello") end).toThrow("attempt to call a nil value (global 'BJDebugMsg')")
 end)
+
+-- A tail call leaves no frame of its caller: the line is the nearest
+-- caller's still on the stack, as for a map that calls a Wrapper.
+it("names the line that called the function a tail call of the Native is in", function()
+  local function name() return GetUnitName(nil) end
+  local function caller()
+    local answer = name() -- line 39
+    return answer
+  end
+  local ok, message = pcall(caller)
+  expect(ok).toEqual(false)
+  expect(message).toEqual(
+    'natives_test.lua:39: GetUnitName is a Native reforged-test does not stub: give it an answer with stubNative("GetUnitName", …)'
+  )
+end)

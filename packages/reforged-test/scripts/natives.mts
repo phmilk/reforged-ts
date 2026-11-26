@@ -2,7 +2,7 @@
 // Typings of their newest Patch (the `reforged.patch` of their package.json):
 // runner/map/natives.ts, the names `stubNative` and `newHandle` of
 // `reforged-test/map` are typed with (every Native and every Handle type),
-// and stubs/unstubbed.lua, the Shipped stub that makes every Native no other
+// and stubs/unstubbed.lua, the shipped stub file that makes every Native no
 // Shipped stub covers throw a message naming `stubNative`. The Typings are a
 // development dependency only: the names are written into the files, which
 // ship as map/natives.d.ts and stubs/unstubbed.lua. Run it for a new Patch,
@@ -17,7 +17,7 @@ export const NATIVES_FILE = fileURLToPath(
   new URL("../runner/map/natives.ts", import.meta.url),
 );
 
-/** The generated Shipped stub of the Natives without a Stub. */
+/** The generated shipped stub file of the Natives without a Stub. */
 export const UNSTUBBED_FILE = fileURLToPath(
   new URL("../stubs/unstubbed.lua", import.meta.url),
 );
@@ -93,8 +93,11 @@ export function unstubbedSource(patch: string, declarations: string): string {
     "for i = 1, #natives do",
     "  local name = natives[i]",
     "  if rawget(_G, name) == nil then",
-    "    -- Level 2: the error names the line that called the Native.",
-    "    local function native()",
+    "    local function throwUnstubbed()",
+    "      -- Level 2 names the line that called the Native. A tail call",
+    "      -- (`return GetUnitName(unit)`, as a Wrapper compiles) leaves no",
+    "      -- frame of its caller, so the line is then the nearest caller's",
+    "      -- still on the stack: the one that called the Wrapper.",
     "      error(",
     "        name",
     '          .. " is a Native reforged-test does not stub: give it an answer with stubNative(\\""',
@@ -103,8 +106,8 @@ export function unstubbedSource(patch: string, declarations: string): string {
     "        2",
     "      )",
     "    end",
-    "    unstubbed[name] = native",
-    "    _G[name] = native",
+    "    unstubbed[name] = throwUnstubbed",
+    "    _G[name] = throwUnstubbed",
     "  end",
     "end",
     "",
@@ -112,8 +115,8 @@ export function unstubbedSource(patch: string, declarations: string): string {
     "-- file defined, which nothing replaced since. Not a Native, so it adds no",
     "-- call-log line.",
     "function __stub_unstubbed(name)",
-    "  local native = unstubbed[name]",
-    "  return native ~= nil and rawget(_G, name) == native",
+    "  local thrower = unstubbed[name]",
+    "  return thrower ~= nil and rawget(_G, name) == thrower",
     "end",
     "",
   ].join("\n");

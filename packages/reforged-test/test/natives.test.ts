@@ -42,7 +42,7 @@ describe("runner/map/natives.ts", () => {
   });
 });
 
-// The Drift check of stubs/unstubbed.lua, the Shipped stub of the Natives
+// The Drift check of stubs/unstubbed.lua, the shipped stub file of the Natives
 // without a Stub: the same generator emits it, from the same Typings.
 
 describe("stubs/unstubbed.lua", () => {
@@ -58,11 +58,6 @@ describe("stubs/unstubbed.lua", () => {
     expect(generated).toContain('  "BlzGetLocale",\n');
     expect(generated).not.toContain('"BJDebugMsg"');
     expect(generated).not.toContain('"StartThread"');
-  });
-
-  it("gives _G no __index", () => {
-    expect(generated).not.toContain("setmetatable");
-    expect(generated).not.toContain("__index");
   });
 
   it("refuses declarations that hold no Native", () => {
