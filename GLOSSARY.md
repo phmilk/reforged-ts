@@ -1,4 +1,4 @@
-# w3ts (fork)
+# reforged-ts, a fork of w3ts
 
 TypeScript wrappers and utilities over the Warcraft III Lua scripting API, compiled to Lua with typescript-to-lua. This context covers the library itself; consuming map projects and the game engine are outside it.
 
@@ -205,11 +205,11 @@ An issue labelled `ticket`, a sub-issue of one Spec, delivered by one pull reque
 _Avoid_: task, story, sub-issue (the GitHub link, which a map's children use too)
 
 **Frontier**:
-The open Tickets of a Spec with no open blocker.
+The open Tickets of a Spec with no open blocker, read by the command that lists them (`pnpm spec:frontier`).
 _Avoid_: queue, next, backlog
 
 **Coverage table**:
-The section of a Spec's body naming, for each item of its decisions, its tests and its notes, the Ticket and the criterion that carry it.
+The section of a Spec's body naming, for each item of its decisions, its tests and its notes, the Ticket and the criterion that carry it, read by the check that finds its gaps (`pnpm spec:check`).
 _Avoid_: coverage (alone, which is test coverage), checklist
 
 **Claim**:
