@@ -103,6 +103,8 @@ describe("the Game clock", function()
       "game.advanceTime: expected a number of seconds, 0 or more, and got soon")
     expect(function() game.advanceTime() end).toThrow(
       "game.advanceTime: expected a number of seconds, 0 or more, and got nil")
+    expect(function() game.advanceTime(math.huge) end).toThrow(
+      "game.advanceTime: expected a number of seconds, 0 or more, and got inf")
   end)
 
   it("refuses an advance inside a handler", function()
@@ -225,6 +227,14 @@ describe("an error in a handler", function()
     expect(function() game.advanceTime(3) end).toThrow("the first tick broke")
     game.advanceTime(2)
     expect(fires).toEqual(3)
+  end)
+end)
+
+describe("an error no test catches", function()
+  it("fails the test", function()
+    local game = startGame()
+    TimerStart(CreateTimer(), 1, false, function() error("the countdown broke", 0) end)
+    game.advanceTime(1)
   end)
 end)
 

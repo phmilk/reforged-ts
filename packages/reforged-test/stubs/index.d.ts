@@ -101,10 +101,11 @@ declare function __stub_fire_timer(whichTimer: timer): void;
  * of timeout 0 fires on the next advance, one of 0 seconds included; a
  * periodic one fires every 0.0001 s. The clock starts at 0 and ends at its
  * start plus `seconds`; an error a handler throws leaves the advance, the
- * clock stopped at that instant. Throws for a negative `seconds` and inside
+ * clock stopped at that instant. Throws for a negative or endless `seconds` and inside
  * a handler an advance runs.
  */
 declare function __stub_advance_time(seconds: number): void;
+
 /** The packets `BlzSendSyncData` recorded so far, oldest first. */
 declare function __stub_sync_packets(): StubSyncPacket[];
 

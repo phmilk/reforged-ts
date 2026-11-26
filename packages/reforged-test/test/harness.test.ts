@@ -361,8 +361,10 @@ describe("the Game clock and game.advanceTime", () => {
   it("loads both files of the fixture", () => {
     expect([clock.error, entry.error]).toEqual([undefined, undefined]);
     expect(
-      [...clock.tests, ...entry.tests].filter((test) => test.status !== "pass"),
-    ).toEqual([]);
+      [...clock.tests, ...entry.tests]
+        .filter((test) => test.status !== "pass")
+        .map((test) => test.suite[0]),
+    ).toEqual(["an error no test catches"]);
   });
 
   it("moves only on the test's order, its expiries in the order of their instants", () => {
@@ -401,6 +403,14 @@ describe("the Game clock and game.advanceTime", () => {
         "keeps a periodic timer armed for the next advance",
       ),
     );
+  });
+
+  it("fails the test whose handler throws in an advance", () => {
+    expect(
+      clock.tests
+        .filter((test) => test.suite[0] === "an error no test catches")
+        .map((test) => [test.name, test.status, test.message]),
+    ).toEqual([["fails the test", "error", "the countdown broke"]]);
   });
 
   it("drops the pending expiry of a destroyed, a paused and a restarted timer", () => {

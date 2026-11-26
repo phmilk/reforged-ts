@@ -355,12 +355,13 @@ export interface Game {
    * @example A countdown, without finding its timer
    * {@includeCode ../../examples/advance-time.test.ts}
    * @param seconds - How far to move game time, in seconds, 0 or more.
-   * @throws When `seconds` is negative or not a number:
+   * @throws When `seconds` is negative, endless or not a number:
    * `game.advanceTime: expected a number of seconds, 0 or more, and got -1`.
    * @throws When a handler the advance runs calls it:
    * `an advance is running: a handler cannot move the Game clock`.
    * @throws When more than 100000 timers expire without the clock moving,
-   * as when a handler starts a timer of timeout 0 every time it runs.
+   * as when a handler starts a timer of timeout 0 every time it runs:
+   * `the Game clock ran more than 100000 expiries at one instant, 1.0 s: a handler that starts a timer of timeout 0 every time it runs never lets the advance end`.
    */
   advanceTime(seconds: number): void;
   /**
@@ -415,7 +416,12 @@ function setLocalPlayer(player: player | { readonly handle: player }): void {
 }
 
 function advanceTime(seconds: number): void {
-  if (type(seconds) !== "number" || seconds !== seconds || seconds < 0) {
+  if (
+    type(seconds) !== "number" ||
+    seconds !== seconds ||
+    seconds < 0 ||
+    seconds === math.huge
+  ) {
     error(
       `game.advanceTime: expected a number of seconds, 0 or more, and got ${tostring(seconds)}`,
       2,

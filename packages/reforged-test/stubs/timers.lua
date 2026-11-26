@@ -123,10 +123,11 @@ end
 -- expiry a handler arms runs in the same advance when it falls inside the
 -- window. The clock ends at its start plus `seconds`; when a handler
 -- throws, the error leaves the advance and the clock stays at that instant.
--- A negative advance is an error, and so is an advance inside a handler.
+-- A negative or an endless advance is an error, and so is an advance inside
+-- a handler.
 -- Not a Native, so it adds no call-log line.
 function __stub_advance_time(seconds)
-  if type(seconds) ~= "number" or seconds ~= seconds or seconds < 0 then
+  if type(seconds) ~= "number" or seconds ~= seconds or seconds < 0 or seconds == math.huge then
     error("__stub_advance_time: expected a number of seconds, 0 or more, and got "
       .. tostring(seconds), 2)
   end
