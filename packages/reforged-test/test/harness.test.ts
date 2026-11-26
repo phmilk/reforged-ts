@@ -93,15 +93,27 @@ describe("results", () => {
 describe("unstubbed Natives", () => {
   const files = runLuaTestFiles({ outDir: outDir("unstubbed") });
 
-  it("reports a call inside a test as not stubbed", () => {
-    expect(file(files, "natives.test.ts").tests).toEqual([
-      {
-        suite: [],
-        name: "calls a Native no stub defines",
-        status: "error",
-        message: "natives_test.lua:5: Native PauseGame is not stubbed",
-      },
-    ]);
+  it("throws a message naming the Native and stubNative, at the call", () => {
+    expect(file(files, "natives.test.ts").tests[0]).toEqual({
+      suite: [],
+      name: "calls a Native no stub defines",
+      status: "error",
+      message:
+        'natives_test.lua:5: PauseGame is a Native reforged-test does not stub: give it an answer with stubNative("PauseGame", …)',
+    });
+  });
+
+  it("leaves a Shipped stub, a function of blizzard.j or common.ai and _G as they were", () => {
+    expect(file(files, "natives.test.ts").tests.slice(1)).toEqual(
+      [
+        "throws for every Native of common.j no Shipped stub covers",
+        "keeps the Native a Shipped stub covers",
+        "leaves the functions of blizzard.j and common.ai undefined",
+        "gives _G no metatable",
+        "reports a function that is no Native as the VM does",
+        "names, for a Native called in a tail call, the nearest caller still on the stack",
+      ].map((name) => ({ suite: [], name, status: "pass" })),
+    );
   });
 
   it("reports a call at module load as the file's error", () => {
@@ -109,7 +121,8 @@ describe("unstubbed Natives", () => {
       moduleName: "load_test",
       testFile: "load.test.ts",
       tests: [],
-      error: "load_test.lua:3: Native BlzGetLocale is not stubbed",
+      error:
+        'load_test.lua:3: BlzGetLocale is a Native reforged-test does not stub: give it an answer with stubNative("BlzGetLocale", …)',
     });
   });
 });
@@ -225,7 +238,8 @@ describe("a Test game per test, on reforged-test/map", () => {
         moduleName: "load_test",
         testFile: "load.test.ts",
         tests: [],
-        error: "load_test.lua:6: Native BlzGetLocale is not stubbed",
+        error:
+          'load_test.lua:6: BlzGetLocale is a Native reforged-test does not stub: give it an answer with stubNative("BlzGetLocale", …)',
       },
     ]);
   });
@@ -556,7 +570,7 @@ describe("extra stub files", () => {
     const [order] = runLuaTestFiles({ outDir: outDir("map-project-stubs") });
     expect(order.tests.map((test) => test.status)).toEqual(["fail", "error"]);
     expect(order.tests[1]?.message).toMatch(
-      /Native BlzGetLocale is not stubbed$/,
+      /BlzGetLocale is a Native reforged-test does not stub: give it an answer with stubNative\("BlzGetLocale", …\)$/,
     );
   });
 });

@@ -5,6 +5,8 @@ import {
   NATIVES_FILE,
   nativesSource,
   typingsPatch,
+  UNSTUBBED_FILE,
+  unstubbedSource,
 } from "../scripts/natives.mts";
 
 // The Drift check of runner/map/natives.ts, the names `stubNative` and
@@ -36,6 +38,31 @@ describe("runner/map/natives.ts", () => {
   it("refuses declarations that hold no Native", () => {
     expect(() => nativesSource(patch, "declare const x: number;\n")).toThrow(
       "found 0 Natives and 0 Handle types in common.j.d.ts; its declarations changed form",
+    );
+  });
+});
+
+// The Drift check of stubs/unstubbed.lua, the shipped stub file of the Natives
+// without a Stub: the same generator emits it, from the same Typings.
+
+describe("stubs/unstubbed.lua", () => {
+  const patch = typingsPatch();
+  const generated = unstubbedSource(patch, commonDeclarations(patch));
+
+  it("is what the generator emits from the Typings: run pnpm --filter reforged-test natives:generate", () => {
+    expect(readFileSync(UNSTUBBED_FILE, "utf8")).toBe(generated);
+  });
+
+  it("lists the Natives of common.j, and no function of blizzard.j or common.ai", () => {
+    expect(generated).toContain('  "GetUnitName",\n');
+    expect(generated).toContain('  "BlzGetLocale",\n');
+    expect(generated).not.toContain('"BJDebugMsg"');
+    expect(generated).not.toContain('"StartThread"');
+  });
+
+  it("refuses declarations that hold no Native", () => {
+    expect(() => unstubbedSource(patch, "declare const x: number;\n")).toThrow(
+      "found 0 Natives in common.j.d.ts; its declarations changed form",
     );
   });
 });

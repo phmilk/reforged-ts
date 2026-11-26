@@ -214,6 +214,13 @@ declare function __stub_constants(kind: string, names: readonly string[]): void;
 declare function __stub_response(name: string): void;
 
 /**
+ * Whether the global `name` is a Native without a Stub: the function the
+ * harness defined for a Native of `common.j` no stub covers, which throws a
+ * message naming `stubNative`, and which nothing replaced since.
+ */
+declare function __stub_unstubbed(name: string): boolean;
+
+/**
  * Runs `body` with `firing` as the firing context and returns what it
  * returned. The previous context is put back afterwards, also when `body`
  * throws.
