@@ -215,6 +215,22 @@ describe("Timer.pause and Timer.resume", () => {
     expect(runs).toEqual(2);
   });
 
+  it("counts a full timeout after a pause in a periodic Timer's handler", () => {
+    const timer = Timer.every(2, (expired) => {
+      // In its handler a periodic timer reads 0 left, as the stub does.
+      expired.pause();
+    });
+    const ref = handleRef("timer", timer.handle);
+    __stub_fire_timer(timer.handle);
+    expect(timer.remaining).toEqual(2);
+    expect(timer.elapsed).toEqual(0);
+    expect(
+      callsDuring(() => {
+        timer.resume();
+      }),
+    ).toEqual([`TimerStart(${ref}, 2, false, <function>)`]);
+  });
+
   it("starts ordinarily after a resume: the new handler and flag, nothing kept", () => {
     const runs: string[] = [];
     const timer = Timer.create().start(2, true, () => {

@@ -142,8 +142,12 @@ export class Timer extends Handle<timer> {
   /**
    * Stops the countdown where it is; `resume` continues it.
    * @remarks
-   * On a Timer that is not counting (never started, paused, or a one-shot
-   * that expired) it changes nothing `resume` or the readings see.
+   * - On a Timer that is not counting (never started, paused, or a one-shot
+   *   that expired) it changes nothing `resume` or the readings see.
+   * - In a periodic Timer's handler it stops the Timer before its next
+   *   countdown: `resume` then counts a full timeout. Measured on Build
+   *   3.0.1.24371, the game runs no expiry of a timer paused in its own
+   *   handler (#962).
    * @returns This Timer, for chaining.
    * @native PauseTimer
    * @native TimerGetRemaining
@@ -151,7 +155,10 @@ export class Timer extends Handle<timer> {
   public pause() {
     const countdown = this.countdown;
     if (countdown?.state === "running" || countdown?.state === "resumed") {
-      countdown.left = TimerGetRemaining(this.handle);
+      const left = TimerGetRemaining(this.handle);
+      // A periodic Timer reads 0 left in its handler, where its next
+      // countdown, a full timeout, has not begun yet.
+      countdown.left = left <= 0 && countdown.periodic ? countdown.timeout : left;
       countdown.state = "paused";
     }
     PauseTimer(this.handle);
