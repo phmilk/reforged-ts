@@ -176,8 +176,8 @@ export const daysAgo = (days: number) =>
 
 /**
  * An open issue `number` of the library, updated yesterday, with no label,
- * no assignee, no parent, nothing closing or blocking it, no sub-issue and
- * no Issue status: Backlog. `more` overrides any field; a Template issue says so with
+ * no assignee, no parent, nothing closing or blocking it and no sub-issue:
+ * Backlog. `more` overrides any field; a Template issue says so with
  * `repository: TEMPLATE`.
  */
 export function issue(
@@ -198,7 +198,6 @@ export function issue(
     pullRequests: [],
     blockedBy: 0,
     subIssues: [],
-    issueStatus: null,
     ...more,
   };
 }
@@ -236,7 +235,6 @@ export function issueNode(
     number: issue.number,
     state: issue.state,
     updatedAt: issue.updatedAt,
-    status: issue.issueStatus === null ? null : { name: issue.issueStatus },
     repository: { nameWithOwner: issue.repository },
     author,
     labels: names(issue.labels, "name"),
@@ -324,7 +322,8 @@ const page = (nodes: unknown[]) => ({
  * `issueNode`'s default otherwise; the labels of `board:labels` are
  * `labelIds` (`LABEL_IDS` by default) and the Issue statuses of each
  * repository `issueStatusIds` (none by default: no repository has Issue
- * statuses); every mutation
+ * statuses), the Issue status of an open issue being `issueStatuses` under
+ * its key when there; every mutation
  * succeeds but `failing`, refused with an error, and an add answers the id
  * `PVTI_<the content id>`.
  */
@@ -338,6 +337,7 @@ export function reading(
     authors?: Readonly<Record<string, unknown>>;
     labelIds?: Readonly<Record<string, Readonly<Record<string, string>>>>;
     issueStatusIds?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+    issueStatuses?: Readonly<Record<string, string>>;
   } = {},
 ): Answers {
   const projects = [state.project, options.created ?? null];
@@ -531,6 +531,32 @@ export function reading(
                         name,
                       })),
                     },
+            },
+          },
+        };
+      }
+      case "OpenIssueStatuses": {
+        const repository = `${text(variables.owner)}/${text(variables.name)}`;
+        return {
+          data: {
+            repository: {
+              issues: page(
+                (options.issues ?? [])
+                  .filter(
+                    (issue) =>
+                      issue.repository === repository && issue.state === "OPEN",
+                  )
+                  .map(({ number }) => {
+                    const name =
+                      options.issueStatuses?.[
+                        `${repository}#${String(number)}`
+                      ];
+                    return {
+                      number,
+                      status: name === undefined ? null : { name },
+                    };
+                  }),
+              ),
             },
           },
         };

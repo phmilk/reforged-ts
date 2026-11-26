@@ -22,6 +22,7 @@ import {
   planBoardLabels,
   planIssueStatuses,
   planBoardReconcile,
+  readIssueStatuses,
   planBoardSetup,
   readBoardState,
   readLabelState,
@@ -33,6 +34,7 @@ import {
   type BoardPullRequest,
   type LabelState,
   type BoardSetupPlan,
+  type IssueStatusState,
   type ProjectItem,
   type ProjectState,
   type ReconcileState,
@@ -1129,7 +1131,6 @@ describe("planBoardLabels", () => {
         right,
       ],
       labelIds: LABEL_IDS,
-      issueStatusIds: {},
     };
 
     expect(planBoardLabels(state)).toEqual({
@@ -1164,7 +1165,6 @@ describe("planBoardLabels", () => {
     const state: LabelState = {
       issues: [issue(10, { repository: OTHER, labels: ["spec"] })],
       labelIds: LABEL_IDS,
-      issueStatusIds: {},
     };
 
     expect(planBoardLabels(state)).toEqual({
@@ -1181,7 +1181,6 @@ describe("planBoardLabels", () => {
         ...LABEL_IDS,
         [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
       },
-      issueStatusIds: {},
     };
 
     expect(() => planBoardLabels(state)).toThrow(
@@ -1198,11 +1197,11 @@ const BOTH_HAVE_STATUSES = {
   [TEMPLATE]: ISSUE_STATUS_IDS,
 };
 
-/** The state `board:labels` reads, with `issues` and Issue statuses in both repositories unless told otherwise. */
-const statusState = (
-  issues: readonly BoardIssue[],
-  issueStatusIds: LabelState["issueStatusIds"] = BOTH_HAVE_STATUSES,
-): LabelState => ({ issues, labelIds: LABEL_IDS, issueStatusIds });
+/** The Issue statuses as read: `current` by issue key, and the seven values in both repositories unless told otherwise. */
+const issueStatuses = (
+  current: IssueStatusState["current"] = {},
+  ids: IssueStatusState["ids"] = BOTH_HAVE_STATUSES,
+): IssueStatusState => ({ ids, current });
 
 const issueStatusWrite = (issueId: string, name: string) => ({
   query: BOARD_MUTATIONS.setIssueStatus,
@@ -1222,7 +1221,7 @@ describe("planIssueStatuses", () => {
       const open = issue(1, more);
       expect(statusOf(open, issueLookup([open]))).toBe(status);
 
-      expect(planIssueStatuses(statusState([open]))).toEqual({
+      expect(planIssueStatuses([open], issueStatuses())).toEqual({
         requests: [
           {
             ...issueStatusWrite("I_1", expected),
@@ -1248,13 +1247,18 @@ describe("planIssueStatuses", () => {
   });
 
   it("sends nothing for an issue whose Issue status already agrees, whatever its case, and says what the other one read", () => {
-    const state = statusState([
-      issue(1, { labels: ["ready-for-agent"], issueStatus: "Todo" }),
-      issue(2, { assignees: ["alice"], issueStatus: "In Progress" }),
-      issue(3, { assignees: ["alice"], issueStatus: "Todo" }),
-    ]);
+    const open = [
+      issue(1, { labels: ["ready-for-agent"] }),
+      issue(2, { assignees: ["alice"] }),
+      issue(3, { assignees: ["alice"] }),
+    ];
+    const read = issueStatuses({
+      [`${LIBRARY}#1`]: "Todo",
+      [`${LIBRARY}#2`]: "In Progress",
+      [`${LIBRARY}#3`]: "Todo",
+    });
 
-    expect(planIssueStatuses(state)).toEqual({
+    expect(planIssueStatuses(open, read)).toEqual({
       requests: [
         {
           ...issueStatusWrite("I_3", "In progress"),
@@ -1268,13 +1272,15 @@ describe("planIssueStatuses", () => {
   });
 
   it("writes nothing on a closed issue, a bot's or one of another repository", () => {
-    const state = statusState([
-      issue(1, { state: "CLOSED", issueStatus: "Backlog" }),
+    const issues = [
+      issue(1, { state: "CLOSED" }),
       issue(2, { bot: true }),
       issue(3, { repository: OTHER }),
-    ]);
+    ];
 
-    expect(planIssueStatuses(state)).toEqual({
+    expect(
+      planIssueStatuses(issues, issueStatuses({ [`${LIBRARY}#1`]: "Todo" })),
+    ).toEqual({
       requests: [],
       issues: 0,
       kept: 0,
@@ -1292,10 +1298,14 @@ describe("planIssueStatuses", () => {
       repository: TEMPLATE,
       labels: ["ticket", "ready-for-agent"],
       blockedBy: 1,
-      issueStatus: "Backlog",
     });
 
-    expect(planIssueStatuses(statusState([spec, ticket])).requests).toEqual([
+    expect(
+      planIssueStatuses(
+        [spec, ticket],
+        issueStatuses({ [`${TEMPLATE}#31`]: "Backlog" }),
+      ).requests,
+    ).toEqual([
       {
         ...issueStatusWrite("I_10", "Todo"),
         summary: `Set the Issue status of ${LIBRARY}#10 to Todo.`,
@@ -1308,16 +1318,17 @@ describe("planIssueStatuses", () => {
   });
 
   it("plans nothing in a repository without Issue statuses and says so once", () => {
-    const state = statusState(
-      [
-        issue(1),
-        issue(2, { assignees: ["alice"] }),
-        issue(30, { repository: TEMPLATE }),
-      ],
+    const open = [
+      issue(1),
+      issue(2, { assignees: ["alice"] }),
+      issue(30, { repository: TEMPLATE }),
+    ];
+    const read = issueStatuses(
+      {},
       { [LIBRARY]: {}, [TEMPLATE]: ISSUE_STATUS_IDS },
     );
 
-    expect(planIssueStatuses(state)).toEqual({
+    expect(planIssueStatuses(open, read)).toEqual({
       requests: [
         {
           ...issueStatusWrite("I_t30", "Backlog"),
@@ -1331,16 +1342,14 @@ describe("planIssueStatuses", () => {
   });
 
   it("warns once of a value the repository lacks, and still writes the others", () => {
-    const state = statusState(
-      [
-        issue(1, { labels: ["ready-for-agent"] }),
-        issue(2, { labels: ["ready-for-human"] }),
-        issue(3),
-      ],
-      { [LIBRARY]: { Backlog: "IS_backlog" } },
-    );
+    const open = [
+      issue(1, { labels: ["ready-for-agent"] }),
+      issue(2, { labels: ["ready-for-human"] }),
+      issue(3),
+    ];
+    const read = issueStatuses({}, { [LIBRARY]: { Backlog: "IS_backlog" } });
 
-    expect(planIssueStatuses(state)).toEqual({
+    expect(planIssueStatuses(open, read)).toEqual({
       requests: [
         {
           ...issueStatusWrite("I_3", "Backlog"),
@@ -1886,9 +1895,9 @@ describe("applyBoardReconcile", () => {
 });
 
 describe("readLabelState", () => {
-  it("reads the open issues of both repositories, each with its Issue status or none, and in each the ids of the two labels and of its Issue statuses by name; a missing label is absent, as are the Issue statuses of a repository without them", async () => {
+  it("reads the open issues of both repositories and the ids of the two labels in each; a missing label is absent", async () => {
     const issues = [
-      issue(10, { labels: ["spec"], issueStatus: "Todo" }),
+      issue(10, { labels: ["spec"] }),
       issue(30, { repository: TEMPLATE, labels: ["spec"] }),
       issue(11, { state: "CLOSED" }),
     ];
@@ -1902,7 +1911,6 @@ describe("readLabelState", () => {
             ...LABEL_IDS,
             [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
           },
-          issueStatusIds: { [LIBRARY]: ISSUE_STATUS_IDS },
         }),
         sent,
       ),
@@ -1914,30 +1922,80 @@ describe("readLabelState", () => {
         [LIBRARY]: LABEL_IDS[LIBRARY],
         [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
       },
-      issueStatusIds: { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: {} },
     });
-    expect(state.issues.map(({ issueStatus }) => issueStatus)).toEqual([
-      "Todo",
-      null,
-    ]);
     expect(sent.map(({ operation }) => operation)).toEqual([
       "OpenIssues",
       "Labels",
-      "IssueStatuses",
       "OpenIssues",
       "Labels",
-      "IssueStatuses",
     ]);
+  });
+
+  it("asks nothing of the Issue status, a preview: neither this read nor the reconcile's names one of its fields", async () => {
+    const sent: Sent[] = [];
+
+    await readLabelState(graphQlApi(reading(STATE), sent));
+    await readReconcileState(graphQlApi(reading(STATE), sent));
+
+    expect(sent.length).toBeGreaterThan(4);
+    for (const { query } of sent) {
+      expect(query).not.toMatch(/planningStatuses|\bstatus \{/);
+    }
+  });
+});
+
+describe("readIssueStatuses", () => {
+  it("reads, in each repository, the ids of its Issue statuses by name and the Issue status of each open issue that has one; a repository without them has none", async () => {
+    const sent: Sent[] = [];
+
+    const read = await readIssueStatuses(
+      graphQlApi(
+        reading(STATE, {
+          issues: [
+            issue(10),
+            issue(11),
+            issue(12, { state: "CLOSED" }),
+            issue(30, { repository: TEMPLATE }),
+          ],
+          issueStatusIds: { [LIBRARY]: ISSUE_STATUS_IDS },
+          issueStatuses: {
+            [`${LIBRARY}#10`]: "Todo",
+            [`${LIBRARY}#12`]: "Done",
+          },
+        }),
+        sent,
+      ),
+    );
+
+    expect(read).toEqual({
+      ids: { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: {} },
+      current: { [`${LIBRARY}#10`]: "Todo" },
+    });
+    expect(sent.map(({ operation }) => operation)).toEqual([
+      "IssueStatuses",
+      "OpenIssueStatuses",
+      "IssueStatuses",
+      "OpenIssueStatuses",
+    ]);
+  });
+
+  it("rejects when GitHub refuses the query, as it would once the preview's fields change", async () => {
+    await expect(
+      readIssueStatuses(
+        graphQlApi(reading(STATE, { failing: "IssueStatuses" })),
+      ),
+    ).rejects.toThrow("Resource not accessible");
   });
 });
 
 describe("applyIssueStatuses", () => {
   const plan = planIssueStatuses(
-    statusState([
+    [
       issue(1, { labels: ["ready-for-agent"] }),
       issue(2, { assignees: ["alice"] }),
       issue(3),
-    ]),
+    ],
+    issueStatuses(),
   );
 
   it("sends the requests in order and warns of nothing", async () => {
@@ -2000,7 +2058,6 @@ describe("applyBoardLabels", () => {
       issue(20, { labels: ["spec"] }),
     ],
     labelIds: LABEL_IDS,
-    issueStatusIds: {},
   });
 
   it("sends the requests in order", async () => {

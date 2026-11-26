@@ -13,7 +13,7 @@
  * into the writes that make the board agree with GitHub, membership and
  * archiving included, on the same state reader. The third is what
  * `board:labels` writes with the App's token: the label pair of an open
- * Spec (`planBoardLabels`) and the Issue status of every open member, the
+ * Spec (`planBoardLabels`) and the Issue status of every open issue, the
  * mirror of its Status (`planIssueStatuses`). The GraphQL transport and the
  * pager are `github-graphql.ts`.
  */
@@ -341,7 +341,7 @@ export const BOARD_MUTATIONS = {
   // The Issue status is a public preview, "subject to change": GitHub's
   // changelog of 2026-11-23, "Issue statuses and repository boards are in
   // public preview". The mutation closes or reopens the issue when the
-  // status calls for it, so the plan sends an open value to an open issue
+  // value calls for it, so the plan sends an open value to an open issue
   // only (`ISSUE_STATUS_OF`). It needs `public_repo` of a classic token, so
   // the App's token sends it and the board's (`project` alone) cannot (#959).
   setIssueStatus: `mutation SetIssueStatus($issueId: ID!, $statusId: ID!) {
@@ -357,13 +357,13 @@ export const BOARD_MUTATIONS = {
  * repository, since a ticket of the Template may be the child of a library
  * spec. `closedByPullRequestsReferences(includeClosedPrs: false)` still
  * returns merged pull requests, so In review is read from each pull
- * request's own `state`, never from the presence of a reference. `status`
- * is the Issue status, `null` when the issue has none or the repository
- * has no Issue statuses.
+ * request's own `state`, never from the presence of a reference. The
+ * Issue status is not read here: it is a preview, and a field GitHub
+ * changes must not fail this fragment, which the reconcile reads too
+ * (`readIssueStatuses`).
  */
 const BOARD_ISSUE_FRAGMENT = `fragment BoardIssue on Issue {
   id number state updatedAt
-  status { name }
   repository { nameWithOwner }
   author { __typename login }
   labels(first: 30) { nodes { name } }
@@ -1019,11 +1019,6 @@ export interface BoardIssue extends IssueRef {
   /** The count of its open blockers. */
   blockedBy: number;
   subIssues: readonly SubIssue[];
-  /**
-   * The name of its Issue status, the one GitHub shows on the issue itself;
-   * `null` when it has none.
-   */
-  issueStatus: string | null;
 }
 
 /** The issue of a reference among those read, or `undefined`. */
@@ -1425,7 +1420,12 @@ export function planBoardReconcile(
 
 // The labels: the pair an open Spec carries by ADR 0025.
 
-/** What `board:labels` needs to know, as the API answers it. */
+/** Node ids by repository (`owner/name`), then by the name of what each one is the id of. */
+export type IdsByRepository = Readonly<
+  Partial<Record<string, Readonly<Partial<Record<string, string>>>>>
+>;
+
+/** What `board:labels` needs to know to write the labels, as the API answers it. */
 export interface LabelState {
   /** The open issues of both repositories. */
   issues: readonly BoardIssue[];
@@ -1433,16 +1433,7 @@ export interface LabelState {
    * The node id of each label the plan may write, by repository
    * (`owner/name`) then name; a label missing from a repository is absent.
    */
-  labelIds: Readonly<
-    Partial<Record<string, Readonly<Partial<Record<string, string>>>>>
-  >;
-  /**
-   * The node id of each Issue status of a repository, by repository
-   * (`owner/name`) then name; a repository without Issue statuses has none.
-   */
-  issueStatusIds: Readonly<
-    Partial<Record<string, Readonly<Partial<Record<string, string>>>>>
-  >;
+  labelIds: IdsByRepository;
 }
 
 /** What `board:labels` will write, and what it found. */
@@ -1532,11 +1523,29 @@ export const ISSUE_STATUS_OF: Readonly<
   "In review": "In review",
 };
 
+/**
+ * The Issue statuses of both Board repositories, as the API answers them:
+ * read apart from the issues (`readIssueStatuses`), since the feature is a
+ * preview and its fields may change.
+ */
+export interface IssueStatusState {
+  /**
+   * The node id of each Issue status a repository has, by repository then
+   * name; a repository without Issue statuses has none.
+   */
+  ids: IdsByRepository;
+  /**
+   * The name of the Issue status of each open issue that has one, by its
+   * key (`issueKey`); an issue without one is absent.
+   */
+  current: Readonly<Partial<Record<string, string>>>;
+}
+
 /** What `board:labels` will write of the Issue statuses, and what it found. */
 export interface IssueStatusPlan {
   /** The requests to send, in order. */
   requests: BoardRequest[];
-  /** How many open members of the board it read. */
+  /** How many open issues it gives an Issue status to. */
   issues: number;
   /** How many of them already read as their Status maps. */
   kept: number;
@@ -1545,21 +1554,25 @@ export interface IssueStatusPlan {
 }
 
 /**
- * The requests that give every open member of the board (an open issue of
- * a Board repository that no bot but the App authored, whether or not its
- * item exists yet) the Issue status `ISSUE_STATUS_OF` maps its Status to,
- * the Status `statusOf` derives, as the reconcile does; nothing for one
- * that already reads so, and never anything for a closed issue. A
- * repository without Issue statuses plans none and is named once in
- * `warnings`, as is each value a repository lacks.
+ * The requests that give every open issue the board holds or will hold (an
+ * open issue of a Board repository that no bot but the App authored,
+ * whether or not it has an item yet) the Issue status `ISSUE_STATUS_OF`
+ * maps its Status to, the Status `statusOf` derives among `open`, the open
+ * issues of both repositories, as the reconcile does; nothing for one that
+ * already reads so, and never anything for a closed issue. A repository
+ * without Issue statuses plans none and is named once in `warnings`, as is
+ * each value a repository lacks.
  */
-export function planIssueStatuses(state: LabelState): IssueStatusPlan {
-  const lookup = issueLookup(state.issues);
+export function planIssueStatuses(
+  open: readonly BoardIssue[],
+  statuses: IssueStatusState,
+): IssueStatusPlan {
+  const lookup = issueLookup(open);
   const requests: BoardRequest[] = [];
   const warnings = new Set<string>();
   let issues = 0;
   let kept = 0;
-  for (const issue of state.issues) {
+  for (const issue of open) {
     if (
       issue.bot ||
       issue.state !== "OPEN" ||
@@ -1572,11 +1585,13 @@ export function planIssueStatuses(state: LabelState): IssueStatusPlan {
     if (status === "Done") continue;
     issues++;
     const value = ISSUE_STATUS_OF[status];
-    if (issue.issueStatus !== null && sameName(issue.issueStatus, value)) {
+    const key = issueKey(issue);
+    const current = statuses.current[key];
+    if (current !== undefined && sameName(current, value)) {
       kept++;
       continue;
     }
-    const ids = Object.entries(state.issueStatusIds[issue.repository] ?? {});
+    const ids = Object.entries(statuses.ids[issue.repository] ?? {});
     if (ids.length === 0) {
       warnings.add(
         `${issue.repository} has no Issue statuses: none is written there.`,
@@ -1593,7 +1608,7 @@ export function planIssueStatuses(state: LabelState): IssueStatusPlan {
     requests.push({
       query: BOARD_MUTATIONS.setIssueStatus,
       variables: { issueId: issue.id, statusId },
-      summary: `Set the Issue status of ${issueKey(issue)} to ${value}${issue.issueStatus === null ? "" : ` (was ${issue.issueStatus})`}.`,
+      summary: `Set the Issue status of ${key} to ${value}${current === undefined ? "" : ` (was ${current})`}.`,
     });
   }
   return { requests, issues, kept, warnings: [...warnings] };
@@ -1693,10 +1708,6 @@ function readIssue(node: unknown): BoardIssue | undefined {
         ? []
         : [{ ...subRef, state: sub.state }];
     }),
-    issueStatus:
-      isRecord(node.status) && typeof node.status.name === "string"
-        ? node.status.name
-        : null,
   };
 }
 
@@ -1822,25 +1833,83 @@ ${Object.entries(LABEL_ALIASES)
 }`;
 
 /**
- * The Issue statuses of one repository, in display order; `null` where the
- * repository has none. They are few (seven on 2026-11-26) and the API has
- * no mutation that adds one.
+ * The queries of the Issue status, a public preview: kept out of every
+ * other document, so that a field GitHub renames or removes fails these
+ * two and nothing else.
  */
-const ISSUE_STATUSES_QUERY = `query IssueStatuses($owner: String!, $name: String!) {
+const ISSUE_STATUS_QUERIES = {
+  // In display order; `null` where the repository has none. They are few
+  // (seven on 2026-11-26) and the API has no mutation that adds one.
+  statuses: `query IssueStatuses($owner: String!, $name: String!) {
   repository(owner: $owner, name: $name) {
     planningStatuses(first: 50) { nodes { id name } }
   }
-}`;
+}`,
+  // `status` is `null` on an issue that has none.
+  open: `query OpenIssueStatuses($owner: String!, $name: String!, $first: Int!, $cursor: String) {
+  repository(owner: $owner, name: $name) {
+    issues(states: OPEN, first: $first, after: $cursor, orderBy: { field: CREATED_AT, direction: ASC }) {
+      pageInfo { hasNextPage endCursor }
+      nodes { number status { name } }
+    }
+  }
+}`,
+} as const;
 
 /**
- * What `board:labels` reads through `api`: the open issues of both
- * repositories and, in each, the ids of the two labels of an open Spec and
- * of its Issue statuses, by name.
+ * The Issue statuses, read through `api`: in each Board repository, the
+ * ids of its Issue statuses by name and the Issue status of each open
+ * issue that has one. Rejects when GitHub refuses a query, as it would
+ * once the preview's fields change: the caller warns and writes none.
+ */
+export async function readIssueStatuses(
+  api: GitHubApi,
+): Promise<IssueStatusState> {
+  const ids: Record<string, Record<string, string>> = {};
+  const current: Record<string, string> = {};
+  for (const repository of BOARD_REPOSITORIES) {
+    const variables = ownerAndName(repository);
+    const data = await graphql(api, ISSUE_STATUS_QUERIES.statuses, variables);
+    ids[repository] = Object.fromEntries(
+      nodesOf(
+        isRecord(data.repository)
+          ? data.repository.planningStatuses
+          : undefined,
+      ).flatMap((status) =>
+        isRecord(status) &&
+        typeof status.id === "string" &&
+        typeof status.name === "string"
+          ? [[status.name, status.id]]
+          : [],
+      ),
+    );
+    const nodes = await readNodes(api, ISSUE_STATUS_QUERIES.open, variables, [
+      "repository",
+      "issues",
+    ]);
+    for (const node of nodes) {
+      if (
+        isRecord(node) &&
+        typeof node.number === "number" &&
+        isRecord(node.status) &&
+        typeof node.status.name === "string"
+      ) {
+        current[issueKey({ repository, number: node.number })] =
+          node.status.name;
+      }
+    }
+  }
+  return { ids, current };
+}
+
+/**
+ * What `board:labels` reads through `api` for the labels: the open issues
+ * of both repositories and, in each, the ids of the two labels of an open
+ * Spec.
  */
 export async function readLabelState(api: GitHubApi): Promise<LabelState> {
   const issues: BoardIssue[] = [];
   const labelIds: Record<string, Record<string, string>> = {};
-  const issueStatusIds: Record<string, Record<string, string>> = {};
   for (const repository of BOARD_REPOSITORIES) {
     issues.push(...(await readOpenIssues(api, repository)));
     const data = await graphql(api, LABELS_QUERY, ownerAndName(repository));
@@ -1853,26 +1922,8 @@ export async function readLabelState(api: GitHubApi): Promise<LabelState> {
           : [];
       }),
     );
-    const statuses = await graphql(
-      api,
-      ISSUE_STATUSES_QUERY,
-      ownerAndName(repository),
-    );
-    issueStatusIds[repository] = Object.fromEntries(
-      nodesOf(
-        isRecord(statuses.repository)
-          ? statuses.repository.planningStatuses
-          : undefined,
-      ).flatMap((status) =>
-        isRecord(status) &&
-        typeof status.id === "string" &&
-        typeof status.name === "string"
-          ? [[status.name, status.id]]
-          : [],
-      ),
-    );
   }
-  return { issues, labelIds, issueStatusIds };
+  return { issues, labelIds };
 }
 
 /**

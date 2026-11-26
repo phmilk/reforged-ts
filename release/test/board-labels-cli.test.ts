@@ -191,19 +191,24 @@ describe("board:labels", () => {
   });
 });
 
-describe("board:labels, the Issue status of every open member (#958)", () => {
+describe("board:labels, the Issue status of every open issue (#958)", () => {
   const BOTH = { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: ISSUE_STATUS_IDS };
 
   /** #1 Ready and reading Backlog, #2 claimed and reading Todo, #3 Backlog with none, #4 claimed and right; no Spec. */
   const OPEN = [
-    issue(1, { labels: ["ready-for-agent"], issueStatus: "Backlog" }),
-    issue(2, { assignees: ["alice"], issueStatus: "Todo" }),
+    issue(1, { labels: ["ready-for-agent"] }),
+    issue(2, { assignees: ["alice"] }),
     issue(3, { repository: TEMPLATE }),
-    issue(4, { assignees: ["alice"], issueStatus: "In progress" }),
+    issue(4, { assignees: ["alice"] }),
   ];
+  const READ = {
+    [`${LIBRARY}#1`]: "Backlog",
+    [`${LIBRARY}#2`]: "Todo",
+    [`${LIBRARY}#4`]: "In progress",
+  };
 
   const answers = (): Answers =>
-    reading(STATE, { issues: OPEN, issueStatusIds: BOTH });
+    reading(STATE, { issues: OPEN, issueStatusIds: BOTH, issueStatuses: READ });
 
   const write = (
     key: string,
@@ -276,7 +281,11 @@ describe("board:labels, the Issue status of every open member (#958)", () => {
     const result = await run(
       [],
       graphQlFetch(
-        reading(STATE, { issues: [OPEN[3]], issueStatusIds: BOTH }),
+        reading(STATE, {
+          issues: [OPEN[3]],
+          issueStatusIds: BOTH,
+          issueStatuses: READ,
+        }),
         sent,
       ),
     );
@@ -375,10 +384,57 @@ describe("board:labels, the Issue status of every open member (#958)", () => {
     expect(result.exitCode).toBe(0);
     expect(mutations(sent)).toEqual([]);
     expect(result.stdout).toContain(
-      "Issue statuses: 4 open issues, 1 as their Status reads.\n" +
+      "Issue statuses: 4 open issues, 0 as their Status reads.\n" +
         `Warning: ${LIBRARY} has no Issue statuses: none is written there.\n` +
         `Warning: ${TEMPLATE} has no Issue statuses: none is written there.\n` +
         "0 requests:\n",
+    );
+  });
+
+  it("exits 0 when GitHub refuses the read of the Issue statuses: none is written, the warning is in the output and the job summary, and the labels are written all the same", async () => {
+    const sent: Sent[] = [];
+    const dir = await tempDir("board-labels");
+    await writeText(dir, "summary.md", "");
+    const base = reading(STATE, {
+      issues: [issue(10, { labels: ["spec", "ready-for-agent"] })],
+      issueStatusIds: BOTH,
+    });
+    const result = await run(
+      [],
+      graphQlFetch(
+        (operation, variables) =>
+          operation === "OpenIssueStatuses"
+            ? {
+                errors: [
+                  { message: "Field 'status' doesn't exist on type 'Issue'" },
+                ],
+              }
+            : base(operation, variables),
+        sent,
+      ),
+      {
+        env: {
+          LABELS_TOKEN: "app",
+          GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+        },
+      },
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(mutations(sent).map(([operation]) => operation)).toEqual([
+      "AddLabels",
+      "RemoveLabels",
+    ]);
+    const warning = result.stdout
+      .split("\n")
+      .find((line) => line.startsWith("Warning: "));
+    expect(warning).toContain(
+      "The Issue statuses could not be read, so none is written: ",
+    );
+    expect(warning).toContain("Field 'status' doesn't exist on type 'Issue'");
+    expect(await readFile(join(dir, "summary.md"), "utf8")).toContain(
+      `## Issue statuses\n\nNot read; 1 warning.\n\n- ${String(warning)}\n`,
     );
   });
 });
