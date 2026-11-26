@@ -12,13 +12,14 @@ Runs TypeScript tests for Warcraft III Reforged map code on real Lua 5.3, with t
 
 The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/) exactly like map code, then run on Lua 5.3.6 compiled to WebAssembly ([lua-wasm-bindings](https://www.npmjs.com/package/lua-wasm-bindings), the VM typescript-to-lua's own suite uses). What a test observes is the Lua your code emits, the Native calls it makes and the objects it returns.
 
-The package has three parts:
+The package has four parts:
 
-| Part       | Reached as          | What it is                                                                                                                             |
-| ---------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner | `reforged-test/lua` | `describe`, `it` and `expect` for the test files, compiled to Lua.                                                                     |
-| The glue   | `reforged-test`     | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
-| The stubs  | `stubs/*.lua`       | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
+| Part                                 | Reached as            | What it is                                                                                                                             |
+| ------------------------------------ | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner                           | `reforged-test/lua`   | `describe`, `it` and `expect` for the test files, compiled to Lua.                                                                     |
+| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
+| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
+| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                          |
 
 ## Writing a test
 
@@ -209,7 +210,7 @@ One file per Native family, loaded after `base.lua` by name:
 | `weathereffects.lua` | `AddWeatherEffect`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                    |
 | `widgets.lua`        | `GetWidgetX`, `GetWidgetY`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                    |
 
-A timer or trigger never fires on its own, and a sent sync packet reaches no one: a test fires or delivers it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test declares the ones it calls, for example `declare function __stub_fire_timer(whichTimer: timer): void;`.
+A timer or trigger never fires on its own, and a sent sync packet reaches no one: a test fires or delivers it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test gets their declarations, and those of every other `__stub_*` helper of the shipped stubs with the types they take (the firing context `StubContext` among them), by adding `reforged-test/stubs` to the `types` of its tsconfig, next to the Typings it names; nothing is copied, and a test of the package fails when the declarations stop matching the Lua.
 
 ### Constants and converters
 
@@ -252,11 +253,6 @@ The trigger keeps nothing of a registration beyond that line: no stub decides wh
 **Firing a trigger.** `__stub_fire_trigger(trigger, context)` fires the trigger as one event would. `context` is an optional table keyed by response Native name: for the length of the firing, every response Native answers with the context's value for its name, and nil for a name the context leaves out. Every condition runs first, in added order, even after one returned false; the actions run, in added order, only if every condition returned true. It returns whether the actions ran. A disabled trigger does not fire (it returns false), and firing a destroyed trigger is an error. Outside a firing, every response Native answers nil.
 
 ```ts
-declare function __stub_fire_trigger(
-  whichTrigger: trigger,
-  context?: { [native: string]: unknown },
-): boolean;
-
 const ran = __stub_fire_trigger(trigger.handle, {
   GetTriggerUnit: dying.handle,
   GetKillingUnit: killer.handle,
@@ -295,13 +291,11 @@ The two playing slots are state the stubs hold, not a game rule: a test relies o
 
 ### Test controls
 
-The controls a test uses to observe what a Map project observes, beyond firing triggers and timers. None is a Native, so none adds a call-log line. A TypeScript test declares the ones it calls, as for the firing helpers.
+The controls a test uses to observe what a Map project observes, beyond firing triggers and timers. None is a Native, so none adds a call-log line. `reforged-test/stubs` declares them, as it does the firing helpers.
 
 **The local player.** `GetLocalPlayer` answers the player in slot 0 until `__stub_set_local_player(slot)` makes another slot the local player; it returns the slot it replaced, so a test puts it back. `__stub_local_player()` returns the local player's handle. A test runs the same code as the matching client and as another one:
 
 ```ts
-declare function __stub_set_local_player(slot: number): number;
-
 const previous = __stub_set_local_player(1); // run as the client of slot 1
 runTheCodeUnderTest(); // GetLocalPlayer() is Player(1) here
 __stub_set_local_player(previous);
@@ -318,8 +312,6 @@ An action that deals damage dispatches again inside its own firing, with its own
 **The arguments of a call.** The call log renders a function as `<function>`. `__stub_args(name)` returns the arguments of every recorded call of the Native `name`, oldest first, one list per call with `n` its argument count (nil arguments included), each value the very object the Native was given. It is how a test checks which function a Native received, for instance that the handler `TimerStart` stored or the function `Condition` wrapped is, or is not, the one the test passed. Stored callbacks are also run by the firing helpers above: `__stub_fire_timer` runs the handler `TimerStart` stored, and `__stub_fire_trigger` evaluates the conditions and runs the actions a trigger holds.
 
 ```ts
-declare function __stub_args(name: string): (unknown[] & { n: number })[];
-
 const handler = () => {};
 timer.start(1, false, handler);
 const [call] = __stub_args("TimerStart");

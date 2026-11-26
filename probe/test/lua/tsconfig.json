@@ -16,7 +16,8 @@
     "types": [
       "@typescript-to-lua/language-extensions",
       "lua-types/5.3",
-      "reforged-types/3.0.1"
+      "reforged-types/3.0.1",
+      "reforged-test/stubs"
     ],
     "strict": true,
     "noUnusedParameters": true,
