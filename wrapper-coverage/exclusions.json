@@ -130,5 +130,11 @@
     "reason": "Patch 3.0.1.24370 added its Blz twin BlzGetItemTag, of the same parameters, which Item#tag calls instead: the patch notes give the equipment Natives 3.0 added the Blz prefix, to avoid conflicts with functions of player-made maps, and say the Natives without it will be removed in a future Patch. The Typings mark it @deprecated from its Overlay entry's deprecated field, naming the twin and citing the patch note (#671), so a Map project calling it gets the editor's warning; the exclusion goes when a Patch removes it.",
     "source": "Patch 3.0.1 notes, World Editor: \"Natives added in 3.0 now have the Blz- prefix\", \"Added new Blz prefix natives versions for: ... GetItemTag ...\", \"Non Blz natives will be removed in a future patch\" (https://liquipedia.net/warcraft/Patch_3.0.1); packages/reforged-types/vendor/3.0.1.24370/common.j declares both, with the same parameters.",
     "date": "2026-10-21"
+  },
+  {
+    "native": "ResumeTimer",
+    "reason": "It does not continue a paused countdown: a timer it resumes fires when what was left at the pause runs out, once more a full timeout later, then stops, one-shot or periodic alike, and on a one-shot timer that expired it fires twice more. Timer#resume calls TimerStart instead, for what was left, and starts a periodic Timer again for its timeout at that expiry (#962).",
+    "source": "Probe runs on Build 3.0.1.24371: docs/research/timer-resume.md (#962); timer-answers.md, \"What ResumeTimer leaves behind\" (#947, https://github.com/phmilk/reforged-ts/blob/research/timer-answers/docs/research/timer-answers.md), and timer-resume-cases.md (#961, https://github.com/phmilk/reforged-ts/blob/research/timer-resume-cases/docs/research/timer-resume-cases.md).",
+    "date": "2026-11-26"
   }
 ]

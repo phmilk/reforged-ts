@@ -4,6 +4,31 @@ import { protect } from "../reforged/protect";
 import { Handle } from "./handle";
 
 /**
+ * What a Timer started through its Wrapper is doing, as the Wrapper tracks
+ * it: counting a start, counting what a pause left after `resume`, paused by
+ * `pause`, or a one-shot that expired.
+ */
+type CountdownState = "running" | "resumed" | "paused" | "expired";
+
+/**
+ * One start of a Timer, what `resume` and the readings need of it: the game
+ * keeps none of it once its `ResumeTimer` is out of the picture (#962).
+ * @noSelf
+ */
+interface Countdown {
+  /** The timeout `start` was given, in seconds. */
+  readonly timeout: number;
+  /** Whether `start` was periodic. */
+  readonly periodic: boolean;
+  /** The protected handler, the function the game runs at each expiry. */
+  readonly run: () => void;
+  /** What the Timer is doing. */
+  state: CountdownState;
+  /** What was left when `pause` stopped it, in seconds. */
+  left: number;
+}
+
+/**
  * A timer: a countdown in game seconds that runs a handler when it expires,
  * once or periodically.
  * @remarks
@@ -11,11 +36,18 @@ import { Handle } from "./handle";
  *   paused.
  * - `Timer.after` and `Timer.every` cover the common cases; `create` then
  *   `start` gives a Timer that can be paused, resumed and started again.
+ * - The Wrapper remembers each start, so that `resume` continues a paused
+ *   countdown and `elapsed`, `remaining` and `timeout` read it: a timer
+ *   started, paused or resumed through its Natives directly
+ *   (`TimerStart`, `PauseTimer`, `ResumeTimer`) is outside what they know.
  * @example A countdown and a delayed call
  * {@includeCode ../../examples/harness/timer-every.ts}
  * @native timer
  */
 export class Timer extends Handle<timer> {
+  /** The last start through this Wrapper; undefined before the first. */
+  private countdown?: Countdown;
+
   /**
    * Creates a stopped timer; `start` sets it running.
    * @returns The new timer.
@@ -29,33 +61,68 @@ export class Timer extends Handle<timer> {
   }
 
   /**
-   * Gets the time since the timer last started.
+   * Gets the time counted of the current countdown: since the last `start`,
+   * or since the last periodic expiry, the time spent paused left out.
+   * @remarks
+   * - `elapsed + remaining` is `timeout`, on a resumed Timer as on any
+   *   other: during the countdown a `resume` continues, `elapsed` goes on
+   *   from what it read at the `pause`.
+   * - A paused Timer reads `timeout` minus what was left at the `pause`,
+   *   which is what it read then.
+   * - Paused in a periodic Timer's handler, it reads 0: the next countdown
+   *   has not begun.
+   * - A one-shot Timer reads `timeout` from its handler on.
+   * - A Timer never started reads 0.
    * @returns The elapsed time, in seconds.
    * @native TimerGetElapsed
-   * @bug After `resume`, it counts only the time since the resume.
+   * @native TimerGetRemaining
    */
   public get elapsed(): number {
-    return TimerGetElapsed(this.handle);
+    const countdown = this.storedCountdown();
+    if (countdown === undefined) {
+      return TimerGetElapsed(this.handle);
+    }
+    return countdown.timeout - this.remaining;
   }
 
   /**
-   * Gets the time left before the timer expires.
+   * Gets the time left before the timer next expires.
+   * @remarks
+   * A paused Timer reads what was left at the `pause`: a full timeout when
+   * paused in a periodic Timer's handler, its next countdown not begun. A
+   * one-shot Timer reads 0 from its handler on, and a Timer never started
+   * reads 0.
    * @returns The remaining time, in seconds.
    * @native TimerGetRemaining
-   * @bug The value can be wrong for a timer that was paused and later
-   * resumed: http://www.wc3c.net/showthread.php?t=95756.
+   * @bug The game's own reading is wrong on a one-shot timer started again
+   * after a pause, once it expired: it reads what was left at that old pause
+   * (#961). The Wrapper answers 0 for a Timer it started.
    */
   public get remaining(): number {
-    return TimerGetRemaining(this.handle);
+    const countdown = this.countdown;
+    if (countdown === undefined) {
+      return TimerGetRemaining(this.handle);
+    }
+    switch (countdown.state) {
+      case "paused":
+        return countdown.left;
+      case "expired":
+        return 0;
+      default:
+        return TimerGetRemaining(this.handle);
+    }
   }
 
   /**
    * Gets the timeout the timer was last started with.
+   * @remarks
+   * A resumed Timer still reads the timeout `start` was given, not what was
+   * left at the `pause`. A Timer never started reads 0.
    * @returns The timeout, in seconds.
    * @native TimerGetTimeout
    */
   public get timeout(): number {
-    return TimerGetTimeout(this.handle);
+    return this.storedCountdown()?.timeout ?? TimerGetTimeout(this.handle);
   }
 
   /**
@@ -76,25 +143,67 @@ export class Timer extends Handle<timer> {
 
   /**
    * Stops the countdown where it is; `resume` continues it.
+   * @remarks
+   * - On a Timer that is not counting (never started, paused, or a one-shot
+   *   that expired) it changes nothing `resume` or the readings see.
+   * - In a periodic Timer's handler it stops the Timer before its next
+   *   countdown: `resume` then counts a full timeout. Measured on Build
+   *   3.0.1.24371, the game runs no expiry of a timer paused in its own
+   *   handler (#962).
    * @returns This Timer, for chaining.
    * @native PauseTimer
-   * @bug The game clears the periodic flag: a periodic Timer paused then
-   * resumed runs its remaining time and one more timeout, then stops. Start it
-   * again with `start` to keep it periodic.
+   * @native TimerGetRemaining
    */
   public pause() {
+    const countdown = this.countdown;
+    if (countdown?.state === "running" || countdown?.state === "resumed") {
+      const left = TimerGetRemaining(this.handle);
+      // A periodic Timer reads 0 left in its handler, where its next
+      // countdown, a full timeout, has not begun yet.
+      countdown.left =
+        left <= 0 && countdown.periodic ? countdown.timeout : left;
+      countdown.state = "paused";
+    }
     PauseTimer(this.handle);
     return this;
   }
 
   /**
-   * Continues a paused countdown from where `pause` stopped it; a running
-   * Timer is left as it is.
+   * Continues the countdown `pause` stopped: the handler runs when what was
+   * left at the pause runs out, and a periodic Timer then runs it every
+   * timeout, as if it had never been paused.
+   * @remarks
+   * - It acts only on a Timer `pause` stopped and nothing started since. On
+   *   a running Timer, a Timer never started and a one-shot Timer that
+   *   expired it does nothing: no expiry, no change of any reading.
+   * - A resumed Timer can be paused and resumed again, any number of times;
+   *   `start` on it is an ordinary start, which forgets the pause.
+   * - The game's `ResumeTimer` is not called: measured on Build
+   *   3.0.1.24371, a timer it resumes expires when what was left runs out,
+   *   once more a full timeout later, then stops, one-shot or periodic alike
+   *   (#947, #962). The Timer starts instead for what was left, and a
+   *   periodic one starts again for its timeout at that expiry, just before
+   *   its handler runs: in that handler it reads an elapsed of 0 and a
+   *   remaining of the timeout, where an ordinary periodic expiry reads the
+   *   timeout and 0.
+   * - A Dev mode failure of the handler is reported under the member that
+   *   registered it, `Timer.start` or `Timer.every`, after a resume too.
    * @returns This Timer, for chaining.
-   * @native ResumeTimer
+   * @native TimerStart
    */
   public resume() {
-    ResumeTimer(this.handle);
+    const countdown = this.countdown;
+    if (countdown?.state !== "paused") {
+      return this;
+    }
+    countdown.state = "resumed";
+    TimerStart(this.handle, countdown.left, false, () => {
+      if (countdown.periodic) {
+        countdown.state = "running";
+        TimerStart(this.handle, countdown.timeout, true, countdown.run);
+      }
+      countdown.run();
+    });
     return this;
   }
 
@@ -171,6 +280,18 @@ export class Timer extends Handle<timer> {
   }
 
   /**
+   * The countdown `elapsed` and `timeout` answer from, or undefined when they
+   * read the Natives: before the first start through this Wrapper, and while
+   * an ordinary start runs, where the Natives are right. `remaining` reads
+   * the Native while resumed too, since the restart for what was left counts
+   * down to the next expiry.
+   */
+  private storedCountdown(): Countdown | undefined {
+    const countdown = this.countdown;
+    return countdown?.state === "running" ? undefined : countdown;
+  }
+
+  /**
    * `start` for the registering `member` a failure report names: the one
    * place a Timer hands a function to `TimerStart`.
    */
@@ -180,14 +301,20 @@ export class Timer extends Handle<timer> {
     periodic: boolean,
     handler: (timer: this) => void,
   ): this {
-    TimerStart(
-      this.handle,
+    const countdown: Countdown = {
       timeout,
       periodic,
-      protect(this, member, () => {
+      run: protect(this, member, () => {
+        if (!countdown.periodic) {
+          countdown.state = "expired";
+        }
         handler(this);
       }),
-    );
+      state: "running",
+      left: 0,
+    };
+    this.countdown = countdown;
+    TimerStart(this.handle, timeout, periodic, countdown.run);
     return this;
   }
 

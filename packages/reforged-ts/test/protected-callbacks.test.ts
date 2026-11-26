@@ -128,6 +128,34 @@ describe("Timer handlers in Dev mode", () => {
     ).toEqual(true);
   });
 
+  it("reports a handler failing after a resume under the member that registered it", () => {
+    Reforged.configure({ devMode: true });
+    const every = Timer.every(1, () => {
+      error("resumed tick failed", 0);
+    });
+    const start = Timer.create().start(2, false, () => {
+      error("resumed one-shot failed", 0);
+    });
+    for (const timer of [every, start]) {
+      withNative(
+        "TimerGetRemaining",
+        () => 0.5,
+        () => {
+          timer.pause();
+        },
+      );
+      timer.resume();
+    }
+    const seen = output(() => {
+      __stub_fire_timer(every.handle);
+      __stub_fire_timer(start.handle);
+    });
+    expect(seen.printed).toEqual([
+      `reforged-ts: Timer#${String(every.id)} Timer.every failed: resumed tick failed`,
+      `reforged-ts: Timer#${String(start.id)} Timer.start failed: resumed one-shot failed`,
+    ]);
+  });
+
   it("reports a different message from the same handler again", () => {
     Reforged.configure({ devMode: true });
     let run = 0;
