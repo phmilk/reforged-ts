@@ -345,6 +345,7 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
         "keeps no hit points: a live unit's life has no answer",
         "runs a chain of handlers inside the call: a death handler that kills",
         "leaves RemoveUnit dispatching nothing",
+        "leaves RemoveUnit dispatching nothing for a dead unit",
       ),
     );
   });

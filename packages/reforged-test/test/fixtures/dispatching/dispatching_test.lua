@@ -90,7 +90,8 @@ local function footman(slot)
   return CreateUnit(Player(slot or 0), FourCC("hfoo"), 0, 0, 0)
 end
 
--- The cases KillUnit(live), KillUnit(dead) and RemoveUnit(live) of docs/research/unit-event-timing.md.
+-- The cases KillUnit(live), KillUnit(dead), RemoveUnit(live) and
+-- RemoveUnit(dead) of docs/research/unit-event-timing.md.
 describe("KillUnit", function()
   it("dispatches the widget death, the player unit death and the unit death, the unit already dead", function()
     startGame()
@@ -161,9 +162,20 @@ describe("KillUnit", function()
     expect(log).toEqual({})
     expect(UnitAlive(unit)).toBe(true)
   end)
+
+  it("leaves RemoveUnit dispatching nothing for a dead unit", function()
+    startGame()
+    local unit = footman()
+    KillUnit(unit)
+    local log = watchAll(unit)
+    RemoveUnit(unit)
+    expect(log).toEqual({})
+    expect(UnitAlive(unit)).toBe(false)
+  end)
 end)
 
--- The cases SetUnitOwner(footman, Player(1)) and SetUnitOwner(footman, Player(0)), its owner, of docs/research/unit-event-timing.md.
+-- The cases SetUnitOwner(footman, Player(1)) and SetUnitOwner(footman,
+-- Player(0)), its owner, of docs/research/unit-event-timing.md.
 describe("SetUnitOwner", function()
   it("dispatches the change of owner of the new owner, then the unit's, the owner already changed", function()
     startGame()
