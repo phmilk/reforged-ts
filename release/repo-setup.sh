@@ -196,8 +196,8 @@ finish() {
 # token of the maintainer as its secret PROJECT_TOKEN, the Template's
 # environment `board` (ADR 0017), whose policy admits main alone and whose
 # one secret is the App's key APP_PRIVATE_KEY, read by the Template's board
-# dispatch, `pnpm board:setup`, the views' hand settings and the first
-# `pnpm board:reconcile`.
+# dispatch, `pnpm board:setup`, the views' hand settings, the built-in
+# workflows to turn on or off by hand and the first `pnpm board:reconcile`.
 #
 # From the repository root, in Git Bash (Windows) or a Linux shell:
 #
@@ -218,8 +218,9 @@ finish() {
 # installation when its Dependency Dashboard issue exists, the settings
 # when they read back as committed, the board when its environment, its
 # policy and its secret exist in both repositories and
-# `pnpm board:setup --dry-run` plans nothing. An environment that exists
-# is left as it is: only a missing branch policy is added to it.
+# `pnpm board:setup --dry-run` plans nothing and names no built-in
+# workflow to set by hand. An environment that exists is left as it is:
+# only a missing branch policy is added to it.
 #
 # The dry run still runs `pnpm install` and the read-only checks (gh, git,
 # what the repository holds, `pnpm repo:settings --dry-run`,
@@ -612,6 +613,14 @@ board_plan() {
   retried pnpm --silent board:setup --dry-run
 }
 
+# board_by_hand prints the hand steps of a board_plan, one per line: each
+# built-in workflow of the project whose state differs from BOARD_WORKFLOWS
+# of release/src/board.ts, which the API cannot turn on or off (#968). They
+# are no requests, so a plan of 0 requests may still hold some.
+board_by_hand() {
+  sed -n 's/^By hand: //p' <<<"$1"
+}
+
 # board_url prints the project's URL from a board_plan, empty when the
 # project does not exist yet.
 board_url() {
@@ -997,14 +1006,21 @@ BOARD_PLAN=$(board_plan) || fail "pnpm board:setup --dry-run failed: $(head -n 1
 while IFS= read -r line; do note "  $line"; done <<<"$BOARD_PLAN"
 BOARD_PENDING=true
 grep -q '^Dry run, 0 requests, none sent' <<<"$BOARD_PLAN" && BOARD_PENDING=false
+WORKFLOWS_PENDING=false
+[[ -n "$(board_by_hand "$BOARD_PLAN")" ]] && WORKFLOWS_PENDING=true
 if $BOARD_PENDING; then
   note "not yet: the board does not read back as committed (the requests above)"
 else
   ok "the board reads back as committed: the project exists, is public, is linked to both repositories, its Status options and its views as release/src/board.ts holds them"
 fi
+if $WORKFLOWS_PENDING; then
+  note "not yet: a built-in workflow of the project is not as release/src/board.ts has it (the By hand lines above)"
+elif ! $BOARD_PENDING; then
+  ok "the project's built-in workflows are on or off as release/src/board.ts has them"
+fi
 
 ROTATE=false
-if $ENVIRONMENT_OK && $SECRET_STORED && $TEMPLATE_OK && $TEMPLATE_KEY_STORED && ! $BOARD_PENDING; then
+if $ENVIRONMENT_OK && $SECRET_STORED && $TEMPLATE_OK && $TEMPLATE_KEY_STORED && ! $BOARD_PENDING && ! $WORKFLOWS_PENDING; then
   confirm "Replace the token (a rotation: it expires a year after it was made)?" && ROTATE=true
 fi
 
@@ -1160,6 +1176,35 @@ if $BOARD_PENDING; then
   pause "Press Enter once By parent is grouped and saved"
   step "GitHub's own first view, ${BOLD}View 1${RESET}: its menu → Delete view (board:setup leaves it)."
   pause "Press Enter once View 1 is deleted"
+fi
+
+# The built-in workflows, read from the project as it is now: the one
+# board:setup just made comes with its own on. The API reads their state and
+# cannot set it, so each difference is a hand step, then read back.
+BOARD_BY_HAND=$(board_by_hand "$BOARD_PLAN")
+if [[ -n "$BOARD_BY_HAND" ]]; then
+  say ""
+  say "The project's built-in workflows, which the API cannot turn on or off. On"
+  say "the Workflows page, pick each one and use the switch at the top right:"
+  open_url "$BOARD_URL/workflows"
+  while IFS= read -r line; do step "$line"; done <<<"$BOARD_BY_HAND"
+  pause "Press Enter once each is as its line says"
+  say ""
+  say "Reading them back:"
+  printf '  %s$ pnpm --silent board:setup --dry-run%s\n' "$BOLD" "$RESET"
+  if $DRY_RUN; then
+    note "A real run then checks that no By hand line is left."
+  else
+    BOARD_PLAN=$(board_plan) || fail "pnpm board:setup --dry-run failed: $(head -n 1 "$ERR_FILE")" "Read the error above."
+    BOARD_BY_HAND=$(board_by_hand "$BOARD_PLAN")
+    [[ -z "$BOARD_BY_HAND" ]] ||
+      fail "The project's built-in workflows do not read back as committed:" "$BOARD_BY_HAND"
+    ok "the project's built-in workflows are on or off as release/src/board.ts has them"
+  fi
+elif $BOARD_PENDING && $DRY_RUN; then
+  note "A real run then reads the built-in workflows of the project as board:setup"
+  note "left it, and has you turn on or off, on its Workflows page, each one whose"
+  note "state differs from release/src/board.ts."
 fi
 
 if $BOARD_PENDING || [[ -n "$TOKEN" ]]; then

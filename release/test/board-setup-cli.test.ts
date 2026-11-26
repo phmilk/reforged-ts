@@ -7,6 +7,7 @@ import {
   fieldId,
   FRESH,
   graphQlFetch,
+  MEASURED_WORKFLOWS,
   mutations,
   reading,
   STATE,
@@ -62,6 +63,61 @@ describe("board:setup", () => {
     );
   });
 
+  it("prints no workflow line on a project whose workflows match", async () => {
+    const result = await run(["--dry-run"], graphQlFetch(reading(STATE)));
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain("Dry run, 0 requests, none sent:\n");
+    expect(result.stdout).not.toMatch(/workflow/i);
+    expect(result.stdout).not.toContain("By hand");
+  });
+
+  it("names each workflow that differs and the state to set by hand, beside a plan of no request", async () => {
+    const sent: Sent[] = [];
+    const state = {
+      ...STATE,
+      project: { ...CONFIGURED, workflows: MEASURED_WORKFLOWS },
+    };
+    const result = await run(["--dry-run"], graphQlFetch(reading(state), sent));
+
+    expect(result.stderr).toBe("");
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain(
+      `Built-in workflows, which the API cannot turn on or off: set by hand on ${CONFIGURED.url}/workflows\n` +
+        'By hand: Turn off the workflow "Auto-close issue": it is on, and the definition has it off.\n' +
+        'By hand: Turn off the workflow "Pull request linked to issue": it is on, and the definition has it off.\n' +
+        'By hand: Turn off the workflow "Pull request merged": it is on, and the definition has it off.\n',
+    );
+    expect(result.stdout.match(/^By hand: /gm)).toHaveLength(3);
+    expect(result.stdout).toContain("Dry run, 0 requests, none sent:\n");
+    expect(mutations(sent)).toEqual([]);
+  });
+
+  it("sends nothing for a workflow that differs on a real run, and names it last", async () => {
+    const sent: Sent[] = [];
+    const state = {
+      ...STATE,
+      project: {
+        ...CONFIGURED,
+        workflows: [
+          ...CONFIGURED.workflows,
+          { name: "Auto-archive items", enabled: true },
+        ],
+      },
+    };
+    const result = await run([], graphQlFetch(reading(state), sent));
+
+    expect(result.exitCode).toBe(0);
+    expect(mutations(sent)).toEqual([]);
+    expect(
+      result.stdout.endsWith(
+        'By hand: The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).\n' +
+          `The board: ${CONFIGURED.url}\n`,
+      ),
+    ).toBe(true);
+    expect(result.stdout.match(/^By hand: /gm)).toHaveLength(1);
+  });
+
   it("creates everything, then the rest on the project GitHub made", async () => {
     const sent: Sent[] = [];
     const state = { ...STATE, project: null };
@@ -107,6 +163,9 @@ describe("board:setup", () => {
     expect(result.stdout).toContain(
       `Done: Link the project to ${BOARD_OWNER}/reforged-ts-template.\n`,
     );
+    // The created project's workflows are read with it: three to turn off.
+    expect(result.stdout).toContain(`set by hand on ${FRESH.url}/workflows\n`);
+    expect(result.stdout.match(/^By hand: Turn off /gm)).toHaveLength(3);
     expect(result.stdout.endsWith(`The board: ${FRESH.url}\n`)).toBe(true);
   });
 

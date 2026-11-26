@@ -10,12 +10,14 @@ import {
   BOARD_REPOSITORIES,
   BOARD_TITLE,
   BOARD_VIEWS,
+  BOARD_WORKFLOWS,
   STATUS_OPTIONS,
   type BoardIssue,
   type BoardPullRequest,
   type BoardState,
   type ProjectItem,
   type ProjectState,
+  type ProjectWorkflow,
   type SubIssue,
 } from "../../src/board.js";
 import { gitHubApi } from "../../src/cli/common.js";
@@ -42,6 +44,19 @@ const FIELD_NAMES = [
 /** The id the fixtures give the field `name` of the project `prefix`. */
 export const fieldId = (prefix: string, name: string) =>
   `${prefix}_${name.toLowerCase().replaceAll(/\W+/g, "_")}`;
+
+/**
+ * The built-in workflows of the live project as read on 2026-11-26
+ * (`ProjectV2.workflows` of project 5, #968), in GitHub's order: five on.
+ */
+export const MEASURED_WORKFLOWS: readonly ProjectWorkflow[] = [
+  { name: "Auto-add sub-issues to project", enabled: true },
+  { name: "Auto-close issue", enabled: true },
+  { name: "Item added to project", enabled: false },
+  { name: "Item closed", enabled: true },
+  { name: "Pull request linked to issue", enabled: true },
+  { name: "Pull request merged", enabled: true },
+];
 
 /** A project the script already set up: everything as committed. */
 export const CONFIGURED: ProjectState = {
@@ -71,12 +86,14 @@ export const CONFIGURED: ProjectState = {
     fields: [...view.fields],
   })),
   repositories: [...BOARD_REPOSITORIES],
+  workflows: BOARD_WORKFLOWS.map(({ name, enabled }) => ({ name, enabled })),
 };
 
 /**
  * A project as GitHub creates it: private, no README, a default table view
  * and the Status options a fresh project is believed to come with (they are
- * not documented).
+ * not documented), its built-in workflows as the live project had them
+ * before anyone set them.
  */
 export const FRESH: ProjectState = {
   id: "PVT_new",
@@ -113,6 +130,7 @@ export const FRESH: ProjectState = {
     },
   ],
   repositories: [],
+  workflows: MEASURED_WORKFLOWS,
 };
 
 export const REPOSITORY_IDS: Readonly<Record<string, string>> =
@@ -474,6 +492,19 @@ export function reading(
               repositories: page(
                 (project?.repositories ?? []).map((nameWithOwner) => ({
                   nameWithOwner,
+                })),
+              ),
+            },
+          },
+        };
+      case "ProjectWorkflows":
+        return {
+          data: {
+            node: {
+              workflows: page(
+                (project?.workflows ?? []).map(({ name, enabled }) => ({
+                  name,
+                  enabled,
                 })),
               ),
             },
