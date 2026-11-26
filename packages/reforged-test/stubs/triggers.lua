@@ -314,33 +314,47 @@ local function remember(whichTrigger, event, subject, filter)
   }
 end
 
-local registerPlayerEvent = TriggerRegisterPlayerEvent
-local registerGameEvent = TriggerRegisterGameEvent
-local registerFilterUnitEvent = TriggerRegisterFilterUnitEvent
-local registerDeathEvent = TriggerRegisterDeathEvent
+-- The registrations the dispatch remembers beside the damage ones below
+-- (TriggerRegisterUnitEvent, TriggerRegisterPlayerUnitEvent): per Native,
+-- how its arguments after the trigger give the event, the subject and the
+-- filter.
+local remembered = {
+  TriggerRegisterPlayerEvent = function(whichPlayer, whichPlayerEvent)
+    return whichPlayerEvent, whichPlayer, nil
+  end,
+  TriggerRegisterGameEvent = function(whichGameEvent)
+    return whichGameEvent, nil, nil
+  end,
+  TriggerRegisterFilterUnitEvent = function(whichUnit, whichEvent, filter)
+    return whichEvent, whichUnit, filter
+  end,
+  TriggerRegisterDeathEvent = function(whichWidget)
+    return EVENT_WIDGET_DEATH, whichWidget, nil
+  end,
+}
 
-function TriggerRegisterPlayerEvent(whichTrigger, whichPlayer, whichPlayerEvent)
-  local event = registerPlayerEvent(whichTrigger, whichPlayer, whichPlayerEvent)
-  remember(whichTrigger, whichPlayerEvent, whichPlayer, nil)
-  return event
+for name, read in pairs(remembered) do
+  local register = _G[name]
+  _G[name] = function(whichTrigger, ...)
+    local event = register(whichTrigger, ...)
+    remember(whichTrigger, read(...))
+    return event
+  end
 end
 
-function TriggerRegisterGameEvent(whichTrigger, whichGameEvent)
-  local event = registerGameEvent(whichTrigger, whichGameEvent)
-  remember(whichTrigger, whichGameEvent, nil, nil)
-  return event
-end
-
-function TriggerRegisterFilterUnitEvent(whichTrigger, whichUnit, whichEvent, filter)
-  local event = registerFilterUnitEvent(whichTrigger, whichUnit, whichEvent, filter)
-  remember(whichTrigger, whichEvent, whichUnit, filter)
-  return event
-end
-
-function TriggerRegisterDeathEvent(whichTrigger, whichWidget)
-  local event = registerDeathEvent(whichTrigger, whichWidget)
-  remember(whichTrigger, EVENT_WIDGET_DEATH, whichWidget, nil)
-  return event
+-- Whether a registration's filter accepts the event on `unit`: no filter
+-- accepts it; a filter runs with `unit` as GetFilterUnit's answer.
+local function filterAccepts(filter, unit)
+  if filter == nil then
+    return true
+  end
+  local func = filter.func
+  if func == nil then
+    error(__stub_format(filter) .. " was not created by Condition or Filter", 0)
+  end
+  return __stub_with_context({ GetFilterUnit = unit }, function()
+    return func() and true or false
+  end)
 end
 
 -- The damage exception: a registration for a damage event also keeps its
@@ -554,13 +568,7 @@ local function damageMatches(registration, target)
   if not rawequal(registration.player, target.owner) then
     return false
   end
-  local filter = registration.filter
-  if filter == nil then
-    return true
-  end
-  return __stub_with_context({ GetFilterUnit = target }, function()
-    return filter.func() and true or false
-  end)
+  return filterAccepts(registration.filter, target)
 end
 
 -- Dispatches one damage event as the game does inside UnitDamageTarget:
@@ -640,21 +648,6 @@ function __stub_fire_trigger(whichTrigger, context)
   end)
 end
 
--- Whether a registration's filter accepts the event: no filter accepts it;
--- a filter runs with the triggering unit as GetFilterUnit's answer.
-local function filterAccepts(filter, context)
-  if filter == nil then
-    return true
-  end
-  local func = filter.func
-  if func == nil then
-    error(__stub_format(filter) .. " was not created by Condition or Filter", 0)
-  end
-  return __stub_with_context({ GetFilterUnit = context.GetTriggerUnit }, function()
-    return func() and true or false
-  end)
-end
-
 -- The Event dispatch: delivers `event` on `subject` (the player, the unit or
 -- the widget a registration watches; nil for a game event) to every trigger
 -- registered for it, as the game would. In registration order, once per
@@ -675,7 +668,7 @@ function __stub_dispatch(event, subject, context)
       and rawequal(registration.subject, subject)
       and not whichTrigger.destroyed
       and not whichTrigger.disabled
-      and filterAccepts(registration.filter, context)
+      and filterAccepts(registration.filter, context.GetTriggerUnit)
     then
       local firing = {}
       for name, value in pairs(context) do

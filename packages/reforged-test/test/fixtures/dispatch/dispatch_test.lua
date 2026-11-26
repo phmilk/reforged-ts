@@ -181,6 +181,13 @@ describe("the subject, by the event's family", function()
     end
   end)
 
+  it("refuses a playerunitevent whose unit has no owner", function()
+    local game = startGame()
+    expect(function()
+      game.fire(EVENT_PLAYER_UNIT_SPELL_EFFECT, { GetTriggerUnit = map.newHandle("unit") })
+    end).toThrow("game.fire: the GetTriggerUnit of EVENT_PLAYER_UNIT_SPELL_EFFECT has no owner; give it a unit the Test game created, such as one of CreateUnit")
+  end)
+
   it("refuses what is not an event of the four families", function()
     local game = startGame()
     local message = "game.fire: expected an event of the game, a playerunitevent, a unitevent, a playerevent or a gameevent"

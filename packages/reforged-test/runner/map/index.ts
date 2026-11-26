@@ -212,6 +212,9 @@ export interface Game {
    * `game.fire: expected an event of the game, a playerunitevent, a unitevent, a playerevent or a gameevent`.
    * @throws When `context` lacks the response the event's family needs, naming it:
    * `game.fire: EVENT_PLAYER_UNIT_SPELL_EFFECT is a playerunitevent, so its Firing context needs GetTriggerUnit`.
+   * @throws When the `GetTriggerUnit` of a `playerunitevent` has no owner,
+   * a Handle of `newHandle("unit")` included:
+   * `game.fire: the GetTriggerUnit of EVENT_PLAYER_UNIT_SPELL_EFFECT has no owner; give it a unit the Test game created, such as one of CreateUnit`.
    */
   fire(
     event: playerunitevent | unitevent | playerevent | gameevent,
@@ -305,6 +308,12 @@ function fire(
     // The owner the units stub keeps, read without a Recorded call.
     if (family === "playerunitevent") {
       subject = (subject as { owner?: unknown }).owner;
+      if (subject === undefined) {
+        error(
+          `game.fire: the GetTriggerUnit of ${constant.__name as string} has no owner; give it a unit the Test game created, such as one of CreateUnit`,
+          2,
+        );
+      }
     }
   }
   // Every Native the context names answers it during the dispatch: it is a

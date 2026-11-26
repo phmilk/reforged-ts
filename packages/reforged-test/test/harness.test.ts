@@ -300,6 +300,7 @@ describe("game.fire and the Event dispatch, on reforged-test/map", () => {
         "reaches GetTriggerPlayer for a playerevent",
         "needs no subject for a gameevent",
         "names the response a context lacks",
+        "refuses a playerunitevent whose unit has no owner",
         "refuses what is not an event of the four families",
       ),
     );

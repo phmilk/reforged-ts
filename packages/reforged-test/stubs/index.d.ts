@@ -7,7 +7,7 @@
 // Lua is missing here or a name here is missing from the Lua.
 
 /**
- * A firing context: what each event response Native answers while a trigger
+ * A Firing context: what each event response Native answers while a trigger
  * fires, keyed by the Native's name (`{ GetTriggerUnit: unit.handle }`). A
  * Native the context leaves out answers nil. The definition of
  * `FiringContext`, the type `reforged-test/map` exports.
@@ -74,7 +74,7 @@ declare function __stub_fire_trigger(
  * it, in registration order and once per registration: a disabled or
  * destroyed trigger is skipped, the registration's filter is evaluated
  * (`GetTriggerUnit` of `context` as `GetFilterUnit`), then the trigger
- * fires, its conditions before its actions. The firing context is
+ * fires, its conditions before its actions. The Firing context is
  * `context`, with the trigger as `GetTriggeringTrigger` and, unless
  * `context` gives one, `event` as `GetTriggerEventId`. Returns how many
  * triggers ran their actions; no registration is no error.
