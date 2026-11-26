@@ -1,15 +1,18 @@
-// The global setup of the reforged-studio vitest project (#945): before any
-// test file runs, it checks that Playwright can launch the headless Chromium
-// the page's tests drive, so a machine without the browser fails once, with
-// the command that installs it, and not twice in each page test file.
+/**
+ * The global setup of the reforged-studio vitest project (#945): before any
+ * test file runs, it checks that Playwright can launch the headless Chromium
+ * the page's tests drive, so a machine without the browser fails once, with
+ * the command that installs it, and not twice in each page test file.
+ */
 
 import { chromium } from "playwright";
 
 /**
  * The command that installs the headless Chromium the page's tests drive:
- * the README's, which CI's Install Chromium step runs too. It works from any
- * folder of the workspace, the root included, where `playwright` is no
- * dependency and a bare `pnpm exec playwright` does not resolve.
+ * the README's. CI's Install Chromium step installs the same build with it
+ * plus its own flags (`--no-progress`, and `--with-deps` on Linux). It works
+ * from any folder of the workspace, the root included, where `playwright` is
+ * no dependency and a bare `pnpm exec playwright` does not resolve.
  */
 export const INSTALL_COMMAND =
   "pnpm --filter reforged-studio exec playwright install --only-shell chromium";
@@ -56,6 +59,12 @@ export async function checkChromium(executablePath?: string): Promise<void> {
   await browser.close();
 }
 
+/**
+ * The global setup vitest runs once, before any test file of the project:
+ * {@link checkChromium} on the installed build.
+ *
+ * @throws What {@link checkChromium} throws, which fails the run.
+ */
 export default async function setup(): Promise<void> {
   await checkChromium();
 }

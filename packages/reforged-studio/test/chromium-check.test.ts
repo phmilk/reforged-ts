@@ -24,7 +24,6 @@ describe("the Chromium check", () => {
     expect(message).toContain(
       "pnpm --filter reforged-studio exec playwright install --only-shell chromium",
     );
-    expect(message).toContain(INSTALL_COMMAND);
   });
 
   it("passes another launch failure through with Playwright's own message", async () => {

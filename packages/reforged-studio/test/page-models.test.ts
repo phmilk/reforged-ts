@@ -9,9 +9,10 @@
  *
  * It needs the page built (`pnpm build`) and the headless Chromium
  * installed (`pnpm --filter reforged-studio exec playwright install
- * --only-shell chromium`, which CI runs and the project's global setup,
- * `support/chromium.ts`, names when the browser is missing). WebGL runs on
- * Chromium's software renderer.
+ * --only-shell chromium`, which the project's global setup,
+ * `support/chromium.ts`, names when the browser is missing; CI's Install
+ * Chromium step installs the same build with that command plus its own
+ * flags). WebGL runs on Chromium's software renderer.
  */
 import fs from "node:fs";
 import path from "node:path";

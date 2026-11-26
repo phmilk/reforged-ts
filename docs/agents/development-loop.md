@@ -195,7 +195,7 @@ An Agent that runs Subagents (`/implement-spec`, `/ship-spec`, `/code-review`, a
 
 ### Removing a worktree
 
-Every removal of a worktree, a Subagent's or any other, follows this recipe, from its repository's checkout, in Git Bash on Windows:
+A throwaway worktree that holds no work and no install, like the detached one `ship-spec` reads the Changesets status in, is removed with `git worktree remove --force`. Every removal of a worktree that holds work or an install (commits, edited files, a `node_modules`), a Subagent's or any other, follows this recipe, from its repository's checkout, in Git Bash on Windows:
 
 1. `git worktree remove <path>`. When it succeeds, the removal is done.
 2. When it fails, read `git worktree list`, whatever the error said:
@@ -204,7 +204,7 @@ Every removal of a worktree, a Subagent's or any other, follows this recipe, fro
 
 The folder left behind has one measured cause (2026-11-25, on Windows, with `core.longpaths` set, [#941](https://github.com/phmilk/reforged-ts/issues/941)): pnpm links the packages of `node_modules` with junctions, and `git worktree remove` follows them. A junction to a sibling under `node_modules/.pnpm/` makes it fail with `Directory not empty`, after it unregistered the worktree. Git Bash's `rm -rf` does not follow a junction, so it deletes the folder and nothing else.
 
-**Never run `git worktree remove` on a worktree whose `node_modules` holds a junction to outside it,** one linked to the main checkout's among them: git follows that junction too, exits 0 and deletes the contents of its target, outside the worktree. That is why a worktree's `node_modules` is never linked to another checkout's. Delete such a worktree's folder with `rm -rf <path>`, then drop its registration with `git worktree prune`.
+**Never run `git worktree remove` on a worktree whose `node_modules` holds a junction to outside it,** one linked to the main checkout's among them: git follows that junction too, exits 0 and deletes the contents of its target, outside the worktree. That is why a worktree's `node_modules` is never linked to another checkout's. Delete such a worktree's folder with `rm -rf <path>`, then drop its registration with `git worktree prune`: measured on 2026-11-26, on Windows with git 2.53.0, on a worktree holding a junction to a folder outside it, the two left `git worktree list` without the worktree and the folder outside with its file.
 
 `core.longpaths` (`git config --global core.longpaths true`) does not prevent the folder left behind. On Windows it guards against one other failure only, `Filename too long` on the deep paths of `node_modules`.
 
@@ -231,7 +231,7 @@ So `timeout: 600000` does not keep a Subagent's command in the foreground past 1
 
 The background-wait check is one script, [`.claude/hooks/background-wait.mjs`](../../.claude/hooks/background-wait.mjs), on two hooks of the shared settings, `PreToolUse` and `Stop`. It blocks two things, wherever hooks run, `claude -p` and cloud sessions included:
 
-- **A Subagent's background command.** A Bash or PowerShell call with `run_in_background` from a Subagent is denied, with the reason: run it in the foreground with a timeout of at most ten minutes, or split it, and when the harness moves it to the background all the same (after 180 s, or 120 s without a timeout), keep the turn and read its output file. The main conversation's pass.
+- **A Subagent's background command.** A Bash or PowerShell call with `run_in_background` from a Subagent is denied, with the reason: run it in the foreground with a timeout of at most ten minutes, or split it, and when the harness moves it to the background all the same ([When the harness moves a foreground command to the background](#when-the-harness-moves-a-foreground-command-to-the-background)), keep the turn and read its output file. The main conversation's pass.
 - **An empty wait.** A turn whose last reply says it waits on background work, while the Stop lists no background task and no session cron, is blocked once: the Agent is told to verify, then resume the work or say plainly that nothing runs. A wait the reply only quotes does not count, so a retrospective or the report of a stall passes: a code span or block, curly quotes, guillemets, or straight quotes that open and close at a word's edge. A `>` line counts, since an Agent writes its own status in one. The stop after that passes, so a false alarm costs one verification and never a loop.
 
 What it sees of an idle teammate, from [#768's `Outcome:`](https://github.com/phmilk/reforged-ts/issues/768#issuecomment-6441630181): in an interactive session a named agent left idle after its report is listed among the Stop's background tasks as a running teammate, so a wait on it passes, though it sends nothing more until it gets a message. In `claude -p` a named agent is no teammate: it ends `completed`, is absent from the background tasks, and a reply that waits on it is blocked once. Unnamed Subagents are seen alike in both.

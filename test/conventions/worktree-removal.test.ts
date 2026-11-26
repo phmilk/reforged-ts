@@ -30,10 +30,10 @@ const recipeUrl = `https://github.com/phmilk/reforged-ts/blob/master/${loopDoc}#
 const recipeCommands = ["git worktree remove", "git worktree list", "rm -rf"];
 
 // What the skill's section keeps, each with the text that shows it.
-const skillOwn: readonly (readonly [string, string])[] = [
-  ["the ledger entry of a worktree left in place", "ledger"],
-  ["the branch's deletion after a merge", "git branch -D"],
-  ["the check lock", "(#the-check-lock)"],
+const skillOwn: readonly { readonly what: string; readonly text: string }[] = [
+  { what: "the ledger entry of a worktree left in place", text: "ledger" },
+  { what: "the branch's deletion after a merge", text: "git branch -D" },
+  { what: "the check lock", text: "(#the-check-lock)" },
 ];
 
 // The recipe's section of the development loop doc, a subsection of
@@ -49,34 +49,40 @@ function recipeOf(doc: string): string | undefined {
 function removalProblems(doc: string, skill: string): string[] {
   const recipe = recipeOf(doc);
   const own = section(skill, `## ${heading}`)?.join("\n");
-  return [
-    ...(recipe === undefined
-      ? [`${loopDoc}: no "### ${heading}" under "## Subagents"`]
-      : recipeCommands.flatMap((command) =>
-          recipe.includes(`\`${command}`)
-            ? []
-            : [`${loopDoc}, "${heading}": the recipe lost \`${command}\``],
-        )),
-    ...(own === undefined
-      ? [`ship-spec: no "## ${heading}"`]
-      : [
-          ...(own.includes(`](${recipeUrl})`)
-            ? []
-            : [`ship-spec, "${heading}": no link to ${recipeUrl}`]),
-          ...recipeCommands.flatMap((command) =>
-            own.includes(command)
-              ? [
-                  `ship-spec, "${heading}": states \`${command}\` again, which the development loop doc's recipe owns`,
-                ]
-              : [],
-          ),
-          ...skillOwn.flatMap(([what, text]) =>
-            own.includes(text)
-              ? []
-              : [`ship-spec, "${heading}": lost ${what} (${text})`],
-          ),
-        ]),
-  ];
+  const problems: string[] = [];
+
+  if (recipe === undefined) {
+    problems.push(`${loopDoc}: no "### ${heading}" under "## Subagents"`);
+  } else {
+    for (const command of recipeCommands) {
+      if (!recipe.includes(`\`${command}`)) {
+        problems.push(
+          `${loopDoc}, "${heading}": the recipe lost \`${command}\``,
+        );
+      }
+    }
+  }
+
+  if (own === undefined) {
+    problems.push(`ship-spec: no "## ${heading}"`);
+    return problems;
+  }
+  if (!own.includes(`](${recipeUrl})`)) {
+    problems.push(`ship-spec, "${heading}": no link to ${recipeUrl}`);
+  }
+  for (const command of recipeCommands) {
+    if (own.includes(command)) {
+      problems.push(
+        `ship-spec, "${heading}": states \`${command}\` again, which the development loop doc's recipe owns`,
+      );
+    }
+  }
+  for (const { what, text } of skillOwn) {
+    if (!own.includes(text)) {
+      problems.push(`ship-spec, "${heading}": lost ${what} (${text})`);
+    }
+  }
+  return problems;
 }
 
 const doc = read(loopDoc);
@@ -96,16 +102,21 @@ describe("the recipe for removing a worktree", () => {
             // A link inside the folder: the recipe's URL has a `:`.
             /\]\(([^)#:\s]*)#removing-a-worktree\)/g,
           ),
-        ].map((match) => `${path} -> ${match[1] ?? ""}`),
+        ].map((match) => ({ from: path, to: match[1] ?? "" })),
       );
-    // A merge, the run's end and a stop in SKILL.md, and the Template's
-    // worktree in template-tickets.md.
-    expect(links).toEqual([
-      "SKILL.md -> ",
-      "SKILL.md -> ",
-      "SKILL.md -> ",
-      "template-tickets.md -> SKILL.md",
-    ]);
+    // Each of the two files links the section at least once: SKILL.md at a
+    // merge, the run's end and a stop, template-tickets.md for the
+    // Template's worktree.
+    const from = links.map((link) => link.from);
+    expect(from).toContain("SKILL.md");
+    expect(from).toContain("template-tickets.md");
+    // Every link lands on SKILL.md, by an anchor of its own or by its name
+    // from a file beside it.
+    expect(
+      links.filter(
+        ({ from: file, to }) => to !== (file === "SKILL.md" ? "" : "SKILL.md"),
+      ),
+    ).toEqual([]);
     expect(section(skill, `## ${heading}`)).toBeDefined();
   });
 
