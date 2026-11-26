@@ -206,6 +206,20 @@ export type GameExpect = (<T>(actual: T) => GameMatchers<T>) &
 export const expect: GameExpect = luaExpect;
 
 /**
+ * A Firing context: what each event response Native answers while the
+ * Triggers of one event run, keyed by the Native's name
+ * (`{ GetTriggerUnit: caster.handle }`). A Native the context leaves out
+ * answers nil. It is the type `StubContext` of `reforged-test/stubs`.
+ * @example A spell no Game action covers, fired with game.fire
+ * {@includeCode ../../examples/fire.test.ts}
+ */
+export type FiringContext = {
+  readonly [
+    N in keyof typeof globalThis
+  ]?: (typeof globalThis)[N] extends () => infer R ? NonNullable<R> : never;
+};
+
+/**
  * One message a display Native showed to a player.
  * @example The messages a player was shown
  * {@includeCode ../../examples/displayed.test.ts}
@@ -238,6 +252,42 @@ export interface Game {
    * first. A copy at each read.
    */
   readonly displayed: readonly DisplayedText[];
+  /**
+   * Fires `event` as the game would: every Trigger registered for it runs,
+   * in registration order, with `context` as the Firing context. It is the
+   * one way to fire an event no Game action and no Dispatching Native
+   * covers, a spell or an order among them.
+   * @remarks
+   * - The Triggers reached are those whose registration watches the
+   *   event's subject, derived from the context by the event's family: the
+   *   owner of `GetTriggerUnit` for a `playerunitevent`, `GetTriggerUnit`
+   *   for a `unitevent`, `GetTriggerPlayer` for a `playerevent`, none for a
+   *   `gameevent`.
+   * - A disabled or destroyed Trigger is skipped, a registration's filter
+   *   is evaluated, and each Trigger's conditions run before its actions,
+   *   both before the next Trigger. No registered Trigger is no error.
+   * - It writes no state: the unit of a death is not dead, the order of an
+   *   order is not given. Every Native the context names answers its value
+   *   during the dispatch, a Native without a Stub included, which answers
+   *   nil after it.
+   * @example A spell no Game action covers
+   * {@includeCode ../../examples/fire.test.ts}
+   * @param event - The event, a constant of the game:
+   * `EVENT_PLAYER_UNIT_SPELL_EFFECT`.
+   * @param context - What the event's response Natives answer, by name.
+   * @throws When `event` is not a `playerunitevent`, a `unitevent`, a
+   * `playerevent` or a `gameevent`:
+   * `game.fire: expected an event of the game, a playerunitevent, a unitevent, a playerevent or a gameevent`.
+   * @throws When `context` lacks the response the event's family needs, naming it:
+   * `game.fire: EVENT_PLAYER_UNIT_SPELL_EFFECT is a playerunitevent, so its Firing context needs GetTriggerUnit`.
+   * @throws When the `GetTriggerUnit` of a `playerunitevent` has no owner,
+   * a Handle of `newHandle("unit")` included:
+   * `game.fire: the GetTriggerUnit of EVENT_PLAYER_UNIT_SPELL_EFFECT has no owner; give it a unit the Test game created, such as one CreateUnit returns`.
+   */
+  fire(
+    event: playerunitevent | unitevent | playerevent | gameevent,
+    context: FiringContext,
+  ): void;
   /**
    * Makes `player` the local player from now on: `GetLocalPlayer` answers
    * it, so the code under test runs as that player's client. The local
@@ -289,9 +339,71 @@ function setLocalPlayer(player: player | { readonly handle: player }): void {
   __stub_set_local_player(made.number as number);
 }
 
+// The response each event family derives its subject from.
+const SUBJECT_RESPONSE: Record<string, string | undefined> = {
+  playerunitevent: "GetTriggerUnit",
+  unitevent: "GetTriggerUnit",
+  playerevent: "GetTriggerPlayer",
+  gameevent: "",
+};
+
+const NOT_AN_EVENT =
+  "game.fire: expected an event of the game, a playerunitevent, a unitevent, a playerevent or a gameevent";
+
+function fire(
+  event: playerunitevent | unitevent | playerevent | gameevent,
+  context: FiringContext,
+): void {
+  // What the Shipped stubs keep on a constant of the game: its kind and
+  // its name.
+  const constant = event as unknown as { __kind?: unknown; __name?: unknown };
+  const family =
+    type(event) === "table" && type(constant.__kind) === "string"
+      ? (constant.__kind as string)
+      : "";
+  const response = SUBJECT_RESPONSE[family];
+  if (response === undefined) error(NOT_AN_EVENT, 2);
+  const answers = context as unknown as Record<string, unknown>;
+  let subject: unknown = undefined;
+  if (response !== "") {
+    subject = answers[response];
+    if (subject === undefined) {
+      error(
+        `game.fire: ${constant.__name as string} is a ${family}, so its Firing context needs ${response}`,
+        2,
+      );
+    }
+    // The owner the units stub keeps, read without a Recorded call.
+    if (family === "playerunitevent") {
+      subject = (subject as { owner?: unknown }).owner;
+      if (subject === undefined) {
+        error(
+          `game.fire: the GetTriggerUnit of ${constant.__name as string} has no owner; give it a unit the Test game created, such as one CreateUnit returns`,
+          2,
+        );
+      }
+    }
+  }
+  // Every Native the context names answers it during the dispatch: it is a
+  // response for that time, and the function it had comes back after. One
+  // without a Stub stays a response, answering nil outside a firing.
+  const globals = _G as unknown as Record<string, unknown>;
+  const replaced: [string, unknown][] = [];
+  for (const [name] of pairs(answers)) {
+    const previous = rawget(globals, name);
+    __stub_response(name);
+    if (previous !== undefined) table.insert(replaced, [name, previous]);
+  }
+  const [ok, err] = pcall(() => {
+    __stub_dispatch(event, subject as handle | undefined, context);
+  });
+  for (const [name, previous] of replaced) globals[name] = previous;
+  if (!ok) error(err, 0);
+}
+
 // printed and displayed are read at each access, so each read is a copy and
 // the map's later lines show.
-const game = setmetatable({ setLocalPlayer } as Game, {
+const game = setmetatable({ fire, setLocalPlayer } as Game, {
   __index: (_: Game, key: unknown): unknown => {
     if (key === "printed") return __stub_printed();
     if (key === "displayed") return displayed();

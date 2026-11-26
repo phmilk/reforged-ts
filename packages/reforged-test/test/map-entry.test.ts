@@ -51,6 +51,7 @@ describe("reforged-test/map", () => {
   it("exports the test API, with no call log and no beforeAll or afterAll", () => {
     expect(exported.map((symbol) => symbol.name).sort()).toEqual([
       "DisplayedText",
+      "FiringContext",
       "Game",
       "GameExpect",
       "GameMatchers",
@@ -235,6 +236,39 @@ describe("reforged-test/map", () => {
       ).toEqual([]);
       expect(errorsOf(`map.startGame().setLocalPlayer(1);`)).toEqual([
         expect.stringContaining("Argument of type 'number'"),
+      ]);
+    },
+  );
+
+  it(
+    "types game.fire by the event families and the Firing context by the response Natives, with no emit",
+    TYPED,
+    () => {
+      expect(
+        errorsOf(`
+        declare const caster: unit;
+        const game = map.startGame();
+        const context: map.FiringContext = {
+          GetTriggerUnit: caster,
+          GetSpellAbilityId: FourCC("AHtb"),
+        };
+        const nothing: void = game.fire(EVENT_PLAYER_UNIT_SPELL_EFFECT, context);
+        game.fire(EVENT_UNIT_DEATH, { GetTriggerUnit: caster });
+        game.fire(EVENT_PLAYER_END_CINEMATIC, { GetTriggerPlayer: Player(0) });
+        game.fire(EVENT_GAME_LOADED, {});
+        print(nothing);
+      `),
+      ).toEqual([]);
+      expect(errorsOf(`map.startGame().fire(EVENT_WIDGET_DEATH, {});`)).toEqual(
+        [expect.stringContaining("Argument of type 'widgetevent'")],
+      );
+      expect(
+        errorsOf(
+          `map.startGame().fire(EVENT_GAME_LOADED, { GetTriggerUnit: 1 });`,
+        ),
+      ).toEqual([expect.stringContaining("Type 'number' is not assignable")]);
+      expect(errorsOf(`map.startGame().emit;`)).toEqual([
+        expect.stringContaining("Property 'emit' does not exist"),
       ]);
     },
   );
