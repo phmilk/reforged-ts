@@ -555,6 +555,9 @@ importers:
       lua-types:
         specifier: 'catalog:'
         version: 2.14.1
+      reforged-types:
+        specifier: workspace:^
+        version: link:../reforged-types
       typescript:
         specifier: 'catalog:'
         version: 6.0.2

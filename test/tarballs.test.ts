@@ -119,7 +119,7 @@ const PACKAGES: readonly Expected[] = [
     allowed: [
       /^dist\/[^/]+\.(js|d\.ts)$/,
       /^lua\/[^/]+\.(lua|d\.ts)$/,
-      /^stubs\/[^/]+\.lua$/,
+      /^stubs\/[^/]+\.(lua|d\.ts)$/,
     ],
     required: [
       "dist/index.js",
@@ -127,6 +127,7 @@ const PACKAGES: readonly Expected[] = [
       "lua/index.lua",
       "lua/index.d.ts",
       "stubs/base.lua",
+      "stubs/index.d.ts",
     ],
     sideEffectsFree: true,
     workspacePeers: {},
