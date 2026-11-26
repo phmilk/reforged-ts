@@ -14,13 +14,13 @@ The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/
 
 The package has five parts:
 
-| Part                                 | Reached as            | What it is                                                                                                                                        |
-| ------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach` and `afterEach` for the test files, compiled to Lua.                                                     |
-| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach` and `startGame` for a Map project's tests, each in a Test game of its own, over the runner. |
-| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.            |
-| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                       |
-| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                     |
+| Part                                 | Reached as            | What it is                                                                                                                                                                   |
+| ------------------------------------ | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach` and `afterEach` for the test files, compiled to Lua.                                                                                |
+| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach`, `startGame`, `stubNative` and `newHandle` for a Map project's tests, each in a Test game of its own, over the runner. |
+| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.                                       |
+| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                                                  |
+| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                                                |
 
 ## Testing a map
 
@@ -39,6 +39,10 @@ it("greets the players", () => {
 The guide [Testing your map](https://phmilk.github.io/reforged-ts/docs/next/guides/testing-your-map) is the page to read: from a first test to what the harness cannot tell you. The Template sets the tests up in every Map project.
 
 Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.
+
+A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative("GetUnitName", (unit) => "Footman")`, typed from the Typings and recorded as a Shipped stub records its calls, with `newHandle(kind)` for an answer that creates a Handle. `game.setLocalPlayer(player)` makes the test act as another client. A Lua stub file listed in the `stubs` option still loads, after the shipped ones.
+
+`stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. `test/natives.test.ts` is its Drift check: it fails, naming the command, when the committed file is not what the generator emits, as on a new Patch.
 
 A helper a map's test needs that has no import in `reforged-test/map` is a gap of the package: [file it as an issue](https://github.com/phmilk/reforged-ts/issues/new), rather than reaching for the helpers of the part below. Sync, the preload file and `os.clock` have no form in `reforged-test/map`.
 

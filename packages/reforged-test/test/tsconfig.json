@@ -5,6 +5,9 @@
   "compilerOptions": {
     "rootDir": "..",
     "noEmit": true,
+    // natives.test.ts imports the generator, a .mts script Node runs from
+    // source.
+    "allowImportingTsExtensions": true,
     // vitest/config adds the `test` key to Vite's config, which map.test.ts
     // passes to startVitest.
     "types": ["node", "vitest/config"]

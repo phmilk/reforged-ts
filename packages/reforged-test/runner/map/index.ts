@@ -16,6 +16,9 @@ import {
   it as luaIt,
   type Matchers,
 } from "../lua/index";
+import type { HandleTypes, NativeName } from "./natives";
+
+export type { HandleTypes, NativeName } from "./natives";
 
 __reforged_test_isolated = true;
 
@@ -153,6 +156,7 @@ export interface DisplayedText {
  * observed of it.
  * @example What the players see when the game starts
  * {@includeCode ../../examples/welcome.test.ts}
+ * @noSelf
  */
 export interface Game {
   /**
@@ -166,6 +170,21 @@ export interface Game {
    * first. A copy at each read.
    */
   readonly displayed: readonly DisplayedText[];
+  /**
+   * Makes `player` the local player from now on: `GetLocalPlayer` answers
+   * it, so the code under test runs as that player's client. The local
+   * player is `Player(0)` until the first call. It may be called more than
+   * once in a test, and it is a Test control, not a Native: it records no
+   * call.
+   * @example The same code, run as two clients
+   * {@includeCode ../../examples/set-local-player.test.ts}
+   * @param player - The player whose client the test acts as: its Handle,
+   * or anything with `.handle`, as a `MapPlayer` of the library.
+   * @throws When `player` is not a player the Test game made, a Handle of
+   * `newHandle("player")` included:
+   * `game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)`.
+   */
+  setLocalPlayer(player: player | { readonly handle: player }): void;
 }
 
 /** What the display Natives showed, as `game.displayed` lists it. */
@@ -181,8 +200,30 @@ function displayed(): DisplayedText[] {
   return records;
 }
 
-// Read at each access, so each read is a copy and the map's later lines show.
-const game = setmetatable({} as Game, {
+const NOT_A_PLAYER =
+  "game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)";
+
+function setLocalPlayer(player: player | { readonly handle: player }): void {
+  let handle: unknown = player;
+  if (type(handle) === "table") {
+    handle = (handle as { handle?: unknown }).handle ?? handle;
+  }
+  // What the Shipped stubs keep on a player they made: its kind and its
+  // slot. A Handle of newHandle("player") has no slot, so it is refused.
+  const made = handle as { __kind?: unknown; number?: unknown };
+  if (
+    type(handle) !== "table" ||
+    made.__kind !== "player" ||
+    type(made.number) !== "number"
+  ) {
+    error(NOT_A_PLAYER, 2);
+  }
+  __stub_set_local_player(made.number as number);
+}
+
+// printed and displayed are read at each access, so each read is a copy and
+// the map's later lines show.
+const game = setmetatable({ setLocalPlayer } as Game, {
   __index: (_: Game, key: unknown): unknown => {
     if (key === "printed") return __stub_printed();
     if (key === "displayed") return displayed();
@@ -232,4 +273,68 @@ export function startGame(): Game {
   globals.main();
   callGlobal("MarkGameStarted");
   return game;
+}
+
+/**
+ * The answer `stubNative` takes for the Native `N`: a function of the
+ * Native's signature, as the Typings declare it. It may be left out for a
+ * Native that returns nothing.
+ * @example A unit's name, answered in the test
+ * {@includeCode ../../examples/stub-native.test.ts}
+ */
+export type NativeAnswer<N extends NativeName> = [
+  ReturnType<(typeof globalThis)[N]>,
+  // void is what the Typings give a Native that returns nothing.
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+] extends [void]
+  ? [impl?: (typeof globalThis)[N]]
+  : [impl: (typeof globalThis)[N]];
+
+/**
+ * Makes the Native `name` answer `impl` in this Test game: every call of it
+ * is recorded, as a Shipped stub records its own, then runs `impl` with the
+ * call's arguments and returns what it returned. It is how a test answers a
+ * Native without a Stub.
+ * @remarks
+ * - It may be called anywhere, before or after `startGame()`; the last call
+ *   for a name wins.
+ * - Over a Native a Shipped stub covers, the replacement is whole: the
+ *   Shipped stub no longer runs, so the state it kept and its Event
+ *   dispatch are gone, and `impl` does not receive the original. Keep it
+ *   for the Natives that answer a value.
+ * @example A unit's name, answered in the test
+ * {@includeCode ../../examples/stub-native.test.ts}
+ * @param name - The Native, one of `common.j` in the Typings.
+ * @param impl - What the Native does and answers, typed by its signature;
+ * optional only for a Native that returns nothing.
+ */
+export function stubNative<N extends NativeName>(
+  name: N,
+  ...impl: NativeAnswer<N>
+): void {
+  const answer = impl[0] as ((...args: unknown[]) => unknown) | undefined;
+  (_G as unknown as Record<string, unknown>)[name] = (
+    ...args: unknown[]
+  ): unknown => {
+    __stub_record(name, ...args);
+    // A bare return: a Native that returns nothing returns no value.
+    if (answer === undefined) return;
+    return answer(...args);
+  };
+}
+
+/**
+ * Creates a Handle of the Test game: what an answer given to `stubNative`
+ * returns for a Native that creates one. It takes the next handle id of the
+ * Test game, as a Handle a Shipped stub creates does, and it records no call.
+ * @example A Native that creates a Handle
+ * {@includeCode ../../examples/new-handle.test.ts}
+ * @param kind - The Handle type, by its name in the Typings: `"unit"`,
+ * `"timer"`.
+ * @returns A new Handle of that type.
+ */
+export function newHandle<K extends keyof HandleTypes>(
+  kind: K,
+): HandleTypes[K] {
+  return __stub_new_handle(kind) as HandleTypes[K];
 }
