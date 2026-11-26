@@ -1,5 +1,13 @@
 # reforged-test
 
+## 1.0.0-alpha.7
+
+### Minor Changes
+
+- [#994](https://github.com/phmilk/reforged-ts/pull/994) [`8ce0689`](https://github.com/phmilk/reforged-ts/commit/8ce0689f551319c2bd51e0c2198fd04931ae1d4a) Thanks [@wyller](https://github.com/wyller)! - Ship the declarations of every `__stub_*` helper of the Shipped stubs, the stub authoring ones included, as `reforged-test/stubs`: add `"reforged-test/stubs"` to the `types` of a test's tsconfig, next to the Typings, and delete any declarations of the helpers you copied by hand. The firing context keeps its type name, `StubContext`.
+
+- [#996](https://github.com/phmilk/reforged-ts/pull/996) [`3c1c5cb`](https://github.com/phmilk/reforged-ts/commit/3c1c5cb1515431b51b22dc09609d4160cc85120a) Thanks [@wyller](https://github.com/wyller)! - The `expect` of `reforged-test/lua` gains Vitest's `.not`, `toBeDefined`, `toContain`, `toContainEqual`, `toHaveLength`, `toMatchObject`, `toBeGreaterThan`, `toBeGreaterThanOrEqual`, `toBeLessThan`, `toBeLessThanOrEqual`, `toBeCloseTo`, `toBeInstanceOf` and `toMatch`, and the asymmetric matchers `expect.anything()`, `expect.any(kind)`, `expect.objectContaining()`, `expect.arrayContaining()` and `expect.stringContaining()` inside `toEqual`, `toMatchObject` and `toContainEqual`. Every text a matcher takes is plain text and means "contains"; `expect.any` takes a Lua type name or a class.
+
 ## 1.0.0-alpha.6
 
 ### Patch Changes

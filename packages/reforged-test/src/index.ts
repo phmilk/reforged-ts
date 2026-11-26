@@ -3,7 +3,6 @@
 
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, test } from "vitest";
 import {
   LuaError,
@@ -11,6 +10,7 @@ import {
   type Chunk,
   type LuaModule,
 } from "./lua-state.js";
+import { shippedStubs } from "./shipped-stubs.js";
 
 export { compileLuaProject } from "./compile.js";
 
@@ -58,8 +58,6 @@ export const MARKER_32_BIT = "[32-bit]";
 /** The test that stands for a module that failed before its tests ran. */
 export const LOAD_TEST_NAME = "loads the test module";
 
-const STUBS_DIR = fileURLToPath(new URL("../stubs/", import.meta.url));
-const BASE_STUB = "base.lua";
 const TEST_SUFFIX = "_test.lua";
 const DEPENDENCIES_DIR = "lua_modules";
 
@@ -144,15 +142,6 @@ class Harness {
     }
     return { moduleName, testFile, tests: parseResults(json, moduleName) };
   }
-}
-
-function shippedStubs(): Chunk[] {
-  const others = readdirSync(STUBS_DIR)
-    .filter((file) => file.endsWith(".lua") && file !== BASE_STUB)
-    .sort();
-  return [BASE_STUB, ...others].map((file) =>
-    readChunk(join(STUBS_DIR, file), `reforged-test/stubs/${file}`),
-  );
 }
 
 /** A path relative to outDir, `/`-separated, as `require` names it: `handles/unit.lua` is `handles.unit`. */
