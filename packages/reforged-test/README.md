@@ -64,7 +64,7 @@ The runner exports:
   - `expect.anything()`: any value but `nil`. A field holding `nil` is absent in Lua, so it fails there too.
   - `expect.any(kind)`: a value of a Lua type, by its name (`"number"`, `"string"`, `"boolean"`, `"table"`, `"function"`), or an instance of a class. `Number`, `String` and the other built-in constructors are `nil` in Lua, so `expect.any(Number)` raises, naming the type name to write.
   - `expect.objectContaining(part)`: a table holding every key of `part` with a deeply equal value.
-  - `expect.arrayContaining(items)`: a list holding, in any order, an item deeply equal to each of `items`.
+  - `expect.arrayContaining(items)`: a list holding, in any order, an item deeply equal to each of `items`; with no items, any value, as Vitest's.
   - `expect.stringContaining(part)`: a string holding this part as plain text.
 - `stubCalls()`: the stub call log, one `Name(arg, arg)` line per Native call.
 - `run()`: runs the registered tests and returns the JSON results. The glue calls it through the global `__reforged_test_run`, so a test file never calls it.

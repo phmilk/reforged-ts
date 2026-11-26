@@ -159,6 +159,18 @@ function show(value: unknown, depth = 0): string {
   return `{${table.concat(parts, ", ")}}`;
 }
 
+/**
+ * A thrown value as a failure message shows it: its message quoted, or the
+ * value itself when it carries no message.
+ */
+function showThrown(err: unknown): string {
+  const text = errorMessage(err);
+  return type(err) === "table" &&
+    text !== (err as { message?: unknown }).message
+    ? text
+    : show(text);
+}
+
 function errorMessage(err: unknown): string {
   if (type(err) === "table") {
     const record = err as { message?: unknown };
@@ -345,7 +357,7 @@ function className(cls: object): string {
 // ---------------------------------------------------------------------------
 // Asymmetric matchers
 
-/** A Lua type name, as `type` returns it. */
+/** A Lua type name `expect.any` takes, as `type` returns it. */
 export type LuaTypeName =
   | "number"
   | "string"
@@ -573,7 +585,7 @@ export interface Matchers<T> {
 function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
   const negation = negated ? "not " : "";
   const shown = (): string => show(actual);
-  const number = (expected: number): number => {
+  const numbers = (expected: number): number => {
     if (type(actual) !== "number")
       fail(`Expected a number to compare, got ${shown()}`);
     if (type(expected) !== "number")
@@ -678,23 +690,23 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       );
     },
     toBeGreaterThan: (expected) => {
-      compare(number(expected) > expected, "greater than", expected);
+      compare(numbers(expected) > expected, "greater than", expected);
     },
     toBeGreaterThanOrEqual: (expected) => {
       compare(
-        number(expected) >= expected,
+        numbers(expected) >= expected,
         "greater than or equal to",
         expected,
       );
     },
     toBeLessThan: (expected) => {
-      compare(number(expected) < expected, "less than", expected);
+      compare(numbers(expected) < expected, "less than", expected);
     },
     toBeLessThanOrEqual: (expected) => {
-      compare(number(expected) <= expected, "less than or equal to", expected);
+      compare(numbers(expected) <= expected, "less than or equal to", expected);
     },
     toBeCloseTo: (expected, digits = 2) => {
-      const value = number(expected);
+      const value = numbers(expected);
       const bound = 10 ** -digits / 2;
       const close = value === expected || math.abs(value - expected) < bound;
       if (close !== negated) return;
@@ -724,7 +736,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
         if (!ok !== negated) return;
         if (negated)
           fail(
-            `Expected the function not to throw, but it threw ${show(errorMessage(err))}`,
+            `Expected the function not to throw, but it threw ${showThrown(err)}`,
           );
         fail("Expected the function to throw, but it returned");
       }
@@ -735,7 +747,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       const text = errorMessage(err);
       if (contains(text, message) !== negated) return;
       fail(
-        `Expected the function ${negation}to throw an error containing ${show(message)}, got ${show(text)}`,
+        `Expected the function ${negation}to throw an error containing ${show(message)}, got ${showThrown(err)}`,
       );
     },
     toContainCall: (call) => {
@@ -771,6 +783,9 @@ export function expect<T>(actual: T): Matchers<T> {
   return matchers;
 }
 
+// The asymmetric matchers. Each wrapper ends in a tail call, so the error
+// level 2 of one that raises names the test's line, not this file's.
+
 /**
  * Matches any value but nil. A field holding nil is absent in Lua, so it
  * fails there too.
@@ -801,7 +816,7 @@ expect.objectContaining = (part: object): any => objectContaining(part);
 
 /**
  * Matches a list holding, in any order, an item deeply equal to each of
- * `items`.
+ * `items`; with no items, any value, as Vitest's.
  * @param items - The items the list holds.
  * @returns The matcher, to stand on the expected side.
  */

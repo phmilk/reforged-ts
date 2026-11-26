@@ -220,7 +220,7 @@ describe("matchers", () => {
       "toThrow on a non-function": "Expected a function to call, got 42",
       "not.toThrow": 'Expected the function not to throw, but it threw "boom"',
       "not.toThrow of a table without a message":
-        'Expected the function not to throw, but it threw "{code = 7}"',
+        "Expected the function not to throw, but it threw {code = 7}",
       "not.toThrow with its message":
         'Expected the function not to throw an error containing "bad", got "bad thing"',
       toContainCall:
@@ -252,7 +252,8 @@ describe("matchers", () => {
       toBeLessThan: "Expected 2 to be less than 2",
       toBeLessThanOrEqual: "Expected 3 to be less than or equal to 2",
       "toBeGreaterThan on a string": 'Expected a number to compare, got "2"',
-      "toBeLessThan a string": 'Expected a number to compare with, got "3"',
+      "toBeLessThan with a string":
+        'Expected a number to compare with, got "3"',
       toBeCloseTo:
         "Expected 0.31 to be close to 0.3 (to 2 digits, a difference below 0.005)",
       "not.toBeCloseTo":
