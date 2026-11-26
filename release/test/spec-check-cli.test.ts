@@ -291,6 +291,7 @@ describe("spec:check", () => {
 
       expect(result.stderr).toBe("");
       expect(result.exitCode).toBe(1);
+      expect(result.stdout.endsWith("}\n")).toBe(true);
       expect(JSON.parse(result.stdout)).toEqual({
         spec: { repository: LIBRARY, number: 10, title: "The Spec" },
         delivered: false,

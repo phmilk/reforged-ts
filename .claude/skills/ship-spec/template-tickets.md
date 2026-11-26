@@ -1,6 +1,6 @@
 # Template Tickets
 
-A Ticket of the Spec in `phmilk/reforged-ts-template`, which `pnpm spec:frontier` prints in full form (`phmilk/reforged-ts-template#<n>`), is worked the way [`SKILL.md`](SKILL.md) works a library Ticket, with the differences below. Every `gh issue` and `gh pr` call on it carries `-R phmilk/reforged-ts-template`, and every `git` call on its checkout or worktree carries `-C <path>`. Its default branch is `main`.
+A Ticket of the Spec in `phmilk/reforged-ts-template`, whose `repository` is `phmilk/reforged-ts-template` in `pnpm spec:frontier <spec> --json`, is worked the way [`SKILL.md`](SKILL.md) works a library Ticket, with the differences below. Every `gh issue` and `gh pr` call on it carries `-R phmilk/reforged-ts-template`, and every `git` call on its checkout or worktree carries `-C <path>`. Its default branch is `main`.
 
 ## The checkout beside the library's
 
