@@ -21,11 +21,13 @@ A Template Ticket's worktree is made from `origin/main`, in a folder beside the 
 
 ```sh
 git -C "$template" fetch origin main
-git -C "$template" worktree add "$template-worktrees/<ticket>" -b <type>/<ticket>-<slug> origin/main
+git -C "$template" worktree add --no-track "$template-worktrees/<ticket>" -b <type>/<ticket>-<slug> origin/main
 git -C "$template-worktrees/<ticket>" merge-base --is-ancestor origin/main HEAD
 ```
 
-It is removed as a library worktree is, through the Template's checkout: `git -C "$template" worktree remove "$template-worktrees/<ticket>"`, then `git -C "$template" branch -D <branch>` once its pull request merged.
+`--no-track`, as for a library worktree, keeps the branch from tracking `origin/main`.
+
+It is removed as a library worktree is ([Removing a worktree](SKILL.md#removing-a-worktree)), through the Template's checkout: every `git` command there takes `-C "$template"`.
 
 ## Its Claim
 
