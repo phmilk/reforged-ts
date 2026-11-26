@@ -1,10 +1,10 @@
 /**
- * The coverage check, `pnpm spec:check <spec> [owner/name] [--json]`: whether a Spec
- * is fully delivered, on evidence, before it closes (ADR 0023). It has the
- * board's shape: `readSpec` reads the Spec's body and every sub-issue
- * (state and close reason, assignees, body) through the GitHub GraphQL
- * API, `coverageVerdict` computes the verdict from them as a pure function,
- * and `cli/spec-check.ts` prints it.
+ * The coverage check, `pnpm spec:check <spec> [owner/name] [--json]`:
+ * whether a Spec is fully delivered, on evidence, before it closes (ADR
+ * 0023). It has the board's shape: `readSpec` reads the Spec's body and
+ * every sub-issue (state and close reason, assignees, body) through the
+ * GitHub GraphQL API, `coverageVerdict` computes the verdict from them as
+ * a pure function, and `cli/spec-check.ts` prints it.
  *
  * What an item is, what the Coverage table holds and where the outcome of
  * a "check whether…" goes are stated once, in `docs/agents/issue-tracker.md`,
@@ -469,8 +469,9 @@ export type GapReport = Gap & {
 };
 
 /**
- * The verdict as `pnpm spec:check --json` prints it, a contract that
- * `ship-spec` and `next-step` read: a change to it changes them too.
+ * The verdict as `pnpm spec:check --json` prints it, for `ship-spec` to
+ * read at a Spec's close (#922): a contract from its first merge, so a
+ * change to it changes that skill in the same pull request.
  */
 export interface VerdictReport {
   /** The Spec checked. */

@@ -62,7 +62,7 @@ function argumentsOf(
   return {
     number: Number(spec.replace("#", "")),
     repository,
-    json: positional.length < args.length,
+    json: args.includes("--json"),
   };
 }
 
