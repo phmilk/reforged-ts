@@ -4,9 +4,9 @@
   "totals": {
     "natives": 1712,
     "owned": 1007,
-    "covered": 985,
+    "covered": 984,
     "missing": 0,
-    "excluded": 22,
+    "excluded": 23,
     "unowned": 705
   },
   "problems": [],
@@ -4738,9 +4738,9 @@
       "type": "timer",
       "counts": {
         "owned": 10,
-        "covered": 10,
+        "covered": 9,
         "missing": 0,
-        "excluded": 0
+        "excluded": 1
       },
       "covered": [
         {
@@ -4793,13 +4793,6 @@
           ]
         },
         {
-          "name": "ResumeTimer",
-          "signature": "ResumeTimer takes timer whichTimer returns nothing",
-          "coveredBy": [
-            "Timer"
-          ]
-        },
-        {
           "name": "GetExpiredTimer",
           "signature": "GetExpiredTimer takes nothing returns timer",
           "coveredBy": [
@@ -4815,7 +4808,15 @@
         }
       ],
       "missing": [],
-      "excluded": []
+      "excluded": [
+        {
+          "name": "ResumeTimer",
+          "signature": "ResumeTimer takes timer whichTimer returns nothing",
+          "reason": "It does not continue a paused countdown: a timer it resumes fires when what was left at the pause runs out, once more a full timeout later, then stops, one-shot or periodic alike, and on a one-shot timer that expired it fires twice more. Timer#resume calls TimerStart instead, for what was left, and starts a periodic Timer again for its timeout at that expiry (#962).",
+          "source": "Probe runs on Build 3.0.1.24371: docs/research/timer-resume.md (#962); timer-answers.md, \"What ResumeTimer leaves behind\" (#947, https://github.com/phmilk/reforged-ts/blob/research/timer-answers/docs/research/timer-answers.md), and timer-resume-cases.md (#961, https://github.com/phmilk/reforged-ts/blob/research/timer-resume-cases/docs/research/timer-resume-cases.md).",
+          "date": "2026-11-26"
+        }
+      ]
     },
     {
       "wrapper": "Point",
