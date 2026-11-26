@@ -461,6 +461,7 @@ function register(children: SuiteNode["children"], inSuite32 = false): void {
     } else if (child.mode === "todo" && !marked) {
       test.todo(child.name);
     } else if (marked || child.mode === "skip") {
+      // A test marked [32-bit] is skipped whatever its mode, as before.
       test.skip(child.name, () => undefined);
     } else {
       (child.mode === "only" ? test.only : test)(child.name, (context) => {
