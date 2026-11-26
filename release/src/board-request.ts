@@ -1,6 +1,6 @@
 /**
  * The request plumbing of the board modules: what a request is
- * (`BoardRequest`), the mutations the three writers send
+ * (`BoardRequest`), the mutations the plans send
  * (`BOARD_MUTATIONS`), the error they stop with (`BoardError`), how a
  * request is printed and sent, and the readers of a GraphQL answer the
  * modules share. The lowest of the five board modules: it imports none of

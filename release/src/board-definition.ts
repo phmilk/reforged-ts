@@ -318,7 +318,7 @@ const QUERIES = {
 }`,
 } as const;
 
-/** Whether two names match but for case, as GitHub compares them. */
+/** Tells whether two names match but for case. */
 export const sameName = (a: string, b: string) =>
   a.toLowerCase() === b.toLowerCase();
 
