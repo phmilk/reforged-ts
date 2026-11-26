@@ -304,8 +304,9 @@ export interface Game {
    *   `GetDyingUnit` answer the unit, `GetTriggerPlayer` its owner, and
    *   `GetKillingUnit` answers `by`, or nil without it. A killer already
    *   dead is accepted.
-   * - In the widget death only `GetTriggerUnit` answers, the unit: no
-   *   dying unit, no player and no killer, as the game answers there.
+   * - In the widget death `GetTriggerUnit` answers the unit, and
+   *   `GetDyingUnit`, `GetTriggerPlayer` and `GetKillingUnit` answer nil, as
+   *   in the game.
    * - It writes the death and nothing derived: no bounty, no experience, no
    *   corpse, and the killer is unchanged. It is not `KillUnit`, which
    *   records no call here.
