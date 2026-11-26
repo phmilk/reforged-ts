@@ -53,7 +53,7 @@ The runner exports:
   - `toContain(item)`: a list holds this very item (`rawequal`), or a string holds this part as plain text.
   - `toContainEqual(item)`: a list holds an item deeply equal to this one.
   - `toHaveLength(length)`: the length `#` gives of a string or a list.
-  - `toMatchObject(subset)`: a table holds every key of `subset` with a matching value, nested tables matched the same way; a list in `subset` matches a list of the same length only.
+  - `toMatchObject(subset)`: a table holds every key of `subset` with a matching value, nested tables matched the same way; a list in `subset` matches a list of the same length only. An empty list is an empty table in Lua, so `{}` matches any table.
   - `toBeGreaterThan`, `toBeGreaterThanOrEqual`, `toBeLessThan` and `toBeLessThanOrEqual`: comparisons of two numbers.
   - `toBeCloseTo(expected, digits?)`: the difference is below half of 10 to the power of `-digits`, `digits` being 2 when omitted.
   - `toBeInstanceOf(cls)`: an instance of a typescript-to-lua class or of one that extends it.

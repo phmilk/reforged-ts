@@ -219,6 +219,8 @@ describe("matchers", () => {
         'Expected the function to throw an error containing "good thing", got "bad thing"',
       "toThrow on a non-function": "Expected a function to call, got 42",
       "not.toThrow": 'Expected the function not to throw, but it threw "boom"',
+      "not.toThrow of a table without a message":
+        'Expected the function not to throw, but it threw "{code = 7}"',
       "not.toThrow with its message":
         'Expected the function not to throw an error containing "bad", got "bad thing"',
       toContainCall:
@@ -250,6 +252,7 @@ describe("matchers", () => {
       toBeLessThan: "Expected 2 to be less than 2",
       toBeLessThanOrEqual: "Expected 3 to be less than or equal to 2",
       "toBeGreaterThan on a string": 'Expected a number to compare, got "2"',
+      "toBeLessThan a string": 'Expected a number to compare with, got "3"',
       toBeCloseTo:
         "Expected 0.31 to be close to 0.3 (to 2 digits, a difference below 0.005)",
       "not.toBeCloseTo":
@@ -284,11 +287,11 @@ describe("matchers", () => {
     for (const test of raising) expect(test).toMatchObject({ status: "error" });
     expect(messages("raise")).toEqual({
       "expect.any of nil":
-        'matchers_test.lua:355: expect.any received nil: Number, String, Boolean, Function, Object and Array are nil in Lua, so write the type name instead: "number", "string", "boolean", "function" or "table"',
+        'matchers_test.lua:362: expect.any received nil: Number, String, Boolean, Function, Object and Array are nil in Lua, so write the type name instead: "number", "string", "boolean", "function" or "table"',
       "expect.any of an unknown type name":
-        'matchers_test.lua:358: expect.any takes a Lua type name ("number", "string", "boolean", "table", "function", "thread" or "userdata") or a class, got "integer"',
+        'matchers_test.lua:365: expect.any takes a Lua type name ("number", "string", "boolean", "table", "function", "thread" or "userdata") or a class, got "integer"',
       "toBeInstanceOf of nil":
-        "matchers_test.lua:361: toBeInstanceOf takes a class, got nil",
+        "matchers_test.lua:368: toBeInstanceOf takes a class, got nil",
     });
   });
 });

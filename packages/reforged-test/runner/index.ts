@@ -163,6 +163,9 @@ function errorMessage(err: unknown): string {
   if (type(err) === "table") {
     const record = err as { message?: unknown };
     if (type(record.message) === "string") return record.message as string;
+    // tostring on a thrown table may call the lualib's __tostring, which
+    // raises without debug, as in the game: docs/research/test-phrasing.md.
+    return show(err);
   }
   return tostring(err);
 }
@@ -181,8 +184,11 @@ function keyPath(path: string, key: unknown): string {
   return `${path}[${tostring(key)}]`;
 }
 
+/** The path a difference of the whole value names. */
+const ROOT = "value";
+
 function mismatch(path: string, actual: unknown, expected: unknown): string {
-  return `${path === "" ? "value" : path}: ${show(actual)} vs ${show(expected)}`;
+  return `${path === "" ? ROOT : path}: ${show(actual)} vs ${show(expected)}`;
 }
 
 /** Records that `a` is under comparison with `b`; false when it already was. */
@@ -253,7 +259,7 @@ function difference(
  * the difference is the whole value, which the message already shows.
  */
 function where(found: string): string {
-  return string.sub(found, 1, 7) === "value: "
+  return string.sub(found, 1, ROOT.length + 2) === `${ROOT}: `
     ? ""
     : ` (first difference at ${found})`;
 }
@@ -305,6 +311,14 @@ function subsetDifference(
   return undefined;
 }
 
+/** Whether an item of `list`, up to its first nil, satisfies `test`. */
+function some(list: unknown[], test: (item: unknown) => boolean): boolean {
+  for (const item of list) {
+    if (test(item)) return true;
+  }
+  return false;
+}
+
 function contains(text: string, part: string): boolean {
   const [start] = string.find(text, part, 1, true);
   return start !== undefined;
@@ -333,7 +347,6 @@ function className(cls: object): string {
 
 /** A Lua type name, as `type` returns it. */
 export type LuaTypeName =
-  | "nil"
   | "number"
   | "string"
   | "boolean"
@@ -418,17 +431,12 @@ function arrayContaining(items: unknown): Asymmetric {
   }
   const wanted = items as unknown[];
   return asymmetric(`expect.arrayContaining(${show(wanted)})`, (actual) => {
+    // As Vitest's, an empty list of items matches any value.
+    if (wanted.length === 0) return true;
     if (type(actual) !== "table") return false;
     const list = actual as unknown[];
     for (const item of wanted) {
-      let found = false;
-      for (const candidate of list) {
-        if (equals(candidate, item)) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) return false;
+      if (!some(list, (candidate) => equals(candidate, item))) return false;
     }
     return true;
   });
@@ -563,11 +571,13 @@ export interface Matchers<T> {
 }
 
 function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
-  const not = negated ? "not " : "";
+  const negation = negated ? "not " : "";
   const shown = (): string => show(actual);
-  const number = (matcher: string): number => {
+  const number = (expected: number): number => {
     if (type(actual) !== "number")
-      fail(`Expected a number to ${matcher}, got ${shown()}`);
+      fail(`Expected a number to compare, got ${shown()}`);
+    if (type(expected) !== "number")
+      fail(`Expected a number to compare with, got ${show(expected)}`);
     return actual as unknown as number;
   };
   const compare = (
@@ -576,7 +586,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
     expected: number,
   ): void => {
     if (holds !== negated) return;
-    fail(`Expected ${shown()} ${not}to be ${relation} ${show(expected)}`);
+    fail(`Expected ${shown()} ${negation}to be ${relation} ${show(expected)}`);
   };
   return {
     not: undefined as unknown as Matchers<T>,
@@ -585,7 +595,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
         const found = difference(actual, expected, "", new LuaMap());
         if ((found === undefined) !== negated) return;
         if (type(actual) !== "table") {
-          fail(`Expected ${shown()} ${not}to equal ${show(expected)}`);
+          fail(`Expected ${shown()} ${negation}to equal ${show(expected)}`);
         }
         if (found === undefined) {
           fail(`Expected ${shown()} not to deeply equal ${show(expected)}`);
@@ -595,7 +605,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
         );
       }
       if ((actual === expected) !== negated) return;
-      fail(`Expected ${shown()} ${not}to equal ${show(expected)}`);
+      fail(`Expected ${shown()} ${negation}to equal ${show(expected)}`);
     },
     toBe: (expected) => {
       if (rawequal(actual, expected) !== negated) return;
@@ -603,23 +613,23 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
         !negated && type(actual) === "table" && type(expected) === "table"
           ? " (not the same table; use toEqual for deep equality)"
           : "";
-      fail(`Expected ${shown()} ${not}to be ${show(expected)}${hint}`);
+      fail(`Expected ${shown()} ${negation}to be ${show(expected)}${hint}`);
     },
     toBeTruthy: () => {
       if (!!actual !== negated) return;
-      fail(`Expected ${shown()} ${not}to be truthy`);
+      fail(`Expected ${shown()} ${negation}to be truthy`);
     },
     toBeFalsy: () => {
       if (!actual !== negated) return;
-      fail(`Expected ${shown()} ${not}to be falsy`);
+      fail(`Expected ${shown()} ${negation}to be falsy`);
     },
     toBeUndefined: () => {
       if ((actual === undefined) !== negated) return;
-      fail(`Expected ${shown()} ${not}to be undefined (nil)`);
+      fail(`Expected ${shown()} ${negation}to be undefined (nil)`);
     },
     toBeDefined: () => {
       if ((actual !== undefined) !== negated) return;
-      fail(`Expected ${shown()} ${not}to be defined (not nil)`);
+      fail(`Expected ${shown()} ${negation}to be defined (not nil)`);
     },
     toContain: (item) => {
       if (type(actual) === "string") {
@@ -627,33 +637,23 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
           fail(`Expected a string to look for in a string, got ${show(item)}`);
         if (contains(actual as unknown as string, item as string) !== negated)
           return;
-        fail(`Expected ${shown()} ${not}to contain ${show(item)}`);
+        fail(`Expected ${shown()} ${negation}to contain ${show(item)}`);
       }
       if (type(actual) !== "table")
         fail(`Expected a list or a string to contain an item, got ${shown()}`);
-      let found = false;
-      for (const candidate of actual as unknown as unknown[]) {
-        if (rawequal(candidate, item)) {
-          found = true;
-          break;
-        }
-      }
-      if (found !== negated) return;
-      fail(`Expected ${shown()} ${not}to contain ${show(item)}`);
+      const list = actual as unknown as unknown[];
+      if (some(list, (candidate) => rawequal(candidate, item)) !== negated)
+        return;
+      fail(`Expected ${shown()} ${negation}to contain ${show(item)}`);
     },
     toContainEqual: (item) => {
       if (type(actual) !== "table")
         fail(`Expected a list to contain an item, got ${shown()}`);
-      let found = false;
-      for (const candidate of actual as unknown as unknown[]) {
-        if (equals(candidate, item)) {
-          found = true;
-          break;
-        }
-      }
-      if (found !== negated) return;
+      const list = actual as unknown as unknown[];
+      if (some(list, (candidate) => equals(candidate, item)) !== negated)
+        return;
       fail(
-        `Expected ${shown()} ${not}to contain an item equal to ${show(item)}`,
+        `Expected ${shown()} ${negation}to contain an item equal to ${show(item)}`,
       );
     },
     toHaveLength: (length) => {
@@ -662,7 +662,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       const got = (actual as unknown as string).length;
       if ((got === length) !== negated) return;
       fail(
-        `Expected ${shown()} ${not}to have length ${show(length)}, got ${show(got)}`,
+        `Expected ${shown()} ${negation}to have length ${show(length)}, got ${show(got)}`,
       );
     },
     toMatchObject: (subset) => {
@@ -678,41 +678,43 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       );
     },
     toBeGreaterThan: (expected) => {
-      compare(number("compare") > expected, "greater than", expected);
+      compare(number(expected) > expected, "greater than", expected);
     },
     toBeGreaterThanOrEqual: (expected) => {
       compare(
-        number("compare") >= expected,
+        number(expected) >= expected,
         "greater than or equal to",
         expected,
       );
     },
     toBeLessThan: (expected) => {
-      compare(number("compare") < expected, "less than", expected);
+      compare(number(expected) < expected, "less than", expected);
     },
     toBeLessThanOrEqual: (expected) => {
-      compare(number("compare") <= expected, "less than or equal to", expected);
+      compare(number(expected) <= expected, "less than or equal to", expected);
     },
     toBeCloseTo: (expected, digits = 2) => {
-      const value = number("compare");
+      const value = number(expected);
       const bound = 10 ** -digits / 2;
       const close = value === expected || math.abs(value - expected) < bound;
       if (close !== negated) return;
       fail(
-        `Expected ${shown()} ${not}to be close to ${show(expected)} (to ${show(digits)} ${digits === 1 ? "digit" : "digits"}, a difference below ${show(bound)})`,
+        `Expected ${shown()} ${negation}to be close to ${show(expected)} (to ${show(digits)} ${digits === 1 ? "digit" : "digits"}, a difference below ${show(bound)})`,
       );
     },
     toBeInstanceOf: (cls) => {
       if (type(cls) !== "table")
         error(`toBeInstanceOf takes a class, got ${show(cls)}`, 2);
       if (isInstance(actual, cls) !== negated) return;
-      fail(`Expected ${shown()} ${not}to be an instance of ${className(cls)}`);
+      fail(
+        `Expected ${shown()} ${negation}to be an instance of ${className(cls)}`,
+      );
     },
     toMatch: (part) => {
       if (type(actual) !== "string")
         fail(`Expected a string to match, got ${shown()}`);
       if (contains(actual as unknown as string, part) !== negated) return;
-      fail(`Expected ${shown()} ${not}to match ${show(part)}`);
+      fail(`Expected ${shown()} ${negation}to match ${show(part)}`);
     },
     toThrow: (message) => {
       if (type(actual) !== "function")
@@ -733,20 +735,13 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       const text = errorMessage(err);
       if (contains(text, message) !== negated) return;
       fail(
-        `Expected the function ${not}to throw an error containing ${show(message)}, got ${show(text)}`,
+        `Expected the function ${negation}to throw an error containing ${show(message)}, got ${show(text)}`,
       );
     },
     toContainCall: (call) => {
       if (type(actual) !== "table") fail(`Expected a call log, got ${shown()}`);
       const log = actual as unknown as string[];
-      let found = false;
-      for (const line of log) {
-        if (line === call) {
-          found = true;
-          break;
-        }
-      }
-      if (found !== negated) return;
+      if (some(log, (line) => line === call) !== negated) return;
       if (negated) fail(`Expected the call log not to contain ${call}`);
       const lines: string[] = [];
       for (const line of log) {
@@ -782,7 +777,7 @@ export function expect<T>(actual: T): Matchers<T> {
  * @returns The matcher, to stand on the expected side.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.anything = anything as () => any;
+expect.anything = (): any => anything();
 
 /**
  * Matches a value of a Lua type (`"number"`, `"string"`, `"boolean"`,
@@ -794,7 +789,7 @@ expect.anything = anything as () => any;
  * @throws When `kind` is nil or neither a type name nor a class.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.any = anyOf as (kind: Exclude<LuaTypeName, "nil"> | Class) => any;
+expect.any = (kind: LuaTypeName | Class): any => anyOf(kind);
 
 /**
  * Matches a table holding every key of `part` with a deeply equal value.
@@ -802,7 +797,7 @@ expect.any = anyOf as (kind: Exclude<LuaTypeName, "nil"> | Class) => any;
  * @returns The matcher, to stand on the expected side.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.objectContaining = objectContaining as (part: object) => any;
+expect.objectContaining = (part: object): any => objectContaining(part);
 
 /**
  * Matches a list holding, in any order, an item deeply equal to each of
@@ -811,7 +806,8 @@ expect.objectContaining = objectContaining as (part: object) => any;
  * @returns The matcher, to stand on the expected side.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.arrayContaining = arrayContaining as (items: readonly unknown[]) => any;
+expect.arrayContaining = (items: readonly unknown[]): any =>
+  arrayContaining(items);
 
 /**
  * Matches a string holding `part` as plain text, not a pattern.
@@ -819,7 +815,7 @@ expect.arrayContaining = arrayContaining as (items: readonly unknown[]) => any;
  * @returns The matcher, to stand on the expected side.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.stringContaining = stringContaining as (part: string) => any;
+expect.stringContaining = (part: string): any => stringContaining(part);
 
 // ---------------------------------------------------------------------------
 // Running and reporting
