@@ -67,7 +67,9 @@ export class Timer extends Handle<timer> {
    * - `elapsed + remaining` is `timeout`, on a resumed Timer as on any
    *   other: during the countdown a `resume` continues, `elapsed` goes on
    *   from what it read at the `pause`.
-   * - A paused Timer reads what it read at the `pause`; a one-shot Timer
+   * - A paused Timer reads `timeout` minus what was left at the `pause`,
+   *   which is what it read then, but in a periodic Timer's handler: paused
+   *   there, it reads 0, its next countdown not begun. A one-shot Timer
    *   reads `timeout` from its handler on.
    * - A Timer never started reads 0.
    * @returns The elapsed time, in seconds.
@@ -75,8 +77,8 @@ export class Timer extends Handle<timer> {
    * @native TimerGetRemaining
    */
   public get elapsed(): number {
-    const countdown = this.countdown;
-    if (countdown === undefined || countdown.state === "running") {
+    const countdown = this.tracked();
+    if (countdown === undefined) {
       return TimerGetElapsed(this.handle);
     }
     return countdown.timeout - this.remaining;
@@ -85,8 +87,10 @@ export class Timer extends Handle<timer> {
   /**
    * Gets the time left before the timer next expires.
    * @remarks
-   * A paused Timer reads what was left at the `pause`; a one-shot Timer reads
-   * 0 from its handler on, and a Timer never started reads 0.
+   * A paused Timer reads what was left at the `pause`: a full timeout when
+   * paused in a periodic Timer's handler, its next countdown not begun. A
+   * one-shot Timer reads 0 from its handler on, and a Timer never started
+   * reads 0.
    * @returns The remaining time, in seconds.
    * @native TimerGetRemaining
    * @bug The game's own reading is wrong on a one-shot timer started again
@@ -117,11 +121,7 @@ export class Timer extends Handle<timer> {
    * @native TimerGetTimeout
    */
   public get timeout(): number {
-    const countdown = this.countdown;
-    if (countdown === undefined || countdown.state === "running") {
-      return TimerGetTimeout(this.handle);
-    }
-    return countdown.timeout;
+    return this.tracked()?.timeout ?? TimerGetTimeout(this.handle);
   }
 
   /**
@@ -276,6 +276,16 @@ export class Timer extends Handle<timer> {
     handler: (timer: Timer) => void,
   ): Timer {
     return this.create().startFor("Timer.every", interval, true, handler);
+  }
+
+  /**
+   * The countdown the readings answer from, or undefined when they read the
+   * Natives: before the first start through this Wrapper, and while an
+   * ordinary start runs, where the Natives are right.
+   */
+  private tracked(): Countdown | undefined {
+    const countdown = this.countdown;
+    return countdown?.state === "running" ? undefined : countdown;
   }
 
   /**

@@ -51,6 +51,7 @@ describe("Timer", () => {
     expect(timer.start(1, false, () => undefined)).toBe(timer);
     expect(timer.pause()).toBe(timer);
     expect(timer.resume()).toBe(timer);
+    // A second resume, on a Timer no longer paused, does nothing and chains.
     expect(timer.resume()).toBe(timer);
   });
 
