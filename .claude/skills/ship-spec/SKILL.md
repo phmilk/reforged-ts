@@ -38,7 +38,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
       git -C .claude/worktrees/<ticket> merge-base --is-ancestor origin/master HEAD
       ```
 
-      `<type>` is the Conventional Commits type of the work, `<slug>` a few kebab-case words of the Ticket's title. `--no-track` leaves the branch without an upstream: made from `origin/master` without it, the branch tracks `master`, and a bare `git push` or `git pull` in the worktree aims at the default branch. The implementer pushes it by name, `git push -u origin <branch>`.
+      `<type>` is the Conventional Commits type of the work, `<slug>` a few kebab-case words of the Ticket's title. `--no-track` keeps the branch from tracking `origin/master`, which a bare `git pull` in the worktree would pull; `/ship` sets its upstream when it pushes (`git push -u origin HEAD`).
 
    5. **Spawn its implementer**, an unnamed Subagent with the prompt of [`implementer.md`](implementer.md), its placeholders filled. Keep its id.
 
@@ -51,14 +51,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
    Before relaying anything, check the real state: the worktree's commits, `gh pr view <pr> --json state,isDraft,autoMergeRequest`. Done when each report is matched to the state it claims.
 
 7. **Watch each pull request** until it merges or stops, with a Monitor (or a background command with a bounded runtime) on `gh pr view <pr> --json state,mergeStateStatus,statusCheckRollup`, never a turn ended on a wait with nothing to wake you:
-   - **Merged:** put it in the ledger, remove its worktree and branch, and go to step 3: the Tickets its merge unblocked start from the new default branch. The removal is three commands, each run whatever the one before it printed, through the Template's checkout for a Template Ticket:
-
-     ```sh
-     git worktree remove .claude/worktrees/<ticket>
-     rm -rf .claude/worktrees/<ticket>   # on Windows, the remove unregisters it but leaves the folder: "Directory not empty"
-     git branch -D <branch>
-     ```
-
+   - **Merged:** put it in the ledger, remove its worktree and its branch ([Removing a worktree](#removing-a-worktree)), and go to step 3: the Tickets its merge unblocked start from the new default branch.
    - **`DIRTY`:** another merge conflicts with it. Continue its implementer by its id: merge `origin/master` (the Template's `origin/main` for a Template Ticket) into the branch, resolved by intent ([Merge conflicts](#merge-conflicts)), run the checks the merge touches, push.
    - **A required check red:** settle it as [A red CI](#a-red-ci) says: one rerun of a known flake, or one fix, then a stop.
    - **Auto-merge off,** its body naming what waits for a human: stop the Ticket.
@@ -70,7 +63,7 @@ The **ledger** is the end comment in the making: one line per merged pull reques
    - **No Ticket open:** run `pnpm spec:check <spec> --json`. It prints one JSON object: the `spec`, whether it is `delivered`, the `counts` of `items`, `rows` and `tickets`, and the `gaps`, each with its `kind`, its fields and the `sentence` the text form prints for it. On green (`delivered` true, exit 0), close the Spec with the end comment, as the Claim section's "Closing a Spec" does: `gh issue close <spec> --comment "$(cat <file>)"`. On red (`delivered` false, exit 1), leave the Spec open and post the end comment (`gh issue comment <spec> --body-file <file>`) with each gap's `sentence`: a gap goes back to a human and `/split-spec`, so create no Ticket. With no JSON object on stdout, the check could not run or read the state (stderr says why, and `pnpm` exits 1 for it too): leave the Spec open and post the end comment with that reason.
    - **Any Ticket open** (held by another login, stopped, or not started after a stop): post the end comment on the Spec and leave it open; whoever merges the last Ticket closes it ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)).
 
-   Then remove every worktree of the run that is left, and the check lock when it is stale. Done when the end comment is on the Spec and printed in the chat, word for word.
+   Then remove every worktree of the run that is left ([Removing a worktree](#removing-a-worktree)), and the check lock when it is stale. Done when the end comment is on the Spec and printed in the chat, word for word.
 
 ## The end comment
 
@@ -108,7 +101,17 @@ The repository's rules name where a human is needed; there, the Ticket stops ([S
 
 ## Stopping
 
-A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree (its branch stays, for the next run), and add the stop to the ledger. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
+A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the Ticket, unless the implementer's report says it posted one (`/ship` does on a red `pnpm check`), with `gh issue comment <ticket> --body-file <file>`: what is pending (the question, the check, the red job), where the branch stands (its name, its last commit, pushed or not) and where the pull request stands (its number, auto-merge on or off, or none). Then remove its worktree ([Removing a worktree](#removing-a-worktree); its branch stays, for the next run), and add the stop to the ledger.
+
+## Removing a worktree
+
+Every removal of a worktree of the run, at a merge, a stop or the run's end, goes through its repository's checkout (the Template's for a Template Ticket):
+
+1. `git worktree remove <path>`. When it succeeds, go to step 3.
+2. When it fails, read why:
+   - **"Directory not empty":** it unregistered the worktree and left the folder behind, as it does on Windows. Check that `git worktree list` no longer names `<path>`, then `rm -rf <path>`.
+   - **Any other failure,** a dirty worktree among the causes: leave the folder and the branch as they are, since uncommitted work may be in it. Put the path and the error in the ledger, and end this removal here.
+3. `git worktree prune`, then, after a merge only, `git branch -D <branch>`. A run with a stop starts no new Ticket and ends at step 9 once the others in flight end. Run again, `/ship-spec <spec>` resumes from GitHub's state (step 4).
 
 ## A red CI
 
@@ -130,12 +133,12 @@ The full `pnpm check` of every worktree, the Template's included, runs one at a 
 
 ```sh
 lock="$(git rev-parse --path-format=absolute --git-common-dir)/ship-spec-check.lock"          # in the library's clone
-timeout 150 sh -c 'until mkdir "$1" 2>/dev/null; do sleep 10; done' _ "$lock"                 # one try to take it
+timeout 100 sh -c 'until mkdir "$1" 2>/dev/null; do sleep 10; done' _ "$lock"                 # one try to take it
 echo "<spec> <ticket>" > "$lock/holder"                                                       # once a try took it
 rm -rf "$lock"                                                                                # release it
 ```
 
-The wait is a series of short tries: a try that ends on its timeout (exit 124) took nothing, and is run again, as its own foreground command. Another worktree's check holds the lock for many minutes, and a single wait that long is moved to the background by the harness after about three minutes, where the implementer ends its turn waiting on it and idles until a message resumes it (#814's run). Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
+The wait is a series of short tries, each its own foreground command within the Bash tool's default timeout of 120 s: a try that ends on its timeout (exit 124) took nothing, and is run again. Another worktree's check holds the lock for many minutes, and a single wait that long outlasts the tool's timeout and can end in the background, where an implementer ends its turn waiting on it and idles until a message resumes it. Another run of `ship-spec`, on another Spec in the same clone, shares the lock, so a lock is **stale** only when one of these holds, and only then removed (`rm -rf "$lock"`):
 
 - its holder names this run's Spec and a Ticket of it not in flight now (at step 2, none is): remove it when you remove that Ticket's worktree, or at step 2;
 - its folder is older than the longest check: the `check` script's commands at ten minutes each, with a margin, two hours: `find "$lock" -maxdepth 0 -mmin +120` prints it. A lock with no holder file yet, between its `mkdir` and its `echo`, is judged by the folder's age alone.

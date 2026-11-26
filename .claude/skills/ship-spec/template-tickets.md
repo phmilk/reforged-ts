@@ -27,7 +27,7 @@ git -C "$template-worktrees/<ticket>" merge-base --is-ancestor origin/main HEAD
 
 `--no-track`, as for a library worktree, keeps the branch from tracking `main`.
 
-It is removed as a library worktree is, through the Template's checkout, once its pull request merged, each command run whatever the one before it printed: `git -C "$template" worktree remove "$template-worktrees/<ticket>"`, then `rm -rf "$template-worktrees/<ticket>"` for the folder Windows leaves behind, then `git -C "$template" branch -D <branch>`.
+It is removed as a library worktree is ([Removing a worktree](SKILL.md#removing-a-worktree)), through the Template's checkout: every `git` command there takes `-C "$template"`.
 
 ## Its Claim
 
