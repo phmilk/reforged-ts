@@ -2,12 +2,14 @@
  * `board:setup`, programmatic entry point: the Claim board as code. The
  * board is one Projects (v2) project on the owner's account, public, over
  * both repositories (ADR 0016): its title, its Status field, its views, its
- * README, its visibility and its repository links are the constants below.
- * `planBoardSetup` turns them and the project's current state into the
- * GraphQL mutations that make the project match, creating it when it is
- * missing; the CLI reads the state and sends them with the maintainer's `gh`
- * authentication, which holds the `project` scope. Importers outside the
- * board modules read it through `board.ts`.
+ * built-in workflows, its README, its visibility and its repository links
+ * are the constants below. `planBoardSetup` turns them and the project's
+ * current state into the GraphQL mutations that make the project match,
+ * creating it when it is missing, and into the steps the API leaves to a
+ * hand (a built-in workflow to turn on or off); the CLI reads the state and
+ * sends the mutations with the maintainer's `gh` authentication, which
+ * holds the `project` scope. Importers outside the board modules read it
+ * through `board.ts`.
  */
 import {
   BOARD_MUTATIONS,
@@ -149,6 +151,63 @@ export const BOARD_VIEWS: readonly BoardView[] = [
   { name: "By parent", layout: "TABLE_LAYOUT", fields: TABLE_FIELDS },
 ];
 
+/** A built-in workflow of the project, as the definition wants it. */
+export interface BoardWorkflow {
+  /** Its name, as GitHub's `ProjectV2Workflow.name` answers it. */
+  name: string;
+  /** Whether it is on. */
+  enabled: boolean;
+  /** Why, in one sentence. */
+  reason: string;
+}
+
+/**
+ * The project's built-in workflows and whether each is on (#968). The
+ * reconcile is the single writer of every value the rules can dispute, so a
+ * workflow stays on only when it can never write against them. The API
+ * reads a workflow's state and cannot set it (its one workflow mutation is
+ * `deleteProjectV2Workflow`, which nothing here sends): `planBoardSetup`
+ * reports a difference as a step for a hand, on the project's Workflows
+ * page.
+ */
+export const BOARD_WORKFLOWS: readonly BoardWorkflow[] = [
+  {
+    name: "Auto-add sub-issues to project",
+    enabled: true,
+    reason:
+      "Harmless: the reconcile classifies what it adds, and adds every open Member itself.",
+  },
+  {
+    name: "Item closed",
+    enabled: true,
+    reason:
+      "It writes Done on a closed issue, which is the rule, within seconds: it can never disagree.",
+  },
+  {
+    name: "Item added to project",
+    enabled: false,
+    reason: "The reconcile gives an added item its Status.",
+  },
+  {
+    name: "Auto-close issue",
+    enabled: false,
+    reason:
+      "It closes an issue whose card becomes Done, so a card moved by hand would close its issue, and the board closes no issue (ADR 0016).",
+  },
+  {
+    name: "Pull request linked to issue",
+    enabled: false,
+    reason:
+      "It writes In review on a draft pull request, which the rule keeps In progress; the reconcile writes In review itself.",
+  },
+  {
+    name: "Pull request merged",
+    enabled: false,
+    reason:
+      "It acts on a pull request's item, and a pull request is not a Member.",
+  },
+];
+
 /** The Claim section of the tracker doc, which holds the protocol in full. */
 export const CLAIM_DOC_URL =
   "https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim";
@@ -177,11 +236,15 @@ The Issue status, the status GitHub shows on an issue's own page, follows the St
 
 ## Members
 
-Every open issue of both repositories, the App's New Patch reports among them; no pull request, no other bot's issue. Specs and maps as parents, whose sub-issues GitHub adds by itself. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
+Every open issue of both repositories, the App's New Patch reports among them; no pull request, no other bot's issue. Specs and maps are parents, and their sub-issues Members like any other open issue: the reconcile adds each one. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
 
 ## Views
 
 **Board**, by Status. **By assignee**, a table grouped by Assignees: who holds what. **By parent**, a table grouped by Parent issue: each spec with its tickets. No "Mine" view: filter a table on \`assignee:@me\`.
+
+## Built-in workflows
+
+Of the project's own workflows, two are on, neither of which can write against the rules: "Auto-add sub-issues to project", and "Item closed", which writes Done on a closed issue. The others are off, "Auto-close issue" first: the board closes no issue. \`pnpm board:setup\` reports one whose state differs, to set by hand on the Workflows page.
 
 ## The Claim
 
@@ -220,6 +283,12 @@ export interface ProjectView {
   fields: readonly string[];
 }
 
+/** A built-in workflow of the project, as the API answers it. */
+export interface ProjectWorkflow {
+  name: string;
+  enabled: boolean;
+}
+
 /** The project, as the API answers it. */
 export interface ProjectState {
   id: string;
@@ -233,6 +302,8 @@ export interface ProjectState {
   views: readonly ProjectView[];
   /** The linked repositories, as `owner/name`. */
   repositories: readonly string[];
+  /** The built-in workflows GitHub lists, on or off. */
+  workflows: readonly ProjectWorkflow[];
 }
 
 /** What the plan needs to know, as the API answers it. */
@@ -252,6 +323,14 @@ export interface BoardSetupPlan {
   requests: BoardRequest[];
   /** What already matches, one sentence each. */
   unchanged: string[];
+  /**
+   * What only a hand can do, one sentence each: a built-in workflow whose
+   * state differs from `BOARD_WORKFLOWS`, on the project the plan was made
+   * on: empty when the plan creates it, and `workflowSteps` then answers
+   * for the project once GitHub has made it. Never a request, so it stays
+   * outside their count.
+   */
+  byHand: string[];
 }
 
 /**
@@ -302,6 +381,16 @@ const QUERIES = {
           id name layout
           configuration { visibleFields(first: $first) { nodes { ... on ProjectV2FieldCommon { name } } } }
         }
+      }
+    }
+  }
+}`,
+  workflows: `query ProjectWorkflows($projectId: ID!, $first: Int!, $cursor: String) {
+  node(id: $projectId) {
+    ... on ProjectV2 {
+      workflows(first: $first, after: $cursor) {
+        pageInfo { hasNextPage endCursor }
+        nodes { name enabled }
       }
     }
   }
@@ -385,6 +474,7 @@ export function freshProject(): ProjectState {
     ),
     views: [],
     repositories: [],
+    workflows: [],
   };
 }
 
@@ -406,6 +496,48 @@ export function assumedState(): BoardState {
   };
 }
 
+const onOrOff = (enabled: boolean) => (enabled ? "on" : "off");
+
+/** Where a step sends its reader to change the definition. */
+const WORKFLOWS_DEFINITION =
+  "BOARD_WORKFLOWS (release/src/board-definition.ts)";
+
+/**
+ * The steps that make `workflows`, the built-in workflows GitHub lists on
+ * a project, match `BOARD_WORKFLOWS`, one sentence each and none when they
+ * match: in the definition's order, a workflow to turn on or off, and one
+ * the definition has on that GitHub does not list, which no switch turns on
+ * (GitHub renamed or removed it); then each one GitHub lists that
+ * the definition does not name, since GitHub may add one. A workflow the
+ * definition has off and GitHub does not list is as wanted. Workflows are
+ * matched by name.
+ */
+export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
+  const steps: string[] = [];
+  for (const { name, enabled } of BOARD_WORKFLOWS) {
+    const listed = workflows.find((workflow) => sameName(workflow.name, name));
+    if (listed === undefined) {
+      if (enabled) {
+        steps.push(
+          `GitHub lists no workflow "${name}", which the definition has on: in ${WORKFLOWS_DEFINITION}, give it its new name when GitHub renamed it, or drop it when GitHub removed it.`,
+        );
+      }
+    } else if (listed.enabled !== enabled) {
+      steps.push(
+        `Turn ${onOrOff(enabled)} the workflow "${name}": it is ${onOrOff(listed.enabled)}, and the definition has it ${onOrOff(enabled)}.`,
+      );
+    }
+  }
+  for (const { name, enabled } of workflows) {
+    if (!BOARD_WORKFLOWS.some((workflow) => sameName(workflow.name, name))) {
+      steps.push(
+        `The workflow "${name}" is ${onOrOff(enabled)}, and the definition does not name it: give it a state in ${WORKFLOWS_DEFINITION}.`,
+      );
+    }
+  }
+  return steps;
+}
+
 const layoutWord = (layout: ViewLayout) =>
   layout === "BOARD_LAYOUT" ? "a board" : "a table";
 
@@ -421,6 +553,9 @@ const layoutWord = (layout: ViewLayout) =>
  * its old value get it back from the reconcile's next run), a missing view
  * created and a drifted view's name, layout or visible fields updated, a
  * missing repository link added. Options and views are matched by name.
+ * Beside the requests, `byHand` holds the steps of `workflowSteps` for an
+ * existing project; on a missing one it is empty, since only the created
+ * project tells which workflows it came with.
  */
 export function planBoardSetup(state: BoardState): BoardSetupPlan {
   const requests: BoardRequest[] = [];
@@ -562,7 +697,10 @@ export function planBoardSetup(state: BoardState): BoardSetupPlan {
   }
   if (linked.length > 0) unchanged.push(`Repositories: ${linked.join(", ")}.`);
 
-  return { requests, unchanged };
+  const byHand =
+    state.project === null ? [] : workflowSteps(state.project.workflows);
+
+  return { requests, unchanged, byHand };
 }
 
 /** A field node of `ProjectFields`, or nothing when it is not one. */
@@ -622,7 +760,7 @@ function readView(node: unknown): ProjectView[] {
   return [{ id: node.id, name: node.name, layout: node.layout, fields }];
 }
 
-/** The project `projectId`, with its fields, views and linked repositories. */
+/** The project `projectId`, with its fields, views, linked repositories and built-in workflows. */
 export async function readProjectState(
   api: GitHubApi,
   projectId: string,
@@ -651,6 +789,10 @@ export async function readProjectState(
     "node",
     "repositories",
   ]);
+  const workflows = await readNodes(api, QUERIES.workflows, variables, [
+    "node",
+    "workflows",
+  ]);
   return {
     id: node.id,
     number: node.number,
@@ -663,6 +805,13 @@ export async function readProjectState(
     repositories: repositories.flatMap((repository) =>
       isRecord(repository) && typeof repository.nameWithOwner === "string"
         ? [repository.nameWithOwner]
+        : [],
+    ),
+    workflows: workflows.flatMap((workflow) =>
+      isRecord(workflow) &&
+      typeof workflow.name === "string" &&
+      typeof workflow.enabled === "boolean"
+        ? [{ name: workflow.name, enabled: workflow.enabled }]
         : [],
     ),
   };

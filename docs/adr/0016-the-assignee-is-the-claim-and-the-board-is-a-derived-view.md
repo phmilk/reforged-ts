@@ -29,5 +29,6 @@ We adopt one Claim protocol for both repositories, GitHub-only: the assignee is 
 - The board's writer runs on the library's events, so the Template's cards waited for the hourly run; ADR 0017 has every other Board repository dispatch the reconcile on its own events.
 - The board writes more than Status, each derived like it and written only when it differs: the label pair of an open Spec (ADR 0025), and one comment of the coverage check's verdict on an open Spec whose Tickets are all closed (ADR 0023, #796). It still closes no issue.
 - The board mirrors the Status into the Issue status, the status GitHub shows on the issue itself (#958): on open issues only, with the App's token, as a write that may fail, since the feature is a preview; a refused write is a warning and never a red run.
+- The project's built-in workflows are part of the board's definition (#968): the reconcile stays the single writer of every value the rules can dispute, and a workflow is on only when it cannot write against them. "Item closed" writes Done on a closed issue beside the reconcile, never against it; "Auto-close issue" is off, since the board closes no issue. The API cannot set a workflow's state, so `board:setup` reports a difference for a hand to fix.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/518

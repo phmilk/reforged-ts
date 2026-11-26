@@ -25,8 +25,21 @@
 // `__reforged_test_run("<position>")`, which runs that one test (the
 // position counts from 0) and answers `{"tests":[<its result>]}`, or
 // `{"tests":[]}` when the file registered no test there.
+//
+// A test registered with `it.skip`, `it.only` or `it.todo` carries its
+// `"mode"` ("skip", "only" or "todo"), and one inside a `describe.skip` or
+// `describe.only` its `"suiteModes"`, one per `suite` name ("run", "skip" or
+// "only"); both are left out when they are "run". The glue registers each
+// in Vitest's native form. A test whose body the runner did not run, a skip
+// or todo test or one in a skipped `describe`, has the status "skip".
 
-type Status = "pass" | "fail" | "error";
+type Status = "pass" | "fail" | "error" | "skip";
+
+/** How a test was registered: `it`, `it.skip`, `it.only` or `it.todo`. */
+type TestMode = "run" | "skip" | "only" | "todo";
+
+/** How a `describe` was registered: `describe`, `describe.skip` or `describe.only`. */
+type SuiteMode = "run" | "skip" | "only";
 
 /** @noSelf */
 interface Block {
@@ -35,6 +48,9 @@ interface Block {
   fn: () => void;
   /** The `describe` the test was registered in, the file's root at the top. */
   scope: Scope;
+  mode: TestMode;
+  /** The modes of the enclosing `describe`s, one per `suite` name. */
+  suiteModes: SuiteMode[];
 }
 
 /**
@@ -66,7 +82,12 @@ interface Result {
   message?: string;
   actual?: string;
   expected?: string;
+  mode?: TestMode;
+  suiteModes?: SuiteMode[];
 }
+
+/** A test as the listing reports it. */
+type Listed = Pick<Result, "suite" | "name" | "mode" | "suiteModes">;
 
 /**
  * The value an unmet expectation throws, told apart from any other error:
@@ -82,6 +103,7 @@ interface Failure {
 
 const blocks: Block[] = [];
 const suites: string[] = [];
+const suiteModes: SuiteMode[] = [];
 const root: Scope = { beforeEach: [], afterEach: [] };
 let scope = root;
 /** Whether a test, or one of its hooks, is running. */
@@ -95,25 +117,103 @@ function copy<T>(list: T[]): T[] {
   return out;
 }
 
-/** Groups the `it` blocks registered by `body` under `name`. */
-export function describe(name: string, body: () => void): void {
+function registerSuite(mode: SuiteMode, name: string, body: () => void): void {
   const outer = scope;
   table.insert(suites, name);
+  table.insert(suiteModes, mode);
   scope = { parent: outer, beforeEach: [], afterEach: [] };
   body();
   scope = outer;
   table.remove(suites);
+  table.remove(suiteModes);
 }
+
+function registerTest(mode: TestMode, name: string, fn: () => void): void {
+  table.insert(blocks, {
+    suite: copy(suites),
+    name,
+    fn,
+    scope,
+    mode,
+    suiteModes: copy(suiteModes),
+  });
+}
+
+/**
+ * Groups the `it` blocks registered by `body` under `name`.
+ * @param name - The name of the group, shown before each of its tests.
+ * @param body - The function that registers the group's tests, called at
+ * once.
+ */
+export function describe(name: string, body: () => void): void {
+  registerSuite("run", name, body);
+}
+
+/**
+ * Groups tests as `describe` does and skips every one of them, as Vitest's
+ * `describe.skip`: no body or hook of them runs.
+ * @param name - The name of the group.
+ * @param body - The function that registers the group's tests, called at
+ * once.
+ */
+describe.skip = (name: string, body: () => void): void => {
+  registerSuite("skip", name, body);
+};
+
+/**
+ * Groups tests as `describe` does and focuses on them, as Vitest's
+ * `describe.only`: Vitest reports the other tests as skipped, and fails the
+ * run under `CI`.
+ * @param name - The name of the group.
+ * @param body - The function that registers the group's tests, called at
+ * once.
+ */
+describe.only = (name: string, body: () => void): void => {
+  registerSuite("only", name, body);
+};
 
 /**
  * Registers one test. It runs after the test module has loaded, in
  * registration order, sharing the Lua state (and the stub call log) with the
  * other tests of the same file; in a file that loads `reforged-test/map`, it
  * runs in a Test game of its own.
+ * @param name - The name of the test.
+ * @param fn - The body of the test.
  */
 export function it(name: string, fn: () => void): void {
-  table.insert(blocks, { suite: copy(suites), name, fn, scope });
+  registerTest("run", name, fn);
 }
+
+/**
+ * Registers a test that does not run, as Vitest's `it.skip`: its body and
+ * its hooks are skipped, and Vitest reports it as skipped.
+ * @param name - The name of the test.
+ * @param fn - The body of the test, which does not run.
+ */
+it.skip = (name: string, fn: () => void): void => {
+  registerTest("skip", name, fn);
+};
+
+/**
+ * Registers a test and focuses on it, as Vitest's `it.only`: Vitest reports
+ * the other tests as skipped, and fails the run under `CI`. On
+ * `reforged-test/lua` the other tests of its file still run, and only their
+ * report is hidden.
+ * @param name - The name of the test.
+ * @param fn - The body of the test.
+ */
+it.only = (name: string, fn: () => void): void => {
+  registerTest("only", name, fn);
+};
+
+/**
+ * Registers a test still to write, as Vitest's `it.todo`: it has a name and
+ * no body, and Vitest reports it as todo.
+ * @param name - The name of the test.
+ */
+it.todo = (name: string): void => {
+  registerTest("todo", name, () => undefined);
+};
 
 /** Refuses a hook registered while a test runs. */
 function refuseInsideTest(kind: "beforeEach" | "afterEach"): void {
@@ -1360,12 +1460,48 @@ function runAfterEach(
 }
 
 /**
+ * Runs one test, with its modes: between its hooks, or not at all when its
+ * body is skipped, its status then "skip".
+ */
+function runBlock(block: Block): Result {
+  if (skipped(block)) {
+    return withModes(block, {
+      suite: block.suite,
+      name: block.name,
+      status: "skip",
+    });
+  }
+  return withModes(block, runBody(block));
+}
+
+/** Whether the block's body is not run: skip or todo, or in a skipped `describe`. */
+function skipped(block: Block): boolean {
+  if (block.mode === "skip" || block.mode === "todo") return true;
+  for (const mode of block.suiteModes) {
+    if (mode === "skip") return true;
+  }
+  return false;
+}
+
+/** The result with the block's modes, each left out when it is "run". */
+function withModes<T extends Listed>(block: Block, result: T): T {
+  if (block.mode !== "run") result.mode = block.mode;
+  for (const mode of block.suiteModes) {
+    if (mode !== "run") {
+      result.suiteModes = block.suiteModes;
+      break;
+    }
+  }
+  return result;
+}
+
+/**
  * Runs one test between its hooks, as Vitest does: the `beforeEach` hooks
  * outer to inner, the body unless one of them threw, then the `afterEach`
  * hooks inner to outer and the cleanups whatever happened. The first error
  * is the result.
  */
-function runBlock(block: Block): Result {
+function runBody(block: Block): Result {
   // An object, not two locals, so the checker sees the closure's writes.
   const first: { failed: boolean; thrown: unknown } = {
     failed: false,
@@ -1472,9 +1608,12 @@ export function run(position?: string): string {
     return toJson({ tests: results });
   }
   if (__reforged_test_isolated === true) {
-    const listed: Pick<Result, "suite" | "name">[] = [];
+    const listed: Listed[] = [];
     for (const block of blocks) {
-      table.insert(listed, { suite: block.suite, name: block.name });
+      table.insert(
+        listed,
+        withModes(block, { suite: block.suite, name: block.name }),
+      );
     }
     return toJson({ isolated: true, tests: listed });
   }

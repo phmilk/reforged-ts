@@ -5,7 +5,10 @@
  * the links to both repositories) through the GitHub GraphQL API, as the
  * maintainer's `gh` authentication, which must be the owner's login and
  * hold the `project` scope. Reads the current state, prints each request,
- * then sends them, creating the project when none has the title.
+ * then sends them, creating the project when none has the title. A
+ * built-in workflow whose state differs from the definition is no request,
+ * since the API cannot set it: each is named on a `By hand: ` line, under
+ * the page to set it on.
  * `--dry-run` sends none and, when GitHub cannot be read (no gh, no login,
  * no scope), prints the plan that creates everything, with a note, so that
  * it never needs the token. Exit codes: 0 applied (or planned), 1 the state
@@ -20,8 +23,10 @@ import {
   describeRequest,
   planBoardSetup,
   readBoardState,
+  workflowSteps,
   type BoardSetupPlan,
   type BoardState,
+  type ProjectState,
 } from "../board.js";
 import {
   errorMessage,
@@ -45,7 +50,28 @@ export interface Context {
   fetcher: typeof fetch;
 }
 
-/** What was found, then the plan: what already matches and each request. */
+/**
+ * The steps only a hand can take on `project`, each on a line the
+ * repository-setup wizard reads by its `By hand: ` prefix, under the page
+ * to take them on; nothing when there is none.
+ */
+function printByHand(
+  output: Output,
+  project: ProjectState,
+  steps: readonly string[],
+): void {
+  if (steps.length === 0) return;
+  output.stdout(
+    `Built-in workflows, which the API cannot turn on or off: set by hand on ${project.url}/workflows\n`,
+  );
+  for (const step of steps) output.stdout(`By hand: ${step}\n`);
+}
+
+/**
+ * What was found, then the plan: what already matches and each request. A
+ * dry run names the hand steps before them; a real run names them last,
+ * once the project it may have created is read.
+ */
 function printSetupPlan(
   output: Output,
   state: BoardState,
@@ -57,6 +83,9 @@ function printSetupPlan(
       ? `No project "${BOARD_TITLE}" under ${BOARD_OWNER}: the plan creates it.\n`
       : `Project "${BOARD_TITLE}" under ${BOARD_OWNER}: ${state.project.url} (number ${String(state.project.number)}).\n`,
   );
+  if (dryRun && state.project !== null) {
+    printByHand(output, state.project, plan.byHand);
+  }
   printPlan(output, plan, describeRequest, dryRun);
 }
 
@@ -121,6 +150,7 @@ export async function main(
     const project = await applyBoardSetup(api, state, plan, ({ summary }) => {
       output.stdout(`Done: ${summary}\n`);
     });
+    printByHand(output, project, workflowSteps(project.workflows));
     output.stdout(`The board: ${project.url}\n`);
   } catch (error) {
     output.stderr(`${errorMessage(error)}\n`);

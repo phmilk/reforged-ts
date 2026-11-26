@@ -24,27 +24,95 @@ export type { HandleTypes, NativeName } from "./natives";
 
 __reforged_test_isolated = true;
 
+// A member of a type literal is a method to typescript-to-lua, called with a
+// colon, in a Map project's compile too: `this: void` makes `it.skip(…)` a
+// call with a dot, as the runner defines it.
+/* eslint-disable @typescript-eslint/no-invalid-void-type -- the no-self marker of typescript-to-lua */
+
 /**
  * Groups the tests registered by `body` under `name`. Nesting is allowed.
+ * @remarks
+ * `describe.skip` and `describe.only` are Vitest's: Vitest reports them in
+ * its own forms, and a forgotten `only` fails the run under `CI`.
  * @example Two groups around one test
  * {@includeCode ../../examples/describe.test.ts}
- * @param name - The name of the group, shown before each of its tests.
- * @param body - The function that registers the group's tests, called at
- * once.
+ * @example A group skipped
+ * {@includeCode ../../examples/describe-skip.test.ts}
  */
-export const describe: (name: string, body: () => void) => void = luaDescribe;
+export const describe: {
+  /**
+   * Groups the tests registered by `body` under `name`.
+   * @param name - The name of the group, shown before each of its tests.
+   * @param body - The function that registers the group's tests, called at
+   * once.
+   */
+  (name: string, body: () => void): void;
+  /**
+   * Groups tests and skips every one of them, as Vitest's `describe.skip`:
+   * none of them opens a Test game or runs a `beforeEach` or `afterEach`.
+   * @param name - The name of the group.
+   * @param body - The function that registers the group's tests, called at
+   * once.
+   */
+  skip: (this: void, name: string, body: () => void) => void;
+  /**
+   * Groups tests and focuses on them, as Vitest's `describe.only`: every
+   * other Lua test of the Map project, in this file or another, is reported
+   * as skipped and opens no Test game. A forgotten `only` fails the run
+   * under `CI`.
+   * @param name - The name of the group.
+   * @param body - The function that registers the group's tests, called at
+   * once.
+   */
+  only: (this: void, name: string, body: () => void) => void;
+} = luaDescribe;
 
 /**
  * Registers one test. It runs in a Test game of its own: the file is loaded
  * again in a fresh Lua state for it, so its module-level code runs once per
  * test, and no test sees the units, the calls or the printed lines of
  * another.
+ * @remarks
+ * `it.skip`, `it.only` and `it.todo` are Vitest's: Vitest reports them in
+ * its own forms, and a forgotten `only` fails the run under `CI`. A test
+ * skipped, todo or out of focus opens no Test game and runs no `beforeEach`
+ * or `afterEach`.
  * @example Each test in a game of its own
  * {@includeCode ../../examples/it.test.ts}
- * @param name - The name of the test.
- * @param fn - The body of the test.
+ * @example A test skipped and a test still to write
+ * {@includeCode ../../examples/it-skip.test.ts}
  */
-export const it: (name: string, fn: () => void) => void = luaIt;
+export const it: {
+  /**
+   * Registers one test, run in a Test game of its own.
+   * @param name - The name of the test.
+   * @param fn - The body of the test.
+   */
+  (name: string, fn: () => void): void;
+  /**
+   * Registers a test that does not run, as Vitest's `it.skip`: Vitest
+   * reports it as skipped.
+   * @param name - The name of the test.
+   * @param fn - The body of the test, which does not run.
+   */
+  skip: (this: void, name: string, fn: () => void) => void;
+  /**
+   * Registers a test and focuses on it, as Vitest's `it.only`: every other
+   * Lua test of the Map project, in this file or another, is reported as
+   * skipped and opens no Test game. A forgotten `only` fails the run under
+   * `CI`.
+   * @param name - The name of the test.
+   * @param fn - The body of the test.
+   */
+  only: (this: void, name: string, fn: () => void) => void;
+  /**
+   * Registers a test still to write, as Vitest's `it.todo`: a name without
+   * a body, which Vitest reports as todo.
+   * @param name - The name of the test.
+   */
+  todo: (this: void, name: string) => void;
+} = luaIt;
+/* eslint-enable @typescript-eslint/no-invalid-void-type */
 
 /**
  * Registers a function that runs before each test of the current

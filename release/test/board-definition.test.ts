@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   applyBoardSetup,
@@ -8,20 +10,25 @@ import {
   BOARD_REPOSITORIES,
   BOARD_TITLE,
   BOARD_VIEWS,
+  BOARD_WORKFLOWS,
   BoardError,
   CLAIM_DOC_URL,
   planBoardSetup,
   readBoardState,
   STATUS_OPTIONS,
+  workflowSteps,
   type BoardSetupPlan,
   type ProjectState,
 } from "../src/board.js";
 import { GraphQlError } from "../src/github-graphql.js";
+import { markdownTable } from "../src/markdown-table.js";
+import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
   fieldId,
   FRESH,
   graphQlApi,
+  MEASURED_WORKFLOWS,
   mutations,
   reading,
   STATE,
@@ -105,6 +112,68 @@ describe("the definition", () => {
     expect(BOARD_README.split("\n")[0]).toBe(`# ${BOARD_TITLE}`);
   });
 
+  it("names the six built-in workflows, two of them on", () => {
+    expect(BOARD_WORKFLOWS.map(({ name, enabled }) => [name, enabled])).toEqual(
+      [
+        ["Auto-add sub-issues to project", true],
+        ["Item closed", true],
+        ["Item added to project", false],
+        ["Auto-close issue", false],
+        ["Pull request linked to issue", false],
+        ["Pull request merged", false],
+      ],
+    );
+    for (const { reason } of BOARD_WORKFLOWS) {
+      expect(reason).toMatch(/\.$/);
+    }
+  });
+
+  it("is described by the workflows table of docs/release.md, row for row and word for word", () => {
+    const lines = readFileSync(
+      join(repositoryRoot, "docs", "release.md"),
+      "utf8",
+    ).split(/\r?\n/);
+    const start = lines.findIndex((line) =>
+      line.startsWith("**The built-in workflows.**"),
+    );
+    expect(start).not.toBe(-1);
+    const rest = lines.slice(start + 1);
+    const first = rest.findIndex((line) => line.startsWith("|"));
+    const end = rest.findIndex(
+      (line, at) => at > first && !line.startsWith("|"),
+    );
+
+    expect(
+      rest
+        .slice(first, end)
+        .map((line) => `${line}\n`)
+        .join(""),
+    ).toBe(
+      markdownTable(
+        ["Workflow", "State", "Why"],
+        BOARD_WORKFLOWS.map(({ name, enabled, reason }) => [
+          name,
+          enabled ? "on" : "off",
+          reason,
+        ]),
+      ),
+    );
+  });
+
+  it("tells the README's reader which built-in workflows are on, and that the reconcile adds the sub-issues", () => {
+    for (const { name, enabled } of BOARD_WORKFLOWS) {
+      if (enabled) expect(BOARD_README).toContain(`"${name}"`);
+    }
+    expect(BOARD_README).toContain('"Auto-close issue"');
+    expect(BOARD_README).toContain("the reconcile adds each one");
+  });
+
+  it("has no mutation that deletes a built-in workflow", () => {
+    expect(Object.values(BOARD_MUTATIONS).join("\n")).not.toContain(
+      "deleteProjectV2Workflow",
+    );
+  });
+
   it("spans both repositories of the owner", () => {
     expect(BOARD_REPOSITORIES).toEqual([
       `${BOARD_OWNER}/reforged-ts`,
@@ -179,6 +248,22 @@ describe("planBoardSetup", () => {
       "Views: Board, By assignee, By parent.",
       `Repositories: ${BOARD_OWNER}/reforged-ts, ${BOARD_OWNER}/reforged-ts-template.`,
     ]);
+  });
+
+  it("carries the workflows that differ beside the requests, never among them", () => {
+    const plan = planBoardSetup({
+      ...STATE,
+      project: { ...CONFIGURED, workflows: MEASURED_WORKFLOWS },
+    });
+
+    expect(plan.requests).toEqual([]);
+    expect(plan.byHand).toEqual(workflowSteps(MEASURED_WORKFLOWS));
+    expect(plan.byHand).toHaveLength(3);
+    expect(planBoardSetup(STATE).byHand).toEqual([]);
+  });
+
+  it("names no workflow on a missing project, whose workflows only GitHub knows", () => {
+    expect(planBoardSetup({ ...STATE, project: null }).byHand).toEqual([]);
   });
 
   it("rewrites the Status options when one is renamed, keeping the ids of the others", () => {
@@ -441,6 +526,58 @@ describe("planBoardSetup", () => {
   });
 });
 
+describe("workflowSteps", () => {
+  it("names nothing when the workflows are as the definition has them", () => {
+    expect(workflowSteps(CONFIGURED.workflows)).toEqual([]);
+  });
+
+  it("names exactly the three to turn off on the live project's measured state", () => {
+    expect(workflowSteps(MEASURED_WORKFLOWS)).toEqual([
+      'Turn off the workflow "Auto-close issue": it is on, and the definition has it off.',
+      'Turn off the workflow "Pull request linked to issue": it is on, and the definition has it off.',
+      'Turn off the workflow "Pull request merged": it is on, and the definition has it off.',
+    ]);
+  });
+
+  it("names a workflow the definition has on, whether it is off or not listed", () => {
+    expect(
+      workflowSteps(
+        CONFIGURED.workflows.flatMap((workflow) =>
+          workflow.name === "Item closed"
+            ? [{ ...workflow, enabled: false }]
+            : workflow.name === "Auto-add sub-issues to project"
+              ? []
+              : [workflow],
+        ),
+      ),
+    ).toEqual([
+      'GitHub lists no workflow "Auto-add sub-issues to project", which the definition has on: in BOARD_WORKFLOWS (release/src/board-definition.ts), give it its new name when GitHub renamed it, or drop it when GitHub removed it.',
+      'Turn on the workflow "Item closed": it is off, and the definition has it on.',
+    ]);
+  });
+
+  it("leaves a workflow the definition has off and GitHub does not list", () => {
+    expect(
+      workflowSteps(
+        CONFIGURED.workflows.filter(({ name }) => name !== "Auto-close issue"),
+      ),
+    ).toEqual([]);
+  });
+
+  it("reports a workflow the definition does not name, on or off", () => {
+    expect(
+      workflowSteps([
+        ...CONFIGURED.workflows,
+        { name: "Auto-archive items", enabled: true },
+        { name: "Code review approved", enabled: false },
+      ]),
+    ).toEqual([
+      'The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
+      'The workflow "Code review approved" is off, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
+    ]);
+  });
+});
+
 describe("readBoardState", () => {
   it("finds the project by its exact title, page after page", async () => {
     const sent: Sent[] = [];
@@ -483,6 +620,7 @@ describe("readBoardState", () => {
       "ProjectFields",
       "ProjectViews",
       "ProjectRepositories",
+      "ProjectWorkflows",
     ]);
     expect(
       sent
