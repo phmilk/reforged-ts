@@ -1,5 +1,13 @@
 # reforged-ts
 
+## 1.0.0-alpha.22
+
+### Patch Changes
+
+- [#995](https://github.com/phmilk/reforged-ts/pull/995) [`9327d36`](https://github.com/phmilk/reforged-ts/commit/9327d36bd80f8443f9ea8bdede1cd1957a27dec1) Thanks [@wyller](https://github.com/wyller)! - Every error the library catches from a Map project callback (an Init stage callback, a Dev-mode protected callback or `MapPlayer.runLocal` function) is also passed to the global `__reforged_caught_error(origin, message)` when one is defined, each repeat included: the seam `reforged-test` will use to fail a test on a Caught error. The game defines no such global, so nothing changes in a map, and what is printed stays the same.
+- Updated dependencies [[`8ce0689`](https://github.com/phmilk/reforged-ts/commit/8ce0689f551319c2bd51e0c2198fd04931ae1d4a), [`3c1c5cb`](https://github.com/phmilk/reforged-ts/commit/3c1c5cb1515431b51b22dc09609d4160cc85120a)]:
+  - reforged-test@1.0.0-alpha.7
+
 ## 1.0.0-alpha.21
 
 ### Patch Changes
