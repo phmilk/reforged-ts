@@ -239,9 +239,10 @@ describe("the Studio's page, /objects/<rawcode>", () => {
       expect(kinds).toEqual(["unit h000", "item I000", "doodad D000"]);
 
       await search.locator('[data-rawcode="I000"]').click();
-      expect(await textOf(page.locator(".object-header h2"))).toContain(
-        "Captain's Claws",
-      );
+      // The header of hfoo is still up until the page moves to I000: poll it.
+      await expect
+        .poll(() => textOf(page.locator(".object-header h2")))
+        .toContain("Captain's Claws");
       expect(
         await page
           .getByRole("tab", { name: "Items" })
