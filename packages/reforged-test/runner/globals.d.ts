@@ -1,7 +1,9 @@
 /** @noSelfInFile */
 
-// The Lua globals the runner shares with the glue and the stubs, and the
-// Lua standard library as the runner calls it.
+// The Lua globals the runner shares with the glue, and the Lua standard
+// library as the runner calls it. The stub helpers it calls are declared by
+// the Shipped stubs' declarations, ../stubs/index.d.ts, which tsconfig.json
+// includes.
 
 /**
  * Set by the runner when a test module loads it; the glue calls it to run the
@@ -14,19 +16,6 @@ declare let __reforged_test_run: ((position?: string) => string) | undefined;
  * file then runs in a Test game of its own, a fresh Lua state.
  */
 declare let __reforged_test_isolated: boolean | undefined;
-
-/** The lines print wrote, oldest first, defined by the baseline stub. */
-declare function __stub_printed(): string[];
-
-/** The messages the display Natives showed, defined by the display stubs. */
-declare function __stub_displayed(): {
-  player: player;
-  duration?: number;
-  text: string;
-}[];
-
-/** The stub call log, defined by the baseline stub. */
-declare const __stub_calls: string[] | undefined;
 
 /**
  * Raises any value as the error, as Lua does; lua-types declares only a

@@ -20,9 +20,6 @@ import { raisedIn } from "./support/raised-in";
 // Dev mode raises for a Wrapper created before the globals Init stage.
 __stub_init_globals();
 
-/** The frames stub's "not found" frame, handle id 0 (stubs/frames.lua). */
-declare function __stub_frame_not_found(): framehandle;
-
 const notFound = __stub_frame_not_found();
 
 /** How many times the call log shows the id of the "not found" frame read. */

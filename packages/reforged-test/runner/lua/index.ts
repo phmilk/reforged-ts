@@ -75,7 +75,8 @@ export function it(name: string, fn: () => void): void {
 
 /** The global call log of the stubs, one `Name(arg, arg)` line per call. */
 export function stubCalls(): string[] {
-  if (__stub_calls === undefined) {
+  // Declared as always there; nil when a test runs without the baseline.
+  if ((__stub_calls as string[] | undefined) === undefined) {
     error(
       "the stub call log __stub_calls is not defined: the baseline stub is not loaded",
       2,

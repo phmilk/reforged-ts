@@ -3,7 +3,6 @@
 
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, test } from "vitest";
 import {
   LuaError,
@@ -11,6 +10,7 @@ import {
   type Chunk,
   type LuaModule,
 } from "./lua-state.js";
+import { shippedStubs } from "./shipped-stubs.js";
 
 export { compileLuaProject } from "./compile.js";
 
@@ -61,8 +61,6 @@ export const MARKER_32_BIT = "[32-bit]";
 /** The test that stands for a module that failed before its tests ran. */
 export const LOAD_TEST_NAME = "loads the test module";
 
-const STUBS_DIR = fileURLToPath(new URL("../stubs/", import.meta.url));
-const BASE_STUB = "base.lua";
 const TEST_SUFFIX = "_test.lua";
 const DEPENDENCIES_DIR = "lua_modules";
 
@@ -174,14 +172,8 @@ class Harness {
    * state of its own when its result is asked for.
    */
   load(module: TestModule): LoadedModule {
-    let json: string;
-    try {
-      json = runTestModule(this.#stubs, this.#modules, module.moduleName);
-    } catch (error) {
-      if (!(error instanceof LuaError)) throw error;
-      return { error: rewrite(error.message) };
-    }
-    const parsed = parseRun(json, module.moduleName);
+    const parsed = this.#runState(module.moduleName);
+    if ("error" in parsed) return parsed;
     if (parsed.isolated) {
       return {
         tests: parsed.tests.map((listed, position) => ({
@@ -211,14 +203,8 @@ class Harness {
       status: "error",
       message,
     });
-    let json: string;
-    try {
-      json = runTestModule(this.#stubs, this.#modules, moduleName, position);
-    } catch (error) {
-      if (!(error instanceof LuaError)) throw error;
-      return failed(rewrite(error.message));
-    }
-    const parsed = parseRun(json, moduleName);
+    const parsed = this.#runState(moduleName, position);
+    if ("error" in parsed) return failed(parsed.error);
     const found = parsed.isolated ? undefined : parsed.tests[0];
     if (found === undefined || fullName(found) !== fullName(listed)) {
       return failed(
@@ -227,20 +213,29 @@ class Harness {
     }
     return found;
   }
+
+  /**
+   * Runs the module in a fresh state, the test at `position` alone when it
+   * is set: what the runner answered, or the Lua message of what raised.
+   */
+  #runState(
+    moduleName: string,
+    position?: number,
+  ): RunnerAnswer | { readonly error: string } {
+    let json: string;
+    try {
+      json = runTestModule(this.#stubs, this.#modules, moduleName, position);
+    } catch (error) {
+      if (!(error instanceof LuaError)) throw error;
+      return { error: rewrite(error.message) };
+    }
+    return parseRun(json, moduleName);
+  }
 }
 
 /** A test's full name, as vitest shows it: `describe > it`. */
 function fullName({ suite, name }: TestName): string {
   return [...suite, name].join(" > ");
-}
-
-function shippedStubs(): Chunk[] {
-  const others = readdirSync(STUBS_DIR)
-    .filter((file) => file.endsWith(".lua") && file !== BASE_STUB)
-    .sort();
-  return [BASE_STUB, ...others].map((file) =>
-    readChunk(join(STUBS_DIR, file), `reforged-test/stubs/${file}`),
-  );
 }
 
 /** A path relative to outDir, `/`-separated, as `require` names it: `handles/unit.lua` is `handles.unit`. */

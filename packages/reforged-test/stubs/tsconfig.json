@@ -1,0 +1,21 @@
+{
+  // The declarations of the stub helpers (index.d.ts), type-checked on the
+  // Typings they name, as a test's tsconfig that lists reforged-test/stubs
+  // in its types reads them. Nothing is emitted; the file ships as written.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.1"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf"
+  },
+  "include": ["index.d.ts"]
+}

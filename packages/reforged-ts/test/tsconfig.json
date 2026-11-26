@@ -9,7 +9,16 @@
   "compilerOptions": {
     "rootDir": "..",
     "outDir": "../dist-test",
-    "declaration": false
+    "declaration": false,
+    // The package's types, and the declarations of the stub helpers the
+    // tests call.
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.1",
+      "reforged-types/3.0.1/common.ai",
+      "reforged-test/stubs"
+    ]
   },
   "include": ["../src", "."],
   // The Node side (harness/, node/) has its own tsconfigs; typescript-to-lua

@@ -1,6 +1,6 @@
 {
   "name": "reforged-test",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Runs typescript-to-lua test modules on real Lua 5.3 with stubbed Warcraft III Reforged natives and reports them to vitest.",
   "license": "MIT",
   "type": "module",
@@ -41,13 +41,14 @@
     "/map/**/*.lua",
     "/map/**/*.d.ts",
     "/stubs/**/*.lua",
+    "/stubs/**/*.d.ts",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p stubs/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-test",
     "prepare": "pnpm run build"
   },

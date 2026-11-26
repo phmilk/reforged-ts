@@ -4,7 +4,8 @@
   // `reforged-test/lua`, and map/index.ts to ../map, reached as
   // `reforged-test/map`. Written in Lua-shaped TypeScript (table.*, string.*,
   // pcall) so the emitted Lua needs no lualib_bundle. The Typings are in
-  // `types` for the Handle types the map entry point names.
+  // `types` for the Handle types the map entry point names, and the Shipped
+  // stubs' declarations are included for the helpers the runner calls.
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
@@ -26,7 +27,7 @@
     "forceConsistentCasingInFileNames": true,
     "newLine": "lf"
   },
-  "include": ["."],
+  "include": [".", "../stubs/index.d.ts"],
   // The default excludes outDir, the package root, which holds this folder.
   "exclude": [],
   "tstl": {
