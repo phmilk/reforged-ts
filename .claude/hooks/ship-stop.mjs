@@ -10,14 +10,17 @@
 // or `gh` cannot be read, so a network failure never traps a session. A stop
 // with work in flight (a running Subagent or background command, or a wakeup
 // the session scheduled) passes before any read, since the work has not ended
-// (#953): the stop after it finishes meets the check again.
+// (#953): the stop after it finishes meets the check again. A branch whose
+// pull request is merged with the branch's last commit as its head passes
+// too: a squash leaves its commits ahead of the remote default, and the work
+// is shipped all the same (#971).
 //
 // The decision is verdict(), a pure function from the hook input and three
 // facts: whether an implement (/implement or /implement-spec, typed or a
 // Skill tool call) ran after the last /ship-branch, read from the transcript by
 // implementPending(), a pure function over its lines; how many commits the
 // branch has ahead of the remote default, read with `git`; and the state of
-// the branch's open pull request, read with `gh` (pullRequestStateOf()). run()
+// the branch's pull request, read with `gh` (pullRequestStateOf()). run()
 // reads the facts in that order, each only when the ones before it call for
 // it, through readers the script gives it; the rest is those readers and the
 // printing of the output after reading stdin. The hook never fails a stop on
@@ -45,10 +48,11 @@ import { fileURLToPath } from "node:url";
  */
 
 /**
- * The state of the branch's open pull request: none, a draft, open with
- * auto-merge on, or open without it.
+ * The state of the branch's pull request: none, a draft, open with
+ * auto-merge on, open without it, or merged with the branch's last commit
+ * as its head.
  *
- * @typedef {"none" | "draft" | "auto-merge" | "open"} PullRequestState
+ * @typedef {"none" | "draft" | "auto-merge" | "open" | "merged"} PullRequestState
  */
 
 /**
@@ -64,13 +68,14 @@ import { fileURLToPath } from "node:url";
 
 /**
  * What run() reads its facts with: the transcript's lines, the commits
- * ahead, and `gh pr list`'s answer for the branch. Each throws when it
- * cannot read.
+ * ahead, `gh pr list`'s answer for the branch, and the branch's last
+ * commit. Each throws when it cannot read.
  *
  * @typedef {object} Readers
  * @property {() => readonly string[]} transcript
  * @property {() => number} ahead
  * @property {() => string} pullRequest
+ * @property {() => string} head The hash of the branch's last commit.
  */
 
 /**
@@ -164,30 +169,45 @@ export function implementPending(lines) {
 }
 
 /**
- * The state of the branch's open pull request from the answer of
- * `gh pr list --head <branch> --state open --json isDraft,autoMergeRequest`;
- * throws on any other answer.
+ * The state of the branch's pull request from the answer of
+ * `gh pr list --head <branch> --state all --json
+ * state,isDraft,autoMergeRequest,headRefOid`, given `head`, the hash of the
+ * branch's last commit: the open one's when there is one; else merged, when
+ * one was merged with `head` as its head, so that commits made after a
+ * merge are still unshipped; else none, a closed one included. Throws on
+ * any other answer.
  *
  * @param {string} answer
+ * @param {string} head
  * @returns {PullRequestState}
  */
-export function pullRequestStateOf(answer) {
+export function pullRequestStateOf(answer, head) {
   /** @type {unknown} */
   const list = JSON.parse(answer);
   if (!Array.isArray(list)) throw new Error("gh pr list: not a list");
-  if (list.length === 0) return "none";
-  /** @type {unknown} */
-  const first = list[0];
-  if (
-    first === null ||
-    typeof first !== "object" ||
-    !("isDraft" in first) ||
-    !("autoMergeRequest" in first)
-  ) {
-    throw new Error("gh pr list: not a pull request");
+  const pullRequests = list.map((/** @type {unknown} */ one) => {
+    if (
+      one === null ||
+      typeof one !== "object" ||
+      !("state" in one) ||
+      !("isDraft" in one) ||
+      !("autoMergeRequest" in one) ||
+      !("headRefOid" in one)
+    ) {
+      throw new Error("gh pr list: not a pull request");
+    }
+    return one;
+  });
+  const open = pullRequests.find(({ state }) => state === "OPEN");
+  if (open !== undefined) {
+    if (open.isDraft === true) return "draft";
+    return open.autoMergeRequest === null ? "open" : "auto-merge";
   }
-  if (first.isDraft === true) return "draft";
-  return first.autoMergeRequest === null ? "open" : "auto-merge";
+  return pullRequests.some(
+    ({ state, headRefOid }) => state === "MERGED" && headRefOid === head,
+  )
+    ? "merged"
+    : "none";
 }
 
 /**
@@ -252,7 +272,7 @@ export function run(input, read) {
     if (!facts.pending) return decide();
     facts.ahead = read.ahead();
     if (facts.ahead <= 0) return decide();
-    facts.pullRequest = pullRequestStateOf(read.pullRequest());
+    facts.pullRequest = pullRequestStateOf(read.pullRequest(), read.head());
   } catch {
     return { verdict: "pass" };
   }
@@ -338,14 +358,15 @@ function readersOf(input) {
           "--head",
           branch,
           "--state",
-          "open",
+          "all",
           "--json",
-          "isDraft,autoMergeRequest",
+          "state,isDraft,autoMergeRequest,headRefOid",
         ],
         cwd,
         GH_TIMEOUT_MS,
       );
     },
+    head: () => git("rev-parse", "HEAD"),
   };
 }
 

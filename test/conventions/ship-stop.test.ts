@@ -178,23 +178,64 @@ describe("implementPending", () => {
   });
 });
 
+/** The hash of the branch's last commit in these tests, and an older one. */
+const HEAD = "835a4c7d00000000000000000000000000000000";
+const OLDER = "135187aa00000000000000000000000000000000";
+
+/** One pull request as `gh pr list` answers it, open and not a draft unless told otherwise. */
+const pullRequest = (more: Record<string, unknown> = {}) => ({
+  state: "OPEN",
+  isDraft: false,
+  autoMergeRequest: null,
+  headRefOid: HEAD,
+  ...more,
+});
+
+/** `gh pr list`'s answer holding `pullRequests`. */
+const listed = (...pullRequests: Record<string, unknown>[]) =>
+  JSON.stringify(pullRequests);
+
 describe("pullRequestStateOf", () => {
   it.each([
-    ["[]", "none"],
-    ['[{"isDraft":true,"autoMergeRequest":null}]', "draft"],
+    ["no pull request", listed(), "none"],
+    ["a draft", listed(pullRequest({ isDraft: true })), "draft"],
     [
-      '[{"isDraft":false,"autoMergeRequest":{"mergeMethod":"SQUASH"}}]',
+      "an open one with auto-merge",
+      listed(pullRequest({ autoMergeRequest: { mergeMethod: "SQUASH" } })),
       "auto-merge",
     ],
-    ['[{"isDraft":false,"autoMergeRequest":null}]', "open"],
-  ])("reads %s as %s", (answer, state) => {
-    expect(pullRequestStateOf(answer)).toBe(state);
+    ["an open one without auto-merge", listed(pullRequest()), "open"],
+    [
+      "one merged with the branch's last commit as its head",
+      listed(pullRequest({ state: "MERGED" })),
+      "merged",
+    ],
+    [
+      "one merged before the branch's last commits",
+      listed(pullRequest({ state: "MERGED", headRefOid: OLDER })),
+      "none",
+    ],
+    [
+      "one closed without a merge",
+      listed(pullRequest({ state: "CLOSED" })),
+      "none",
+    ],
+    [
+      "a draft opened after an earlier merge",
+      listed(
+        pullRequest({ state: "MERGED", headRefOid: OLDER }),
+        pullRequest({ isDraft: true }),
+      ),
+      "draft",
+    ],
+  ])("reads %s as such", (_, answer, state) => {
+    expect(pullRequestStateOf(answer, HEAD)).toBe(state);
   });
 
   it.each(["", "{ not json", '{"isDraft":false}', "[1]"])(
     "throws on %j, which is no answer of gh pr list",
     (answer) => {
-      expect(() => pullRequestStateOf(answer)).toThrow();
+      expect(() => pullRequestStateOf(answer, HEAD)).toThrow();
     },
   );
 });
@@ -284,7 +325,14 @@ describe("verdict", () => {
   // Every combination of the three facts: it blocks on exactly two.
   const pendings = [true, false];
   const aheads = [0, 2, null];
-  const states = ["none", "draft", "auto-merge", "open", null] as const;
+  const states = [
+    "none",
+    "draft",
+    "auto-merge",
+    "open",
+    "merged",
+    null,
+  ] as const;
   const combinations = pendings.flatMap((pending) =>
     aheads.flatMap((ahead) =>
       states.map((pullRequest) => ({ pending, ahead, pullRequest })),
@@ -339,6 +387,7 @@ function readers(answers: {
   transcript: readonly string[] | Error;
   ahead?: number | Error;
   pullRequest?: string | Error;
+  head?: string | Error;
 }) {
   const calls: string[] = [];
   const answer = <T>(name: string, value: T | Error | undefined): T => {
@@ -353,6 +402,7 @@ function readers(answers: {
       transcript: () => answer("transcript", answers.transcript),
       ahead: () => answer("ahead", answers.ahead),
       pullRequest: () => answer("pullRequest", answers.pullRequest),
+      head: () => answer("head", answers.head ?? HEAD),
     },
   };
 }
@@ -370,16 +420,36 @@ describe("run", () => {
     expect(result).toEqual(
       verdict(stop(), { pending: true, ahead: 2, pullRequest: "none" }),
     );
-    expect(calls).toEqual(["transcript", "ahead", "pullRequest"]);
+    expect(calls).toEqual(["transcript", "ahead", "pullRequest", "head"]);
   });
 
   it("passes an open pull request with auto-merge", () => {
     const { read } = readers({
       transcript: IMPLEMENTED,
       ahead: 2,
-      pullRequest: '[{"isDraft":false,"autoMergeRequest":{}}]',
+      pullRequest: listed(pullRequest({ autoMergeRequest: {} })),
     });
     expect(run(stop(), read)).toEqual(PASS);
+  });
+
+  it("passes a branch whose pull request was squash-merged: its commits stay ahead of the remote default (#971)", () => {
+    const { read } = readers({
+      transcript: IMPLEMENTED,
+      ahead: 3,
+      pullRequest: listed(pullRequest({ state: "MERGED" })),
+    });
+    expect(run(stop(), read)).toEqual(PASS);
+  });
+
+  it("blocks commits made after the branch's pull request was merged", () => {
+    const { read } = readers({
+      transcript: IMPLEMENTED,
+      ahead: 4,
+      pullRequest: listed(pullRequest({ state: "MERGED", headRefOid: OLDER })),
+    });
+    expect(run(stop(), read)).toEqual(
+      verdict(stop(), { pending: true, ahead: 4, pullRequest: "none" }),
+    );
   });
 
   it("reads nothing on a stop whose stop hook is already active", () => {
