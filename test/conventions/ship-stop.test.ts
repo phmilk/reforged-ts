@@ -1,6 +1,6 @@
 // The ship Stop check (.claude/hooks/ship-stop.mjs, #807): a turn that ends
 // an implement with commits ahead of the remote default and no pull request
-// (or a draft) is blocked once and told to run /ship (ADR 0026). The
+// (or a draft) is blocked once and told to run /ship-branch (ADR 0026). The
 // transcript reader over fixture lines, the reader of `gh`'s answer, the
 // pure verdict over the three facts, and run() with readers that stand in
 // for the transcript, `git` and `gh`; no test spawns `gh` or `git`, and the
@@ -111,19 +111,35 @@ function quotingResultLine(command: string) {
 describe("implementPending", () => {
   it.each([
     [
-      "a typed /implement after the last /ship",
-      [typedLine("/ship"), typedLine("/implement", "807")],
-    ],
-    ["a typed /implement and no /ship", [typedLine("/implement", "#807")]],
-    [
-      "a Skill call of implement-spec after a typed /ship",
-      [typedLine("/ship"), skillCallLine("implement-spec", "802")],
+      "a typed /implement after the last /ship-branch",
+      [typedLine("/ship-branch"), typedLine("/implement", "807")],
     ],
     [
-      "a plugin's implement after a Skill call of ship",
-      [skillCallLine("ship"), skillCallLine("mattpocock-skills:implement")],
+      "a typed /implement and no /ship-branch",
+      [typedLine("/implement", "#807")],
+    ],
+    [
+      "a Skill call of implement-spec after a typed /ship-branch",
+      [typedLine("/ship-branch"), skillCallLine("implement-spec", "802")],
+    ],
+    [
+      "a plugin's implement after a Skill call of ship-branch",
+      [
+        skillCallLine("ship-branch"),
+        skillCallLine("mattpocock-skills:implement"),
+      ],
     ],
     ["a prompt that opens with /implement", [promptLine("/implement 807")]],
+    // The built-in /ship of Claude Code is not the skill (#940): its pull
+    // request passes the check through the repository state instead.
+    [
+      "a typed /implement, then the built-in /ship",
+      [typedLine("/implement", "807"), typedLine("/ship")],
+    ],
+    [
+      "a typed /implement, then a Skill call of ship",
+      [typedLine("/implement", "807"), skillCallLine("ship")],
+    ],
   ])("is true for %s", (_, lines) => {
     expect(implementPending(lines)).toBe(true);
   });
@@ -132,18 +148,18 @@ describe("implementPending", () => {
     ["no line", []],
     ["no implement", [typedLine("/grill-with-docs"), skillCallLine("pr")]],
     [
-      "a typed /implement before the last /ship",
-      [typedLine("/implement", "807"), typedLine("/ship")],
+      "a typed /implement before the last /ship-branch",
+      [typedLine("/implement", "807"), typedLine("/ship-branch")],
     ],
     [
-      "a Skill call of implement before a Skill call of ship",
-      [skillCallLine("implement", "807"), skillCallLine("ship")],
+      "a Skill call of implement before a Skill call of ship-branch",
+      [skillCallLine("implement", "807"), skillCallLine("ship-branch")],
     ],
     [
-      "an implement-spec before a ship, then other skills",
+      "an implement-spec before a ship-branch, then other skills",
       [
         typedLine("/implement-spec", "802"),
-        skillCallLine("ship"),
+        skillCallLine("ship-branch"),
         skillCallLine("next-step"),
       ],
     ],
@@ -196,13 +212,13 @@ describe("verdict", () => {
     ["none", /no pull request/],
     ["draft", /a draft pull request without auto-merge/],
   ] as const)(
-    "blocks a pending implement with commits ahead and pull request %s, telling the Agent to run /ship or say why it stops",
+    "blocks a pending implement with commits ahead and pull request %s, telling the Agent to run /ship-branch or say why it stops",
     (pullRequest, said) => {
       const result = verdict(stop(), { pending: true, ahead: 3, pullRequest });
       const reason = blocked(result);
       expect(reason).toMatch(said);
       expect(reason).toMatch(/3 commits ahead of the remote default/);
-      expect(reason).toMatch(/run \/ship/);
+      expect(reason).toMatch(/run \/ship-branch/);
       expect(reason).toMatch(/say why/);
       expect(reason).toMatch(/ADR 0026/);
       expect(result).toEqual({
@@ -319,7 +335,7 @@ describe("run", () => {
 
   it("reads neither git nor gh when no implement is pending", () => {
     const { calls, read } = readers({
-      transcript: [typedLine("/implement"), typedLine("/ship")],
+      transcript: [typedLine("/implement"), typedLine("/ship-branch")],
     });
     expect(run(stop(), read)).toEqual(PASS);
     expect(calls).toEqual(["transcript"]);
@@ -385,12 +401,12 @@ describe("the ship Stop hook", () => {
     ).toContain(command);
   });
 
-  it("is listed in what both repositories share, with ship and the Replaced skill Stop check", () => {
+  it("is listed in what both repositories share, with ship-branch and the Replaced skill Stop check", () => {
     const shared = JSON.parse(read(".claude/shared.json")) as {
       skills: string[];
       files: string[];
     };
-    expect(shared.skills).toContain("ship");
+    expect(shared.skills).toContain("ship-branch");
     expect(shared.files).toEqual(
       expect.arrayContaining([script, ".claude/hooks/replaced-skill-stop.mjs"]),
     );

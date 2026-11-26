@@ -28,10 +28,10 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    - **After `/split-spec`:** the Claim of the first Ticket of the Frontier's `takeable`, with its Spec, `gh issue edit <ticket> --add-assignee @me` then `gh issue edit <spec> --add-assignee @me` ([Claim](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim)), then `/clear` and `/implement <ticket>`. With `takeable` empty, name the one that unblocks the Frontier instead.
    - **After an implement:** the steps below.
 
-   From where an implement ends, the code closes out with `/code-review`, the work goes up as a pull request opened by `/ship`, and the next Ticket starts after `/clear`; when a Spec's Tickets are all delivered, its close follows. Keep the steps not yet done, in this order:
+   From where an implement ends, the code closes out with `/code-review`, the work goes up as a pull request opened by `/ship-branch`, and the next Ticket starts after `/clear`; when a Spec's Tickets are all delivered, its close follows. Keep the steps not yet done, in this order:
    - `/code-review <fixed point>`, when the branch's commits since its base have not been reviewed;
    - `gh issue edit <n> --body-file <file>`, when the reviewed Ticket's body still has an unchecked criterion or a "check whether…" without its `Outcome:` line: check each one the review confirmed, and write each outcome. `pnpm spec:check` counts them at the Spec's close ([A Spec's coverage](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#a-specs-coverage));
-   - `/ship`, when the branch has no pull request, or a draft: it opens it with its `## Review` section and turns on auto-merge unless a human is needed, so the pull request merges once the required checks pass ([ADR 0026](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0026-an-implement-ends-with-its-pull-request-opened-by-ship.md), [ADR 0021](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0021-an-agent-merges-its-own-pull-request-behind-the-required-checks-and-a-code-review.md)); `gh pr merge --auto --squash` alone, when it is open without auto-merge and its body names nothing that waits for a human;
+   - `/ship-branch`, when the branch has no pull request, or a draft: it opens it with its `## Review` section and turns on auto-merge unless a human is needed, so the pull request merges once the required checks pass ([ADR 0026](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0026-an-implement-ends-with-its-pull-request-opened-by-ship.md), [ADR 0021](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0021-an-agent-merges-its-own-pull-request-behind-the-required-checks-and-a-code-review.md)); `gh pr merge --auto --squash` alone, when it is open without auto-merge and its body names nothing that waits for a human;
    - `/clear`, once the pull request is open;
    - `/implement <n>`, for the first Ticket of the Frontier's `takeable`, other than the one just worked;
    - when the Spec has no open Ticket left once this pull request merges: `pnpm spec:check <spec>`, then, on green, `gh issue close <spec> --comment "..."` ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim), ADR 0023). The board comments the same verdict on the Spec once its Tickets are all closed, as a reminder: it closes nothing, so the close is still this step.
@@ -43,7 +43,7 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    ```text
    Next steps:
    1. /code-review origin/master
-   2. /ship
+   2. /ship-branch
    3. /clear
    4. /implement 744
    ```

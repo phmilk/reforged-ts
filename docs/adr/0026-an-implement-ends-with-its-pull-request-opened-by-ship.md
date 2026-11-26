@@ -26,3 +26,9 @@ We amend ADR 0021 and ADR 0025. Every implement ends with `/ship`, an Agent skil
 - An Agent outside Claude Code meets the rule in `AGENTS.md` alone.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/802
+
+## Amendment (2026-11-25)
+
+The skill is named `ship-branch`, after its title, "Ship a branch", and beside `ship-spec`; everything it does stands. Claude Code reserves the skill names `ship`, `ship-local` and `steward` for its built-in `/ship` and `/steward` ([Resolve skills that share a name](https://code.claude.com/docs/en/skills.md#resolve-skills-that-share-a-name)): a skill under one of them is never loaded, and a typed `/ship` runs the built-in, which writes no `## Review` section and turns on no auto-merge. So `/ship` above reads `/ship-branch`, the Stop check matches the skill by its new name only, and a convention test refuses a skill of `.claude/skills/`, shared or not, whose name Claude Code reserves. The open pull request the built-in leaves still passes the Stop check through the repository state.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/940
