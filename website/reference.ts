@@ -102,6 +102,30 @@ export const LIBRARY_REFERENCE: Reference = {
 };
 
 /**
+ * The Lua test harness, from `reforged-test/map` alone, the entry point a
+ * Map project's tests import, with the runner's tsconfig: `reforged-test/lua`
+ * and `reforged-test/stubs`, the harness level a library's tests use, stay
+ * out of it.
+ */
+export const TEST_REFERENCE: Reference = {
+  id: "reforged-test",
+  label: "reforged-test",
+  dir: "api/reforged-test",
+  entryPoints: [join(WORKSPACE, "packages/reforged-test/runner/map/index.ts")],
+  tsconfig: join(WORKSPACE, "packages/reforged-test/runner/tsconfig.json"),
+  // What the types of `/map` are computed from in `reforged-test/lua`, the
+  // harness level a Map project does not import. One name per line.
+  intentionallyNotExported: [
+    // GameExpect: the asymmetric matchers it picks from the runner's expect.
+    "expect",
+    // GameMatchers.toBeInstanceOf: a class compiled by typescript-to-lua.
+    "Class",
+    // GameMatchers.toContain: an item of a list, or a part of a string.
+    "ItemOf",
+  ],
+};
+
+/**
  * The docs folder of the Typings' docs instance, in the site folder: one
  * subfolder per Game version, served under `TYPINGS_ROUTE_BASE`. Not
  * versioned: a docs version cut never copies the Typings' thousands of pages
@@ -206,8 +230,8 @@ function writeIfChanged(file: string, text: string): void {
 
 /**
  * Every reference the site generates, in sidebar order: the library, its
- * `@native` tags linked to the Typings of the newest Game version, then the
- * Typings of each Game version.
+ * `@native` tags linked to the Typings of the newest Game version, the test
+ * harness's `reforged-test/map`, then the Typings of each Game version.
  */
 export function siteReferences(): Reference[] {
   const typings = typingsReferences(
@@ -220,7 +244,11 @@ export function siteReferences(): Reference[] {
       "packages/reforged-types holds no Game version with a manifest.json: the library's @native tags have no Typings to link. Run `pnpm typings:generate`.",
     );
   }
-  return [{ ...LIBRARY_REFERENCE, nativeTypings: newest }, ...typings];
+  return [
+    { ...LIBRARY_REFERENCE, nativeTypings: newest },
+    TEST_REFERENCE,
+    ...typings,
+  ];
 }
 
 /** How a reference is generated. */

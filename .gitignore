@@ -112,6 +112,8 @@ packages/reforged-types/build/
 # reforged-test build output: the glue in dist/ (ignored above) and the runner's Lua
 packages/reforged-test/lua/
 packages/reforged-test/map/
+# and its test build output: its examples compiled to Lua with the library
+packages/reforged-test/dist-examples/
 
 # reforged-ts test build output: the library and its tests compiled to Lua,
 # and the library and its examples
@@ -141,9 +143,10 @@ website/docs/contributing/adding-a-patch.md
 website/docs/changelog/*.md
 website/docs/_supported-patch.md
 
-# The API reference TypeDoc generates at every build: the library's into the
-# docs tree, the Typings' into their own docs instance
+# The API reference TypeDoc generates at every build: the library's and the
+# test harness's into the docs tree, the Typings' into their own docs instance
 website/docs/api/reforged-ts/
+website/docs/api/reforged-test/
 website/typings/*/
 
 # The Wrapper coverage report script's build output

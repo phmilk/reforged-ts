@@ -126,6 +126,7 @@ export default defineConfig(
     "website/build/**",
     "website/.docusaurus/**",
     "website/docs/api/reforged-ts/**",
+    "website/docs/api/reforged-test/**",
     "website/typings/*/**",
     // The docs versions docs:version cuts: frozen copies of the docs tree.
     "website/versioned_docs/**",
@@ -134,6 +135,7 @@ export default defineConfig(
     "probe/.probe/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-test/map/**",
+    "packages/reforged-test/dist-examples/**",
     "packages/reforged-ts/dist-test/**",
     "packages/reforged-ts/dist-examples/**",
     // What tools own: the vendored Patch files and the generated Typings.
@@ -219,6 +221,13 @@ export default defineConfig(
   // files: they hold deliberate findings.
   {
     files: ["packages/reforged-ts/src/**/*.ts"],
+    ...docComments,
+  },
+  // The doc comments of `reforged-test/map`, the test harness's entry point
+  // for a Map project, held to the same standard: the site documents it
+  // beside the library.
+  {
+    files: ["packages/reforged-test/runner/map/**/*.ts"],
     ...docComments,
   },
   // The library's declaration fixtures import `reforged-ts` as a Map project
@@ -309,6 +318,18 @@ export default defineConfig(
       "import-x/resolver": {
         typescript: {
           project: "packages/reforged-ts/examples/tsconfig.json",
+        },
+      },
+    },
+  },
+  // The examples of `reforged-test/map` import it and `reforged-ts` as a
+  // Map project's tests do, through the same kind of mapping.
+  {
+    files: ["packages/reforged-test/examples/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project: "packages/reforged-test/examples/tsconfig.json",
         },
       },
     },

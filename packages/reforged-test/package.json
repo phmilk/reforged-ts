@@ -47,8 +47,8 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p stubs/tsconfig.json",
+    "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json && node --experimental-strip-types ../reforged-ts/scripts/include-code.mts map runner/map",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p stubs/tsconfig.json && tsc -p examples/tsconfig.json --noEmit",
     "test": "vitest run --root ../.. --project reforged-test",
     "prepare": "pnpm run build"
   },

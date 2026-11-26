@@ -52,6 +52,21 @@ describe("reforged-test/map", () => {
     ]);
   });
 
+  it("shows each export's example in its hover, the included file's code", () => {
+    const examples = exported.map((symbol) => {
+      const tags = symbol
+        .getJsDocTags(checker)
+        .filter((tag) => tag.name === "example");
+      return [symbol.name, ts.displayPartsToString(tags[0]?.text)] as const;
+    });
+    for (const [name, example] of examples) {
+      expect(example, name).toMatch(
+        /```ts\nimport \{ [\w, ]+ \} from "reforged-test\/map";\n/,
+      );
+      expect(example, name).not.toContain("@includeCode");
+    }
+  });
+
   it("gives expect no toContainCall, negated or not", () => {
     const expectSymbol = exported.find((symbol) => symbol.name === "expect");
     if (expectSymbol === undefined) throw new Error("no expect");

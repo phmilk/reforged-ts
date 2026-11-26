@@ -1,17 +1,17 @@
 # Documenting the library
 
-Every exported symbol and every public member of `reforged-ts` carries a doc comment in TSDoc syntax ([ADR 0004](adr/0004-tsdoc-standard-with-compiled-examples.md)). This page is the standard those comments follow: the tags, their order, the tags each kind of symbol requires, the style rules and the examples convention. A Map project author reads these comments in the editor's hover and on the docs site, and an agent reads them in the `.d.ts` files under `node_modules`, so each comment holds the whole contract of its symbol.
+Every exported symbol and every public member of `reforged-ts`, and every export of `reforged-test/map`, carries a doc comment in TSDoc syntax ([ADR 0004](adr/0004-tsdoc-standard-with-compiled-examples.md)). This page is the standard those comments follow: the tags, their order, the tags each kind of symbol requires, the style rules and the examples convention. A Map project author reads these comments in the editor's hover and on the docs site, and an agent reads them in the `.d.ts` files under `node_modules`, so each comment holds the whole contract of its symbol.
 
-The rules apply to the library's sources, `packages/reforged-ts/src/`. Private and protected members, `#private` members and constructors are exempt.
+The rules apply to the library's sources, `packages/reforged-ts/src/`, and to the test harness's entry point for a Map project, `packages/reforged-test/runner/map/`, whose every export also carries an `@example`. Private and protected members, `#private` members and constructors are exempt.
 
 ## What checks it
 
 Two gates, run by different tools, count the same symbols:
 
 - **Lint.** `tsdoc/syntax` ([eslint-plugin-tsdoc](https://www.npmjs.com/package/eslint-plugin-tsdoc)) checks the syntax and the tag vocabulary. Four rules of [eslint-plugin-jsdoc](https://www.npmjs.com/package/eslint-plugin-jsdoc) check the rest: `require-jsdoc` (a comment is present), `require-param`, `require-returns` and `sort-tags` (the tag order). Its tag-name and type checks are off: TypeScript gives the types and `tsdoc/syntax` the tags.
-- **TypeDoc.** The docs site's `pnpm docs:check` builds the API reference from `packages/reforged-ts/src/index.ts` with the `notDocumented` and `invalidLink` validations on. It also fails on an `{@includeCode}` whose file or region is missing, and on an `@native` naming neither a Native in the Typings manifest nor a Handle type the Typings declare. CI runs it on ubuntu; it runs locally too, after `pnpm build`.
+- **TypeDoc.** The docs site's `pnpm docs:check` builds the API reference from `packages/reforged-ts/src/index.ts`, and its `reforged-test` section from `packages/reforged-test/runner/map/index.ts` alone, with the `notDocumented` and `invalidLink` validations on. It also fails on an `{@includeCode}` whose file or region is missing, and on an `@native` naming neither a Native in the Typings manifest nor a Handle type the Typings declare. CI runs it on ubuntu; it runs locally too, after `pnpm build`.
 
-**Both gates fail on a finding.** The lint rules sit in `eslint.config.mjs` at error, on `packages/reforged-ts/src/`, so `pnpm lint` and `pnpm check` fail on an undocumented public member. `docs:check` fails on TypeDoc's validation warnings (`STRICT_REFERENCE` in `website/config.ts`). `pnpm docs:audit` runs both gates without the site build, in `pnpm check` and on both CI legs, lists the findings per file, largest first, and exits 1 on any finding ([The docs audit](../website/README.md#the-docs-audit)):
+**Both gates fail on a finding.** The lint rules sit in `eslint.config.mjs` at error, on `packages/reforged-ts/src/` and `packages/reforged-test/runner/map/`, so `pnpm lint` and `pnpm check` fail on an undocumented public member. `docs:check` fails on TypeDoc's validation warnings (`STRICT_REFERENCE` in `website/config.ts`). `pnpm docs:audit` runs both gates without the site build, in `pnpm check` and on both CI legs, lists the findings per file, largest first, and exits 1 on any finding ([The docs audit](../website/README.md#the-docs-audit)):
 
 ```sh
 pnpm docs:audit                              # every file, then the total
@@ -126,9 +126,9 @@ A comment that meets the matrix and these rules:
 
 ## Examples
 
-An `@example` is never written inline: it includes a TypeScript file from `packages/reforged-ts/examples/`, which is compiled on every pull request and, when it does not need the game, run.
+An `@example` is never written inline: it includes a TypeScript file from an examples folder, compiled on every pull request and, when it does not need the game, run. The library's is `packages/reforged-ts/examples/`; that of `reforged-test/map` is `packages/reforged-test/examples/` ([below](#the-examples-of-reforged-testmap)).
 
-- **Two folders.** `examples/harness/` holds the examples that run on the Lua harness with the Native stubs of `reforged-test`. `examples/game/` holds those that need the game, such as one calling a Native with no stub; they are only compiled. Write a new one in `harness/` first, and move it to `game/` only when its run fails on `Native X is not stubbed`. Only the files directly in `harness/` run, not its subfolders.
+- **Two folders** in the library's. `examples/harness/` holds the examples that run on the Lua harness with the Native stubs of `reforged-test`. `examples/game/` holds those that need the game, such as one calling a Native with no stub; they are only compiled. Write a new one in `harness/` first, and move it to `game/` only when its run fails on `Native X is not stubbed`. Only the files directly in `harness/` run, not its subfolders.
 - **One file per concept or class**, named in kebab-case (`destructable-create.ts`). It reads like Map project code: it imports from `"reforged-ts"`, which the examples' `tsconfig.json` maps to the library sources.
 - **Regions.** A file shown in parts marks each with `// #region name` and `// #endregion name`; the name is required on both markers. The markers are not shown and the content is dedented.
 - **The include.** `@example`, a title on the same line if any, then the include on the next line and nothing else. The path is relative to the source file holding the comment. For instance, a class comment including one region:
@@ -164,3 +164,17 @@ What checks them:
 - `pnpm test` runs each example of `harness/` in a fresh Lua state through the library's vitest project, as `examples/harness/<name>.test.ts > runs without error`. It loads the file, so its top level runs, then runs `config()`, `main()` and `MarkGameStarted()`, so every `Init.on*` callback runs; a Timer or a Trigger never fires. It passes when no error is raised and no `reforged-ts: ... failed: ...` line is printed. What the example prints is not checked: an example is documentation, not a test. On its own: `pnpm vitest run --project reforged-ts packages/reforged-ts/test/harness/examples.spec.ts`.
 - `pnpm docs:check` resolves every `{@includeCode}`: a missing file or region fails it.
 - `pnpm build` expands every `{@includeCode}` of the library's emitted declarations into a fenced block of the code it includes, which the editor's hover shows; the sources keep the tag. A missing file, region or line fails it.
+
+### The examples of `reforged-test/map`
+
+The doc comments of `packages/reforged-test/runner/map/index.ts` include the files of `packages/reforged-test/examples/`, and a complete test of the guide "Testing your map" on `reforged-test/map` is a file of it too (`welcome.test.ts`). The rules above hold, but for these:
+
+- **Each file is a test file**, named `<concept>.test.ts` (`start-game.test.ts`), as a Map project writes one: it imports from `"reforged-test/map"`, which the folder's `tsconfig.json` maps to the entry point the package builds, so it sees what a Map project sees, and from `"reforged-ts"`, mapped to the library's sources. Its map code sits in the file, above its tests. One folder: every file runs.
+- **What it checks is asserted.** Unlike the library's examples, each `it` of the file runs as a test of the package, in a Test game of its own, and fails on a matcher that does not hold.
+- **The include path** is relative to `runner/map/`: `{@includeCode ../../examples/start-game.test.ts}`.
+
+What checks them:
+
+- `pnpm test` compiles the folder with typescript-to-lua in the global setup of the `reforged-test` vitest project, after the runner, and runs each file through the glue, as `reforged-test/examples/<name>.test.ts > <its test>`; a compile error fails the run. On its own: `pnpm vitest run --project reforged-test packages/reforged-test/test/examples.test.ts`. `pnpm typecheck` type-checks the folder too.
+- `pnpm docs:check` resolves every `{@includeCode}` of the `reforged-test` section of the API reference.
+- `pnpm build` expands every `{@includeCode}` of `map/index.d.ts`, the declarations `reforged-test/map` ships, with the library's include-code script, so the hover shows the code as the library's does.

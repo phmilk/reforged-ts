@@ -18,6 +18,8 @@ __reforged_test_isolated = true;
 
 /**
  * Groups the tests registered by `body` under `name`. Nesting is allowed.
+ * @example Two groups around one test
+ * {@includeCode ../../examples/describe.test.ts}
  * @param name - The name of the group, shown before each of its tests.
  * @param body - The function that registers the group's tests, called at
  * once.
@@ -29,6 +31,8 @@ export const describe: (name: string, body: () => void) => void = luaDescribe;
  * again in a fresh Lua state for it, so its module-level code runs once per
  * test, and no test sees the units, the calls or the printed lines of
  * another.
+ * @example Each test in a game of its own
+ * {@includeCode ../../examples/it.test.ts}
  * @param name - The name of the test.
  * @param fn - The body of the test.
  */
@@ -36,6 +40,13 @@ export const it: (name: string, fn: () => void) => void = luaIt;
 
 /**
  * The matchers of `expect` on a Map project's test: Vitest's, with `.not`.
+ * @remarks
+ * A text a matcher takes (`toMatch`, `toContain` on a string, `toThrow`) is
+ * plain text and means "contains", never a pattern: typescript-to-lua
+ * compiles no regular expression. Truthiness is Lua's: 0 and `""` are
+ * truthy.
+ * @example Matchers, a negated one and an asymmetric matcher
+ * {@includeCode ../../examples/expect.test.ts}
  * @noSelf
  */
 export interface GameMatchers<T> extends Omit<
@@ -46,7 +57,18 @@ export interface GameMatchers<T> extends Omit<
   not: GameMatchers<T>;
 }
 
-/** The `expect` of a Map project's test, with its asymmetric matchers. */
+/**
+ * The `expect` of a Map project's test, with its asymmetric matchers.
+ * @remarks
+ * Called on a value, it gives the {@link GameMatchers} on it. Its members are
+ * the asymmetric matchers, which stand on the expected side of `toEqual`,
+ * `toMatchObject` and `toContainEqual` for any value they accept:
+ * `anything()`, `any(typeName)` with a Lua type name or a class,
+ * `objectContaining(part)`, `arrayContaining(items)` and
+ * `stringContaining(part)`.
+ * @example Matchers, a negated one and an asymmetric matcher
+ * {@includeCode ../../examples/expect.test.ts}
+ */
 export type GameExpect = (<T>(actual: T) => GameMatchers<T>) &
   Pick<
     typeof luaExpect,
@@ -62,10 +84,16 @@ export type GameExpect = (<T>(actual: T) => GameMatchers<T>) &
  * test, with a message naming the values, when it does not hold, and `.not`
  * negates every matcher. Its members are the asymmetric matchers. It is the
  * `expect` of `reforged-test/lua`.
+ * @example Matchers, a negated one and an asymmetric matcher
+ * {@includeCode ../../examples/expect.test.ts}
  */
 export const expect: GameExpect = luaExpect;
 
-/** One message a display Native showed to a player. */
+/**
+ * One message a display Native showed to a player.
+ * @example The messages a player was shown
+ * {@includeCode ../../examples/displayed.test.ts}
+ */
 export interface DisplayedText {
   /** The text, as the Native was given it. */
   readonly text: string;
@@ -75,7 +103,12 @@ export interface DisplayedText {
   readonly duration?: number;
 }
 
-/** The Test game of one test, which `startGame` returns. */
+/**
+ * The Test game of one test, which `startGame` returns: what the player
+ * observed of it.
+ * @example What the players see when the game starts
+ * {@includeCode ../../examples/welcome.test.ts}
+ */
 export interface Game {
   /**
    * Every line printed since the Test game began, the library's included,
@@ -131,6 +164,8 @@ let started = false;
  * `MarkGameStarted`), and so through the library's Init stages. An editor
  * function nothing defined is defined as one that does nothing. Call it once
  * per test, in the test or at the top of the file.
+ * @example The Init stages, run by startGame
+ * {@includeCode ../../examples/start-game.test.ts}
  * @returns The test's game.
  * @throws When the game of this test already started:
  * `startGame: the game already started; a test is one game, so call startGame once per test`.

@@ -94,6 +94,8 @@ it("greets the players", () => {
 - `startGame()` runs the map's initialization as the game does: `config`, then `main` (`InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`), then `MarkGameStarted`, and so the library's Init stages. An editor function nothing defined is defined as one that does nothing. Call it once per test, in the `it` or at the top of the file; a second call in the same test throws, saying the game already started.
 - `game.printed` is every line printed since the Test game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` is every message a display Native showed, as records `{ text, player, duration }`, `player` being the Handle the Native received and `duration` undefined for `DisplayTextToPlayer`. Each read is a copy.
 
+Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.
+
 Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`, and the map entry point's under `lua_modules/reforged-test/map/`.
 
 ## Running the tests with vitest
