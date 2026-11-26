@@ -1,5 +1,6 @@
 ---
 "reforged-test": minor
+"reforged-types": none
 ---
 
 `reforged-test/map` gains `stubNative`, `newHandle` and `game.setLocalPlayer`.
