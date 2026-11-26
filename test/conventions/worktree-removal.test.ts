@@ -104,12 +104,14 @@ describe("the recipe for removing a worktree", () => {
           ),
         ].map((match) => ({ from: path, to: match[1] ?? "" })),
       );
-    // Each of the two files links the section at least once: SKILL.md at a
-    // merge, the run's end and a stop, template-tickets.md for the
-    // Template's worktree.
-    const from = links.map((link) => link.from);
-    expect(from).toContain("SKILL.md");
-    expect(from).toContain("template-tickets.md");
+    // SKILL.md links the section from three steps at least, a merge, the
+    // run's end and a stop, and template-tickets.md for the Template's
+    // worktree.
+    const sources = links.map((link) => link.from);
+    expect(
+      sources.filter((source) => source === "SKILL.md").length,
+    ).toBeGreaterThanOrEqual(3);
+    expect(sources).toContain("template-tickets.md");
     // Every link lands on SKILL.md, by an anchor of its own or by its name
     // from a file beside it.
     expect(

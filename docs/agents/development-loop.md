@@ -195,12 +195,14 @@ An Agent that runs Subagents (`/implement-spec`, `/ship-spec`, `/code-review`, a
 
 ### Removing a worktree
 
-A throwaway worktree that holds no work and no install, like the detached one `ship-spec` reads the Changesets status in, is removed with `git worktree remove --force`. Every removal of a worktree that holds work or an install (commits, edited files, a `node_modules`), a Subagent's or any other, follows this recipe, from its repository's checkout, in Git Bash on Windows:
+Every removal of a worktree that holds work or an install (commits, edited files, a `node_modules`), a Subagent's or any other, follows this recipe, from its repository's checkout, in Git Bash on Windows:
 
 1. `git worktree remove <path>`. When it succeeds, the removal is done.
 2. When it fails, read `git worktree list`, whatever the error said:
    - **It no longer names `<path>`:** the remove unregistered the worktree and failed to delete its folder. Delete the folder with `rm -rf <path>`.
    - **It still names `<path>`,** a dirty worktree among the causes: leave the folder and its branch as they are, since uncommitted work may be in it, and report the path and the error.
+
+A throwaway worktree that holds neither work nor an install, like the detached one `ship-spec` reads the Changesets status in, is removed with `git worktree remove --force`.
 
 The folder left behind has one measured cause (2026-11-25, on Windows, with `core.longpaths` set, [#941](https://github.com/phmilk/reforged-ts/issues/941)): pnpm links the packages of `node_modules` with junctions, and `git worktree remove` follows them. A junction to a sibling under `node_modules/.pnpm/` makes it fail with `Directory not empty`, after it unregistered the worktree. Git Bash's `rm -rf` does not follow a junction, so it deletes the folder and nothing else.
 
