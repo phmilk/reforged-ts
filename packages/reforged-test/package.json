@@ -38,6 +38,8 @@
     "/dist/**/*.d.ts",
     "/lua/**/*.lua",
     "/lua/**/*.d.ts",
+    "/map/**/*.lua",
+    "/map/**/*.d.ts",
     "/stubs/**/*.lua",
     "/LICENSE",
     "/README.md"
@@ -61,6 +63,7 @@
     "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
     "lua-types": "catalog:",
+    "reforged-types": "workspace:^",
     "typescript": "catalog:",
     "typescript-to-lua": "catalog:",
     "vitest": "catalog:"

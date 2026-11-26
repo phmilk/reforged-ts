@@ -1,17 +1,23 @@
 {
-  // The Lua-side runner, compiled by typescript-to-lua in library mode to
-  // ../lua, where a test file reaches it as `reforged-test/lua`. Written in
-  // Lua-shaped TypeScript (table.*, string.*, pcall) so the emitted Lua needs
-  // no lualib_bundle.
+  // The Lua-side runner, compiled by typescript-to-lua in library mode to the
+  // package's root: lua/index.ts to ../lua, where a test file reaches it as
+  // `reforged-test/lua`, and map/index.ts to ../map, reached as
+  // `reforged-test/map`. Written in Lua-shaped TypeScript (table.*, string.*,
+  // pcall) so the emitted Lua needs no lualib_bundle. The Typings are in
+  // `types` for the Handle types the map entry point names.
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "rootDir": ".",
-    "outDir": "../lua",
+    "outDir": "..",
     "declaration": true,
-    "types": ["@typescript-to-lua/language-extensions", "lua-types/5.3"],
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.1"
+    ],
     "strict": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
@@ -21,6 +27,8 @@
     "newLine": "lf"
   },
   "include": ["."],
+  // The default excludes outDir, the package root, which holds this folder.
+  "exclude": [],
   "tstl": {
     "buildMode": "library",
     "luaTarget": "5.3",

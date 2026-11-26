@@ -1,13 +1,21 @@
 import { fileURLToPath } from "node:url";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  type UserConsoleLog,
+} from "vitest";
 import type { TestCase, TestModule, TestSuite, Vitest } from "vitest/node";
 import { startVitest } from "vitest/node";
 import { LOAD_TEST_NAME } from "../src/index.js";
 import { outDir, removeOutDirs } from "./support/fixture.js";
 
 // Runs vitest on test/fixtures/vitest-project, whose one spec calls
-// runLuaTests on the results and unstubbed fixtures, and reads what vitest
-// itself recorded.
+// runLuaTests on the results, unstubbed and per-test fixtures, and reads
+// what vitest itself recorded, the console lines with the task that wrote
+// them included.
 
 const project = fileURLToPath(
   new URL("./fixtures/vitest-project/", import.meta.url),
@@ -15,6 +23,8 @@ const project = fileURLToPath(
 
 let vitest: Vitest;
 let module: TestModule;
+/** What the inner run's tests wrote to the console, in order. */
+const logs: UserConsoleLog[] = [];
 
 // Measured 4.6 s with pnpm test on Linux (WSL 2, 8 threads), 2026-10: the
 // windows leg's report carries no hook duration.
@@ -22,11 +32,22 @@ beforeAll(async () => {
   const exitCode = process.exitCode;
   vitest = await startVitest(
     [],
-    { root: project, config: false, watch: false, reporters: [] },
+    {
+      root: project,
+      config: false,
+      watch: false,
+      reporters: [
+        {
+          onUserConsoleLog: (log) => {
+            logs.push(log);
+          },
+        },
+      ],
+    },
     {
       test: {
         include: ["*.spec.ts"],
-        provide: { outDir: outDir("results", "unstubbed") },
+        provide: { outDir: outDir("results", "unstubbed", "per-test") },
       },
     },
   );
@@ -62,6 +83,7 @@ function testCase(fullName: string): TestCase {
 describe("runLuaTests", () => {
   it("registers one describe per compiled test file, under its TypeScript name", () => {
     expect([...module.children.suites()].map((s) => s.name)).toEqual([
+      "game.test.ts",
       "handles/unit.test.ts",
       "load.test.ts",
       "natives.test.ts",
@@ -142,5 +164,27 @@ describe("runLuaTests", () => {
 
   it("never reaches emscripten's uncaught-exception handler", () => {
     expect(vitest.state.getUnhandledErrors()).toEqual([]);
+  });
+});
+
+describe("runLuaTests on reforged-test/map", () => {
+  /** The lines written while the task of `id` ran, a test or the file. */
+  function written(id: string): string[] {
+    return logs.filter((log) => log.taskId === id).map((log) => log.content);
+  }
+
+  it("lists the tests at collection, loading the file once", () => {
+    expect(written(module.id)).toEqual(["loaded\n"]);
+  });
+
+  it("loads the file again inside each test's vitest test", () => {
+    for (const [name, line] of [
+      ["first", "first ran\n"],
+      ["second", "second ran\n"],
+    ] as const) {
+      const test = testCase(`game.test.ts > game > ${name}`);
+      expect(test.result().state).toBe("passed");
+      expect(written(test.id).join("")).toBe(`loaded\n${line}`);
+    }
   });
 });

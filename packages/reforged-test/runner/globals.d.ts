@@ -7,7 +7,23 @@
  * Set by the runner when a test module loads it; the glue calls it to run the
  * module's tests and read their results as JSON.
  */
-declare let __reforged_test_run: (() => string) | undefined;
+declare let __reforged_test_run: ((position?: string) => string) | undefined;
+
+/**
+ * Set by reforged-test/map when a test module loads it: each test of the
+ * file then runs in a Test game of its own, a fresh Lua state.
+ */
+declare let __reforged_test_isolated: boolean | undefined;
+
+/** The lines print wrote, oldest first, defined by the baseline stub. */
+declare function __stub_printed(): string[];
+
+/** The messages the display Natives showed, defined by the display stubs. */
+declare function __stub_displayed(): {
+  player: player;
+  duration?: number;
+  text: string;
+}[];
 
 /** The stub call log, defined by the baseline stub. */
 declare const __stub_calls: string[] | undefined;

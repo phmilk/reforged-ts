@@ -12,13 +12,14 @@ Runs TypeScript tests for Warcraft III Reforged map code on real Lua 5.3, with t
 
 The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/) exactly like map code, then run on Lua 5.3.6 compiled to WebAssembly ([lua-wasm-bindings](https://www.npmjs.com/package/lua-wasm-bindings), the VM typescript-to-lua's own suite uses). What a test observes is the Lua your code emits, the Native calls it makes and the objects it returns.
 
-The package has three parts:
+The package has four parts:
 
-| Part       | Reached as          | What it is                                                                                                                             |
-| ---------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner | `reforged-test/lua` | `describe`, `it` and `expect` for the test files, compiled to Lua.                                                                     |
-| The glue   | `reforged-test`     | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
-| The stubs  | `stubs/*.lua`       | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
+| Part                | Reached as          | What it is                                                                                                                             |
+| ------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner          | `reforged-test/lua` | `describe`, `it` and `expect` for the test files, compiled to Lua.                                                                     |
+| The map entry point | `reforged-test/map` | `describe`, `it`, `expect` and `startGame` for a Map project's tests, each in a Test game of its own. Compiled to Lua over the runner. |
+| The glue            | `reforged-test`     | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
+| The stubs           | `stubs/*.lua`       | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
 
 ## Writing a test
 
@@ -67,13 +68,32 @@ The runner exports:
   - `expect.arrayContaining(items)`: a list holding, in any order, an item deeply equal to each of `items`; with no items, any value, as Vitest's.
   - `expect.stringContaining(part)`: a string holding this part as plain text.
 - `stubCalls()`: the stub call log, one `Name(arg, arg)` line per Native call.
-- `run()`: runs the registered tests and returns the JSON results. The glue calls it through the global `__reforged_test_run`, so a test file never calls it.
+- `run(position?)`: runs the registered tests and returns the JSON results; in a file that loads `reforged-test/map`, lists them, or runs the one at `position`. The glue calls it through the global `__reforged_test_run`, so a test file never calls it.
 
 A failed expectation fails its test with a message such as `Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)`. Any other error fails it with the Lua message, location included.
 
 `toMatch`, `toThrow(message)` and `expect.stringContaining` take plain text, never a pattern: typescript-to-lua compiles no regular expression, and a Lua pattern would read `.` or `%` as no Vitest test means them. There is no `toBeNull` (`null` is `nil`, so `toBeUndefined`), `toBeNaN`, `toStrictEqual`, `toHaveProperty`, snapshot, `resolves` or `rejects`. Why each matcher reads as it does, and what typescript-to-lua compiles of Vitest's: [How test libraries phrase a test](https://github.com/phmilk/reforged-ts/blob/master/docs/research/test-phrasing.md).
 
-Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`.
+### A Test game per test
+
+A Map project's test imports from `reforged-test/map`, and each of its tests runs in a Test game of its own:
+
+```ts
+import { expect, it, startGame } from "reforged-test/map";
+import "../../src/main";
+
+it("greets the players", () => {
+  const game = startGame();
+  expect(game.printed).toContain("Welcome!");
+});
+```
+
+- `describe`, `it` and `expect` are the runner's, with the same matchers but `toContainCall`, and `reforged-test/map` exports no call log.
+- Each `it` runs in a fresh Lua state: the file is loaded again for it, so its module-level code runs once per test, and no test sees the units, the Recorded calls or the printed lines of another. This holds for the whole file, also when it imports from `reforged-test/lua` too (ADR 0029).
+- `startGame()` runs the map's initialization as the game does: `config`, then `main` (`InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`), then `MarkGameStarted`, and so the library's Init stages. An editor function nothing defined is defined as one that does nothing. Call it once per test, in the `it` or at the top of the file; a second call in the same test throws, saying the game already started.
+- `game.printed` is every line printed since the Test game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` is every message a display Native showed, as records `{ text, player, duration }`, `player` being the Handle the Native received and `duration` undefined for `DisplayTextToPlayer`. Each read is a copy.
+
+Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`, and the map entry point's under `lua_modules/reforged-test/map/`.
 
 ## Running the tests with vitest
 
@@ -106,6 +126,8 @@ Each compiled test file runs in a fresh Lua state, in this order:
 4. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
 5. The test module is required, which registers its tests.
 6. The runner runs the tests and returns the results.
+
+A file that loads `reforged-test/map` stops at step 6 with the list of its tests, and each test then runs in a fresh state of its own, the six steps again with that test alone at step 6, inside its vitest `test`. A file of N tests costs N+1 states. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
 
 A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts library preloaded. lua-wasm-bindings loads once per process.
 
@@ -155,6 +177,8 @@ The runner and the glue share nothing but this JSON string, returned by the glob
 - `suite` lists the enclosing `describe` names, outermost first.
 - `status` is `pass`, `fail` (an expectation did not hold) or `error` (anything else was thrown).
 - `message` is present on `fail` and `error`.
+
+In a file that loads `reforged-test/map`, the call without an argument answers the list of the tests, `{"isolated":true,"tests":[{"name":"adds","suite":["arithmetic"]}]}`, and the glue calls the global again in a fresh state for each test, with its position counted from 0 as a string (`"2"`); that call answers the form above with the one test's result, or with an empty `tests` when the file registered no test there.
 
 The runner writes it with its own encoder, with keys sorted, because the game's Lua has no JSON library. The glue rejects results of any other shape.
 

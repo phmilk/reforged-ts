@@ -10,6 +10,18 @@
 // `message` is present on "fail" (an expectation did not hold) and "error"
 // (anything else was thrown). Keys are sorted; `suite` lists the enclosing
 // `describe` names, outermost first.
+//
+// A file that loads reforged-test/map runs each test in a Test game of its
+// own (ADR 0029): the map entry point sets the global
+// `__reforged_test_isolated`, and the run without an argument then lists the
+// tests without running them,
+//
+//   {"isolated":true,"tests":[{"name":"...","suite":["..."]}]}
+//
+// and the glue loads the file again in a fresh state for each test, calling
+// `__reforged_test_run("<position>")`, which runs that one test (the
+// position counts from 0) and answers `{"tests":[<its result>]}`, or
+// `{"tests":[]}` when the file registered no test there.
 
 type Status = "pass" | "fail" | "error";
 
@@ -54,7 +66,8 @@ export function describe(name: string, body: () => void): void {
 /**
  * Registers one test. It runs after the test module has loaded, in
  * registration order, sharing the Lua state (and the stub call log) with the
- * other tests of the same file.
+ * other tests of the same file; in a file that loads `reforged-test/map`, it
+ * runs in a Test game of its own.
  */
 export function it(name: string, fn: () => void): void {
   table.insert(blocks, { suite: copy(suites), name, fn });
@@ -903,9 +916,29 @@ function toJson(value: unknown): string {
   return `{${table.concat(parts, ",")}}`;
 }
 
-/** Runs every registered `it` once and returns the results as JSON. */
-export function run(): string {
+/**
+ * Runs the registered tests and returns the results as JSON: every `it`
+ * once, in registration order. In a file that loads `reforged-test/map`, it
+ * lists the tests instead and, given a position, runs that one test. The
+ * glue calls it through the global `__reforged_test_run`.
+ * @param position - The position of the one test to run, counted from 0, as
+ * a decimal string; only in a file that loads `reforged-test/map`.
+ * @returns The results contract of the package's README, as a JSON string.
+ */
+export function run(position?: string): string {
   const results: Result[] = [];
+  if (position !== undefined) {
+    const block = blocks[tonumber(position) ?? -1] as Block | undefined;
+    if (block !== undefined) table.insert(results, runBlock(block));
+    return toJson({ tests: results });
+  }
+  if (__reforged_test_isolated === true) {
+    const listed: Pick<Result, "suite" | "name">[] = [];
+    for (const block of blocks) {
+      table.insert(listed, { suite: block.suite, name: block.name });
+    }
+    return toJson({ isolated: true, tests: listed });
+  }
   for (const block of blocks) {
     table.insert(results, runBlock(block));
   }
