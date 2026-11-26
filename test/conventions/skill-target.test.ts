@@ -163,10 +163,10 @@ describe("replacedVerdict", () => {
 });
 
 // The line a skill let through adds to the Agent's context (#806): an
-// implement names the branch to create on the default branch, then /ship
+// implement names the branch to create on the default branch, then /ship-branch
 // and next-step; the other hand-overs of the main flow name next-step.
 const SHIP_AND_NEXT_STEP =
-  "This repository ends every implement with /ship, which reviews the branch, pushes it and opens its pull request, then with the next-step skill, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0026, .claude/hooks/skill-target.mjs).";
+  "This repository ends every implement with /ship-branch, which reviews the branch, pushes it and opens its pull request, then with the next-step skill, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0026, .claude/hooks/skill-target.mjs).";
 const ON_MASTER = `This session is on the default branch, master: before the first commit, create the work's branch from the remote default, git fetch origin master then git switch -c <type>/<n>-<slug> origin/master, <type> the Conventional Commits type of the work, <n> its issue and <slug> a few kebab-case words of the issue's title. ${SHIP_AND_NEXT_STEP}`;
 const handOver = (skill: string) =>
   `This repository ends /${skill} with the next-step skill: when this work is done, run next-step, which prints the next steps of the main flow from the state of the work, its issue and its Spec (ADR 0026, .claude/hooks/skill-target.mjs).`;
@@ -181,7 +181,7 @@ describe("passOutput", () => {
     args: "806",
   });
 
-  it("on the default branch, tells an implement to create <type>/<n>-<slug> from the remote default first, then to end with /ship and next-step", () => {
+  it("on the default branch, tells an implement to create <type>/<n>-<slug> from the remote default first, then to end with /ship-branch and next-step", () => {
     const onMaster = { current: "master", default: "master" };
     expect(passOutput(implement("implement"), onMaster)).toEqual(
       context("UserPromptSubmit", ON_MASTER),
@@ -195,13 +195,13 @@ describe("passOutput", () => {
       context(
         "UserPromptSubmit",
         expect.stringMatching(
-          /^This session is on the default branch, main: .*git fetch origin main then git switch -c <type>\/<n>-<slug> origin\/main, .*ends every implement with \/ship.*next-step skill/,
+          /^This session is on the default branch, main: .*git fetch origin main then git switch -c <type>\/<n>-<slug> origin\/main, .*ends every implement with \/ship-branch.*next-step skill/,
         ) as unknown,
       ),
     );
   });
 
-  it("off the default branch, names /ship and next-step only", () => {
+  it("off the default branch, names /ship-branch and next-step only", () => {
     for (const current of ["feat/806-next-steps-main-flow", ""]) {
       expect(
         passOutput(implement("implement"), { current, default: "master" }),
@@ -814,7 +814,7 @@ describe("the skill-target script", () => {
     });
   });
 
-  it("lets a takeable Ticket through on both events off the default branch, adding /ship and next-step to the Agent's context", () => {
+  it("lets a takeable Ticket through on both events off the default branch, adding /ship-branch and next-step to the Agent's context", () => {
     const answers = {
       git: { current: "feat/740-a-ticket", default: "master" },
       repo: LIBRARY,
@@ -857,7 +857,7 @@ describe("the skill-target script", () => {
       context(
         "PreToolUse",
         expect.stringMatching(
-          /^This session is on the default branch, main: .*origin\/main, .*\/ship.*next-step/,
+          /^This session is on the default branch, main: .*origin\/main, .*\/ship-branch.*next-step/,
         ),
       ),
     );
@@ -957,9 +957,9 @@ describe("the skill-target script", () => {
         "The skill-target check could not read GitHub (error connecting to api.github.com); the skill runs, and the claim check still holds the rule on its pull request.",
     };
 
-    // The skill runs, and still ends with /ship and its next steps.
+    // The skill runs, and still ends with /ship-branch and its next steps.
     const nextStep = expect.stringContaining(
-      "ends every implement with /ship",
+      "ends every implement with /ship-branch",
     ) as unknown;
 
     expect(runHook(typed("/implement 742"), answers)).toMatchObject({

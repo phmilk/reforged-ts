@@ -16,6 +16,7 @@
 //   or AGENTS.md or the development loop doc names a Replaced skill without
 //   its variant on the same line (ADR 0027);
 // - the list of what is shared names a lock, skill or file that is not there;
+// - a shared skill takes a name Claude Code reserves, so it is never loaded;
 // - an Upstream skill could be rewritten by git or by `pnpm format`, or a
 //   repository skill is not formatted.
 //
@@ -106,6 +107,24 @@ function replacesProblems(
       : [
           `${variant}: metadata.replaces names ${skill}, which is no Upstream skill of ${lockPath}`,
         ],
+  );
+}
+
+// The skill names Claude Code reserves for its built-in /ship and /steward
+// (v2.1.330+): a skill under one of them is not loaded, and the typed name
+// runs the built-in.
+const RESERVED_NAMES: readonly string[] = ["ship", "ship-local", "steward"];
+const RESERVED_SOURCE =
+  "https://code.claude.com/docs/en/skills.md#resolve-skills-that-share-a-name";
+
+// What is wrong with skill names Claude Code would load: a name it reserves.
+function reservedProblems(names: readonly string[]): string[] {
+  return names.flatMap((name) =>
+    RESERVED_NAMES.includes(name)
+      ? [
+          `${name}: Claude Code reserves this skill name and never loads the skill (${RESERVED_SOURCE})`,
+        ]
+      : [],
   );
 }
 
@@ -486,5 +505,24 @@ describe("the list of what both repositories share", () => {
       ),
     ];
     expect(problems, "the names of .claude/shared.json").toEqual([]);
+  });
+
+  // A shared skill of a reserved name is never loaded: typed, the name runs
+  // Claude Code's own command instead (#940).
+  it("names no shared skill, Upstream or the repository's, that Claude Code reserves", () => {
+    expect(
+      reservedProblems([...upstream, ...shared.skills]),
+      "the shared skills of .claude/shared.json and skills-lock.json",
+    ).toEqual([]);
+  });
+
+  it("refuses each name Claude Code reserves, and only those", () => {
+    expect(
+      reservedProblems(["ship", "ship-branch", "ship-local", "steward", "tdd"]),
+    ).toEqual([
+      `ship: Claude Code reserves this skill name and never loads the skill (${RESERVED_SOURCE})`,
+      `ship-local: Claude Code reserves this skill name and never loads the skill (${RESERVED_SOURCE})`,
+      `steward: Claude Code reserves this skill name and never loads the skill (${RESERVED_SOURCE})`,
+    ]);
   });
 });

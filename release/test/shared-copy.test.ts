@@ -84,7 +84,7 @@ describe("sharedFiles", () => {
     ]);
   });
 
-  it("lists, in this repository, the lock, every Upstream skill, write-spec, ship, the hooks and their registration", async () => {
+  it("lists, in this repository, the lock, every Upstream skill, write-spec, ship-branch, the hooks and their registration", async () => {
     const files = await sharedFiles(repositoryRoot);
     const lock = JSON.parse(
       await readFile(join(repositoryRoot, "skills-lock.json"), "utf8"),
@@ -97,7 +97,7 @@ describe("sharedFiles", () => {
         ".claude/hooks/shadowed-skills.mjs",
         ".claude/hooks/ship-stop.mjs",
         ".claude/settings.json",
-        ".claude/skills/ship/SKILL.md",
+        ".claude/skills/ship-branch/SKILL.md",
         ".claude/skills/write-spec/SKILL.md",
         ...Object.keys(lock.skills).map(
           (name) => `.claude/skills/${name}/SKILL.md`,
