@@ -388,6 +388,7 @@ describe("the Game clock and game.advanceTime", () => {
     expect(suite(clock, "a timeout of 0")).toEqual(
       passing(
         "fires a one-shot timer on the next advance, advanceTime(0) included, never inside TimerStart",
+        "fires nothing at the end of a Game action",
         "fires nothing at the end of game.fire",
         "fires a one-shot timer started in a handler in the same advance, at the same instant",
         "fires a periodic timer every 0.0001 s, its timeout still read as 0",
@@ -521,6 +522,52 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
   it("dispatches nothing under stubNative, whose replacement is whole", () => {
     expect(suite("a Dispatching Native under stubNative")).toEqual(
       passing("dispatches nothing: the replacement is whole"),
+    );
+  });
+});
+
+describe("game.kill, the first Game action, on reforged-test/map", () => {
+  const [kill] = runLuaTestFiles({ outDir: outDir("kill") });
+
+  /** The tests of one describe of the fixture, by name and status. */
+  function suite(name: string): { name: string; status: string }[] {
+    return kill.tests
+      .filter((test) => test.suite[0] === name)
+      .map((test) => ({ name: test.name, status: test.status }));
+  }
+
+  /** The tests of one describe, each passing. */
+  function passing(...names: string[]): { name: string; status: string }[] {
+    return names.map((name) => ({ name, status: "pass" }));
+  }
+
+  it("dispatches the three deaths, the unit dead, the killer answered, and writes nothing else", () => {
+    expect(kill.error).toBeUndefined();
+    expect(suite("game.kill")).toEqual(
+      passing(
+        "dispatches the widget death, the player unit death and the unit death, the unit already dead",
+        "answers by as GetKillingUnit in the player unit death and the unit death, and nil in the widget death",
+        "takes anything with .handle, for the unit and for the killer",
+        "accepts a killer already dead",
+        "leaves the unit dead, the killer alive, and returns nothing",
+        "is not the Native: it records no KillUnit call",
+        "runs a chain of handlers inside the action: a death handler that kills",
+        "throws a handler's error out of the action",
+        "has no createUnit: a test creates units with the map's own API",
+      ),
+    );
+  });
+
+  it("refuses a unit already dead or removed, a removed killer and what is not a unit", () => {
+    expect(suite("game.kill refuses what the game refuses")).toEqual(
+      passing(
+        "a unit already dead, by game.kill or by KillUnit",
+        "a removed unit, alive or dead",
+        "a removed killer, the unit left alive",
+        "what is not a unit: a bare number, nothing, a player",
+        "a killer that is not a unit, the unit left alive",
+        "names the test's line, not the harness's",
+      ),
     );
   });
 });

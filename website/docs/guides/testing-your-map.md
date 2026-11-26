@@ -23,7 +23,15 @@ The Template sets the harness up; there is nothing to install or configure.
 
 ## A first test
 
-{/* Written with game.kill, the first Game action (#983): startGame, game.kill, expect(game.printed). */}
+A test starts the game, makes something happen in it and checks what the player observes:
+
+{@includeCode ../../../packages/reforged-test/examples/first.test.ts}
+
+- **`startGame()`** runs the map's initialization, so the handler the map registers when the game starts is in place, and returns the test's `game`.
+- **`game.kill(footman)`** says what happens in the game. Every death Trigger the game would fire runs, the map's handler among them, with the footman already dead: the test never looks for a Trigger.
+- **`expect(game.printed)`** checks what the map printed, with Vitest's matchers.
+
+The units are created with the map's own API, `Unit.create` here: the test and the map speak the same language. In a Map project the handler lives in `src`, and the test imports the map's entry file in its place.
 
 ## A game per test
 
@@ -39,7 +47,19 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## Making the game happen
 
-{/* The table of Game actions, written with game.kill (#983) and game.chat, game.select, game.deselect and game.leave (#984). */}
+**A Game action says what happens in the game.** It takes its subject, then what else it needs in an options object, a unit being its Handle or anything with `.handle`, as a `Unit` of the library. It fires every event the game would fire, with every response the game gives, writes the state its name states and nothing derived, and returns nothing. What the game refuses is an error, so a test cannot describe a game that cannot happen:
+
+| Game action                | Fires, in this order                                                                          | A handler reads                                                                                                                                                                                                                                                         | Writes        | Refuses                                              |
+| -------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------- |
+| `game.kill(unit, { by? })` | the widget death (`TriggerRegisterDeathEvent`), `EVENT_PLAYER_UNIT_DEATH`, `EVENT_UNIT_DEATH` | `GetTriggerUnit` the unit, already dead (`UnitAlive` false, its life 0); in the two death events of the unit, `GetDyingUnit` the unit, `GetTriggerPlayer` its owner and `GetKillingUnit` the unit given as `by`, nil without it; in the widget death, none of the three | the unit dead | a unit already dead or removed, and a removed killer |
+
+{/* The rows of game.chat, game.select, game.deselect and game.leave are written with them (#984). */}
+
+A killer already dead is accepted. A handler reads the killer the test names:
+
+{@includeCode ../../../packages/reforged-test/examples/kill.test.ts}
+
+There is no `game.createUnit`: a test creates its units as the map does.
 
 **A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, as the game fired them:
 

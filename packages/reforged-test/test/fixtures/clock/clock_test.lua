@@ -151,6 +151,19 @@ describe("a timeout of 0", function()
     expect(log).toEqual({ "after TimerStart", "zero" })
   end)
 
+  it("fires nothing at the end of a Game action", function()
+    local game = startGame()
+    local log = {}
+    local footman = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
+    local trigger = CreateTrigger()
+    TriggerRegisterUnitEvent(trigger, footman, EVENT_UNIT_DEATH)
+    TriggerAddAction(trigger, function() logging(log, "deferred", 0) end)
+    game.kill(footman)
+    expect(log).toEqual({})
+    game.advanceTime(0)
+    expect(log).toEqual({ "deferred" })
+  end)
+
   it("fires nothing at the end of game.fire", function()
     local game = startGame()
     local log = {}

@@ -279,6 +279,43 @@ describe("reforged-test/map", () => {
   );
 
   it(
+    "types game.kill for a unit Handle or anything with .handle, never a bare number, with no createUnit",
+    TYPED,
+    () => {
+      expect(
+        errorsOf(`
+        declare const footman: unit;
+        declare const knight: unit;
+        const game = map.startGame();
+        const nothing: void = game.kill(footman);
+        game.kill({ handle: footman }, { by: knight });
+        game.kill(footman, { by: { handle: knight } });
+        game.kill(footman, {});
+        print(nothing);
+      `),
+      ).toEqual([]);
+      expect(errorsOf(`map.startGame().kill(1);`)).toEqual([
+        expect.stringContaining("Argument of type 'number'"),
+      ]);
+      expect(
+        errorsOf(`
+        declare const footman: unit;
+        map.startGame().kill(footman, { by: 1 });
+      `),
+      ).toEqual([expect.stringContaining("Type 'number' is not assignable")]);
+      expect(
+        errorsOf(`
+        declare const footman: unit;
+        map.startGame().kill(footman, { killer: footman });
+      `),
+      ).toEqual([expect.stringContaining("'killer' does not exist")]);
+      expect(errorsOf(`map.startGame().createUnit;`)).toEqual([
+        expect.stringContaining("Property 'createUnit' does not exist"),
+      ]);
+    },
+  );
+
+  it(
     "types game.fire by the event families and the Firing context by the response Natives, with no emit",
     TYPED,
     () => {
