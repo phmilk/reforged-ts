@@ -208,11 +208,14 @@ function setLocalPlayer(player: player | { readonly handle: player }): void {
   if (type(handle) === "table") {
     handle = (handle as { handle?: unknown }).handle ?? handle;
   }
-  if (type(handle) !== "table") error(NOT_A_PLAYER, 2);
   // What the Shipped stubs keep on a player they made: its kind and its
   // slot. A Handle of newHandle("player") has no slot, so it is refused.
   const made = handle as { __kind?: unknown; number?: unknown };
-  if (made.__kind !== "player" || type(made.number) !== "number") {
+  if (
+    type(handle) !== "table" ||
+    made.__kind !== "player" ||
+    type(made.number) !== "number"
+  ) {
     error(NOT_A_PLAYER, 2);
   }
   __stub_set_local_player(made.number as number);
@@ -296,8 +299,8 @@ export type NativeAnswer<N extends NativeName> = [
  * - It may be called anywhere, before or after `startGame()`; the last call
  *   for a name wins.
  * - Over a Native a Shipped stub covers, the replacement is whole: the
- *   Shipped stub no longer runs, so the state it kept and the events it
- *   dispatched are gone, and `impl` does not receive the original. Keep it
+ *   Shipped stub no longer runs, so the state it kept and its Event
+ *   dispatch are gone, and `impl` does not receive the original. Keep it
  *   for the Natives that answer a value.
  * @example A unit's name, answered in the test
  * {@includeCode ../../examples/stub-native.test.ts}
