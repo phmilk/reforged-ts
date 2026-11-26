@@ -6,10 +6,11 @@
  * than itself), those it holds, with their open pull requests, and those
  * other logins hold. The skill hook, `next-step` and `ship-spec` ask it, so
  * that they agree on the Frontier. `frontierQuery` is pure: the fetched
- * Spec and the login in, the three lists out. `main` reads the Spec through the GitHub GraphQL API, the
- * login being the token's (the `gh` login's unless the environment sets
- * one), and prints them: as text for a human, or with `--json` as one JSON
- * object, `answerJson`, for an Agent to read by its fields.
+ * Spec and the login in, the three lists out. `main` reads the Spec through
+ * the GitHub GraphQL API, the login being the token's (the `gh` login's
+ * unless the environment sets one), and prints them: as text for a human,
+ * or with `--json` as one JSON object, `answerJson`, for an Agent to read
+ * by its fields.
  *
  * Self-contained on purpose, as the claim check: Node built-ins only and
  * erasable syntax only (no enum, no namespace, no parameter property), so
