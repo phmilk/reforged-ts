@@ -179,7 +179,7 @@ An Agent that runs Subagents (`/implement-spec`, `/ship-spec`, `/code-review`, a
 - **Worktrees, made by hand.** Make each implementer's worktree yourself, from the integration branch, check its base before the Subagent starts, and give the Subagent its absolute path:
 
   ```sh
-  git worktree add .claude/worktrees/<name> -b <branch> <integration-branch>
+  git worktree add --no-track .claude/worktrees/<name> -b <branch> <integration-branch>
   git -C .claude/worktrees/<name> merge-base --is-ancestor <integration-branch> HEAD
   ```
 
