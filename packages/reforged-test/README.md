@@ -44,6 +44,8 @@ A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative
 
 `stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. `test/natives.test.ts` is its Drift check: it fails, naming the command, when the committed file is not what the generator emits, as on a new Patch.
 
+`it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only` are Vitest's: the glue registers each in Vitest's native form, so a test skipped, todo or out of focus opens no Test game, and a forgotten `only` fails the run under `CI`. `only` reaches every Lua test of the Map project, not its file's only.
+
 A helper a map's test needs that has no import in `reforged-test/map` is a gap of the package: [file it as an issue](https://github.com/phmilk/reforged-ts/issues/new), rather than reaching for the helpers of the part below. Sync, the preload file and `os.clock` have no form in `reforged-test/map`.
 
 ## Testing a library
@@ -75,6 +77,7 @@ The runner exports:
 
 - `describe(name, body)`: groups the `it` blocks registered by `body`. Nesting is allowed.
 - `it(name, fn)`: registers one test. Tests run after the file has loaded, in registration order. The tests of one file share its Lua state, and so its stub call log and handle ids.
+- `it.skip(name, fn)`, `it.only(name, fn)`, `it.todo(name)`, `describe.skip(name, body)` and `describe.only(name, body)`: Vitest's focus and skip forms, which `runLuaTests` registers in Vitest's native form, so Vitest reports them and a forgotten `only` fails the run under `CI`. The body of a skip or todo test, or of a test in a skipped `describe`, does not run, nor do its hooks. `only` hides the report of the other tests only: they still run, in the file's Lua state, at load. `it.todo` takes no body. There is no `skipIf`, `runIf`, `fails`, `concurrent` or `each`.
 - `beforeEach(fn)` and `afterEach(fn)`: register a function that runs before, or after, each test of the current `describe`, its nested ones included, or of the whole file at the top, wherever in the `describe` it is registered. They fail as Vitest's do:
   - the `beforeEach` hooks run from the outer `describe` inwards, in registration order within one, and the `afterEach` hooks from the inner outwards, the last registered first within one;
   - a `beforeEach` that throws fails the test, and the remaining `beforeEach` hooks and the test's body are skipped;
@@ -145,17 +148,17 @@ Each compiled test file runs in a fresh Lua state, in this order:
 5. The test module is required, which registers its tests.
 6. The runner runs the tests and returns the results.
 
-A file that loads `reforged-test/map` stops at step 6 with the list of its tests, and each test then runs in a fresh state of its own, the six steps again with that test alone at step 6, inside its vitest `test`. A file of N tests costs N+1 states. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
+A file that loads `reforged-test/map` stops at step 6 with the list of its tests, and each test then runs in a fresh state of its own, the six steps again with that test alone at step 6, inside its vitest `test`. A file of N tests costs N+1 states, less the tests Vitest does not run: a skip or todo test, or one out of focus, opens no state. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
 
 A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts library preloaded. lua-wasm-bindings loads once per process.
 
 Other exports of the glue:
 
-- `runLuaTestFiles(options)`: runs the same files and returns their results without registering anything with vitest. Each result carries the Lua `moduleName` (`handles.unit_test`), the `testFile` it was compiled from (`handles/unit.test.ts`), its `tests` and, when the module failed to load, its `error`.
+- `runLuaTestFiles(options)`: runs the same files and returns their results without registering anything with vitest. Each result carries the Lua `moduleName` (`handles.unit_test`), the `testFile` it was compiled from (`handles/unit.test.ts`), its `tests` and, when the module failed to load, its `error`. It runs every test but a skip or todo one, which it reports with the status `skip`; `only` is reported in a test's `mode`, and hides nothing.
 - `compileLuaProject(tsconfigPath)`: compiles a typescript-to-lua project and returns its errors as text, or `""` when it compiled. A Map project's vitest global setup calls it to build the tests before they run. `typescript` and `typescript-to-lua` are peer dependencies for it.
 - `MARKER_32_BIT`: the `[32-bit]` marker described under the integer width policy.
 - `LOAD_TEST_NAME`: the name of the one failing test that stands for a file that failed to load, for example on a Native called at module load that no stub defines. The other files still run.
-- The types `LuaTestOptions`, `LuaTestFile`, `LuaTestResult` and `LuaTestStatus`.
+- The types `LuaTestOptions`, `LuaTestFile`, `LuaTestResult`, `LuaTestStatus`, `LuaTestMode` and `LuaSuiteMode`.
 
 #### Error messages
 
@@ -193,10 +196,12 @@ The runner and the glue share nothing but this JSON string, returned by the glob
 ```
 
 - `suite` lists the enclosing `describe` names, outermost first.
-- `status` is `pass`, `fail` (an expectation did not hold) or `error` (anything else was thrown).
+- `status` is `pass`, `fail` (an expectation did not hold), `error` (anything else was thrown) or `skip` (the body did not run: a skip or todo test, or one in a skipped `describe`).
 - `message` is present on `fail` and `error`.
+- `mode` is `skip`, `only` or `todo` for a test registered with `it.skip`, `it.only` or `it.todo`, and absent for a plain `it`.
+- `suiteModes` lists the mode of each enclosing `describe`, one per `suite` name (`run`, `skip` or `only`), and is absent when every one is a plain `describe`.
 
-In a file that loads `reforged-test/map`, the call without an argument answers the list of the tests, `{"isolated":true,"tests":[{"name":"adds","suite":["arithmetic"]}]}`, and the glue calls the global again in a fresh state for each test, with its position counted from 0 as a string (`"2"`); that call answers the form above with the one test's result, or with an empty `tests` when the file registered no test there.
+In a file that loads `reforged-test/map`, the call without an argument answers the list of the tests, `{"isolated":true,"tests":[{"name":"adds","suite":["arithmetic"]}]}`, each with its `mode` and `suiteModes` when it has them, and the glue calls the global again in a fresh state for each test, with its position counted from 0 as a string (`"2"`); that call answers the form above with the one test's result, or with an empty `tests` when the file registered no test there.
 
 The runner writes it with its own encoder, with keys sorted, because the game's Lua has no JSON library. The glue rejects results of any other shape.
 

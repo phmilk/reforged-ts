@@ -178,6 +178,33 @@ describe("reforged-test/map", () => {
     }
   });
 
+  it("has Vitest's focus and skip forms, and no other", () => {
+    const members = (name: string) => {
+      const symbol = exported.find((candidate) => candidate.name === name);
+      if (symbol === undefined) throw new Error(`no ${name}`);
+      return checker
+        .getTypeOfSymbolAtLocation(symbol, source)
+        .getProperties()
+        .map((property) => property.name)
+        .sort();
+    };
+    expect(members("it")).toEqual(["only", "skip", "todo"]);
+    expect(members("describe")).toEqual(["only", "skip"]);
+  });
+
+  it("takes a name and no body in it.todo", TYPED, () => {
+    expect(
+      errorsOf(`
+        map.it.todo("ends the game");
+        map.it.skip("ends the game", () => undefined);
+        map.describe.only("the end", () => undefined);
+      `),
+    ).toEqual([]);
+    expect(errorsOf(`map.it.todo("ends the game", () => undefined);`)).toEqual([
+      expect.stringContaining("Expected 1 arguments, but got 2"),
+    ]);
+  });
+
   it("types newHandle's Handle from its kind", TYPED, () => {
     expect(
       errorsOf(`
