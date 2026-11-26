@@ -452,7 +452,7 @@ describe("the Game clock and game.advanceTime", () => {
         "reads as before when never advanced",
         "moves through __stub_advance_time, which adds no call-log line",
         "keeps the clock of the Lua state from one test to the next",
-        "refuses a negative advance",
+        "refuses a negative and an endless advance",
         "leaves os.clock to __stub_set_clock",
       ),
     );

@@ -65,7 +65,8 @@ export function run(p: ProbeContext): void {
 
   // The responses, and how often each registration fires.
   TriggerRegisterTimerEvent(watched("once-1"), 1, false);
-  TriggerRegisterTimerEvent(watched("every-1"), 1, true);
+  const every = watched("every-1");
+  TriggerRegisterTimerEvent(every, 1, true);
 
   // A Trigger with two registrations.
   const twice = watched("two-registrations");
@@ -79,6 +80,7 @@ export function run(p: ProbeContext): void {
   p.after(2.25, () => {
     EnableTrigger(disabled);
     p.record("STEP", { name: "enabled", t: t() });
+    p.checkpoint();
   });
   const destroyed = watched("destroyed");
   TriggerRegisterTimerEvent(destroyed, 1, true);
@@ -114,6 +116,9 @@ export function run(p: ProbeContext): void {
 
   p.checkpoint();
   p.after(DURATION, () => {
+    // The periodic registrations would record past the end.
+    DestroyTrigger(every);
+    DestroyTrigger(disabled);
     p.record("END_STATE", {
       zeroFires,
       order: order.join(","),

@@ -45,9 +45,11 @@ describe("the Game clock, on reforged-test/lua", function()
     expect(log).toEqual({ "at 3.5" })
   end)
 
-  it("refuses a negative advance", function()
+  it("refuses a negative and an endless advance", function()
     expect(function() __stub_advance_time(-0.5) end).toThrow(
       "__stub_advance_time: expected a number of seconds, 0 or more, and got -0.5")
+    expect(function() __stub_advance_time(math.huge) end).toThrow(
+      "__stub_advance_time: expected a number of seconds, 0 or more, and got inf")
   end)
 
   it("leaves os.clock to __stub_set_clock", function()
