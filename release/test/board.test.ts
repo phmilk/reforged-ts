@@ -17,7 +17,10 @@ import {
   issueLookup,
   MAX_DELETES,
   applyBoardLabels,
+  applyIssueStatuses,
+  ISSUE_STATUS_OF,
   planBoardLabels,
+  planIssueStatuses,
   planBoardReconcile,
   planBoardSetup,
   readBoardState,
@@ -46,6 +49,7 @@ import {
   FRESH,
   graphQlApi,
   issue,
+  ISSUE_STATUS_IDS,
   item,
   LABEL_IDS,
   LIBRARY,
@@ -1125,6 +1129,7 @@ describe("planBoardLabels", () => {
         right,
       ],
       labelIds: LABEL_IDS,
+      issueStatusIds: {},
     };
 
     expect(planBoardLabels(state)).toEqual({
@@ -1159,6 +1164,7 @@ describe("planBoardLabels", () => {
     const state: LabelState = {
       issues: [issue(10, { repository: OTHER, labels: ["spec"] })],
       labelIds: LABEL_IDS,
+      issueStatusIds: {},
     };
 
     expect(planBoardLabels(state)).toEqual({
@@ -1175,6 +1181,7 @@ describe("planBoardLabels", () => {
         ...LABEL_IDS,
         [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
       },
+      issueStatusIds: {},
     };
 
     expect(() => planBoardLabels(state)).toThrow(
@@ -1182,6 +1189,170 @@ describe("planBoardLabels", () => {
         `The label needs-split does not exist in ${TEMPLATE}: create it there (pnpm repo:settings creates the library's), then run board:labels again.`,
       ),
     );
+  });
+});
+
+/** Both Board repositories with GitHub's seven Issue statuses. */
+const BOTH_HAVE_STATUSES = {
+  [LIBRARY]: ISSUE_STATUS_IDS,
+  [TEMPLATE]: ISSUE_STATUS_IDS,
+};
+
+/** The state `board:labels` reads, with `issues` and Issue statuses in both repositories unless told otherwise. */
+const statusState = (
+  issues: readonly BoardIssue[],
+  issueStatusIds: LabelState["issueStatusIds"] = BOTH_HAVE_STATUSES,
+): LabelState => ({ issues, labelIds: LABEL_IDS, issueStatusIds });
+
+const issueStatusWrite = (issueId: string, name: string) => ({
+  query: BOARD_MUTATIONS.setIssueStatus,
+  variables: { issueId, statusId: ISSUE_STATUS_IDS[name] },
+});
+
+describe("planIssueStatuses", () => {
+  it.each([
+    ["Backlog", {}, "Backlog"],
+    ["Blocked", { blockedBy: 1, labels: ["ready-for-agent"] }, "Todo"],
+    ["Ready", { labels: ["ready-for-agent"] }, "Todo"],
+    ["In progress", { assignees: ["alice"] }, "In progress"],
+    ["In review", { pullRequests: [pullRequest("OPEN")] }, "In review"],
+  ] satisfies [Status, Partial<BoardIssue>, string][])(
+    "gives an open issue whose Status is %s the Issue status its Status maps to",
+    (status, more, expected) => {
+      const open = issue(1, more);
+      expect(statusOf(open, issueLookup([open]))).toBe(status);
+
+      expect(planIssueStatuses(statusState([open]))).toEqual({
+        requests: [
+          {
+            ...issueStatusWrite("I_1", expected),
+            summary: `Set the Issue status of ${LIBRARY}#1 to ${expected}.`,
+          },
+        ],
+        issues: 1,
+        kept: 0,
+        warnings: [],
+      });
+    },
+  );
+
+  it("maps every Status an open issue takes, and none to a value that closes an issue", () => {
+    expect(Object.keys(ISSUE_STATUS_OF).sort()).toEqual(
+      STATUS_OPTIONS.map(({ name }) => name)
+        .filter((name) => name !== "Done")
+        .sort(),
+    );
+    for (const value of Object.values(ISSUE_STATUS_OF)) {
+      expect(["Done", "Not planned", "Duplicate"]).not.toContain(value);
+    }
+  });
+
+  it("sends nothing for an issue whose Issue status already agrees, whatever its case, and says what the other one read", () => {
+    const state = statusState([
+      issue(1, { labels: ["ready-for-agent"], issueStatus: "Todo" }),
+      issue(2, { assignees: ["alice"], issueStatus: "In Progress" }),
+      issue(3, { assignees: ["alice"], issueStatus: "Todo" }),
+    ]);
+
+    expect(planIssueStatuses(state)).toEqual({
+      requests: [
+        {
+          ...issueStatusWrite("I_3", "In progress"),
+          summary: `Set the Issue status of ${LIBRARY}#3 to In progress (was Todo).`,
+        },
+      ],
+      issues: 3,
+      kept: 2,
+      warnings: [],
+    });
+  });
+
+  it("writes nothing on a closed issue, a bot's or one of another repository", () => {
+    const state = statusState([
+      issue(1, { state: "CLOSED", issueStatus: "Backlog" }),
+      issue(2, { bot: true }),
+      issue(3, { repository: OTHER }),
+    ]);
+
+    expect(planIssueStatuses(state)).toEqual({
+      requests: [],
+      issues: 0,
+      kept: 0,
+      warnings: [],
+    });
+  });
+
+  it("writes on an open issue that has no item on the board yet, in the Template too, by the Status the reconcile derives", () => {
+    // A Template ticket, blocked, of a library spec: the spec takes its value.
+    const spec = issue(10, {
+      labels: ["spec", "ready-for-agent"],
+      subIssues: [sub(31, TEMPLATE)],
+    });
+    const ticket = issue(31, {
+      repository: TEMPLATE,
+      labels: ["ticket", "ready-for-agent"],
+      blockedBy: 1,
+      issueStatus: "Backlog",
+    });
+
+    expect(planIssueStatuses(statusState([spec, ticket])).requests).toEqual([
+      {
+        ...issueStatusWrite("I_10", "Todo"),
+        summary: `Set the Issue status of ${LIBRARY}#10 to Todo.`,
+      },
+      {
+        ...issueStatusWrite("I_t31", "Todo"),
+        summary: `Set the Issue status of ${TEMPLATE}#31 to Todo (was Backlog).`,
+      },
+    ]);
+  });
+
+  it("plans nothing in a repository without Issue statuses and says so once", () => {
+    const state = statusState(
+      [
+        issue(1),
+        issue(2, { assignees: ["alice"] }),
+        issue(30, { repository: TEMPLATE }),
+      ],
+      { [LIBRARY]: {}, [TEMPLATE]: ISSUE_STATUS_IDS },
+    );
+
+    expect(planIssueStatuses(state)).toEqual({
+      requests: [
+        {
+          ...issueStatusWrite("I_t30", "Backlog"),
+          summary: `Set the Issue status of ${TEMPLATE}#30 to Backlog.`,
+        },
+      ],
+      issues: 3,
+      kept: 0,
+      warnings: [`${LIBRARY} has no Issue statuses: none is written there.`],
+    });
+  });
+
+  it("warns once of a value the repository lacks, and still writes the others", () => {
+    const state = statusState(
+      [
+        issue(1, { labels: ["ready-for-agent"] }),
+        issue(2, { labels: ["ready-for-human"] }),
+        issue(3),
+      ],
+      { [LIBRARY]: { Backlog: "IS_backlog" } },
+    );
+
+    expect(planIssueStatuses(state)).toEqual({
+      requests: [
+        {
+          ...issueStatusWrite("I_3", "Backlog"),
+          summary: `Set the Issue status of ${LIBRARY}#3 to Backlog.`,
+        },
+      ],
+      issues: 3,
+      kept: 0,
+      warnings: [
+        `${LIBRARY} has no Issue status named Todo: it is written on no issue there.`,
+      ],
+    });
   });
 });
 
@@ -1715,9 +1886,9 @@ describe("applyBoardReconcile", () => {
 });
 
 describe("readLabelState", () => {
-  it("reads the open issues of both repositories and the ids of the two labels in each; a missing label is absent", async () => {
+  it("reads the open issues of both repositories, each with its Issue status or none, and in each the ids of the two labels and of its Issue statuses by name; a missing label is absent, as are the Issue statuses of a repository without them", async () => {
     const issues = [
-      issue(10, { labels: ["spec"] }),
+      issue(10, { labels: ["spec"], issueStatus: "Todo" }),
       issue(30, { repository: TEMPLATE, labels: ["spec"] }),
       issue(11, { state: "CLOSED" }),
     ];
@@ -1731,6 +1902,7 @@ describe("readLabelState", () => {
             ...LABEL_IDS,
             [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
           },
+          issueStatusIds: { [LIBRARY]: ISSUE_STATUS_IDS },
         }),
         sent,
       ),
@@ -1742,12 +1914,81 @@ describe("readLabelState", () => {
         [LIBRARY]: LABEL_IDS[LIBRARY],
         [TEMPLATE]: { "ready-for-agent": "LA_t_ready" },
       },
+      issueStatusIds: { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: {} },
     });
+    expect(state.issues.map(({ issueStatus }) => issueStatus)).toEqual([
+      "Todo",
+      null,
+    ]);
     expect(sent.map(({ operation }) => operation)).toEqual([
       "OpenIssues",
       "Labels",
+      "IssueStatuses",
       "OpenIssues",
       "Labels",
+      "IssueStatuses",
+    ]);
+  });
+});
+
+describe("applyIssueStatuses", () => {
+  const plan = planIssueStatuses(
+    statusState([
+      issue(1, { labels: ["ready-for-agent"] }),
+      issue(2, { assignees: ["alice"] }),
+      issue(3),
+    ]),
+  );
+
+  it("sends the requests in order and warns of nothing", async () => {
+    const sent: Sent[] = [];
+    const done: string[] = [];
+
+    const refused = await applyIssueStatuses(
+      graphQlApi(reading(STATE), sent),
+      plan,
+      ({ summary }) => done.push(summary),
+    );
+
+    expect(refused).toEqual([]);
+    expect(mutations(sent)).toEqual([
+      ["SetIssueStatus", { issueId: "I_1", statusId: "IS_todo" }],
+      ["SetIssueStatus", { issueId: "I_2", statusId: "IS_in_progress" }],
+      ["SetIssueStatus", { issueId: "I_3", statusId: "IS_backlog" }],
+    ]);
+    expect(done).toEqual(plan.requests.map(({ summary }) => summary));
+  });
+
+  it("reports a refused write as a warning naming the issue and the value, and still sends the ones after it", async () => {
+    const sent: Sent[] = [];
+    const done: string[] = [];
+    const base = reading(STATE);
+
+    const refused = await applyIssueStatuses(
+      graphQlApi(
+        (operation, variables) =>
+          variables.issueId === "I_2"
+            ? { errors: [{ message: "Field 'setIssueStatus' doesn't exist" }] }
+            : base(operation, variables),
+        sent,
+      ),
+      plan,
+      ({ summary }) => done.push(summary),
+    );
+
+    expect(refused).toHaveLength(1);
+    expect(refused[0]).toContain("Field 'setIssueStatus' doesn't exist");
+    expect(refused[0]).toContain(
+      `Not done: Set the Issue status of ${LIBRARY}#2 to In progress.`,
+    );
+    expect(mutations(sent).map(([, variables]) => variables)).toEqual([
+      { issueId: "I_1", statusId: "IS_todo" },
+      { issueId: "I_2", statusId: "IS_in_progress" },
+      { issueId: "I_3", statusId: "IS_backlog" },
+    ]);
+    expect(done).toEqual([
+      `Set the Issue status of ${LIBRARY}#1 to Todo.`,
+      `Set the Issue status of ${LIBRARY}#3 to Backlog.`,
     ]);
   });
 });
@@ -1759,6 +2000,7 @@ describe("applyBoardLabels", () => {
       issue(20, { labels: ["spec"] }),
     ],
     labelIds: LABEL_IDS,
+    issueStatusIds: {},
   });
 
   it("sends the requests in order", async () => {

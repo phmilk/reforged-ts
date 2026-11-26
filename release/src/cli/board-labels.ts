@@ -6,11 +6,18 @@
  * differences; Specs already right draw no request. Then it comments the
  * coverage check's verdict on every open Spec whose Tickets are all closed,
  * by `spec-verdict.ts`, and closes nothing (#796); a Spec that fails is
- * reported and the others are still commented. Neither pass stops the
- * other: a label missing or a label request refused still leaves the
- * verdicts commented, and either failing exits 1. The token is
+ * reported and the others are still commented. Between the two it writes
+ * the Issue status of every open member of the board, the mirror of its
+ * Status (#958): `planIssueStatuses` maps the Status `statusOf` derives,
+ * and only the differences are sent. That mirror may fail: a refused write,
+ * a repository without Issue statuses or a value it lacks is a warning, on
+ * standard output and in the job summary, and never an exit code. No pass
+ * stops another: a label missing or a label request refused still leaves
+ * the Issue statuses written and the verdicts commented, and the labels or
+ * the verdicts failing exits 1. The token is
  * `LABELS_TOKEN`, the App's installation token over both repositories that
- * `board.yml` mints, since `PROJECT_TOKEN` writes no label, else, locally,
+ * `board.yml` mints, since `PROJECT_TOKEN` writes no label and is refused
+ * `setIssueStatus` (it needs `public_repo`), else, locally,
  * the `gh` login's; it says which. `--dry-run` prints the plan and sends
  * none. Exit codes: 0 applied (or planned), 1 the state cannot be read, a
  * label missing from a repository, no token, a request failed or a Spec's
@@ -18,9 +25,11 @@
  */
 import {
   applyBoardLabels,
+  applyIssueStatuses,
   BOARD_REPOSITORIES,
   describeRequest,
   planBoardLabels,
+  planIssueStatuses,
   readLabelState,
   type BoardIssue,
   type BoardLabelPlan,
@@ -76,8 +85,8 @@ export async function main(
     const api = gitHubApi(context.fetcher, token, "reforged-ts-board-labels");
     output.stdout(`Token: ${source}.\n`);
     const state = await readLabelState(api);
-    // Neither pass stops the other: each says what failed, and either
-    // failing exits 1.
+    // No pass stops another: each says what failed, and the labels or the
+    // verdicts failing exits 1. The Issue statuses only warn.
     const labels = await writeLabels(
       api,
       state,
@@ -85,6 +94,7 @@ export async function main(
       output,
       context.env,
     );
+    await writeIssueStatuses(api, state, parsed.dryRun, output, context.env);
     const verdicts = await commentVerdicts(
       api,
       state.issues,
@@ -145,6 +155,45 @@ async function writeLabels(
         `${done.map((summary) => `\n- ${summary}`).join("")}${done.length === 0 ? "" : "\n"}`,
     );
   }
+}
+
+/**
+ * The Issue status of each open member of `state`, written, or printed
+ * only on a dry run. Nothing here fails the run: what cannot be written (a
+ * repository without Issue statuses, a value it lacks, a request GitHub
+ * refuses) is a warning, printed and in the job summary.
+ */
+async function writeIssueStatuses(
+  api: GitHubApi,
+  state: LabelState,
+  dryRun: boolean,
+  output: Output,
+  env: Readonly<Record<string, string | undefined>>,
+): Promise<void> {
+  const plan = planIssueStatuses(state);
+  const found = `${plural(plan.issues, "open issue", "open issues")}, ${String(plan.kept)} as their Status reads`;
+  output.stdout(`Issue statuses: ${found}.\n`);
+  const warn = (warning: string) => {
+    output.stdout(`Warning: ${warning}\n`);
+  };
+  plan.warnings.forEach(warn);
+  printPlan(output, plan, describeRequest, dryRun);
+  if (dryRun) return;
+  const done: string[] = [];
+  const refused = await applyIssueStatuses(api, plan, ({ summary }) => {
+    done.push(summary);
+    output.stdout(`Done: ${summary}\n`);
+  });
+  refused.forEach(warn);
+  const warnings = [...plan.warnings, ...refused];
+  const lines = [...done, ...warnings.map((warning) => `Warning: ${warning}`)];
+  await appendSummary(
+    env,
+    `## Issue statuses\n\n${found}; ` +
+      `${plural(plan.requests.length, "request", "requests")}, ${String(done.length)} done; ` +
+      `${plural(warnings.length, "warning", "warnings")}.\n` +
+      `${lines.map((line) => `\n- ${line}`).join("")}${lines.length === 0 ? "" : "\n"}`,
+  );
 }
 
 /**

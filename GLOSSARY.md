@@ -220,6 +220,10 @@ _Avoid_: assignment (the GitHub act; a Claim is what it means), reservation, loc
 The one Projects board of the project, over every Board repository, where each open issue shows a Status derived from GitHub state; a view of the Claims, never their source, and nobody moves a card by hand.
 _Avoid_: project board (any Projects board), kanban, the board of reforged-ts (it is the project's)
 
+**Issue status**:
+The status GitHub shows on an issue itself, on its page and outside the Claim board; it follows the issue's Status on the Claim board and is never set by hand.
+_Avoid_: status (alone, which is the Claim board's Status), state (open or closed), pill
+
 **Board repository**:
 A repository whose open issues are on the Claim board; today `phmilk/reforged-ts` and `phmilk/reforged-ts-template`, and the project may add more.
 _Avoid_: member repository (a member is an item on the board), tracked repository

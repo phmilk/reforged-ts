@@ -149,6 +149,21 @@ export const LABEL_IDS: Readonly<
   },
 };
 
+/**
+ * The ids of GitHub's seven Issue statuses, the same in each Board
+ * repository as measured on 2026-11-26: what a test passes as
+ * `issueStatusIds` for a repository that has them.
+ */
+export const ISSUE_STATUS_IDS: Readonly<Record<string, string>> = {
+  Backlog: "IS_backlog",
+  Todo: "IS_todo",
+  "In progress": "IS_in_progress",
+  "In review": "IS_in_review",
+  Done: "IS_done",
+  "Not planned": "IS_not_planned",
+  Duplicate: "IS_duplicate",
+};
+
 /** A third repository of the owner, whose issues are not members. */
 export const OTHER = `${BOARD_OWNER}/other`;
 
@@ -161,8 +176,8 @@ export const daysAgo = (days: number) =>
 
 /**
  * An open issue `number` of the library, updated yesterday, with no label,
- * no assignee, no parent, nothing closing or blocking it and no sub-issue:
- * Backlog. `more` overrides any field; a Template issue says so with
+ * no assignee, no parent, nothing closing or blocking it, no sub-issue and
+ * no Issue status: Backlog. `more` overrides any field; a Template issue says so with
  * `repository: TEMPLATE`.
  */
 export function issue(
@@ -183,6 +198,7 @@ export function issue(
     pullRequests: [],
     blockedBy: 0,
     subIssues: [],
+    issueStatus: null,
     ...more,
   };
 }
@@ -220,6 +236,7 @@ export function issueNode(
     number: issue.number,
     state: issue.state,
     updatedAt: issue.updatedAt,
+    status: issue.issueStatus === null ? null : { name: issue.issueStatus },
     repository: { nameWithOwner: issue.repository },
     author,
     labels: names(issue.labels, "name"),
@@ -305,7 +322,9 @@ const page = (nodes: unknown[]) => ({
  * issues of both repositories `issues` (none by default), each by its
  * author in `authors` under its key (`owner/name#number`) when there, by
  * `issueNode`'s default otherwise; the labels of `board:labels` are
- * `labelIds` (`LABEL_IDS` by default); every mutation
+ * `labelIds` (`LABEL_IDS` by default) and the Issue statuses of each
+ * repository `issueStatusIds` (none by default: no repository has Issue
+ * statuses); every mutation
  * succeeds but `failing`, refused with an error, and an add answers the id
  * `PVTI_<the content id>`.
  */
@@ -318,6 +337,7 @@ export function reading(
     issues?: readonly BoardIssue[];
     authors?: Readonly<Record<string, unknown>>;
     labelIds?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+    issueStatusIds?: Readonly<Record<string, Readonly<Record<string, string>>>>;
   } = {},
 ): Answers {
   const projects = [state.project, options.created ?? null];
@@ -490,6 +510,27 @@ export function reading(
             repository: {
               needsSplit: label("needs-split"),
               readyForAgent: label("ready-for-agent"),
+            },
+          },
+        };
+      }
+      case "IssueStatuses": {
+        const ids =
+          options.issueStatusIds?.[
+            `${text(variables.owner)}/${text(variables.name)}`
+          ];
+        return {
+          data: {
+            repository: {
+              planningStatuses:
+                ids === undefined
+                  ? null
+                  : {
+                      nodes: Object.entries(ids).map(([name, id]) => ({
+                        id,
+                        name,
+                      })),
+                    },
             },
           },
         };
