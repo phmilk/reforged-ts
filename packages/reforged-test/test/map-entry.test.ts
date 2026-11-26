@@ -39,12 +39,14 @@ describe("reforged-test/map", () => {
     expect(globals).toEqual([]);
   });
 
-  it("exports the test API and no call log", () => {
+  it("exports the test API, with no call log and no beforeAll or afterAll", () => {
     expect(exported.map((symbol) => symbol.name).sort()).toEqual([
       "DisplayedText",
       "Game",
       "GameExpect",
       "GameMatchers",
+      "afterEach",
+      "beforeEach",
       "describe",
       "expect",
       "it",

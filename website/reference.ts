@@ -122,6 +122,8 @@ export const TEST_REFERENCE: Reference = {
     "Class",
     // GameMatchers.toContain: an item of a list, or a part of a string.
     "ItemOf",
+    // beforeEach: the function it takes, which may return a cleanup.
+    "BeforeEachCallback",
   ],
 };
 

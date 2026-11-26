@@ -14,13 +14,13 @@ The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/
 
 The package has five parts:
 
-| Part                                 | Reached as            | What it is                                                                                                                             |
-| ------------------------------------ | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner                           | `reforged-test/lua`   | `describe`, `it` and `expect` for the test files, compiled to Lua.                                                                     |
-| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect` and `startGame` for a Map project's tests, each in a Test game of its own. Compiled to Lua over the runner. |
-| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest. |
-| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                            |
-| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                          |
+| Part                                 | Reached as            | What it is                                                                                                                                        |
+| ------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach` and `afterEach` for the test files, compiled to Lua.                                                     |
+| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach` and `startGame` for a Map project's tests, each in a Test game of its own, over the runner. |
+| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.            |
+| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                       |
+| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                     |
 
 ## Writing a test
 
@@ -47,6 +47,14 @@ The runner exports:
 
 - `describe(name, body)`: groups the `it` blocks registered by `body`. Nesting is allowed.
 - `it(name, fn)`: registers one test. Tests run after the file has loaded, in registration order. The tests of one file share its Lua state, and so its stub call log and handle ids.
+- `beforeEach(fn)` and `afterEach(fn)`: register a function that runs before, or after, each test of the current `describe`, its nested ones included, or of the whole file at the top, wherever in the `describe` it is registered. They fail as Vitest's do:
+  - the `beforeEach` hooks run from the outer `describe` inwards, in registration order within one, and the `afterEach` hooks from the inner outwards, the last registered first within one;
+  - a `beforeEach` that throws fails the test, and the remaining `beforeEach` hooks and the test's body are skipped;
+  - the `afterEach` hooks run even when the body or a `beforeEach` failed; one that throws fails a test that had passed, and the remaining `afterEach` hooks are skipped;
+  - a function a `beforeEach` returns runs after the `afterEach` hooks, the last returned first, as Vitest's cleanup does, unless an `afterEach` threw;
+  - the test reports its first error;
+  - a `beforeEach` or `afterEach` called inside a running test throws. There is no `beforeAll` or `afterAll`.
+  - `BeforeEachCallback` is the type of the function `beforeEach` takes.
 - `expect(value)`, with Vitest's matchers where typescript-to-lua compiles them. `.not` negates each one: `expect(n).not.toBe(0)`.
   - `toEqual(expected)`: strict equality (`==`) on primitives, deep equality on tables. Metatables are ignored.
   - `toBe(expected)`: identity (`rawequal`), so two equal tables are not the same.
@@ -89,9 +97,9 @@ it("greets the players", () => {
 });
 ```
 
-- `describe`, `it` and `expect` are the runner's, with the same matchers but `toContainCall`, and `reforged-test/map` exports no call log.
+- `describe`, `it`, `expect`, `beforeEach` and `afterEach` are the runner's, with the same matchers but `toContainCall`, and `reforged-test/map` exports no call log.
 - Each `it` runs in a fresh Lua state: the file is loaded again for it, so its module-level code runs once per test, and no test sees the units, the Recorded calls or the printed lines of another. This holds for the whole file, also when it imports from `reforged-test/lua` too (ADR 0029).
-- `startGame()` runs the map's initialization as the game does: `config`, then `main` (`InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`), then `MarkGameStarted`, and so the library's Init stages. An editor function nothing defined is defined as one that does nothing. Call it once per test, in the `it` or at the top of the file; a second call in the same test throws, saying the game already started.
+- `startGame()` runs the map's initialization as the game does: `config`, then `main` (`InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`), then `MarkGameStarted`, and so the library's Init stages. An editor function nothing defined is defined as one that does nothing. Call it once per test, in the `it`, in a `beforeEach` or at the top of the file; a second call in the same test throws, saying the game already started.
 - `game.printed` is every line printed since the Test game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` is every message a display Native showed, as records `{ text, player, duration }`, `player` being the Handle the Native received and `duration` undefined for `DisplayTextToPlayer`. Each read is a copy.
 
 Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.

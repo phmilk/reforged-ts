@@ -8,6 +8,9 @@
 // through `startGame` and the `game` it returns.
 
 import {
+  afterEach as luaAfterEach,
+  type BeforeEachCallback,
+  beforeEach as luaBeforeEach,
   describe as luaDescribe,
   expect as luaExpect,
   it as luaIt,
@@ -37,6 +40,48 @@ export const describe: (name: string, body: () => void) => void = luaDescribe;
  * @param fn - The body of the test.
  */
 export const it: (name: string, fn: () => void) => void = luaIt;
+
+/**
+ * Registers a function that runs before each test of the current
+ * `describe`, its nested ones included, or of the whole file at the top, in
+ * the test's own Test game: `startGame()` may be called there.
+ * @remarks
+ * - The hooks run from the outer `describe` inwards, in registration order
+ *   within one.
+ * - One that throws fails the test with its error, and the remaining
+ *   `beforeEach` hooks and the test's body are skipped; the `afterEach`
+ *   hooks still run.
+ * - A function it returns runs after the test's `afterEach` hooks, the last
+ *   returned first, as Vitest's cleanup does.
+ * - There is no `beforeAll`: each test is a game of its own, so the file's
+ *   top level runs once per test already.
+ * @example One game started before each test
+ * {@includeCode ../../examples/before-each.test.ts}
+ * @param fn - The function to run before each test.
+ * @throws When called inside a test:
+ * `beforeEach: called inside a test; register it in a describe or at the top of the file`.
+ */
+export const beforeEach: (fn: BeforeEachCallback) => void = luaBeforeEach;
+
+/**
+ * Registers a function that runs after each test of the current
+ * `describe`, its nested ones included, or of the whole file at the top,
+ * even when the test or a `beforeEach` failed.
+ * @remarks
+ * - The hooks run from the inner `describe` outwards, the last registered
+ *   first within one.
+ * - One that throws fails a test that had passed, and the remaining
+ *   `afterEach` hooks and the cleanups `beforeEach` returned are skipped, as
+ *   Vitest's; a test that had failed keeps its first error.
+ * - There is no `afterAll`: each test is a game of its own, and nothing of
+ *   one reaches the next.
+ * @example A check after each test
+ * {@includeCode ../../examples/after-each.test.ts}
+ * @param fn - The function to run after each test.
+ * @throws When called inside a test:
+ * `afterEach: called inside a test; register it in a describe or at the top of the file`.
+ */
+export const afterEach: (fn: () => void) => void = luaAfterEach;
 
 /**
  * The matchers of `expect` on a Map project's test: Vitest's, with `.not`.
@@ -163,7 +208,7 @@ let started = false;
  * `InitGlobals`, `InitCustomTriggers` and `RunInitializationTriggers`, then
  * `MarkGameStarted`), and so through the library's Init stages. An editor
  * function nothing defined is defined as one that does nothing. Call it once
- * per test, in the test or at the top of the file.
+ * per test, in the test, in a `beforeEach` or at the top of the file.
  * @example The Init stages, run by startGame
  * {@includeCode ../../examples/start-game.test.ts}
  * @returns The test's game.
