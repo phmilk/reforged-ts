@@ -209,7 +209,7 @@ The open Tickets of a Spec with no open blocker, read by the command that lists 
 _Avoid_: queue, next, backlog
 
 **Coverage table**:
-The section of a Spec's body naming, for each item of its decisions, its tests and its notes, the Ticket and the criterion that carry it, read by the check that finds the Spec's gaps (`pnpm spec:check`).
+The section of a Spec's body naming, for each item of its decisions, its tests and its notes, the Ticket and the criterion that carry it, read by the coverage check that finds the Spec's gaps (`pnpm spec:check`).
 _Avoid_: coverage (alone, which is test coverage), checklist
 
 **Claim**:
