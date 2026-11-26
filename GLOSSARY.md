@@ -334,7 +334,7 @@ _Avoid_: mock call, invocation, call log (the library's own tests' list of lines
 
 **Spy**:
 A function made by `fn()`, which keeps its own calls.
-_Avoid_: mock (nothing here replaces behaviour), fake, **Stub** (which answers for a Native)
+_Avoid_: mock (nothing here replaces behaviour), fake, stub (a Stub answers for a Native)
 
 **Caught error**:
 An error the library caught from a Map project's callback and reported. A test **expects** it; one is _expected_ or _unexpected_.
@@ -342,4 +342,4 @@ _Avoid_: reported error (reads as `Reforged.debug.report()`), failure (the libra
 
 **Test control**:
 What a test sets on its **Test game** without making anything happen: no event fires and no call is recorded (`game.setLocalPlayer`). Moving the **Game clock** is not one.
-_Avoid_: test helper, **Stub** (a Test control answers for no Native)
+_Avoid_: test helper, stub (a Test control answers for no Native)
