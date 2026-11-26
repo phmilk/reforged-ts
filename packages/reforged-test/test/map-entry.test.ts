@@ -60,8 +60,10 @@ describe("reforged-test/map", () => {
       "NativeName",
       "afterEach",
       "beforeEach",
+      "calls",
       "describe",
       "expect",
+      "fn",
       "it",
       "newHandle",
       "startGame",
@@ -177,6 +179,42 @@ describe("reforged-test/map", () => {
       expect(errors[index]).toContain(`Argument of type '"${name}"'`);
     }
   });
+
+  it(
+    "types a spy matcher's arguments and calls from the function's parameters",
+    TYPED,
+    () => {
+      expect(
+        errorsOf(`
+        const { expect } = map;
+        expect(TimerStart).toHaveBeenCalledWith(expect.anything(), 60, true, expect.anything());
+        expect(TimerStart).not.toHaveBeenNthCalledWith(2, expect.anything(), 30, false, expect.anything());
+        const spy = map.fn((wave: number, name: string) => name.length + wave);
+        expect(spy).toHaveBeenLastCalledWith(1, "a");
+        const handler: code = map.calls(TimerStart)[0][3];
+        const name: string = map.calls(spy)[0][1];
+        const plain: (...args: any[]) => any = map.fn();
+        print(handler, name, plain);
+      `),
+      ).toEqual([]);
+      expect(
+        errorsOf(
+          `map.expect(TimerStart).toHaveBeenCalledWith(1, 60, true, () => undefined);`,
+        ),
+      ).toEqual([
+        expect.stringContaining(
+          "Argument of type 'number' is not assignable to parameter of type 'timer'",
+        ),
+      ]);
+      expect(
+        errorsOf(`const timeout: string = map.calls(TimerStart)[0][1];`),
+      ).toEqual([
+        expect.stringContaining(
+          "Type 'number' is not assignable to type 'string'",
+        ),
+      ]);
+    },
+  );
 
   it("has Vitest's focus and skip forms, and no other", () => {
     const members = (name: string) => {

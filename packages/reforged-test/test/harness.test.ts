@@ -2,7 +2,11 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { runLuaTestFiles, type LuaTestFile } from "../src/index.js";
+import {
+  runLuaTestFiles,
+  type LuaTestFile,
+  type LuaTestResult,
+} from "../src/index.js";
 import { fixturePath, outDir, removeOutDirs } from "./support/fixture.js";
 
 afterAll(removeOutDirs);
@@ -49,6 +53,8 @@ describe("results", () => {
       name: "fails an expectation",
       status: "fail",
       message: "Expected 2 to equal 3",
+      actual: "2",
+      expected: "3",
     });
   });
 
@@ -485,6 +491,8 @@ describe("beforeEach and afterEach, scoped by describe", () => {
         name: "fails the test with the expectation's message",
         status: "fail",
         message: "Expected 1 to equal 2",
+        actual: "1",
+        expected: "2",
       },
       {
         suite: ["two failures", "in a beforeEach and an afterEach"],
@@ -497,6 +505,8 @@ describe("beforeEach and afterEach, scoped by describe", () => {
         name: "reports the body's",
         status: "fail",
         message: "Expected 1 to equal 3",
+        actual: "1",
+        expected: "3",
       },
       {
         suite: ["a hook registered inside a test"],
@@ -696,6 +706,119 @@ describe("matchers", () => {
         'matchers_test.lua:365: expect.any takes a Lua type name ("number", "string", "boolean", "table", "function", "thread" or "userdata") or a class, got "integer"',
       "toBeInstanceOf of nil":
         "matchers_test.lua:368: toBeInstanceOf takes a class, got nil",
+    });
+  });
+});
+
+describe("spies, on reforged-test/map", () => {
+  const [spies] = runLuaTestFiles({ outDir: outDir("spies") });
+
+  function results(suite: string): Record<string, Partial<LuaTestResult>> {
+    return Object.fromEntries(
+      spies.tests
+        .filter((test) => test.suite[0] === suite)
+        .map(({ name, status, message, actual, expected }) => [
+          name,
+          { status, message, actual, expected },
+        ]),
+    );
+  }
+
+  it("read a Native's Recorded calls and a Spy's calls alike", () => {
+    const passing = results("pass");
+    expect(Object.keys(passing)).toHaveLength(7);
+    for (const [name, result] of Object.entries(passing)) {
+      expect(result, name).toMatchObject({ status: "pass" });
+    }
+  });
+
+  it("fail with the runner's sentence and the calls received", () => {
+    expect(results("fail")).toEqual({
+      "a Native never called": {
+        status: "fail",
+        message: "Expected PauseTimer to have been called; it was never called",
+      },
+      "a call with other arguments": {
+        status: "fail",
+        message:
+          "Expected TimerStart to have been called with (expect.anything(), 60, true, expect.anything()); it received 1 call:\n  1: TimerStart(timer#1048577, 30, false, <function>)",
+        actual: "(timer#1048577, 30, false, <function>)",
+        expected: "(expect.anything(), 60, true, expect.anything())",
+      },
+      "a Spy called, negated": {
+        status: "fail",
+        message:
+          'Expected the spy not to have been called; it received 1 call:\n  1: spy(1, "a")',
+      },
+      "a count of calls": {
+        status: "fail",
+        message:
+          "Expected the spy to have been called 1 time; it received 2 calls:\n  1: spy()\n  2: spy(nil)",
+      },
+      "the nth call": {
+        status: "fail",
+        message:
+          "Expected the spy to have been called with (1) on call 2; it received 1 call:\n  1: spy(1)",
+      },
+      "the last call": {
+        status: "fail",
+        message:
+          "Expected the spy to have been last called with (1); it received 2 calls:\n  1: spy(1)\n  2: spy(2)",
+        actual: "(2)",
+        expected: "(1)",
+      },
+      "a function of the Lua library": {
+        status: "fail",
+        message:
+          "Expected a Native or a Spy made by fn(), got a function that is neither a Native with a recorded Stub nor a Spy made by fn()",
+      },
+      "a function of the map": {
+        status: "fail",
+        message:
+          "Expected a Native or a Spy made by fn(), got a function that is neither a Native with a recorded Stub nor a Spy made by fn()",
+      },
+      "a value that is no function": {
+        status: "fail",
+        message: "Expected a Native or a Spy made by fn(), got 3",
+      },
+      "a deep difference": {
+        status: "fail",
+        message:
+          "Expected {1, {x = 2}} to deeply equal {1, {x = 3}} (first difference at [2].x: 2 vs 3)",
+        actual: "{\n  1,\n  {\n    x = 2,\n  },\n}",
+        expected: "{\n  1,\n  {\n    x = 3,\n  },\n}",
+      },
+      "a constant and a Handle": {
+        status: "fail",
+        message:
+          "Expected {PLAYER_SLOT_STATE_PLAYING, timer#1048577} to deeply equal {PLAYER_SLOT_STATE_EMPTY} (first difference at [1]: PLAYER_SLOT_STATE_PLAYING vs PLAYER_SLOT_STATE_EMPTY)",
+        actual: "{\n  PLAYER_SLOT_STATE_PLAYING,\n  timer#1048577,\n}",
+        expected: "{\n  PLAYER_SLOT_STATE_EMPTY,\n}",
+      },
+    });
+  });
+
+  it("draw no diff of a call never made", () => {
+    expect(results("fail")["the nth call"]).toMatchObject({
+      actual: undefined,
+      expected: undefined,
+    });
+    expect(
+      spies.tests.find((test) => test.name === "the nth call"),
+    ).not.toHaveProperty("actual");
+  });
+
+  it("raise on a value calls cannot read, and read a thrown table's .message", () => {
+    expect(results("raise")).toEqual({
+      "calls of a value that is no Spy": {
+        status: "error",
+        message:
+          "spies_test.lua:143: calls: expected a Native or a Spy made by fn(), got 3",
+      },
+      "a thrown table with a message": {
+        status: "error",
+        message: "the wave did not come",
+      },
     });
   });
 });

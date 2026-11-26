@@ -45,6 +45,13 @@ export interface LuaTestResult {
   readonly status: LuaTestStatus;
   /** The Lua message, on "fail" and "error". */
   readonly message?: string;
+  /**
+   * On a "fail" whose matcher compared two values, the value under test,
+   * rendered as text: what Vitest's diff shows as received.
+   */
+  readonly actual?: string;
+  /** On a "fail" that carries `actual`, the value it was compared with. */
+  readonly expected?: string;
   /** How the test was registered; absent for a plain `it`. */
   readonly mode?: Exclude<LuaTestMode, "run">;
   /**
@@ -79,6 +86,13 @@ export const MARKER_32_BIT = "[32-bit]";
 export const LOAD_TEST_NAME = "loads the test module";
 
 const TEST_SUFFIX = "_test.lua";
+
+/**
+ * Run after the last stub file: every global function the stub files
+ * defined becomes the Stub of its Native, which a matcher handed the Native
+ * reads the Recorded calls of.
+ */
+const SEAL: Chunk = { name: "reforged-test/seal", source: "__stub_seal()" };
 const DEPENDENCIES_DIR = "lua_modules";
 
 /**
@@ -158,6 +172,7 @@ class Harness {
     this.#stubs = [
       ...shippedStubs(),
       ...(options.stubs ?? []).map((path) => readChunk(resolve(path), path)),
+      SEAL,
     ];
     this.#modules = luaFiles(outDir).map((path) => {
       const name = relative(outDir, path).split(sep).join("/");
@@ -372,6 +387,10 @@ function parseRun(json: string, moduleName: string): RunnerAnswer {
   return { isolated: false, tests: parseResults(tests, malformed) };
 }
 
+function optionalString(value: unknown): value is string | undefined {
+  return value === undefined || typeof value === "string";
+}
+
 function isSuite(suite: unknown): suite is string[] {
   return (
     Array.isArray(suite) && suite.every((part) => typeof part === "string")
@@ -384,7 +403,7 @@ function parseResults(
 ): LuaTestResult[] {
   return tests.map((entry: unknown): LuaTestResult => {
     const record = (entry ?? {}) as Record<string, unknown>;
-    const { suite, name, status, message } = record;
+    const { suite, name, status, message, actual, expected } = record;
     const modes = isSuite(suite) ? parseModes(record, suite) : undefined;
     if (
       !isSuite(suite) ||
@@ -392,7 +411,9 @@ function parseResults(
       typeof name !== "string" ||
       typeof status !== "string" ||
       !STATUSES.includes(status) ||
-      (message !== undefined && typeof message !== "string")
+      !optionalString(message) ||
+      !optionalString(actual) ||
+      !optionalString(expected)
     ) {
       throw malformed(`bad test entry ${JSON.stringify(entry)}`);
     }
@@ -401,6 +422,9 @@ function parseResults(
       name,
       status: status as LuaTestStatus,
       ...(message === undefined ? {} : { message: rewrite(message) }),
+      ...(actual === undefined || expected === undefined
+        ? {}
+        : { actual, expected }),
       ...modes,
     };
   });
@@ -475,16 +499,31 @@ function register(children: SuiteNode["children"], inSuite32 = false): void {
         throw luaError(
           result.status === "fail" ? "AssertionError" : "LuaError",
           result.message ?? "(no message)",
+          result,
         );
       });
     }
   }
 }
 
-/** An Error whose report is the Lua message alone, without a JS stack. */
-function luaError(name: string, message: string): Error {
-  const error = new Error(message);
+/**
+ * An Error whose report is the Lua message alone, without a JS stack, and,
+ * when the result carries the two values a matcher compared, the `actual`
+ * and `expected` Vitest draws its diff of.
+ */
+function luaError(
+  name: string,
+  message: string,
+  compared?: Pick<LuaTestResult, "actual" | "expected">,
+): Error {
+  const error: Error & { actual?: string; expected?: string } = new Error(
+    message,
+  );
   error.name = name;
   error.stack = `${name}: ${message}`;
+  if (compared?.actual !== undefined && compared.expected !== undefined) {
+    error.actual = compared.actual;
+    error.expected = compared.expected;
+  }
   return error;
 }

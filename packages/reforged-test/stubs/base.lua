@@ -5,6 +5,13 @@
 -- the stub authoring rules. The glue executes this file first, then the other
 -- shipped stub files, then the extra stub files of the `stubs` option.
 
+-- The globals that exist before any stub runs, the standard library's: what
+-- __stub_seal leaves out when it takes every other global function as a Stub.
+local standard = {}
+for name in pairs(_G) do
+  standard[name] = true
+end
+
 -- The call log: every stub appends one readable line per call.
 __stub_calls = {}
 
@@ -60,6 +67,38 @@ function __stub_args(name)
   return table.move(calls, 1, #calls, 1, {})
 end
 
+-- The Stubs by function: the name of the Native each one stands for, so a
+-- matcher handed the Native itself reads its Recorded calls.
+local nativeNames = {}
+
+-- Takes every global function the stub files defined as the Stub of the
+-- Native it is named after: every global function but the standard
+-- library's and the __stub_* helpers. The glue calls it once, after the last
+-- stub file and before the test module loads, so the map's own globals are
+-- not taken. Not a Native, so it adds no call-log line.
+function __stub_seal()
+  for name, value in pairs(_G) do
+    if type(name) == "string" and type(value) == "function"
+      and not standard[name] and string.sub(name, 1, 2) ~= "__" then
+      nativeNames[value] = name
+    end
+  end
+end
+
+-- Defines the global Native `name` as `stub`, a Stub that records its calls
+-- under that name, as stubNative does in a test. Not a Native, so it adds no
+-- call-log line.
+function __stub_define(name, stub)
+  _G[name] = stub
+  nativeNames[stub] = name
+end
+
+-- The name of the Native whose Stub is `value`, or nil when `value` is no
+-- Stub. Not a Native, so it adds no call-log line.
+function __stub_native_name(value)
+  return nativeNames[value]
+end
+
 -- What every handle's tostring gives, as the game's does: its kind, a colon
 -- and a number (the game writes the address, the stubs the handle id), so
 -- code reading a handle's type from tostring works on the stubs.
@@ -98,14 +137,16 @@ local context = nil
 
 -- Defines the response Native `name`: it records its call and answers with
 -- the firing context's value for its name, nil when the context has none.
+-- It is a Stub __stub_native_name knows, also when game.fire defines it
+-- after the seal.
 function __stub_response(name)
-  _G[name] = function()
+  __stub_define(name, function()
     __stub_record(name)
     if context == nil then
       return nil
     end
     return context[name]
-  end
+  end)
 end
 
 -- Runs body with `firing` as the firing context and returns what it returned.

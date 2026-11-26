@@ -1,10 +1,12 @@
 import { fileURLToPath } from "node:url";
+import { stripVTControlCharacters } from "node:util";
 import {
   afterAll,
   beforeAll,
   describe,
   expect,
   it,
+  type TestError,
   type UserConsoleLog,
 } from "vitest";
 import type { TestCase, TestModule, TestSuite, Vitest } from "vitest/node";
@@ -77,7 +79,7 @@ let logs: UserConsoleLog[];
 // windows leg's report carries no hook duration.
 beforeAll(async () => {
   const run = await runInner(
-    ["results", "unstubbed", "per-test", "focus"],
+    ["results", "unstubbed", "per-test", "focus", "diff"],
     true,
   );
   runs.push(run);
@@ -106,9 +108,17 @@ function testCase(fullName: string, of = module): TestCase {
   return found;
 }
 
+/** The first error the test of `fullName` failed with. */
+function firstError(fullName: string): TestError {
+  const error = testCase(fullName).result().errors?.at(0);
+  if (error === undefined) throw new Error(`${fullName} did not fail`);
+  return error;
+}
+
 describe("runLuaTests", () => {
   it("registers one describe per compiled test file, under its TypeScript name", () => {
     expect([...module.children.suites()].map((s) => s.name)).toEqual([
+      "diff.test.ts",
       "game.test.ts",
       "handles/unit.test.ts",
       "load.test.ts",
@@ -188,6 +198,27 @@ describe("runLuaTests", () => {
         "results.test.ts > arithmetic > wraps around at 2^31 [32-bit]",
       ).result().state,
     ).toBe("skipped");
+  });
+
+  it("hands Vitest the actual and expected values, for its diff", () => {
+    const deep = firstError("diff.test.ts > a deep difference");
+    expect(deep).toMatchObject({
+      name: "AssertionError",
+      actual: '{\n  units = {\n    "hfoo",\n  },\n  wave = 2,\n}',
+      expected: '{\n  units = {\n    "hfoo",\n  },\n  wave = 3,\n}',
+    });
+    // Vitest colours the diff where the terminal takes colours, as on CI.
+    const deepDiff = stripVTControlCharacters(deep.diff ?? "");
+    expect(deepDiff).toContain("-   wave = 3,");
+    expect(deepDiff).toContain("+   wave = 2,");
+    const call = firstError("diff.test.ts > a call with other arguments");
+    expect(call).toMatchObject({
+      actual: '(1, "a")',
+      expected: '(1, "b")',
+    });
+    const callDiff = stripVTControlCharacters(call.diff ?? "");
+    expect(callDiff).toContain('Expected: "(1, "b")"');
+    expect(callDiff).toContain('Received: "(1, "a")"');
   });
 
   it("never reaches emscripten's uncaught-exception handler", () => {

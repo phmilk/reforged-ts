@@ -11,8 +11,10 @@ import {
   afterEach as luaAfterEach,
   type BeforeEachCallback,
   beforeEach as luaBeforeEach,
+  calls as luaCalls,
   describe as luaDescribe,
   expect as luaExpect,
+  fn as luaFn,
   it as luaIt,
   type Matchers,
 } from "../lua/index";
@@ -157,10 +159,19 @@ export const afterEach: (fn: () => void) => void = luaAfterEach;
 /**
  * The matchers of `expect` on a Map project's test: Vitest's, with `.not`.
  * @remarks
- * A text a matcher takes (`toMatch`, `toContain` on a string, `toThrow`) is
- * plain text and means "contains", never a pattern: typescript-to-lua
- * compiles no regular expression. Truthiness is Lua's: 0 and `""` are
- * truthy.
+ * - A text a matcher takes (`toMatch`, `toContain` on a string, `toThrow`)
+ *   is plain text and means "contains", never a pattern: typescript-to-lua
+ *   compiles no regular expression. Truthiness is Lua's: 0 and `""` are
+ *   truthy.
+ * - Every Native is already a Spy: the five spy matchers
+ *   (`toHaveBeenCalled`, `toHaveBeenCalledTimes`, `toHaveBeenCalledWith`,
+ *   `toHaveBeenLastCalledWith`, `toHaveBeenNthCalledWith`) take the Native
+ *   itself, `expect(TimerStart)`, and read the Recorded calls its Stub keeps,
+ *   the arguments typed from the Native's parameters; they take a Spy
+ *   {@link fn} made alike. Nothing is replaced on `_G`, so nothing is
+ *   restored, and any other function fails the matcher.
+ * - A failure shows the values compared, a spy matcher's the calls
+ *   received, and Vitest draws the diff of the two.
  * @example Matchers, a negated one and an asymmetric matcher
  * {@includeCode ../../examples/expect.test.ts}
  * @noSelf
@@ -204,6 +215,39 @@ export type GameExpect = (<T>(actual: T) => GameMatchers<T>) &
  * {@includeCode ../../examples/expect.test.ts}
  */
 export const expect: GameExpect = luaExpect;
+
+/**
+ * Makes a Spy: a real function, to hand the library as a callback, that
+ * keeps the arguments of each of its calls apart from every other
+ * function's, then calls `impl` with them and returns what it returned.
+ * @remarks
+ * - The spy matchers of `expect` read its calls, a trailing nil argument
+ *   counted, and {@link calls} returns them. It has no `mock` member: there
+ *   is nothing to reset, each test being a game of its own.
+ * - Without `impl`, it returns nothing.
+ * @example A Spy handed to the library as a callback
+ * {@includeCode ../../examples/fn.test.ts}
+ * @param impl - What the Spy does when called, and what it answers.
+ * @returns The Spy, typed as `impl`.
+ */
+export const fn: typeof luaFn = luaFn;
+
+/**
+ * Returns the arguments of each call of a Spy {@link fn} made, or of a
+ * Native, whose Recorded calls its Stub keeps, oldest first: how a test
+ * takes a value out of a call, such as the handler a Native received.
+ * @remarks
+ * Each list ends at its last argument that is not nil, as a Lua list does;
+ * the spy matchers count a trailing nil argument.
+ * @example The handler a Native received, called by the test
+ * {@includeCode ../../examples/calls.test.ts}
+ * @param spy - The Spy, or the Native itself, as `TimerStart`.
+ * @returns One list of arguments per call, each typed as the function's
+ * parameters.
+ * @throws When `spy` is neither a Spy nor a Native:
+ * `calls: expected a Native or a Spy made by fn(), got <value>`.
+ */
+export const calls: typeof luaCalls = luaCalls;
 
 /**
  * A Firing context: what each event response Native answers while the
@@ -493,14 +537,13 @@ export function stubNative<N extends NativeName>(
   ...impl: NativeAnswer<N>
 ): void {
   const answer = impl[0] as ((...args: unknown[]) => unknown) | undefined;
-  (_G as unknown as Record<string, unknown>)[name] = (
-    ...args: unknown[]
-  ): unknown => {
+  // A Stub the spy matchers know: expect(GetUnitName) reads its calls.
+  __stub_define(name, (...args: unknown[]): unknown => {
     __stub_record(name, ...args);
     // A bare return: a Native that returns nothing returns no value.
     if (answer === undefined) return;
     return answer(...args);
-  };
+  });
 }
 
 /**

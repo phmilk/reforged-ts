@@ -9,7 +9,9 @@
 //   {"tests":[{"message":"...","name":"...","status":"pass"|"fail"|"error","suite":["..."]}]}
 //
 // `message` is present on "fail" (an expectation did not hold) and "error"
-// (anything else was thrown). Keys are sorted; `suite` lists the enclosing
+// (anything else was thrown). A "fail" may carry `actual` and `expected`,
+// the two values the matcher compared, rendered as text, which the glue
+// hands to Vitest for its diff. Keys are sorted; `suite` lists the enclosing
 // `describe` names, outermost first.
 //
 // A file that loads reforged-test/map runs each test in a Test game of its
@@ -78,6 +80,8 @@ interface Result {
   name: string;
   status: Status;
   message?: string;
+  actual?: string;
+  expected?: string;
   mode?: TestMode;
   suiteModes?: SuiteMode[];
 }
@@ -85,10 +89,16 @@ interface Result {
 /** A test as the listing reports it. */
 type Listed = Pick<Result, "suite" | "name" | "mode" | "suiteModes">;
 
-/** The value an unmet expectation throws, told apart from any other error. */
+/**
+ * The value an unmet expectation throws, told apart from any other error:
+ * its message, and the two values compared, rendered, when a diff of them
+ * helps.
+ */
 interface Failure {
   reforgedTestFailure: true;
   message: string;
+  actual?: string;
+  expected?: string;
 }
 
 const blocks: Block[] = [];
@@ -296,6 +306,14 @@ function isHandle(value: object): boolean {
   return record.__kind !== undefined && record.__handleId !== undefined;
 }
 
+/** A constant of the game a stub defined (`PLAYER_COLOR_RED`): its name, or undefined. */
+function constantName(value: object): string | undefined {
+  const record = value as { __kind?: unknown; __name?: unknown };
+  return record.__kind !== undefined && type(record.__name) === "string"
+    ? (record.__name as string)
+    : undefined;
+}
+
 function sortedKeys(value: object): unknown[] {
   const keys: unknown[] = [];
   for (const [key] of pairs(value)) {
@@ -333,6 +351,8 @@ function show(value: unknown, depth = 0): string {
   const record = value as Record<string | number, unknown>;
   if (isHandle(record))
     return `${tostring(record.__kind)}#${tostring(record.__handleId)}`;
+  const constant = constantName(record);
+  if (constant !== undefined) return constant;
   if (depth >= 2) return "{...}";
   const parts: string[] = [];
   const keys = sortedKeys(record);
@@ -352,6 +372,47 @@ function show(value: unknown, depth = 0): string {
     );
   }
   return `{${table.concat(parts, ", ")}}`;
+}
+
+/** The depth below which `pretty` writes a table out. */
+const PRETTY_DEPTH = 8;
+
+/**
+ * A value as the diff of a failure shows it: as `show` writes it, a table
+ * written out one key per line, nested ones indented, so the diff Vitest
+ * draws of two of them is line by line.
+ */
+function pretty(
+  value: unknown,
+  indent = "",
+  seen = new LuaMap<object, boolean>(),
+): string {
+  if (type(value) !== "table") return show(value);
+  const record = value as Record<string | number, unknown>;
+  if (
+    isAsymmetric(record) ||
+    isHandle(record) ||
+    constantName(record) !== undefined
+  ) {
+    return show(record);
+  }
+  if (seen.get(record) === true) return "<cycle>";
+  const keys = sortedKeys(record);
+  if (keys.length === 0) return "{}";
+  if (indent.length >= 2 * PRETTY_DEPTH) return "{...}";
+  seen.set(record, true);
+  const inner = `${indent}  `;
+  const lines: string[] = [];
+  const array = isArray(record, keys);
+  for (const key of keys) {
+    const shown = pretty(record[key as string], inner, seen);
+    if (array) table.insert(lines, `${inner}${shown},`);
+    else if (type(key) === "string")
+      table.insert(lines, `${inner}${key as string} = ${shown},`);
+    else table.insert(lines, `${inner}[${tostring(key)}] = ${shown},`);
+  }
+  seen.delete(record);
+  return `{\n${table.concat(lines, "\n")}\n${indent}}`;
 }
 
 /**
@@ -380,8 +441,20 @@ function errorMessage(err: unknown): string {
 // ---------------------------------------------------------------------------
 // Comparing values
 
-function fail(message: string): never {
-  const failure: Failure = { reforgedTestFailure: true, message };
+/**
+ * Fails the expectation with `message`; with `diff`, the two values
+ * compared, as `pretty` or the spy matchers render them, for Vitest's diff.
+ */
+function fail(
+  message: string,
+  diff?: { actual: string; expected: string },
+): never {
+  const failure: Failure = {
+    reforgedTestFailure: true,
+    message,
+    actual: diff?.actual,
+    expected: diff?.expected,
+  };
   // What `throw failure` compiles to; the table reaches pcall unchanged.
   error(failure, 0);
 }
@@ -396,6 +469,18 @@ const ROOT = "value";
 
 function mismatch(path: string, actual: unknown, expected: unknown): string {
   return `${path === "" ? ROOT : path}: ${show(actual)} vs ${show(expected)}`;
+}
+
+/**
+ * Whether a value is compared key by key: a table, but a Handle and a
+ * constant of the game, which are compared by identity.
+ */
+function composite(value: unknown): boolean {
+  return (
+    type(value) === "table" &&
+    !isHandle(value as object) &&
+    constantName(value as object) === undefined
+  );
 }
 
 /** Records that `a` is under comparison with `b`; false when it already was. */
@@ -432,7 +517,7 @@ function difference(
       : mismatch(path, actual, expected);
   }
   if (actual === expected) return undefined;
-  if (type(actual) !== "table" || type(expected) !== "table") {
+  if (!composite(actual) || !composite(expected)) {
     return mismatch(path, actual, expected);
   }
   const a = actual as Record<string, unknown>;
@@ -493,7 +578,7 @@ function subsetDifference(
       : mismatch(path, actual, expected);
   }
   if (actual === expected) return undefined;
-  if (type(actual) !== "table" || type(expected) !== "table") {
+  if (!composite(actual) || !composite(expected)) {
     return mismatch(path, actual, expected);
   }
   const a = actual as Record<string, unknown>;
@@ -661,7 +746,157 @@ function stringContaining(part: unknown): Asymmetric {
 }
 
 // ---------------------------------------------------------------------------
+// Spies and Recorded calls
+
+/** The arguments of one call, `n` counting the nil ones too. */
+type Packed = unknown[] & { n: number };
+
+/** Any function, as `fn` and `calls` take one. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- any function, as Vitest's Procedure
+type Procedure = (...args: any[]) => any;
+
+/** The calls of every Spy `fn` made, by the Spy. */
+const spies = new LuaMap<Procedure, Packed[]>();
+
+/**
+ * Makes a Spy: a real function that keeps the arguments of each of its
+ * calls, then calls `impl` with them, when given, and returns what it
+ * returned.
+ * @param impl - What the Spy does when called; it returns nothing without one.
+ * @returns The Spy, typed as `impl`.
+ */
+export function fn<F extends Procedure = Procedure>(impl?: F): F {
+  const recordedCalls: Packed[] = [];
+  const spy = (...args: unknown[]): unknown => {
+    table.insert(recordedCalls, table.pack(...args));
+    // A bare return: a Spy without impl returns no value.
+    if (impl === undefined) return;
+    return impl(...args);
+  };
+  spies.set(spy, recordedCalls);
+  return spy as F;
+}
+
+/** What a spy matcher reads: how it names the function, and its calls. */
+interface Recorded {
+  /** The function in a sentence: the Native's name, or "the spy". */
+  label: string;
+  /** The function in a line of the calls received: the Native's name, or "spy". */
+  callee: string;
+  calls: Packed[];
+}
+
+/**
+ * The calls of a Spy, or the Recorded calls of a Native's Stub; undefined
+ * for any other value.
+ */
+function recordedOf(value: unknown): Recorded | undefined {
+  if (type(value) !== "function") return undefined;
+  const received = spies.get(value as Procedure);
+  if (received !== undefined) {
+    return { label: "the spy", callee: "spy", calls: received };
+  }
+  // Undefined when the runner runs without the baseline stub.
+  const nativeName = __stub_native_name as
+    typeof __stub_native_name | undefined;
+  const name = nativeName?.(value);
+  if (name === undefined) return undefined;
+  return { label: name, callee: name, calls: __stub_args(name) };
+}
+
+/** Why a value is not one a spy matcher or `calls` reads. */
+function notRecorded(value: unknown): string {
+  return type(value) === "function"
+    ? "a function that is neither a Native with a recorded Stub nor a Spy made by fn()"
+    : show(value);
+}
+
+/**
+ * Returns the arguments of each call of `spy`, oldest first: a Spy `fn`
+ * made, or a Native, whose Recorded calls its Stub keeps.
+ * @param spy - The Spy, or the Native itself (`TimerStart`).
+ * @returns One list of arguments per call, each typed as the function's
+ * parameters; a list ends at its last argument that is not nil.
+ * @throws When `spy` is neither:
+ * `calls: expected a Native or a Spy made by fn(), got <value>`.
+ */
+export function calls<F extends Procedure>(spy: F): Parameters<F>[] {
+  const recorded = recordedOf(spy);
+  if (recorded === undefined) {
+    error(
+      `calls: expected a Native or a Spy made by fn(), got ${notRecorded(spy)}`,
+      2,
+    );
+  }
+  const lists: Parameters<F>[] = [];
+  for (const call of recorded.calls) {
+    table.insert(lists, table.move(call, 1, call.n, 1, []) as Parameters<F>);
+  }
+  return lists;
+}
+
+/** The arguments of a call as a failure shows them: `(timer#1048577, 60)`. */
+function showArguments(call: Packed): string {
+  const parts: string[] = [];
+  for (let i = 0; i < call.n; i++) {
+    table.insert(parts, show(call[i]));
+  }
+  return `(${table.concat(parts, ", ")})`;
+}
+
+/** The arguments of every call, one line each, as a diff shows them. */
+function everyCall(recorded: Recorded): string {
+  const lines: string[] = [];
+  for (const call of recorded.calls) {
+    table.insert(lines, showArguments(call));
+  }
+  return table.concat(lines, "\n");
+}
+
+/** "1 call", "2 calls". */
+function count(times: number, noun: string): string {
+  return `${tostring(times)} ${noun}${times === 1 ? "" : "s"}`;
+}
+
+/** The calls received, as a spy matcher's message ends. */
+function received(recorded: Recorded): string {
+  if (recorded.calls.length === 0) return "it was never called";
+  const lines: string[] = [];
+  for (const [index, call] of ipairs(recorded.calls)) {
+    table.insert(
+      lines,
+      `  ${tostring(index)}: ${recorded.callee}${showArguments(call)}`,
+    );
+  }
+  return `it received ${count(recorded.calls.length, "call")}:\n${table.concat(lines, "\n")}`;
+}
+
+/**
+ * How a matcher that compares arguments names what it expected:
+ * `called with`, then the arguments, then the position, ` on call 2`.
+ */
+interface CallPhrase {
+  what: string;
+  position?: string;
+}
+
+/** Whether a call's arguments match the expected ones, nil arguments counted. */
+function sameArguments(call: Packed, expected: Packed): boolean {
+  if (call.n !== expected.n) return false;
+  for (let i = 0; i < call.n; i++) {
+    if (!equals(call[i], expected[i])) return false;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------
 // Matchers
+
+/**
+ * What a spy matcher compares a call with: the parameters of the function
+ * under test.
+ */
+type ArgumentsOf<T> = T extends (...args: infer A) => unknown ? A : unknown[];
 
 /** What `toContain` and `toContainEqual` take: an item of a list, or a part of a string. */
 type ItemOf<T> = T extends string
@@ -771,6 +1006,37 @@ export interface Matchers<T> {
    */
   toThrow(message?: string): void;
   /**
+   * The value, a Native or a Spy made by `fn`, was called at least once.
+   * A Native's calls are the Recorded calls its Stub keeps.
+   */
+  toHaveBeenCalled(): void;
+  /**
+   * The value, a Native or a Spy made by `fn`, was called exactly `times`
+   * times.
+   * @param times - The number of calls.
+   */
+  toHaveBeenCalledTimes(times: number): void;
+  /**
+   * The value, a Native or a Spy made by `fn`, received these arguments in
+   * one of its calls, compared as `toEqual` compares, their number
+   * included: a trailing nil argument counts.
+   * @param args - The arguments, or asymmetric matchers standing for them.
+   */
+  toHaveBeenCalledWith(...args: ArgumentsOf<T>): void;
+  /**
+   * The last call of the value, a Native or a Spy made by `fn`, received
+   * these arguments, compared as `toHaveBeenCalledWith` compares.
+   * @param args - The arguments, or asymmetric matchers standing for them.
+   */
+  toHaveBeenLastCalledWith(...args: ArgumentsOf<T>): void;
+  /**
+   * The call at position `n` of the value, a Native or a Spy made by `fn`,
+   * received these arguments, compared as `toHaveBeenCalledWith` compares.
+   * @param n - The position of the call, counted from 1.
+   * @param args - The arguments, or asymmetric matchers standing for them.
+   */
+  toHaveBeenNthCalledWith(n: number, ...args: ArgumentsOf<T>): void;
+  /**
    * The value is a call log (see `stubCalls`) holding exactly this line.
    * @param call - The line, as the call log renders it.
    */
@@ -780,6 +1046,11 @@ export interface Matchers<T> {
 function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
   const negation = negated ? "not " : "";
   const shown = (): string => show(actual);
+  /** The diff of `actual` and `expected`, written out for Vitest. */
+  const diffWith = (expected: unknown) => ({
+    actual: pretty(actual),
+    expected: pretty(expected),
+  });
   const numbers = (expected: number): number => {
     if (type(actual) !== "number")
       fail(`Expected a number to compare, got ${shown()}`);
@@ -795,24 +1066,120 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
     if (holds !== negated) return;
     fail(`Expected ${shown()} ${negation}to be ${relation} ${show(expected)}`);
   };
+  const recorded = (): Recorded => {
+    const found = recordedOf(actual);
+    if (found === undefined) {
+      fail(
+        `Expected a Native or a Spy made by fn(), got ${notRecorded(actual)}`,
+      );
+    }
+    return found;
+  };
+  /**
+   * Holds or fails a matcher that compares the arguments of the call at
+   * `index` (counted from 1; the last call when omitted) with `args`. The
+   * diff Vitest draws is of that call and the arguments, and there is none
+   * when the call was never made.
+   */
+  const failUnlessCallMatches = (
+    expected: Packed,
+    phrase: CallPhrase,
+    index?: number,
+  ): void => {
+    const spy = recorded();
+    const call = spy.calls[(index ?? spy.calls.length) - 1] as
+      Packed | undefined;
+    const matched = call !== undefined && sameArguments(call, expected);
+    if (matched !== negated) return;
+    failCalledWith(spy, expected, phrase, call);
+  };
+  /**
+   * Fails a matcher that compares arguments: its sentence, the calls
+   * received, and, not negated, the diff of the expected arguments with
+   * `call`, or with every call for `"every"`; there is none when `call` is
+   * undefined, a call never made.
+   */
+  const failCalledWith = (
+    spy: Recorded,
+    expected: Packed,
+    phrase: CallPhrase,
+    call: Packed | "every" | undefined,
+  ): never => {
+    const diff =
+      negated || call === undefined || spy.calls.length === 0
+        ? undefined
+        : {
+            actual: call === "every" ? everyCall(spy) : showArguments(call),
+            expected: showArguments(expected),
+          };
+    fail(
+      `Expected ${spy.label} ${negation}to have been ${phrase.what} ${showArguments(expected)}${phrase.position ?? ""}; ${received(spy)}`,
+      diff,
+    );
+  };
   return {
     not: undefined as unknown as Matchers<T>,
+    toHaveBeenCalled: () => {
+      const spy = recorded();
+      const called = spy.calls.length > 0;
+      if (called !== negated) return;
+      fail(
+        `Expected ${spy.label} ${negation}to have been called; ${received(spy)}`,
+      );
+    },
+    toHaveBeenCalledTimes: (times) => {
+      const spy = recorded();
+      if ((spy.calls.length === times) !== negated) return;
+      fail(
+        `Expected ${spy.label} ${negation}to have been called ${count(times, "time")}; ${received(spy)}`,
+      );
+    },
+    toHaveBeenCalledWith: (...args) => {
+      const expected = table.pack(...args) as unknown as Packed;
+      const spy = recorded();
+      const matched = some(spy.calls, (call) =>
+        sameArguments(call as Packed, expected),
+      );
+      if (matched !== negated) return;
+      failCalledWith(spy, expected, { what: "called with" }, "every");
+    },
+    // Each packs its arguments itself: a rest parameter spread once keeps
+    // a trailing nil, which a list handed on would drop.
+    toHaveBeenLastCalledWith: (...args) => {
+      failUnlessCallMatches(table.pack(...args) as unknown as Packed, {
+        what: "last called with",
+      });
+    },
+    toHaveBeenNthCalledWith: (n, ...args) => {
+      failUnlessCallMatches(
+        table.pack(...args) as unknown as Packed,
+        { what: "called with", position: ` on call ${tostring(n)}` },
+        n,
+      );
+    },
     toEqual: (expected) => {
       if (type(actual) === "table" || isAsymmetric(expected)) {
         const found = difference(actual, expected, "", new LuaMap());
         if ((found === undefined) !== negated) return;
         if (type(actual) !== "table") {
-          fail(`Expected ${shown()} ${negation}to equal ${show(expected)}`);
+          fail(
+            `Expected ${shown()} ${negation}to equal ${show(expected)}`,
+            negated ? undefined : diffWith(expected),
+          );
         }
         if (found === undefined) {
           fail(`Expected ${shown()} not to deeply equal ${show(expected)}`);
         }
         fail(
           `Expected ${shown()} to deeply equal ${show(expected)}${where(found)}`,
+          diffWith(expected),
         );
       }
       if ((actual === expected) !== negated) return;
-      fail(`Expected ${shown()} ${negation}to equal ${show(expected)}`);
+      fail(
+        `Expected ${shown()} ${negation}to equal ${show(expected)}`,
+        negated ? undefined : diffWith(expected),
+      );
     },
     toBe: (expected) => {
       if (rawequal(actual, expected) !== negated) return;
@@ -820,7 +1187,10 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
         !negated && type(actual) === "table" && type(expected) === "table"
           ? " (not the same table; use toEqual for deep equality)"
           : "";
-      fail(`Expected ${shown()} ${negation}to be ${show(expected)}${hint}`);
+      fail(
+        `Expected ${shown()} ${negation}to be ${show(expected)}${hint}`,
+        negated ? undefined : diffWith(expected),
+      );
     },
     toBeTruthy: () => {
       if (!!actual !== negated) return;
@@ -882,6 +1252,7 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       }
       fail(
         `Expected ${shown()} to match object ${show(subset)}${where(found)}`,
+        diffWith(subset),
       );
     },
     toBeGreaterThan: (expected) => {
@@ -979,15 +1350,17 @@ export function expect<T>(actual: T): Matchers<T> {
 }
 
 // The asymmetric matchers. Each wrapper ends in a tail call, so the error
-// level 2 of one that raises names the test's line, not this file's.
+// level 2 of one that raises names the test's line, not this file's. Each is
+// typed `never`, which stands where any value is expected, as Vitest's `any`
+// does, without the `no-unsafe-argument` finding of an `any` handed to a
+// typed parameter, such as a Native's in `toHaveBeenCalledWith`.
 
 /**
  * Matches any value but nil. A field holding nil is absent in Lua, so it
  * fails there too.
  * @returns The matcher, to stand on the expected side.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.anything = (): any => anything();
+expect.anything = (): never => anything() as never;
 
 /**
  * Matches a value of a Lua type (`"number"`, `"string"`, `"boolean"`,
@@ -998,16 +1371,15 @@ expect.anything = (): any => anything();
  * @returns The matcher, to stand on the expected side.
  * @throws When `kind` is nil or neither a type name nor a class.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.any = (kind: LuaTypeName | Class): any => anyOf(kind);
+expect.any = (kind: LuaTypeName | Class): never => anyOf(kind) as never;
 
 /**
  * Matches a table holding every key of `part` with a deeply equal value.
  * @param part - The keys and values the table holds.
  * @returns The matcher, to stand on the expected side.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.objectContaining = (part: object): any => objectContaining(part);
+expect.objectContaining = (part: object): never =>
+  objectContaining(part) as never;
 
 /**
  * Matches a list holding, in any order, an item deeply equal to each of
@@ -1015,17 +1387,16 @@ expect.objectContaining = (part: object): any => objectContaining(part);
  * @param items - The items the list holds.
  * @returns The matcher, to stand on the expected side.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.arrayContaining = (items: readonly unknown[]): any =>
-  arrayContaining(items);
+expect.arrayContaining = (items: readonly unknown[]): never =>
+  arrayContaining(items) as never;
 
 /**
  * Matches a string holding `part` as plain text, not a pattern.
  * @param part - The part of the string.
  * @returns The matcher, to stand on the expected side.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- stands where any value is expected, as Vitest's
-expect.stringContaining = (part: string): any => stringContaining(part);
+expect.stringContaining = (part: string): never =>
+  stringContaining(part) as never;
 
 // ---------------------------------------------------------------------------
 // Running and reporting
@@ -1160,6 +1531,8 @@ function runBody(block: Block): Result {
       name: block.name,
       status: "fail",
       message: failure.message,
+      actual: failure.actual,
+      expected: failure.expected,
     };
   }
   return {

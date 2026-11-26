@@ -70,7 +70,26 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 `expect` has Vitest's matchers where typescript-to-lua compiles them, with `.not` and the asymmetric matchers (`expect.anything()`, `expect.any("number")`, `expect.objectContaining(…)`); [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) lists them. `game.printed` holds every line printed since the game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` holds every message shown on a player's screen, as `{ text, player, duration }`. Each read is a copy, taken at the moment you read it.
 
-{/* Completed with every Native a Spy, fn and calls (#987). */}
+{@includeCode ../../../packages/reforged-test/examples/expect.test.ts}
+
+**Every Native is already a Spy.** Hand the Native itself to `expect`, and the spy matchers (`toHaveBeenCalled`, `toHaveBeenCalledTimes`, `toHaveBeenCalledWith`, `toHaveBeenLastCalledWith` and `toHaveBeenNthCalledWith`, which [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) describes) read the calls its Stub recorded. The arguments are typed from the Native's parameters, so a wrong one is a compile error, and nothing is replaced to watch the Native, so there is nothing to restore:
+
+{@includeCode ../../../packages/reforged-test/examples/spies.test.ts}
+
+**A Spy of your own.** `fn()` makes a Spy: a real function, to hand the library as a callback, whose calls the same matchers read. Given a function, the Spy calls it and returns what it returned. There is no `spyOn` and no `mockReturnValue`: a Native's answer is given with [`stubNative`](#a-native-without-a-stub). There is no reset either, each test being a game of its own:
+
+{@includeCode ../../../packages/reforged-test/examples/fn.test.ts}
+
+**A value out of a call.** `calls` returns the arguments of each call of a Spy or of a Native, oldest first, typed as its parameters: the handler a Native received, for instance, which the test can then call as the game would:
+
+{@includeCode ../../../packages/reforged-test/examples/calls.test.ts}
+
+A failure says what was compared, with Handles rendered as `kind#id`, and a spy matcher's lists the calls received, one per line. Vitest draws the diff of the two values compared, in the terminal and in the editor's panel:
+
+```text
+AssertionError: Expected TimerStart to have been called with (expect.anything(), 60, true, expect.anything()); it received 1 call:
+  1: TimerStart(timer#1048577, 30, false, <function>)
+```
 
 ## Errors
 

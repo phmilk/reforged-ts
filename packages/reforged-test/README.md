@@ -14,13 +14,13 @@ The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/
 
 The package has five parts:
 
-| Part                                 | Reached as            | What it is                                                                                                                                                                   |
-| ------------------------------------ | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach` and `afterEach` for the test files, compiled to Lua.                                                                                |
-| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach`, `startGame`, `stubNative` and `newHandle` for a Map project's tests, each in a Test game of its own, over the runner. |
-| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.                                       |
-| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                                                  |
-| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                                                |
+| Part                                 | Reached as            | What it is                                                                                                                                                                                  |
+| ------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The runner                           | `reforged-test/lua`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach`, `fn` and `calls` for the test files, compiled to Lua.                                                                                |
+| The map entry point                  | `reforged-test/map`   | `describe`, `it`, `expect`, `beforeEach`, `afterEach`, `startGame`, `fn`, `calls`, `stubNative` and `newHandle` for a Map project's tests, each in a Test game of its own, over the runner. |
+| The glue                             | `reforged-test`       | The Node entry point a vitest file calls. It runs every compiled test file in a fresh Lua state and registers the results with vitest.                                                      |
+| The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                                                                 |
+| The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                                                               |
 
 ## Testing a map
 
@@ -101,16 +101,19 @@ The runner exports:
   - `toMatch(part)`: a string holds this part as plain text.
   - `toThrow(message?)`: the value is a function that throws when called. With `message`, the error's message contains it as plain text. It takes no error class.
   - `toContainCall(call)`: the value is a call log that holds exactly this line.
+  - The spy matchers, on a Native or a Spy alike: `toHaveBeenCalled()`, `toHaveBeenCalledTimes(times)`, `toHaveBeenCalledWith(...args)`, `toHaveBeenLastCalledWith(...args)` and `toHaveBeenNthCalledWith(n, ...args)`, `n` counted from 1. Every Native is already a Spy: `expect(TimerStart)` reads the Recorded calls its Stub keeps, the arguments typed from the Native's parameters, with nothing replaced on `_G` and nothing to restore. The arguments compare as `toEqual` compares, their number included, so a trailing `nil` counts. Any other value, a function of the map or of the Lua library included, fails the matcher, saying so.
 - The asymmetric matchers, which stand on the expected side of `toEqual`, `toMatchObject` and `toContainEqual`: `expect(call).toEqual([expect.anything(), 60])`.
   - `expect.anything()`: any value but `nil`. A field holding `nil` is absent in Lua, so it fails there too.
   - `expect.any(kind)`: a value of a Lua type, by its name (`"number"`, `"string"`, `"boolean"`, `"table"`, `"function"`), or an instance of a class. `Number`, `String` and the other built-in constructors are `nil` in Lua, so `expect.any(Number)` raises, naming the type name to write.
   - `expect.objectContaining(part)`: a table holding every key of `part` with a deeply equal value.
   - `expect.arrayContaining(items)`: a list holding, in any order, an item deeply equal to each of `items`; with no items, any value, as Vitest's.
   - `expect.stringContaining(part)`: a string holding this part as plain text.
+- `fn(impl?)`: a Spy, a real function that keeps the arguments of each of its calls apart from every other function's, then calls `impl`, when given, and returns what it returned. It has no `mock` member and nothing resets it.
+- `calls(spy)`: the arguments of each call of a Spy or of a Native, oldest first, one list per call typed as the function's parameters: `calls(TimerStart)[0][3]` is the handler of the first `TimerStart`. A list ends at its last argument that is not `nil`.
 - `stubCalls()`: the stub call log, one `Name(arg, arg)` line per Native call.
 - `run(position?)`: runs the registered tests and returns the JSON results; in a file that loads `reforged-test/map`, lists them, or runs the one at `position`. The glue calls it through the global `__reforged_test_run`, so a test file never calls it.
 
-A failed expectation fails its test with a message such as `Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)`. Any other error fails it with the Lua message, location included.
+A failed expectation fails its test with a message such as `Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)`, with no file and line of the TypeScript, Handles rendered as `kind#id` and constants by their name, as the call log renders them. A spy matcher's message ends with the calls received, one per line, `1: TimerStart(timer#1048577, 30, false, <function>)`. `toEqual`, `toBe`, `toMatchObject` and the three spy matchers that compare arguments hand Vitest the two values compared, so it draws their diff. Any other error fails it with the Lua message, location included, a thrown table's read from its `message`.
 
 `toMatch`, `toThrow(message)` and `expect.stringContaining` take plain text, never a pattern: typescript-to-lua compiles no regular expression, and a Lua pattern would read `.` or `%` as no Vitest test means them. There is no `toBeNull` (`null` is `nil`, so `toBeUndefined`), `toBeNaN`, `toStrictEqual`, `toHaveProperty`, snapshot, `resolves` or `rejects`. Why each matcher reads as it does, and what typescript-to-lua compiles of Vitest's: [How test libraries phrase a test](https://github.com/phmilk/reforged-ts/blob/master/docs/research/test-phrasing.md).
 
@@ -144,11 +147,12 @@ Each compiled test file runs in a fresh Lua state, in this order:
 1. The standard libraries are opened.
 2. The shipped stub files run: `base.lua` first, then the others by name.
 3. The stub files listed in `stubs` run, in the order given.
-4. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
-5. The test module is required, which registers its tests.
-6. The runner runs the tests and returns the results.
+4. Every global function the stub files defined becomes the Stub of the Native it is named after (`__stub_seal`), what a spy matcher reads the Recorded calls of, so a function of a stub file that records no call reads as never called.
+5. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
+6. The test module is required, which registers its tests.
+7. The runner runs the tests and returns the results.
 
-A file that loads `reforged-test/map` stops at step 6 with the list of its tests, and each test then runs in a fresh state of its own, the six steps again with that test alone at step 6, inside its vitest `test`. A file of N tests costs N+1 states, less the tests Vitest does not run: a skip or todo test, or one out of focus, opens no state. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
+A file that loads `reforged-test/map` stops at step 7 with the list of its tests, and each test then runs in a fresh state of its own, the seven steps again with that test alone at step 7, inside its vitest `test`. A file of N tests costs N+1 states, less the tests Vitest does not run: a skip or todo test, or one out of focus, opens no state. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
 
 A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts library preloaded. lua-wasm-bindings loads once per process.
 
@@ -198,6 +202,7 @@ The runner and the glue share nothing but this JSON string, returned by the glob
 - `suite` lists the enclosing `describe` names, outermost first.
 - `status` is `pass`, `fail` (an expectation did not hold), `error` (anything else was thrown) or `skip` (the body did not run: a skip or todo test, or one in a skipped `describe`).
 - `message` is present on `fail` and `error`.
+- `actual` and `expected`, together, on a `fail` whose matcher compared two values: each rendered as text, which the glue hands to Vitest as the error's `actual` and `expected` for its diff, and `runLuaTestFiles` returns on the result.
 - `mode` is `skip`, `only` or `todo` for a test registered with `it.skip`, `it.only` or `it.todo`, and absent for a plain `it`.
 - `suiteModes` lists the mode of each enclosing `describe`, one per `suite` name (`run`, `skip` or `only`), and is absent when every one is a plain `describe`.
 
@@ -226,6 +231,7 @@ It also holds the shared machinery the other stub files use:
 - `__stub_constant(kind, name)` returns a constant of the game: a table carrying `__kind` and `__name` and no handle id, so defining one leaves the handle sequence alone.
 - `__stub_constants(kind, names)` defines one global constant of `kind` per name in the list, each named after itself: a family of constants in one call.
 - `__stub_format(value)` renders one argument as `__stub_record` does.
+- `__stub_seal()` takes every global function the stub files defined, but the standard library's and the `__stub_*` helpers, as the Stub of the Native it is named after; the glue calls it after the last stub file. `__stub_define(name, stub)` defines the global Native `name` as `stub`, a Stub too, as `stubNative` does, and `__stub_native_name(value)` answers the name of the Native whose Stub `value` is, or `nil`.
 - `__stub_player(number)` returns the player handle of a slot, the one `Player` returns, without a call-log line. Stubs that return a player use it.
 - `__stub_response(name)` defines the event response Native `name` (`GetTriggerUnit`, `GetExpiredTimer`): it records its call and answers with the firing context's value for its name, nil when the context has none or outside a firing. A Map project's stub file uses it for a response Native the shipped families leave out.
 - `__stub_with_context(context, body)` runs `body` with `context` as the firing context and returns what `body` returned. The previous context comes back afterwards, also when `body` throws, so a firing inside a firing hands the outer context back when it ends. The firing helpers use it.
