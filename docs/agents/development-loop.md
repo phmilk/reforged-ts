@@ -179,11 +179,11 @@ An Agent that runs Subagents (`/implement-spec`, `/ship-spec`, `/code-review`, a
 - **Worktrees, made by hand.** Make each implementer's worktree yourself, from the integration branch, check its base before the Subagent starts, and give the Subagent its absolute path:
 
   ```sh
-  git worktree add .claude/worktrees/<name> -b <branch> <integration-branch>
+  git worktree add --no-track .claude/worktrees/<name> -b <branch> <integration-branch>
   git -C .claude/worktrees/<name> merge-base --is-ancestor <integration-branch> HEAD
   ```
 
-  The Agent tool's worktree isolation stays unused: it refuses as unverifiable many commands this repository runs (a `cd` through a variable, the `GIT_CONFIG_COUNT=` prefix of the skills install, `gh --jq` with a newline). The Subagent's prompt says its worktree is already on the right base, and that a wrong base is reported, not repaired: the Subagent stops and says so, and never resets, though step 4 of `/implement-spec` tells it to reset onto the integration branch. Once a branch is merged, remove its worktree with `git worktree remove`. On Windows set `core.longpaths` first (`git config --global core.longpaths true`): without it the deep paths of `node_modules` stop the removal halfway, the worktree unregistered and its folder left behind.
+  The Agent tool's worktree isolation stays unused: it refuses as unverifiable many commands this repository runs (a `cd` through a variable, the `GIT_CONFIG_COUNT=` prefix of the skills install, `gh --jq` with a newline). The Subagent's prompt says its worktree is already on the right base, and that a wrong base is reported, not repaired: the Subagent stops and says so, and never resets, though step 4 of `/implement-spec` tells it to reset onto the integration branch. Each worktree runs its own `pnpm install`: its `node_modules` is never linked to another checkout's. Once a branch is merged, remove its worktree as [Removing a worktree](#removing-a-worktree) says.
 
 - **Commands, in the foreground.** A Subagent runs every command in the foreground, with a timeout of at most ten minutes (`timeout: 600000`); a longer check is split into steps that each fit, `pnpm check` into `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm test` and the rest of its script. Only a completion notice wakes an Agent that waits on a background command, and it sometimes never comes: the process dies, or the waiter went idle first. The main conversation keeps background commands for real parallelism (a CI watch), each with a bounded runtime (a `timeout`, a runner's own limit), and stops what it started once it no longer needs it. An Agent ends a turn on a background wait only with something that wakes it, a Monitor or a scheduled wakeup that checks the condition; with neither, its reply says what is pending and how the Collaborator can check it. Subagents themselves may run in parallel: each is listed as in flight while it runs, and its completion notice is its report.
 - **Spawn Subagents unnamed.** An unnamed Subagent hands back one report. A named agent is a teammate: each of its messages and idle notices arrives in the Collaborator's conversation as a turn of its own. A name is for an agent the Collaborator wants to talk to back and forth. An unnamed Subagent is still continued by its id, to hand it the review's findings.
@@ -192,6 +192,21 @@ An Agent that runs Subagents (`/implement-spec`, `/ship-spec`, `/code-review`, a
 - **Integration, checked before it moves.** The integration branch moves while implementers work, so the tip an implementer merged may be an old one, though its report says the tip. Before fast-forwarding the integration branch onto an implementer's branch, run `git merge-base --is-ancestor <integration-branch> <branch>`; when it fails, merge the current tip into that branch yourself and run again the checks the merge touches. `master` moves too: before `gh pr ready`, merge `origin/master` into the integration branch, run again the checks the merge touches, push, and confirm `gh pr view --json mergeStateStatus` is not `DIRTY`.
 - **Review, by fresh Subagents.** `/code-review` runs its reviewers as fresh Subagents, as clean as a new session. Their prompt carries pointers only: the diff command, the standards, the issue and the Spec. The implementer's report, outcomes and justifications stay out of it, so its conclusions cannot steer the review.
 - **Fixes, and one more round.** The implementer fixes what the review found, so the fix starts from the context that wrote the code. Then one more `/code-review` runs on the fix commits alone, by fresh Subagents: its fixed point is the last commit before the fixes. What it finds is fixed, and what stays a judgement call goes to the pull request's body. There is no third round. This round is what makes ADR 0021's "the pull request has been through `/code-review`, and what it found is fixed" verifiable.
+
+### Removing a worktree
+
+Every removal of a worktree, a Subagent's or any other, follows this recipe, from its repository's checkout, in Git Bash on Windows:
+
+1. `git worktree remove <path>`. When it succeeds, the removal is done.
+2. When it fails, read `git worktree list`, whatever the error said:
+   - **It no longer names `<path>`:** the remove unregistered the worktree and failed to delete its folder. Delete the folder with `rm -rf <path>`.
+   - **It still names `<path>`,** a dirty worktree among the causes: leave the folder and its branch as they are, since uncommitted work may be in it, and report the path and the error.
+
+The folder left behind has one measured cause (2026-11-25, on Windows, with `core.longpaths` set, [#941](https://github.com/phmilk/reforged-ts/issues/941)): pnpm links the packages of `node_modules` with junctions, and `git worktree remove` follows them. A junction to a sibling under `node_modules/.pnpm/` makes it fail with `Directory not empty`, after it unregistered the worktree. Git Bash's `rm -rf` does not follow a junction, so it deletes the folder and nothing else.
+
+**Never run `git worktree remove` on a worktree whose `node_modules` holds a junction to outside it,** one linked to the main checkout's among them: git follows that junction too, exits 0 and deletes the contents of its target, outside the worktree. That is why a worktree's `node_modules` is never linked to another checkout's. Delete such a worktree's folder with `rm -rf <path>`, then drop its registration with `git worktree prune`.
+
+`core.longpaths` (`git config --global core.longpaths true`) does not prevent the folder left behind. On Windows it guards against one other failure only, `Filename too long` on the deep paths of `node_modules`.
 
 ### What the background-wait check blocks
 
