@@ -6,15 +6,17 @@
 // stage, or the alias's entry point), the callback and the message pcall
 // returned, and the run goes on with the next callback. Printing is
 // unconditional (ADR 0003): a Lua error in a game thread is silent
-// otherwise, and the game has no debug library for a traceback.
+// otherwise, and the game has no debug library for a traceback. The line
+// goes through `reportCaughtError` (reforged/protect.ts), which also tells a
+// harness's `__reforged_caught_error` (ADR 0028).
 //
 // Package-internal: nothing here is exported from the library index.
 
 import { configuration, noteRegistration } from "../reforged/configuration";
+import { reportCaughtError } from "../reforged/protect";
 import {
   type EntryPoint,
   type InitStage,
-  LIBRARY,
   type Origin,
   type Registration,
 } from "./state";
@@ -73,8 +75,10 @@ export function enqueue(
 export function runProtected(where: Where, registration: Registration): void {
   const [ok, failure] = pcall(registration.callback);
   if (!ok) {
-    print(
-      `${LIBRARY}: ${where} callback ${registration.name} failed: ${tostring(failure)}`,
+    reportCaughtError(
+      `${where} callback ${registration.name}`,
+      tostring(failure),
+      "print",
     );
   }
 }

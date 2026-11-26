@@ -16,10 +16,17 @@
 // callback failing with the same message again is counted, not reported
 // again; `Reforged.debug.report()` prints the counts.
 //
+// Every Caught error, of a protected callback, of `runLocal` or of an Init
+// queue (init/queue.ts), goes through `reportCaughtError`, which also calls
+// the global `__reforged_caught_error(origin, message)` when one is defined,
+// on every failure, the counted repeats included: the seam `reforged-test`
+// defines to fail a test on a Caught error (ADR 0028). The game defines no
+// such global, and the Typings do not declare it.
+//
 // Package-internal: nothing here is exported from the library index.
 
 import type { Handle } from "../handles/handle";
-import { anchored, LIBRARY } from "../init/state";
+import { anchored, globals, LIBRARY } from "../init/state";
 import { configuration, noteRegistration } from "./configuration";
 
 /** How long a report stays on screen, in seconds. */
@@ -95,6 +102,52 @@ function store(): FailureStore {
 export function reportLine(line: string): void {
   DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, REPORT_DURATION, line);
   print(line);
+}
+
+/**
+ * The global a harness defines to hear of every Caught error (ADR 0028),
+ * called with its origin and its message.
+ */
+const CAUGHT_ERROR_HOOK = "__reforged_caught_error";
+
+/** A harness's Caught error hook, as `CAUGHT_ERROR_HOOK` names it. */
+type CaughtErrorHook = (origin: string, message: string) => void;
+
+/**
+ * What a Caught error shows besides the hook: its line printed (an Init
+ * queue's), printed and on screen (a protected callback's first failure with
+ * a message), or nothing, a repeat only counted.
+ */
+export type CaughtErrorReport = "print" | "screen" | "count";
+
+/**
+ * Reports one Caught error, an error the library caught from a Map project's
+ * callback: unless `report` is `"count"`, the line
+ * `reforged-ts: <origin> failed: <message>`, printed, and on screen too for
+ * `"screen"`; then, whatever `report` is, the global
+ * `__reforged_caught_error(origin, message)` when it is defined.
+ * @param origin - Where the callback was registered or ran:
+ * `Timer#1048577 Timer.start`, `globals callback "spawn"`.
+ * @param message - The Lua error text, as pcall returned it.
+ * @param report - What shows besides the hook.
+ */
+export function reportCaughtError(
+  origin: string,
+  message: string,
+  report: CaughtErrorReport,
+): void {
+  if (report !== "count") {
+    const line = `${LIBRARY}: ${origin} failed: ${message}`;
+    if (report === "screen") {
+      reportLine(line);
+    } else {
+      print(line);
+    }
+  }
+  const hook = globals[CAUGHT_ERROR_HOOK] as CaughtErrorHook | undefined;
+  if (hook !== undefined) {
+    hook(origin, message);
+  }
 }
 
 /**
@@ -191,6 +244,7 @@ export function reportedFailures(): ReportedFailures {
  * Records one failure of a protected callback that `reported` remembers:
  * the first time a message is seen (since the last reset) it is reported,
  * `reforged-ts: <origin> failed: <message>`; afterwards it is only counted.
+ * Either way it is a Caught error, which `reportCaughtError` reports.
  * @param reported - The messages this callback already reported, which
  * decide between a report and a count.
  * @param origin - Where it was registered, as `originOf` names it.
@@ -212,12 +266,13 @@ export function reportFailure(
   const row = reported.seen.get(message);
   if (row !== undefined) {
     row.count++;
+    reportCaughtError(origin, message, "count");
     return;
   }
   const added: FailureRow = { origin, message, count: 1 };
   failures.rows.push(added);
   reported.seen.set(message, added);
-  reportLine(`${LIBRARY}: ${origin} failed: ${message}`);
+  reportCaughtError(origin, message, "screen");
 }
 
 /**
