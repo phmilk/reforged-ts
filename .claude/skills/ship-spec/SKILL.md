@@ -107,10 +107,8 @@ A stop is per Ticket. It leaves the Claim protocol's "Stopping" comment on the T
 
 Every removal of a worktree of the run, at a merge, a stop or the run's end, goes through its repository's checkout (the Template's for a Template Ticket):
 
-1. `git worktree remove <path>`. When it succeeds, go to step 3.
-2. When it fails, read `git worktree list`, whatever the error said:
-   - **It no longer names `<path>`:** the remove unregistered the worktree and failed to delete its folder, as it did on Windows for every worktree of the first run ("Directory not empty", with `core.longpaths` set). `rm -rf <path>`.
-   - **It still names `<path>`,** a dirty worktree among the causes: leave the folder and the branch as they are, since uncommitted work may be in it. Put the path and the error in the ledger, and end this removal here.
+1. Remove the worktree by the development loop doc's recipe ([Removing a worktree](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/development-loop.md#removing-a-worktree)), which says what to run, what to do when the remove fails and why it fails on Windows.
+2. When the recipe leaves the worktree in place, its folder and its branch stay: put the path and the error in the ledger, and end this removal here.
 3. After a merge only, `git branch -D <branch>`. Then remove the check lock when its holder names this Ticket ([The check lock](#the-check-lock)).
 
 ## A red CI
