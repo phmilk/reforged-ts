@@ -253,6 +253,8 @@ describe("runLuaTests on focus and skip", () => {
 
   describe("with an only, allowed", () => {
     let focused: InnerRun;
+    // Measured 1.2 s with pnpm test --project reforged-test on Linux (WSL 2,
+    // 8 threads), 2026-11: the first inner run's limit, for a run as large.
     beforeAll(async () => {
       focused = await runInner(["only", "results"], true);
       runs.push(focused);
@@ -303,6 +305,8 @@ describe("runLuaTests on focus and skip", () => {
 
   describe("with an only, under CI", () => {
     let ci: InnerRun;
+    // Measured 1.2 s with pnpm test --project reforged-test on Linux (WSL 2,
+    // 8 threads), 2026-11: the first inner run's limit, for a run as large.
     beforeAll(async () => {
       // allowOnly is false under CI by Vitest's own default.
       ci = await runInner(["only", "results"], false);
