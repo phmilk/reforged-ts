@@ -509,10 +509,8 @@ describe("the list of what both repositories share", () => {
   });
 });
 
-describe("the names Claude Code reserves", () => {
-  // A skill of a reserved name is never loaded, shared or not: typed, the
-  // name runs Claude Code's own command instead (#940).
-  it("takes none for a skill of .claude/skills/, Upstream, shared or the repository's", () => {
+describe("the skill names of .claude/skills/", () => {
+  it("take none Claude Code reserves, Upstream or the repository's", () => {
     expect(
       reservedProblems([...upstream, ...repository]),
       "the skills of .claude/skills/",
