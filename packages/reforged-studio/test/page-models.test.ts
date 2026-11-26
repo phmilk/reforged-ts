@@ -7,9 +7,11 @@
  * model field shows, which the server then caches; the live preview; the
  * picker; and the art layer's switch.
  *
- * It needs the page built (`pnpm build`) and Chromium installed
- * (`pnpm --filter reforged-studio exec playwright install chromium`, which
- * CI runs). WebGL runs on Chromium's software renderer.
+ * It needs the page built (`pnpm build`) and the headless Chromium
+ * installed (`pnpm --filter reforged-studio exec playwright install
+ * --only-shell chromium`, which CI runs and the project's global setup,
+ * `support/chromium.ts`, names when the browser is missing). WebGL runs on
+ * Chromium's software renderer.
  */
 import fs from "node:fs";
 import path from "node:path";
