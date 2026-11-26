@@ -1,12 +1,12 @@
 /**
- * The Frontier query, `pnpm spec:frontier <spec> [owner/name]`: what a
- * login can do on a Spec now (#737, "The Frontier query"). It prints three
- * lists of the Spec's open Tickets, in either Board repository: those the
- * login may take (on the Frontier, no assignee other than itself), those it
- * holds, with their open pull requests, and those other logins hold. The
- * skill hook, `next-step` and `ship-spec` ask it, so that they agree on the
- * Frontier. `frontierQuery` is pure: the fetched Spec and the login in, the
- * three lists out. `main` reads the Spec through the GitHub GraphQL API, the
+ * The Frontier query, `pnpm spec:frontier <spec> [owner/name] [--json]`:
+ * what a login can do on a Spec now (#737, "The Frontier query"). It
+ * prints three lists of the Spec's open Tickets, in either Board
+ * repository: those the login may take (on the Frontier, no assignee other
+ * than itself), those it holds, with their open pull requests, and those
+ * other logins hold. The skill hook, `next-step` and `ship-spec` ask it, so
+ * that they agree on the Frontier. `frontierQuery` is pure: the fetched
+ * Spec and the login in, the three lists out. `main` reads the Spec through the GitHub GraphQL API, the
  * login being the token's (the `gh` login's unless the environment sets
  * one), and prints them: as text for a human, or with `--json` as one JSON
  * object, `answerJson`, for an Agent to read by its fields.
@@ -24,7 +24,8 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
-const USAGE = "Usage: node release/src/spec-frontier.ts <spec> [owner/name]\n";
+const USAGE =
+  "Usage: node release/src/spec-frontier.ts <spec> [owner/name] [--json]\n";
 
 /** An issue or a pull request, in any repository. */
 export interface IssueRef {
@@ -192,8 +193,8 @@ export interface TicketJson extends IssueRef {
 /**
  * The JSON form of the answer, as `main` prints it with `--json`: the
  * Spec, the login and the three lists in the order the text prints them.
- * A contract of `ship-spec` and `next-step`, which read it: a change to
- * its shape changes them in the same pull request.
+ * A contract from its first merge, for `ship-spec` and `next-step` to read
+ * (#926): a change to its shape changes them in the same pull request.
  */
 export interface AnswerJson {
   spec: IssueRef & { title: string };
@@ -637,8 +638,7 @@ export async function main(
     const answer = frontierQuery(spec, login);
     output.stdout(
       target.json
-        ? `${JSON.stringify(answerJson(spec, answer), null, 2)}
-`
+        ? `${JSON.stringify(answerJson(spec, answer), null, 2)}\n`
         : renderAnswer(spec, answer),
     );
     return 0;

@@ -8,7 +8,8 @@ import { tempDir } from "./support/workspace.js";
 const SCRIPT = join(repositoryRoot, "release", "src", "spec-frontier.ts");
 const LIBRARY = "phmilk/reforged-ts";
 const TEMPLATE = "phmilk/reforged-ts-template";
-const USAGE = "Usage: node release/src/spec-frontier.ts <spec> [owner/name]\n";
+const USAGE =
+  "Usage: node release/src/spec-frontier.ts <spec> [owner/name] [--json]\n";
 
 interface Received {
   authorization: string | undefined;
@@ -363,8 +364,15 @@ describe("spec-frontier", () => {
   });
 
   describe("--json", () => {
-    /** The Spec of the first test: a Ticket in each list, one in two. */
-    function tickets(): unknown[] {
+    /** The Spec as `--json` prints it. */
+    const SPEC = { repository: LIBRARY, number: 10, title: "The Spec" };
+
+    /**
+     * Tickets in every list for @alice: one she holds with @dave, with an
+     * open pull request in each repository and a merged one, and a closed
+     * Ticket, in no list.
+     */
+    function everyListTickets(): unknown[] {
       return [
         ticketNode(11),
         ticketNode(12, {
@@ -384,9 +392,9 @@ describe("spec-frontier", () => {
       ];
     }
 
-    /** The JSON object `--json` prints for `tickets()`, for @alice. */
+    /** The JSON object `--json` prints for `everyListTickets()`, for @alice. */
     const OBJECT = {
-      spec: { repository: LIBRARY, number: 10, title: "The Spec" },
+      spec: SPEC,
       login: "alice",
       takeable: [
         {
@@ -435,7 +443,7 @@ describe("spec-frontier", () => {
     };
 
     it("prints the answer as one JSON object and a final newline, and exits 0", async () => {
-      answer = specData(tickets());
+      answer = specData(everyListTickets());
 
       const result = await run(["10", "--json"]);
 
@@ -457,7 +465,7 @@ describe("spec-frontier", () => {
       ["between the Spec and its repository", ["10", "--json", LIBRARY]],
       ["after the repository", ["#10", LIBRARY, "--json"]],
     ])("takes the flag %s", async (_, args) => {
-      answer = specData(tickets());
+      answer = specData(everyListTickets());
 
       const result = await run(args);
 
@@ -479,7 +487,7 @@ describe("spec-frontier", () => {
         code: 0,
         stdout: `${JSON.stringify(
           {
-            spec: { repository: LIBRARY, number: 10, title: "The Spec" },
+            spec: SPEC,
             login: "alice",
             takeable: [],
             held: [],
@@ -517,7 +525,7 @@ describe("spec-frontier", () => {
     });
 
     it("leaves the text output unchanged without the flag", async () => {
-      answer = specData(tickets());
+      answer = specData(everyListTickets());
 
       const result = await run(["10"]);
 
