@@ -172,7 +172,7 @@ class Harness {
    * state of its own when its result is asked for.
    */
   load(module: TestModule): LoadedModule {
-    const parsed = this.#runState(module.moduleName);
+    const parsed = this.#runInFreshState(module.moduleName);
     if ("error" in parsed) return parsed;
     if (parsed.isolated) {
       return {
@@ -203,7 +203,7 @@ class Harness {
       status: "error",
       message,
     });
-    const parsed = this.#runState(moduleName, position);
+    const parsed = this.#runInFreshState(moduleName, position);
     if ("error" in parsed) return failed(parsed.error);
     const found = parsed.isolated ? undefined : parsed.tests[0];
     if (found === undefined || fullName(found) !== fullName(listed)) {
@@ -218,7 +218,7 @@ class Harness {
    * Runs the module in a fresh state, the test at `position` alone when it
    * is set: what the runner answered, or the Lua message of what raised.
    */
-  #runState(
+  #runInFreshState(
     moduleName: string,
     position?: number,
   ): RunnerAnswer | { readonly error: string } {
