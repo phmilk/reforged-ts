@@ -111,7 +111,7 @@ describe("board:setup", () => {
     expect(mutations(sent)).toEqual([]);
     expect(
       result.stdout.endsWith(
-        'By hand: The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).\n' +
+        'By hand: The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).\n' +
           `The board: ${CONFIGURED.url}\n`,
       ),
     ).toBe(true);

@@ -160,12 +160,12 @@ describe("the definition", () => {
     );
   });
 
-  it("tells the README's reader which built-in workflows are on, and relies on none", () => {
+  it("tells the README's reader which built-in workflows are on, and that the reconcile adds the sub-issues", () => {
     for (const { name, enabled } of BOARD_WORKFLOWS) {
       if (enabled) expect(BOARD_README).toContain(`"${name}"`);
     }
     expect(BOARD_README).toContain('"Auto-close issue"');
-    expect(BOARD_README).not.toContain("GitHub adds by itself");
+    expect(BOARD_README).toContain("the reconcile adds each one");
   });
 
   it("has no mutation that deletes a built-in workflow", () => {
@@ -531,7 +531,7 @@ describe("workflowSteps", () => {
     expect(workflowSteps(CONFIGURED.workflows)).toEqual([]);
   });
 
-  it("names exactly the three to turn off on the state measured on 2026-11-26", () => {
+  it("names exactly the three to turn off on the live project's measured state", () => {
     expect(workflowSteps(MEASURED_WORKFLOWS)).toEqual([
       'Turn off the workflow "Auto-close issue": it is on, and the definition has it off.',
       'Turn off the workflow "Pull request linked to issue": it is on, and the definition has it off.',
@@ -539,7 +539,7 @@ describe("workflowSteps", () => {
     ]);
   });
 
-  it("names a workflow to turn on, off or missing", () => {
+  it("names a workflow the definition has on, whether it is off or not listed", () => {
     expect(
       workflowSteps(
         CONFIGURED.workflows.flatMap((workflow) =>
@@ -551,7 +551,7 @@ describe("workflowSteps", () => {
         ),
       ),
     ).toEqual([
-      'Turn on the workflow "Auto-add sub-issues to project": GitHub lists none of that name, and the definition has it on.',
+      'GitHub lists no workflow "Auto-add sub-issues to project", which the definition has on: when GitHub renamed it, give BOARD_WORKFLOWS (release/src/board.ts) its new name.',
       'Turn on the workflow "Item closed": it is off, and the definition has it on.',
     ]);
   });
@@ -572,8 +572,8 @@ describe("workflowSteps", () => {
         { name: "Code review approved", enabled: false },
       ]),
     ).toEqual([
-      'The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
-      'The workflow "Code review approved" is off, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
+      'The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).',
+      'The workflow "Code review approved" is off, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).',
     ]);
   });
 });

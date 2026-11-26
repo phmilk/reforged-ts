@@ -236,7 +236,7 @@ The Issue status, the status GitHub shows on an issue's own page, follows the St
 
 ## Members
 
-Every open issue of both repositories, the App's New Patch reports among them; no pull request, no other bot's issue. Specs and maps are parents, and their sub-issues Members like any other open issue: the same workflow adds each one. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
+Every open issue of both repositories, the App's New Patch reports among them; no pull request, no other bot's issue. Specs and maps are parents, and their sub-issues Members like any other open issue: the reconcile adds each one. A closed issue stays Done for two weeks after its last update, then its item is archived; reopened, it is back.
 
 ## Views
 
@@ -325,7 +325,9 @@ export interface BoardSetupPlan {
   unchanged: string[];
   /**
    * What only a hand can do, one sentence each: a built-in workflow whose
-   * state differs from `BOARD_WORKFLOWS`. Never a request, so it stays
+   * state differs from `BOARD_WORKFLOWS`, on the project the plan was made
+   * on: empty when the plan creates it, and `workflowSteps` then answers
+   * for the project once GitHub has made it. Never a request, so it stays
    * outside their count.
    */
   byHand: string[];
@@ -499,10 +501,12 @@ const onOrOff = (enabled: boolean) => (enabled ? "on" : "off");
 /**
  * The steps that make `workflows`, the built-in workflows GitHub lists on
  * a project, match `BOARD_WORKFLOWS`, one sentence each and none when they
- * match: a workflow to turn on or off, in the definition's order, then each
- * one GitHub lists that the definition does not name, since GitHub may add
- * one. A workflow the definition has off and GitHub does not list is as
- * wanted. Workflows are matched by name.
+ * match: in the definition's order, a workflow to turn on or off, and one
+ * the definition has on that GitHub does not list, which no switch turns on
+ * (a rename by GitHub is the likely cause); then each one GitHub lists that
+ * the definition does not name, since GitHub may add one. A workflow the
+ * definition has off and GitHub does not list is as wanted. Workflows are
+ * matched by name, and the file named is the definition's entry point.
  */
 export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
   const steps: string[] = [];
@@ -511,7 +515,7 @@ export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
     if (listed === undefined) {
       if (enabled) {
         steps.push(
-          `Turn on the workflow "${name}": GitHub lists none of that name, and the definition has it on.`,
+          `GitHub lists no workflow "${name}", which the definition has on: when GitHub renamed it, give BOARD_WORKFLOWS (release/src/board.ts) its new name.`,
         );
       }
     } else if (listed.enabled !== enabled) {
@@ -523,7 +527,7 @@ export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
   for (const { name, enabled } of workflows) {
     if (!BOARD_WORKFLOWS.some((workflow) => sameName(workflow.name, name))) {
       steps.push(
-        `The workflow "${name}" is ${onOrOff(enabled)}, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).`,
+        `The workflow "${name}" is ${onOrOff(enabled)}, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).`,
       );
     }
   }

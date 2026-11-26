@@ -92,8 +92,8 @@ export const CONFIGURED: ProjectState = {
 /**
  * A project as GitHub creates it: private, no README, a default table view
  * and the Status options a fresh project is believed to come with (they are
- * not documented), its built-in workflows as the live project had them
- * before anyone set them.
+ * not documented). Its built-in workflows are an assumption too: those of
+ * the live project when first read, which someone may have set before.
  */
 export const FRESH: ProjectState = {
   id: "PVT_new",

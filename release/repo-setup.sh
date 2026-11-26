@@ -1185,7 +1185,9 @@ BOARD_BY_HAND=$(board_by_hand "$BOARD_PLAN")
 if [[ -n "$BOARD_BY_HAND" ]]; then
   say ""
   say "The project's built-in workflows, which the API cannot turn on or off. On"
-  say "the Workflows page, pick each one and use the switch at the top right:"
+  say "the Workflows page, pick the one a line names and use the switch at the top"
+  say "right; a line that names release/src/board.ts is settled there instead, in"
+  say "a pull request, and stops this stage until it is merged:"
   open_url "$BOARD_URL/workflows"
   while IFS= read -r line; do step "$line"; done <<<"$BOARD_BY_HAND"
   pause "Press Enter once each is as its line says"
