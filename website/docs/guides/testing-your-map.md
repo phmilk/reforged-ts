@@ -39,7 +39,15 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## Making the game happen
 
-{/* Written with the Event dispatch and game.fire (#981), the Dispatching Natives (#982), game.kill (#983) and game.chat, game.select, game.deselect and game.leave (#984): the table of Game actions, the table of Dispatching Natives, and the rule that every other event goes through game.fire, with a spell as its example. */}
+{/* The table of Game actions, written with game.kill (#983) and game.chat, game.select, game.deselect and game.leave (#984), and the table of Dispatching Natives (#982). */}
+
+**Every other event goes through `game.fire`.** An event no Game action and no Dispatching Native covers (a spell, an order, a construction, a hero's level) is fired with `game.fire`, the one way to fire it. It takes the event and its Firing context: what each response Native answers while the event's Triggers run, by name. Every Trigger the game would fire for the event runs, the map's handlers among them, and the test never picks one:
+
+{@includeCode ../../../packages/reforged-test/examples/fire.test.ts}
+
+- **The Triggers the game would fire.** They run in registration order, each Trigger's conditions before its actions; a disabled or destroyed Trigger is skipped, and a registration's filter is asked first. No registered Trigger is no error.
+- **Whose event it is.** The context names it by the event's family: `GetTriggerUnit` for a unit's event, the `EVENT_PLAYER_UNIT_` ones reaching the Triggers registered for its owner, and `GetTriggerPlayer` for a player's event. A game event needs neither. A context without the one its event needs is an error that names it.
+- **Nothing else happens.** `game.fire` changes nothing in the game: it fires the event, and the context answers for its length only. A Native the context names answers its value during the event, even one no Stub answers, and nil after it.
 
 ## Time
 

@@ -137,14 +137,16 @@ local context = nil
 
 -- Defines the response Native `name`: it records its call and answers with
 -- the firing context's value for its name, nil when the context has none.
+-- It is a Stub __stub_native_name knows, also when game.fire defines it
+-- after the seal.
 function __stub_response(name)
-  _G[name] = function()
+  __stub_define(name, function()
     __stub_record(name)
     if context == nil then
       return nil
     end
     return context[name]
-  end
+  end)
 end
 
 -- Runs body with `firing` as the firing context and returns what it returned.

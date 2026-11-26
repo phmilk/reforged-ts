@@ -33,6 +33,12 @@ describe("pass", function()
     expect(TimerStart)["not"].toHaveBeenLastCalledWith(timer, 10, false, noop)
   end)
 
+  it("reads the calls of a response Native defined after the seal", function()
+    __stub_response("GetSpellTargetX")
+    GetSpellTargetX()
+    expect(GetSpellTargetX).toHaveBeenCalledTimes(1)
+  end)
+
   it("reads the calls of a Native stubNative answers", function()
     stubNative("GetUnitName", function() return "Footman" end)
     GetUnitName(nil)

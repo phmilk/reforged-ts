@@ -1,11 +1,12 @@
 -- reforged-test stubs for the triggers family. CreateTrigger is in base.lua,
 -- the baseline every test can rely on (the library's globals stage creates
 -- the sync Trigger with it). A trigger never fires on its own: it stores its
--- actions and conditions, a registration keeps nothing beyond its call-log
--- line, and a test fires the trigger with __stub_fire_trigger and the context
--- the response Natives answer from. The one exception is a sync
--- registration, remembered so that __stub_deliver_sync finds the triggers
--- the game would fire for a packet.
+-- actions and conditions, and fires only on the test's order. A test fires
+-- one trigger it holds with __stub_fire_trigger and the context the response
+-- Natives answer from, or one event with __stub_dispatch, which reaches every
+-- trigger registered for it. Registrations are remembered where a delivery
+-- needs them: the ones that name their event (__stub_dispatch), the damage
+-- ones (__stub_dispatch_damage) and the sync ones (__stub_deliver_sync).
 
 -- The game's constants the registration Natives take and the event response
 -- Natives answer with, per kind in the order the Typings declare them: opaque
@@ -169,8 +170,8 @@ constants("oskeytype", {
 
 -- Every TriggerRegister* Native of the Patch, with its parameters after the
 -- trigger. Each records the trigger and exactly those arguments (an omitted
--- filter as nil) and returns a new event handle; the trigger keeps nothing
--- of it, so which event fires is the test's decision.
+-- filter as nil) and returns a new event handle; the ones a delivery needs
+-- are remembered below.
 local registrations = {
   { "TriggerRegisterVariableEvent", "varName", "opcode", "limitval" },
   { "TriggerRegisterTimerEvent", "timeout", "periodic" },
@@ -296,6 +297,66 @@ function DestroyCondition(c)
   c.destroyed = true
 end
 
+-- The Event dispatch's registrations: every registration of a Native that
+-- names its event, as { trigger, event, subject, filter }, in registration
+-- order. The subject is what the registration watches: the player of a
+-- player-unit or a player event, the unit of a unit event, the widget of a
+-- death event, none for a game event. Its call-log line and event handle
+-- are the ones every registration has.
+local eventRegistrations = {}
+
+local function remember(whichTrigger, event, subject, filter)
+  eventRegistrations[#eventRegistrations + 1] = {
+    trigger = whichTrigger,
+    event = event,
+    subject = subject,
+    filter = filter,
+  }
+end
+
+-- The registrations the dispatch remembers beside the damage ones below
+-- (TriggerRegisterUnitEvent, TriggerRegisterPlayerUnitEvent): per Native,
+-- how its arguments after the trigger give the event, the subject and the
+-- filter.
+local remembered = {
+  TriggerRegisterPlayerEvent = function(whichPlayer, whichPlayerEvent)
+    return whichPlayerEvent, whichPlayer, nil
+  end,
+  TriggerRegisterGameEvent = function(whichGameEvent)
+    return whichGameEvent, nil, nil
+  end,
+  TriggerRegisterFilterUnitEvent = function(whichUnit, whichEvent, filter)
+    return whichEvent, whichUnit, filter
+  end,
+  TriggerRegisterDeathEvent = function(whichWidget)
+    return EVENT_WIDGET_DEATH, whichWidget, nil
+  end,
+}
+
+for name, read in pairs(remembered) do
+  local register = _G[name]
+  _G[name] = function(whichTrigger, ...)
+    local event = register(whichTrigger, ...)
+    remember(whichTrigger, read(...))
+    return event
+  end
+end
+
+-- Whether a registration's filter accepts the event on `unit`: no filter
+-- accepts it; a filter runs with `unit` as GetFilterUnit's answer.
+local function filterAccepts(filter, unit)
+  if filter == nil then
+    return true
+  end
+  local func = filter.func
+  if func == nil then
+    error(__stub_format(filter) .. " was not created by Condition or Filter", 0)
+  end
+  return __stub_with_context({ GetFilterUnit = unit }, function()
+    return func() and true or false
+  end)
+end
+
 -- The damage exception: a registration for a damage event also keeps its
 -- trigger, its unit or player, its event and its filter, in registration
 -- order, because UnitDamageTarget dispatches the damage to the triggers the
@@ -311,6 +372,7 @@ local registerPlayerUnitEvent = TriggerRegisterPlayerUnitEvent
 
 function TriggerRegisterUnitEvent(whichTrigger, whichUnit, whichEvent)
   local event = registerUnitEvent(whichTrigger, whichUnit, whichEvent)
+  remember(whichTrigger, whichEvent, whichUnit, nil)
   if damageEvents[whichEvent] ~= nil then
     damageRegistrations[#damageRegistrations + 1] = {
       trigger = whichTrigger,
@@ -323,6 +385,7 @@ end
 
 function TriggerRegisterPlayerUnitEvent(whichTrigger, whichPlayer, whichPlayerUnitEvent, filter)
   local event = registerPlayerUnitEvent(whichTrigger, whichPlayer, whichPlayerUnitEvent, filter)
+  remember(whichTrigger, whichPlayerUnitEvent, whichPlayer, filter)
   if damageEvents[whichPlayerUnitEvent] ~= nil then
     damageRegistrations[#damageRegistrations + 1] = {
       trigger = whichTrigger,
@@ -335,7 +398,8 @@ function TriggerRegisterPlayerUnitEvent(whichTrigger, whichPlayer, whichPlayerUn
 end
 
 -- The unit a registration's filter is asked about, from the firing context:
--- the damaged unit while __stub_dispatch_damage runs the filter.
+-- the damaged unit while __stub_dispatch_damage runs the filter, the
+-- triggering unit while __stub_dispatch runs it.
 __stub_response("GetFilterUnit")
 
 -- A trigger's actions and conditions are lists of { handle, value } entries,
@@ -504,13 +568,7 @@ local function damageMatches(registration, target)
   if not rawequal(registration.player, target.owner) then
     return false
   end
-  local filter = registration.filter
-  if filter == nil then
-    return true
-  end
-  return __stub_with_context({ GetFilterUnit = target }, function()
-    return filter.func() and true or false
-  end)
+  return filterAccepts(registration.filter, target)
 end
 
 -- Dispatches one damage event as the game does inside UnitDamageTarget:
@@ -588,6 +646,44 @@ function __stub_fire_trigger(whichTrigger, context)
     execute(whichTrigger)
     return true
   end)
+end
+
+-- The Event dispatch: delivers `event` on `subject` (the player, the unit or
+-- the widget a registration watches; nil for a game event) to every trigger
+-- registered for it, as the game would. In registration order, once per
+-- matching registration: a disabled or destroyed trigger is skipped, the
+-- registration's filter is evaluated, then the trigger fires, its
+-- conditions before its actions, all before the next registration. The
+-- firing context is `context` (keyed by response Native name), with the
+-- trigger as GetTriggeringTrigger and, unless `context` gives one, the
+-- event as GetTriggerEventId. A registration made during the dispatch
+-- waits for the next one. No registration is no error. Returns how many
+-- triggers ran their actions. Not a Native, so it adds no call-log line.
+function __stub_dispatch(event, subject, context)
+  context = context or {}
+  local fired = 0
+  for _, registration in ipairs(table.move(eventRegistrations, 1, #eventRegistrations, 1, {})) do
+    local whichTrigger = registration.trigger
+    if rawequal(registration.event, event)
+      and rawequal(registration.subject, subject)
+      and not whichTrigger.destroyed
+      and not whichTrigger.disabled
+      and filterAccepts(registration.filter, context.GetTriggerUnit)
+    then
+      local firing = {}
+      for name, value in pairs(context) do
+        firing[name] = value
+      end
+      firing.GetTriggeringTrigger = whichTrigger
+      if firing.GetTriggerEventId == nil then
+        firing.GetTriggerEventId = event
+      end
+      if __stub_fire_trigger(whichTrigger, firing) then
+        fired = fired + 1
+      end
+    end
+  end
+  return fired
 end
 
 -- Delivers a sync packet as the game would: fires every trigger registered
