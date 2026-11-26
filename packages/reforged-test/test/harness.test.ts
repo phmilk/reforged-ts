@@ -320,6 +320,71 @@ describe("game.fire and the Event dispatch, on reforged-test/map", () => {
   });
 });
 
+describe("the Dispatching Natives, on reforged-test/map", () => {
+  const [dispatching] = runLuaTestFiles({ outDir: outDir("dispatching") });
+
+  /** The names of the tests of one describe of the fixture. */
+  function suite(name: string): { name: string; status: string }[] {
+    return dispatching.tests
+      .filter((test) => test.suite[0] === name)
+      .map((test) => ({ name: test.name, status: test.status }));
+  }
+
+  /** The tests of one describe, each passing. */
+  function passing(...names: string[]): { name: string; status: string }[] {
+    return names.map((name) => ({ name, status: "pass" }));
+  }
+
+  it("KillUnit dispatches the three deaths of a live unit, the unit dead, and nothing for a dead one", () => {
+    expect(dispatching.error).toBeUndefined();
+    expect(suite("KillUnit")).toEqual(
+      passing(
+        "dispatches the widget death, the player unit death and the unit death, the unit already dead",
+        "fires nothing for a unit already dead",
+        "leaves the unit dead: UnitAlive false, its life 0",
+        "keeps no hit points: a live unit's life has no answer",
+        "runs a chain of handlers inside the call: a death handler that kills",
+        "leaves RemoveUnit dispatching nothing",
+      ),
+    );
+  });
+
+  it("SetUnitOwner dispatches the change of owner of the new owner, and nothing for the same owner", () => {
+    expect(suite("SetUnitOwner")).toEqual(
+      passing(
+        "dispatches the change of owner of the new owner, then the unit's, the owner already changed",
+        "fires nothing for the owner the unit has",
+      ),
+    );
+  });
+
+  it("UnitAddItem and UnitAddItemById dispatch the pickup, and nothing for a unit without an inventory", () => {
+    expect(suite("UnitAddItem and UnitAddItemById")).toEqual(
+      passing(
+        "dispatch the pickup, the item already carried in the handler",
+        "dispatch the drop, then the pickup, for an item the unit carries",
+        "UnitAddItemById dispatches the pickup before it returns the item",
+        "fire nothing for a unit without an inventory, UnitAddItem returning false",
+      ),
+    );
+  });
+
+  it("UnitRemoveItem dispatches the drop, the item still carried in the handler", () => {
+    expect(suite("UnitRemoveItem")).toEqual(
+      passing(
+        "dispatches the drop, the item still carried in the handler and gone after",
+        "fires nothing for an item the unit does not carry",
+      ),
+    );
+  });
+
+  it("dispatches nothing under stubNative, whose replacement is whole", () => {
+    expect(suite("a Dispatching Native under stubNative")).toEqual(
+      passing("dispatches nothing: the replacement is whole"),
+    );
+  });
+});
+
 describe("beforeEach and afterEach, scoped by describe", () => {
   const log = join(
     mkdtempSync(join(tmpdir(), "reforged-test-hooks-")),
