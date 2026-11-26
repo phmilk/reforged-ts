@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { runLuaTestFiles, type LuaTestFile } from "../src/index.js";
 import { fixturePath, outDir, removeOutDirs } from "./support/fixture.js";
@@ -113,6 +116,112 @@ describe("state isolation", () => {
       for (const test of tests) expect(test).toMatchObject({ status: "pass" });
     }
     expect(file(files, "b.test.ts").tests).toHaveLength(2);
+  });
+});
+
+describe("a Test game per test, on reforged-test/map", () => {
+  const files = runLuaTestFiles({ outDir: outDir("game") });
+
+  it("runs each test in a fresh Lua state, also when the file imports reforged-test/lua", () => {
+    expect(file(files, "isolation.test.ts").tests).toEqual([
+      {
+        suite: ["a Test game per test"],
+        name: "makes a unit, a call, a global and a line",
+        status: "pass",
+      },
+      {
+        suite: ["a Test game per test"],
+        name: "sees none of them, and loaded the file once",
+        status: "pass",
+      },
+      {
+        suite: ["a Test game per test"],
+        name: "runs a test of a repeated name",
+        status: "pass",
+      },
+      {
+        suite: ["a Test game per test"],
+        name: "runs a test of a repeated name",
+        status: "pass",
+      },
+    ]);
+  });
+
+  it("opens one state to list the tests, then one per test", () => {
+    const counter = join(
+      mkdtempSync(join(tmpdir(), "reforged-test-count-")),
+      "counter.lua",
+    );
+    writeFileSync(
+      counter,
+      `__fixture_loads_path = "/reforged-test-loads-${String(Date.now())}-${String(Math.random())}"\n`,
+    );
+    const [count] = runLuaTestFiles({
+      outDir: outDir("map-count"),
+      stubs: [counter],
+    });
+    expect(count.tests.map(({ name, status }) => ({ name, status }))).toEqual([
+      { name: "runs in the second load", status: "pass" },
+      { name: "runs in the third load", status: "pass" },
+      { name: "runs in the fourth load", status: "pass" },
+    ]);
+    rmSync(dirname(counter), { recursive: true, force: true });
+  });
+
+  it("starts the game through the Init stages, once per test", () => {
+    expect(file(files, "start.test.ts").tests).toEqual([
+      {
+        suite: [],
+        name: "runs the map's initialization through the Init stages",
+        status: "pass",
+      },
+      {
+        suite: [],
+        name: "throws on a second call in the same test",
+        status: "pass",
+      },
+      {
+        suite: [],
+        name: "fails a test that starts the game twice",
+        status: "error",
+        message:
+          "start_test.lua:31: startGame: the game already started; a test is one game, so call startGame once per test",
+      },
+    ]);
+  });
+
+  it("starts the game at the top of the file, for each test", () => {
+    for (const test of file(files, "top.test.ts").tests) {
+      expect(test).toMatchObject({ status: "pass" });
+    }
+    expect(file(files, "top.test.ts").tests).toHaveLength(2);
+  });
+
+  it("holds what the map printed and displayed, a copy at each read", () => {
+    const { tests } = file(files, "observed.test.ts");
+    expect(tests).toHaveLength(4);
+    for (const test of tests) expect(test).toMatchObject({ status: "pass" });
+  });
+
+  it("fails a test whose name changed between two loads of its file", () => {
+    const [different] = runLuaTestFiles({ outDir: outDir("different") });
+    expect(different.tests).toHaveLength(1);
+    const [test] = different.tests;
+    expect(test.status).toBe("error");
+    expect(test.message).toMatch(
+      /^different\.test\.ts registers different tests on each load: test 1 was "registered on load \d+" when the file was listed, and is "registered on load \d+" now$/,
+    );
+  });
+
+  it("reports a file that fails to load as the file's error", () => {
+    expect(runLuaTestFiles({ outDir: outDir("map-load") })).toEqual([
+      {
+        moduleName: "load_test",
+        testFile: "load.test.ts",
+        tests: [],
+        error: "load_test.lua:6: Native BlzGetLocale is not stubbed",
+      },
+    ]);
   });
 });
 

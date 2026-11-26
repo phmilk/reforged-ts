@@ -3,6 +3,7 @@
 packages/reforged-types/build/
 packages/reforged-builtins/build/
 packages/reforged-test/lua/
+packages/reforged-test/map/
 packages/reforged-ts/dist-test/
 packages/reforged-ts/dist-examples/
 release/build/

@@ -133,6 +133,7 @@ export default defineConfig(
     "probe/build/**",
     "probe/.probe/**",
     "packages/reforged-test/lua/**",
+    "packages/reforged-test/map/**",
     "packages/reforged-ts/dist-test/**",
     "packages/reforged-ts/dist-examples/**",
     // What tools own: the vendored Patch files and the generated Typings.
