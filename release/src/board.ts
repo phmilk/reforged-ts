@@ -13,9 +13,10 @@
  * into the writes that make the board agree with GitHub, membership and
  * archiving included, on the same state reader. The third is what
  * `board:labels` writes with the App's token: the label pair of an open
- * Spec (`planBoardLabels`) and the Issue status of every open issue, the
- * mirror of its Status (`planIssueStatuses`). The GraphQL transport and the
- * pager are `github-graphql.ts`.
+ * Spec (`planBoardLabels`) and the Issue status of every open issue the
+ * board holds or will hold, the mirror of its Status
+ * (`planIssueStatuses`). The GraphQL transport and the pager are
+ * `github-graphql.ts`.
  */
 import { graphql, readNodes } from "./github-graphql.js";
 import type { GitHubApi } from "./repo-settings.js";
@@ -1535,17 +1536,18 @@ export interface IssueStatusState {
    */
   ids: IdsByRepository;
   /**
-   * The name of the Issue status of each open issue that has one, by its
-   * key (`issueKey`); an issue without one is absent.
+   * The Issue status of each issue this read saw open, by its key
+   * (`issueKey`): its name, or `null` when it has none. An issue absent was
+   * not open at this read, and is never written.
    */
-  current: Readonly<Partial<Record<string, string>>>;
+  current: Readonly<Partial<Record<string, string | null>>>;
 }
 
 /** What `board:labels` will write of the Issue statuses, and what it found. */
 export interface IssueStatusPlan {
   /** The requests to send, in order. */
   requests: BoardRequest[];
-  /** How many open issues it gives an Issue status to. */
+  /** How many open issues it looked at: the ones the board holds or will hold. */
   issues: number;
   /** How many of them already read as their Status maps. */
   kept: number;
@@ -1557,22 +1559,24 @@ export interface IssueStatusPlan {
  * The requests that give every open issue the board holds or will hold (an
  * open issue of a Board repository that no bot but the App authored,
  * whether or not it has an item yet) the Issue status `ISSUE_STATUS_OF`
- * maps its Status to, the Status `statusOf` derives among `open`, the open
- * issues of both repositories, as the reconcile does; nothing for one that
- * already reads so, and never anything for a closed issue. A repository
- * without Issue statuses plans none and is named once in `warnings`, as is
- * each value a repository lacks.
+ * maps its Status to, the Status `statusOf` derives among `read`, the open
+ * issues of both repositories as the labels read them, as the reconcile
+ * does; nothing for one that already reads so, and never anything for a
+ * closed issue. `statuses` is a later read: an issue it did not see open
+ * (closed in between) gets nothing, since an open value would reopen it. A
+ * repository without Issue statuses plans none and is named once in
+ * `warnings`, as is each value a repository lacks.
  */
 export function planIssueStatuses(
-  open: readonly BoardIssue[],
+  read: readonly BoardIssue[],
   statuses: IssueStatusState,
 ): IssueStatusPlan {
-  const lookup = issueLookup(open);
+  const lookup = issueLookup(read);
   const requests: BoardRequest[] = [];
   const warnings = new Set<string>();
   let issues = 0;
   let kept = 0;
-  for (const issue of open) {
+  for (const issue of read) {
     if (
       issue.bot ||
       issue.state !== "OPEN" ||
@@ -1580,14 +1584,16 @@ export function planIssueStatuses(
     ) {
       continue;
     }
+    const key = issueKey(issue);
+    const current = statuses.current[key];
+    // Not open any more when the Issue statuses were read: the next run's.
+    if (current === undefined) continue;
     const status = statusOf(issue, lookup);
     // An open issue is never Done.
     if (status === "Done") continue;
     issues++;
     const value = ISSUE_STATUS_OF[status];
-    const key = issueKey(issue);
-    const current = statuses.current[key];
-    if (current !== undefined && sameName(current, value)) {
+    if (current !== null && sameName(current, value)) {
       kept++;
       continue;
     }
@@ -1608,7 +1614,7 @@ export function planIssueStatuses(
     requests.push({
       query: BOARD_MUTATIONS.setIssueStatus,
       variables: { issueId: issue.id, statusId },
-      summary: `Set the Issue status of ${key} to ${value}${current === undefined ? "" : ` (was ${current})`}.`,
+      summary: `Set the Issue status of ${key} to ${value}${current === null ? "" : ` (was ${current})`}.`,
     });
   }
   return { requests, issues, kept, warnings: [...warnings] };
@@ -1859,14 +1865,15 @@ const ISSUE_STATUS_QUERIES = {
 /**
  * The Issue statuses, read through `api`: in each Board repository, the
  * ids of its Issue statuses by name and the Issue status of each open
- * issue that has one. Rejects when GitHub refuses a query, as it would
- * once the preview's fields change: the caller warns and writes none.
+ * issue, `null` for one that has none. Rejects when GitHub refuses a
+ * query, as it would once the preview's fields change: the caller warns
+ * and writes none.
  */
 export async function readIssueStatuses(
   api: GitHubApi,
 ): Promise<IssueStatusState> {
   const ids: Record<string, Record<string, string>> = {};
-  const current: Record<string, string> = {};
+  const current: Record<string, string | null> = {};
   for (const repository of BOARD_REPOSITORIES) {
     const variables = ownerAndName(repository);
     const data = await graphql(api, ISSUE_STATUS_QUERIES.statuses, variables);
@@ -1888,15 +1895,11 @@ export async function readIssueStatuses(
       "issues",
     ]);
     for (const node of nodes) {
-      if (
-        isRecord(node) &&
-        typeof node.number === "number" &&
-        isRecord(node.status) &&
-        typeof node.status.name === "string"
-      ) {
-        current[issueKey({ repository, number: node.number })] =
-          node.status.name;
-      }
+      if (!isRecord(node) || typeof node.number !== "number") continue;
+      current[issueKey({ repository, number: node.number })] =
+        isRecord(node.status) && typeof node.status.name === "string"
+          ? node.status.name
+          : null;
     }
   }
   return { ids, current };

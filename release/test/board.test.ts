@@ -14,6 +14,7 @@ import {
   BOARD_VIEWS,
   BoardError,
   CLAIM_DOC_URL,
+  issueKey,
   issueLookup,
   MAX_DELETES,
   applyBoardLabels,
@@ -1197,11 +1198,26 @@ const BOTH_HAVE_STATUSES = {
   [TEMPLATE]: ISSUE_STATUS_IDS,
 };
 
-/** The Issue statuses as read: `current` by issue key, and the seven values in both repositories unless told otherwise. */
+/**
+ * The Issue statuses as read: each open issue of `seen` with none, but
+ * those of `named`, by issue key, and the seven values in both
+ * repositories unless told otherwise.
+ */
 const issueStatuses = (
-  current: IssueStatusState["current"] = {},
+  seen: readonly BoardIssue[],
+  named: Readonly<Record<string, string>> = {},
   ids: IssueStatusState["ids"] = BOTH_HAVE_STATUSES,
-): IssueStatusState => ({ ids, current });
+): IssueStatusState => ({
+  ids,
+  current: {
+    ...Object.fromEntries(
+      seen
+        .filter(({ state }) => state === "OPEN")
+        .map((one) => [issueKey(one), null]),
+    ),
+    ...named,
+  },
+});
 
 const issueStatusWrite = (issueId: string, name: string) => ({
   query: BOARD_MUTATIONS.setIssueStatus,
@@ -1221,7 +1237,7 @@ describe("planIssueStatuses", () => {
       const open = issue(1, more);
       expect(statusOf(open, issueLookup([open]))).toBe(status);
 
-      expect(planIssueStatuses([open], issueStatuses())).toEqual({
+      expect(planIssueStatuses([open], issueStatuses([open]))).toEqual({
         requests: [
           {
             ...issueStatusWrite("I_1", expected),
@@ -1252,7 +1268,7 @@ describe("planIssueStatuses", () => {
       issue(2, { assignees: ["alice"] }),
       issue(3, { assignees: ["alice"] }),
     ];
-    const read = issueStatuses({
+    const read = issueStatuses(open, {
       [`${LIBRARY}#1`]: "Todo",
       [`${LIBRARY}#2`]: "In Progress",
       [`${LIBRARY}#3`]: "Todo",
@@ -1279,10 +1295,32 @@ describe("planIssueStatuses", () => {
     ];
 
     expect(
-      planIssueStatuses(issues, issueStatuses({ [`${LIBRARY}#1`]: "Todo" })),
+      planIssueStatuses(
+        issues,
+        issueStatuses(issues, { [`${LIBRARY}#1`]: "Todo" }),
+      ),
     ).toEqual({
       requests: [],
       issues: 0,
+      kept: 0,
+      warnings: [],
+    });
+  });
+
+  it("writes nothing on an issue the Issue statuses' read did not see open: closed in between, an open value would reopen it", () => {
+    const stillOpen = issue(1, { labels: ["ready-for-agent"] });
+    const closedSince = issue(2, { assignees: ["alice"] });
+
+    expect(
+      planIssueStatuses([stillOpen, closedSince], issueStatuses([stillOpen])),
+    ).toEqual({
+      requests: [
+        {
+          ...issueStatusWrite("I_1", "Todo"),
+          summary: `Set the Issue status of ${LIBRARY}#1 to Todo.`,
+        },
+      ],
+      issues: 1,
       kept: 0,
       warnings: [],
     });
@@ -1303,7 +1341,7 @@ describe("planIssueStatuses", () => {
     expect(
       planIssueStatuses(
         [spec, ticket],
-        issueStatuses({ [`${TEMPLATE}#31`]: "Backlog" }),
+        issueStatuses([spec, ticket], { [`${TEMPLATE}#31`]: "Backlog" }),
       ).requests,
     ).toEqual([
       {
@@ -1324,6 +1362,7 @@ describe("planIssueStatuses", () => {
       issue(30, { repository: TEMPLATE }),
     ];
     const read = issueStatuses(
+      open,
       {},
       { [LIBRARY]: {}, [TEMPLATE]: ISSUE_STATUS_IDS },
     );
@@ -1347,7 +1386,11 @@ describe("planIssueStatuses", () => {
       issue(2, { labels: ["ready-for-human"] }),
       issue(3),
     ];
-    const read = issueStatuses({}, { [LIBRARY]: { Backlog: "IS_backlog" } });
+    const read = issueStatuses(
+      open,
+      {},
+      { [LIBRARY]: { Backlog: "IS_backlog" } },
+    );
 
     expect(planIssueStatuses(open, read)).toEqual({
       requests: [
@@ -1937,7 +1980,10 @@ describe("readLabelState", () => {
     await readLabelState(graphQlApi(reading(STATE), sent));
     await readReconcileState(graphQlApi(reading(STATE), sent));
 
-    expect(sent.length).toBeGreaterThan(4);
+    // Both reads were made: the labels' and the reconcile's own queries.
+    expect(sent.map(({ operation }) => operation)).toEqual(
+      expect.arrayContaining(["Labels", "ProjectItems", "OpenIssues"]),
+    );
     for (const { query } of sent) {
       expect(query).not.toMatch(/planningStatuses|\bstatus \{/);
     }
@@ -1969,7 +2015,11 @@ describe("readIssueStatuses", () => {
 
     expect(read).toEqual({
       ids: { [LIBRARY]: ISSUE_STATUS_IDS, [TEMPLATE]: {} },
-      current: { [`${LIBRARY}#10`]: "Todo" },
+      current: {
+        [`${LIBRARY}#10`]: "Todo",
+        [`${LIBRARY}#11`]: null,
+        [`${TEMPLATE}#30`]: null,
+      },
     });
     expect(sent.map(({ operation }) => operation)).toEqual([
       "IssueStatuses",
@@ -1989,14 +2039,12 @@ describe("readIssueStatuses", () => {
 });
 
 describe("applyIssueStatuses", () => {
-  const plan = planIssueStatuses(
-    [
-      issue(1, { labels: ["ready-for-agent"] }),
-      issue(2, { assignees: ["alice"] }),
-      issue(3),
-    ],
-    issueStatuses(),
-  );
+  const open = [
+    issue(1, { labels: ["ready-for-agent"] }),
+    issue(2, { assignees: ["alice"] }),
+    issue(3),
+  ];
+  const plan = planIssueStatuses(open, issueStatuses(open));
 
   it("sends the requests in order and warns of nothing", async () => {
     const sent: Sent[] = [];
