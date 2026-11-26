@@ -225,6 +225,139 @@ describe("a Test game per test, on reforged-test/map", () => {
   });
 });
 
+describe("beforeEach and afterEach, scoped by describe", () => {
+  const log = join(
+    mkdtempSync(join(tmpdir(), "reforged-test-hooks-")),
+    "log.lua",
+  );
+  writeFileSync(
+    log,
+    `__fixture_log_path = "/reforged-test-hooks-${String(Date.now())}-${String(Math.random())}"\n`,
+  );
+  const files = runLuaTestFiles({ outDir: outDir("hooks"), stubs: [log] });
+  rmSync(dirname(log), { recursive: true, force: true });
+
+  it("runs beforeEach outer to inner and afterEach inner to outer, a describe's own only", () => {
+    expect(file(files, "order.test.ts").tests).toEqual([
+      {
+        suite: [],
+        name: "runs the file's hooks around a test at the top",
+        status: "pass",
+      },
+      {
+        suite: ["outer", "inner"],
+        name: "runs beforeEach outer to inner and afterEach inner to outer",
+        status: "pass",
+      },
+      {
+        suite: ["sibling"],
+        name: "runs no hook of another describe",
+        status: "pass",
+      },
+    ]);
+  });
+
+  it("fails as in Vitest", () => {
+    expect(file(files, "failures.test.ts").tests).toEqual([
+      {
+        suite: ["a beforeEach that throws"],
+        name: "fails the test and skips its body",
+        status: "error",
+        message: "before broke",
+      },
+      {
+        suite: [],
+        name: "notes the afterEach hooks, run after a failing beforeEach",
+        status: "pass",
+      },
+      {
+        suite: ["a body that throws", "inner"],
+        name: "fails the test",
+        status: "error",
+        message: "body broke",
+      },
+      {
+        suite: [],
+        name: "notes the afterEach hooks, run after a failing body",
+        status: "pass",
+      },
+      {
+        suite: ["an afterEach that throws"],
+        name: "fails a test that had passed",
+        status: "error",
+        message: "after broke",
+      },
+      {
+        suite: [],
+        name: "notes the afterEach hooks, the ones after the failing one and the cleanup skipped",
+        status: "pass",
+      },
+      {
+        suite: ["a beforeEach that returns a function"],
+        name: "runs it after the afterEach hooks",
+        status: "pass",
+      },
+      {
+        suite: [],
+        name: "notes the cleanups after the afterEach hooks, the last returned first",
+        status: "pass",
+      },
+      {
+        suite: ["a beforeEach that returns a function, then one that throws"],
+        name: "runs the cleanup all the same",
+        status: "error",
+        message: "before broke",
+      },
+      {
+        suite: [],
+        name: "notes the cleanup of the beforeEach that ran",
+        status: "pass",
+      },
+      {
+        suite: ["a cleanup that throws"],
+        name: "fails a test that had passed",
+        status: "error",
+        message: "cleanup broke",
+      },
+      {
+        suite: ["an afterEach whose expectation fails"],
+        name: "fails the test with the expectation's message",
+        status: "fail",
+        message: "Expected 1 to equal 2",
+      },
+      {
+        suite: ["two failures", "in a beforeEach and an afterEach"],
+        name: "reports the beforeEach's",
+        status: "error",
+        message: "before broke",
+      },
+      {
+        suite: ["two failures", "in the body and an afterEach"],
+        name: "reports the body's",
+        status: "fail",
+        message: "Expected 1 to equal 3",
+      },
+      {
+        suite: ["a hook registered inside a test"],
+        name: "throws",
+        status: "pass",
+      },
+    ]);
+  });
+
+  it("starts the game in a beforeEach, a game per test", () => {
+    const { tests } = file(files, "game.test.ts");
+    expect(tests).toHaveLength(3);
+    for (const test of tests) expect(test).toMatchObject({ status: "pass" });
+  });
+
+  it("runs the hooks around each test of a file on reforged-test/lua alone", () => {
+    const { tests } = file(files, "shared.test.ts");
+    expect(tests).toHaveLength(2);
+    for (const test of tests) expect(test).toMatchObject({ status: "pass" });
+  });
+});
+
 describe("extra stub files", () => {
   it("runs the listed files after the shipped ones, in order", () => {
     const [order] = runLuaTestFiles({
