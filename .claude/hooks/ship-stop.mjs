@@ -76,9 +76,11 @@ import { fileURLToPath } from "node:url";
 /** The implements: each ends with /ship-branch (ADR 0026). */
 const IMPLEMENTS = ["implement", "implement-spec"];
 
-// The skill that ships, by its own name. Claude Code reserves `ship` for its
-// built-in /ship, which never runs the skill and is not matched here (#940):
-// the open pull request it leaves passes through the repository state.
+/**
+ * The skill that ships, by its own name. Claude Code reserves `ship` for its
+ * built-in /ship, which never runs the skill and is not matched here (#940):
+ * the open pull request it leaves passes through the repository state.
+ */
 const SHIP = "ship-branch";
 
 const SOURCE = "ADR 0026, .claude/hooks/ship-stop.mjs";

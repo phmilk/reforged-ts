@@ -163,8 +163,9 @@ describe("replacedVerdict", () => {
 });
 
 // The line a skill let through adds to the Agent's context (#806): an
-// implement names the branch to create on the default branch, then /ship-branch
-// and next-step; the other hand-overs of the main flow name next-step.
+// implement names the branch to create on the default branch, then
+// /ship-branch and next-step; the other hand-overs of the main flow name
+// next-step.
 const SHIP_AND_NEXT_STEP =
   "This repository ends every implement with /ship-branch, which reviews the branch, pushes it and opens its pull request, then with the next-step skill, which prints the next steps from the state of the issue, its Spec and its pull request (ADR 0026, .claude/hooks/skill-target.mjs).";
 const ON_MASTER = `This session is on the default branch, master: before the first commit, create the work's branch from the remote default, git fetch origin master then git switch -c <type>/<n>-<slug> origin/master, <type> the Conventional Commits type of the work, <n> its issue and <slug> a few kebab-case words of the issue's title. ${SHIP_AND_NEXT_STEP}`;

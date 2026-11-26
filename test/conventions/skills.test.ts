@@ -16,7 +16,8 @@
 //   or AGENTS.md or the development loop doc names a Replaced skill without
 //   its variant on the same line (ADR 0027);
 // - the list of what is shared names a lock, skill or file that is not there;
-// - a shared skill takes a name Claude Code reserves, so it is never loaded;
+// - a skill, shared or not, takes a name Claude Code reserves, so it is never
+//   loaded;
 // - an Upstream skill could be rewritten by git or by `pnpm format`, or a
 //   repository skill is not formatted.
 //
@@ -506,13 +507,15 @@ describe("the list of what both repositories share", () => {
     ];
     expect(problems, "the names of .claude/shared.json").toEqual([]);
   });
+});
 
-  // A shared skill of a reserved name is never loaded: typed, the name runs
-  // Claude Code's own command instead (#940).
-  it("names no shared skill, Upstream or the repository's, that Claude Code reserves", () => {
+describe("the names Claude Code reserves", () => {
+  // A skill of a reserved name is never loaded, shared or not: typed, the
+  // name runs Claude Code's own command instead (#940).
+  it("takes none for a skill of .claude/skills/, Upstream, shared or the repository's", () => {
     expect(
-      reservedProblems([...upstream, ...shared.skills]),
-      "the shared skills of .claude/shared.json and skills-lock.json",
+      reservedProblems([...upstream, ...repository]),
+      "the skills of .claude/skills/",
     ).toEqual([]);
   });
 

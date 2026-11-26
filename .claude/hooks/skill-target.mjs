@@ -26,8 +26,9 @@
 // Agent's context (#745, #806): on the default branch, create the branch
 // <type>/<n>-<slug> from the remote default first; then end the work with
 // /ship-branch (ADR 0026) and the next-step skill. The current and default
-// branches reach that line as facts, read with `git`. When it lets /grill-with-docs,
-// /write-spec or /split-spec through, the line is the next-step one alone:
+// branches reach that line as facts, read with `git`. When it lets
+// /grill-with-docs, /write-spec or /split-spec through, the line is the
+// next-step one alone:
 // next-step prints the next steps at every hand-over of the main flow. The
 // first two name no issue to check, so they read nothing from GitHub.
 //
