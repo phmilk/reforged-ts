@@ -10,10 +10,14 @@ function GetLocalPlayer()
   return __stub_player(localSlot)
 end
 
--- Makes the player in slot `number` the local player and returns the slot
--- that was local before: how a test runs code as another client. Not a
--- Native, so it adds no call-log line.
+-- Makes the player in slot `number`, or the player handle given in its
+-- place, the local player and returns the slot that was local before: how a
+-- test runs code as another client. Not a Native, so it adds no call-log
+-- line.
 function __stub_set_local_player(number)
+  if type(number) == "table" then
+    number = number.number
+  end
   local previous = localSlot
   localSlot = number
   return previous

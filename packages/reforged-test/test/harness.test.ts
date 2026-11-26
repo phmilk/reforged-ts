@@ -225,6 +225,43 @@ describe("a Test game per test, on reforged-test/map", () => {
   });
 });
 
+describe("a Native without a Stub, on reforged-test/map", () => {
+  const files = runLuaTestFiles({ outDir: outDir("native") });
+
+  /** The tests of a fixture file that did not pass. */
+  function notPassing(testFile: string): unknown[] {
+    return file(files, testFile).tests.filter((test) => test.status !== "pass");
+  }
+
+  it("answers a Native with stubNative, recorded, replaced whole", () => {
+    expect(notPassing("stub_native.test.ts")).toEqual([]);
+    expect(file(files, "stub_native.test.ts").tests).toHaveLength(10);
+  });
+
+  it("creates a Handle with newHandle, on the Test game's id sequence", () => {
+    expect(notPassing("new_handle.test.ts")).toEqual([]);
+    expect(file(files, "new_handle.test.ts").tests).toHaveLength(3);
+  });
+
+  it("acts as another client with game.setLocalPlayer", () => {
+    expect(notPassing("local_player.test.ts")).toEqual([]);
+    expect(file(files, "local_player.test.ts").tests).toHaveLength(5);
+  });
+
+  it("still loads a Lua stub file of the stubs option, which stubNative replaces", () => {
+    const [stubbed] = runLuaTestFiles({
+      outDir: outDir("map-stubs"),
+      stubs: [fixturePath("stubs", "first.lua")],
+    });
+    expect(stubbed.tests.map(({ name, status }) => ({ name, status }))).toEqual(
+      [
+        { name: "calls a Native a listed stub file defines", status: "pass" },
+        { name: "replaces it with stubNative", status: "pass" },
+      ],
+    );
+  });
+});
+
 describe("beforeEach and afterEach, scoped by describe", () => {
   const log = join(
     mkdtempSync(join(tmpdir(), "reforged-test-hooks-")),

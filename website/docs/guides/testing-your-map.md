@@ -57,7 +57,26 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## A Native without a Stub
 
-{/* Written with stubNative and newHandle (#989) and the message that names stubNative (#990). */}
+The harness answers the Natives a map most often calls with its Stubs, and not every one: it holds no object data, so nothing answers `GetUnitName`. A test gives such a Native its answer with `stubNative`:
+
+{@includeCode ../../../packages/reforged-test/examples/stub-native.test.ts}
+
+- **Typed from the Typings.** The name is a Native of `common.j`, and the answer has that Native's signature: its parameters need no annotation, and a wrong return is a compile error. The answer may be left out only for a Native that returns nothing: `stubNative("PauseGame")`.
+- **Recorded.** Every call is recorded before the answer runs, as a Stub of the harness records its own.
+- **Anywhere, for this test.** Call it at the top of the file, for every test of it, or inside one test, before or after `startGame()`. The last call for a name wins, and an answer lives in its test's game only.
+- **A `stubNative` replacement is whole: over a Native the harness already answers, its Stub no longer runs, so the state it kept and the events it fired are gone; keep `stubNative` for the Natives that answer a value.**
+
+An answer that creates a Handle returns one made with `newHandle(kind)`, the kind being the Handle type's name in the Typings. It takes the next handle id of the test's game, as a Handle of the harness does:
+
+{@includeCode ../../../packages/reforged-test/examples/new-handle.test.ts}
+
+`game.setLocalPlayer(player)` makes the test act as another client: `GetLocalPlayer` answers that player from then on, `Player(0)` until the first call. It takes a `MapPlayer` or its Handle, and may be called more than once in a test:
+
+{@includeCode ../../../packages/reforged-test/examples/set-local-player.test.ts}
+
+A Lua stub file listed in the `stubs` option of the harness still loads, after the shipped ones; `stubNative` replaces it where a test needs the answer in TypeScript.
+
+{/* Completed with the message that names stubNative (#990). */}
 
 ## Focus and skip
 

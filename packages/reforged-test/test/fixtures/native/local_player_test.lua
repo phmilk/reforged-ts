@@ -1,0 +1,45 @@
+-- Hand-written stand-in for a compiled local-player.test.ts on
+-- reforged-test/map: the test acting as another client.
+local map = require("lua_modules.reforged-test.map.index")
+local runner = require("lua_modules.reforged-test.lua.index")
+local it, expect, startGame = map.it, map.expect, map.startGame
+
+it("is Player(0) until the test says otherwise", function()
+  startGame()
+  expect(GetLocalPlayer()).toBe(Player(0))
+end)
+
+it("makes a player the local one, more than once in a test, returning nothing", function()
+  local game = startGame()
+  expect(select("#", game.setLocalPlayer(Player(1)))).toEqual(0)
+  expect(GetLocalPlayer()).toBe(Player(1))
+  game.setLocalPlayer(Player(3))
+  expect(GetLocalPlayer()).toBe(Player(3))
+  game.setLocalPlayer(Player(0))
+  expect(GetLocalPlayer()).toBe(Player(0))
+end)
+
+it("takes anything with .handle, as a Wrapper of the library", function()
+  local game = startGame()
+  game.setLocalPlayer({ handle = Player(1) })
+  expect(GetLocalPlayer()).toBe(Player(1))
+end)
+
+it("records no call", function()
+  local game = startGame()
+  local player = Player(1)
+  local mark = #runner.stubCalls()
+  game.setLocalPlayer(player)
+  expect(#runner.stubCalls()).toEqual(mark)
+end)
+
+it("refuses what is not a player", function()
+  local game = startGame()
+  local ok, message = pcall(game.setLocalPlayer, 1)
+  expect(ok).toEqual(false)
+  expect(message).toMatch("game.setLocalPlayer: expected a player, its Handle or anything with .handle, such as Player(1)")
+  expect(pcall(game.setLocalPlayer, CreateTrigger())).toEqual(false)
+  expect(pcall(game.setLocalPlayer, { handle = CreateTrigger() })).toEqual(false)
+  expect(pcall(game.setLocalPlayer, nil)).toEqual(false)
+  expect(GetLocalPlayer()).toBe(Player(0))
+end)

@@ -1,3 +1,4 @@
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as ts from "typescript";
 import { describe, expect, it } from "vitest";
@@ -28,7 +29,15 @@ const source = program.getSourceFile(entry);
 if (source === undefined) throw new Error(`no ${entry}`);
 const moduleSymbol = checker.getSymbolAtLocation(source);
 if (moduleSymbol === undefined) throw new Error(`${entry} is not a module`);
-const exported = checker.getExportsOfModule(moduleSymbol);
+// An export of another file of the entry point (natives.d.ts) is read as
+// the declaration it names, as the editor's hover reads it.
+const exported = checker
+  .getExportsOfModule(moduleSymbol)
+  .map((symbol) =>
+    symbol.flags & ts.SymbolFlags.Alias
+      ? checker.getAliasedSymbol(symbol)
+      : symbol,
+  );
 
 describe("reforged-test/map", () => {
   it("declares no __stub_* global", () => {
@@ -45,12 +54,17 @@ describe("reforged-test/map", () => {
       "Game",
       "GameExpect",
       "GameMatchers",
+      "HandleTypes",
+      "NativeAnswer",
+      "NativeName",
       "afterEach",
       "beforeEach",
       "describe",
       "expect",
       "it",
+      "newHandle",
       "startGame",
+      "stubNative",
     ]);
   });
 
@@ -63,7 +77,7 @@ describe("reforged-test/map", () => {
     });
     for (const [name, example] of examples) {
       expect(example, name).toMatch(
-        /```ts\nimport \{ [\w, ]+ \} from "reforged-test\/map";\n/,
+        /```ts\nimport \{[\w,\s]+\} from "reforged-test\/map";\n/,
       );
       expect(example, name).not.toContain("@includeCode");
     }
@@ -86,5 +100,102 @@ describe("reforged-test/map", () => {
       expect(names).toContain("toEqual");
       expect(names).not.toContain("toContainCall");
     }
+  });
+
+  /**
+   * The messages of the errors a test file holding `code` has, compiled as
+   * a Map project compiles it, the entry point imported as `map`.
+   */
+  function errorsOf(code: string): string[] {
+    const file = fileURLToPath(
+      new URL("../map/typed.test.ts", import.meta.url),
+    );
+    const text = `import * as map from "./index";\n${code}\nexport {};\n`;
+    const options = program.getCompilerOptions();
+    const host = ts.createCompilerHost(options);
+    const readFile = host.readFile.bind(host);
+    const fileExists = host.fileExists.bind(host);
+    host.readFile = (name) => (resolve(name) === file ? text : readFile(name));
+    host.fileExists = (name) => resolve(name) === file || fileExists(name);
+    // `types` resolve from the package, where its dependencies are linked.
+    host.getCurrentDirectory = () => dirname(dirname(entry));
+    const typed = ts.createProgram([file], options, host);
+    return ts
+      .getPreEmitDiagnostics(typed, typed.getSourceFile(file))
+      .map((diagnostic) =>
+        ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
+      );
+  }
+
+  it("types stubNative's answer by the Native's signature", () => {
+    expect(
+      errorsOf(`
+        map.stubNative("GetUnitName", (whichUnit) => {
+          const typed: unit = whichUnit;
+          return typed === undefined ? undefined : "Footman";
+        });
+        map.stubNative("PauseGame");
+        map.stubNative("PauseGame", (flag) => {
+          const typed: boolean = flag;
+          print(typed);
+        });
+      `),
+    ).toEqual([]);
+    expect(errorsOf(`map.stubNative("GetUnitName", () => 1);`)).toEqual([
+      expect.stringContaining(
+        "Type 'number' is not assignable to type 'string'",
+      ),
+    ]);
+  });
+
+  it("makes the answer optional only for a Native that returns nothing", () => {
+    expect(errorsOf(`map.stubNative("GetUnitName");`)).toEqual([
+      expect.stringContaining("Expected 2 arguments, but got 1"),
+    ]);
+  });
+
+  it("takes the name of a Native of common.j only", () => {
+    for (const name of [
+      "GetUnitNam",
+      "BJDebugMsg",
+      "print",
+      "bj_MAX_PLAYERS",
+    ]) {
+      expect(
+        errorsOf(`map.stubNative("${name}", () => undefined);`),
+        name,
+      ).toEqual([expect.stringContaining(`Argument of type '"${name}"'`)]);
+    }
+  });
+
+  it("types newHandle's Handle from its kind", () => {
+    expect(
+      errorsOf(`
+        const unit: unit = map.newHandle("unit");
+        const timer: timer = map.newHandle("timer");
+        print(unit, timer);
+      `),
+    ).toEqual([]);
+    expect(errorsOf(`const unit: unit = map.newHandle("timer");`)).toEqual([
+      expect.stringContaining("Type 'timer' is missing"),
+    ]);
+    expect(errorsOf(`map.newHandle("footman");`)).toEqual([
+      expect.stringContaining(`Argument of type '"footman"'`),
+    ]);
+  });
+
+  it("types game.setLocalPlayer for a player Handle or anything with .handle", () => {
+    expect(
+      errorsOf(`
+        declare const handle: player;
+        const game = map.startGame();
+        const nothing: void = game.setLocalPlayer(handle);
+        game.setLocalPlayer({ handle });
+        print(nothing);
+      `),
+    ).toEqual([]);
+    expect(errorsOf(`map.startGame().setLocalPlayer(1);`)).toEqual([
+      expect.stringContaining("Argument of type 'number'"),
+    ]);
   });
 });
