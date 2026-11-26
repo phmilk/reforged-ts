@@ -1,4 +1,5 @@
 import { fileURLToPath } from "node:url";
+import { stripVTControlCharacters } from "node:util";
 import {
   afterAll,
   beforeAll,
@@ -206,15 +207,18 @@ describe("runLuaTests", () => {
       actual: '{\n  units = {\n    "hfoo",\n  },\n  wave = 2,\n}',
       expected: '{\n  units = {\n    "hfoo",\n  },\n  wave = 3,\n}',
     });
-    expect(deep.diff).toContain("-   wave = 3,");
-    expect(deep.diff).toContain("+   wave = 2,");
+    // Vitest colours the diff where the terminal takes colours, as on CI.
+    const deepDiff = stripVTControlCharacters(deep.diff ?? "");
+    expect(deepDiff).toContain("-   wave = 3,");
+    expect(deepDiff).toContain("+   wave = 2,");
     const call = firstError("diff.test.ts > a call with other arguments");
     expect(call).toMatchObject({
       actual: '(1, "a")',
       expected: '(1, "b")',
     });
-    expect(call.diff).toContain('Expected: "(1, "b")"');
-    expect(call.diff).toContain('Received: "(1, "a")"');
+    const callDiff = stripVTControlCharacters(call.diff ?? "");
+    expect(callDiff).toContain('Expected: "(1, "b")"');
+    expect(callDiff).toContain('Received: "(1, "a")"');
   });
 
   it("never reaches emscripten's uncaught-exception handler", () => {
