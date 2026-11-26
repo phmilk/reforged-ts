@@ -32,6 +32,9 @@ import {
 
 const USAGE = "Usage: spec:check <spec> [owner/name] [--json]\n";
 
+/** The flag that prints the verdict as JSON. */
+const JSON_FLAG = "--json";
+
 export interface Context {
   gh: Gh;
   fetcher: typeof fetch;
@@ -48,7 +51,7 @@ const DEFAULT_REPOSITORY = BOARD_REPOSITORIES[0];
 function argumentsOf(
   args: readonly string[],
 ): { number: number; repository: string; json: boolean } | null {
-  const positional = args.filter((arg) => arg !== "--json");
+  const positional = args.filter((arg) => arg !== JSON_FLAG);
   const [spec = "", repository = DEFAULT_REPOSITORY] = positional;
   if (
     positional.length < 1 ||
@@ -62,7 +65,7 @@ function argumentsOf(
   return {
     number: Number(spec.replace("#", "")),
     repository,
-    json: args.includes("--json"),
+    json: args.includes(JSON_FLAG),
   };
 }
 
