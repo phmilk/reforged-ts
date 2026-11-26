@@ -1,5 +1,11 @@
 # reforged-test
 
+## 1.0.0-alpha.9
+
+### Minor Changes
+
+- [#1005](https://github.com/phmilk/reforged-ts/pull/1005) [`e348c42`](https://github.com/phmilk/reforged-ts/commit/e348c42a8430edc530ee0cb2a97c30d555b92db7) Thanks [@wyller](https://github.com/wyller)! - A Map project's test arranges each test once, in `beforeEach`, and cleans up in `afterEach`, both imported from `reforged-test/map` (and from `reforged-test/lua`). They are scoped by `describe` and fail as Vitest's do: `beforeEach` runs from the outer `describe` inwards and `afterEach` from the inner outwards, even after a failure; a failing `beforeEach` skips the test's body; a failing `afterEach` fails a test that had passed; the test reports its first error. A function a `beforeEach` returns runs after the `afterEach` hooks, and `startGame()` works in a `beforeEach`. There is no `beforeAll` or `afterAll`.
+
 ## 1.0.0-alpha.8
 
 ### Minor Changes
