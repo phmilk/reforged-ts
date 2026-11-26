@@ -666,14 +666,14 @@ const spies = new LuaMap<Procedure, Packed[]>();
  * @returns The Spy, typed as `impl`.
  */
 export function fn<F extends Procedure = Procedure>(impl?: F): F {
-  const received: Packed[] = [];
+  const own: Packed[] = [];
   const spy = (...args: unknown[]): unknown => {
-    table.insert(received, table.pack(...args));
+    table.insert(own, table.pack(...args));
     // A bare return: a Spy without impl returns no value.
     if (impl === undefined) return;
     return impl(...args);
   };
-  spies.set(spy, received);
+  spies.set(spy, own);
   return spy as F;
 }
 
@@ -769,6 +769,15 @@ function received(recorded: Recorded): string {
     );
   }
   return `it received ${count(recorded.calls.length, "call")}:\n${table.concat(lines, "\n")}`;
+}
+
+/**
+ * How a matcher that compares arguments names what it expected:
+ * `called with`, then the arguments, then the position, ` on call 2`.
+ */
+interface CallPhrase {
+  what: string;
+  position?: string;
 }
 
 /** Whether a call's arguments match the expected ones, nil arguments counted. */
@@ -966,25 +975,44 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
     }
     return found;
   };
-  /** Fails a call matcher on `call`, the call compared, or on all of them. */
-  const calledWith = (
-    spy: Recorded,
-    matched: boolean,
+  /**
+   * Holds or fails a matcher that compares the arguments of the call at
+   * `index` (counted from 1; the last call when omitted) with `args`. The
+   * diff Vitest draws is of that call and the arguments, and there is none
+   * when the call was never made.
+   */
+  const failUnlessCallMatches = (
     expected: Packed,
-    what: string,
-    call?: Packed,
-    position = "",
+    phrase: CallPhrase,
+    index?: number,
   ): void => {
+    const spy = recorded();
+    const call = spy.calls[(index ?? spy.calls.length) - 1] as
+      Packed | undefined;
+    const matched = call !== undefined && sameArguments(call, expected);
     if (matched !== negated) return;
+    failCalledWith(spy, expected, phrase, call);
+  };
+  /**
+   * Fails a matcher that compares arguments: its sentence, the calls
+   * received, and, not negated, the diff of `call` (every call when
+   * omitted) and the expected arguments.
+   */
+  const failCalledWith = (
+    spy: Recorded,
+    expected: Packed,
+    phrase: CallPhrase,
+    call: Packed | "every" | undefined,
+  ): never => {
     const diff =
-      negated || spy.calls.length === 0
+      negated || call === undefined || spy.calls.length === 0
         ? undefined
         : {
-            actual: call === undefined ? everyCall(spy) : showArguments(call),
+            actual: call === "every" ? everyCall(spy) : showArguments(call),
             expected: showArguments(expected),
           };
     fail(
-      `Expected ${spy.label} ${negation}to have been ${what} ${showArguments(expected)}${position}; ${received(spy)}`,
+      `Expected ${spy.label} ${negation}to have been ${phrase.what} ${showArguments(expected)}${phrase.position ?? ""}; ${received(spy)}`,
       diff,
     );
   };
@@ -1011,27 +1039,21 @@ function matchersOf<T>(actual: T, negated: boolean): Matchers<T> {
       const matched = some(spy.calls, (call) =>
         sameArguments(call as Packed, expected),
       );
-      calledWith(spy, matched, expected, "called with");
+      if (matched !== negated) return;
+      failCalledWith(spy, expected, { what: "called with" }, "every");
     },
+    // Each packs its arguments itself: a rest parameter spread once keeps
+    // a trailing nil, which a list handed on would drop.
     toHaveBeenLastCalledWith: (...args) => {
-      const expected = table.pack(...args) as unknown as Packed;
-      const spy = recorded();
-      const last = spy.calls[spy.calls.length - 1] as Packed | undefined;
-      const matched = last !== undefined && sameArguments(last, expected);
-      calledWith(spy, matched, expected, "last called with", last);
+      failUnlessCallMatches(table.pack(...args) as unknown as Packed, {
+        what: "last called with",
+      });
     },
     toHaveBeenNthCalledWith: (n, ...args) => {
-      const expected = table.pack(...args) as unknown as Packed;
-      const spy = recorded();
-      const call = spy.calls[n - 1] as Packed | undefined;
-      const matched = call !== undefined && sameArguments(call, expected);
-      calledWith(
-        spy,
-        matched,
-        expected,
-        "called with",
-        call,
-        ` on call ${tostring(n)}`,
+      failUnlessCallMatches(
+        table.pack(...args) as unknown as Packed,
+        { what: "called with", position: ` on call ${tostring(n)}` },
+        n,
       );
     },
     toEqual: (expected) => {

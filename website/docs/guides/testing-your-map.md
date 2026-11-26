@@ -51,7 +51,7 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 {@includeCode ../../../packages/reforged-test/examples/expect.test.ts}
 
-**Every Native is already a Spy.** Hand the Native itself to `expect`, and the spy matchers read the calls its Stub recorded: `toHaveBeenCalled()`, `toHaveBeenCalledTimes(times)`, `toHaveBeenCalledWith(...args)`, `toHaveBeenLastCalledWith(...args)` and `toHaveBeenNthCalledWith(n, ...args)`. The arguments are typed from the Native's parameters, so a wrong one is a compile error, and nothing is replaced to watch the Native, so there is nothing to restore:
+**Every Native is already a Spy.** Hand the Native itself to `expect`, and the spy matchers, which [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) lists, read the calls its Stub recorded. The arguments are typed from the Native's parameters, so a wrong one is a compile error, and nothing is replaced to watch the Native, so there is nothing to restore:
 
 {@includeCode ../../../packages/reforged-test/examples/spies.test.ts}
 
@@ -59,7 +59,7 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 {@includeCode ../../../packages/reforged-test/examples/fn.test.ts}
 
-**A value out of a call.** `calls(spy)` returns the arguments of each call of a Spy or of a Native, oldest first, typed as its parameters: the handler a Native received, for instance, which the test can then call as the game would:
+**A value out of a call.** `calls` returns the arguments of each call of a Spy or of a Native, oldest first, typed as its parameters: the handler a Native received, for instance, which the test can then call as the game would:
 
 {@includeCode ../../../packages/reforged-test/examples/calls.test.ts}
 

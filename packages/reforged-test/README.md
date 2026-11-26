@@ -144,11 +144,12 @@ Each compiled test file runs in a fresh Lua state, in this order:
 1. The standard libraries are opened.
 2. The shipped stub files run: `base.lua` first, then the others by name.
 3. The stub files listed in `stubs` run, in the order given.
-4. Every global function the stub files defined becomes the Stub of the Native it is named after (`__stub_seal`), what a spy matcher reads the Recorded calls of. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
-5. The test module is required, which registers its tests.
-6. The runner runs the tests and returns the results.
+4. Every global function the stub files defined becomes the Stub of the Native it is named after (`__stub_seal`), what a spy matcher reads the Recorded calls of, so a function of a stub file that records no call reads as never called.
+5. Every `.lua` file under `outDir` is preloaded into `package.preload` under its module name.
+6. The test module is required, which registers its tests.
+7. The runner runs the tests and returns the results.
 
-A file that loads `reforged-test/map` stops at step 6 with the list of its tests, and each test then runs in a fresh state of its own, the six steps again with that test alone at step 6, inside its vitest `test`. A file of N tests costs N+1 states. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
+A file that loads `reforged-test/map` stops at step 7 with the list of its tests, and each test then runs in a fresh state of its own, the seven steps again with that test alone at step 7, inside its vitest `test`. A file of N tests costs N+1 states. A test is known across loads by its position, its full name checked: when a load registers another name there, the test fails with a message saying the file registers different tests on each load.
 
 A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts library preloaded. lua-wasm-bindings loads once per process.
 

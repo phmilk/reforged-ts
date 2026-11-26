@@ -635,8 +635,6 @@ describe("spies, on reforged-test/map", () => {
         status: "fail",
         message:
           "Expected the spy to have been called with (1) on call 2; it received 1 call:\n  1: spy(1)",
-        actual: "(1)",
-        expected: "(1)",
       },
       "the last call": {
         status: "fail",
@@ -681,7 +679,7 @@ describe("spies, on reforged-test/map", () => {
       "calls of a value that is no Spy": {
         status: "error",
         message:
-          "spies_test.lua:131: calls: expected a Native or a Spy made by fn(), got 3",
+          "spies_test.lua:135: calls: expected a Native or a Spy made by fn(), got 3",
       },
       "a thrown table with a message": {
         status: "error",
