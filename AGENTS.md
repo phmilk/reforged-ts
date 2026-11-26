@@ -21,7 +21,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 
 - `packages/reforged-ts/`: the library, the Wrappers and Systems, and under `examples/` the compiled files every `@example` includes.
 - `packages/reforged-types/`: the Typings, their generator and the Overlay. Read its `AGENTS.md` before changing the package.
-- `packages/reforged-test/`: the Lua test harness the library's tests run on.
+- `packages/reforged-test/`: the Lua test harness the library's tests run on, and under `examples/` the compiled test files every `@example` of `reforged-test/map` includes.
 - `packages/reforged-map/`: the reader of a Map project's map folder, run at build time: the declarations and the Lua stub of its Editor globals.
 - `packages/reforged-builtins/`: the Built-in objects of each Patch (ADR 0013): the committed JSON index per Game version, its provenance and the unpublished generator that extracts them from an install.
 - `packages/reforged-studio/`: the Studio (#829), published with the others and peer of `reforged-map`: its server (`startStudio`, the `reforged-studio` bin, a JSON API over a map folder), its page, and the reader of the game's install (CASC, SLK and profile readers, the game data model, path resolution) that the `reforged-builtins` generator imports.
@@ -44,7 +44,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `*BJ` functions are never mirrored: what one offers is reimplemented over Natives (ADR 0008).
 - A Wrapper covers every Native whose first parameter is its Handle type, or excludes it with a reason (ADR 0008).
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
-- Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/`, `harness/` or `game/` ([Examples](docs/documentation.md#examples), ADR 0004).
+- Every `@example` is included with `{@includeCode}` from a compiled file: the library's under `packages/reforged-ts/examples/`, `harness/` or `game/`, and `reforged-test/map`'s under `packages/reforged-test/examples/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
 - A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
 - Before working on an issue, claim it: `gh issue edit <n> --add-assignee @me`, your first write, before the branch, the first commit, any comment and the pull request; a Ticket or an issue assigned to another login is theirs. A Ticket is claimed together with its Spec, and the stale rule and the takeover are in `docs/agents/issue-tracker.md`, "Claim".

@@ -9,7 +9,11 @@ import { fileURLToPath } from "node:url";
 import type { LoadContext } from "@docusaurus/types";
 import docusaurusPluginTypedoc from "docusaurus-plugin-typedoc";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { type Reference, referencePluginOptions } from "../../reference";
+import {
+  type Reference,
+  referencePluginOptions,
+  siteReferences,
+} from "../../reference";
 
 const FIXTURE = fileURLToPath(new URL("fixtures/library/", import.meta.url));
 
@@ -163,5 +167,30 @@ describe("the reference", () => {
     expect(warnings.join("\n")).toMatch(
       /undocumentedFarewell \(\w+\).*does not have any documentation/,
     );
+  });
+});
+
+describe("the site's references", () => {
+  it("are the library, reforged-test from its map entry point alone, then the Typings", () => {
+    const references = siteReferences();
+    const [library, harness, ...typings] = references;
+
+    expect(library.id).toBe("reforged-ts");
+    expect(harness).toMatchObject({
+      id: "reforged-test",
+      dir: "api/reforged-test",
+    });
+    expect(harness.entryPoints).toEqual([
+      fileURLToPath(
+        new URL(
+          "../../../packages/reforged-test/runner/map/index.ts",
+          import.meta.url,
+        ),
+      ),
+    ]);
+    expect(typings.length).toBeGreaterThan(0);
+    for (const reference of typings) {
+      expect(reference.typingsManifest).toBeDefined();
+    }
   });
 });

@@ -1,0 +1,43 @@
+{
+  // The examples the doc comments of `reforged-test/map` include with
+  // `{@includeCode}` (ADR 0004), each a test file as a Map project writes
+  // one: `reforged-test/map` resolves to the entry point the package builds
+  // (map/index.d.ts and map/index.lua, so they see what a Map project sees),
+  // and `reforged-ts` to the library's sources. The package's vitest global
+  // setup (../test/support/compile-runner.ts) compiles them with
+  // typescript-to-lua to ../dist-examples after the runner, and
+  // ../test/examples.test.ts runs each on the harness as a Map project's
+  // tests run. The root is the packages folder, which holds both packages.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.1",
+      "reforged-types/3.0.1/common.ai"
+    ],
+    "strict": true,
+    "noUnusedParameters": true,
+    "rootDir": "../..",
+    "outDir": "../dist-examples",
+    "paths": {
+      "reforged-test/map": ["../map/index"],
+      // The require of the runner map/index.lua holds, by its path in the
+      // package: typescript-to-lua applies `paths` to a Lua file's requires
+      // too.
+      "lua/index": ["../lua/index"],
+      "reforged-ts": ["../../reforged-ts/src/index.ts"]
+    }
+  },
+  "include": ["."],
+  // The library's own options: its sources compile with the examples.
+  "tstl": {
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
+}
