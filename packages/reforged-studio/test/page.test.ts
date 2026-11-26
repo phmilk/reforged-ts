@@ -7,9 +7,10 @@
  * seam 1 covers: what an author sees after opening a link, a click or a
  * key.
  *
- * It needs the page built (`pnpm build`) and Chromium installed
- * (`pnpm --filter reforged-studio exec playwright install chromium`, which
- * CI runs).
+ * It needs the page built (`pnpm build`) and the headless Chromium
+ * installed (`pnpm --filter reforged-studio exec playwright install
+ * --only-shell chromium`, which CI runs and the project's global setup,
+ * `support/chromium.ts`, names when the browser is missing).
  */
 import fs from "node:fs";
 import path from "node:path";
