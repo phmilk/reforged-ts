@@ -28,9 +28,10 @@ interface Caught {
   readonly message: string;
 }
 
-/** What a piece of code printed and passed to the hook. */
+/** What a piece of code printed, showed on screen and passed to the hook. */
 interface Seen {
   readonly printed: string[];
+  readonly displayed: number;
   readonly caught: Caught[];
 }
 
@@ -42,6 +43,7 @@ interface Seen {
 function caughtBy(body: () => void, hooked = true): Seen {
   const caught: Caught[] = [];
   const printed = __stub_printed().length;
+  const displayed = __stub_displayed().length;
   if (hooked) {
     globals.__reforged_caught_error = (origin: string, message: string) => {
       caught.push({ origin, message });
@@ -52,7 +54,11 @@ function caughtBy(body: () => void, hooked = true): Seen {
   } finally {
     globals.__reforged_caught_error = undefined;
   }
-  return { printed: __stub_printed().slice(printed), caught };
+  return {
+    printed: __stub_printed().slice(printed),
+    displayed: __stub_displayed().length - displayed,
+    caught,
+  };
 }
 
 /** Runs an Init queue whose one callback, `"spawn"`, fails. */
@@ -89,6 +95,7 @@ describe("the Caught error hook", () => {
       'reforged-ts: globals callback "spawn" failed: queue failure',
       'reforged-ts: globals callback "spawn" failed: queue failure',
     ]);
+    expect(seen.displayed).toEqual(0);
   });
 
   it("hears a protected callback's failure, its counted repeats included", () => {
@@ -103,6 +110,7 @@ describe("the Caught error hook", () => {
     expect(seen.printed).toEqual([
       "reforged-ts: Test.member failed: protected failure",
     ]);
+    expect(seen.displayed).toEqual(1);
   });
 
   it("hears a runLocal function's failure, its counted repeats included", () => {
@@ -138,6 +146,33 @@ describe("the Caught error hook", () => {
       'reforged-ts: globals callback "spawn" failed: queue failure',
       "reforged-ts: Test.member failed: protected failure",
       `reforged-ts: MapPlayer#${String(local.id)} MapPlayer.runLocal failed: unheard local failure`,
+    ]);
+    expect(seen.displayed).toEqual(2);
+  });
+
+  it("reads the global raw: a map's undeclared-global warner never sees the lookup", () => {
+    const callback = failingProtected();
+    const previous = getmetatable(_G);
+    let looked = 0;
+    setmetatable(_G, {
+      __index: () => {
+        looked++;
+        error("undeclared global", 0);
+      },
+    });
+    let seen: Seen;
+    try {
+      seen = caughtBy(() => {
+        failingQueue();
+        callback();
+      }, false);
+    } finally {
+      setmetatable(_G, previous);
+    }
+    expect(looked).toEqual(0);
+    expect(seen.printed).toEqual([
+      'reforged-ts: globals callback "spawn" failed: queue failure',
+      "reforged-ts: Test.member failed: protected failure",
     ]);
   });
 });
