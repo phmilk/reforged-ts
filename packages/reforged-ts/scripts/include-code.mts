@@ -140,14 +140,20 @@ function includesCode(lines: readonly string[], from: number): boolean {
   return false;
 }
 
-interface IncludedCode {
+/** What one `{@includeCode}` includes. */
+export interface IncludedCode {
   /** The fence's language: the included file's extension. */
   language: string;
   code: string;
 }
 
-/** Reads what one tag includes, as TypeDoc does. */
-function includedCode(
+/**
+ * Reads what one tag includes, as TypeDoc does: `target` is the tag's text
+ * after `@includeCode` (`file.ts`, `file.ts#a,b`, `file.ts:3-6`), resolved
+ * against `sourceDir`; `where` names the tag in errors. The docs site's
+ * include marker reads a guide page's includes with it too.
+ */
+export function includedCode(
   target: string | undefined,
   sourceDir: string,
   where: string,

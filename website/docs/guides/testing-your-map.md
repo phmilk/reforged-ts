@@ -1,171 +1,74 @@
 ---
 title: Testing your map
 sidebar_position: 12
-description: Run map logic on the Lua harness of reforged-test, real Lua 5.3 with the Natives stubbed, without opening the game.
+description: Test map logic without opening the game, on reforged-test/map, each test a game of its own on real Lua 5.3.
 ---
 
 # Testing your map
 
-Opening the game to check a change takes minutes. Most map logic (a score, a spawn rule, a handler's reaction to an event) can be checked in a second instead, on the Lua harness of [`reforged-test`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-test): your code compiled by typescript-to-lua exactly as the build compiles it, run on real Lua 5.3 with the game's Natives replaced by stubs, and reported to vitest like any other test.
+Opening the game to check a change takes minutes. Most map logic (a score, a spawn rule, a handler's reaction to an event) can be checked in a second instead, with [`reforged-test`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-test): your code compiled by typescript-to-lua exactly as the build compiles it, run on real Lua 5.3 with the game's Natives answered by Stubs, and reported to Vitest like any other test.
 
-A test observes what the game would see of your code: the Native calls it makes with their arguments, the Handles it creates, and what it prints. It fires the triggers and the timers your code registered, as the game would, and checks what happened.
+A test of a Map project imports everything it needs from `reforged-test/map`. It reads as a Vitest test and acts as the game does: it starts a game, makes things happen in it, and checks what the player observes.
 
 ## In a Map project
 
 The Template sets the harness up; there is nothing to install or configure.
 
-| Where                  | What                                                                                                                                                             |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tests/lua/`           | The map's tests, `*.test.ts`, compiled with `src` into `dist-test` by `tests/lua/tsconfig.json`.                                                                 |
-| `tests/stubs/`         | The Native stubs the map needs beyond the ones `reforged-test` ships, plain Lua files.                                                                           |
-| `tests/lua/stubs.d.ts` | The TypeScript declarations of the firing helpers the tests call (`__stub_fire_trigger`, `__stub_fire_timer`, `__stub_format`).                                  |
-| `tests/harness/`       | The wiring: a vitest global setup that compiles the tests before each run, and the vitest file that hands the compiled tests to the harness. You do not edit it. |
+| Where            | What                                                                                                                                                             |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tests/lua/`     | The map's tests, `*.test.ts`, compiled with `src` into `dist-test` by `tests/lua/tsconfig.json`.                                                                 |
+| `tests/harness/` | The wiring: a Vitest global setup that compiles the tests before each run, and the Vitest file that hands the compiled tests to the harness. You do not edit it. |
 
-`pnpm test` runs them with the rest of the Template's tests, `pnpm test:lua` alone, and `pnpm check` runs them before you call a change done. A failing test shows the Lua error and the line, in the terminal and in the vitest panel of the editor.
+`pnpm test` runs them with the rest of the Template's tests, `pnpm test:lua` alone, and `pnpm check` runs them before you call a change done. A failing test shows the Lua error and the line, in the terminal and in the Vitest panel of the editor.
 
 ## A first test
 
-Take a module that counts the kills of each player:
-
-```ts title="src/score.ts"
-import { Init, on, UnitEvents } from "reforged-ts";
-
-/** The kills of each player, by player id. */
-export const kills: number[] = [];
-
-Init.onGameStart(() => {
-  on(UnitEvents.death, ({ killer }) => {
-    if (killer === undefined) return;
-    const id = killer.getOwner().id;
-    kills[id] = (kills[id] ?? 0) + 1;
-  });
-});
-```
-
-Its test starts the game, finds the Trigger the Subscription registered, fires it with a killer, and reads the count:
-
-```ts title="tests/lua/score.test.ts"
-/** @noSelfInFile */
-import { describe, expect, it } from "reforged-test/lua";
-import { MapPlayer, Unit } from "reforged-ts";
-import { kills } from "../../src/score";
-
-// The arguments of every call of a Native, oldest first.
-declare function __stub_args(name: string): (unknown[] & { n: number })[];
-
-const globals = _G as unknown as Record<string, unknown>;
-
-// Starts the game as the editor's script would: the library wraps
-// MarkGameStarted when it is defined, so calling it runs the game start stage.
-globals.MarkGameStarted = () => undefined;
-MarkGameStarted();
-
-describe("the score", () => {
-  it("counts a kill for the killer's owner", () => {
-    const deaths = __stub_args("TriggerRegisterPlayerUnitEvent").filter(
-      (call) => call[2] === EVENT_PLAYER_UNIT_DEATH,
-    );
-    const trigger = deaths[0]?.[0] as trigger;
-    const owner = MapPlayer.fromIndex(0);
-    if (owner === undefined) throw new Error("no player in slot 0");
-    // A Footman, `FourCC("hfoo")`, kills a Peasant, `FourCC("hpea")`.
-    const killer = Unit.create(owner, FourCC("hfoo"), 0, 0);
-    const victim = Unit.create(owner, FourCC("hpea"), 0, 0);
-
-    __stub_fire_trigger(trigger, {
-      GetTriggerUnit: victim.handle,
-      GetKillingUnit: killer.handle,
-    });
-
-    expect(kills[0]).toEqual(1);
-  });
-});
-```
-
-What the test relies on:
-
-- **The runner.** `describe`, `it` and `expect` come from `reforged-test/lua`: they run inside Lua, not in Node. The matchers are Vitest's where typescript-to-lua compiles them, with `.not` and the asymmetric matchers (`expect.anything()`, `expect.any("number")`, `expect.objectContaining(…)`), plus `toContainCall` for the call log; the [`reforged-test` README](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-test#writing-a-test) lists them.
-- **One Lua state per file.** Each test file runs in a fresh Lua state: the stubs load, then the file, then its `it`s in order. The `it`s of one file share the state, its Handles and its call log.
-- **Nothing fires on its own.** No time passes and no event happens: the test enters an Init stage by calling the editor's entry point, and fires triggers and timers with the helpers below.
+{/* Written with game.kill, the first Game action (#983): startGame, game.kill, expect(game.printed). */}
 
 ## A game per test
 
-A test that imports from `reforged-test/map` runs in a game of its own, and starts that game itself:
+Each test runs in a Test game of its own, and starts that game itself:
 
-```ts title="tests/lua/welcome.test.ts"
-import { expect, it, startGame } from "reforged-test/map";
-import { Init, MapPlayer } from "reforged-ts";
-
-Init.onGameStart(() => {
-  print("Welcome!");
-  const host = MapPlayer.fromIndex(0);
-  if (host !== undefined) host.displayTimedText(0, 0, 10, "You are the host");
-});
-
-it("greets the players when the game starts", () => {
-  const game = startGame();
-  expect(game.printed).toEqual(["Welcome!"]);
-  expect(game.displayed).toMatchObject([
-    { text: "You are the host", duration: 10 },
-  ]);
-});
-
-it("starts from nothing", () => {
-  const game = startGame();
-  expect(game.printed).toEqual(["Welcome!"]);
-});
-```
+{@includeCode ../../../packages/reforged-test/examples/welcome.test.ts}
 
 - **A fresh game for each test.** The file is loaded again for each test, in a Lua state of its own, so its top-level code runs once per test, and no test sees the units, the Native calls or the printed lines of another. The order of the tests changes nothing.
 - **`startGame()`** runs the map's initialization as the game does, through the Init stages, and returns the test's `game`. Call it once per test, in the test, in a `beforeEach` or at the top of the file; a second call in the same test throws, saying the game already started.
-- **`beforeEach` and `afterEach`**, imported from `reforged-test/map`, run around each test of their `describe`, or of the file at the top, as Vitest's do: the `beforeEach` hooks from the outer `describe` inwards, the `afterEach` hooks from the inner outwards and even when the test failed. A `beforeEach` that throws fails the test and skips its body; an `afterEach` that throws fails a test that had passed; the test reports its first error. A `beforeEach` can start the game for every test of its `describe`: `beforeEach(() => { game = startGame(); })`. There is no `beforeAll` or `afterAll`: each test is a game of its own.
-- **What the player observes.** `game.printed` holds every line printed since the game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` holds every message shown on a player's screen, as `{ text, player, duration }`. Each read is a copy, taken at the moment you read it.
+- **`beforeEach` and `afterEach`** run around each test of their `describe`, or of the file at the top, as Vitest's do: the `beforeEach` hooks from the outer `describe` inwards, the `afterEach` hooks from the inner outwards and even when the test failed. A `beforeEach` that throws fails the test and skips its body; an `afterEach` that throws fails a test that had passed; the test reports its first error. A `beforeEach` can start the game for every test of its `describe`. There is no `beforeAll` or `afterAll`: each test is a game of its own.
 
-## Driving the game
+{@includeCode ../../../packages/reforged-test/examples/before-each.test.ts}
 
-The shipped stubs record every Native call and give the test these helpers. They are Lua globals, not Natives; the Template declares the first three in `tests/lua/stubs.d.ts`, and a test declares any other it calls, as the test above declares `__stub_args`.
+## Making the game happen
 
-| Helper                                   | What it does                                                                                                                                     |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `__stub_fire_trigger(trigger, context?)` | Runs the trigger's conditions, then its actions, with `context` as what the event response Natives answer (`{ GetTriggerUnit: u.handle }`).      |
-| `__stub_fire_timer(timer)`               | Runs the handler `TimerStart` stored, once, with the timer as `GetExpiredTimer`'s answer.                                                        |
-| `__stub_format(value)`                   | Renders a value as the call log does: a Handle as `timer#1048577`.                                                                               |
-| `stubCalls()` (from `reforged-test/lua`) | The call log, one `Name(arg, arg)` line per Native call: `expect(stubCalls()).toContainCall("TimerStart(timer#1048580, 60, true, <function>)")`. |
-| `__stub_args(name)`                      | The arguments of every call of the Native `name`, each the very value it was given (a callback, a Handle).                                       |
-| `__stub_init_globals()`                  | Enters the globals Init stage, as the editor's `main` does.                                                                                      |
-| `__stub_set_local_player(slot)`          | Makes the player in `slot` the local player, to run the code as another client; returns the slot it replaced.                                    |
-| `__stub_printed()`, `__stub_displayed()` | What `print` and the display Natives showed, oldest first.                                                                                       |
-| `__stub_dispatch_damage(damage)`         | Dispatches a damage event to the triggers registered for it, as `UnitDamageTarget` does.                                                         |
+{/* Written with the Event dispatch and game.fire (#981), the Dispatching Natives (#982), game.kill (#983) and game.chat, game.select, game.deselect and game.leave (#984): the table of Game actions, the table of Dispatching Natives, and the rule that every other event goes through game.fire, with a spell as its example. */}
 
-Slots 0 and 1 are playing users and every other slot is empty, until a test overrides the Natives that say so. The [`reforged-test` README](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-test#stubs) lists every stubbed Native, each helper's exact behaviour and the stub authoring rules.
+## Time
 
-## Stubbing a Native
+{/* Written with the Game clock and game.advanceTime (#985) and the timer readings under it (#986). */}
 
-A Native that no stub defines fails the test that calls it:
+## Assertions
 
-```text
-LuaError: score_test.lua:12: Native SetUnitX is not stubbed
-```
+`expect` has Vitest's matchers where typescript-to-lua compiles them, with `.not` and the asymmetric matchers (`expect.anything()`, `expect.any("number")`, `expect.objectContaining(…)`); [`GameMatchers`](../api/reforged-test/interfaces/GameMatchers.md) lists them. `game.printed` holds every line printed since the game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` holds every message shown on a player's screen, as `{ text, player, duration }`. Each read is a copy, taken at the moment you read it.
 
-Add it to a Lua file in `tests/stubs/`. A stub records its call with `__stub_record`, keeps only the state its Natives read back, and never simulates a game rule. The Template's `tests/stubs/units.lua` stubs `GetUnitName`:
+{/* Completed with every Native a Spy, fn and calls (#987). */}
 
-```lua
--- The harness's units carry no name, so a unit answers the rawcode
--- CreateUnit was given: FourCC("hfoo") -> "hfoo".
-function GetUnitName(whichUnit)
-  __stub_record("GetUnitName", whichUnit)
-  return string.pack(">I4", whichUnit.typeId)
-end
-```
+## Errors
 
-Never edit the stubs `reforged-test` ships: a stub the whole ecosystem needs belongs in the package, through a pull request.
+{/* Written with the Caught error and game.expectError (#988). */}
+
+## A Native without a Stub
+
+{/* Written with stubNative and newHandle (#989) and the message that names stubNative (#990). */}
+
+## Focus and skip
+
+{/* Written with it.skip, it.only, it.todo and their describe forms (#980). */}
 
 ## What the harness cannot tell you
 
 The harness stands in for the Natives, not for the game:
 
-- **Integers are 64-bit** on the harness and 32-bit in the game ([Runtime facts](runtime-facts.md#integers-are-32-bit)). A test must not depend on the width: no overflow, no bit operation above 31 bits, no `math.maxinteger`. A test that needs 32-bit semantics carries `[32-bit]` in its name and is skipped until the harness gains a 32-bit run.
-- **No engine.** Pathing, combat, orders, object data, rendering and frame layout are absent. A stub hands back what the code gave it, nothing more.
+- **Integers are 64-bit** on the harness and 32-bit in the game ([Runtime facts](runtime-facts.md#integers-are-32-bit)). A test must not depend on the width: no overflow, no bit operation above 31 bits, no `math.maxinteger`.
+- **No engine.** Pathing, combat, orders, object data, rendering and frame layout are absent. A Stub answers what the code gave it and what the test set, nothing more.
 - **One client.** The harness is one machine. It can run code as another local player, but it cannot show a desync.
 - **The Lua is stock 5.3.** The globals the game removes (`debug`, `require`, `io`) exist on the harness, and the Typings declare the whole 5.3 standard library, so a call to one compiles, passes a test and fails in the game: keep them out of map code ([Runtime facts](runtime-facts.md#missing-globals)).
 

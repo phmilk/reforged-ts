@@ -290,8 +290,56 @@ _Avoid_: batch, phase, chunk
 
 **Fixture**:
 A factory, inside a Probe, for a Handle in a known state (live, dead, removed, destroyed), built with Natives only, so a case names the state it tests. A **stale handle** is one whose object is dead, removed or destroyed: the Handle is still held, and the object behind it is no longer alive or no longer there.
-_Avoid_: setup, mock, stub (the Lua test harness's stand-ins); test fixture (a file a vitest test reads)
+_Avoid_: setup, mock, Stub (a Native's stand-in in a Test game); test fixture (a file a vitest test reads)
 
 **Crashing case**:
 A case of the Nullability sweep in which the game crashed: one Native with one argument value or Handle state (`CreateImage` with image type 2147483647, `GetExpiredTimer` in a trigger's action), on one Build. A Native with a Crashing case is not on the Ban list: its other cases ran.
 _Avoid_: unsafe (alone), crash (alone, which is the event, not the case), crashing Native
+
+**Test game**:
+The game one test of a Map project runs in: a fresh Lua state with the **Shipped stubs** and the map's script loaded, started by the test. One Test game per test is the isolation rule.
+_Avoid_: test world, sandbox, game state (alone)
+
+**Stub**:
+The function that answers for a Native in a **Test game**.
+_Avoid_: mock, fake, map-specific stub (a Stub a test defines)
+
+**Shipped stub**:
+A **Stub** `reforged-test` publishes, as opposed to one a test defines with `stubNative`.
+_Avoid_: built-in stub, default stub, map-specific stub
+
+**Game action**:
+An action of the test API that says what happens in the game (`game.kill`, `game.chat`): it makes the **Event dispatch** the game would make and writes the state its name states.
+_Avoid_: simulation, emit, fire (alone, which is `game.fire`, the escape hatch for the events no Game action covers)
+
+**Event dispatch**:
+Delivering one event to every Trigger registered for it, as the game would.
+_Avoid_: firing (alone, which runs one Trigger), emit, broadcast
+
+**Firing context**:
+The answers of the response Natives (`GetTriggerUnit`, `GetKillingUnit`) for the length of one firing.
+_Avoid_: event payload (what an Event descriptor reads from it), event data, context (alone)
+
+**Dispatching Native**:
+A Native whose **Stub** makes its **Event dispatch** inside the call (`KillUnit`), because a Probe showed that the game fires that event synchronously.
+_Avoid_: firing Native, event Native
+
+**Game clock**:
+The game time of a **Test game**, which only the test moves. Not `os.clock`, the client's wall clock, and not the `gametime` System behind `getElapsedTime`.
+_Avoid_: fake timers, scheduler, clock (alone)
+
+**Recorded call**:
+A call of a Native, kept by its **Stub** with its arguments, which a test reads through `expect(Native)` or `calls`.
+_Avoid_: mock call, invocation, call log (the library's own tests' list of lines, `stubCalls()`)
+
+**Spy**:
+A function made by `fn()`, which keeps its own calls.
+_Avoid_: mock (nothing here replaces behaviour), fake, stub
+
+**Caught error**:
+An error the library caught from a Map project's callback and reported. A test **expects** it; one is _expected_ or _unexpected_.
+_Avoid_: reported error (reads as `Reforged.debug.report()`), failure (the library's word for the report's row, `CallbackFailure`)
+
+**Test control**:
+What a test sets on its **Test game** without making anything happen: no event fires and no call is recorded (`game.setLocalPlayer`). Moving the **Game clock** is not one.
+_Avoid_: test helper, stub helper (the `__stub_*` globals of the library's own tests)

@@ -169,7 +169,7 @@ export function rewriteLinks(
  * belongs to a fenced code block (its fences included), and whether it is
  * the block's opening fence, with its info string, or its closing one.
  */
-function forEachLine(
+export function forEachLine(
   markdown: string,
   visit: (
     line: string,

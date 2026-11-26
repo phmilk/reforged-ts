@@ -3,7 +3,7 @@
 // `docs:start` and `docs:build`, docusaurus.check.config.ts, strict, for
 // `docs:check`, the CI gate. A configuration file exports its configuration
 // and nothing else: Docusaurus rejects any other export as an unknown field.
-import { dirname } from "node:path";
+import { dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
@@ -17,6 +17,8 @@ import {
 } from "./reference";
 import { llmsFilesPlugin } from "./llms";
 import { mermaidCheckPlugin } from "./mermaid";
+import { expandIncludes, mayInclude } from "./scripts/includes.mts";
+import { snippetsCheckPlugin } from "./snippets";
 import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
 import {
   cutVersions,
@@ -30,7 +32,8 @@ export interface SiteOptions {
   /**
    * Fail on what `docs:build` only warns about: broken anchors, and, with
    * `STRICT_REFERENCE`, TypeDoc's validation warnings in the API reference
-   * (an undocumented member). The CI gate, `docs:check`, builds strict.
+   * (an undocumented member); and type-check the code samples of the docs
+   * tree (snippets.ts). The CI gate, `docs:check`, builds strict.
    */
   readonly strict: boolean;
 }
@@ -71,6 +74,17 @@ export function siteConfig(options: SiteOptions): Config {
       // `default` theme in light, its `dark` theme in dark.
       mermaid: true,
       hooks: { onBrokenMarkdownLinks: "throw" },
+      // An include marker of a page, `{@includeCode <file>[#region]}` alone
+      // on its line, is the fenced block of the code it names (#979,
+      // scripts/includes.mts); a missing file or region fails the build.
+      preprocessor: ({ filePath, fileContent }) =>
+        mayInclude(fileContent)
+          ? expandIncludes(
+              fileContent,
+              dirname(filePath),
+              relative(SITE, filePath),
+            )
+          : fileContent,
     },
 
     // Docusaurus Faster (Rspack, SWC, Lightning CSS). Its worker threads
@@ -126,6 +140,8 @@ export function siteConfig(options: SiteOptions): Config {
       // llms.txt, llms-full.txt and each page as Markdown, per docs version
       // and once for the Typings.
       llmsFilesPlugin(cut),
+      // Strict: every TypeScript fence of the docs tree type-checks.
+      ...(options.strict ? [() => snippetsCheckPlugin(SITE)] : []),
     ],
 
     themes: [

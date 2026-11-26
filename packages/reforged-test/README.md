@@ -22,7 +22,31 @@ The package has five parts:
 | The stubs                            | `stubs/*.lua`         | Plain Lua files that define the Natives and globals the code under test calls. The glue loads them by path.                                       |
 | The declarations of the stub helpers | `reforged-test/stubs` | The TypeScript declarations of the `__stub_*` helpers the stubs define, for the `types` of a test's tsconfig.                                     |
 
-## Writing a test
+## Testing a map
+
+A Map project's test imports everything it needs from `reforged-test/map`, and each of its tests runs in a Test game of its own:
+
+```ts
+import { expect, it, startGame } from "reforged-test/map";
+import "../../src/main";
+
+it("greets the players", () => {
+  const game = startGame();
+  expect(game.printed).toContain("Welcome!");
+});
+```
+
+The guide [Testing your map](https://phmilk.github.io/reforged-ts/docs/next/guides/testing-your-map) is the page to read: from a first test to what the harness cannot tell you. The Template sets the tests up in every Map project.
+
+Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.
+
+A helper a map's test needs that has no import in `reforged-test/map` is a gap of the package: [file it as an issue](https://github.com/phmilk/reforged-ts/issues/new), rather than reaching for the helpers of the part below. Sync, the preload file and `os.clock` have no form in `reforged-test/map`.
+
+## Testing a library
+
+A Map project does not use this part: it is the harness level the library's own tests are written at, `reforged-test/lua` with its call log, the `__stub_*` helpers the Shipped stubs define, the glue and the Shipped stubs themselves.
+
+### Writing a test
 
 A test file is TypeScript, named `*.test.ts`, and imports the runner from `reforged-test/lua`:
 
@@ -83,30 +107,9 @@ A failed expectation fails its test with a message such as `Expected {a = {1, 2}
 
 `toMatch`, `toThrow(message)` and `expect.stringContaining` take plain text, never a pattern: typescript-to-lua compiles no regular expression, and a Lua pattern would read `.` or `%` as no Vitest test means them. There is no `toBeNull` (`null` is `nil`, so `toBeUndefined`), `toBeNaN`, `toStrictEqual`, `toHaveProperty`, snapshot, `resolves` or `rejects`. Why each matcher reads as it does, and what typescript-to-lua compiles of Vitest's: [How test libraries phrase a test](https://github.com/phmilk/reforged-ts/blob/master/docs/research/test-phrasing.md).
 
-### A Test game per test
-
-A Map project's test imports from `reforged-test/map`, and each of its tests runs in a Test game of its own:
-
-```ts
-import { expect, it, startGame } from "reforged-test/map";
-import "../../src/main";
-
-it("greets the players", () => {
-  const game = startGame();
-  expect(game.printed).toContain("Welcome!");
-});
-```
-
-- `describe`, `it`, `expect`, `beforeEach` and `afterEach` are the runner's, with the same matchers but `toContainCall`, and `reforged-test/map` exports no call log.
-- Each `it` runs in a fresh Lua state: the file is loaded again for it, so its module-level code runs once per test, and no test sees the units, the Recorded calls or the printed lines of another. This holds for the whole file, also when it imports from `reforged-test/lua` too (ADR 0029).
-- `startGame()` runs the map's initialization as the game does: `config`, then `main` (`InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`), then `MarkGameStarted`, and so the library's Init stages. An editor function nothing defined is defined as one that does nothing. Call it once per test, in the `it`, in a `beforeEach` or at the top of the file; a second call in the same test throws, saying the game already started.
-- `game.printed` is every line printed since the Test game began, the library's included, one entry per `print` call with its arguments joined by a tab. `game.displayed` is every message a display Native showed, as records `{ text, player, duration }`, `player` being the Handle the Native received and `duration` undefined for `DisplayTextToPlayer`. Each read is a copy.
-
-Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.
-
 Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`, and the map entry point's under `lua_modules/reforged-test/map/`.
 
-## Running the tests with vitest
+### Running the tests with vitest
 
 Add one vitest file that calls the glue with the output folder of that compile:
 
@@ -150,7 +153,7 @@ Other exports of the glue:
 - `LOAD_TEST_NAME`: the name of the one failing test that stands for a file that failed to load, for example on a Native called at module load that no stub defines. The other files still run.
 - The types `LuaTestOptions`, `LuaTestFile`, `LuaTestResult` and `LuaTestStatus`.
 
-### Error messages
+#### Error messages
 
 The glue rewrites the VM's `attempt to call a nil value (global 'X')` into `Native X is not stubbed`:
 
@@ -160,7 +163,7 @@ LuaError: handles/unit_test.lua:12: Native SetUnitX is not stubbed
 
 The fix is a stub for `X` in a stub file. Every error the VM raises is caught and reported with its Lua message only.
 
-## The module naming contract
+### The module naming contract
 
 - typescript-to-lua replaces the dots in a file name with underscores, so `unit.test.ts` is emitted as `unit_test.lua`.
 - The glue discovers test modules by the `_test.lua` suffix, anywhere under `outDir` except `lua_modules/`.
@@ -168,7 +171,7 @@ The fix is a stub for `X` in a stub file. Every error the VM raises is caught an
 - A module's name is its path relative to `outDir` without the extension, with separators turned into dots. That is the name typescript-to-lua emits in `require` (`handles.unit`).
 - A file whose name ends in `_test.lua` is always treated as a test module, so keep that ending for test files.
 
-## The results contract
+### The results contract
 
 The runner and the glue share nothing but this JSON string, returned by the global `__reforged_test_run`:
 
@@ -193,9 +196,9 @@ In a file that loads `reforged-test/map`, the call without an argument answers t
 
 The runner writes it with its own encoder, with keys sorted, because the game's Lua has no JSON library. The glue rejects results of any other shape.
 
-## Stubs
+### Stubs
 
-### The shipped baseline
+#### The shipped baseline
 
 `stubs/base.lua` defines the baseline every test can rely on, before any test runs:
 
@@ -220,7 +223,7 @@ It also holds the shared machinery the other stub files use:
 
 The baseline also replaces the standard library's `os.clock` with a clock the test sets: it answers 0.0 until `__stub_set_clock(seconds)` sets a value, keeps that value until the next set, and `__stub_set_clock` returns the value it replaced. The game's `os.clock` is a local, async value (it differs between clients), so a test controls lobby and start times exactly. `os.clock` is not a Native: reading it adds no call-log line.
 
-### The shipped families
+#### The shipped families
 
 One file per Native family, loaded after `base.lua` by name:
 
@@ -262,7 +265,7 @@ One file per Native family, loaded after `base.lua` by name:
 
 A timer or trigger never fires on its own, and a sent sync packet reaches no one: a test fires or delivers it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test gets their declarations, and those of every other `__stub_*` helper of the shipped stubs with the types they take (the firing context `StubContext` among them), by adding `reforged-test/stubs` to the `types` of its tsconfig, next to the Typings it names; nothing is copied, and a test of the package fails when the declarations stop matching the Lua.
 
-### Constants and converters
+#### Constants and converters
 
 A constant of the game is an opaque value made with `__stub_constant` (a whole family with `__stub_constants`): it carries its kind and its name, no handle id, and renders by name in the call log (`PLAYER_COLOR_BLACK`, `CAMERA_FIELD_ZABSOLUTE`). A test compares constants by identity (`toBe`), and defining them leaves the handle sequence alone. Besides the event constants (below), the shipped stubs define the `PLAYER_COLOR_*`, `RACE_PREF_*`, `ITEM_TYPE_*`, `CAMERA_FIELD_*`, `MOUSE_BUTTON_TYPE_*` and `PATHING_TYPE_*` families. A constant the Patch converts from the same integer as another is that other value: `ITEM_TYPE_TOME` is `ITEM_TYPE_POWERUP`.
 
@@ -283,7 +286,7 @@ const unknown = ConvertEquipmentType(42); // no EQUIPMENT_TYPE_* is this value
 
 No sentinel takes a handle id. The older converters `ConvertEffectType` and `ConvertFogState` do not follow the rule yet: each call returns a new handle, which takes an id.
 
-### Triggers, conditions and the firing context
+#### Triggers, conditions and the firing context
 
 **Registrations.** The triggers family defines all 26 `TriggerRegister*` Natives of the Patch, the `Blz` ones included: `TriggerRegisterVariableEvent`, `TriggerRegisterTimerEvent`, `TriggerRegisterTimerExpireEvent`, `TriggerRegisterGameStateEvent`, `TriggerRegisterDialogEvent`, `TriggerRegisterDialogButtonEvent`, `TriggerRegisterGameEvent`, `TriggerRegisterEnterRegion`, `TriggerRegisterLeaveRegion`, `TriggerRegisterTrackableHitEvent`, `TriggerRegisterTrackableTrackEvent`, `TriggerRegisterCommandEvent`, `TriggerRegisterUpgradeCommandEvent`, `TriggerRegisterPlayerEvent`, `TriggerRegisterPlayerUnitEvent`, `TriggerRegisterPlayerAllianceChange`, `TriggerRegisterPlayerStateEvent`, `TriggerRegisterPlayerChatEvent`, `TriggerRegisterDeathEvent`, `TriggerRegisterUnitStateEvent`, `TriggerRegisterUnitEvent`, `TriggerRegisterFilterUnitEvent`, `TriggerRegisterUnitInRange`, `BlzTriggerRegisterFrameEvent`, `BlzTriggerRegisterPlayerSyncEvent` and `BlzTriggerRegisterPlayerKeyEvent`. Each records the trigger and one argument per parameter of the Native, so an omitted filter shows as `nil`, and returns a new `event` handle:
 
@@ -339,7 +342,7 @@ __stub_deliver_sync(packet, { cString: true });
 
 The two playing slots are state the stubs hold, not a game rule: a test relies on slots 0 and 1 being playing users and on slot 2 (or any later slot) being empty, and overrides the two Natives for the length of a test when it needs another lobby.
 
-### Test controls
+#### Test controls
 
 The controls a test uses to observe what a Map project observes, beyond firing triggers and timers. None is a Native, so none adds a call-log line. `reforged-test/stubs` declares them, as it does the firing helpers.
 
@@ -368,7 +371,7 @@ const [call] = __stub_args("TimerStart");
 expect(call[3]).toBe(handler);
 ```
 
-### Stub authoring rules
+#### Stub authoring rules
 
 - Stubs are plain Lua 5.3 and must run on stock Lua without `debug`, `require`, `package` beyond `preload`, `io`, `collectgarbage`, `os.getenv` or `load`. The game lacks the first six.
 - Every stub appends one readable line to the global call log, `Name(arg, arg)`, with handles rendered as `kind#id`. Use `__stub_record`.
@@ -377,7 +380,7 @@ expect(call[3]).toBe(handler);
 - A stub keeps only the state its Natives were given and hands it back through the Natives that read it: enumerating a stored group (`ForGroup`), reading a stored inventory slot, a frame's parent or child, a frame by the name it was created under. What no Native reads back in the game (a sent sync packet, the strings a file was written with, a displayed message, the arguments of a call) is handed to the test through a helper (`__stub_sync_packets`, `__stub_preload_file`, `__stub_displayed`, `__stub_args`). It never simulates game rules: no inventory size or first-free-slot rule, no order, no event, no frame layout. The one event it dispatches itself is damage inside `UnitDamageTarget`, because the game fires it synchronously inside that call and nested dispatch is what a test of damage handlers observes.
 - There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set, then the extra stub files a Map project lists in the `stubs` option.
 
-## Integer width policy
+### Integer width policy
 
 The VM has 64-bit integers and the game has 32-bit integers. Tests must not depend on integer width:
 

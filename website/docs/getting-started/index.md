@@ -104,7 +104,7 @@ Three ideas carry every Map project:
 - `src/`: the map's code, `src/main.ts` first. The build compiles it with typescript-to-lua into one Lua bundle and appends it to the script the World Editor saved.
 - `my-map.w3m/`: the map folder, named after the project. The World Editor owns it; the build copies it, adds the code and packs the archive into `dist/`.
 - `reforged.config.ts`: the build's configuration (the map folder, the output folder, the mode). It is committed, so it holds only what every machine shares.
-- `tests/lua/` and `tests/stubs/`: the map's tests on the Lua harness and the Native stubs they need.
+- `tests/lua/`: the map's tests, written on `reforged-test/map`, each run in a Test game of its own, without the game ([Testing your map](../guides/testing-your-map.md)).
 - `AGENTS.md` and `GLOSSARY.md`: the instructions and the glossary a coding agent reads. They are Seeds: yours after generation. Add your map's own terms to `GLOSSARY.md`.
 
 ## Next
@@ -112,5 +112,5 @@ Three ideas carry every Map project:
 - [Handles and Wrappers](../guides/handles-and-wrappers.md): the first of the concept guides, one page per idea of the library, in the order they build on each other.
 - [Runtime facts](../guides/runtime-facts.md): what the game's Lua has and lacks, measured in the game.
 - [Desync safety and guards](../guides/desync-safety-and-guards.md): the pitfalls the type layer, the lint and Dev mode catch.
-- [Testing your map](../guides/testing-your-map.md): running map logic on the Lua harness without the game.
+- [Testing your map](../guides/testing-your-map.md): testing map logic without opening the game, each test a game of its own.
 - [Typings](../guides/typings.md): the declarations of the Natives, per Patch.

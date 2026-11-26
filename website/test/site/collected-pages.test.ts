@@ -8,48 +8,11 @@
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { validateConfig } from "@docusaurus/core/lib/server/configValidation.js";
-import mdxLoader, { type Options } from "@docusaurus/mdx-loader";
 import { afterEach, describe, expect, it } from "vitest";
-import { siteConfig } from "../../config";
 import { WORKSPACE } from "../../scripts/collect.mts";
 import { collect } from "../../scripts/collector.mts";
 import { fixture, GLOSSARY, REPOSITORY_FILES } from "../support/workspace.mts";
-
-const SITE = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
-
-/** The loader's options, as the docs plugin gives them, under `docs:check`. */
-const OPTIONS: Options = {
-  markdownConfig: validateConfig(
-    siteConfig({ strict: true }),
-    "docusaurus.check.config.ts",
-  ).markdown,
-  admonitions: true,
-  staticDirs: [],
-  siteDir: SITE,
-};
-
-/** The compiled JavaScript of the page at `filePath`, as a build gets it. */
-function compile(filePath: string, fileContent: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const context = {
-      _compiler: { name: "client" },
-      resource: filePath,
-      resourcePath: filePath,
-      getOptions: () => OPTIONS,
-      addDependency: () => undefined,
-      async: () => (error: Error | null, result?: string) => {
-        if (error) reject(error);
-        else resolve(result ?? "");
-      },
-    };
-    void mdxLoader.call(
-      context as unknown as ThisParameterType<typeof mdxLoader>,
-      fileContent,
-    );
-  });
-}
+import { compile } from "./compile";
 
 let folders: string[] = [];
 
