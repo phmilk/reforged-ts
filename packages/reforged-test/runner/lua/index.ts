@@ -30,6 +30,19 @@ interface Block {
   suite: string[];
   name: string;
   fn: () => void;
+  /** The `describe` the test was registered in, the file's root at the top. */
+  scope: Scope;
+}
+
+/**
+ * A `describe`, or the file's root, with the hooks registered in it, in
+ * registration order.
+ * @noSelf
+ */
+interface Scope {
+  parent?: Scope;
+  beforeEach: (() => void)[];
+  afterEach: (() => void)[];
 }
 
 interface Result {
@@ -47,6 +60,10 @@ interface Failure {
 
 const blocks: Block[] = [];
 const suites: string[] = [];
+const root: Scope = { beforeEach: [], afterEach: [] };
+let scope = root;
+/** Whether a test, or one of its hooks, is running. */
+let running = false;
 
 function copy<T>(list: T[]): T[] {
   const out: T[] = [];
@@ -58,8 +75,11 @@ function copy<T>(list: T[]): T[] {
 
 /** Groups the `it` blocks registered by `body` under `name`. */
 export function describe(name: string, body: () => void): void {
+  const outer = scope;
   table.insert(suites, name);
+  scope = { parent: outer, beforeEach: [], afterEach: [] };
   body();
+  scope = outer;
   table.remove(suites);
 }
 
@@ -70,7 +90,48 @@ export function describe(name: string, body: () => void): void {
  * runs in a Test game of its own.
  */
 export function it(name: string, fn: () => void): void {
-  table.insert(blocks, { suite: copy(suites), name, fn });
+  table.insert(blocks, { suite: copy(suites), name, fn, scope });
+}
+
+/** Adds a hook to the current scope, refused while a test runs. */
+function hook(kind: "beforeEach" | "afterEach", fn: () => void): void {
+  if (running) {
+    error(
+      `${kind}: called inside a test; register it in a describe or at the top of the file`,
+      3,
+    );
+  }
+  table.insert(scope[kind], fn);
+}
+
+/**
+ * Registers a function that runs before each test of the current
+ * `describe`, its nested ones included, or of the whole file at the top.
+ * The hooks run from the outer `describe` inwards, in registration order
+ * within one. One that throws fails the test, with its error, and the
+ * remaining hooks and the test's body are skipped; the `afterEach` hooks
+ * still run.
+ * @param fn - The function to run before each test.
+ * @throws When called inside a test:
+ * `beforeEach: called inside a test; register it in a describe or at the top of the file`.
+ */
+export function beforeEach(fn: () => void): void {
+  hook("beforeEach", fn);
+}
+
+/**
+ * Registers a function that runs after each test of the current
+ * `describe`, its nested ones included, or of the whole file at the top,
+ * even when the test or a `beforeEach` failed. The hooks run from the inner
+ * `describe` outwards, the last registered first within one. One that
+ * throws fails a test that had passed, and the remaining `afterEach` hooks
+ * are skipped, as Vitest's; a test that had failed keeps its first error.
+ * @param fn - The function to run after each test.
+ * @throws When called inside a test:
+ * `afterEach: called inside a test; register it in a describe or at the top of the file`.
+ */
+export function afterEach(fn: () => void): void {
+  hook("afterEach", fn);
 }
 
 /** The global call log of the stubs, one `Name(arg, arg)` line per call. */
@@ -849,10 +910,76 @@ expect.stringContaining = (part: string): any => stringContaining(part);
 // ---------------------------------------------------------------------------
 // Running and reporting
 
+/** The scopes of a test, from the file's root to its own `describe`. */
+function scopesOf(block: Block): Scope[] {
+  const chain: Scope[] = [];
+  let current: Scope | undefined = block.scope;
+  while (current !== undefined) {
+    table.insert(chain, 1, current);
+    current = current.parent;
+  }
+  return chain;
+}
+
+/** Runs each hook in order; returns false at the first that throws. */
+function runHooks(
+  hooks: (() => void)[],
+  attempt: (fn: () => void) => boolean,
+): boolean {
+  for (const fn of hooks) {
+    if (!attempt(fn)) return false;
+  }
+  return true;
+}
+
+/** Runs the `afterEach` hooks, inner scope first, each scope's last first. */
+function runAfterEach(
+  chain: Scope[],
+  attempt: (fn: () => void) => boolean,
+): void {
+  for (let i = chain.length - 1; i >= 0; i--) {
+    const hooks = chain[i].afterEach;
+    for (let j = hooks.length - 1; j >= 0; j--) {
+      if (!attempt(hooks[j])) return;
+    }
+  }
+}
+
+/**
+ * Runs one test between its hooks, as Vitest does: the `beforeEach` hooks
+ * outer to inner, the body unless one of them threw, then the `afterEach`
+ * hooks inner to outer whatever happened. The first error is the result.
+ */
 function runBlock(block: Block): Result {
-  const [ok, err] = pcall(block.fn);
-  if (ok) return { suite: block.suite, name: block.name, status: "pass" };
-  const failure = err as unknown as Failure | undefined;
+  // An object, not two locals, so the checker sees the closure's writes.
+  const first: { failed: boolean; thrown: unknown } = {
+    failed: false,
+    thrown: undefined,
+  };
+  const attempt = (fn: () => void): boolean => {
+    const [ok, err] = pcall(fn);
+    if (!ok && !first.failed) {
+      first.failed = true;
+      first.thrown = err;
+    }
+    return ok;
+  };
+  const chain = scopesOf(block);
+  running = true;
+  let ready = true;
+  for (const each of chain) {
+    if (!runHooks(each.beforeEach, attempt)) {
+      ready = false;
+      break;
+    }
+  }
+  if (ready) attempt(block.fn);
+  runAfterEach(chain, attempt);
+  running = false;
+  if (!first.failed) {
+    return { suite: block.suite, name: block.name, status: "pass" };
+  }
+  const failure = first.thrown as Failure | undefined;
   if (type(failure) === "table" && failure?.reforgedTestFailure === true) {
     return {
       suite: block.suite,
@@ -865,7 +992,7 @@ function runBlock(block: Block): Result {
     suite: block.suite,
     name: block.name,
     status: "error",
-    message: errorMessage(err),
+    message: errorMessage(first.thrown),
   };
 }
 
