@@ -152,51 +152,147 @@ describe("matchers", () => {
   const [matchers] = runLuaTestFiles({ outDir: outDir("matchers") });
   const { tests } = matchers;
 
+  function messages(suite: string): Record<string, string | undefined> {
+    return Object.fromEntries(
+      tests
+        .filter((test) => test.suite[0] === suite)
+        .map((test) => [test.name, test.message]),
+    );
+  }
+
   it("pass when the expectation holds", () => {
     const passing = tests.filter((test) => test.suite[0] === "pass");
-    expect(passing).toHaveLength(7);
+    expect(passing.map((test) => test.name)).toEqual([
+      "toEqual",
+      "toBe",
+      "toBeTruthy",
+      "toBeFalsy",
+      "toBeUndefined",
+      "toBeDefined",
+      "toThrow",
+      "toContainCall",
+      "toContain",
+      "toContainEqual",
+      "toHaveLength",
+      "toMatchObject",
+      "toBeGreaterThan",
+      "toBeGreaterThanOrEqual",
+      "toBeLessThan",
+      "toBeLessThanOrEqual",
+      "toBeCloseTo",
+      "toBeInstanceOf",
+      "toMatch",
+      "expect.anything",
+      "expect.any",
+      "expect.objectContaining",
+      "expect.arrayContaining",
+      "expect.stringContaining",
+    ]);
     for (const test of passing) expect(test).toMatchObject({ status: "pass" });
   });
 
   it("fail with a message naming both values", () => {
     const failing = tests.filter((test) => test.suite[0] === "fail");
-    expect(
-      Object.fromEntries(
-        failing.map((test) => [test.name, [test.status, test.message]]),
-      ),
-    ).toEqual({
-      "toEqual on primitives": ["fail", 'Expected "a" to equal "b"'],
-      "toEqual on tables": [
-        "fail",
+    for (const test of failing) expect(test).toMatchObject({ status: "fail" });
+    expect(messages("fail")).toEqual({
+      "toEqual on primitives": 'Expected "a" to equal "b"',
+      "toEqual on tables":
         "Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)",
-      ],
-      "toEqual on a missing key": [
-        "fail",
+      "toEqual on a missing key":
         "Expected {} to deeply equal {x = 1} (first difference at .x: nil vs 1)",
-      ],
-      "toBe on equal tables": [
-        "fail",
+      "not.toEqual": "Expected 1 not to equal 1",
+      "not.toEqual on tables": "Expected {1} not to deeply equal {1}",
+      "toBe on equal tables":
         "Expected {} to be {} (not the same table; use toEqual for deep equality)",
-      ],
-      toBeTruthy: ["fail", "Expected nil to be truthy"],
-      toBeFalsy: ["fail", "Expected 0 to be falsy"],
-      toBeUndefined: ["fail", "Expected player#1048577 to be undefined (nil)"],
-      "toThrow when nothing is thrown": [
-        "fail",
+      "not.toBe": "Expected 1 not to be 1",
+      toBeTruthy: "Expected nil to be truthy",
+      "not.toBeTruthy": "Expected 0 not to be truthy",
+      toBeFalsy: "Expected 0 to be falsy",
+      "not.toBeFalsy": "Expected false not to be falsy",
+      toBeUndefined: "Expected player#1048577 to be undefined (nil)",
+      "not.toBeUndefined": "Expected nil not to be undefined (nil)",
+      toBeDefined: "Expected nil to be defined (not nil)",
+      "not.toBeDefined": "Expected 0 not to be defined (not nil)",
+      "toThrow when nothing is thrown":
         "Expected the function to throw, but it returned",
-      ],
-      "toThrow with another message": [
-        "fail",
+      "toThrow with another message":
         'Expected the function to throw an error containing "good thing", got "bad thing"',
-      ],
-      "toThrow on a non-function": [
-        "fail",
-        "Expected a function to call, got 42",
-      ],
-      toContainCall: [
-        "fail",
+      "toThrow on a non-function": "Expected a function to call, got 42",
+      "not.toThrow": 'Expected the function not to throw, but it threw "boom"',
+      "not.toThrow of a table without a message":
+        "Expected the function not to throw, but it threw {code = 7}",
+      "not.toThrow with its message":
+        'Expected the function not to throw an error containing "bad", got "bad thing"',
+      toContainCall:
         "Expected the call log to contain Player(2); it holds:\n  Player(0)\n  Player(0)\n  Player(1)",
-      ],
+      "not.toContainCall": "Expected the call log not to contain Player(1)",
+      "toContain on a list": "Expected {{}} to contain {}",
+      "toContain on a string": 'Expected "hfoo" to contain "died"',
+      "not.toContain": "Expected {1, 2} not to contain 2",
+      "toContain on a number":
+        "Expected a list or a string to contain an item, got 5",
+      toContainEqual: "Expected {{a = 1}} to contain an item equal to {a = 2}",
+      "not.toContainEqual":
+        "Expected {{a = 1}} not to contain an item equal to {a = 1}",
+      toHaveLength: "Expected {1, 2} to have length 3, got 2",
+      "not.toHaveLength": 'Expected "ab" not to have length 2, got 2',
+      "toHaveLength on a number":
+        "Expected a list or a string to have a length, got 5",
+      toMatchObject:
+        "Expected {a = 1, b = {c = 2}} to match object {b = {c = 3}} (first difference at .b.c: 2 vs 3)",
+      "toMatchObject on lists of another length":
+        "Expected {{a = 1}, {a = 2}} to match object {{a = 1}}",
+      "not.toMatchObject":
+        "Expected {a = 1, b = 2} not to match object {a = 1}",
+      "toMatchObject on a string":
+        'Expected a table to match an object, got "a"',
+      toBeGreaterThan: "Expected 1 to be greater than 1",
+      "not.toBeGreaterThan": "Expected 2 not to be greater than 1",
+      toBeGreaterThanOrEqual: "Expected 0 to be greater than or equal to 1",
+      toBeLessThan: "Expected 2 to be less than 2",
+      toBeLessThanOrEqual: "Expected 3 to be less than or equal to 2",
+      "toBeGreaterThan on a string": 'Expected a number to compare, got "2"',
+      "toBeLessThan with a string":
+        'Expected a number to compare with, got "3"',
+      toBeCloseTo:
+        "Expected 0.31 to be close to 0.3 (to 2 digits, a difference below 0.005)",
+      "not.toBeCloseTo":
+        "Expected 0.3 not to be close to 0.3 (to 1 digit, a difference below 0.05)",
+      toBeInstanceOf: "Expected {x = 1} to be an instance of Hero",
+      "not.toBeInstanceOf": "Expected {} not to be an instance of Base",
+      "toBeInstanceOf another class": "Expected {} to be an instance of Base",
+      toMatch: 'Expected "a.b" to match "a%.b"',
+      "not.toMatch": 'Expected "Footman died" not to match "died"',
+      "toMatch on a number": "Expected a string to match, got 1",
+      "expect.anything on nil":
+        "Expected {[1] = 1, [3] = 3} to deeply equal {1, expect.anything(), 3} (first difference at [2]: nil vs expect.anything())",
+      "expect.anything on a missing key":
+        "Expected {} to match object {a = expect.anything()} (first difference at .a: nil vs expect.anything())",
+      "expect.any of a type":
+        'Expected {1, "x"} to deeply equal {1, expect.any("number")} (first difference at [2]: "x" vs expect.any("number"))',
+      "expect.any of a class":
+        "Expected {{}} to contain an item equal to expect.any(Base)",
+      "expect.objectContaining":
+        "Expected {a = 1, b = {c = 2, d = 3}} to deeply equal expect.objectContaining({b = {c = 2}})",
+      "expect.arrayContaining":
+        "Expected {1, 2} to deeply equal expect.arrayContaining({3})",
+      "expect.stringContaining":
+        'Expected {msg = "hfoo"} to match object {msg = expect.stringContaining("died")} (first difference at .msg: "hfoo" vs expect.stringContaining("died"))',
+      "expect.stringContaining on a number":
+        'Expected 5 to equal expect.stringContaining("5")',
+    });
+  });
+
+  it("raise on an argument no matcher can take, naming what to write", () => {
+    const raising = tests.filter((test) => test.suite[0] === "raise");
+    for (const test of raising) expect(test).toMatchObject({ status: "error" });
+    expect(messages("raise")).toEqual({
+      "expect.any of nil":
+        'matchers_test.lua:362: expect.any received nil: Number, String, Boolean, Function, Object and Array are nil in Lua, so write the type name instead: "number", "string", "boolean", "function" or "table"',
+      "expect.any of an unknown type name":
+        'matchers_test.lua:365: expect.any takes a Lua type name ("number", "string", "boolean", "table", "function", "thread" or "userdata") or a class, got "integer"',
+      "toBeInstanceOf of nil":
+        "matchers_test.lua:368: toBeInstanceOf takes a class, got nil",
     });
   });
 });

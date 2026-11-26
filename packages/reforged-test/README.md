@@ -45,17 +45,33 @@ The runner exports:
 
 - `describe(name, body)`: groups the `it` blocks registered by `body`. Nesting is allowed.
 - `it(name, fn)`: registers one test. Tests run after the file has loaded, in registration order. The tests of one file share its Lua state, and so its stub call log and handle ids.
-- `expect(value)`, with these matchers:
+- `expect(value)`, with Vitest's matchers where typescript-to-lua compiles them. `.not` negates each one: `expect(n).not.toBe(0)`.
   - `toEqual(expected)`: strict equality (`==`) on primitives, deep equality on tables. Metatables are ignored.
   - `toBe(expected)`: identity (`rawequal`), so two equal tables are not the same.
   - `toBeTruthy()` and `toBeFalsy()`: Lua truthiness, where only `nil` and `false` are falsy (`0` and `""` are truthy).
-  - `toBeUndefined()`: the value is `nil`.
-  - `toThrow(message?)`: the value is a function that throws when called. With `message`, the error's message contains it as plain text.
+  - `toBeUndefined()` and `toBeDefined()`: the value is `nil`, or is not.
+  - `toContain(item)`: a list holds this very item (`rawequal`), or a string holds this part as plain text.
+  - `toContainEqual(item)`: a list holds an item deeply equal to this one.
+  - `toHaveLength(length)`: the length `#` gives of a string or a list.
+  - `toMatchObject(subset)`: a table holds every key of `subset` with a matching value, nested tables matched the same way; a list in `subset` matches a list of the same length only. An empty list is an empty table in Lua, so `{}` matches any table.
+  - `toBeGreaterThan`, `toBeGreaterThanOrEqual`, `toBeLessThan` and `toBeLessThanOrEqual`: comparisons of two numbers.
+  - `toBeCloseTo(expected, digits?)`: the difference is below half of 10 to the power of `-digits`, `digits` being 2 when omitted.
+  - `toBeInstanceOf(cls)`: an instance of a typescript-to-lua class or of one that extends it.
+  - `toMatch(part)`: a string holds this part as plain text.
+  - `toThrow(message?)`: the value is a function that throws when called. With `message`, the error's message contains it as plain text. It takes no error class.
   - `toContainCall(call)`: the value is a call log that holds exactly this line.
+- The asymmetric matchers, which stand on the expected side of `toEqual`, `toMatchObject` and `toContainEqual`: `expect(call).toEqual([expect.anything(), 60])`.
+  - `expect.anything()`: any value but `nil`. A field holding `nil` is absent in Lua, so it fails there too.
+  - `expect.any(kind)`: a value of a Lua type, by its name (`"number"`, `"string"`, `"boolean"`, `"table"`, `"function"`), or an instance of a class. `Number`, `String` and the other built-in constructors are `nil` in Lua, so `expect.any(Number)` raises, naming the type name to write.
+  - `expect.objectContaining(part)`: a table holding every key of `part` with a deeply equal value.
+  - `expect.arrayContaining(items)`: a list holding, in any order, an item deeply equal to each of `items`; with no items, any value, as Vitest's.
+  - `expect.stringContaining(part)`: a string holding this part as plain text.
 - `stubCalls()`: the stub call log, one `Name(arg, arg)` line per Native call.
 - `run()`: runs the registered tests and returns the JSON results. The glue calls it through the global `__reforged_test_run`, so a test file never calls it.
 
 A failed expectation fails its test with a message such as `Expected {a = {1, 2}} to deeply equal {a = {1, 3}} (first difference at .a[2]: 2 vs 3)`. Any other error fails it with the Lua message, location included.
+
+`toMatch`, `toThrow(message)` and `expect.stringContaining` take plain text, never a pattern: typescript-to-lua compiles no regular expression, and a Lua pattern would read `.` or `%` as no Vitest test means them. There is no `toBeNull` (`null` is `nil`, so `toBeUndefined`), `toBeNaN`, `toStrictEqual`, `toHaveProperty`, snapshot, `resolves` or `rejects`. Why each matcher reads as it does, and what typescript-to-lua compiles of Vitest's: [How test libraries phrase a test](https://github.com/phmilk/reforged-ts/blob/master/docs/research/test-phrasing.md).
 
 Compile the tests with a typescript-to-lua project of their own: `luaTarget` `5.3`, `moduleResolution` `bundler`, the language extensions and `lua-types/5.3` (or `reforged-types/3.0.1`) in `types`. typescript-to-lua copies the runner's Lua into the output folder under `lua_modules/reforged-test/lua/`.
 

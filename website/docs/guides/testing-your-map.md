@@ -84,7 +84,7 @@ describe("the score", () => {
 
 What the test relies on:
 
-- **The runner.** `describe`, `it` and `expect` come from `reforged-test/lua`: they run inside Lua, not in Node. The matchers are `toEqual` (deep equality on tables), `toBe` (identity), `toBeTruthy`, `toBeFalsy`, `toBeUndefined`, `toThrow` and `toContainCall`.
+- **The runner.** `describe`, `it` and `expect` come from `reforged-test/lua`: they run inside Lua, not in Node. The matchers are Vitest's where typescript-to-lua compiles them, with `.not` and the asymmetric matchers (`expect.anything()`, `expect.any("number")`, `expect.objectContaining(…)`), plus `toContainCall` for the call log; the [`reforged-test` README](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-test#writing-a-test) lists them.
 - **One Lua state per file.** Each test file runs in a fresh Lua state: the stubs load, then the file, then its `it`s in order. The `it`s of one file share the state, its Handles and its call log.
 - **Nothing fires on its own.** No time passes and no event happens: the test enters an Init stage by calling the editor's entry point, and fires triggers and timers with the helpers below.
 
