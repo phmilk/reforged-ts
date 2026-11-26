@@ -125,7 +125,10 @@ export type CaughtErrorReport = "print" | "screen" | "count";
  * callback: unless `report` is `"count"`, the line
  * `reforged-ts: <origin> failed: <message>`, printed, and on screen too for
  * `"screen"`; then, whatever `report` is, the global
- * `__reforged_caught_error(origin, message)` when it is defined, read raw.
+ * `__reforged_caught_error(origin, message)` when it is defined.
+ * @remarks
+ * The global is read with `rawget`, so a `_G` metatable a map installed (an
+ * undeclared-global warner) never sees the lookup.
  * @param origin - Where the callback was registered or ran:
  * `Timer#1048577 Timer.start`, `globals callback "spawn"`.
  * @param message - The Lua error text, as pcall returned it.
@@ -144,8 +147,8 @@ export function reportCaughtError(
       print(line);
     }
   }
-  // A raw read: a `_G` metatable a map installed (an undeclared-global
-  // warner) never sees the lookup, so nothing changes in the game.
+  // A raw read: a map's undeclared-global warner neither warns nor raises
+  // for a global the game never defines.
   const hook = rawget(globals, CAUGHT_ERROR_HOOK) as
     CaughtErrorHook | undefined;
   if (hook !== undefined) {

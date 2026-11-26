@@ -153,6 +153,9 @@ describe("the Caught error hook", () => {
   it("reads the global raw: a map's undeclared-global warner never sees the lookup", () => {
     const callback = failingProtected();
     const previous = getmetatable(_G);
+    // A warner that raises, unlike the logging one of
+    // support/header-position-with-metatable.ts: a lookup would escape the
+    // failure, and `looked` counts it besides.
     let looked = 0;
     setmetatable(_G, {
       __index: () => {

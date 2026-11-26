@@ -18,6 +18,7 @@ The library's three places that catch one (an Init queue, a protected callback, 
 
 - The global's name and its two arguments are a contract: renaming it, or changing what `origin` and `message` hold, is a breaking change for `reforged-test`.
 - A new place in the library that catches a Map project's error must go through the same report function, or the harness does not hear of it.
+- The library reads the global raw, so a `_G` metatable a map installed (an undeclared-global warner) never sees the lookup; the harness assigns the global on `_G` itself, since one served only through a metatable is not seen.
 - The hook runs outside the `pcall` that caught the error: a hook that throws escapes into the callback's thread, which a harness's hook, the only definer, does not do.
 - With Dev mode off a protected callback is not caught, so its error escapes as in the game and the hook is not called; an Init queue's failure is caught in either mode.
 
