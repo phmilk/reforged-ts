@@ -551,7 +551,7 @@ describe("workflowSteps", () => {
         ),
       ),
     ).toEqual([
-      'GitHub lists no workflow "Auto-add sub-issues to project", which the definition has on: when GitHub renamed it, give BOARD_WORKFLOWS (release/src/board.ts) its new name.',
+      'GitHub lists no workflow "Auto-add sub-issues to project", which the definition has on: in BOARD_WORKFLOWS (release/src/board-definition.ts), give it its new name when GitHub renamed it, or drop it when GitHub removed it.',
       'Turn on the workflow "Item closed": it is off, and the definition has it on.',
     ]);
   });
@@ -572,8 +572,8 @@ describe("workflowSteps", () => {
         { name: "Code review approved", enabled: false },
       ]),
     ).toEqual([
-      'The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).',
-      'The workflow "Code review approved" is off, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).',
+      'The workflow "Auto-archive items" is on, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
+      'The workflow "Code review approved" is off, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board-definition.ts).',
     ]);
   });
 });

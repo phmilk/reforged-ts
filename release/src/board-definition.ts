@@ -498,15 +498,19 @@ export function assumedState(): BoardState {
 
 const onOrOff = (enabled: boolean) => (enabled ? "on" : "off");
 
+/** Where a step sends its reader to change the definition. */
+const WORKFLOWS_DEFINITION =
+  "BOARD_WORKFLOWS (release/src/board-definition.ts)";
+
 /**
  * The steps that make `workflows`, the built-in workflows GitHub lists on
  * a project, match `BOARD_WORKFLOWS`, one sentence each and none when they
  * match: in the definition's order, a workflow to turn on or off, and one
  * the definition has on that GitHub does not list, which no switch turns on
- * (a rename by GitHub is the likely cause); then each one GitHub lists that
+ * (GitHub renamed or removed it); then each one GitHub lists that
  * the definition does not name, since GitHub may add one. A workflow the
  * definition has off and GitHub does not list is as wanted. Workflows are
- * matched by name, and the file named is the definition's entry point.
+ * matched by name.
  */
 export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
   const steps: string[] = [];
@@ -515,7 +519,7 @@ export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
     if (listed === undefined) {
       if (enabled) {
         steps.push(
-          `GitHub lists no workflow "${name}", which the definition has on: when GitHub renamed it, give BOARD_WORKFLOWS (release/src/board.ts) its new name.`,
+          `GitHub lists no workflow "${name}", which the definition has on: in ${WORKFLOWS_DEFINITION}, give it its new name when GitHub renamed it, or drop it when GitHub removed it.`,
         );
       }
     } else if (listed.enabled !== enabled) {
@@ -527,7 +531,7 @@ export function workflowSteps(workflows: readonly ProjectWorkflow[]): string[] {
   for (const { name, enabled } of workflows) {
     if (!BOARD_WORKFLOWS.some((workflow) => sameName(workflow.name, name))) {
       steps.push(
-        `The workflow "${name}" is ${onOrOff(enabled)}, and the definition does not name it: give it a state in BOARD_WORKFLOWS (release/src/board.ts).`,
+        `The workflow "${name}" is ${onOrOff(enabled)}, and the definition does not name it: give it a state in ${WORKFLOWS_DEFINITION}.`,
       );
     }
   }
