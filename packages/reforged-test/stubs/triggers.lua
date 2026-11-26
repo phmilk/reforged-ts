@@ -348,10 +348,10 @@ end
 -- through the Event dispatch to the trigger of that registration alone, the
 -- event handle it returned being the subject. A disabled or destroyed
 -- trigger is skipped, as for any event. Its call-log line and event handle
--- are the ones every registration has. Not measured in the game yet
--- (probe/probes/timer-event.ts, written for #985 and still to run): that
--- GetTriggerEventId answers EVENT_GAME_TIMER_EXPIRED, and that a timer and a
--- timer event of one instant run in the order they were started.
+-- are the ones every registration has. As measured in the game
+-- (docs/research/timer-event.md): GetTriggerEventId answers
+-- EVENT_GAME_TIMER_EXPIRED, GetExpiredTimer nil, and a timer and a timer
+-- event of one instant run in the order they were started.
 local registerTimerEvent = TriggerRegisterTimerEvent
 
 function TriggerRegisterTimerEvent(whichTrigger, timeout, periodic)

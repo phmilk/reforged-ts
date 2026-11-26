@@ -432,7 +432,7 @@ describe("the Game clock and game.advanceTime", () => {
         "fire through the Event dispatch, once or once per period",
         "take their turn among the timers, in the order of their instants",
         "skip a disabled or destroyed Trigger silently, and fire again once enabled",
-        "answer GetTriggeringTrigger, and each registration fires its own Trigger only",
+        "answer GetTriggeringTrigger and the timer event, and each registration fires its own Trigger only",
         "are not reached by an event the test fires",
         "record the registration as before, and no timer",
       ),

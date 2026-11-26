@@ -317,6 +317,10 @@ describe("a cancelled expiry", function()
   end)
 end)
 
+-- docs/research/timer-event.md: a Trigger of TriggerRegisterTimerEvent
+-- reads EVENT_GAME_TIMER_EXPIRED and no expired timer, fires its condition
+-- before its action, is skipped while disabled or destroyed, and takes its
+-- turn among the timers of its instant in the order they were started.
 describe("the Triggers of TriggerRegisterTimerEvent", function()
   -- A trigger that appends `name .. " condition"` and `name .. " action"`
   -- to `log` when it runs.
@@ -378,11 +382,15 @@ describe("the Triggers of TriggerRegisterTimerEvent", function()
     expect(log).toEqual({ "disabled condition", "disabled action" })
   end)
 
-  it("answer GetTriggeringTrigger, and each registration fires its own Trigger only", function()
+  it("answer GetTriggeringTrigger and the timer event, and each registration fires its own Trigger only", function()
     local game = startGame()
     local seen = {}
     local first, second = CreateTrigger(), CreateTrigger()
-    TriggerAddAction(first, function() seen[#seen + 1] = GetTriggeringTrigger() end)
+    local eventId, expired
+    TriggerAddAction(first, function()
+      seen[#seen + 1] = GetTriggeringTrigger()
+      eventId, expired = GetTriggerEventId(), GetExpiredTimer()
+    end)
     TriggerAddAction(second, function() seen[#seen + 1] = GetTriggeringTrigger() end)
     TriggerRegisterTimerEvent(first, 1, false)
     TriggerRegisterTimerEvent(second, 2, false)
@@ -390,6 +398,8 @@ describe("the Triggers of TriggerRegisterTimerEvent", function()
     expect(#seen).toEqual(2)
     expect(seen[1]).toBe(first)
     expect(seen[2]).toBe(second)
+    expect(eventId).toBe(EVENT_GAME_TIMER_EXPIRED)
+    expect(expired).toBeUndefined()
   end)
 
   it("are not reached by an event the test fires", function()
