@@ -13,6 +13,7 @@ type CountdownState = "running" | "resumed" | "paused" | "expired";
 /**
  * One start of a Timer, what `resume` and the readings need of it: the game
  * keeps none of it once its `ResumeTimer` is out of the picture (#962).
+ * @noSelf
  */
 interface Countdown {
   /** The timeout `start` was given, in seconds. */
@@ -20,7 +21,7 @@ interface Countdown {
   /** Whether `start` was periodic. */
   readonly periodic: boolean;
   /** The protected handler, the function the game runs at each expiry. */
-  readonly run: (this: void) => void;
+  readonly run: () => void;
   /** What the Timer is doing. */
   state: CountdownState;
   /** What was left when `pause` stopped it, in seconds. */
@@ -158,7 +159,8 @@ export class Timer extends Handle<timer> {
       const left = TimerGetRemaining(this.handle);
       // A periodic Timer reads 0 left in its handler, where its next
       // countdown, a full timeout, has not begun yet.
-      countdown.left = left <= 0 && countdown.periodic ? countdown.timeout : left;
+      countdown.left =
+        left <= 0 && countdown.periodic ? countdown.timeout : left;
       countdown.state = "paused";
     }
     PauseTimer(this.handle);
