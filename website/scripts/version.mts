@@ -3,19 +3,25 @@
 // version command, which loads the site, and with it the reference plugins,
 // which regenerate both API references before it copies the docs tree, so
 // the guides, the collected pages and the references are frozen together.
-// Then it applies the retention rule, as docs:prune does, so that a local cut
-// ends as the one CI makes. Exit code 0 when cut, 1 when a step fails or the
-// label cannot be cut, 2 on arguments.
+// The include markers of the frozen pages are written out as the code they
+// stand for (scripts/includes.mts), so the version keeps its code and no
+// marker resolves against the copy's folder. Then it applies the retention
+// rule, as docs:prune does, so that a local cut ends as the one CI makes.
+// Exit code 0 when cut, 1 when a step fails or the label cannot be cut, 2 on
+// arguments.
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { main as collect, type Output, PROCESS_OUTPUT } from "./collect.mts";
+import { IncludeCodeError } from "../../packages/reforged-ts/scripts/include-code-reader.mts";
+import { freezeIncludes } from "./includes.mts";
 import { pruneAndReport, SITE } from "./prune.mts";
 import {
   isLabel,
   readVersions,
   retain,
+  versionedDocs,
   versionsFile,
   VersionsError,
 } from "./versions.mts";
@@ -93,6 +99,16 @@ export async function main(
   const cut = await steps.docusaurusVersion(label);
   if (cut !== 0) {
     output.stderr(`docs:version: Docusaurus could not cut ${label}.\n`);
+    return 1;
+  }
+  try {
+    await freezeIncludes(
+      versionedDocs(steps.site, label),
+      join(steps.site, "docs"),
+    );
+  } catch (error) {
+    if (!(error instanceof IncludeCodeError)) throw error;
+    output.stderr(`docs:version: ${error.message}\n`);
     return 1;
   }
   return pruneAndReport(steps.site, output);

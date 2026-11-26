@@ -193,6 +193,66 @@ describe("docs:version", () => {
     expect(out.stdout).toBe("docs:prune: kept 1.3, 1.2, 1.1; removed 1.0.\n");
   });
 
+  it("writes the code of each include marker into the frozen pages", async () => {
+    await cutSite([]);
+    const marker = "{@includeCode ../../examples/first.test.ts}\n";
+    await writeText(site, "docs/guides/testing.md", `# Testing\n\n${marker}`);
+    await writeText(
+      site,
+      "examples/first.test.ts",
+      'it("passes", () => {});\n',
+    );
+    const cut = steps([]);
+    const { output } = capture();
+
+    expect(
+      await versionMain(["1.0"], output, {
+        ...cut,
+        docusaurusVersion: async (label) => {
+          const exit = await cut.docusaurusVersion(label);
+          await writeText(
+            site,
+            `versioned_docs/version-${label}/guides/testing.md`,
+            `# Testing\n\n${marker}`,
+          );
+          return exit;
+        },
+      }),
+    ).toBe(0);
+
+    expect(
+      await readText(site, "versioned_docs/version-1.0/guides/testing.md"),
+    ).toBe('# Testing\n\n```ts\nit("passes", () => {});\n```\n');
+    expect(await readText(site, "docs/guides/testing.md")).toBe(
+      `# Testing\n\n${marker}`,
+    );
+  });
+
+  it("fails the cut on a marker whose file is missing, with a message", async () => {
+    await cutSite([]);
+    const cut = steps([]);
+    const { out, output } = capture();
+
+    expect(
+      await versionMain(["1.0"], output, {
+        ...cut,
+        docusaurusVersion: async (label) => {
+          const exit = await cut.docusaurusVersion(label);
+          await writeText(
+            site,
+            `versioned_docs/version-${label}/guides/testing.md`,
+            "{@includeCode ../../examples/missing.test.ts}\n",
+          );
+          return exit;
+        },
+      }),
+    ).toBe(1);
+
+    expect(out.stderr).toMatch(
+      /^docs:version: version-1\.0\/guides\/testing\.md:1: \{@includeCode \.\.\/\.\.\/examples\/missing\.test\.ts\} resolved to .*, which does not exist\n$/,
+    );
+  });
+
   it("refuses a label that is not major.minor, with a message", async () => {
     for (const label of ["1.0.0", "v1.0", "next"]) {
       const calls: string[] = [];

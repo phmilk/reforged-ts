@@ -12,6 +12,7 @@ import { join } from "node:path";
 import type { LoadContext, Plugin, PluginConfig } from "@docusaurus/types";
 import llmsPlugin from "docusaurus-plugin-llms";
 import { TYPINGS_FOLDER } from "./reference";
+import { includeBlocks, replaceIncludes } from "./scripts/includes.mts";
 import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
 
 /** One set of LLM files: a docs version, or the Typings' reference. */
@@ -139,17 +140,38 @@ export function llmsProblems(
 /** An MDX comment, which the plugin copies as text, and the lines after it. */
 const MDX_COMMENT = /\{\/\*[\s\S]*?\*\/\}\n*/g;
 
-/** Removes the MDX comments from the files of `target`, pages included. */
-function tidy(outDir: string, siteUrl: string, target: LlmsTarget): void {
+/**
+ * Removes the MDX comments from the files of `target`, pages included, and
+ * replaces each include marker the plugin copied as text with the code it
+ * stands for, from `blocks` (`includeBlocks` of the target's docs folder).
+ * Returns a problem for each marker with no block, one line each.
+ */
+function finishFiles(
+  outDir: string,
+  siteUrl: string,
+  target: LlmsTarget,
+  blocks: ReadonlyMap<string, string>,
+): string[] {
   const files = targetFiles(outDir, target);
   const pages = pageLinks(files[0] ?? "").map((url) =>
     fileOf(outDir, siteUrl, url),
   );
+  const problems: string[] = [];
   for (const file of [...files, ...pages]) {
     const text = readFileSync(file, "utf8");
-    const tidied = text.replace(MDX_COMMENT, "");
-    if (tidied !== text) writeFileSync(file, tidied);
+    const { text: included, missing } = replaceIncludes(
+      text.replace(MDX_COMMENT, ""),
+      blocks,
+    );
+    problems.push(
+      ...missing.map(
+        (marker) =>
+          `${file} holds ${marker}, which no page of ${target.folder} holds.`,
+      ),
+    );
+    if (included !== text) writeFileSync(file, included);
   }
+  return problems;
 }
 
 /** The docusaurus-plugin-llms options of `target`. */
@@ -200,8 +222,16 @@ function llmsFiles(
           new Set(routes),
           target,
         );
-        if (found.length === 0) tidy(props.outDir, siteUrl, target);
-        problems.push(...found);
+        problems.push(
+          ...(found.length === 0
+            ? finishFiles(
+                props.outDir,
+                siteUrl,
+                target,
+                await includeBlocks(join(context.siteDir, target.folder)),
+              )
+            : found),
+        );
       }
       if (problems.length > 0) {
         throw new Error(

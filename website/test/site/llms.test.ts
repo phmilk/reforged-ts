@@ -162,6 +162,49 @@ describe("the Markdown copy of a page", () => {
     expect(copy).toContain(DIAGRAM);
     expect(full).toContain(DIAGRAM);
   });
+
+  it("holds the code an include marker of the page stands for", async () => {
+    const site = join(build, "site");
+    const outDir = join(build, "out");
+    await write(
+      "site/docs/guides/testing.md",
+      "---\ntitle: Testing\n---\n\nA test:\n\n{@includeCode ../../examples/first.test.ts}\n",
+    );
+    await write("site/examples/first.test.ts", 'it("passes", () => {});\n');
+    await write("site/typings/index.md", "# reforged-types\n\nThe Typings.\n");
+    const plugin = llmsFilesPlugin([]);
+    if (typeof plugin !== "function") throw new Error("Not a plugin module.");
+    const context = {
+      siteDir: site,
+      outDir,
+      siteConfig: {
+        title: "reforged-ts",
+        tagline: "TypeScript for Warcraft III maps, compiled to Lua.",
+        url: "https://phmilk.github.io",
+        baseUrl: "/reforged-ts/",
+      },
+    } as unknown as LoadContext;
+    const { postBuild } = (await plugin(context, undefined)) as Plugin;
+
+    await postBuild?.({
+      ...context,
+      outDir,
+      routesPaths: [
+        "/reforged-ts/docs/next/guides/testing",
+        "/reforged-ts/typings",
+      ],
+    } as unknown as Parameters<NonNullable<Plugin["postBuild"]>>[0]);
+
+    const code = '```ts\nit("passes", () => {});\n```';
+    for (const file of [
+      "docs/next/guides/testing.md",
+      "docs/next/llms-full.txt",
+    ]) {
+      const text = await readFile(join(outDir, file), "utf8");
+      expect(text).toContain(code);
+      expect(text).not.toContain("@includeCode");
+    }
+  });
 });
 
 describe("the Typings' LLM files", () => {

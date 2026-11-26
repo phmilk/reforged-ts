@@ -167,7 +167,7 @@ What checks them:
 
 ### The examples of `reforged-test/map`
 
-The doc comments of `packages/reforged-test/runner/map/index.ts` include the files of `packages/reforged-test/examples/`, and the complete test of the guide "Testing your map" on `reforged-test/map` is a file of it too (`welcome.test.ts`): until a guide page includes a file, the guide shows it in a fence that `test/guide-example.test.ts` holds equal to the file. The rules above hold, but for these:
+The doc comments of `packages/reforged-test/runner/map/index.ts` include the files of `packages/reforged-test/examples/`, and so does every complete test of the guide "Testing your map", through the docs site's include marker ([below](#in-a-guide-page)). The rules above hold, but for these:
 
 - **Each file is a test file**, named `<concept>.test.ts` (`start-game.test.ts`), as a Map project writes one: it imports from `"reforged-test/map"`, which the folder's `tsconfig.json` maps to the entry point the package builds, so it sees what a Map project sees, and from `"reforged-ts"`, mapped to the library's sources. Its map code sits in the file, above its tests. One folder: every file runs.
 - **What it checks is asserted.** Unlike the library's examples, each `it` of the file runs as a test of the package, in a Test game of its own, and fails on a matcher that does not hold.
@@ -178,3 +178,12 @@ What checks them:
 - `pnpm test` compiles the folder with typescript-to-lua in the global setup of the `reforged-test` vitest project, after the runner, and runs each file through the glue, as `reforged-test/examples/<name>.test.ts > <its test>`; a compile error fails the run. On its own: `pnpm vitest run --project reforged-test packages/reforged-test/test/examples.test.ts`. `pnpm typecheck` type-checks the folder too.
 - `pnpm docs:check` resolves every `{@includeCode}` of the `reforged-test` section of the API reference.
 - `pnpm build` expands every `{@includeCode}` of `map/index.d.ts`, the declarations `reforged-test/map` ships, with the library's include-code script, so the hover shows the code as the library's does.
+
+### In a guide page
+
+A docs page shows a complete example the same way: a line holding `{@includeCode <path>[#region]}` and nothing else, outside a code block, the path relative to the page, stands for a fenced block of the code it names (`{@includeCode ../../../packages/reforged-test/examples/welcome.test.ts}` in `website/docs/guides/`). It reads the forms the tag reads, a whole file, `#regions` and `:line` ranges, and the fence's language is the file's extension. A file a guide includes is one a package compiles and runs: an example of `packages/reforged-test/examples/` for a test of a Map project. A one-line fragment stays a ` ```ts ` fence of the page, type-checked as the site's code samples are ([the site's README, "Code samples"](../website/README.md#code-samples)).
+
+What checks them:
+
+- `pnpm docs:build` and `pnpm docs:check` expand every marker before MDX reads the page; a missing file, region or line fails them, naming the page and line. The LLM files carry the code, and a Docs version's cut writes it into the frozen page.
+- `pnpm test` runs the expansion's own tests (`website/test/includes.test.mts`) and the examples themselves, as above.
