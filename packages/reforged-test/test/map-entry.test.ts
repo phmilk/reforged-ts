@@ -102,8 +102,9 @@ describe("reforged-test/map", () => {
     }
   });
 
-  // Each call of errorsOf type-checks a program with the Typings: about a
-  // second here, and the windows CI leg took 5.4 s for four (#1013).
+  // Each call of errorsOf type-checks a program with the Typings.
+  // Measured 5.4 s with pnpm test on the windows CI leg of #1013, for a
+  // test of four calls, 2026-11.
   const TYPED = { timeout: 30_000 };
 
   /**
