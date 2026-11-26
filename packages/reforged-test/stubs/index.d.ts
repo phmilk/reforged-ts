@@ -91,6 +91,20 @@ declare function __stub_dispatch(
  */
 declare function __stub_fire_timer(whichTimer: timer): void;
 
+/**
+ * Moves the Game clock `seconds` forward, firing every timer and every
+ * Trigger of `TriggerRegisterTimerEvent` that expires inside the window: in
+ * the order of their instants, ties in the order they were started, the
+ * clock standing at each instant while its handler runs. A periodic timer
+ * fires once per period, without drift, and a timer a handler starts fires
+ * in the same advance when it expires inside the window. A one-shot timer
+ * of timeout 0 fires on the next advance, one of 0 seconds included; a
+ * periodic one fires every 0.0001 s. The clock starts at 0 and ends at its
+ * start plus `seconds`; an error a handler throws leaves the advance, the
+ * clock stopped at that instant. Throws for a negative `seconds` and inside
+ * a handler an advance runs.
+ */
+declare function __stub_advance_time(seconds: number): void;
 /** The packets `BlzSendSyncData` recorded so far, oldest first. */
 declare function __stub_sync_packets(): StubSyncPacket[];
 
@@ -227,5 +241,16 @@ declare function __stub_unstubbed(name: string): boolean;
  */
 declare function __stub_with_context<R>(firing: StubContext, body: () => R): R;
 
+/**
+ * Arms an expiry on the Game clock: `expire` runs when an advance reaches
+ * `timeout` seconds from now, once, or once per `timeout` when `periodic`.
+ * Nothing runs it but `__stub_advance_time`. Returns a function that
+ * cancels what is still to expire.
+ */
+declare function __stub_schedule(
+  timeout: number,
+  periodic: boolean,
+  expire: () => void,
+): () => void;
 /** The player handle of the slot `slot`, the one `Player` returns, without a call-log line. */
 declare function __stub_player(slot: number): player;

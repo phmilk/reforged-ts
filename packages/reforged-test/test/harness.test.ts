@@ -340,6 +340,115 @@ describe("game.fire and the Event dispatch, on reforged-test/map", () => {
   });
 });
 
+describe("the Game clock and game.advanceTime", () => {
+  const [clock, entry] = runLuaTestFiles({ outDir: outDir("clock") });
+
+  /** The tests of one describe of a fixture file. */
+  function suite(
+    file: typeof clock,
+    name: string,
+  ): { name: string; status: string }[] {
+    return file.tests
+      .filter((test) => test.suite[0] === name)
+      .map((test) => ({ name: test.name, status: test.status }));
+  }
+
+  /** The tests of one describe, each passing. */
+  function passing(...names: string[]): { name: string; status: string }[] {
+    return names.map((name) => ({ name, status: "pass" }));
+  }
+
+  it("loads both files of the fixture", () => {
+    expect([clock.error, entry.error]).toEqual([undefined, undefined]);
+    expect(
+      [...clock.tests, ...entry.tests].filter((test) => test.status !== "pass"),
+    ).toEqual([]);
+  });
+
+  it("moves only on the test's order, its expiries in the order of their instants", () => {
+    expect(suite(clock, "the Game clock")).toEqual(
+      passing(
+        "fires nothing until the test advances it",
+        "runs the expiries in the order of their instants, ties in the order of TimerStart",
+        "stands at each instant inside its handler, and ends at its start plus the seconds",
+        "fires a periodic timer once per period, without drift",
+        "fires a timer started in a handler in the same advance when it expires inside the window",
+        "answers GetExpiredTimer with the expired timer inside the handler and nil after",
+        "refuses a negative advance and what is not a number",
+        "refuses an advance inside a handler",
+        "gives the game no runAllTimers and no advanceToNextTimer",
+        "leaves os.clock where the test set it",
+      ),
+    );
+  });
+
+  it("fires a timeout of 0 as the game does", () => {
+    expect(suite(clock, "a timeout of 0")).toEqual(
+      passing(
+        "fires a one-shot timer on the next advance, advanceTime(0) included, never inside TimerStart",
+        "fires nothing at the end of game.fire",
+        "fires a one-shot timer started in a handler in the same advance, at the same instant",
+        "fires a periodic timer every 0.0001 s, its timeout still read as 0",
+        "names a handler that starts a timer of timeout 0 every time it runs",
+      ),
+    );
+  });
+
+  it("lets a handler's error out of the advance, the clock stopped at that instant", () => {
+    expect(suite(clock, "an error in a handler")).toEqual(
+      passing(
+        "leaves the advance, the clock stopped at that instant",
+        "keeps a periodic timer armed for the next advance",
+      ),
+    );
+  });
+
+  it("drops the pending expiry of a destroyed, a paused and a restarted timer", () => {
+    expect(suite(clock, "a cancelled expiry")).toEqual(
+      passing(
+        "is dropped by DestroyTimer",
+        "is dropped by a new TimerStart, which counts from its own instant",
+        "skips a paused timer silently",
+        "skips a timer a handler of the same instant destroys or pauses",
+        "lets a periodic timer destroy or restart itself in its handler",
+      ),
+    );
+  });
+
+  it("fires the Triggers of TriggerRegisterTimerEvent through the Event dispatch", () => {
+    expect(suite(clock, "the Triggers of TriggerRegisterTimerEvent")).toEqual(
+      passing(
+        "fire through the Event dispatch, once or once per period",
+        "take their turn among the timers, in the order of their instants",
+        "skip a disabled or destroyed Trigger silently, and fire again once enabled",
+        "answer GetTriggeringTrigger, and each registration fires its own Trigger only",
+        "are not reached by an event the test fires",
+        "record the registration as before, and no timer",
+      ),
+    );
+  });
+
+  it("leaves __stub_fire_timer as it was", () => {
+    expect(suite(clock, "__stub_fire_timer")).toEqual(
+      passing(
+        "still runs the handler once, moves no clock and arms nothing again",
+      ),
+    );
+  });
+
+  it("is one clock on reforged-test/lua too, read as before when never advanced", () => {
+    expect(suite(entry, "the Game clock, on reforged-test/lua")).toEqual(
+      passing(
+        "reads as before when never advanced",
+        "moves through __stub_advance_time, which adds no call-log line",
+        "keeps the clock of the Lua state from one test to the next",
+        "refuses a negative advance",
+        "leaves os.clock to __stub_set_clock",
+      ),
+    );
+  });
+});
+
 describe("the Dispatching Natives, on reforged-test/map", () => {
   const [dispatching] = runLuaTestFiles({ outDir: outDir("dispatching") });
 
