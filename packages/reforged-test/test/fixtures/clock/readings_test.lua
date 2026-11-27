@@ -227,6 +227,31 @@ describe("the readings of a timer", function()
     expect(read(oneShot)).toEqual({ 0.5, 1.5, 2 })
     expect(read(periodic)).toEqual({ 0.5, 1.5, 2 })
   end)
+
+  -- No finding of the game either: in a handler __stub_fire_timer runs, a
+  -- one-shot timer is not running, as in the handler of an expiry, until
+  -- the handler starts it again.
+  it("answers a handler __stub_fire_timer runs as an expiry would, until the handler starts the timer", function()
+    local game, now = clockedGame()
+    local paused, pausedFires = watched(now, 2, false, function(timer) PauseTimer(timer) end)
+    game.advanceTime(0.5)
+    __stub_fire_timer(paused)
+    expect(read(paused)).toEqual({ 0.5, 1.5, 2 })
+    game.advanceTime(1.5)
+    expect(pausedFires).toEqual({ 0.5, 2 })
+
+    local afterStart, afterPause
+    local restarted = CreateTimer()
+    TimerStart(restarted, 2, false, function()
+      TimerStart(restarted, 5, false, function() end)
+      afterStart = read(restarted)
+      PauseTimer(restarted)
+      afterPause = read(restarted)
+    end)
+    __stub_fire_timer(restarted)
+    expect(afterStart).toEqual({ 0, 5, 5 })
+    expect(afterPause).toEqual({ 0, 5, 5 })
+  end)
 end)
 
 -- docs/research/timer-answers.md, "What ResumeTimer leaves behind", and
@@ -737,6 +762,8 @@ describe("a call a handler makes on its own timer", function()
     expect(read(timer)).toEqual({ 1, 0, 1 })
   end)
 
+  -- "A call a handler makes on its own timer", its last paragraph:
+  -- DestroyTimer in a handler ends the timer there.
   it("fires a timer destroyed in its handler no more: a periodic one, and a resumed one in its first fire", function()
     local game, now = clockedGame()
     local _, periodicFires = watched(now, 1, true, function(timer) DestroyTimer(timer) end)
@@ -773,17 +800,24 @@ end)
 -- is, and the handler runs after it whatever it did.
 describe("a call a Trigger of the expire event makes on its timer", function()
   -- A trigger of the timer's expire event that calls `act` in its event
-  -- number `at`.
-  local function acting(timer, at, act)
+  -- number `at`. Returns what it saw: `events`, how many there were,
+  -- `before`, what the timer read before the call, and `after`, what it
+  -- read after it, unless `destroys`.
+  local function acting(timer, at, act, destroys)
     local trigger = CreateTrigger()
-    local events = 0
+    local seen = { events = 0 }
     TriggerRegisterTimerExpireEvent(trigger, timer)
     TriggerAddAction(trigger, function()
-      events = events + 1
-      if events == at then
+      seen.events = seen.events + 1
+      if seen.events == at then
+        seen.before = read(timer)
         act()
+        if not destroys then
+          seen.after = read(timer)
+        end
       end
     end)
+    return seen
   end
 
   it("runs the handler of a TimerStart the Trigger made, at that expiry and at the new one", function()
@@ -791,12 +825,14 @@ describe("a call a Trigger of the expire event makes on its timer", function()
       local game, now = clockedGame()
       local timer, first = watched(now, 1, periodic)
       local second = {}
-      acting(timer, 1, function()
+      local seen = acting(timer, 1, function()
         TimerStart(timer, 0.75, false, function()
           second[#second + 1] = { now(), read(timer) }
         end)
       end)
       game.advanceTime(10)
+      expect(seen.before).toEqual({ 1, 0, 1 })
+      expect(seen.after).toEqual({ 0, 0.75, 0.75 })
       expect(first).toEqual({})
       expect(second).toEqual({ { 1, { 0, 0.75, 0.75 } }, { 1.75, { 0.75, 0, 0.75 } } })
     end
@@ -805,10 +841,12 @@ describe("a call a Trigger of the expire event makes on its timer", function()
   it("runs the handler after a PauseTimer of the Trigger, which stops a periodic timer and no one-shot one", function()
     local game, now = clockedGame()
     local oneShot, oneShotFires = watched(now, 1, false)
-    acting(oneShot, 1, function() PauseTimer(oneShot) end)
+    local oneShotSeen = acting(oneShot, 1, function() PauseTimer(oneShot) end)
     local periodic, periodicFires = watched(now, 1, true)
-    acting(periodic, 1, function() PauseTimer(periodic) end)
+    local periodicSeen = acting(periodic, 1, function() PauseTimer(periodic) end)
     game.advanceTime(10)
+    expect({ oneShotSeen.before, oneShotSeen.after }).toEqual({ { 1, 0, 1 }, { 1, 0, 1 } })
+    expect({ periodicSeen.before, periodicSeen.after }).toEqual({ { 1, 0, 1 }, { 1, 0, 1 } })
     expect(oneShotFires).toEqual({ 1 })
     expect(read(oneShot)).toEqual({ 1, 0, 1 })
     expect(periodicFires).toEqual({ 1 })
@@ -820,10 +858,12 @@ describe("a call a Trigger of the expire event makes on its timer", function()
   it("fires a one-shot timer the Trigger resumed again, then a timeout later, and leaves a periodic one alone", function()
     local game, now = clockedGame()
     local oneShot, oneShotFires = watched(now, 1, false)
-    acting(oneShot, 1, function() ResumeTimer(oneShot) end)
+    local oneShotSeen = acting(oneShot, 1, function() ResumeTimer(oneShot) end)
     local periodic, periodicFires = watched(now, 1, true)
-    acting(periodic, 1, function() ResumeTimer(periodic) end)
+    local periodicSeen = acting(periodic, 1, function() ResumeTimer(periodic) end)
     game.advanceTime(3.5)
+    expect({ oneShotSeen.before, oneShotSeen.after }).toEqual({ { 1, 0, 1 }, { 0, 0.0001, 1 } })
+    expect({ periodicSeen.before, periodicSeen.after }).toEqual({ { 1, 0, 1 }, { 1, 0, 1 } })
     expect(oneShotFires).toEqual({ 1, 1, 2 })
     expect(periodicFires).toEqual({ 1, 2, 3 })
   end)
@@ -831,11 +871,13 @@ describe("a call a Trigger of the expire event makes on its timer", function()
   it("still runs the handler of the expiry when the Trigger destroys the timer, and never again", function()
     local game, now = clockedGame()
     local oneShot, oneShotFires = watched(now, 6, false)
-    acting(oneShot, 1, function() DestroyTimer(oneShot) end)
+    local oneShotSeen = acting(oneShot, 1, function() DestroyTimer(oneShot) end, true)
     local periodic, periodicFires = watched(now, 2, true)
-    acting(periodic, 3, function() DestroyTimer(periodic) end)
+    local periodicSeen = acting(periodic, 3, function() DestroyTimer(periodic) end, true)
     game.advanceTime(10)
     expect(oneShotFires).toEqual({ 6 })
     expect(periodicFires).toEqual({ 2, 4, 6 })
+    -- No expire event after it either.
+    expect({ oneShotSeen.events, periodicSeen.events }).toEqual({ 1, 3 })
   end)
 end)

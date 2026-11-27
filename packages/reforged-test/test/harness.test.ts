@@ -465,6 +465,7 @@ describe("the Game clock and game.advanceTime", () => {
         "changes no reading with PauseTimer on a timer that is not running",
         "keeps the remaining of a pause across TimerStart, read once the timer is not running",
         "reads a timer in a handler __stub_fire_timer runs as in the handler of an expiry",
+        "answers a handler __stub_fire_timer runs as an expiry would, until the handler starts the timer",
       ),
     );
   });

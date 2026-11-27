@@ -171,13 +171,20 @@ end
 --   periodic one is still running in its handler, its countdown at its end,
 --   and counts again from there once the handler returns.
 --
--- `firedByHand` is set while __stub_fire_timer runs the handler, which then
--- reads the timer as the handler of an expiry does.
+-- `firedByHand` is the countdown __stub_fire_timer runs the handler on,
+-- while it runs it: until the handler starts the timer again, the timer
+-- reads and answers as in the handler of an expiry.
+
+-- Whether __stub_fire_timer is running the handler on the countdown the
+-- timer has now.
+local function atHandFire(whichTimer)
+  return whichTimer.run ~= nil and whichTimer.firedByHand == whichTimer.run
+end
 
 -- Whether the timer is running. A one-shot timer __stub_fire_timer fires is
 -- not, inside its handler, as in the handler of an expiry.
 local function running(whichTimer)
-  return whichTimer.run ~= nil and not (whichTimer.firedByHand and not whichTimer.periodic)
+  return whichTimer.run ~= nil and not (atHandFire(whichTimer) and not whichTimer.periodic)
 end
 
 -- The elapsed and the remaining time of the timer.
@@ -188,7 +195,7 @@ local function reading(whichTimer)
     return timeout - stored, stored
   end
   local run = whichTimer.run
-  if run.ended or whichTimer.firedByHand then
+  if run.ended or atHandFire(whichTimer) then
     return timeout, 0.0
   end
   local elapsed = clock - run.from
@@ -332,9 +339,11 @@ end
 -- timer").
 function ResumeTimer(whichTimer)
   __stub_record("ResumeTimer", whichTimer)
-  if whichTimer.run ~= nil or whichTimer.destroyed then
+  if running(whichTimer) or whichTimer.destroyed then
     return
   end
+  -- The countdown of a one-shot timer __stub_fire_timer fired, if any.
+  disarm(whichTimer)
   local starts = whichTimer.starts
   if starts == nil then
     armLast(whichTimer, 0.0)
@@ -369,9 +378,10 @@ __stub_response("GetExpiredTimer")
 -- Runs the handler TimerStart stored, once, with the timer as
 -- GetExpiredTimer's answer. It moves no clock, arms nothing and fires no
 -- expire event: the countdown of the timer stays as it was. Inside the
--- handler the timer reads as it does in the handler of an expiry, the
--- timeout and nothing left, and a PauseTimer on a one-shot timer writes
--- nothing and stops nothing, as on one that expired. Firing a timer that was never started or was
+-- handler the timer reads and answers as in the handler of an expiry,
+-- until the handler starts it again: the timeout and nothing left, and a
+-- one-shot timer is not running, so a PauseTimer writes nothing and stops
+-- nothing, and a ResumeTimer resumes it, in place of its countdown. Firing a timer that was never started or was
 -- destroyed is an error. Not a Native, so it adds no call-log line.
 function __stub_fire_timer(whichTimer)
   local handler = whichTimer.handler
@@ -382,7 +392,7 @@ function __stub_fire_timer(whichTimer)
     error("__stub_fire_timer: " .. __stub_format(whichTimer) .. " was destroyed", 2)
   end
   local firedByHand = whichTimer.firedByHand
-  whichTimer.firedByHand = true
+  whichTimer.firedByHand = whichTimer.run
   thenAlways(function()
     __stub_with_context({ GetExpiredTimer = whichTimer }, handler)
   end, function()
