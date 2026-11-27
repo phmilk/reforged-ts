@@ -45,9 +45,8 @@ export interface Label {
  * `needs-split` and `probe` carry the skills' and the board's text
  * (`needs-split`, which `board:labels` derives, ADR 0025; `probe`, put by
  * hand on an issue whose work includes a Probe run, #1029): those are kept as
- * committed. The
- * others are GitHub's defaults and the triage skills', only created when
- * missing, so an existing one keeps its colour and description.
+ * committed. The others are GitHub's defaults and the triage skills', only
+ * created when missing, so an existing one keeps its colour and description.
  */
 export const LABELS: readonly (Label & { owned: boolean })[] = [
   {

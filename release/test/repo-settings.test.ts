@@ -351,7 +351,10 @@ describe("the probe label", () => {
 
     expect(probe?.description).toContain("Probe run");
     expect(probe?.description).toContain("Battle.net");
-    // GitHub refuses a label description over 100 characters.
-    expect(probe?.description.length).toBeLessThanOrEqual(100);
+  });
+
+  it("keeps every label's description within the 100 characters GitHub takes", () => {
+    for (const { description } of LABELS)
+      expect(description.length).toBeLessThanOrEqual(100);
   });
 });

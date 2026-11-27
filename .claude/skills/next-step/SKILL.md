@@ -20,8 +20,6 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    - **After `/split-spec`:** the Spec it split and its Frontier, `pnpm spec:frontier <spec> --json`.
    - **After an implement:** the issue just worked, or the one the Collaborator names: `gh issue view <n> --json number,state,title,labels,body`, its body for the criteria still unchecked and the "check whether…" without their `Outcome:` line. Its parent, `gh api repos/<owner>/<repo>/issues/<n>/parent` (a 404: no parent), and when the parent is labelled `spec`, that Spec's Frontier: `pnpm spec:frontier <spec> --json`. The branch, `git branch --show-current`, and its pull request: `gh pr view --json number,state,autoMergeRequest`. Whether `/code-review` ran on the branch's last commits: its two reports in this session, since it posts nothing to GitHub.
 
-   Last, the labels of each issue a step will name that this read did not give: the Ticket to claim, the Ticket to implement next, `gh issue view <n> --json labels --jq '.labels[].name'`.
-
    Done when the hand-over is known and each of its reads is done, or known to be absent.
 
 2. **Choose the steps.** `ask-matt`'s main flow, in this repository's names, from the hand-over just reached:
@@ -38,7 +36,7 @@ The vocabulary is the glossary's, under "Domain docs" in [`AGENTS.md`](../../../
    - `/implement <n>`, for the first Ticket of the Frontier's `takeable`, other than the one just worked;
    - when the Spec has no open Ticket left once this pull request merges: `pnpm spec:check <spec>`, then, on green, `gh issue close <spec> --comment "..."` ([Closing a Spec](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim), ADR 0023). The board comments the same verdict on the Spec once its Tickets are all closed, as a reminder: it closes nothing, so the close is still this step.
 
-   An issue outside a Spec stops after `/clear`. Done when the list holds at most five steps, the first one runnable now.
+   An issue outside a Spec stops after `/clear`. Then read the labels of each issue a kept step names (the Ticket to claim, the Ticket to implement next), where step 1 did not: `gh issue view <n> --json labels --jq '.labels[].name'`. Done when the list holds at most five steps, the first one runnable now, and the labels of each issue it names are read.
 
 3. **Print them.** In the conversation's language, one heading line, `Next step:` for one step and `Next steps:` for several (`Próximo passo:` or `Próximos passos:` in Portuguese), then at most five numbered lines and nothing else, each one naming the skill or command to run with its argument. A line that names an issue labelled `probe` (its Claim, its `/implement`) ends with a note in brackets, in the conversation's language: its work includes a Probe run, so it needs someone within reach for the Battle.net login ([The `probe` label](https://github.com/phmilk/reforged-ts/blob/master/docs/agents/triage-labels.md#the-probe-label)).
 
