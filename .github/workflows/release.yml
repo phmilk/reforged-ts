@@ -210,10 +210,22 @@ jobs:
       # vendored inputs: a drifted declaration file is never packed.
       - name: Typings generator output check
         run: pnpm typings:check
+      # The Template ref of the branch's Release channel, main from master,
+      # written into create-reforged-map's build output: the packed CLI
+      # downloads the Template the release is gated against.
+      - name: Template ref
+        env:
+          BRANCH: ${{ needs.select.outputs.branch }}
+        run: pnpm release:template-ref --branch "$BRANCH"
       # The Changesets CLI rather than the pack sub-action, which uploads the
       # artifact itself: the plan's tags must be rewritten to the channel's
-      # (release:dist-tag) before the upload.
+      # (release:dist-tag) before the upload. Without the packages' scripts:
+      # pnpm pack runs each package's prepare, which would build the
+      # Creation CLI again from its source and drop the Template ref above.
+      # The build step built every package already.
       - name: Pack
+        env:
+          pnpm_config_ignore_scripts: "true"
         run: pnpm changeset pack --out-dir "$RUNNER_TEMP/pack"
       # The dist-tag of the branch's Release channel, latest from master,
       # written into the plan the Template gate and the publish job read.
@@ -231,7 +243,7 @@ jobs:
 
   template-gate:
     name: template-gate
-    needs: pack
+    needs: [select, pack]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -245,12 +257,18 @@ jobs:
         with:
           artifact-ids: ${{ needs.pack.outputs.artifact-id }}
           path: ${{ runner.temp }}/pack
-      # Outside the repository checkout: a Template without its own
+      # The Template's branch of the Release channel, main from master: the
+      # ref the packed Creation CLI downloads, which the gate checks. Outside
+      # the repository checkout: a Template without its own
       # pnpm-workspace.yaml would otherwise install as part of this workspace.
       - name: Clone the Template
-        run: pnpm release:template-clone --pack-dir "$RUNNER_TEMP/pack" --into "$RUNNER_TEMP/template"
+        env:
+          BRANCH: ${{ needs.select.outputs.branch }}
+        run: pnpm release:template-clone --branch "$BRANCH" --into "$RUNNER_TEMP/template"
       - name: Template gate
-        run: pnpm release:template-gate --template "$RUNNER_TEMP/template" --pack-dir "$RUNNER_TEMP/pack"
+        env:
+          BRANCH: ${{ needs.select.outputs.branch }}
+        run: pnpm release:template-gate --template "$RUNNER_TEMP/template" --pack-dir "$RUNNER_TEMP/pack" --branch "$BRANCH"
 
   publish:
     name: publish

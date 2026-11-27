@@ -1,9 +1,9 @@
 /**
  * `release:template-clone`, programmatic entry point: a throwaway clone of
- * the Template at the ref a release is gated against, for the Template
- * gate. Before cloning it asks the remote for the ref, so a missing
- * `v<major>` ref fails with a message naming it. The Template is public:
- * git reads it without a token.
+ * the Template at the ref a release is gated against, the Template's branch
+ * of its Release channel, for the Template gate. Before cloning it asks the
+ * remote for the branch, so a missing one fails with a message naming it.
+ * The Template is public: git reads it without a token.
  */
 import type { GitRunner } from "./git.js";
 
@@ -22,7 +22,7 @@ const TEMPLATE_URL = `https://github.com/${TEMPLATE_REPOSITORY}.git`;
 const NO_MATCHING_REF = 2;
 
 export interface CloneInput {
-  /** The Template ref: `v<major>`, a tag or a branch. */
+  /** The Template ref: the Template's branch of the release's channel. */
   ref: string;
   /** The folder to clone into. */
   into: string;
@@ -46,23 +46,17 @@ export const GIT_ENVIRONMENT: Readonly<Record<string, string>> = {
 export async function cloneTemplate(input: CloneInput): Promise<CloneResult> {
   const env = GIT_ENVIRONMENT;
   const lookup = await input.git({
-    args: [
-      "ls-remote",
-      "--exit-code",
-      TEMPLATE_URL,
-      `refs/tags/${input.ref}`,
-      `refs/heads/${input.ref}`,
-    ],
+    args: ["ls-remote", "--exit-code", TEMPLATE_URL, `refs/heads/${input.ref}`],
     env,
   });
   if (lookup === NO_MATCHING_REF) {
     return {
       ok: false,
       message:
-        `The Template (${TEMPLATE_REPOSITORY}) has no ${input.ref} tag or branch. ` +
-        `A release is gated against the Template ref named after the library major: ` +
-        `create ${input.ref} on the Template commit that supports this release ` +
-        `(git tag ${input.ref} <commit> && git push origin ${input.ref}), then re-run this job.`,
+        `The Template (${TEMPLATE_REPOSITORY}) has no branch ${input.ref}. ` +
+        "A release is gated against the Template's branch of its Release channel, " +
+        'main from master and next from next (docs/release.md, "Release channels"): ' +
+        `cut ${input.ref} on the Template, then re-run this job.`,
     };
   }
   if (lookup !== 0) {

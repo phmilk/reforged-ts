@@ -14,6 +14,7 @@ import {
   TemplateGateError,
   type StepFailure,
 } from "./template-gate-failure.js";
+import { readTemplateRef, TEMPLATE_REF_MODULE } from "./template-ref.js";
 import { errorMessage, isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
 
@@ -52,6 +53,11 @@ export interface CreationStepInput {
   /** The workspace, whose Creation CLI is packed when the plan lacks it. */
   root: string;
   /**
+   * The Template ref of the release's channel, which the plan's Creation CLI
+   * must download.
+   */
+  templateRef: string;
+  /**
    * An empty folder: the Template's archive, the unpacked Creation CLI and
    * the Map project it creates.
    */
@@ -69,7 +75,9 @@ export interface CreationStepInput {
  * `AGENTS.md`'s "Your project"), no path the Template's maintenance manifest
  * lists, and no `template:detach` script. Resolves with the first failure,
  * or `undefined`. Throws a `TemplateGateError` when the workspace has no
- * Creation CLI or its tarball cannot be read.
+ * Creation CLI or its tarball cannot be read, and, before running it, when
+ * the plan's Creation CLI downloads another Template ref than the channel's:
+ * the workspace's, which the release does not publish, is not checked.
  */
 export async function creationFailure(
   input: CreationStepInput,
@@ -125,10 +133,11 @@ export async function creationFailure(
     }
     tarball = join(input.scratch, file);
   }
-  const binary = await unpackBinary(
-    tarball,
-    join(input.scratch, CREATION_PACKAGE),
-  );
+  const unpacked = join(input.scratch, CREATION_PACKAGE);
+  const binary = await unpackBinary(tarball, unpacked);
+  if (input.tarball !== undefined) {
+    await checkTemplateRef(input.tarball, unpacked, input.templateRef);
+  }
 
   const project = join(input.scratch, CREATED_PROJECT.folder);
   const creating: Command = {
@@ -188,6 +197,36 @@ async function unpackBinary(tarball: string, folder: string): Promise<string> {
     );
   }
   return join(folder, "package", path);
+}
+
+/**
+ * Throws a `TemplateGateError` unless the Creation CLI of `tarball`,
+ * unpacked into `folder`, downloads the Template at `templateRef`: the ref
+ * the release's pack step writes into its build output (`template-ref.ts`),
+ * which a pack that rebuilt it would have dropped.
+ */
+async function checkTemplateRef(
+  tarball: string,
+  folder: string,
+  templateRef: string,
+): Promise<void> {
+  const label = `The tarball of ${CREATION_PACKAGE} (${tarball})`;
+  const path = join(folder, "package", TEMPLATE_REF_MODULE);
+  let ref: string;
+  try {
+    ref = readTemplateRef(await readFile(path, "utf8"), path);
+  } catch (error) {
+    throw new TemplateGateError(
+      `${label} cannot be read: ${errorMessage(error)}`,
+      { cause: error },
+    );
+  }
+  if (ref !== templateRef) {
+    throw new TemplateGateError(
+      `${label} downloads the Template at ${ref}, not at ${templateRef}, the Template ref of the release's channel: ` +
+        "write it into the build output with release:template-ref before changeset pack.",
+    );
+  }
 }
 
 /**

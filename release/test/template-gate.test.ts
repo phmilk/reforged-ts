@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-gate.js";
 import type { Runner } from "../src/process.js";
-import { runTemplateGate, templateRef } from "../src/template-gate.js";
+import { runTemplateGate } from "../src/template-gate.js";
 import {
   ALL_FOUR,
   ALPHA,
@@ -138,6 +138,7 @@ describe("runTemplateGate", () => {
         template,
         packDir,
         root,
+        templateRef: "main",
         scratch,
         run: runner.run,
       });
@@ -200,26 +201,6 @@ describe("runTemplateGate", () => {
   });
 });
 
-describe("templateRef", () => {
-  it.each([
-    ["1.0.0-alpha.0", "v1"],
-    ["1.0.0-alpha.12", "v1"],
-    ["1.0.0", "v1"],
-    ["1.4.2", "v1"],
-    ["2.0.0-alpha.3", "v2"],
-    ["10.1.0", "v10"],
-  ])("maps library %s to the Template's %s", (version, ref) => {
-    expect(templateRef(version)).toBe(ref);
-  });
-
-  it("refuses a version that is not semver", () => {
-    expect(() => templateRef("1.0")).toThrow('"1.0" is not a semver version.');
-    expect(() => templateRef("01.0.0")).toThrow(
-      '"01.0.0" is not a semver version.',
-    );
-  });
-});
-
 describe("release:template-gate", () => {
   async function runCli(args: string[], run: Runner = fakeRunner().run) {
     let stdout = "";
@@ -236,33 +217,62 @@ describe("release:template-gate", () => {
     return { status, stdout, stderr };
   }
 
-  it("prints the usage and exits 2 without a pack output", async () => {
-    expect(await runCli(["--template", "t"])).toMatchObject({
-      status: 2,
+  it("prints the usage and exits 2 without a Template, a pack output and a branch", async () => {
+    for (const args of [
+      ["--template", "t", "--pack-dir", "p"],
+      ["--template", "t", "--branch", "master"],
+      ["--pack-dir", "p", "--branch", "master"],
+      ["--print-ref", "--pack-dir", "p"],
+    ]) {
+      expect(await runCli(args)).toEqual({
+        status: 2,
+        stdout: "",
+        stderr:
+          "Usage: release:template-gate --template <path> --pack-dir <dir> --branch <name>\n",
+      });
+    }
+  });
+
+  it("checks the plan's create-reforged-map against the Template ref of the branch's channel", async () => {
+    const template = await templateCheckout();
+    const packDir = await packOutput([
+      ...ALL_FOUR,
+      { name: CLI, templateRef: "next" },
+    ]);
+    const args = ["--template", template, "--pack-dir", packDir];
+
+    expect(await runCli([...args, "--branch", "next"])).toMatchObject({
+      status: 0,
+    });
+    expect(await runCli([...args, "--branch", "master"])).toMatchObject({
+      status: 1,
       stderr: expect.stringContaining(
-        "Usage: release:template-gate",
+        "downloads the Template at next, not at main, the Template ref of the release's channel",
       ) as unknown,
     });
   });
 
-  it("prints the Template ref of the library version the plan publishes", async () => {
-    const packDir = await packOutput([
-      { name: "reforged-ts", version: "2.0.0-alpha.1" },
-    ]);
-    expect(await runCli(["--print-ref", "--pack-dir", packDir])).toEqual({
-      status: 0,
-      stdout: "v2\n",
-      stderr: "",
+  it("refuses a branch with no channel, running nothing", async () => {
+    const runner = fakeRunner();
+    expect(
+      await runCli(
+        [
+          "--template",
+          await templateCheckout(),
+          "--pack-dir",
+          await packOutput(ALL_FOUR),
+          "--branch",
+          "feat/x",
+        ],
+        runner.run,
+      ),
+    ).toMatchObject({
+      status: 1,
+      stderr: expect.stringContaining(
+        'A release runs from master or next, and "feat/x" is neither',
+      ) as unknown,
     });
-  });
-
-  it("prints the Template ref of the workspace's library when the plan lacks it", async () => {
-    const packDir = await packOutput([{ name: "reforged-types" }]);
-    expect(await runCli(["--print-ref", "--pack-dir", packDir])).toEqual({
-      status: 0,
-      stdout: "v1\n",
-      stderr: "",
-    });
+    expect(runner.commands).toEqual([]);
   });
 
   it("exits 0 when the Template passes and 1 naming the failing command", async () => {
@@ -272,6 +282,8 @@ describe("release:template-gate", () => {
       await templateCheckout(),
       "--pack-dir",
       packDir,
+      "--branch",
+      "master",
     ];
     expect(await runCli(args)).toMatchObject({
       status: 0,
