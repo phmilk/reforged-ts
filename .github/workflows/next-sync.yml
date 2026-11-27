@@ -16,9 +16,9 @@ on:
 permissions:
   contents: read
 
-# One sync at a time, never cancelled: a push during a run leaves one run
-# pending, the newest push's, whose commit holds the commits of the pushes
-# before it.
+# One sync at a time; the run in progress is never cancelled. A push during
+# a run waits as the one pending run, and a newer push replaces it: the
+# newest push's commit holds the commits of the pushes before it.
 concurrency:
   group: next-sync
   cancel-in-progress: false
@@ -113,8 +113,10 @@ jobs:
       # conflicting merge merged into: next, or master into the branch) and
       # head (the branch's commit); the conflicting files go to
       # $RUNNER_TEMP/conflicts.txt; a merge that fails with none fails the
-      # step. No hooks, for every git command of the step: a hook planted by
-      # the checkout's code would receive the token in this environment.
+      # step. No hooks, for every git command of the job from the step's
+      # first line on (core.hooksPath in the checkout's config): a hook
+      # planted by the checkout's code would receive the token in this
+      # environment.
       - id: branch
         name: Update the branch
         env:
@@ -232,14 +234,16 @@ jobs:
           } > "$RUNNER_TEMP/conflict.md"
           cat "$RUNNER_TEMP/conflict.md"
       # One issue: an open one of the same title, whatever its labels now,
-      # gets a comment, unless its last word already says the same.
+      # gets a comment, unless its last word already says the same. Found
+      # in the open issues' listing, never through search, whose index can
+      # miss the issue the run before this one opened seconds ago.
       - id: issue
         name: Open or comment on the conflict issue
         if: steps.branch.outputs.state == 'conflicts'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$ISSUE_TITLE\" in:title" --limit 100 --json number,title \
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 500 --json number,title \
             --jq ".[] | select(.title == \"$ISSUE_TITLE\") | .number" | head -n 1)
           if [ -n "$existing" ]; then
             last=$(gh issue view "$existing" --repo "$GITHUB_REPOSITORY" --json body,comments --jq '([.body] + [.comments[].body]) | last')

@@ -1,6 +1,6 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { chmod, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { APP_ENVIRONMENT } from "../src/github-app.js";
@@ -85,10 +85,10 @@ describe("next-sync.yml", () => {
     expect(issue.if).toBe("steps.branch.outputs.state == 'conflicts'");
     expect(issue.env?.GH_TOKEN).toBe("${{ steps.app.outputs.token }}");
     const run = issue.run ?? "";
-    // Found by its title alone, whatever labels triage left on it.
-    expect(run).toContain(
-      '--state open --search "\\"$ISSUE_TITLE\\" in:title"',
-    );
+    // Found by its title alone, whatever labels triage left on it, in the
+    // listing rather than the search index, which lags.
+    expect(run).toContain("--state open --limit 500 --json number,title");
+    expect(run).not.toContain("--search");
     expect(run).toContain('select(.title == \\"$ISSUE_TITLE\\")');
     expect(run).toContain('gh issue comment "$existing"');
     expect(run).toContain(
@@ -225,6 +225,25 @@ describe("the detect step of next-sync.yml", () => {
   });
 });
 
+/**
+ * The open pull request's branch holding an Agent's resolution (next merged
+ * into master's fix), then a later fix on master; resolves with the
+ * resolution's commit.
+ */
+async function withResolution(
+  repos: Awaited<ReturnType<typeof repositories>>,
+): Promise<string> {
+  await repos.commit("a.txt", "one\ntwo\n", "fix on master");
+  repos.git("push", "-q", "origin", "master:master-into-next");
+  repos.git("switch", "-q", "-c", "resolution", "master");
+  repos.git("merge", "-q", "--no-edit", "origin/next");
+  const resolution = repos.git("rev-parse", "HEAD");
+  repos.git("push", "-q", "origin", "resolution:master-into-next");
+  repos.git("switch", "-q", "master");
+  await repos.commit("d.txt", "later\n", "later fix on master");
+  return resolution;
+}
+
 describe("the branch step of next-sync.yml", () => {
   /**
    * The checkout of the run at master's tip, every branch fetched as the
@@ -323,16 +342,7 @@ describe("the branch step of next-sync.yml", () => {
     "merges master into the open pull request's branch, keeping an Agent's resolution",
     async () => {
       const repos = await repositories();
-      await repos.commit("a.txt", "one\ntwo\n", "fix on master");
-      repos.git("push", "-q", "origin", "master:master-into-next");
-      // An Agent's resolution: next merged into the branch.
-      repos.git("switch", "-q", "-c", "resolution", "master");
-      repos.git("merge", "-q", "--no-edit", "origin/next");
-      const resolution = repos.git("rev-parse", "HEAD");
-      repos.git("push", "-q", "origin", "resolution:master-into-next");
-      repos.git("switch", "-q", "master");
-      await repos.commit("d.txt", "later\n", "later fix on master");
-
+      const resolution = await withResolution(repos);
       const result = await sync(repos, "7");
       const head = repos.shaAt("refs/heads/master-into-next");
       expect(result.outputs).toEqual({ state: "clean", with: "next", head });
@@ -354,22 +364,22 @@ describe("the branch step of next-sync.yml", () => {
     "runs no hook of the checkout, which would receive the token",
     async () => {
       const repos = await repositories();
-      await repos.commit("a.txt", "one\ntwo\n", "fix on master");
-      repos.git("push", "-q", "origin", "master:master-into-next");
-      repos.git("switch", "-q", "-c", "resolution", "master");
-      repos.git("merge", "-q", "--no-edit", "origin/next");
-      repos.git("push", "-q", "origin", "resolution:master-into-next");
-      repos.git("switch", "-q", "master");
-      await repos.commit("d.txt", "later\n", "later fix on master");
-      const marker = slashed(join(repos.root, "hooked"));
+      await withResolution(repos);
+      const marker = join(repos.root, "hooked");
       const result = await sync(repos, "7", async (checkout) => {
         for (const hook of ["post-checkout", "post-merge", "pre-push"]) {
+          const path = `.git/hooks/${hook}`;
           await writeText(
             checkout,
-            `.git/hooks/${hook}`,
-            `#!/bin/sh\necho ${hook} >> "${marker}"\n`,
+            path,
+            `#!/bin/sh\necho ${hook} >> "${slashed(marker)}"\n`,
           );
+          await chmod(join(checkout, path), 0o755);
         }
+        // The control: without the step, git runs them.
+        repos.run(checkout, "switch", "-q", "--detach", "HEAD");
+        expect(existsSync(marker)).toBe(true);
+        await rm(marker);
       });
       expect(result.outputs.state).toBe("clean");
       expect(existsSync(marker)).toBe(false);
