@@ -15,6 +15,7 @@ import {
 } from "./game-data.js";
 import { GAME_IMAGE_NAME } from "./game.js";
 import type { Machine } from "./machine.js";
+import { PLAYERS_BEGIN_KEY, playersFrom, playersLine } from "./players.js";
 import { checkProbeName } from "./probes.js";
 import { readState } from "./state.js";
 import { customMapDataFolder, pathsOf } from "./user-folder.js";
@@ -86,6 +87,13 @@ export interface ProbeRun {
    * one.
    */
   gameData?: GameData;
+  /**
+   * The user slots the run's build staged, from its `BEGIN` line, or from
+   * the state file for the line of a runner that did not write them;
+   * undefined when the build kept the map's own, and unless the run is the
+   * expected one.
+   */
+  players?: number;
   /** The Probe's own records, in order; empty unless the run is the expected one. */
   records: readonly ResultLine[];
   /**
@@ -148,12 +156,14 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   const patch = field(begin, "patch");
   const written = gameDataFrom((name) => field(begin, BEGIN_KEYS[name]));
   const gameData = Object.keys(written).length > 0 ? written : state.gameData;
+  const players = playersFrom(field(begin, PLAYERS_BEGIN_KEY)) ?? state.players;
   const expected = {
     ...run,
     runId,
     ...(patch !== undefined && { patch }),
     ...(state.client !== undefined && { client: state.client }),
     ...(gameData !== undefined && { gameData }),
+    ...(players !== undefined && { players }),
   };
   const lines = [begin, ...texts.slice(1).map(parseResultLine)];
   const records = lines.filter((line) => !RESERVED_KINDS.includes(line.kind));
@@ -474,14 +484,16 @@ export function formatLine(line: ResultLine): string {
 }
 
 /**
- * What `probe:read` prints: the status line, the Game data the run's build
- * staged when it set any, then one line per record.
+ * What `probe:read` prints: the status line, the Game data and the players
+ * the run's build staged when it set any, then one line per record.
  */
 export function formatProbeRun(run: ProbeRun): string {
   const gameData = run.gameData && gameDataLine(run.gameData);
+  const players = playersLine(run.players);
   return [
     statusLine(run),
     ...(gameData === undefined ? [] : [gameData]),
+    ...(players === undefined ? [] : [players]),
     ...run.records.map(formatLine),
   ]
     .map((line) => `${line}\n`)

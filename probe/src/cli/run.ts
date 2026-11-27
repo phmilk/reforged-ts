@@ -1,8 +1,8 @@
 /**
  * `probe:run <probe> [--game-executable <file>] [--begin-timeout <seconds>]
  * [--stall-timeout <seconds>] [--game-data-set <set>] [--game-data-version
- * <version>] [--melee-map] [--client-build <Build>]`: run by the agent,
- * native Windows only. Runs the Probe in the game end to end and blocks
+ * <version>] [--melee-map] [--players <n>] [--client-build <Build>]`: run
+ * by the agent, native Windows only. Runs the Probe in the game end to end and blocks
  * until the run ends, printing one progress line per event, then exactly
  * what `probe:read` prints for the run. Exit codes are `probe:read`'s: 0
  * `finished`, 1 `failed`, 2 `crashed` (a stall included), 3 `not-started`
@@ -24,6 +24,12 @@ import {
   gameDataOf,
 } from "../game-data.js";
 import { systemMachine } from "../machine.js";
+import {
+  PLAYERS_ARGS,
+  PLAYERS_OPTION,
+  playersOf,
+  SUPPORTED_PLAYERS,
+} from "../players.js";
 import { EXIT_CODES, formatProbeRun } from "../read.js";
 import { DEFAULT_TIMEOUTS, runProbe, type RunContext } from "../run.js";
 import { FAILURE_EXIT_CODE } from "./read.js";
@@ -34,7 +40,7 @@ import {
   type Output,
 } from "./common.js";
 
-const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}] [--${GAME_DATA_OPTIONS.melee}] [--client-build <Build>]\n`;
+const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}] [--${GAME_DATA_OPTIONS.melee}] [--${PLAYERS_OPTION} ${SUPPORTED_PLAYERS.join("|")}] [--client-build <Build>]\n`;
 
 /** Where the command builds, the machine it runs the game on, and the workspace its paths are relative to. */
 export type Context = Omit<RunContext, "progress">;
@@ -54,11 +60,13 @@ export async function main(
     return FAILURE_EXIT_CODE;
   }
   try {
+    const players = playersOf(parsed.values);
     const run = await runProbe(
       parsed.probe,
       {
         gameExecutable: parsed.gameExecutable,
         gameData: gameDataOf(parsed.values),
+        ...(players !== undefined && { players }),
         clientBuild: parsed.clientBuild,
       },
       { begin: parsed.beginTimeout, stall: parsed.stallTimeout },
@@ -83,7 +91,7 @@ interface CommandLine {
   clientBuild?: string;
   beginTimeout: number;
   stallTimeout: number;
-  /** Every option as `parseArgs` read it, for the Game data. */
+  /** Every option as `parseArgs` read it, for the Game data and the players. */
   values: Readonly<Record<string, unknown>>;
 }
 
@@ -108,6 +116,7 @@ function parseCommandLine(args: readonly string[]): CommandLine | undefined {
         "begin-timeout": { type: "string" },
         "stall-timeout": { type: "string" },
         ...GAME_DATA_ARGS,
+        ...PLAYERS_ARGS,
       },
       strict: true,
       allowPositionals: true,

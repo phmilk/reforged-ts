@@ -1,7 +1,8 @@
 /**
  * `probe:build [<probe> ...] [--game-data-set <set>] [--game-data-version
- * <version>] [--melee-map]`: builds each Probe named, or every Probe of `probe/probes/`
- * when none is, its staged map declaring the Game data the options set, and
+ * <version>] [--melee-map] [--players <n>]`: builds each Probe named, or
+ * every Probe of `probe/probes/` when none is, its staged map declaring the
+ * Game data and the player slots the options set, and
  * prints where each was staged with the runId it bakes. Stops at the first
  * failure. Exit codes: 0 built; 1 a failure, an author error printed on
  * one line.
@@ -11,6 +12,7 @@ import { buildProbe, builtMessage } from "../build.js";
 import { AuthorError } from "../errors.js";
 import { GAME_DATA_ARGS, gameDataOf } from "../game-data.js";
 import { PROBE_FOLDERS, type ProbeFolders } from "../folders.js";
+import { PLAYERS_ARGS, playersOf } from "../players.js";
 import { listProbes } from "../probes.js";
 import {
   failure,
@@ -32,10 +34,14 @@ export function main(
   try {
     const { positionals, values } = parseCommandLine(args);
     const gameData = gameDataOf(values);
+    const players = playersOf(values);
     const probes =
       positionals.length > 0 ? positionals : listProbes(context.folders.probes);
     for (const probe of probes) {
-      const build = buildProbe(probe, context.folders, { gameData });
+      const build = buildProbe(probe, context.folders, {
+        gameData,
+        ...(players !== undefined && { players }),
+      });
       output.stdout(`${builtMessage(build)}\n`);
     }
     return 0;
@@ -45,13 +51,14 @@ export function main(
   }
 }
 
-/** The Probes and the Game data options; an unknown option is an AuthorError. */
+/** The Probes, the Game data options and the players; an unknown option is an AuthorError. */
 function parseCommandLine(args: readonly string[]) {
   try {
     return parseArgs({
       args: [...args],
       options: {
         ...GAME_DATA_ARGS,
+        ...PLAYERS_ARGS,
       },
       strict: true,
       allowPositionals: true,

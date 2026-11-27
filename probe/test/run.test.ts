@@ -13,6 +13,7 @@ import {
 } from "../src/game.js";
 import type { Machine } from "../src/machine.js";
 import { readGameData } from "../src/game-data.js";
+import { readPlayers } from "../src/players.js";
 import { readPatch } from "../src/manifest.js";
 import { readProbeRun, resultFile } from "../src/read.js";
 import { HUMAN_WAIT_SECONDS, LAUNCH_ARGS, captureFile } from "../src/run.js";
@@ -397,6 +398,29 @@ describe("probe:run", () => {
     });
     expect(stdout).toContain(
       "\nGame data: Game Data Set Melee, Game Data Version Reign of Chaos; the rest the map's own\n",
+    );
+  });
+
+  it("stages the players of --players, naming them in the build's line and after the status line", async () => {
+    const { code, stdout, context } = await run({
+      args: ["hello", "--players", "2"],
+      script: game(12),
+    });
+
+    expect(code).toBe(0);
+    expect(stdout).toMatch(/^Built Probe hello with 2 player slots, run /);
+    const staged = readFileSync(
+      path.join(
+        context.folders.output,
+        "hello",
+        "staging",
+        "probe.w3m",
+        "war3map.w3i",
+      ),
+    );
+    expect(readPlayers(staged)).toHaveLength(2);
+    expect(stdout).toContain(
+      "\nPlayers: 2 user slots, staged by the build; the map folder's own has 1\n",
     );
   });
 
