@@ -86,9 +86,9 @@ describe("the Event dispatch", function()
   end)
 
   -- docs/research/trigger-registered-twice.md, "The cases", the row of
-  -- TriggerRegisterPlayerUnitEvent with EVENT_PLAYER_UNIT_DEATH: a Trigger
-  -- registered twice for one event and subject runs twice on one event, each
-  -- run in the turn of its registration.
+  -- TriggerRegisterPlayerUnitEvent with EVENT_PLAYER_UNIT_DEATH, without a
+  -- filter: a Trigger registered twice for one event and subject runs twice
+  -- on one event, each run in the turn of its registration.
   it("runs a Trigger once per matching registration", function()
     local game = startGame()
     local log = {}

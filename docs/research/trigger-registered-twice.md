@@ -55,7 +55,7 @@ In every case where a Trigger ran, the log is, in this order: `twice` condition,
 
 ## The filters
 
-The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitEvent` ran 0 times while its Triggers ran, and the Triggers of `TriggerRegisterFilterUnitEvent` did not run at all. So the run measures each kind of filter on one registration of one Trigger: how often the filter ran, and whether the Trigger did. The filter is made with `Filter` from a Lua function that counts its runs.
+The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitEvent` ran 0 times while its Triggers ran, and the Triggers of `TriggerRegisterFilterUnitEvent` did not run at all. So the run measures each kind of filter on one registration of one Trigger: how often the filter ran, and whether the Trigger did. The filter is made with `Filter` from a Lua function that counts its runs and reads `GetFilterUnit`, which no row shows, since no filter ran.
 
 | Registration                                                | Filter answers | Filter ran | Trigger ran |
 | ----------------------------------------------------------- | -------------- | ---------- | ----------- |
@@ -69,7 +69,7 @@ The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitE
 | `TriggerRegisterFilterUnitEvent`, `EVENT_UNIT_DAMAGED`      | `false`        | 0          | 0           |
 | `TriggerRegisterFilterUnitEvent`, `EVENT_UNIT_DAMAGED`      | no filter      |            | 0           |
 
-No filter of these nine cases ran later either: the count of their runs, read at the end of the run, 4 seconds after the cases, is 0. The filters of the two cases above with a filter were counted once, on the line after `KillUnit`.
+No filter of these cases ran later either: the count of their runs, read at the end of the run, 4 seconds after the cases, is 0. The filters of the two cases above with a filter were counted once, on the line after `KillUnit`.
 
 - **`TriggerRegisterPlayerUnitEvent` ignored its filter**: the Trigger ran with a filter that answers `false`.
 - **`TriggerRegisterFilterUnitEvent` fired nothing**, for a death or a damage, with or without a filter, where `TriggerRegisterUnitEvent` on the same events fired.

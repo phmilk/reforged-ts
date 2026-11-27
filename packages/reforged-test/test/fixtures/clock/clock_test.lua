@@ -351,9 +351,8 @@ describe("the Triggers of TriggerRegisterTimerEvent", function()
   end)
 
   -- docs/research/trigger-registered-twice.md, "The cases", the row of
-  -- TriggerRegisterTimerEvent: a Trigger registered twice
-  -- with one timeout runs twice at that instant, each run in the turn of
-  -- its registration.
+  -- TriggerRegisterTimerEvent: a Trigger registered twice with one timeout
+  -- runs twice at that instant, each run in the turn of its registration.
   it("fire a Trigger registered twice with one timeout twice at that instant", function()
     local game = startGame()
     local log = {}
