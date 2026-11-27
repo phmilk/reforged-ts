@@ -16,7 +16,7 @@ import { creationFailure } from "./creation-step.js";
 import { CREATION_PACKAGE } from "./packages.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
-import type { ReleaseChannel } from "./release-channel.js";
+import type { TemplateRef } from "./release-channel.js";
 import {
   exitFailure,
   TemplateGateError,
@@ -135,7 +135,7 @@ export interface TemplateGateInput {
    * The Template ref of the release's channel, which the plan's Creation
    * CLI must download.
    */
-  templateRef: ReleaseChannel["templateRef"];
+  templateRef: TemplateRef;
   /**
    * An empty folder for the creation step: the Template's archive, the
    * unpacked Creation CLI and the Map project it creates.

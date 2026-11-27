@@ -2,7 +2,7 @@
  * `release:template-ref --branch <name>`: writes the Template ref of the
  * Release channel of the branch `<name>` the release runs from (`main` from
  * `master`, `next` from `next`, ADR 0031) into the Creation CLI's build
- * output, `packages/create-reforged-map/dist/template.js`, so the CLI packed
+ * output (`TEMPLATE_REF_MODULE` of `template-ref.ts`), so the CLI packed
  * next downloads it. Run it after the build and before `changeset pack`,
  * and pack without the packages' scripts: `pnpm pack` runs their `prepare`,
  * which builds the CLI again from its source and its `main`. Refuses any

@@ -9,6 +9,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { CREATION_PACKAGE } from "./packages.js";
+import type { TemplateRef } from "./release-channel.js";
 import { errorMessage } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
 
@@ -51,7 +52,7 @@ export function readTemplateRef(text: string, path: string): string {
  */
 export async function writeTemplateRef(
   root: string,
-  ref: string,
+  ref: TemplateRef,
 ): Promise<void> {
   const cli = (await readPublishablePackages(root)).find(
     ({ name }) => name === CREATION_PACKAGE,

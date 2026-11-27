@@ -9,7 +9,7 @@ import { dirname, join, posix, sep } from "node:path";
 import { parse } from "yaml";
 import { CREATED_PROJECT } from "../../src/creation-step.js";
 import { commandLine, type Command, type Runner } from "../../src/process.js";
-import type { ReleaseChannel } from "../../src/release-channel.js";
+import type { TemplateRef } from "../../src/release-channel.js";
 import {
   runTemplateGate,
   type TemplateGateResult,
@@ -27,7 +27,7 @@ export interface PlanEntry {
   version?: string;
   kind?: "publish" | "tag-only";
   /** The Template ref the Creation CLI's tarball downloads: `main` unless given. */
-  templateRef?: string;
+  templateRef?: TemplateRef;
 }
 
 export async function writeBytes(
@@ -44,7 +44,10 @@ export async function writeBytes(
  * A tarball of the Creation CLI, as `pnpm pack` writes it, downloading the
  * Template at `templateRef`.
  */
-export const cliTarball = (version: string, templateRef = "main") =>
+export const cliTarball = (
+  version: string,
+  templateRef: TemplateRef = "main",
+) =>
   packageTarball({
     "package.json": JSON.stringify({
       name: CLI,
@@ -292,7 +295,7 @@ export async function gate(
   template: string,
   packDir: string,
   run: Runner = fakeRunner().run,
-  templateRef: ReleaseChannel["templateRef"] = "main",
+  templateRef: TemplateRef = "main",
 ): Promise<{ result: TemplateGateResult; root: string; scratch: string }> {
   const root = await writeWorkspace();
   const scratch = await tempDir("scratch");

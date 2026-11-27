@@ -6,6 +6,7 @@
  * The Template is public: git reads it without a token.
  */
 import type { GitRunner } from "./git.js";
+import type { TemplateRef } from "./release-channel.js";
 
 /**
  * The library's repository, on GitHub, which the workflows belong to:
@@ -23,7 +24,7 @@ const NO_MATCHING_REF = 2;
 
 export interface CloneInput {
   /** The Template ref: the Template's branch of the release's channel. */
-  ref: string;
+  ref: TemplateRef;
   /** The folder to clone into. */
   into: string;
   git: GitRunner;

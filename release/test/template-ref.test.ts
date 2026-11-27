@@ -46,6 +46,9 @@ describe("the Creation CLI's Template", () => {
 });
 
 describe("release:template-ref", () => {
+  /** The Creation CLI's module holding its Template ref, in the workspace. */
+  const BUILT_MODULE = `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`;
+
   /** The Creation CLI's build output as tsc writes it from the source. */
   const BUILT = [
     'export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";',
@@ -64,20 +67,13 @@ describe("release:template-ref", () => {
   async function workspace(built: string | null = BUILT) {
     const root = await writeWorkspace();
     if (built !== null) {
-      await writeText(
-        root,
-        `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`,
-        built,
-      );
+      await writeText(root, BUILT_MODULE, built);
     }
     return root;
   }
 
   const builtOutput = (root: string) =>
-    readFile(
-      join(root, `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`),
-      "utf8",
-    );
+    readFile(join(root, BUILT_MODULE), "utf8");
 
   async function runCli(args: string[], root: string) {
     let stdout = "";
@@ -130,7 +126,7 @@ describe("release:template-ref", () => {
     expect(await runCli(["--branch", "master"], root)).toMatchObject({
       status: 1,
       stderr: expect.stringContaining(
-        `${join(root, `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`)} cannot be read: build create-reforged-map first (pnpm build).`,
+        `${join(root, BUILT_MODULE)} cannot be read: build create-reforged-map first (pnpm build).`,
       ) as unknown,
     });
   });
