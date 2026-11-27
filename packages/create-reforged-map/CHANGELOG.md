@@ -1,5 +1,13 @@
 # create-reforged-map
 
+## 1.0.0-alpha.3
+
+### Patch Changes
+
+- [#1072](https://github.com/phmilk/reforged-ts/pull/1072) [`488b0d9`](https://github.com/phmilk/reforged-ts/commit/488b0d995b3011fba236b8856d7bc5eae4695fee) Thanks [@phmilk](https://github.com/phmilk)! - The alphas are published under npm's `latest` dist-tag, so `pnpm add reforged-ts` and `npx create-reforged-map my-map` install the current alpha without `@next`, and `pnpm update` moves a Map project to it. Each README's install commands drop `@next`. The `next` dist-tag now carries only the betas of a major in preparation; until one exists, it stays on the last alpha it got.
+
+- [#1075](https://github.com/phmilk/reforged-ts/pull/1075) [`b98c973`](https://github.com/phmilk/reforged-ts/commit/b98c973bafa33552bd0c10b81a01494066735ea5) Thanks [@phmilk](https://github.com/phmilk)! - `create-reforged-map` downloads the Template's `main` instead of the tag `v1`, so a new Map project gets every change merged into the Template, `pnpm studio` among them. A beta of the Creation CLI (`npx create-reforged-map@next`) downloads the Template's `next`.
+
 ## 1.0.0-alpha.2
 
 ### Minor Changes
