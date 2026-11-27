@@ -7,11 +7,12 @@
 #
 # A workflow called by the release, not one a tag triggers: the App's key
 # lives in the environment app, whose deployment branch policy admits master
-# alone, and a tag's run is on the tag's ref, which it refuses. Admitting the
-# reforged-ts@* tags too would reopen the exposure: anyone who can push a
-# tag can push one on a branch's commit, whose workflow would then read the
-# key. The release calls it on master's commit, the one the publish job
-# tagged.
+# and next alone, and a tag's run is on the tag's ref, which it refuses.
+# Admitting the reforged-ts@* tags too would reopen the exposure: anyone who
+# can push a tag can push one on a branch's commit, whose workflow would then
+# read the key. The release calls it on its branch's commit, the one the
+# publish job tagged; a release from next publishes prereleases, which cut
+# no docs version.
 #
 # The caller passes the key by name: an environment secret reaches a called
 # job only when its caller passes it, and is empty otherwise, even when the
@@ -55,8 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # The App's key lives in the environment app, whose deployment branch
-    # policy admits master alone: a run on any other ref is refused it
-    # before any step (docs/release.md, "Repository variables and secrets").
+    # policy admits master and next alone: a run on any other ref is refused
+    # it before any step (docs/release.md, "Repository variables and
+    # secrets").
     environment: app
     permissions:
       contents: read

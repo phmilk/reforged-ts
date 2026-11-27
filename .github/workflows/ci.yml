@@ -138,11 +138,13 @@ jobs:
       # legs. docs/release.md describes each.
       - name: release:check-changeset
         # The Version Packages pull request consumes changesets and adds
-        # none; its head branch is always changeset-release/master of this
-        # repository (a fork's branch of that name is checked).
+        # none; its head branch is always changeset-release/<branch> of this
+        # repository, for the two branches a release runs from (a fork's
+        # branch of that name is checked).
         if: >-
           matrix.os == 'ubuntu' && github.event_name == 'pull_request' &&
-          !(github.head_ref == 'changeset-release/master' &&
+          !((github.head_ref == 'changeset-release/master' ||
+             github.head_ref == 'changeset-release/next') &&
             github.event.pull_request.head.repo.full_name == github.repository) &&
           !cancelled() && steps.install.outcome == 'success'
         env:

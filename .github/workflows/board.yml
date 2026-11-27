@@ -22,7 +22,7 @@
 # (#958), a write on a preview API that only ever warns. PROJECT_TOKEN
 # writes no label and no Issue status, so the labels job mints the repositories'
 # App token over both repositories, issues write, in the environment `app`,
-# the App key's home, whose policy also admits master alone. Its writes
+# the App key's home, whose policy admits master and next alone. Its writes
 # raise labeled events, so one more run follows and finds nothing to write.
 # The reconcile runs after it even when it fails: a Status never waits on a
 # label.
@@ -88,7 +88,8 @@ jobs:
     name: labels
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # The App key's home: its deployment branch policy admits master alone.
+    # The App key's home: its deployment branch policy admits master and
+    # next alone, the branches a release runs from.
     environment: app
     permissions:
       contents: read

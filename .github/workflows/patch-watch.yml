@@ -46,11 +46,11 @@ jobs:
       # writes the issue, the branch and the pull request.
       issues: read
     # The App's key lives in the environment app, whose deployment branch
-    # policy admits master alone: a run on any other ref, a dry run
+    # policy admits master and next alone: a run on any other ref, a dry run
     # included, is refused before any step (docs/release.md, "Repository
     # variables and secrets"). The dry run shares the job, so it rehearses
-    # master only; a branch's change to the watch is tried with its CLIs
-    # locally (pnpm patch-watch:plan, pnpm patch-watch:report).
+    # master or next only; a branch's change to the watch is tried with its
+    # CLIs locally (pnpm patch-watch:plan, pnpm patch-watch:report).
     environment: app
     env:
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

@@ -188,8 +188,9 @@ finish() {
 # of the Claim board (#529). It registers the repository's GitHub App and
 # installs it on this repository, stores its client ID and a private key as
 # the variable APP_CLIENT_ID and the secret APP_PRIVATE_KEY of the
-# environment `app`, whose deployment branch policy admits master alone
-# (every job that mints the App's token runs in it), installs the
+# environment `app`, whose deployment branch policy admits master and next
+# alone, the branches a release runs from (every job that mints the App's
+# token runs in it), installs the
 # Renovate GitHub App, applies the repository settings with
 # `pnpm repo:settings`, and sets up the Claim board: the environment
 # `board`, whose deployment branch policy admits master alone, a classic
@@ -237,12 +238,13 @@ readonly REPO="$REPO_OWNER/$REPO_NAME"
 readonly TEMPLATE_NAME=reforged-ts-template
 readonly CLIENT_ID_VARIABLE=APP_CLIENT_ID
 # The App's key: the secret PRIVATE_KEY_SECRET of the environment
-# APP_ENVIRONMENT, whose deployment branch policy admits APP_BRANCH alone,
-# so no workflow run from another ref can read it (docs/release.md,
-# "Repository variables and secrets").
+# APP_ENVIRONMENT, whose deployment branch policy admits APP_BRANCHES alone,
+# the branches a release runs from (APP_BRANCHES of
+# release/src/github-app.ts), so no workflow run from another ref can read
+# it (docs/release.md, "Repository variables and secrets").
 readonly PRIVATE_KEY_SECRET=APP_PRIVATE_KEY
 readonly APP_ENVIRONMENT=app
-readonly APP_BRANCH=master
+readonly APP_BRANCHES="master next"
 # The board's token: a classic personal access token of the maintainer with
 # the project scope, read by board.yml (docs/release.md, "The board") as a
 # secret of the environment BOARD_ENVIRONMENT, whose deployment branch
@@ -415,7 +417,7 @@ secret_stored() {
 }
 
 # app_stored: whether the repository holds the App's variable, and its
-# environment, admitting APP_BRANCH alone, the App's key.
+# environment, admitting APP_BRANCHES alone, the App's key.
 app_stored() {
   client_id_stored && app_environment_ok && app_key_stored
 }
@@ -426,9 +428,9 @@ client_id_stored() {
 }
 
 # app_environment_ok: whether the App's environment exists and its
-# deployment branch policy admits APP_BRANCH alone.
+# deployment branch policy admits APP_BRANCHES alone.
 app_environment_ok() {
-  [[ "$(policy_branches "$APP_ENVIRONMENT")" == "$APP_BRANCH" ]]
+  admits_alone "$APP_ENVIRONMENT" "$APP_BRANCHES"
 }
 
 # app_key_stored: whether the App's environment holds the App's key.
@@ -496,46 +498,64 @@ board_policy_branches() {
   policy_branches "$BOARD_ENVIRONMENT" "$@"
 }
 
-# make_environment ENVIRONMENT BRANCH [REPOSITORY] creates ENVIRONMENT in
+# admits_alone ENVIRONMENT BRANCHES [REPOSITORY]: whether the deployment
+# branch policy of ENVIRONMENT in REPOSITORY (this one by default) admits
+# BRANCHES, a space-separated list, and no other branch, in any order.
+admits_alone() {
+  local environment="$1" branches="$2" repository="${3:-$REPO}"
+  [[ "$(policy_branches "$environment" "$repository" | sort)" == "$(tr ' ' '\n' <<<"$branches" | sort)" ]]
+}
+
+# alone BRANCHES prints a space-separated list of branches as the wizard
+# says it: "master alone", "master and next alone".
+alone() {
+  printf '%s alone' "${1// / and }"
+}
+
+# make_environment ENVIRONMENT BRANCHES [REPOSITORY] creates ENVIRONMENT in
 # REPOSITORY (this one by default) with a deployment branch policy of its
-# own that admits BRANCH alone, then checks it (admit_branch_alone). Both
-# calls are idempotent: the PUT sets custom branch policies, the POST adds
-# BRANCH when it is not listed.
+# own that admits BRANCHES alone, a space-separated list, then checks it
+# (admit_branch_alone). Both calls are idempotent: the PUT sets custom
+# branch policies, the POST adds each branch that is not listed.
 make_environment() {
-  local environment="$1" branch="$2" repository="${3:-$REPO}"
+  local environment="$1" branches="$2" repository="${3:-$REPO}"
   # The JSON goes to gh on its standard input, as the secrets do.
   printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$ENVIRONMENT_POLICY'" "$repository" "$environment" "$RESET"
   if ! $DRY_RUN; then
     printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$repository/environments/$environment" --input - ||
       fail "gh api -X PUT repos/$repository/environments/$environment failed." "Read the error above."
   fi
-  admit_branch_alone "$environment" "$branch" "$repository"
+  admit_branch_alone "$environment" "$branches" "$repository"
 }
 
-# admit_branch_alone ENVIRONMENT BRANCH [REPOSITORY] adds BRANCH to the
-# deployment branch policy of ENVIRONMENT in REPOSITORY (this one by
-# default) when it is not listed, then checks that the policy admits BRANCH
-# alone; in the dry run it only lists the policy.
+# admit_branch_alone ENVIRONMENT BRANCHES [REPOSITORY] adds each branch of
+# BRANCHES, a space-separated list, to the deployment branch policy of
+# ENVIRONMENT in REPOSITORY (this one by default) when it is not listed,
+# then checks that the policy admits BRANCHES alone; in the dry run it only
+# lists the policy.
 admit_branch_alone() {
-  local environment="$1" branch="$2" repository="${3:-$REPO}"
+  local environment="$1" branches="$2" repository="${3:-$REPO}" branch listed
   local name="the environment $environment" title="The environment $environment"
   if [[ "$repository" != "$REPO" ]]; then
     name="${repository#*/}'s environment $environment"
     title="$name"
   fi
-  if grep -qx "$branch" <<<"$(policy_branches "$environment" "$repository")"; then
-    ok "the policy admits $branch"
-  else
-    run gh api --silent -X POST "repos/$repository/environments/$environment/deployment-branch-policies" -f "name=$branch" -f type=branch ||
-      fail "gh api -X POST repos/$repository/environments/$environment/deployment-branch-policies failed." "Read the error above."
-  fi
+  listed=$(policy_branches "$environment" "$repository")
+  for branch in $branches; do
+    if grep -qx "$branch" <<<"$listed"; then
+      ok "the policy admits $branch"
+    else
+      run gh api --silent -X POST "repos/$repository/environments/$environment/deployment-branch-policies" -f "name=$branch" -f type=branch ||
+        fail "gh api -X POST repos/$repository/environments/$environment/deployment-branch-policies failed." "Read the error above."
+    fi
+  done
   if $DRY_RUN; then
     run gh api "repos/$repository/environments/$environment/deployment-branch-policies"
-    note "A real run then checks that the environment admits $branch alone."
+    note "A real run then checks that the environment admits $(alone "$branches")."
   else
-    [[ "$(policy_branches "$environment" "$repository")" == "$branch" ]] ||
-      fail "$title does not admit $branch alone: its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
-    ok "$name exists and admits $branch alone"
+    admits_alone "$environment" "$branches" "$repository" ||
+      fail "$title does not admit $(alone "$branches"): its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
+    ok "$name exists and admits $(alone "$branches")"
   fi
 }
 
@@ -632,6 +652,7 @@ board_url() {
 TOTAL_STAGES=8
 APP_DONE=false # the variable and the environment's key exist and are kept
 KEY_ONLY=false # the App is kept; only its key moves into the environment
+POLICY_ONLY=false # the App and its key are kept; only the policy is widened
 CLIENT_ID=""
 KEY_FILE=""
 INSTALL_PAGE=""
@@ -706,7 +727,7 @@ pause "Press Enter to continue"
 stage "Register the GitHub App"
 
 if app_stored; then
-  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and its environment $APP_ENVIRONMENT, admitting $APP_BRANCH alone, the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
+  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and its environment $APP_ENVIRONMENT, admitting $(alone "$APP_BRANCHES"), the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
   if confirm "Set the App up again (another App, or a new private key)?"; then
     note "For a new key of the same App, do not register another: answer yes below."
   else
@@ -717,8 +738,19 @@ if app_stored; then
 elif client_id_stored && secret_stored "$PRIVATE_KEY_SECRET"; then
   ok "$REPO holds the variable $CLIENT_ID_VARIABLE and the repository secret $PRIVATE_KEY_SECRET: the App was set up before the environment $APP_ENVIRONMENT."
   say "A repository secret is readable by a workflow of any branch; the environment"
-  say "$APP_ENVIRONMENT admits $APP_BRANCH alone."
+  say "$APP_ENVIRONMENT admits $(alone "$APP_BRANCHES")."
   confirm "Keep the App, and store its key in the environment $APP_ENVIRONMENT?" && KEY_ONLY=true
+# The environment from an earlier run, holding the key, with a policy of
+# other branches (master alone, before a release ran from next): the App and
+# its key stay, the missing branches are added.
+elif client_id_stored && app_key_stored; then
+  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and the secret $PRIVATE_KEY_SECRET in its environment $APP_ENVIRONMENT: the App was set up on an earlier run."
+  say "The environment's policy admits '$(policy_branches "$APP_ENVIRONMENT" | tr '\n' ' ')', not $(alone "$APP_BRANCHES"),"
+  say "the branches a release runs from."
+  if confirm "Keep the App and its key, and admit $(alone "$APP_BRANCHES") in the environment's policy?"; then
+    APP_DONE=true
+    POLICY_ONLY=true
+  fi
 fi
 
 if $APP_DONE || $KEY_ONLY; then
@@ -819,15 +851,26 @@ stage "Store the client ID and the private key"
 
 if $APP_DONE; then
   ok "Kept from an earlier run: $CLIENT_ID_VARIABLE, and $PRIVATE_KEY_SECRET in the environment $APP_ENVIRONMENT."
+  if $POLICY_ONLY; then
+    # The environment exists: no PUT rewrites its settings, only the
+    # missing branches are added to its custom branch policies.
+    say "Its deployment branch policy, widened to $(alone "$APP_BRANCHES"), the branches a"
+    say "release runs from:"
+    [[ "$(gh_read api "repos/$REPO/environments/$APP_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] ||
+      fail "The environment $APP_ENVIRONMENT does not admit selected branches only." \
+        "Set its Deployment branches to Selected branches and tags, with $(alone "$APP_BRANCHES"): https://github.com/$REPO/settings/environments"
+    admit_branch_alone "$APP_ENVIRONMENT" "$APP_BRANCHES"
+  fi
 else
   if ! $KEY_ONLY; then
     run gh variable set "$CLIENT_ID_VARIABLE" --repo "$REPO" --body "$CLIENT_ID" ||
       fail "gh variable set failed." "Read the error above."
   fi
   say "The environment $APP_ENVIRONMENT, the key's home, with a deployment branch policy"
-  say "of its own ($APP_BRANCH alone, below): every job that mints the App's token runs"
-  say "in it, so a run on any other ref is refused the key. Both calls are idempotent:"
-  make_environment "$APP_ENVIRONMENT" "$APP_BRANCH"
+  say "of its own ($(alone "$APP_BRANCHES"), below, the branches a release runs from): every"
+  say "job that mints the App's token runs in it, so a run on any other ref is refused the"
+  say "key. Both calls are idempotent:"
+  make_environment "$APP_ENVIRONMENT" "$APP_BRANCHES"
   # The key goes to gh on its standard input: never on a command line,
   # never printed. An environment secret, never a repository one.
   printf '  %s$ gh secret set %s --env %s --repo %s < %s%s\n' "$BOLD" "$PRIVATE_KEY_SECRET" "$APP_ENVIRONMENT" "$REPO" "$KEY_FILE" "$RESET"
@@ -856,7 +899,7 @@ fi
 # environment's copy: deleting it is the proof that none reads it.
 if secret_stored "$PRIVATE_KEY_SECRET"; then
   warn "A repository secret $PRIVATE_KEY_SECRET exists next to the environment's: a workflow of any branch can read it."
-  note "Delete it once a run of each workflow that mints the App's token is green on $APP_BRANCH"
+  note "Delete it once a run of each workflow that mints the App's token is green on master"
   note "with the environment's copy ($GUIDE, \"Repository variables and secrets\"):"
   note "  gh secret delete $PRIVATE_KEY_SECRET --repo $REPO"
 fi
