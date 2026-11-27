@@ -47,6 +47,10 @@ On the host's client, every game:
 
 The leaver's files hold the same records as the host's, field for field, up to where they end. In `menu` they end with the `LEAVE` record and the handler's read after its work, both reading `slot1=PLAYING`. In the three others they end before the leave, at the leaver's last checkpoint. `probe:read` reports them as `crashed`: the client stopped without the run's `END` line.
 
+### The check on screen
+
+[#1040](https://github.com/phmilk/reforged-ts/issues/1040), a check made by looking at the screen, 2026-11-27, on 3.0.1.24371, in the `disconect` game alone: nothing appeared on the host's screen for the leave, no dialog included. Some time after the leaver cut the network, the only message was the Probe's, that the run had finished. Nobody timed it.
+
 ## What the Shipped stubs copy
 
 `__stub_leave_player`, which `game.leave` of `reforged-test/map` calls, dispatches `EVENT_PLAYER_LEAVE` to the Triggers registered for the leaver, `GetTriggerPlayer` answering it and `GetPlayerSlotState` still `PLAYER_SLOT_STATE_PLAYING`, then writes the slot as `PLAYER_SLOT_STATE_LEFT`. It writes nothing else: the controller, the units and the selection stay, and no defeat or victory fires.
@@ -55,6 +59,7 @@ Where they differ: the harness has no timer between the handlers and the write, 
 
 ## Not measured
 
-- What the screens showed: the host's waiting dialog in the network cut, and how long the game waited before the leave. The time from the selection to the leave, 4.82 to 25.04 seconds of game time, mixes the human's own pace with the game's detection, so it measures neither.
+- How long the game waits before a network cut becomes a leave. The time from the selection to the leave, 4.82 to 25.04 seconds of game time, mixes the human's own pace with the game's detection, so it measures neither, and no one timed the cut.
+- What the screens showed in the menu, Alt+F4 and killed-process games.
 - A game of more than two players, a leaver on a team, and a game with the melee rules, where `MeleeInitVictoryDefeat` reacts to a leave.
 - Whether the slot reads `PLAYER_SLOT_STATE_LEFT` before the timer of timeout 0: no read sits between the end of the handler and that timer.
