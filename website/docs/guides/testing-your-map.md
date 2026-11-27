@@ -127,7 +127,23 @@ AssertionError: Expected TimerStart to have been called with (expect.anything(),
 
 ## Errors
 
-{/* Written with the Caught error and game.expectError (#988). */}
+**A Caught error fails the test.** The library catches an error of the map's code in an Init stage's callback, and in Dev mode in a handler: it prints the line `reforged-ts: <origin> failed: <message>` and the game goes on, as in the game. A test that leaves one unexpected fails at its end, after its last `afterEach`, so a broken callback is never a green test:
+
+```text
+LuaError: The map's code raised an error the library caught, and the test did not expect it with game.expectError:
+  gameStart callback #1 failed: war3map.lua:11: attempt to index a nil value (local 'third')
+```
+
+- **Each listed, the cause first.** The failure lists every Caught error the test did not expect, as `<origin> failed: <message>`, a repeat counted `×N` on the line of its first, before the test's own failure when it has one.
+- **For the whole test.** One raised during `startGame()`, a `beforeEach` or an `afterEach` counts for the test too. A warning the library prints is no Caught error, and fails nothing.
+
+**A map meant to report an error says so after the act.** `game.expectError(text)` expects every Caught error so far whose message contains `text`, as plain text, its repeats included, and throws at once when there is none. A Caught error after the call needs another call. There is no `game.errors`: the test states the error it expects, and the harness fails it for the others.
+
+{@includeCode ../../../packages/reforged-test/examples/expect-error.test.ts}
+
+**With Dev mode off, a handler's error fails the test at once, thrown out of the Game action.** The Test game forces no Dev mode: as in a release build, the library catches no handler's error, so the test sees it where the game would stop the handler:
+
+{@includeCode ../../../packages/reforged-test/examples/handler-error.test.ts}
 
 ## A Native without a Stub
 

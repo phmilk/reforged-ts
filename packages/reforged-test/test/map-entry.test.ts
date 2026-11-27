@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as ts from "typescript";
@@ -347,4 +348,36 @@ describe("reforged-test/map", () => {
       ]);
     },
   );
+
+  it("types game.expectError for a text, with no errors on game", TYPED, () => {
+    expect(
+      errorsOf(`
+        const game = map.startGame();
+        const nothing: void = game.expectError("attempt to index a nil value");
+        print(nothing);
+      `),
+    ).toEqual([]);
+    expect(errorsOf(`map.startGame().expectError(1);`)).toEqual([
+      expect.stringContaining("Argument of type 'number'"),
+    ]);
+    expect(errorsOf(`map.startGame().errors;`)).toEqual([
+      expect.stringContaining("Property 'errors' does not exist"),
+    ]);
+  });
+
+  it("depends on nothing of reforged-ts, as a peer or otherwise", () => {
+    const manifest = JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+    ) as Record<string, Record<string, string> | undefined>;
+    for (const field of [
+      "dependencies",
+      "peerDependencies",
+      "optionalDependencies",
+      "devDependencies",
+    ]) {
+      expect(Object.keys(manifest[field] ?? {}), field).not.toContain(
+        "reforged-ts",
+      );
+    }
+  });
 });

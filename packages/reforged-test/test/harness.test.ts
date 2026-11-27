@@ -572,6 +572,130 @@ describe("game.kill, the first Game action, on reforged-test/map", () => {
   });
 });
 
+describe("a Caught error fails the test, unless game.expectError expected it", () => {
+  const files = runLuaTestFiles({ outDir: outDir("caught") });
+  const { tests } = file(files, "caught.test.ts");
+
+  const ONE =
+    "The map's code raised an error the library caught, and the test did not expect it with game.expectError:";
+  const MANY =
+    "The map's code raised errors the library caught, and the test did not expect them with game.expectError:";
+
+  /** The tests of one describe of the fixture, without their suite. */
+  function suite(...names: string[]): Omit<LuaTestResult, "suite">[] {
+    return tests
+      .filter((test) => test.suite.join(" > ") === names.join(" > "))
+      .map((test) => {
+        const rest: Record<string, unknown> = { ...test };
+        delete rest.suite;
+        return rest as Omit<LuaTestResult, "suite">;
+      });
+  }
+
+  it("fails a test that left one unexpected at its end, each listed, a repeat counted, before the test's own failure", () => {
+    expect(suite("a Caught error left unexpected")).toEqual([
+      {
+        name: "fails the test at its end, the game going on",
+        status: "error",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: war3map.lua:12: boom`,
+      },
+      {
+        name: "lists each, a repeat counted on the line of its first",
+        status: "error",
+        message: `${MANY}\n  Timer#1048577 Timer.start failed: boom ×3\n  Trigger#1048578 Trigger.addAction failed: bang`,
+      },
+      {
+        name: "lists them before a failed assertion",
+        status: "fail",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: boom\n\nExpected 1 to equal 2`,
+        actual: "1",
+        expected: "2",
+      },
+      {
+        name: "lists them before an error",
+        status: "error",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: boom\n\nbody broke`,
+      },
+      {
+        name: "does not fail for a warning the library prints",
+        status: "pass",
+      },
+    ]);
+  });
+
+  it("expects with game.expectError every Caught error so far whose message contains the text, and throws when none does", () => {
+    expect(suite("game.expectError")).toEqual([
+      {
+        name: "expects every Caught error so far whose message contains the text, repeats included",
+        status: "pass",
+      },
+      {
+        name: "leaves unexpected the ones whose message does not contain it",
+        status: "error",
+        message: `${ONE}\n  Trigger#1048578 Trigger.addAction failed: bang`,
+      },
+      { name: "throws at once when none contains the text", status: "pass" },
+      { name: "throws for a Caught error already expected", status: "pass" },
+      {
+        name: "needs another call for a later Caught error",
+        status: "error",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: boom`,
+      },
+      { name: "takes the text as plain text, not a pattern", status: "pass" },
+      { name: "refuses a text that is not a string", status: "pass" },
+      { name: "has no errors on game", status: "pass" },
+    ]);
+  });
+
+  it("counts one raised during startGame, a beforeEach or an afterEach, checked after the last afterEach and the cleanups", () => {
+    expect(suite("for the whole test")).toEqual([
+      {
+        name: "counts one raised during startGame",
+        status: "error",
+        message: `${ONE}\n  globals callback "spawn" failed: init broke`,
+      },
+      { name: "expects one raised during startGame", status: "pass" },
+    ]);
+    expect(
+      suite("for the whole test", "in a beforeEach, before the game started"),
+    ).toEqual([
+      {
+        name: "counts it",
+        status: "error",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: before broke`,
+      },
+      { name: "expects it in the test", status: "pass" },
+    ]);
+    expect(suite("for the whole test", "in an afterEach")).toEqual([
+      {
+        name: "counts it, failing a test that had passed",
+        status: "error",
+        message: `${ONE}\n  Timer#1048577 Timer.start failed: after broke`,
+      },
+    ]);
+    expect(suite("for the whole test", "expected in an afterEach")).toEqual([
+      {
+        name: "passes: the check comes after the last afterEach",
+        status: "pass",
+      },
+    ]);
+    expect(
+      suite(
+        "for the whole test",
+        "expected in a cleanup a beforeEach returned",
+      ),
+    ).toEqual([
+      { name: "passes: the check comes after the cleanups", status: "pass" },
+    ]);
+  });
+
+  it("defines no hook in a file on reforged-test/lua alone", () => {
+    expect(file(files, "shared.test.ts").tests).toEqual([
+      { suite: [], name: "defines no __reforged_caught_error", status: "pass" },
+    ]);
+  });
+});
+
 describe("beforeEach and afterEach, scoped by describe", () => {
   const log = join(
     mkdtempSync(join(tmpdir(), "reforged-test-hooks-")),
