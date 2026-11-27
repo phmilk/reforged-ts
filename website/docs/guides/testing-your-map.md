@@ -91,14 +91,16 @@ Game time is the Test game's own. It starts at 0 and nothing expires on its own:
 - **In the game's order.** The timers fire in the order of their instants, those of one instant in the order they were started. Each handler runs with the clock at its instant, so a timer it starts fires in the same advance when it expires before the advance ends.
 - **Exact counts.** A periodic timer fires once per period, without drift: 120 times in `game.advanceTime(120)` at a period of 1, however the test splits the 120 seconds.
 - **Stopped timers stay quiet.** A destroyed or paused timer does not fire, and starting a timer again drops what it had pending.
+- **Readings as in the game.** A timer's elapsed and remaining time follow the clock: a paused timer reads what it read at the pause, and a one-shot timer its timeout and 0 from its handler on.
+- **Expire events.** The Triggers of a timer's expire event fire at each of its expiries, before its handler.
 - **An error stops the clock.** An error a handler throws leaves `game.advanceTime`, the clock at that instant and the later timers still pending.
-- **Timers, and nothing else.** An advance fires timers and the Triggers of `TriggerRegisterTimerEvent`. Nothing else has a duration on the harness: a wait (`TriggerSleepAction`), a cooldown, a buff and a unit's life span do not move, and neither does `os.clock`.
+- **Timers, and nothing else.** An advance fires timers, their expire events and the Triggers of `TriggerRegisterTimerEvent`. Nothing else has a duration on the harness: a wait (`TriggerSleepAction`), a cooldown, a buff and a unit's life span do not move, and neither does `os.clock`.
 
 **A timeout of 0 is deferred work.** A one-shot timer of timeout 0 never fires inside the call that starts it, [as in the game](https://github.com/phmilk/reforged-ts/blob/master/docs/research/timer-answers.md#a-timer-of-timeout-0): it fires on the next advance, `game.advanceTime(0)` included. A periodic one fires every 0.0001 s, the period the game runs it at, so one second of it is 10000 handlers.
 
 {@includeCode ../../../packages/reforged-test/examples/deferred.test.ts}
 
-{/* What a timer reads (its elapsed and remaining time) and what a resumed timer does, written with the timer readings (#986). */}
+**A resumed timer does what it does in the game.** A timer the game's `ResumeTimer` resumes fires when what was left at the pause runs out, once more a full timeout later, then never again, one-shot or periodic alike ([the findings](https://github.com/phmilk/reforged-ts/blob/master/docs/research/timer-resume-cases.md)), so a map that continues a countdown uses the library's `Timer.resume`, which fires once for a one-shot timer and keeps a periodic one periodic.
 
 ## Assertions
 
