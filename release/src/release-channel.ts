@@ -13,7 +13,7 @@
  *
  * Any other branch has no channel and is refused.
  */
-import { compareSemver, parseSemver } from "./semver.js";
+import { compareSemver, parseSemver, type SemVer } from "./semver.js";
 import { readPublishablePackages } from "./workspace.js";
 
 /** The branches a release runs from, each with its channel. */
@@ -59,7 +59,7 @@ export class ReleaseChannelError extends Error {
 }
 
 /** The first stable version, which `master` refuses a major after. */
-const FIRST_STABLE = {
+const FIRST_STABLE: SemVer = {
   major: 1,
   minor: 0,
   patch: 0,

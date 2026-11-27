@@ -38,7 +38,7 @@ jobs:
       dry-run: ${{ steps.dry-run.outputs.dry-run }}
       # The branch whose Release channel the run publishes or rehearses
       # (release/src/release-channel.ts).
-      branch: ${{ steps.dry-run.outputs.branch }}
+      branch: ${{ steps.branch.outputs.branch }}
     steps:
       - id: dry-run
         name: Dry run or release
@@ -49,16 +49,17 @@ jobs:
             echo "::error title=Not master::A release runs from master only; this run is on $GITHUB_REF. Dispatch the workflow with dry-run to rehearse another branch."
             exit 1
           fi
-          # A dry run of a branch with no channel rehearses a release from
-          # master, where the branch's pull request goes.
+          echo "dry-run=$DRY_RUN" >> "$GITHUB_OUTPUT"
+      # A dry run of a branch with no channel rehearses a release from
+      # master, where the branch's pull request goes.
+      - id: branch
+        name: Release channel's branch
+        run: |
           case "$GITHUB_REF_NAME" in
             master | next) branch=$GITHUB_REF_NAME ;;
             *) branch=master ;;
           esac
-          {
-            echo "dry-run=$DRY_RUN"
-            echo "branch=$branch"
-          } >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false

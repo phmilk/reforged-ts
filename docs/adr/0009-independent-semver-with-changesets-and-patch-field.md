@@ -24,6 +24,6 @@ Decision record: https://github.com/phmilk/reforged-ts/issues/25
 
 ## Amendment (2026-11-27)
 
-[ADR 0031](0031-a-releases-channel-follows-the-branch-it-runs-from.md) decides a release's dist-tag by the branch it runs from. The consequence "during the build phase the `next` dist-tag carries `1.0.0-alpha.N`" no longer holds: a release from `master` publishes on `latest`, the alphas of the build phase included, so the Template and every Map project install the current alpha without `@next`. The `next` dist-tag carries the prereleases of a major prepared on the branch `next`.
+[ADR 0031](0031-a-releases-channel-follows-the-branch-it-runs-from.md) decides a release's dist-tag by the branch it runs from. The consequence "during the build phase the `next` dist-tag carries `1.0.0-alpha.N`" no longer holds: a release from `master` publishes on `latest`, the alphas of the build phase included, so the Template and every Map project install the current alpha without `@next`. The `next` dist-tag carries the prereleases of a major prepared on the Next branch.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/1062

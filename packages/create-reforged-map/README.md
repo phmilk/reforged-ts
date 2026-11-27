@@ -17,7 +17,7 @@ Either runs the command of the version on `latest`, the newest alpha during the 
 
 **Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version, so a bare `npx create-reforged-map` runs the newest alpha.
 
-**A beta.** Once a major is in preparation on the Next branch, `npx create-reforged-map@next my-map` (or `pnpm create reforged-map@next my-map`) makes a project from a beta: the Creation CLI of the `next` dist-tag, which downloads the Template's `next`, with the beta packages. Without `@next` it makes one from the stable line. See [Release channels](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#release-channels).
+**A beta.** Once a major is in preparation on the Next branch, `npx create-reforged-map@next my-map` (or `pnpm create reforged-map@next my-map`) makes a project from a beta: the Creation CLI of the `next` dist-tag, with the beta packages. Without `@next` it makes one from the stable line. See [Release channels](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#release-channels).
 
 ## Usage
 

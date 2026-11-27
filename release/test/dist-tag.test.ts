@@ -21,7 +21,7 @@ describe("setDistTags", () => {
       [entry("reforged-types"), entry("reforged-test", ALPHA, "latest")],
       [entry("reforged-ts", ALPHA, "next")],
     );
-    for (const tag of ["latest", "next"]) {
+    for (const tag of ["latest", "next"] as const) {
       const { plan: output, releases } = setDistTags(input, tag);
       expect(output).toEqual(
         plan(

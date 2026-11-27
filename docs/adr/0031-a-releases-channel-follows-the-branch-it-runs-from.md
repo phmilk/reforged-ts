@@ -10,7 +10,7 @@ Three things a release does were decided apart, and drifted. The Creation CLI do
 We decide that one rule, the Release channel, decides for every package and for the Template what a release publishes and what it is checked against: the branch the release runs from.
 
 - **`master` is the stable channel.** A release from `master` publishes every package on the `latest` dist-tag, and the Template gate and the packed Creation CLI use the Template's `main`. During the build phase this already holds: the alphas go on `latest`.
-- **`next` is the channel of a major in preparation.** When a major is prepared, a branch `next` is cut from `master` in Changesets pre mode (`beta`, then `rc`), and the Template gets a branch `next` too. A release from `next` publishes on the `next` dist-tag, and its gate, its packed CLI and its Template dispatch use the Template's `next`. When the major ships, a human merges `next` into `master` and both branches `next` are deleted.
+- **`next`, the Next branch, is the channel of a major in preparation.** When a major is prepared, the Next branch is cut from `master` in Changesets pre mode (`beta`, then `rc`), and the Template gets a branch `next` too. A release from `next` publishes on the `next` dist-tag, and its gate, its packed CLI and its Template dispatch use the Template's `next`. When the major ships, a human merges `next` into `master` and both branches `next` are deleted.
 - **Majors go to `next`.** On `master`, a package takes a major changeset only while it is not yet at its first stable version, which every package is during the build phase; after that a major of any package goes to `next`, and the check that reads a pull request's changesets refuses it on `master`.
 - **Any other branch has no channel.** A release runs from `master` or `next`, and from no other branch.
 
@@ -36,8 +36,8 @@ It amends two decisions:
 
 - `release:dist-tag` takes the branch and writes `latest` into the publish plan of a release from `master`, the alphas included, so `npx create-reforged-map` and `pnpm add reforged-ts` install the current alpha, and the READMEs and the docs stop asking for `@next` during the build phase.
 - The Template gate, the Template clone, the packed Creation CLI and the Template dispatch take the channel's Template ref, so no ref is moved by hand; the tag `v1` is retired once a Creation CLI that downloads `main` is on `latest`.
-- After 1.0.0, a major changeset on `master` fails CI, naming the branch `next`; a Spec or Ticket whose delivery needs a major carries the label `next`, and its work is based on `next`.
+- After 1.0.0, a major changeset on `master` fails CI, naming the Next branch; a Spec or Ticket whose delivery needs a major carries the label `next`, and its work is based on the Next branch.
 - A workflow merges `master` into `next` at every push to `master` while `next` exists, and the merge of `next` into `master` stays a human step with its checklist.
-- The release workflow runs from `next` as from `master`, and the environment `app` admits both.
+- The release workflow runs from the Next branch as from `master`, and the environment `app` admits both.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/1062
