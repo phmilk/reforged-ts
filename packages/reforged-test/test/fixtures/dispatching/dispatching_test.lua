@@ -522,6 +522,24 @@ describe("the player's event and the unit's", function()
   end
 end)
 
+-- The stubs keep no hit points, so lethal damage kills nothing: in the game
+-- a lethal UnitDamageTarget fires the three deaths after the damage
+-- (docs/research/unit-event-timing.md), and a test that needs that death
+-- writes game.kill(target, { by = attacker }).
+describe("UnitDamageTarget", function()
+  it("dispatches the damage only: no death, whatever the amount", function()
+    startGame()
+    local attacker, target = footman(1), footman()
+    local log = watchAll(target)
+    TriggerRegisterUnitEvent(watch(log, "EVENT_UNIT_DAMAGING"), target, EVENT_UNIT_DAMAGING)
+    TriggerRegisterUnitEvent(watch(log, "EVENT_UNIT_DAMAGED"), target, EVENT_UNIT_DAMAGED)
+    expect(UnitDamageTarget(attacker, target, 10000, true, false,
+      ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL, WEAPON_TYPE_WHOKNOWS)).toBe(true)
+    expect(log).toEqual(fired("EVENT_UNIT_DAMAGING", "EVENT_UNIT_DAMAGED"))
+    expect(UnitAlive(target)).toBe(true)
+  end)
+end)
+
 describe("a Dispatching Native under stubNative", function()
   it("dispatches nothing: the replacement is whole", function()
     startGame()

@@ -148,6 +148,72 @@ declare function __stub_dispatch_damage(damage: StubDamage): number;
  */
 declare function __stub_kill_unit(whichUnit: unit, killer?: unit): void;
 
+/**
+ * Dispatches one chat message of `whichPlayer` as the game does: walks that
+ * player's registrations of `TriggerRegisterPlayerChatEvent` in registration
+ * order, over every trigger, and fires the trigger of each one whose filter
+ * matches, once per registration. A filter matches when it is empty or, in
+ * lower case, equals the message (`exactMatchOnly`) or is found in it,
+ * nothing trimmed. A handler reads the message as given
+ * (`GetEventPlayerChatString`), that registration's filter in lower case
+ * (`GetEventPlayerChatStringMatched`), the player (`GetTriggerPlayer`) and,
+ * as `GetTriggerEventId`, the event of id 96, which is not
+ * `EVENT_PLAYER_CHAT`. Returns how many triggers ran their actions. It
+ * checks nothing and records no call.
+ */
+declare function __stub_dispatch_chat(
+  whichPlayer: player,
+  message: string,
+): number;
+
+/**
+ * The unit enters the selection of `whichPlayer`, as the game tells the
+ * script: dispatches `EVENT_PLAYER_UNIT_SELECTED` of that player, then
+ * `EVENT_UNIT_SELECTED`, `IsUnitSelected` already answering true in the
+ * handlers, then adds the unit after the units selected before, where
+ * `GroupEnumUnitsSelected` finds it. `GetTriggerPlayer` answers the player
+ * in the player unit event and the unit's owner in the unit event. It
+ * clears nothing, checks nothing, a unit already selected included, and
+ * records no call.
+ */
+declare function __stub_select_unit(whichPlayer: player, whichUnit: unit): void;
+
+/**
+ * The unit leaves the selection of `whichPlayer`, as the game tells the
+ * script: dispatches `EVENT_PLAYER_UNIT_DESELECTED` of that player, then
+ * `EVENT_UNIT_DESELECTED`, the unit still selected in the handlers, then
+ * takes it out. It checks nothing, a unit that is not selected included,
+ * and records no call.
+ */
+declare function __stub_deselect_unit(
+  whichPlayer: player,
+  whichUnit: unit,
+): void;
+
+/**
+ * Whether the unit is in the selection of `whichPlayer`, as
+ * `IsUnitSelected` answers it, without a call-log line.
+ */
+declare function __stub_selected(whichPlayer: player, whichUnit: unit): boolean;
+
+/**
+ * The player leaves the game, as a Probe run with two clients measured it:
+ * `EVENT_PLAYER_LEAVE` is dispatched to the triggers registered for it,
+ * `GetTriggerPlayer` answering it and its slot still reading
+ * `PLAYER_SLOT_STATE_PLAYING`, then the slot reads `PLAYER_SLOT_STATE_LEFT`,
+ * even when a handler throws. Its units, its controller and its selection
+ * stay, and no defeat or victory fires. It checks nothing, a player who
+ * already left included, and records no call.
+ */
+declare function __stub_leave_player(whichPlayer: player): void;
+
+/**
+ * The slot state of a player, as `GetPlayerSlotState` answers it, without a
+ * call-log line: playing for the slots 0 and 1, left after
+ * `__stub_leave_player`, empty for every other slot.
+ */
+declare function __stub_slot_state(whichPlayer: player): playerslotstate;
+
 // The test controls.
 
 /** Sets what `os.clock` answers from now on; returns what it answered before. */

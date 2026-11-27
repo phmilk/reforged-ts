@@ -33,6 +33,12 @@ export const NEXT_TAG = "next";
 /** The dist-tag of a channel: `latest` or `next`. */
 export type DistTag = typeof LATEST_TAG | typeof NEXT_TAG;
 
+/**
+ * The Template's branch of a channel, which the release checks against and
+ * the packed Creation CLI downloads: `main` or `next`.
+ */
+export type TemplateRef = "main" | "next";
+
 /** A package of the workspace, as the channel reads it. */
 export interface ChannelPackage {
   name: string;
@@ -50,7 +56,7 @@ export interface ReleaseChannel {
    * The Template's branch the release checks against and the packed
    * Creation CLI downloads.
    */
-  templateRef: "main" | "next";
+  templateRef: TemplateRef;
   /** Whether each package, by name, may take a major changeset. */
   majors: Readonly<Record<string, boolean>>;
 }

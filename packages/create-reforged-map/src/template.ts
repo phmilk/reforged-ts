@@ -22,12 +22,14 @@ export interface TemplateSource {
 export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";
 
 /**
- * The Template ref the CLI downloads: `v<major>`, the line the release gate
- * checks out for the library's major (`templateRef` in the release scripts).
- * A test of the release scripts holds it equal to `templateRef` of the
- * library's version in the workspace, so it moves with the library's major.
+ * The Template ref the CLI downloads: the Template's branch of the Release
+ * channel it was released from (ADR 0031). The source keeps `main`, the
+ * Template ref of `master`, which a local build downloads; the release's
+ * pack step writes the channel's ref into the build output before packing,
+ * so a CLI released from `next` downloads the Template's `next`. A test of
+ * the release scripts holds it equal to `master`'s Template ref.
  */
-export const TEMPLATE_REF = "v1";
+export const TEMPLATE_REF = "main";
 
 /** Fetches a URL: the global `fetch`, or a test's stand-in. */
 export type Fetch = (url: string) => Promise<Response>;

@@ -633,6 +633,12 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
     );
   });
 
+  it("UnitDamageTarget dispatches the damage only, with no death from lethal damage", () => {
+    expect(suite("UnitDamageTarget")).toEqual(
+      passing("dispatches the damage only: no death, whatever the amount"),
+    );
+  });
+
   it("dispatches nothing under stubNative, whose replacement is whole", () => {
     expect(suite("a Dispatching Native under stubNative")).toEqual(
       passing("dispatches nothing: the replacement is whole"),

@@ -41,6 +41,7 @@
     "release:version": "pnpm --filter reforged-ts-release release:version",
     "release:dist-tag": "pnpm --filter reforged-ts-release release:dist-tag",
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
+    "release:template-ref": "pnpm --filter reforged-ts-release release:template-ref",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
     "release:template-dispatch": "pnpm --filter reforged-ts-release release:template-dispatch",
     "release:docs-cut": "pnpm --filter reforged-ts-release release:docs-cut",

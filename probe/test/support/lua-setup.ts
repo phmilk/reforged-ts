@@ -1,6 +1,6 @@
 // The global setup of the probe vitest project: compiles the Lua tests
 // (../lua) with typescript-to-lua, builds the hello, failing, held,
-// failing-later and calibration Probes and the Probes of the Lua tests
+// failing-later, calibration and player-leave Probes and the Probes of the Lua tests
 // (../lua/probes) with the bridge fixtures' runId and Patch, hello once
 // more with Game data (`hello_game_data_bundle`) and once with two player
 // slots (`hello_players_bundle`), and puts their bundles
@@ -37,13 +37,14 @@ const BUNDLED_PROBES = [
   "held",
   "failing-later",
   "calibration",
+  "player-leave",
 ];
 
 /**
  * The Probes of the Lua tests, in ../lua/probes and never in probe/probes,
  * each loaded as the module `<probe>_bundle`.
  */
-const TEST_PROBES = ["nullability-cases", "nullability-call-cases"];
+const TEST_PROBES = ["nullability-cases", "nullability-call-cases", "renamed"];
 
 /** The Game data of the hello bundle built with some, `hello_game_data_bundle`. */
 const GAME_DATA_BUILD: GameData = {
