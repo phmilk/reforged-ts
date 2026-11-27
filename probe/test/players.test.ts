@@ -120,10 +120,15 @@ describe("writePlayers", () => {
     expect(buffer).toEqual(before);
   });
 
-  it.each([0, 1, 3])("refuses %i players, a number it does not stage", (n) => {
-    expect(() => writePlayers(TEMPLATE_W3I, n)).toThrow(AuthorError);
-    expect(() => writePlayers(TEMPLATE_W3I, n)).toThrow(/stages 2 players/);
-  });
+  // parsePlayers refuses them first, as an author error: here they are a
+  // caller's bug, whose stack the command prints.
+  it.each([0, 1, 3])(
+    "throws for %i players, a number it does not stage",
+    (n) => {
+      expect(() => writePlayers(TEMPLATE_W3I, n)).toThrow(/stages 2 players/);
+      expect(() => writePlayers(TEMPLATE_W3I, n)).not.toThrow(AuthorError);
+    },
+  );
 
   it("writes nothing over a map that has more than one player already", () => {
     expect(() => writePlayers(writePlayers(TEMPLATE_W3I, 2), 2)).toThrow(

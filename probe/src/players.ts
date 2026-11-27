@@ -20,10 +20,13 @@ export const PLAYERS_ARGS = {
 } as const;
 
 /**
- * The numbers of player slots the step stages: two, the case of #1040, the
+ * The number of player slots the step stages: two, the case of #1040, the
  * second one's start mirrored from the first's.
  */
-export const SUPPORTED_PLAYERS: readonly number[] = [2];
+const TWO_PLAYERS = 2;
+
+/** The numbers of player slots the option takes: two alone. */
+export const SUPPORTED_PLAYERS: readonly number[] = [TWO_PLAYERS];
 
 /** The players of the option `parseArgs` read with `PLAYERS_ARGS`; undefined for the map's own. */
 export function playersOf(
@@ -103,17 +106,18 @@ export function readPlayers(w3i: Uint8Array): PlayerSlot[] {
 }
 
 /**
- * A copy of `w3i` declaring `players` user slots, one of
- * `SUPPORTED_PLAYERS`: the first record copied for the second, with its
- * number, the name `Player 2` and a start of its own, both in the force;
- * every byte before and after the tables unchanged. The map's own tables
- * are read first, and the step writes only over what it knows: one
- * record, Player 1's, a user slot, and one force.
+ * A copy of `w3i` declaring two user slots, `players` being 2, the one
+ * number the step stages: the first record copied for the second, with
+ * its number, the name `Player 2` and a start of its own, both in the
+ * force; every byte before and after the tables unchanged. The map's own
+ * tables are read first, and the step writes only over what it knows: one
+ * record, Player 1's, a user slot, and one force. Any other `players` is
+ * a caller's bug, `parsePlayers` refusing it first.
  */
 export function writePlayers(w3i: Uint8Array, players: number): Uint8Array {
-  if (players !== 2) {
-    throw new AuthorError(
-      `The runner stages ${SUPPORTED_PLAYERS.join(", ")} players, not ${String(players)}.`,
+  if (players !== TWO_PLAYERS) {
+    throw new Error(
+      `writePlayers stages ${String(TWO_PLAYERS)} players, not ${String(players)}.`,
     );
   }
   const tables = locate(w3i);
@@ -141,11 +145,11 @@ export function writePlayers(w3i: Uint8Array, players: number): Uint8Array {
   ];
   const forceTable = copyOf(w3i, tables.forcesStart, tables.tablesEnd);
   const maskOffset = force.maskOffset - tables.forcesStart;
-  const mask = (force.mask | ((1 << players) - 1)) >>> 0;
+  const mask = (force.mask | ((1 << TWO_PLAYERS) - 1)) >>> 0;
   new DataView(forceTable.buffer).setUint32(maskOffset, mask, true);
 
   const count = new Uint8Array(4);
-  new DataView(count.buffer).setInt32(0, players, true);
+  new DataView(count.buffer).setInt32(0, TWO_PLAYERS, true);
   return concat([
     w3i.subarray(0, tables.tablesStart),
     count,
@@ -283,7 +287,7 @@ function coordinate(value: number): string {
 }
 
 /**
- * The start of a new player: the second's mirrors the first's through the
+ * The start of Player 2: the mirror of Player 1's through the
  * centre of the camera bounds, so the two stand apart on any map.
  */
 function mirroredStart(
