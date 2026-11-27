@@ -1,15 +1,14 @@
 /**
- * `release:template-gate --template <path> --pack-dir <dir>`: installs the
- * tarballs of the publish plan in the pack output of `changeset pack` into
- * the Template checkout as overrides in its pnpm-workspace.yaml, then runs
- * the Template's build in release mode, its lint and its tests, then has the
- * packed create-reforged-map make a Map project from an archive of the
- * checkout in a temporary folder, and checks it; it stops at the first
- * failure, naming the command.
- *
- * `release:template-gate --print-ref --pack-dir <dir>` prints the Template
- * ref to check out for that release: `v<major>` of the library version the
- * plan publishes, else of the workspace's library.
+ * `release:template-gate --template <path> --pack-dir <dir> --branch <name>`:
+ * installs the tarballs of the publish plan in the pack output of
+ * `changeset pack` into the Template checkout as overrides in its
+ * pnpm-workspace.yaml, then runs the Template's build in release mode, its
+ * lint and its tests, then has the packed create-reforged-map make a Map
+ * project from an archive of the checkout in a temporary folder, and checks
+ * it; it stops at the first failure, naming the command. The plan's
+ * create-reforged-map must download the Template ref of the Release channel
+ * of the branch `<name>` the release runs from (`main` from `master`, `next`
+ * from `next`, ADR 0031), the ref `release:template-clone` checks out.
  *
  * Relative paths resolve against the folder the command was started from.
  * Exit codes: 0 pass, 1 a command failed or the inputs cannot be read, 2
@@ -20,60 +19,30 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { CREATION_PACKAGE } from "../packages.js";
 import { commandLine, runInherited, type Runner } from "../process.js";
-import { releaseTemplateRef, runTemplateGate } from "../template-gate.js";
+import { readReleaseChannel } from "../release-channel.js";
+import { runTemplateGate } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
   invokedDirectly,
+  parseOptions,
   PROCESS_OUTPUT,
   type Output,
 } from "./common.js";
 
 const USAGE =
-  "Usage: release:template-gate --template <path> --pack-dir <dir>\n" +
-  "       release:template-gate --print-ref --pack-dir <dir>\n";
+  "Usage: release:template-gate --template <path> --pack-dir <dir> --branch <name>\n";
 
 /** Where the command runs, and how it runs the Template's commands. */
 export interface Context {
   /** The folder relative paths resolve against. */
   cwd: string;
   /**
-   * The workspace, for the library version and the Creation CLI when the
-   * plan lacks them.
+   * The workspace, whose packages the Release channel reads, and whose
+   * Creation CLI is packed when the plan lacks it.
    */
   root: string;
   run: Runner;
-}
-
-interface Options {
-  template?: string;
-  packDir?: string;
-  printRef: boolean;
-}
-
-function parseArgs(args: readonly string[]): Options | undefined {
-  const options: Options = { printRef: false };
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--print-ref") {
-      options.printRef = true;
-      continue;
-    }
-    const value = args.at(i + 1);
-    if (value === undefined || value === "" || value.startsWith("--")) {
-      return undefined;
-    }
-    if (arg === "--template") options.template = value;
-    else if (arg === "--pack-dir") options.packDir = value;
-    else return undefined;
-    i++;
-  }
-  const valid =
-    options.packDir !== undefined &&
-    (options.printRef
-      ? options.template === undefined
-      : options.template !== undefined);
-  return valid ? options : undefined;
 }
 
 export async function main(
@@ -86,24 +55,27 @@ export async function main(
     run: spawnRunner(output),
   },
 ): Promise<number> {
-  const options = parseArgs(args);
-  if (options?.packDir === undefined) {
+  const options = parseOptions(
+    args,
+    ["--template", "--pack-dir", "--branch"],
+    ["--template", "--pack-dir", "--branch"],
+  );
+  if (options === undefined) {
     output.stderr(USAGE);
     return 2;
   }
-  const packDir = resolve(context.cwd, options.packDir);
 
   try {
-    if (options.printRef) {
-      output.stdout(`${await releaseTemplateRef(packDir, context.root)}\n`);
-      return 0;
-    }
-
+    const { templateRef } = await readReleaseChannel(
+      options["--branch"],
+      context.root,
+    );
     const scratch = await mkdtemp(join(tmpdir(), "reforged-template-gate-"));
     const result = await runTemplateGate({
-      template: resolve(context.cwd, String(options.template)),
-      packDir,
+      template: resolve(context.cwd, options["--template"]),
+      packDir: resolve(context.cwd, options["--pack-dir"]),
       root: context.root,
+      templateRef,
       scratch,
       run: context.run,
     }).finally(() => rm(scratch, { recursive: true, force: true }));

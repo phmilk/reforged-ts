@@ -13,17 +13,16 @@ import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { parseDocument } from "yaml";
 import { byCodePoint } from "./order.js";
 import { creationFailure } from "./creation-step.js";
-import { CREATION_PACKAGE, LIBRARY_PACKAGE } from "./packages.js";
+import { CREATION_PACKAGE } from "./packages.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
-import { parseSemver } from "./semver.js";
+import type { TemplateRef } from "./release-channel.js";
 import {
   exitFailure,
   TemplateGateError,
   type StepFailure,
 } from "./template-gate-failure.js";
 import { errorMessage, isRecord } from "./unknown.js";
-import { readPublishablePackages } from "./workspace.js";
 
 /** A package of the publish plan, and its tarball in the pack output. */
 export interface PackedPackage {
@@ -31,43 +30,6 @@ export interface PackedPackage {
   version: string;
   /** The tarball, absolute. */
   tarball: string;
-}
-
-/**
- * The Template ref a library version is gated against: the Template keeps
- * one line per library major, named `v<major>` (a tag or a branch; both
- * check out the same way). Prereleases map to their major: every 1.x,
- * alphas included, maps to `v1`.
- */
-export function templateRef(libraryVersion: string): string {
-  const version = parseSemver(libraryVersion);
-  if (version === undefined) {
-    throw new TemplateGateError(`"${libraryVersion}" is not a semver version.`);
-  }
-  return `v${String(version.major)}`;
-}
-
-/**
- * The Template ref a release is gated against: `templateRef` of the library
- * version the publish plan in `packDir` publishes, else of the library in
- * the workspace at `root` (a release that leaves the library alone).
- */
-export async function releaseTemplateRef(
-  packDir: string,
-  root: string,
-): Promise<string> {
-  const packed = await readPackedPackages(packDir);
-  const library =
-    packed.find(({ name }) => name === LIBRARY_PACKAGE) ??
-    (await readPublishablePackages(root)).find(
-      ({ name }) => name === LIBRARY_PACKAGE,
-    );
-  if (library === undefined) {
-    throw new TemplateGateError(
-      `Neither the plan nor the workspace has ${LIBRARY_PACKAGE}.`,
-    );
-  }
-  return templateRef(library.version);
 }
 
 /**
@@ -170,6 +132,11 @@ export interface TemplateGateInput {
   /** The workspace, whose Creation CLI is packed when the plan lacks it. */
   root: string;
   /**
+   * The Template ref of the release's channel, which the plan's Creation
+   * CLI must download.
+   */
+  templateRef: TemplateRef;
+  /**
    * An empty folder for the creation step: the Template's archive, the
    * unpacked Creation CLI and the Map project it creates.
    */
@@ -198,8 +165,9 @@ type Manifest = Record<string, unknown>;
  * checkout, which the step checks. Stops at the first command that fails, or at
  * the first script the Template lacks, and names it. Throws a
  * `TemplateGateError` when the pack output, the checkout or the Creation
- * CLI's tarball cannot be read. The checkout keeps the overrides and any
- * lockfile the install writes: gate a throwaway clone.
+ * CLI's tarball cannot be read, or when the plan's Creation CLI downloads
+ * another Template ref than `templateRef`. The checkout keeps the overrides
+ * and any lockfile the install writes: gate a throwaway clone.
  */
 export async function runTemplateGate(
   input: TemplateGateInput,
@@ -263,6 +231,7 @@ export async function runTemplateGate(
     scripts,
     tarball: installed.find(({ name }) => name === CREATION_PACKAGE)?.tarball,
     root: input.root,
+    templateRef: input.templateRef,
     scratch: input.scratch,
     run: input.run,
   });

@@ -1,10 +1,9 @@
-import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-clone.js";
 import type { GitCommand } from "../src/git.js";
 import { cloneTemplate, GIT_ENVIRONMENT } from "../src/template-clone.js";
-import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
+import { tempDir, writeWorkspace } from "./support/workspace.js";
 
 const URL = "https://github.com/phmilk/reforged-ts-template.git";
 
@@ -22,35 +21,37 @@ function fakeGit(codes: { "ls-remote"?: number; clone?: number } = {}) {
 }
 
 describe("cloneTemplate", () => {
-  it("looks the ref up, then clones it shallow, never interactively", async () => {
+  it("looks the branch up, then clones it shallow, never interactively", async () => {
     const { commands, git } = fakeGit();
-    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
+    expect(await cloneTemplate({ ref: "main", into: "/tmp/t", git })).toEqual({
       ok: true,
     });
     expect(commands.map(({ args }) => args)).toEqual([
-      ["ls-remote", "--exit-code", URL, "refs/tags/v1", "refs/heads/v1"],
-      ["clone", "--quiet", "--depth", "1", "--branch", "v1", URL, "/tmp/t"],
+      ["ls-remote", "--exit-code", URL, "refs/heads/main"],
+      ["clone", "--quiet", "--depth", "1", "--branch", "main", URL, "/tmp/t"],
     ]);
     for (const { env } of commands) {
       expect(env).toEqual({ GIT_TERMINAL_PROMPT: "0" });
     }
   });
 
-  it("names the missing ref and does not clone", async () => {
+  it("names the missing branch and does not clone", async () => {
     const { commands, git } = fakeGit({ "ls-remote": 2 });
-    const result = await cloneTemplate({ ref: "v1", into: "/tmp/t", git });
+    const result = await cloneTemplate({ ref: "next", into: "/tmp/t", git });
     expect(result).toEqual({
       ok: false,
-      message: expect.stringContaining(
-        "The Template (phmilk/reforged-ts-template) has no v1 tag or branch.",
-      ) as unknown,
+      message:
+        "The Template (phmilk/reforged-ts-template) has no branch next. " +
+        "A release is gated against the Template's branch of its Release channel, " +
+        'main from master and next from next (docs/release.md, "Release channels"): ' +
+        "cut next on the Template, then re-run this job.",
     });
     expect(commands).toHaveLength(1);
   });
 
   it("says it cannot read the Template, and does not clone", async () => {
     const { commands, git } = fakeGit({ "ls-remote": 128 });
-    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
+    expect(await cloneTemplate({ ref: "main", into: "/tmp/t", git })).toEqual({
       ok: false,
       message:
         "Cannot read the Template (phmilk/reforged-ts-template), git ls-remote exit code 128. " +
@@ -61,38 +62,15 @@ describe("cloneTemplate", () => {
 
   it("reports a failed clone", async () => {
     const { git } = fakeGit({ clone: 128 });
-    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
+    expect(await cloneTemplate({ ref: "main", into: "/tmp/t", git })).toEqual({
       ok: false,
       message:
-        "git clone of the Template (phmilk/reforged-ts-template) at v1 into /tmp/t failed with exit code 128.",
+        "git clone of the Template (phmilk/reforged-ts-template) at main into /tmp/t failed with exit code 128.",
     });
   });
 });
 
 describe("release:template-clone", () => {
-  /** A pack output publishing reforged-ts at `version`. */
-  async function packOutput(version: string): Promise<string> {
-    const dir = await tempDir("pack");
-    const path = `packages/reforged-ts-${version}.tgz`;
-    const bytes = `tarball of reforged-ts@${version}`;
-    await writeText(dir, path, bytes);
-    const integrity = `sha256-${createHash("sha256").update(bytes).digest("base64")}`;
-    const entry = {
-      kind: "publish",
-      name: "reforged-ts",
-      version,
-      access: "public",
-      tag: "next",
-      tarball: { path, integrity },
-    };
-    await writeText(
-      dir,
-      "publish-plan.json",
-      JSON.stringify({ version: 1, plan: [[entry]] }),
-    );
-    return dir;
-  }
-
   async function runCli(args: string[], fake = fakeGit()) {
     let stdout = "";
     let stderr = "";
@@ -108,52 +86,70 @@ describe("release:template-clone", () => {
     return { status, stdout, stderr, cwd };
   }
 
-  it("clones the Template at the ref of the library major the plan publishes", async () => {
+  it.each([
+    ["master", "main"],
+    ["next", "next"],
+  ])(
+    "clones the Template at the Template ref of %s's channel, %s",
+    async (branch, ref) => {
+      const fake = fakeGit();
+      const result = await runCli(["--branch", branch, "--into", "t"], fake);
+      const into = join(result.cwd, "t");
+      expect(result).toMatchObject({
+        status: 0,
+        stdout: `Cloned phmilk/reforged-ts-template at ${ref} into ${into}.\n`,
+        stderr: "",
+      });
+      expect(fake.commands[1]?.args).toEqual([
+        "clone",
+        "--quiet",
+        "--depth",
+        "1",
+        "--branch",
+        ref,
+        URL,
+        into,
+      ]);
+      expect(fake.commands[0]?.env).toEqual(GIT_ENVIRONMENT);
+    },
+  );
+
+  it("refuses a branch with no channel, cloning nothing", async () => {
     const fake = fakeGit();
-    const packDir = await packOutput("2.0.0-alpha.3");
-    const result = await runCli(["--pack-dir", packDir, "--into", "t"], fake);
-    const into = join(result.cwd, "t");
-    expect(result).toMatchObject({
-      status: 0,
-      stdout: `Cloned phmilk/reforged-ts-template at v2 into ${into}.\n`,
-      stderr: "",
+    expect(
+      await runCli(["--branch", "feat/x", "--into", "t"], fake),
+    ).toMatchObject({
+      status: 1,
+      stderr: expect.stringContaining(
+        'A release runs from master or next, and "feat/x" is neither',
+      ) as unknown,
     });
-    expect(fake.commands[1]?.args).toEqual([
-      "clone",
-      "--quiet",
-      "--depth",
-      "1",
-      "--branch",
-      "v2",
-      URL,
-      into,
-    ]);
-    expect(fake.commands[0]?.env).toEqual(GIT_ENVIRONMENT);
+    expect(fake.commands).toEqual([]);
   });
 
-  it("exits 1 with the message of a missing prerequisite", async () => {
-    const packDir = await packOutput("1.0.0-alpha.0");
+  it("exits 1 with the message of a missing branch", async () => {
     expect(
       await runCli(
-        ["--pack-dir", packDir, "--into", "t"],
+        ["--branch", "next", "--into", "t"],
         fakeGit({ "ls-remote": 2 }),
       ),
     ).toMatchObject({
       status: 1,
-      stderr: expect.stringContaining("has no v1 tag or branch") as unknown,
+      stderr: expect.stringContaining("has no branch next") as unknown,
     });
   });
 
-  it("prints the usage and exits 2 without both folders", async () => {
+  it("prints the usage and exits 2 without a branch and a folder", async () => {
     for (const args of [
-      ["--pack-dir", "p"],
+      ["--branch", "master"],
       ["--into", "t"],
-      ["--pack-dir", "p", "--into"],
-      ["--pack-dir", "p", "--into", "t", "--pack-dir", "q"],
+      ["--branch", "master", "--into"],
+      ["--pack-dir", "p", "--into", "t"],
+      ["--branch", "master", "--into", "t", "--branch", "next"],
     ]) {
       expect(await runCli(args)).toMatchObject({
         status: 2,
-        stderr: "Usage: release:template-clone --pack-dir <dir> --into <dir>\n",
+        stderr: "Usage: release:template-clone --branch <name> --into <dir>\n",
       });
     }
   });

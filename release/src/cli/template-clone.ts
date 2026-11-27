@@ -1,10 +1,11 @@
 /**
- * `release:template-clone --pack-dir <dir> --into <dir>`: clones the
- * Template at the ref the release in the `changeset pack` output `<dir>` is
- * gated against (`v<major>` of the library version, as
- * `release:template-gate --print-ref` prints it) into a new folder, shallow.
- * The Template is public: git reads it without a token. Fails naming the
- * ref when the Template has no such ref, and saying so when git cannot read it.
+ * `release:template-clone --branch <name> --into <dir>`: clones the
+ * Template at the Template ref of the Release channel of the branch
+ * `<name>` the release runs from (`main` from `master`, `next` from `next`,
+ * ADR 0031) into a new folder, shallow. The Template is public: git reads
+ * it without a token. Refuses a branch with no channel, fails naming the
+ * ref when the Template has no such branch, and says so when git cannot
+ * read it.
  *
  * Clone outside the repository: a Template without its own
  * `pnpm-workspace.yaml` would otherwise be installed as part of this
@@ -13,8 +14,8 @@
  */
 import { resolve } from "node:path";
 import { runGit, type GitRunner } from "../git.js";
+import { readReleaseChannel } from "../release-channel.js";
 import { cloneTemplate, TEMPLATE_REPOSITORY } from "../template-clone.js";
-import { releaseTemplateRef } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
@@ -24,12 +25,12 @@ import {
   type Output,
 } from "./common.js";
 
-const USAGE = "Usage: release:template-clone --pack-dir <dir> --into <dir>\n";
+const USAGE = "Usage: release:template-clone --branch <name> --into <dir>\n";
 
 export interface Context {
   /** The folder relative paths resolve against. */
   cwd: string;
-  /** The workspace, for the library version when the plan lacks it. */
+  /** The workspace, whose packages the Release channel reads. */
   root: string;
   git: GitRunner;
 }
@@ -46,8 +47,8 @@ export async function main(
 ): Promise<number> {
   const options = parseOptions(
     args,
-    ["--pack-dir", "--into"],
-    ["--pack-dir", "--into"],
+    ["--branch", "--into"],
+    ["--branch", "--into"],
   );
   if (options === undefined) {
     output.stderr(USAGE);
@@ -56,8 +57,8 @@ export async function main(
   const into = resolve(context.cwd, options["--into"]);
 
   try {
-    const ref = await releaseTemplateRef(
-      resolve(context.cwd, options["--pack-dir"]),
+    const { templateRef: ref } = await readReleaseChannel(
+      options["--branch"],
       context.root,
     );
     const result = await cloneTemplate({
