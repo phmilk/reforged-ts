@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-ref.js";
 import { readReleaseChannel } from "../src/release-channel.js";
 import { TEMPLATE_REPOSITORY } from "../src/template-clone.js";
+import { TEMPLATE_REF_MODULE } from "../src/template-ref.js";
 import { writeText, writeWorkspace } from "./support/workspace.js";
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
@@ -65,7 +66,7 @@ describe("release:template-ref", () => {
     if (built !== null) {
       await writeText(
         root,
-        "packages/create-reforged-map/dist/template.js",
+        `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`,
         built,
       );
     }
@@ -74,7 +75,7 @@ describe("release:template-ref", () => {
 
   const builtOutput = (root: string) =>
     readFile(
-      join(root, "packages/create-reforged-map/dist/template.js"),
+      join(root, `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`),
       "utf8",
     );
 
@@ -129,7 +130,7 @@ describe("release:template-ref", () => {
     expect(await runCli(["--branch", "master"], root)).toMatchObject({
       status: 1,
       stderr: expect.stringContaining(
-        `${join(root, "packages/create-reforged-map/dist/template.js")} cannot be read: build create-reforged-map first (pnpm build).`,
+        `${join(root, `packages/create-reforged-map/${TEMPLATE_REF_MODULE}`)} cannot be read: build create-reforged-map first (pnpm build).`,
       ) as unknown,
     });
   });

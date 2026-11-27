@@ -8,6 +8,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { CREATION_PACKAGE } from "./packages.js";
 import { commandLine, type Command, type Runner } from "./process.js";
+import type { ReleaseChannel } from "./release-channel.js";
 import { unpackTarball } from "./tarball.js";
 import {
   exitFailure,
@@ -56,7 +57,7 @@ export interface CreationStepInput {
    * The Template ref of the release's channel, which the plan's Creation CLI
    * must download.
    */
-  templateRef: string;
+  templateRef: ReleaseChannel["templateRef"];
   /**
    * An empty folder: the Template's archive, the unpacked Creation CLI and
    * the Map project it creates.
@@ -208,7 +209,7 @@ async function unpackBinary(tarball: string, folder: string): Promise<string> {
 async function checkTemplateRef(
   tarball: string,
   folder: string,
-  templateRef: string,
+  templateRef: ReleaseChannel["templateRef"],
 ): Promise<void> {
   const label = `The tarball of ${CREATION_PACKAGE} (${tarball})`;
   const path = join(folder, "package", TEMPLATE_REF_MODULE);

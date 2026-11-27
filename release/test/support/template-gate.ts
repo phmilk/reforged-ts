@@ -9,10 +9,12 @@ import { dirname, join, posix, sep } from "node:path";
 import { parse } from "yaml";
 import { CREATED_PROJECT } from "../../src/creation-step.js";
 import { commandLine, type Command, type Runner } from "../../src/process.js";
+import type { ReleaseChannel } from "../../src/release-channel.js";
 import {
   runTemplateGate,
   type TemplateGateResult,
 } from "../../src/template-gate.js";
+import { TEMPLATE_REF_MODULE } from "../../src/template-ref.js";
 import { packageTarball } from "./tarball.js";
 import { tempDir, writeText, writeWorkspace } from "./workspace.js";
 
@@ -50,7 +52,7 @@ export const cliTarball = (version: string, templateRef = "main") =>
       bin: { [CLI]: "./dist/cli.js" },
     }),
     "dist/cli.js": "#!/usr/bin/env node\n",
-    "dist/template.js": `export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";\nexport const TEMPLATE_REF = "${templateRef}";\n`,
+    [TEMPLATE_REF_MODULE]: `export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";\nexport const TEMPLATE_REF = "${templateRef}";\n`,
   });
 
 /**
@@ -290,7 +292,7 @@ export async function gate(
   template: string,
   packDir: string,
   run: Runner = fakeRunner().run,
-  templateRef = "main",
+  templateRef: ReleaseChannel["templateRef"] = "main",
 ): Promise<{ result: TemplateGateResult; root: string; scratch: string }> {
   const root = await writeWorkspace();
   const scratch = await tempDir("scratch");

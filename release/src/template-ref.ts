@@ -27,16 +27,16 @@ export class TemplateRefError extends Error {
 }
 
 /**
- * The Template ref the Creation CLI's module `text`, read from `from`,
+ * The Template ref the Creation CLI's module `text`, read from `path`,
  * downloads. Throws a `TemplateRefError` when the module does not declare
  * it exactly once.
  */
-export function readTemplateRef(text: string, from: string): string {
+export function readTemplateRef(text: string, path: string): string {
   const refs = Array.from(text.matchAll(DECLARATION), ([, ref]) => ref);
   const [ref] = refs;
   if (refs.length !== 1) {
     throw new TemplateRefError(
-      `${from} does not declare \`export const TEMPLATE_REF = "…";\` once: ` +
+      `${path} does not declare \`export const TEMPLATE_REF = "…";\` once: ` +
         `it is not the build output of ${CREATION_PACKAGE}'s src/template.ts.`,
     );
   }
@@ -45,15 +45,14 @@ export function readTemplateRef(text: string, from: string): string {
 
 /**
  * Writes `ref` as the Template ref of the Creation CLI's build output in
- * the workspace at `root`, and resolves with the module it wrote. Throws a
- * `TemplateRefError` when the workspace has no Creation CLI, when it is not
- * built, or when its module does not declare the ref exactly once, writing
- * nothing.
+ * the workspace at `root`. Throws a `TemplateRefError` when the workspace
+ * has no Creation CLI, when it is not built, or when its module does not
+ * declare the ref exactly once, writing nothing.
  */
 export async function writeTemplateRef(
   root: string,
   ref: string,
-): Promise<string> {
+): Promise<void> {
   const cli = (await readPublishablePackages(root)).find(
     ({ name }) => name === CREATION_PACKAGE,
   );
@@ -78,5 +77,4 @@ export async function writeTemplateRef(
       `export const TEMPLATE_REF = ${JSON.stringify(ref)};`,
     ),
   );
-  return path;
 }

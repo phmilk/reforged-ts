@@ -16,6 +16,7 @@ import { creationFailure } from "./creation-step.js";
 import { CREATION_PACKAGE } from "./packages.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
+import type { ReleaseChannel } from "./release-channel.js";
 import {
   exitFailure,
   TemplateGateError,
@@ -134,7 +135,7 @@ export interface TemplateGateInput {
    * The Template ref of the release's channel, which the plan's Creation
    * CLI must download.
    */
-  templateRef: string;
+  templateRef: ReleaseChannel["templateRef"];
   /**
    * An empty folder for the creation step: the Template's archive, the
    * unpacked Creation CLI and the Map project it creates.
@@ -165,8 +166,8 @@ type Manifest = Record<string, unknown>;
  * the first script the Template lacks, and names it. Throws a
  * `TemplateGateError` when the pack output, the checkout or the Creation
  * CLI's tarball cannot be read, or when the plan's Creation CLI downloads
- * another Template ref than `templateRef`. The checkout keeps the overrides and any
- * lockfile the install writes: gate a throwaway clone.
+ * another Template ref than `templateRef`. The checkout keeps the overrides
+ * and any lockfile the install writes: gate a throwaway clone.
  */
 export async function runTemplateGate(
   input: TemplateGateInput,
