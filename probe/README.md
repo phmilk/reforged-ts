@@ -88,7 +88,7 @@ A run with two clients is a human's ([What stays for a human](#what-stays-for-a-
 
 #### Labelled runs
 
-One build serves several games, `player-leave` once per way of leaving (the menu, Alt+F4, the network cut), when each game writes a file of its own. The Probe calls `p.rename(<label>)` ([Writing a Probe](#writing-a-probe)) and writes `<probe>-<label>.txt` from then on, every record before included; `probe:read <probe> --label <label>` reads that file, and refuses a label outside lower-case `a` to `z`, `0` to `9` and `-`, or an empty one. Its status line names the label: `finished: Probe player-leave, label menu, run …`.
+One build serves several games, `player-leave` once per way of leaving (the menu, Alt+F4, the network cut, the killed process), when each game writes a file of its own. The Probe calls `p.rename(<label>)` ([Writing a Probe](#writing-a-probe)) and writes `<probe>-<label>.txt` from then on, every record before included; `probe:read <probe> --label <label>` reads that file, and refuses a label outside lower-case `a` to `z`, `0` to `9` and `-`, or an empty one. Its status line names the label: `finished: Probe player-leave, label menu, run …`.
 
 `player-leave` takes its label from chat. At its start it shows, for two minutes:
 
@@ -96,7 +96,7 @@ One build serves several games, `player-leave` once per way of leaving (the menu
 Para nomear este teste, digite no chat: teste <nome> (letras, números ou -). Sem nome, o resultado vai para player-leave.txt.
 ```
 
-Before the leave, a player types `teste <name>`, `teste menu` for instance. The chat string is synced, so every client takes the same label: the name in lower case, each character outside `a` to `z`, `0` to `9` and `-` turned into `-`, the spaces around it dropped, cut at 32 characters. The run records `LABEL name=<label> player=<slot> t=<seconds>`, checkpoints into `player-leave-<label>.txt` and shows `Teste nomeado: <label>. O resultado vai para player-leave-<label>.txt.`. The first label taken wins: a later `teste` message shows `O nome deste teste já é <label>: mensagem ignorada.`, an empty name `Nome vazio recusado: digite teste <nome>, com letras, números ou -.`, and one typed once the run has ended `O teste já terminou: o nome não foi aplicado.`. A run with no label writes `player-leave.txt`, which also holds the start of every labelled run, up to its label: label each game meant to be kept.
+Before the leave, a player types `teste <name>`, `teste menu` for instance. The chat string is synced, so every client takes the same label: the name in lower case, each character outside `a` to `z`, `0` to `9` and `-` turned into `-`, the spaces around it dropped, cut at 32 characters. The run records `LABEL name=<label> player=<slot> t=<seconds>`, checkpoints into `player-leave-<label>.txt` and shows `Teste nomeado: <label>. O resultado vai para player-leave-<label>.txt.`. The first label taken wins: a later `teste` message shows `O nome deste teste já é <label>: mensagem ignorada.`, an empty name `Nome vazio recusado: digite teste <nome>, com letras, números ou -.`, and one typed once the run has ended `O teste já terminou: o nome não foi aplicado.`. A run with no label writes `player-leave.txt`, which also holds the start of every labelled run, up to its label: label each game meant to be kept, each with a name of its own, since a label used again rewrites its file.
 
 To read each game, on the host's machine:
 

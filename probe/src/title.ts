@@ -48,18 +48,29 @@ function nameField(w3i: Uint8Array): {
   };
 }
 
+/**
+ * The string `n` of a `war3map.wts`, in four groups: the line break before
+ * it, its head (its `STRING n` line, any comment lines and its `{` line),
+ * its text, and its closing `}` line.
+ */
+function stringBlock(n: number): RegExp {
+  return new RegExp(
+    `(^|\\n)(\\uFEFF?STRING ${String(n)}[ \\t]*\\r?\\n(?:[^{\\n]*\\r?\\n)*?\\{\\r?\\n)([\\s\\S]*?)(\\r?\\n\\})`,
+  );
+}
+
 /** The string `n` of `wts` replaced by `title`; undefined when `wts` has no string `n`. */
 function writeString(
   wts: string,
   n: number,
   title: string,
 ): string | undefined {
-  const block = new RegExp(
-    `(^|\\n)(\\uFEFF?STRING ${String(n)}[ \\t]*\\r?\\n(?:[^{\\n]*\\r?\\n)*?\\{\\r?\\n)[\\s\\S]*?(\\r?\\n\\})`,
-  );
+  const block = stringBlock(n);
   if (!block.test(wts)) return undefined;
-  return wts.replace(block, (_all, lead: string, head: string, tail: string) =>
-    [lead, head, title, tail].join(""),
+  return wts.replace(
+    block,
+    (_all, lead: string, head: string, _text: string, tail: string) =>
+      [lead, head, title, tail].join(""),
   );
 }
 
@@ -94,8 +105,5 @@ export function readTitle(w3i: Uint8Array, wts: string | undefined): string {
   const name = nameField(w3i);
   const pointer = TRIGSTR.exec(name.text);
   if (pointer === null || wts === undefined) return name.text;
-  const block = new RegExp(
-    `(?:^|\\n)\\uFEFF?STRING ${String(Number(pointer[1]))}[ \\t]*\\r?\\n(?:[^{\\n]*\\r?\\n)*?\\{\\r?\\n([\\s\\S]*?)\\r?\\n\\}`,
-  ).exec(wts);
-  return block?.[1] ?? name.text;
+  return stringBlock(Number(pointer[1])).exec(wts)?.[3] ?? name.text;
 }

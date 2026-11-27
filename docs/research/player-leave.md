@@ -47,8 +47,14 @@ On the host's client, every game:
 
 The leaver's files hold the same records as the host's, field for field, up to where they end. In `menu` they end with the `LEAVE` record and the handler's read after its work, both reading `slot1=PLAYING`. In the three others they end before the leave, at the leaver's last checkpoint. `probe:read` reports them as `crashed`: the client stopped without the run's `END` line.
 
+## What the Shipped stubs copy
+
+`__stub_leave_player`, which `game.leave` of `reforged-test/map` calls, dispatches `EVENT_PLAYER_LEAVE` to the Triggers registered for the leaver, `GetTriggerPlayer` answering it and `GetPlayerSlotState` still `PLAYER_SLOT_STATE_PLAYING`, then writes the slot as `PLAYER_SLOT_STATE_LEFT`. It writes nothing else: the controller, the units and the selection stay, and no defeat or victory fires.
+
+Where they differ: the harness has no timer between the handlers and the write, so the slot reads left on the line after `game.leave`, where the game was seen to read it left at a timer of timeout 0. A handler's error still writes the slot, and `game.leave`, `game.chat` and `game.select` refuse the leaver inside its own leave's handlers: both are the harness's choices, which no run measured.
+
 ## Not measured
 
-- What the screens showed: the host's waiting dialog in the network cut, and how long the game waited before the leave. The network cut's leave came 25 seconds of game time after the selection, against 5 to 6 in the other games.
+- What the screens showed: the host's waiting dialog in the network cut, and how long the game waited before the leave. The time from the selection to the leave, 4.82 to 25.04 seconds of game time, mixes the human's own pace with the game's detection, so it measures neither.
 - A game of more than two players, a leaver on a team, and a game with the melee rules, where `MeleeInitVictoryDefeat` reacts to a leave.
 - Whether the slot reads `PLAYER_SLOT_STATE_LEFT` before the timer of timeout 0: no read sits between the end of the handler and that timer.

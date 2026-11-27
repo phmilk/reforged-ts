@@ -200,6 +200,7 @@ describe("game.leave, on reforged-test/map", () => {
         "a player who is not playing: an empty slot",
         "a player who already left",
         "after leaving, that player's chat and select, its selection kept",
+        "a player leaving, in a handler of its leave, though its slot still reads playing",
         "what is not a player: a bare number, nothing, a unit, a Handle of newHandle",
         "names the test's line, not the harness's",
       ),

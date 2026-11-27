@@ -468,9 +468,12 @@ export interface Game {
    *   saw the game do, whichever way the player left: no defeat, no
    *   victory, and the player's units, its controller (`MAP_CONTROL_USER`)
    *   and its selection stay.
-   * - A handler's error leaves the slot written.
-   * - After it, the player is not playing: `game.chat`, `game.select` and
-   *   `game.leave` refuse it.
+   * - A handler's error leaves the slot written, the harness's choice: no
+   *   Probe run saw a handler throw on a leave.
+   * - From its first handler on, the player is not playing for the Game
+   *   actions, though its slot still reads playing: `game.chat`,
+   *   `game.select` and `game.leave` refuse it, so a handler cannot make
+   *   it leave twice, which the game never does.
    * - A handler's error is thrown out of the action when nothing caught it.
    * @example Saying who left
    * {@includeCode ../../examples/leave.test.ts}
@@ -478,10 +481,11 @@ export interface Game {
    * `.handle`, as a `MapPlayer` of the library.
    * @throws When `player` is not a player the Test game made:
    * `game.leave: expected a player of the Test game, its Handle or anything with .handle, such as Player(0)`.
-   * @throws When `player` is not playing, an empty slot or a player who
-   * already left:
-   * `game.leave: Player(2) is not playing: its slot is empty`, or
-   * `game.leave: Player(1) is not playing: it left the game`.
+   * @throws When `player` is not playing, an empty slot, a player who
+   * already left or one leaving, in a handler of its leave:
+   * `game.leave: Player(2) is not playing: its slot is empty`,
+   * `game.leave: Player(1) is not playing: it left the game`, or
+   * `game.leave: Player(1) is not playing: it is leaving the game`.
    */
   leave(player: player | { readonly handle: player }): void;
   /**
@@ -758,8 +762,20 @@ function gamePlayer(action: string, value: unknown, level: number): player {
  * not playing does nothing in the game, so it is an error, raised at the
  * line that called the action.
  */
+/**
+ * The players whose `game.leave` is dispatching their leave: their slot
+ * still reads playing, but they are no longer a player the actions take.
+ */
+const leavingPlayers = new LuaSet<player>();
+
 function playingPlayer(action: string, value: unknown): player {
   const who = gamePlayer(action, value, 4);
+  if (leavingPlayers.has(who)) {
+    error(
+      `game.${action}: ${playerName(who)} is not playing: it is leaving the game`,
+      3,
+    );
+  }
   const state = __stub_slot_state(who);
   if (state !== PLAYER_SLOT_STATE_PLAYING) {
     const why =
@@ -834,7 +850,12 @@ function deselectUnit(
 
 function leave(player: player | { readonly handle: player }): void {
   const leaving = playingPlayer("leave", player);
-  __stub_leave_player(leaving);
+  leavingPlayers.add(leaving);
+  try {
+    __stub_leave_player(leaving);
+  } finally {
+    leavingPlayers.delete(leaving);
+  }
 }
 
 // The response each event family derives its subject from.

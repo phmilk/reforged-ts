@@ -118,6 +118,29 @@ describe("game.leave refuses what the game refuses", function()
     game.select(Player(0), unit)
   end)
 
+  it("a player leaving, in a handler of its leave, though its slot still reads playing", function()
+    local game = startGame()
+    local unit = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
+    local errors, fired = {}, 0
+    local trigger = CreateTrigger()
+    TriggerRegisterPlayerEvent(trigger, Player(1), EVENT_PLAYER_LEAVE)
+    TriggerAddAction(trigger, function()
+      fired = fired + 1
+      errors.slot = GetPlayerSlotState(Player(1))
+      errors.leave = select(2, pcall(game.leave, Player(1)))
+      errors.chat = select(2, pcall(game.chat, Player(1), "-go"))
+      errors.select = select(2, pcall(game.select, Player(1), unit))
+    end)
+    game.leave(Player(1))
+    expect(fired).toBe(1)
+    expect(errors.slot).toBe(PLAYER_SLOT_STATE_PLAYING)
+    expect(errors.leave).toContain("game.leave: Player(1) is not playing: it is leaving the game")
+    expect(errors.chat).toContain("game.chat: Player(1) is not playing: it is leaving the game")
+    expect(errors.select).toContain("game.select: Player(1) is not playing: it is leaving the game")
+    -- The other player goes on, in the handler and after it.
+    game.chat(Player(0), "-go")
+  end)
+
   it("what is not a player: a bare number, nothing, a unit, a Handle of newHandle", function()
     local game = startGame()
     local NOT_A_PLAYER =
