@@ -287,6 +287,13 @@ export interface DisplayedText {
  * gives, writes the state its name states and nothing derived, refuses what
  * the game refuses with an error, and returns nothing. There is no
  * `createUnit`: a test creates its units with the map's own API.
+ *
+ * A Caught error, an error the library caught from a Map project's
+ * callback, fails the test at its end, after its last `afterEach`, unless
+ * {@link Game.expectError} expected it; the failure lists each before the
+ * test's own failure, when it has one, and the game goes on meanwhile, as
+ * in the game. One raised during `startGame()`, a `beforeEach` or an
+ * `afterEach` counts for the test too.
  * @example What the players see when the game starts
  * {@includeCode ../../examples/welcome.test.ts}
  * @noSelf
@@ -432,6 +439,30 @@ export interface Game {
    * `game.setLocalPlayer: expected a player of the Test game, its Handle or anything with .handle, such as Player(1)`.
    */
   setLocalPlayer(player: player | { readonly handle: player }): void;
+  /**
+   * Expects the Caught errors so far whose message contains `text`: an
+   * error the library caught from a Map project's callback, which
+   * otherwise fails the test at its end. Call it after the act, in a test
+   * of a map meant to report an error.
+   * @remarks
+   * - It marks expected every Caught error not yet expected whose message
+   *   holds `text`, as plain text, not a pattern, its repeats included. A
+   *   Caught error after the call needs another call.
+   * - A Caught error is one the library reports through
+   *   `__reforged_caught_error`: of an Init stage's callback, and, in Dev
+   *   mode, of a protected callback or of `MapPlayer.runLocal`. The Test
+   *   game forces no Dev mode: with Dev mode off a handler's error is not
+   *   caught, and it fails the test at once, thrown out of the Game action.
+   * - A warning the library prints is no Caught error, and fails nothing.
+   * @example A map whose Init stage's callback breaks
+   * {@includeCode ../../examples/expect-error.test.ts}
+   * @param text - A part of the message: `"attempt to index a nil value"`.
+   * @throws When no Caught error not yet expected holds `text`, naming it:
+   * `game.expectError: no Caught error not yet expected contains "attempt to index a nil value"`.
+   * @throws When `text` is not a string:
+   * `game.expectError: expected a part of a Caught error's message, a string`.
+   */
+  expectError(text: string): void;
 }
 
 /** What the display Natives showed, as `game.displayed` lists it. */
@@ -611,15 +642,117 @@ function fire(
   if (!ok) error(err, 0);
 }
 
+/** One Caught error the library reported in this Test game. */
+interface CaughtError {
+  readonly origin: string;
+  readonly message: string;
+  /** Set by game.expectError. */
+  expected: boolean;
+}
+
+/** Every Caught error of the Test game, oldest first. */
+const caughtErrors: CaughtError[] = [];
+
+/** Keeps one Caught error, as the library reports it. */
+function hearCaughtError(origin: unknown, message: unknown): void {
+  table.insert(caughtErrors, {
+    origin: tostring(origin),
+    message: tostring(message),
+    expected: false,
+  });
+}
+
+// The contract with the library (ADR 0028): it calls this global on every
+// Caught error, the repeats it only counts included, and goes on as in the
+// game. Assigned raw, since the library reads it raw: a metatable a map
+// set on _G sees neither.
+rawset(
+  _G as unknown as Record<string, unknown>,
+  "__reforged_caught_error",
+  hearCaughtError,
+);
+
+function expectError(text: string): void {
+  if (type(text) !== "string") {
+    error(
+      "game.expectError: expected a part of a Caught error's message, a string",
+      2,
+    );
+  }
+  let found = false;
+  for (const caught of caughtErrors) {
+    if (caught.expected) continue;
+    const [start] = string.find(caught.message, text, 1, true);
+    if (start !== undefined) {
+      caught.expected = true;
+      found = true;
+    }
+  }
+  if (!found) {
+    error(
+      `game.expectError: no Caught error not yet expected contains "${text}"`,
+      2,
+    );
+  }
+}
+
+/** One line of the Caught errors left unexpected, with its repeats. */
+interface CaughtRow {
+  readonly line: string;
+  count: number;
+}
+
+/**
+ * The Caught errors left unexpected, one line each, a repeat counted
+ * `×N` on the line of its first; undefined when there is none. The runner
+ * reads it at the end of the test, after the last afterEach.
+ */
+function unexpectedCaughtErrors(): string | undefined {
+  const rows: CaughtRow[] = [];
+  const byLine: Record<string, CaughtRow | undefined> = {};
+  for (const caught of caughtErrors) {
+    if (caught.expected) continue;
+    const line = `${caught.origin} failed: ${caught.message}`;
+    const row = byLine[line];
+    if (row === undefined) {
+      const added = { line, count: 1 };
+      byLine[line] = added;
+      table.insert(rows, added);
+    } else {
+      row.count++;
+    }
+  }
+  if (rows.length === 0) return undefined;
+  const lines = [
+    rows.length === 1
+      ? "The map's code raised an error the library caught, and the test did not expect it with game.expectError:"
+      : "The map's code raised errors the library caught, and the test did not expect them with game.expectError:",
+  ];
+  for (const row of rows) {
+    table.insert(
+      lines,
+      row.count === 1
+        ? `  ${row.line}`
+        : `  ${row.line} ×${tostring(row.count)}`,
+    );
+  }
+  return table.concat(lines, "\n");
+}
+
+__reforged_test_caught = unexpectedCaughtErrors;
+
 // printed and displayed are read at each access, so each read is a copy and
 // the map's later lines show.
-const game = setmetatable({ advanceTime, kill, fire, setLocalPlayer } as Game, {
-  __index: (_: Game, key: unknown): unknown => {
-    if (key === "printed") return __stub_printed();
-    if (key === "displayed") return displayed();
-    return undefined;
+const game = setmetatable(
+  { advanceTime, kill, fire, setLocalPlayer, expectError } as Game,
+  {
+    __index: (_: Game, key: unknown): unknown => {
+      if (key === "printed") return __stub_printed();
+      if (key === "displayed") return displayed();
+      return undefined;
+    },
   },
-});
+);
 
 const globals = _G as unknown as Record<string, (() => void) | undefined>;
 

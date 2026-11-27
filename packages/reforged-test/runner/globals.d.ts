@@ -18,6 +18,13 @@ declare let __reforged_test_run: ((position?: string) => string) | undefined;
 declare let __reforged_test_isolated: boolean | undefined;
 
 /**
+ * Set by reforged-test/map: answers, at the end of a test, after its last
+ * `afterEach` and the cleanups, the message listing the Caught errors the
+ * test left unexpected, or undefined when there is none.
+ */
+declare let __reforged_test_caught: (() => string | undefined) | undefined;
+
+/**
  * Raises any value as the error, as Lua does; lua-types declares only a
  * string message. The runner raises a table to tell an unmet expectation
  * from any other error.
