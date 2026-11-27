@@ -10,8 +10,10 @@ The Shipped stubs never fired anything on their own: a test found the Trigger it
 The harness simulates what the game would do, and only on the test's order. Nothing happens on its own: no timer expires while the test is not looking, no event fires because a state changed. When the test orders something, the harness does what the game would do for it, whole:
 
 - **The Event dispatch.** One event, fired with `game.fire(event, context)` or by a Game action, reaches every Trigger registered for it, as the game would: in registration order, a disabled or destroyed Trigger skipped, the registration's filter evaluated, each Trigger's condition before its action and both before the next Trigger. `game.fire` derives the subject from the Firing context by the event's family (the owner of `GetTriggerUnit` for a `playerunitevent`, `GetTriggerUnit` for a `unitevent`, `GetTriggerPlayer` for a `playerevent`, none for a `gameevent`) and writes no state.
-- **The Dispatching Natives.** A Native the map calls fires its event inside the call where a Probe showed that the game fires it synchronously (`UnitDamageTarget`, `KillUnit`), and fires nothing where the game fires nothing.
-- **The Game clock.** Game time is the Test game's own and starts at 0; only `game.advanceTime(seconds)` moves it, firing the timers and the timer events that expire inside the window, in the order of their instants.
+- **The Dispatching Natives.** A Native the map calls fires its event inside the call where a Probe showed that the game fires it synchronously (`UnitDamageTarget`, `KillUnit`), and fires nothing where the game fires nothing ([Which unit Natives fire their event inside the call](../research/unit-event-timing.md), [Five facts of the Dispatching Natives](../research/dispatching-natives.md)).
+- **The Game clock.** Game time is the Test game's own and starts at 0; only `game.advanceTime(seconds)` moves it, firing the timers and the timer events that expire inside the window, in the order of their instants. A timer reads and fires as the Probes measured the game ([What a paused, an expired and a zero-period timer answer](../research/timer-answers.md), [What ResumeTimer does to a timer never started, restarted or paused again](../research/timer-resume-cases.md)).
+
+Every test framework surveyed for the map's test API makes an event happen by an action named after it and moves time by hand ([How test libraries phrase a test](../research/test-phrasing.md)).
 
 ## Considered options
 
