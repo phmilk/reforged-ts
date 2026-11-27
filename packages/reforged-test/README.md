@@ -44,6 +44,8 @@ A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative
 
 `stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. The same command generates `stubs/unstubbed.lua`, the shipped stub file that makes a Native without a Stub throw a message naming `stubNative`. `test/natives.test.ts` is the Drift check of both: it fails, naming the command, when a committed file is not what the generator emits, as on a new Patch.
 
+An error the library caught from the map's code, a Caught error, fails the test at its end unless the test expected it with `game.expectError(text)`; with Dev mode off, which the Test game does not force on, a handler's error is not caught and fails the test at once. [The Caught error contract](#the-caught-error-contract) is how the library tells the harness.
+
 `it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only` are Vitest's: the glue registers each in Vitest's native form, so a test skipped, todo or out of focus opens no Test game, and a forgotten `only` fails the run under `CI`. `only` reaches every Lua test of the Map project, not its file's only.
 
 A helper a map's test needs that has no import in `reforged-test/map` is a gap of the package: [file it as an issue](https://github.com/phmilk/reforged-ts/issues/new), rather than reaching for the helpers of the part below. Sync, the preload file and `os.clock` have no form in `reforged-test/map`.
@@ -211,6 +213,14 @@ The runner and the glue share nothing but this JSON string, returned by the glob
 In a file that loads `reforged-test/map`, the call without an argument answers the list of the tests, `{"isolated":true,"tests":[{"name":"adds","suite":["arithmetic"]}]}`, each with its `mode` and `suiteModes` when it has them, and the glue calls the global again in a fresh state for each test, with its position counted from 0 as a string (`"2"`); that call answers the form above with the one test's result, or with an empty `tests` when the file registered no test there.
 
 The runner writes it with its own encoder, with keys sorted, because the game's Lua has no JSON library. The glue rejects results of any other shape.
+
+### The Caught error contract
+
+`reforged-test` and `reforged-ts` depend on nothing of each other: the global `__reforged_caught_error(origin, message)` is the whole contract between them ([ADR 0028](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0028-the-library-reports-a-caught-error-to-a-global-the-harness-defines.md)).
+
+- **The library calls it.** Each of the library's places that catch an error of the map's code (an Init stage's callback, and in Dev mode a protected callback or `MapPlayer.runLocal`) calls it on every failure, a repeat the library only counts included, after printing its line `reforged-ts: <origin> failed: <message>`, and goes on as in the game. It reads the global raw, and only when it is defined: the game defines none, and the Typings do not declare it. A warning does not go through it.
+- **The harness defines it.** `reforged-test/map` assigns it raw on `_G` in every Test game, when it loads. It keeps each call, `origin` and `message` as strings. At the end of the test, after the last `afterEach` and the cleanups a `beforeEach` returned, the runner fails the test for every one `game.expectError` did not expect, listed as `<origin> failed: <message>`, `×N` after a repeat, before the test's own failure when it has one. A file on `reforged-test/lua` alone defines no such global, so the library only prints there.
+- **What it holds.** `origin` is where the callback was registered or ran, `Timer#1048577 Timer.start` or `globals callback "spawn"`; `message` is the Lua error text, as `pcall` returned it. Renaming the global, or changing what its two arguments hold, is a breaking change of both packages.
 
 ### Stubs
 

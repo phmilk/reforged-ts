@@ -24,7 +24,10 @@
 // and the glue loads the file again in a fresh state for each test, calling
 // `__reforged_test_run("<position>")`, which runs that one test (the
 // position counts from 0) and answers `{"tests":[<its result>]}`, or
-// `{"tests":[]}` when the file registered no test there.
+// `{"tests":[]}` when the file registered no test there. The map entry
+// point also sets `__reforged_test_caught`, which the runner calls at the
+// end of each test, after the cleanups: the Caught errors it lists fail the
+// test, their lines before its own message.
 //
 // A test registered with `it.skip`, `it.only` or `it.todo` carries its
 // `"mode"` ("skip", "only" or "todo"), and one inside a `describe.skip` or
@@ -1499,7 +1502,8 @@ function withModes<T extends Listed>(block: Block, result: T): T {
  * Runs one test between its hooks, as Vitest does: the `beforeEach` hooks
  * outer to inner, the body unless one of them threw, then the `afterEach`
  * hooks inner to outer and the cleanups whatever happened. The first error
- * is the result.
+ * is the result; in a Test game, the Caught errors the test left
+ * unexpected fail it too, listed before that error.
  */
 function runBody(block: Block): Result {
   // An object, not two locals, so the checker sees the closure's writes.
@@ -1521,16 +1525,30 @@ function runBody(block: Block): Result {
   if (runBeforeEach(chain, attempt, cleanups)) attempt(block.fn);
   runAfterEach(chain, attempt, cleanups);
   running = false;
+  // The Caught errors the test left unexpected, read after the last
+  // afterEach and the cleanups, which may still expect one; listed before
+  // the test's own failure, the cause first.
+  const caught = __reforged_test_caught?.();
   if (!first.failed) {
-    return { suite: block.suite, name: block.name, status: "pass" };
+    if (caught === undefined) {
+      return { suite: block.suite, name: block.name, status: "pass" };
+    }
+    return {
+      suite: block.suite,
+      name: block.name,
+      status: "error",
+      message: caught,
+    };
   }
+  const withCaught = (message: string): string =>
+    caught === undefined ? message : `${caught}\n\n${message}`;
   const failure = first.thrown as Failure | undefined;
   if (type(failure) === "table" && failure?.reforgedTestFailure === true) {
     return {
       suite: block.suite,
       name: block.name,
       status: "fail",
-      message: failure.message,
+      message: withCaught(failure.message),
       actual: failure.actual,
       expected: failure.expected,
     };
@@ -1539,7 +1557,7 @@ function runBody(block: Block): Result {
     suite: block.suite,
     name: block.name,
     status: "error",
-    message: errorMessage(first.thrown),
+    message: withCaught(errorMessage(first.thrown)),
   };
 }
 
