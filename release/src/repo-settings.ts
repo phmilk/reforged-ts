@@ -120,7 +120,7 @@ export const LABELS: readonly (Label & { owned: boolean })[] = [
   },
   {
     name: "probe",
-    color: "c5def5",
+    color: "ff8c00",
     description:
       "Its work includes a Probe run: a human may have to log in to Battle.net",
     owned: true,
