@@ -466,7 +466,7 @@ describe("a Caught error fails the test, unless game.expectError expected it", (
     return tests
       .filter((test) => test.suite.join(" > ") === names.join(" > "))
       .map((test) => {
-        const rest: Partial<LuaTestResult> = { ...test };
+        const rest: Record<string, unknown> = { ...test };
         delete rest.suite;
         return rest as Omit<LuaTestResult, "suite">;
       });
