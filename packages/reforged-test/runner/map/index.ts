@@ -388,6 +388,38 @@ export interface Game {
     context: FiringContext,
   ): void;
   /**
+   * Moves the Game clock `seconds` forward: every timer that expires inside
+   * the window fires, the library's own included, and so does every Trigger
+   * of `TriggerRegisterTimerEvent`. Nothing expires on its own, so game
+   * time stands at 0 until the first call.
+   * @remarks
+   * - The expiries run in the order of their instants, ties in the order
+   *   the timers were started, and the clock stands at each instant while
+   *   its handler runs: a timer a handler starts fires in the same advance
+   *   when it expires inside the window. A periodic timer fires once per
+   *   period, without drift. The clock ends at its start plus `seconds`.
+   * - A one-shot timer of timeout 0 fires on the next advance,
+   *   `game.advanceTime(0)` included, never inside `TimerStart`. A periodic
+   *   timer of timeout 0 fires every 0.0001 s, as in the game.
+   * - A destroyed or paused timer is skipped, and a new `TimerStart` drops
+   *   the expiry the timer had pending.
+   * - An error a handler throws leaves the advance, the clock stopped at
+   *   that instant.
+   * - It moves timers and nothing else: no wait, no cooldown, no buff, and
+   *   not `os.clock`.
+   * @example A countdown, without finding its timer
+   * {@includeCode ../../examples/advance-time.test.ts}
+   * @param seconds - How far to move game time, in seconds, 0 or more.
+   * @throws When `seconds` is negative, endless or not a number:
+   * `game.advanceTime: expected a number of seconds, 0 or more, and got -1`.
+   * @throws When a handler the advance runs calls it:
+   * `an advance is running: a handler cannot move the Game clock`.
+   * @throws When more than 100000 timers expire without the clock moving,
+   * as when a handler starts a timer of timeout 0 every time it runs:
+   * `the Game clock ran more than 100000 expiries at one instant, 1.0 s: a handler that starts a timer of timeout 0 every time it runs never lets the advance end`.
+   */
+  advanceTime(seconds: number): void;
+  /**
    * Makes `player` the local player from now on: `GetLocalPlayer` answers
    * it, so the code under test runs as that player's client. The local
    * player is `Player(0)` until the first call. It may be called more than
@@ -466,6 +498,21 @@ function setLocalPlayer(player: player | { readonly handle: player }): void {
     error(NOT_A_PLAYER, 2);
   }
   __stub_set_local_player(made.number as number);
+}
+
+function advanceTime(seconds: number): void {
+  if (
+    type(seconds) !== "number" ||
+    seconds !== seconds ||
+    seconds < 0 ||
+    seconds === math.huge
+  ) {
+    error(
+      `game.advanceTime: expected a number of seconds, 0 or more, and got ${tostring(seconds)}`,
+      2,
+    );
+  }
+  __stub_advance_time(seconds);
 }
 
 /** What the units stub keeps on a unit it made, as a Game action reads it. */
@@ -691,13 +738,16 @@ __reforged_test_caught = unexpectedCaughtErrors;
 
 // printed and displayed are read at each access, so each read is a copy and
 // the map's later lines show.
-const game = setmetatable({ kill, fire, setLocalPlayer, expectError } as Game, {
-  __index: (_: Game, key: unknown): unknown => {
-    if (key === "printed") return __stub_printed();
-    if (key === "displayed") return displayed();
-    return undefined;
+const game = setmetatable(
+  { advanceTime, kill, fire, setLocalPlayer, expectError } as Game,
+  {
+    __index: (_: Game, key: unknown): unknown => {
+      if (key === "printed") return __stub_printed();
+      if (key === "displayed") return displayed();
+      return undefined;
+    },
   },
-});
+);
 
 const globals = _G as unknown as Record<string, (() => void) | undefined>;
 
