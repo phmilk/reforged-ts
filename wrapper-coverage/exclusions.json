@@ -134,7 +134,7 @@
   {
     "native": "ResumeTimer",
     "reason": "It does not continue a paused countdown: a timer it resumes fires when what was left at the pause runs out, once more a full timeout later, then stops, one-shot or periodic alike, and on a one-shot timer that expired it fires twice more. Timer#resume calls TimerStart instead, for what was left, and starts a periodic Timer again for its timeout at that expiry (#962).",
-    "source": "Probe runs on Build 3.0.1.24371: docs/research/timer-resume.md (#962); timer-answers.md, \"What ResumeTimer leaves behind\" (#947, https://github.com/phmilk/reforged-ts/blob/research/timer-answers/docs/research/timer-answers.md), and timer-resume-cases.md (#961, https://github.com/phmilk/reforged-ts/blob/research/timer-resume-cases/docs/research/timer-resume-cases.md).",
+    "source": "Probe runs on Build 3.0.1.24371: docs/research/timer-resume.md (#962); docs/research/timer-answers.md, \"What ResumeTimer leaves behind\" (#947), and docs/research/timer-resume-cases.md (#961).",
     "date": "2026-11-26"
   }
 ]

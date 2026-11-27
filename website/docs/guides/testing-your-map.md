@@ -69,13 +69,13 @@ A killer already dead is accepted. A handler reads the killer the test names:
 
 {@includeCode ../../../packages/reforged-test/examples/select.test.ts}
 
-**Players 0 and 1 are playing**, and every other slot is empty. A player who is not playing types, selects and leaves nothing: naming one is an error, as it is for a player after `game.leave`, and in a handler of its leave. `game.leave` copies a Probe run of two clients: the handlers run first, the slot still playing, then the slot is written, and nothing else, no defeat, no victory, the units, the controller and the selection kept. The chat and the selection each copy a Probe run too:
+**Players 0 and 1 are playing**, and every other slot is empty. A player who is not playing types, selects and leaves nothing: naming one is an error, as it is for a player after `game.leave`, and in a handler of its leave. `game.leave` copies [a Probe run of two clients](https://github.com/phmilk/reforged-ts/blob/master/docs/research/player-leave.md): the handlers run first, the slot still playing, then the slot is written, and nothing else, no defeat, no victory, the units, the controller and the selection kept. The [chat](https://github.com/phmilk/reforged-ts/blob/master/docs/research/chat-event-matching.md) and the [selection](https://github.com/phmilk/reforged-ts/blob/master/docs/research/selection-events.md) each copy a Probe run too:
 
 {@includeCode ../../../packages/reforged-test/examples/leave.test.ts}
 
 There is no `game.createUnit`: a test creates its units as the map does.
 
-**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, whichever Trigger was registered first, as in the game:
+**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, whichever Trigger was registered first, as two Probe runs measured the game ([which Natives fire inside the call](https://github.com/phmilk/reforged-ts/blob/master/docs/research/unit-event-timing.md), [what their handlers read](https://github.com/phmilk/reforged-ts/blob/master/docs/research/dispatching-natives.md)):
 
 | Native                                     | Fires, in this order                                                                                               | A handler reads                                                                                                                 | Fires nothing for                                                                      |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -176,7 +176,7 @@ A test gives such a Native its answer with `stubNative`:
 - **Typed from the Typings.** The name is a Native of `common.j`, and the answer has that Native's signature: its parameters need no annotation, and a wrong return is a compile error. The answer may be left out only for a Native that returns nothing: `stubNative("PauseGame")`.
 - **Recorded.** Every call is recorded before the answer runs, as a Shipped stub records its own.
 - **Anywhere, for this test.** Call it at the top of the file, for every test of it, or inside one test, before or after `startGame()`. The last call for a name wins, and an answer lives in its test's game only.
-- **A `stubNative` replacement is whole: over a Native a Shipped stub covers, the Shipped stub no longer runs, so the state it kept and its Event dispatch are gone; keep `stubNative` for the Natives that answer a value.**
+- **Whole.** A `stubNative` replacement is whole: over a Native a Shipped stub covers, the Shipped stub does not run, so the state it kept and its Event dispatch are gone; keep `stubNative` for the Natives that answer a value.
 
 An answer that creates a Handle returns one made with `newHandle(kind)`, the kind being the Handle type's name in the Typings. It takes the next handle id of the test's game, as a Handle a Shipped stub creates does:
 
@@ -186,9 +186,7 @@ An answer that creates a Handle returns one made with `newHandle(kind)`, the kin
 
 {@includeCode ../../../packages/reforged-test/examples/set-local-player.test.ts}
 
-A Lua stub file listed in the `stubs` option of the harness still loads, after the shipped ones; `stubNative` replaces it where a test needs the answer in TypeScript.
-
-{/* Completed with the message that names stubNative (#990). */}
+A Lua stub file listed in the `stubs` option of the harness loads after the shipped ones; `stubNative` replaces it where a test needs the answer in TypeScript.
 
 ## Focus and skip
 

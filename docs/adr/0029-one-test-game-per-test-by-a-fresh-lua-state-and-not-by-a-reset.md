@@ -5,7 +5,7 @@ date: 2026-11-26
 
 # One Test game per test, by a fresh Lua state and not by a reset
 
-On `reforged-test/lua`, the tests of one file share one Lua state, so each test sees the units, the Recorded calls and the printed lines of the ones before it, and a Map project's test starts the game at module level because it can start only once per file. A map author expects each test to begin from nothing, as Vitest's tests do.
+On `reforged-test/lua`, the tests of one file share one Lua state, so each test sees the units, the Recorded calls and the printed lines of the ones before it, and a Map project's test starts the game at module level because it can start only once per file. A map author expects each test to begin from nothing, as Vitest's tests do; every test framework surveyed for the map's test API gives a test a fresh world, per test or per file ([How test libraries phrase a test](../research/test-phrasing.md)).
 
 A test file that loads `reforged-test/map` runs each `it` in a Test game of its own: a fresh Lua state, in which the Shipped stubs run, the modules are preloaded and the test file is required again, and only that `it`'s body runs. A file of N tests costs N+1 states: one load lists the tests, at collection, and each test opens its own state inside its Vitest `test`. A test's identity across loads is its position in the list, its full name checked, so a file that registers different tests on each load fails the test at that position, saying so. It is the default for the file and has no switch, even when the file imports from `reforged-test/lua` too; a file on `reforged-test/lua` alone keeps one state per file.
 
