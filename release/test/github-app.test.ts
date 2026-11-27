@@ -252,6 +252,7 @@ describe("the App's private key", () => {
       expect.arrayContaining([
         "board-dispatch.yml dispatch",
         "docs-cut.yml cut-version",
+        "next-sync.yml merge",
         "patch-watch.yml watch",
         "release.yml version",
         "release.yml publish",

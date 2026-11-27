@@ -1,0 +1,259 @@
+# Keeping next up to date: at each push to master while a branch next
+# exists (the Next branch, a major in preparation), the App opens or updates
+# the pull request "master into next", from the branch master-into-next,
+# with auto-merge by a merge commit, so the major never drifts from the
+# fixes on master. When the merge conflicts, the App opens, or comments on,
+# one ready-for-agent issue naming the conflicting files, and the pull
+# request waits for an Agent's resolution. With no branch next, the merge
+# job is skipped and nothing happens. docs/release.md, "Release channels",
+# describes it; release/test/next-sync.test.ts runs its git steps.
+name: next-sync
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+# One sync at a time; the run in progress is never cancelled. A push during
+# a run waits as the one pending run, and a newer push replaces it: the
+# newest push's commit holds the commits of the pushes before it.
+concurrency:
+  group: next-sync
+  cancel-in-progress: false
+
+env:
+  BRANCH: master-into-next
+  TITLE: master into next
+  ISSUE_TITLE: "Merge conflict: master into next"
+
+jobs:
+  # Whether a branch next exists, without the App: while there is none, the
+  # merge job is skipped, and no run asks the environment app for its key.
+  detect:
+    name: detect
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      next: ${{ steps.next.outputs.exists }}
+    steps:
+      - id: next
+        name: Whether a branch next exists
+        run: |
+          set +e
+          git ls-remote --exit-code --heads "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" refs/heads/next > /dev/null
+          code=$?
+          set -e
+          case "$code" in
+            0) exists=true ;;
+            2)
+              exists=false
+              echo "::notice title=No branch next::No major is in preparation: there is nothing to merge master into."
+              ;;
+            *) exit "$code" ;;
+          esac
+          echo "exists=$exists" >> "$GITHUB_OUTPUT"
+
+  merge:
+    name: merge
+    needs: detect
+    if: needs.detect.outputs.next == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The App's key lives in the environment app, whose deployment branch
+    # policy admits master alone (docs/release.md, "Repository variables and
+    # secrets"); this workflow runs on pushes to master alone. The App opens
+    # the pull request, so CI runs on it, and the issue.
+    environment: app
+    permissions:
+      contents: read
+    steps:
+      # Every branch, master's history among them: the merges below need
+      # next and master-into-next as the remote has them.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # Minted before anything else runs. The job runs no code of the
+      # checkout (no install, no pnpm): git and gh alone.
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+      - id: open
+        name: The open pull request
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          number=$(gh pr list --repo "$GITHUB_REPOSITORY" --base next --head "$BRANCH" --state open --json number --jq '.[0].number // ""')
+          echo "Open pull request: ${number:-none}"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+      - name: Commit as the App
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          bot="${APP_SLUG}[bot]"
+          id=$(gh api "users/$bot" --jq .id)
+          git config user.name "$bot"
+          git config user.email "$id+$bot@users.noreply.github.com"
+      # The branch master-into-next, then whether it merges into next.
+      # Without an open pull request, the branch starts again at this push's
+      # commit. With one, the branch may hold an Agent's resolution, so
+      # master is merged into it (a fast-forward when it holds none); when
+      # that merge conflicts, nothing is pushed. Outputs state (merged when
+      # next already holds the commit, clean, or conflicts), with (what the
+      # conflicting merge merged into: next, or master into the branch) and
+      # head (the branch's commit); the conflicting files go to
+      # $RUNNER_TEMP/conflicts.txt; a merge that fails with none fails the
+      # step. No hooks, for every git command of the job from the step's
+      # first line on (core.hooksPath in the checkout's config): a hook
+      # planted by the checkout's code would receive the token in this
+      # environment.
+      - id: branch
+        name: Update the branch
+        env:
+          OPEN: ${{ steps.open.outputs.number }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          git config core.hooksPath /dev/null
+          conflicts="$RUNNER_TEMP/conflicts.txt"
+          : > "$conflicts"
+          # The files of a failed merge, or the step fails: a merge that
+          # failed for another reason is no conflict.
+          conflicted() {
+            git diff --name-only --diff-filter=U > "$conflicts"
+            if [ ! -s "$conflicts" ]; then
+              echo "::error title=Merge failed::git merge failed (above) with no conflicting file."
+              exit 1
+            fi
+          }
+          if git merge-base --is-ancestor "$GITHUB_SHA" origin/next; then
+            echo "::notice title=Nothing to merge::next already holds master's $GITHUB_SHA."
+            echo "state=merged" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          remote=$(git rev-parse -q --verify "refs/remotes/origin/$BRANCH^{commit}" || true)
+          if [ -z "$OPEN" ] || [ -z "$remote" ]; then
+            git switch --quiet --detach "$GITHUB_SHA"
+          else
+            git switch --quiet --detach "$remote"
+            if ! git merge --no-edit -m "Merge master into $BRANCH" "$GITHUB_SHA"; then
+              conflicted
+              git reset --hard --quiet
+              { echo "state=conflicts"; echo "with=master"; echo "head=$remote"; } >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          head=$(git rev-parse HEAD)
+          if [ "$head" != "$remote" ]; then
+            # The lease: the branch as fetched, or none, so a resolution an
+            # Agent pushed since is never overwritten.
+            header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
+            echo "::add-mask::$header"
+            if ! git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
+              push --force-with-lease="refs/heads/$BRANCH:$remote" origin "$head:refs/heads/$BRANCH"; then
+              echo "::error title=Push refused::The branch $BRANCH was not pushed (above): it moved since the checkout, or GitHub refused the App's push."
+              exit 1
+            fi
+          fi
+          # As GitHub merges the pull request: the branch into next.
+          git switch --quiet --detach origin/next
+          if git merge --no-commit --no-ff "$head" > /dev/null; then
+            state=clean
+          else
+            conflicted
+            state=conflicts
+          fi
+          git reset --hard --quiet
+          { echo "state=$state"; echo "with=next"; echo "head=$head"; } >> "$GITHUB_OUTPUT"
+      # A merge commit, never a squash: next then holds master's commits,
+      # and the next sync merges only what came after them.
+      - id: pull-request
+        name: Open or update the pull request
+        if: steps.branch.outputs.state != 'merged'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          OPEN: ${{ steps.open.outputs.number }}
+          STATE: ${{ steps.branch.outputs.state }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          number=$OPEN
+          if [ -z "$number" ]; then
+            body="Merges \`master\` into the Next branch, \`next\`, so the major in preparation keeps the fixes of \`master\`. Opened by [next-sync.yml]($RUN_URL) at a push to \`master\`; each later push updates it. It merges by a merge commit, never a squash, so \`next\` holds \`master\`'s commits. [docs/release.md, \"Release channels\"]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/master/docs/release.md#release-channels)."
+            url=$(gh pr create --repo "$GITHUB_REPOSITORY" --base next --head "$BRANCH" --title "$TITLE" --body "$body")
+            number=${url##*/}
+            echo "Opened $url"
+          fi
+          if [ "$STATE" = clean ]; then
+            gh pr merge "$number" --repo "$GITHUB_REPOSITORY" --auto --merge
+            echo "#$number: auto-merge on (merge commit)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "#$number conflicts: it waits for an Agent's resolution." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+      - id: report
+        name: Write the conflict report
+        if: steps.branch.outputs.state == 'conflicts'
+        env:
+          NUMBER: ${{ steps.pull-request.outputs.number }}
+          WITH: ${{ steps.branch.outputs.with }}
+        run: |
+          if [ "$WITH" = master ]; then
+            merge="\`master\` into \`$BRANCH\`, the branch of #$NUMBER, which holds an earlier resolution,"
+          else
+            merge="\`$BRANCH\` into \`next\`, as #$NUMBER would,"
+          fi
+          {
+            echo "\`master\` does not merge cleanly into the Next branch: the pull request #$NUMBER, \"$TITLE\", waits for a resolution. Merging $merge conflicts in:"
+            echo
+            while IFS= read -r path; do
+              [ -n "$path" ] && echo "- \`$path\`"
+            done < "$RUNNER_TEMP/conflicts.txt"
+            echo
+            echo "To resolve it, on the branch of #$NUMBER:"
+            echo
+            echo '```sh'
+            echo "git fetch origin"
+            echo "git switch -C $BRANCH origin/$BRANCH"
+            echo "git merge origin/master"
+            echo "git merge origin/next"
+            echo "# resolve each conflict, then commit the merge"
+            echo "git push origin $BRANCH"
+            echo "gh pr merge $NUMBER --auto --merge"
+            echo '```'
+            echo
+            echo "Merge commits only, never a squash or a rebase: \`next\` keeps \`master\`'s commits, so the next sync merges only what came after them. Close this issue once #$NUMBER merged. [docs/release.md, \"Release channels\"]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/master/docs/release.md#release-channels)."
+          } > "$RUNNER_TEMP/conflict.md"
+          cat "$RUNNER_TEMP/conflict.md"
+      # One issue: an open one of the same title, whatever its labels now,
+      # gets a comment, unless its last word already says the same. Found
+      # in the open issues' listing, never through search, whose index can
+      # miss the issue the run before this one opened seconds ago.
+      - id: issue
+        name: Open or comment on the conflict issue
+        if: steps.branch.outputs.state == 'conflicts'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 500 --json number,title \
+            --jq ".[] | select(.title == \"$ISSUE_TITLE\") | .number" | head -n 1)
+          if [ -n "$existing" ]; then
+            last=$(gh issue view "$existing" --repo "$GITHUB_REPOSITORY" --json body,comments --jq '([.body] + [.comments[].body]) | last')
+            if [ "$last" = "$(cat "$RUNNER_TEMP/conflict.md")" ]; then
+              echo "#$existing already says this." >> "$GITHUB_STEP_SUMMARY"
+            else
+              gh issue comment "$existing" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/conflict.md"
+              echo "Commented on #$existing." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            url=$(gh issue create --repo "$GITHUB_REPOSITORY" --title "$ISSUE_TITLE" --label ready-for-agent --body-file "$RUNNER_TEMP/conflict.md")
+            echo "Opened $url." >> "$GITHUB_STEP_SUMMARY"
+          fi

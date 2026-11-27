@@ -34,6 +34,7 @@ export interface Workflow {
   on: Partial<Record<string, unknown>>;
   permissions?: unknown;
   concurrency?: unknown;
+  env?: Partial<Record<string, string>>;
   jobs: Partial<Record<string, Job>>;
 }
 

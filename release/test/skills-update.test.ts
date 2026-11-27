@@ -1,5 +1,4 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
 import { mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -25,6 +24,7 @@ import {
   type LockSkill,
 } from "../src/skills-update.js";
 import { repositoryRoot } from "../src/workspace.js";
+import { gitBash } from "./support/bash.js";
 import { readWorkflow } from "./support/workflows.js";
 import { tempDir, writeText } from "./support/workspace.js";
 
@@ -593,19 +593,6 @@ describe("skills-update.yml", () => {
     ]);
   });
 });
-
-/**
- * Git Bash's bash on Windows, beside git (`bash` there may be WSL's); bash
- * elsewhere. Undefined when Git for Windows keeps none.
- */
-function gitBash(): string | undefined {
-  if (process.platform !== "win32") return "bash";
-  const execPath = execFileSync("git", ["--exec-path"], {
-    encoding: "utf8",
-  }).trim();
-  const bash = join(execPath, "..", "..", "..", "bin", "bash.exe");
-  return existsSync(bash) ? bash : undefined;
-}
 
 // The step's own script, run against a repository holding a lock naming tdd,
 // tdd's folder, the repository skill write-spec and a workflow, with what a
