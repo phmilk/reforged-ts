@@ -443,7 +443,7 @@ export function run(p: ProbeContext): void {
     // The item the call left on the map, when it returned none.
     const after = itemsOnTheMap();
     const appeared = after.filter((each) => !before.includes(each));
-    if (returned === undefined && appeared[0] !== undefined) {
+    if (returned === undefined && appeared.length > 0) {
       names.set(appeared[0], "appeared");
     }
     return {
