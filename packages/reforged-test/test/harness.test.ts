@@ -430,6 +430,7 @@ describe("the Game clock and game.advanceTime", () => {
     expect(suite(clock, "the Triggers of TriggerRegisterTimerEvent")).toEqual(
       passing(
         "fire through the Event dispatch, once or once per period",
+        "fire a Trigger registered twice with one timeout twice at that instant",
         "take their turn among the timers, in the order of their instants",
         "skip a disabled or destroyed Trigger silently, and fire again once enabled",
         "answer GetTriggeringTrigger and the timer event, and each registration fires its own Trigger only",

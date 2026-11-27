@@ -350,6 +350,24 @@ describe("the Triggers of TriggerRegisterTimerEvent", function()
     })
   end)
 
+  -- docs/research/trigger-registered-twice.md, "The cases", the row of
+  -- TriggerRegisterTimerEvent: a Trigger registered twice with one timeout
+  -- runs twice at that instant, each run in the turn of its registration.
+  it("fire a Trigger registered twice with one timeout twice at that instant", function()
+    local game = startGame()
+    local log = {}
+    local twice = logged(log, "twice")
+    TriggerRegisterTimerEvent(twice, 1, false)
+    TriggerRegisterTimerEvent(logged(log, "between"), 1, false)
+    TriggerRegisterTimerEvent(twice, 1, false)
+    game.advanceTime(1)
+    expect(log).toEqual({
+      "twice condition", "twice action",
+      "between condition", "between action",
+      "twice condition", "twice action",
+    })
+  end)
+
   it("take their turn among the timers, in the order of their instants", function()
     local game = startGame()
     local log = {}

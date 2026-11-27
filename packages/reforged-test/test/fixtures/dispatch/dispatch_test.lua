@@ -85,14 +85,24 @@ describe("the Event dispatch", function()
     expect(seen).toBe(hero)
   end)
 
+  -- docs/research/trigger-registered-twice.md, "The cases", the row of
+  -- TriggerRegisterPlayerUnitEvent with EVENT_PLAYER_UNIT_DEATH, without a
+  -- filter: a Trigger registered twice for one event and subject runs twice
+  -- on one event, each run in the turn of its registration.
   it("runs a Trigger once per matching registration", function()
     local game = startGame()
     local log = {}
-    local trigger = logged(log, "twice")
-    TriggerRegisterPlayerUnitEvent(trigger, Player(0), EVENT_PLAYER_UNIT_SPELL_EFFECT, nil)
-    TriggerRegisterPlayerUnitEvent(trigger, Player(0), EVENT_PLAYER_UNIT_SPELL_EFFECT, nil)
-    game.fire(EVENT_PLAYER_UNIT_SPELL_EFFECT, { GetTriggerUnit = caster() })
-    expect(#log).toEqual(4)
+    local twice = logged(log, "twice")
+    local between = logged(log, "between")
+    for _, trigger in ipairs({ twice, between, twice }) do
+      TriggerRegisterPlayerUnitEvent(trigger, Player(0), EVENT_PLAYER_UNIT_DEATH, nil)
+    end
+    game.fire(EVENT_PLAYER_UNIT_DEATH, { GetTriggerUnit = caster() })
+    expect(log).toEqual({
+      "twice condition", "twice action",
+      "between condition", "between action",
+      "twice condition", "twice action",
+    })
   end)
 
   it("is no error with no Trigger registered", function()

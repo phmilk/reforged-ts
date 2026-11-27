@@ -488,6 +488,21 @@ describe("sync", function()
     expect(__stub_deliver_sync({ prefix = "O", data = "", from = Player(0) })).toEqual(2)
     expect(order).toEqual({ "second", "first" })
   end)
+  -- docs/research/trigger-registered-twice.md, "The cases", the row of
+  -- BlzTriggerRegisterPlayerSyncEvent: a Trigger registered twice for one
+  -- prefix and player runs twice on one packet, each run in the turn of its
+  -- registration.
+  it("fires a Trigger registered twice for one prefix and player twice", function()
+    local twice, between = CreateTrigger(), CreateTrigger()
+    local order = {}
+    TriggerAddAction(twice, function() order[#order + 1] = "twice" end)
+    TriggerAddAction(between, function() order[#order + 1] = "between" end)
+    for _, trigger in ipairs({ twice, between, twice }) do
+      BlzTriggerRegisterPlayerSyncEvent(trigger, Player(0), "twice", false)
+    end
+    expect(__stub_deliver_sync({ prefix = "twice", data = "data", from = Player(0) })).toEqual(3)
+    expect(order).toEqual({ "twice", "between", "twice" })
+  end)
   it("cuts the data at its first zero byte with the cString option, as the game cuts a C string", function()
     local trigger = CreateTrigger()
     local seen = {}
