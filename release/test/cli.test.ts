@@ -5,6 +5,7 @@ import {
   changesetText,
   commitAll,
   initRepository,
+  PACKAGES,
   writeText,
   writeWorkspace,
 } from "./support/workspace.js";
@@ -169,6 +170,67 @@ describe("release:check-changeset", () => {
     const { status, stderr } = await runCli(repo);
     expect(status).toBe(1);
     expect(stderr).toMatch(/^\.changeset\/bad\.md: could not parse changeset/);
+  });
+
+  it("refuses on master a major of a package at a stable version, naming the branch next", async () => {
+    // Every fixture package is at 1.0.0, its first stable version.
+    const repo = await repository();
+    // CI names the base as its remote-tracking branch.
+    await repo.git(["update-ref", "refs/remotes/origin/master", "master"]);
+    await writeText(repo.root, "packages/reforged-ts/src/unit.ts", "");
+    await writeText(
+      repo.root,
+      ".changeset/bold-hawks.md",
+      changesetText({ "reforged-ts": "major" }),
+    );
+    await commitAll(repo.git, "a breaking change");
+
+    expect(
+      await runCli(repo, [], { RELEASE_BASE_REF: "origin/master" }),
+    ).toEqual({
+      status: 1,
+      stdout: "",
+      stderr:
+        "Major refused on master: .changeset/bold-hawks.md bumps reforged-ts by a major, and reforged-ts is at its first stable version or after.\n" +
+        'A major goes to the branch next, the Next branch, once a package is stable: base the pull request on next (docs/release.md, "Release channels").\n',
+    });
+  });
+
+  it("passes on next a major of a package at a stable version", async () => {
+    const repo = await repository();
+    await repo.git(["update-ref", "refs/remotes/origin/next", "master"]);
+    await writeText(
+      repo.root,
+      ".changeset/bold-hawks.md",
+      changesetText({ "reforged-ts": "major" }),
+    );
+    await commitAll(repo.git, "a breaking change");
+
+    expect(await runCli(repo, [], { RELEASE_BASE_REF: "origin/next" })).toEqual(
+      {
+        status: 0,
+        stdout: "No publishable package changed since origin/next.\n",
+        stderr: "",
+      },
+    );
+  });
+
+  it("refuses no major on master during the build phase", async () => {
+    const root = await writeWorkspace(
+      PACKAGES.map((pkg) => ({
+        ...pkg,
+        fields: { version: "1.0.0-alpha.23" },
+      })),
+    );
+    const git = await initRepository(root);
+    await writeText(
+      root,
+      ".changeset/bold-hawks.md",
+      changesetText({ "reforged-ts": "major", "reforged-types": "major" }),
+    );
+    await commitAll(git, "a breaking change");
+
+    expect((await runCli({ root, git })).status).toBe(0);
   });
 
   it("prints its usage and exits 2 on an unknown argument", async () => {
