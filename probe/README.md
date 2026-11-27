@@ -9,7 +9,7 @@ A fact to check in game is a Probe run the agent writes and runs itself, by defa
 - **a check made by looking at the screen:** a visual result, a frame's layout, an effect, a sound;
 - **multiplayer:** two or more clients, such as host election (#131).
 
-Such a check is an issue labelled `ready-for-human`, naming which of these it is. During a run, a human also logs in to Battle.net when the run's notification asks (the step "No `BEGIN` after `--begin-timeout` seconds" of [Running a Probe run](#running-a-probe-run)).
+Such a check is an issue labelled `ready-for-human`, naming which of these it is. During a run, a human also logs in to Battle.net when the run's notification asks (the step "No `BEGIN` after `--begin-timeout` seconds" of [Running a Probe run](#running-a-probe-run)). An issue whose work includes a Probe run carries the label `probe` for that login ([The `probe` label](../docs/agents/triage-labels.md#the-probe-label)), so whoever asks for the work knows beforehand to stay within reach.
 
 `probe:run` needs native Windows with the game installed. An agent without them stops at a `ready-for-agent` check in game: it reports the fact as unverified, says in the issue that the check needs a machine with the game, and leaves the label for an agent on one.
 

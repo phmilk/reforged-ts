@@ -249,7 +249,7 @@ An Upstream skill a Skill variant declares it replaces (`to-spec`, replaced by `
 _Avoid_: deprecated skill (upstream's own folder of retired skills), disabled skill, overridden skill
 
 **Judgement call**:
-A reversible choice an Agent makes on its own, with a reason, where the issue, the docs and the ADRs leave room; listed in the pull request's body, it never holds the merge.
+A reversible choice an Agent makes on its own, with a reason, where the issue, the docs and the ADRs leave room; listed in the pull request's body, it never holds the merge. A fact only the game can settle is never one: it is measured by a Probe run, or stated as an Open decision.
 _Avoid_: assumption, guess, decision (alone)
 
 **Open decision**:
@@ -263,6 +263,10 @@ _Avoid_: probe map (the Lua pasted into the World Editor, #9), test, script
 **Probe run**:
 One run of a built Probe in the game, from start to end by the agent: the build bakes a fresh runId, `probe:run` starts the game on it, passes the screens before the map, ends the game once the Result file ends or stalls, and reads it. A human steps in only to log in to Battle.net when the game asks. A Result file whose runId is not the last build's belongs to no current Probe run.
 _Avoid_: session, execution, test run
+
+**Probe Ticket**:
+A Ticket labelled `probe`: its work includes a Probe run, so a human may have to log in to Battle.net while it is worked. It is told by its label, never by its body.
+_Avoid_: game Ticket, human Ticket
 
 **Probe runner**:
 The private workspace package `probe/` and its commands: `probe:build` compiles a Probe into a map folder, `probe:run` runs it in the game end to end, `probe:read` reads its Result file and says how the Probe run ended, `probe:nullability-report` reports a Slice, `probe:nullability-curate` applies a Slice's verdicts to the Overlay.
