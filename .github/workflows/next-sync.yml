@@ -16,8 +16,9 @@ on:
 permissions:
   contents: read
 
-# One sync at a time; a newer push waits, and its run merges the commits of
-# the pushes before it too.
+# One sync at a time, never cancelled: a push during a run leaves one run
+# pending, the newest push's, whose commit holds the commits of the pushes
+# before it.
 concurrency:
   group: next-sync
   cancel-in-progress: false
@@ -111,16 +112,27 @@ jobs:
       # next already holds the commit, clean, or conflicts), with (what the
       # conflicting merge merged into: next, or master into the branch) and
       # head (the branch's commit); the conflicting files go to
-      # $RUNNER_TEMP/conflicts.txt. No hooks: a hook planted by the
-      # checkout's code would receive the token in this environment.
+      # $RUNNER_TEMP/conflicts.txt; a merge that fails with none fails the
+      # step. No hooks, for every git command of the step: a hook planted by
+      # the checkout's code would receive the token in this environment.
       - id: branch
         name: Update the branch
         env:
           OPEN: ${{ steps.open.outputs.number }}
           APP_TOKEN: ${{ steps.app.outputs.token }}
         run: |
+          git config core.hooksPath /dev/null
           conflicts="$RUNNER_TEMP/conflicts.txt"
           : > "$conflicts"
+          # The files of a failed merge, or the step fails: a merge that
+          # failed for another reason is no conflict.
+          conflicted() {
+            git diff --name-only --diff-filter=U > "$conflicts"
+            if [ ! -s "$conflicts" ]; then
+              echo "::error title=Merge failed::git merge failed (above) with no conflicting file."
+              exit 1
+            fi
+          }
           if git merge-base --is-ancestor "$GITHUB_SHA" origin/next; then
             echo "::notice title=Nothing to merge::next already holds master's $GITHUB_SHA."
             echo "state=merged" >> "$GITHUB_OUTPUT"
@@ -131,8 +143,8 @@ jobs:
             git switch --quiet --detach "$GITHUB_SHA"
           else
             git switch --quiet --detach "$remote"
-            if ! git -c core.hooksPath=/dev/null merge --no-edit -m "Merge master into $BRANCH" "$GITHUB_SHA"; then
-              git diff --name-only --diff-filter=U > "$conflicts"
+            if ! git merge --no-edit -m "Merge master into $BRANCH" "$GITHUB_SHA"; then
+              conflicted
               git reset --hard --quiet
               { echo "state=conflicts"; echo "with=master"; echo "head=$remote"; } >> "$GITHUB_OUTPUT"
               exit 0
@@ -152,10 +164,10 @@ jobs:
           fi
           # As GitHub merges the pull request: the branch into next.
           git switch --quiet --detach origin/next
-          if git -c core.hooksPath=/dev/null merge --no-commit --no-ff "$head" > /dev/null; then
+          if git merge --no-commit --no-ff "$head" > /dev/null; then
             state=clean
           else
-            git diff --name-only --diff-filter=U > "$conflicts"
+            conflicted
             state=conflicts
           fi
           git reset --hard --quiet
@@ -219,15 +231,15 @@ jobs:
             echo "Merge commits only, never a squash or a rebase: \`next\` keeps \`master\`'s commits, so the next sync merges only what came after them. Close this issue once #$NUMBER merged. [docs/release.md, \"Release channels\"]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/master/docs/release.md#release-channels)."
           } > "$RUNNER_TEMP/conflict.md"
           cat "$RUNNER_TEMP/conflict.md"
-      # One issue: an open one of the same title gets a comment, unless its
-      # last word already says the same.
+      # One issue: an open one of the same title, whatever its labels now,
+      # gets a comment, unless its last word already says the same.
       - id: issue
         name: Open or comment on the conflict issue
         if: steps.branch.outputs.state == 'conflicts'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label ready-for-agent --limit 100 --json number,title \
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$ISSUE_TITLE\" in:title" --limit 100 --json number,title \
             --jq ".[] | select(.title == \"$ISSUE_TITLE\") | .number" | head -n 1)
           if [ -n "$existing" ]; then
             last=$(gh issue view "$existing" --repo "$GITHUB_REPOSITORY" --json body,comments --jq '([.body] + [.comments[].body]) | last')

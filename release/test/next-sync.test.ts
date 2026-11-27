@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { APP_ENVIRONMENT } from "../src/github-app.js";
+import { gitBash } from "./support/bash.js";
 import { readWorkflow, type Step } from "./support/workflows.js";
 import { tempDir, writeText } from "./support/workspace.js";
 
@@ -84,26 +85,17 @@ describe("next-sync.yml", () => {
     expect(issue.if).toBe("steps.branch.outputs.state == 'conflicts'");
     expect(issue.env?.GH_TOKEN).toBe("${{ steps.app.outputs.token }}");
     const run = issue.run ?? "";
-    expect(run).toContain("--state open --label ready-for-agent");
+    // Found by its title alone, whatever labels triage left on it.
+    expect(run).toContain(
+      '--state open --search "\\"$ISSUE_TITLE\\" in:title"',
+    );
+    expect(run).toContain('select(.title == \\"$ISSUE_TITLE\\")');
     expect(run).toContain('gh issue comment "$existing"');
     expect(run).toContain(
       'gh issue create --repo "$GITHUB_REPOSITORY" --title "$ISSUE_TITLE" --label ready-for-agent',
     );
   });
 });
-
-/**
- * Git Bash's bash on Windows, beside git (`bash` there may be WSL's); bash
- * elsewhere. Undefined when Git for Windows keeps none.
- */
-function gitBash(): string | undefined {
-  if (process.platform !== "win32") return "bash";
-  const execPath = execFileSync("git", ["--exec-path"], {
-    encoding: "utf8",
-  }).trim();
-  const bash = join(execPath, "..", "..", "..", "bin", "bash.exe");
-  return existsSync(bash) ? bash : undefined;
-}
 
 const bash = gitBash();
 const slashed = (path: string) => path.replaceAll("\\", "/");
@@ -119,7 +111,7 @@ const IDENTITY = {
  * A repository `origin.git` whose master holds `a.txt` and, when `next` is
  * set, whose branch next adds `b.txt`; `work` is a clone to commit from.
  */
-async function repositories(next = true) {
+async function repositories({ next = true } = {}) {
   const root = await tempDir("next-sync");
   const run = (cwd: string, ...args: string[]) =>
     execFileSync("git", ["-c", "core.autocrlf=false", ...args], {
@@ -147,17 +139,17 @@ async function repositories(next = true) {
     git("push", "-q", "origin", "next");
     git("switch", "-q", "master");
   }
-  const origin = (ref: string) =>
+  const shaAt = (ref: string) =>
     run(join(root, "origin.git"), "rev-parse", "-q", "--verify", ref);
-  const has = (ref: string) => {
+  const exists = (ref: string) => {
     try {
-      origin(ref);
+      shaAt(ref);
       return true;
     } catch {
       return false;
     }
   };
-  return { root, run, git, commit, origin, has };
+  return { root, run, git, commit, shaAt, exists };
 }
 
 /** Runs a step's script in `cwd` with `env`, as the runner would. */
@@ -213,7 +205,7 @@ async function runStep(
 
 describe("the detect step of next-sync.yml", () => {
   async function detect(next: boolean) {
-    const repos = await repositories(next);
+    const repos = await repositories({ next });
     return runStep(await stepOf("detect", "next"), repos.root, repos.root, {
       GITHUB_SERVER_URL: slashed(repos.root),
       GITHUB_REPOSITORY: "origin",
@@ -236,18 +228,21 @@ describe("the detect step of next-sync.yml", () => {
 describe("the branch step of next-sync.yml", () => {
   /**
    * The checkout of the run at master's tip, every branch fetched as the
-   * checkout's `fetch-depth: 0` fetches them; then the step, with `open`
-   * the number of the open pull request, or empty.
+   * checkout's `fetch-depth: 0` fetches them, and `plant` run on it;
+   * then the step, with `open` the number of the open pull request, or
+   * empty.
    */
   async function sync(
     repos: Awaited<ReturnType<typeof repositories>>,
     open = "",
+    plant: (checkout: string) => Promise<void> = () => Promise.resolve(),
   ) {
     repos.git("push", "-q", "origin", "master");
     const checkout = join(repos.root, `checkout-${String(Date.now())}`);
     repos.run(repos.root, "clone", "-q", "origin.git", checkout);
-    const sha = repos.origin("refs/heads/master");
+    const sha = repos.shaAt("refs/heads/master");
     repos.run(checkout, "switch", "-q", "--detach", sha);
+    await plant(checkout);
     const result = await runStep(
       await stepOf("merge", "branch"),
       repos.root,
@@ -269,7 +264,7 @@ describe("the branch step of next-sync.yml", () => {
       const repos = await repositories();
       const result = await sync(repos);
       expect(result.outputs).toEqual({ state: "merged" });
-      expect(repos.has("refs/heads/master-into-next")).toBe(false);
+      expect(repos.exists("refs/heads/master-into-next")).toBe(false);
     },
   );
 
@@ -284,7 +279,7 @@ describe("the branch step of next-sync.yml", () => {
         with: "next",
         head: result.sha,
       });
-      expect(repos.origin("refs/heads/master-into-next")).toBe(result.sha);
+      expect(repos.shaAt("refs/heads/master-into-next")).toBe(result.sha);
     },
   );
 
@@ -300,7 +295,7 @@ describe("the branch step of next-sync.yml", () => {
       repos.git("switch", "-q", "master");
       const result = await sync(repos);
       expect(result.outputs.state).toBe("clean");
-      expect(repos.origin("refs/heads/master-into-next")).toBe(result.sha);
+      expect(repos.shaAt("refs/heads/master-into-next")).toBe(result.sha);
     },
   );
 
@@ -320,7 +315,7 @@ describe("the branch step of next-sync.yml", () => {
         head: result.sha,
       });
       expect(await result.conflicts()).toEqual(["a.txt"]);
-      expect(repos.origin("refs/heads/master-into-next")).toBe(result.sha);
+      expect(repos.shaAt("refs/heads/master-into-next")).toBe(result.sha);
     },
   );
 
@@ -339,7 +334,7 @@ describe("the branch step of next-sync.yml", () => {
       await repos.commit("d.txt", "later\n", "later fix on master");
 
       const result = await sync(repos, "7");
-      const head = repos.origin("refs/heads/master-into-next");
+      const head = repos.shaAt("refs/heads/master-into-next");
       expect(result.outputs).toEqual({ state: "clean", with: "next", head });
       for (const ancestor of [resolution, result.sha]) {
         expect(() =>
@@ -356,6 +351,32 @@ describe("the branch step of next-sync.yml", () => {
   );
 
   it.skipIf(bash === undefined)(
+    "runs no hook of the checkout, which would receive the token",
+    async () => {
+      const repos = await repositories();
+      await repos.commit("a.txt", "one\ntwo\n", "fix on master");
+      repos.git("push", "-q", "origin", "master:master-into-next");
+      repos.git("switch", "-q", "-c", "resolution", "master");
+      repos.git("merge", "-q", "--no-edit", "origin/next");
+      repos.git("push", "-q", "origin", "resolution:master-into-next");
+      repos.git("switch", "-q", "master");
+      await repos.commit("d.txt", "later\n", "later fix on master");
+      const marker = slashed(join(repos.root, "hooked"));
+      const result = await sync(repos, "7", async (checkout) => {
+        for (const hook of ["post-checkout", "post-merge", "pre-push"]) {
+          await writeText(
+            checkout,
+            `.git/hooks/${hook}`,
+            `#!/bin/sh\necho ${hook} >> "${marker}"\n`,
+          );
+        }
+      });
+      expect(result.outputs.state).toBe("clean");
+      expect(existsSync(marker)).toBe(false);
+    },
+  );
+
+  it.skipIf(bash === undefined)(
     "fast-forwards the open pull request's branch to master's commit",
     async () => {
       const repos = await repositories();
@@ -364,7 +385,7 @@ describe("the branch step of next-sync.yml", () => {
       await repos.commit("d.txt", "later\n", "later fix on master");
       const result = await sync(repos, "7");
       expect(result.outputs.state).toBe("clean");
-      expect(repos.origin("refs/heads/master-into-next")).toBe(result.sha);
+      expect(repos.shaAt("refs/heads/master-into-next")).toBe(result.sha);
     },
   );
 
@@ -387,7 +408,7 @@ describe("the branch step of next-sync.yml", () => {
         head: resolution,
       });
       expect(await result.conflicts()).toEqual(["a.txt"]);
-      expect(repos.origin("refs/heads/master-into-next")).toBe(resolution);
+      expect(repos.shaAt("refs/heads/master-into-next")).toBe(resolution);
     },
   );
 });
