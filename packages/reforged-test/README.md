@@ -44,7 +44,7 @@ A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative
 
 `stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. The same command generates `stubs/unstubbed.lua`, the shipped stub file that makes a Native without a Stub throw a message naming `stubNative`. `test/natives.test.ts` is the Drift check of both: it fails, naming the command, when a committed file is not what the generator emits, as on a new Patch.
 
-An error the library caught from the map's code, a Caught error, fails the test at its end unless the test expected it with `game.expectError(text)`; with Dev mode off, which the Test game does not force on, a handler's error is not caught and fails the test at once. [The Caught error contract](#the-caught-error-contract) is how the library tells the harness.
+An error the library caught from a Map project's callback, a Caught error, fails the test at its end unless the test expected it with `game.expectError(text)`; with Dev mode off, which the Test game does not force on, a handler's error is not caught and fails the test at once. [The Caught error contract](#the-caught-error-contract) is how the library tells the harness.
 
 `it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only` are Vitest's: the glue registers each in Vitest's native form, so a test skipped, todo or out of focus opens no Test game, and a forgotten `only` fails the run under `CI`. `only` reaches every Lua test of the Map project, not its file's only.
 
@@ -204,8 +204,8 @@ The runner and the glue share nothing but this JSON string, returned by the glob
 ```
 
 - `suite` lists the enclosing `describe` names, outermost first.
-- `status` is `pass`, `fail` (an expectation did not hold), `error` (anything else was thrown) or `skip` (the body did not run: a skip or todo test, or one in a skipped `describe`).
-- `message` is present on `fail` and `error`.
+- `status` is `pass`, `fail` (an expectation did not hold), `error` (anything else was thrown, or, in a Test game, a test that threw nothing left a Caught error unexpected) or `skip` (the body did not run: a skip or todo test, or one in a skipped `describe`).
+- `message` is present on `fail` and `error`. In a Test game it starts with the lines of the Caught errors the test left unexpected, when there are any ([The Caught error contract](#the-caught-error-contract)).
 - `actual` and `expected`, together, on a `fail` whose matcher compared two values: each rendered as text, which the glue hands to Vitest as the error's `actual` and `expected` for its diff, and `runLuaTestFiles` returns on the result.
 - `mode` is `skip`, `only` or `todo` for a test registered with `it.skip`, `it.only` or `it.todo`, and absent for a plain `it`.
 - `suiteModes` lists the mode of each enclosing `describe`, one per `suite` name (`run`, `skip` or `only`), and is absent when every one is a plain `describe`.

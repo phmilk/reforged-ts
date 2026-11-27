@@ -1540,7 +1540,7 @@ function runBody(block: Block): Result {
       message: caught,
     };
   }
-  const withCaught = (message: string): string =>
+  const prefixCaught = (message: string): string =>
     caught === undefined ? message : `${caught}\n\n${message}`;
   const failure = first.thrown as Failure | undefined;
   if (type(failure) === "table" && failure?.reforgedTestFailure === true) {
@@ -1548,7 +1548,7 @@ function runBody(block: Block): Result {
       suite: block.suite,
       name: block.name,
       status: "fail",
-      message: withCaught(failure.message),
+      message: prefixCaught(failure.message),
       actual: failure.actual,
       expected: failure.expected,
     };
@@ -1557,7 +1557,7 @@ function runBody(block: Block): Result {
     suite: block.suite,
     name: block.name,
     status: "error",
-    message: withCaught(errorMessage(first.thrown)),
+    message: prefixCaught(errorMessage(first.thrown)),
   };
 }
 

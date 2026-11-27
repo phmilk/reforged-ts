@@ -288,7 +288,8 @@ export interface DisplayedText {
  * the game refuses with an error, and returns nothing. There is no
  * `createUnit`: a test creates its units with the map's own API.
  *
- * A Caught error, an error the library caught from the map's code, fails
+ * A Caught error, an error the library caught from a Map project's
+ * callback, fails
  * the test at its end, after its last `afterEach`, unless
  * {@link Game.expectError} expected it; the failure lists each before the
  * test's own failure, when it has one, and the game goes on meanwhile, as
@@ -403,7 +404,7 @@ export interface Game {
   setLocalPlayer(player: player | { readonly handle: player }): void;
   /**
    * Expects the Caught errors so far whose message contains `text`: an
-   * error the library caught from the map's code, which otherwise fails
+   * error the library caught from a Map project's callback, which otherwise fails
    * the test at its end. Call it after the act, in a test of a map meant to
    * report an error.
    * @remarks
@@ -412,15 +413,17 @@ export interface Game {
    *   Caught error after the call needs another call.
    * - A Caught error is one the library reports through
    *   `__reforged_caught_error`: of an Init stage's callback, and, in Dev
-   *   mode, of a protected callback or of `runLocal`. The Test game forces
+   *   mode, of a protected callback or of `MapPlayer.runLocal`. The Test game forces
    *   no Dev mode: with Dev mode off a handler's error is not caught, and it
    *   fails the test at once, thrown out of the Game action.
    * - A warning the library prints is no Caught error, and fails nothing.
-   * @example A map that reports a broken handler
+   * @example A map whose Init callback breaks
    * {@includeCode ../../examples/expect-error.test.ts}
    * @param text - A part of the message: `"attempt to index a nil value"`.
    * @throws When no Caught error not yet expected holds `text`, naming it:
    * `game.expectError: no Caught error not yet expected contains "attempt to index a nil value"`.
+   * @throws When `text` is not a string:
+   * `game.expectError: expected a part of a Caught error's message, a string`.
    */
   expectError(text: string): void;
 }
@@ -641,15 +644,20 @@ function expectError(text: string): void {
   }
 }
 
+/** One line of the Caught errors left unexpected, with its repeats. */
+interface CaughtRow {
+  readonly line: string;
+  count: number;
+}
+
 /**
  * The Caught errors left unexpected, one line each, a repeat counted
  * `×N` on the line of its first; undefined when there is none. The runner
  * reads it at the end of the test, after the last afterEach.
  */
 function unexpectedCaughtErrors(): string | undefined {
-  const rows: { line: string; count: number }[] = [];
-  const byLine: Record<string, { line: string; count: number } | undefined> =
-    {};
+  const rows: CaughtRow[] = [];
+  const byLine: Record<string, CaughtRow | undefined> = {};
   for (const caught of caughtErrors) {
     if (caught.expected) continue;
     const line = `${caught.origin} failed: ${caught.message}`;
