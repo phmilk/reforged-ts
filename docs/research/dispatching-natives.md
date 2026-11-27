@@ -117,7 +117,7 @@ In the widget death handler, `GetTriggerWidget()` and `GetTriggerUnit()` are the
 
 The same holds with no event, through a hashtable, which stores a Handle under either type: after `SaveUnitHandle` and `SaveWidgetHandle` of one paladin, `LoadUnitHandle` answered the very value of the unit (`rawequal` `true`, and it finds the unit's entry in a table), while `LoadWidgetHandle` answered a `widget: <address>` that is `==` to the unit, not `rawequal` to it, and does not find its entry; two `LoadWidgetHandle` calls answered the same value (`rawequal` `true`).
 
-So a Handle is one Lua value per type it is read as, and the values of one Handle are equal by `==` alone. This is a fact of every Handle read as another type, not of the death handlers, so the Shipped stubs were left as they are: their `GetTriggerWidget` answers the unit's own value, so a table keyed by the unit is found with it in a test and not in the game. The fixture case of `GetTriggerWidget` compares with `==`, which holds in both. The rule "Handle identity is stable across Natives: a Handle is a safe table key" (`AGENTS.md`, "Runtime constraints") holds for one type only.
+So a Handle is one Lua value per type it is read as, and the values of one Handle are equal by `==` alone. This is a fact of every Handle read as another type, not of the death handlers, so the Shipped stubs were left as they are: their `GetTriggerWidget` answers the unit's own value, so a table keyed by the unit is found with it in a test and not in the game. The fixture case of `GetTriggerWidget` compares with `==`, the one comparison this run saw hold in the game. The rule "Handle identity is stable across Natives: a Handle is a safe table key" (`AGENTS.md`, "Runtime constraints") holds for one type only.
 
 ## After the returns
 
@@ -126,7 +126,7 @@ Within the 3 seconds after the last case, eight firings came: `EVENT_PLAYER_UNIT
 ## What this settles for the Shipped stubs
 
 - The dispatch of a unit event to the player's registrations, then to the unit's, is the game's order, not an accident of the first Probe's registration order.
-- `UnitAddItemById` returns `nil` for a unit without an inventory. The item the game leaves on the ground has no Shipped stub that would read it back, so the stub makes none.
+- `UnitAddItemById` returns `nil` for a unit without an inventory. The stub makes the item all the same, as the game does; no Shipped stub reads it back, since `EnumItemsInRect` has none.
 - `UnitRemoveItem` of an item the unit does not carry does nothing.
 - `UnitRemoveItemFromSlot` is a Dispatching Native: the drop of the item in the slot, the item still carried in the handlers, and nothing for an empty slot.
 - `GetTriggerWidget` answers the unit in the widget death alone.

@@ -329,16 +329,19 @@ describe("UnitAddItem and UnitAddItemById", function()
   end)
 
   -- The case UnitAddItemById(footman, 'ratc'), no inventory, of
-  -- docs/research/dispatching-natives.md: the game returns nothing. The item
-  -- it leaves on the ground is not made here, as no Shipped stub reads it.
+  -- docs/research/dispatching-natives.md: the game makes the item, leaves it
+  -- on the ground and returns nothing.
   it("UnitAddItemById returns nothing for a unit without an inventory, and fires nothing", function()
     startGame()
     map.stubNative("UnitInventorySize", function() return 0 end)
     local unit = footman()
     local log = watchAll(unit)
+    local before = __stub_new_handle("mark").__handleId
     expect(UnitAddItemById(unit, FourCC("ratc"))).toBeUndefined()
     expect(log).toEqual({})
     expect(UnitItemInSlot(unit, 0)).toBeUndefined()
+    -- The item exists, though nothing reads it back: it took a handle id.
+    expect(__stub_new_handle("mark").__handleId).toBe(before + 2)
   end)
 end)
 

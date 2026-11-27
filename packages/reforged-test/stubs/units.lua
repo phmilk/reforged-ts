@@ -157,16 +157,16 @@ end
 -- UnitAddItemById creates a new item and gives it to the unit as UnitAddItem
 -- does, the pickup dispatched before it returns the item. A unit without an
 -- inventory gets nothing, nothing fires and nil is returned, as in the game
--- (docs/research/dispatching-natives.md). The game leaves there an item on
--- the ground that the call does not return; no Shipped stub would read it
--- back, so the stub makes none.
+-- (docs/research/dispatching-natives.md). The item is made all the same, as
+-- the game makes it and leaves it on the ground: it takes its handle id,
+-- and no Shipped stub reads it back.
 function UnitAddItemById(whichUnit, itemId)
   __stub_record("UnitAddItemById", whichUnit, itemId)
+  local item = __stub_new_handle("item")
+  item.typeId = itemId
   if not hasInventory(whichUnit) then
     return nil
   end
-  local item = __stub_new_handle("item")
-  item.typeId = itemId
   carry(whichUnit, item)
   dispatchPickup(whichUnit, item)
   return item
