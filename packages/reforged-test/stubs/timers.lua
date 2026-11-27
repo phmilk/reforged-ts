@@ -36,6 +36,12 @@ local SAME_INSTANT = 1e-9
 -- advance is an error.
 local MOST_EXPIRIES_AT_ONE_INSTANT = 100000
 
+-- The seconds a timeout counts: one that is no number, or below 0, counts
+-- as 0.
+local function counted(timeout)
+  return type(timeout) == "number" and math.max(timeout, 0.0) or 0.0
+end
+
 -- Arms an expiry on the Game clock: `expire` runs when an advance reaches
 -- `timeout` seconds from now, once, or once per `timeout` when `periodic`,
 -- counted from now without drift. A timeout of 0 expires on the next
@@ -45,8 +51,7 @@ local MOST_EXPIRIES_AT_ONE_INSTANT = 100000
 function __stub_schedule(timeout, periodic, expire)
   armed = armed + 1
   local expiry = { order = armed, expire = expire }
-  -- A timeout that is no number, or below 0, counts as 0.
-  timeout = type(timeout) == "number" and math.max(timeout, 0.0) or 0.0
+  timeout = counted(timeout)
   if periodic then
     expiry.from = clock
     expiry.period = math.max(timeout, SHORTEST_PERIOD)
@@ -166,18 +171,24 @@ end
 --   periodic one is still running in its handler, its countdown at its end,
 --   and counts again from there once the handler returns.
 --
--- `fired` is set while __stub_fire_timer runs the handler, which then reads
--- the timer as the handler of an expiry does.
+-- `firedByHand` is set while __stub_fire_timer runs the handler, which then
+-- reads the timer as the handler of an expiry does.
+
+-- Whether the timer is running. A one-shot timer __stub_fire_timer fires is
+-- not, inside its handler, as in the handler of an expiry.
+local function running(whichTimer)
+  return whichTimer.run ~= nil and not (whichTimer.firedByHand and not whichTimer.periodic)
+end
 
 -- The elapsed and the remaining time of the timer.
 local function reading(whichTimer)
   local timeout = whichTimer.timeout or 0.0
-  local run = whichTimer.run
-  if run == nil or (whichTimer.fired and not whichTimer.periodic) then
+  if not running(whichTimer) then
     local stored = whichTimer.stored or 0.0
     return timeout - stored, stored
   end
-  if run.ended or whichTimer.fired then
+  local run = whichTimer.run
+  if run.ended or whichTimer.firedByHand then
     return timeout, 0.0
   end
   local elapsed = clock - run.from
@@ -197,11 +208,14 @@ end
 
 -- One expiry of the timer: the Triggers of its expire event through the
 -- Event dispatch, then its handler, each with the timer as GetExpiredTimer's
--- answer (docs/research/timer-expire-event.md, "The expire event").
+-- answer (docs/research/timer-expire-event.md, "The expire event"). The
+-- handler is the one the timer has once the Triggers ran, and it runs even
+-- when one of them destroyed the timer ("A call a Trigger of the expire
+-- event makes on its timer").
 local function expire(whichTimer)
-  local handler = whichTimer.handler
   __stub_dispatch(EVENT_GAME_TIMER_EXPIRED, whichTimer, { GetExpiredTimer = whichTimer })
-  if handler ~= nil and not whichTimer.destroyed then
+  local handler = whichTimer.handler
+  if handler ~= nil then
     __stub_with_context({ GetExpiredTimer = whichTimer }, handler)
   end
 end
@@ -218,14 +232,24 @@ local function arm(whichTimer, length, periodic, ended)
   return run
 end
 
--- Runs `expiry`, then `after`, also when `expiry` throws: an error a
--- handler throws leaves the advance, and the timer goes on as in the game.
-local function expireThen(expiry, after)
-  local ok, err = pcall(expiry)
+-- Runs `body`, then `after`, also when `body` throws: an error a handler
+-- throws leaves the advance, and the timer goes on as in the game.
+local function thenAlways(body, after)
+  local ok, err = pcall(body)
   after()
   if not ok then
     error(err, 0)
   end
+end
+
+-- Starts a countdown of `length` seconds at whose end the timer stops
+-- running, then expires: the countdown of a one-shot timer, and the last
+-- one of a resumed timer.
+local function armLast(whichTimer, length)
+  arm(whichTimer, length, false, function()
+    whichTimer.run = nil
+    expire(whichTimer)
+  end)
 end
 
 -- A new start cancels the countdown, whatever a resume had left to do, and
@@ -242,18 +266,13 @@ function TimerStart(whichTimer, timeout, periodic, handlerFunc)
   if whichTimer.destroyed then
     return
   end
-  -- A timeout that is no number, or below 0, counts as 0.
-  local length = type(timeout) == "number" and math.max(timeout, 0.0) or 0.0
   if not periodic then
-    arm(whichTimer, length, false, function()
-      whichTimer.run = nil
-      expire(whichTimer)
-    end)
+    armLast(whichTimer, counted(timeout))
     return
   end
-  arm(whichTimer, math.max(length, SHORTEST_PERIOD), true, function(run)
+  arm(whichTimer, math.max(counted(timeout), SHORTEST_PERIOD), true, function(run)
     run.ended = true
-    expireThen(function()
+    thenAlways(function()
       expire(whichTimer)
     end, function()
       run.ended = nil
@@ -291,7 +310,7 @@ end
 -- nothing.
 function PauseTimer(whichTimer)
   __stub_record("PauseTimer", whichTimer)
-  if whichTimer.run ~= nil then
+  if running(whichTimer) then
     local _, remaining = reading(whichTimer)
     whichTimer.stored = remaining
     disarm(whichTimer)
@@ -318,26 +337,19 @@ function ResumeTimer(whichTimer)
   end
   local starts = whichTimer.starts
   if starts == nil then
-    arm(whichTimer, 0.0, false, function()
-      whichTimer.run = nil
-      expire(whichTimer)
-    end)
+    armLast(whichTimer, 0.0)
     return
   end
   arm(whichTimer, whichTimer.stored or 0.0, false, function()
     whichTimer.run = nil
-    expireThen(function()
+    thenAlways(function()
       expire(whichTimer)
     end, function()
       if whichTimer.destroyed or whichTimer.starts ~= starts then
         return
       end
       disarm(whichTimer)
-      local timeout = whichTimer.timeout
-      arm(whichTimer, type(timeout) == "number" and math.max(timeout, 0.0) or 0.0, false, function()
-        whichTimer.run = nil
-        expire(whichTimer)
-      end)
+      armLast(whichTimer, counted(whichTimer.timeout))
     end)
   end)
 end
@@ -357,8 +369,9 @@ __stub_response("GetExpiredTimer")
 -- Runs the handler TimerStart stored, once, with the timer as
 -- GetExpiredTimer's answer. It moves no clock, arms nothing and fires no
 -- expire event: the countdown of the timer stays as it was. Inside the
--- handler the timer reads as it does in the handler of an expiry: the
--- timeout and nothing left. Firing a timer that was never started or was
+-- handler the timer reads as it does in the handler of an expiry, the
+-- timeout and nothing left, and a PauseTimer on a one-shot timer writes
+-- nothing and stops nothing, as on one that expired. Firing a timer that was never started or was
 -- destroyed is an error. Not a Native, so it adds no call-log line.
 function __stub_fire_timer(whichTimer)
   local handler = whichTimer.handler
@@ -368,11 +381,11 @@ function __stub_fire_timer(whichTimer)
   if whichTimer.destroyed then
     error("__stub_fire_timer: " .. __stub_format(whichTimer) .. " was destroyed", 2)
   end
-  local fired = whichTimer.fired
-  whichTimer.fired = true
-  expireThen(function()
+  local firedByHand = whichTimer.firedByHand
+  whichTimer.firedByHand = true
+  thenAlways(function()
     __stub_with_context({ GetExpiredTimer = whichTimer }, handler)
   end, function()
-    whichTimer.fired = fired
+    whichTimer.firedByHand = firedByHand
   end)
 end

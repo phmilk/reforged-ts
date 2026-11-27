@@ -100,7 +100,7 @@ Game time is the Test game's own. It starts at 0 and nothing expires on its own:
 
 {@includeCode ../../../packages/reforged-test/examples/deferred.test.ts}
 
-**A resumed timer does what it does in the game.** A timer the game's `ResumeTimer` resumes fires when what was left at the pause runs out, once more a full timeout later, then never again, one-shot or periodic alike ([the findings](https://github.com/phmilk/reforged-ts/blob/master/docs/research/timer-resume-cases.md)), so a map that continues a countdown uses the library's `Timer.resume`, which fires once for a one-shot timer and keeps a periodic one periodic.
+**A resumed timer does what it does in the game.** A timer the game's `ResumeTimer` resumes fires when what was left at the pause runs out, once more a full timeout later, then never again, one-shot or periodic alike ([the findings](https://github.com/phmilk/reforged-ts/blob/master/docs/research/timer-resume-cases.md)).
 
 ## Assertions
 

@@ -474,6 +474,7 @@ describe("the Game clock and game.advanceTime", () => {
       passing(
         "fires when what was left runs out, a full timeout later, then stops, one-shot or periodic alike",
         "reads what was left, then a full timeout, and the values of the pause in its handlers and after",
+        "ends a periodic timer paused after a fire: two more fires, then the stop",
         "fires the timer's expire event at both fires, each time before the handler",
         "does nothing on a running timer, resumed or not",
         "is one resume when called twice in a row on a paused timer",
@@ -511,7 +512,24 @@ describe("the Game clock and game.advanceTime", () => {
         "starts ordinarily with TimerStart in the first fire of a resumed timer: no second countdown",
         "changes nothing with ResumeTimer in a periodic timer's handler",
         "fires a one-shot timer again with ResumeTimer in its handler, then a timeout later, and stops",
+        "fires a timer destroyed in its handler no more: a periodic one, and a resumed one in its first fire",
         "stops a periodic timer paused in its handler, which a resume fires on the next advance",
+      ),
+    );
+  });
+
+  it("answers a call a Trigger of the expire event makes on its timer as the game does", () => {
+    expect(
+      suite(
+        readings,
+        "a call a Trigger of the expire event makes on its timer",
+      ),
+    ).toEqual(
+      passing(
+        "runs the handler of a TimerStart the Trigger made, at that expiry and at the new one",
+        "runs the handler after a PauseTimer of the Trigger, which stops a periodic timer and no one-shot one",
+        "fires a one-shot timer the Trigger resumed again, then a timeout later, and leaves a periodic one alone",
+        "still runs the handler of the expiry when the Trigger destroys the timer, and never again",
       ),
     );
   });

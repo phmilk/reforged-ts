@@ -1,10 +1,10 @@
 # What a timer's expire event answers, and what a timer's own handler can do to it
 
-What a Trigger registered with `TriggerRegisterTimerExpireEvent` answers and when it fires, and what `ResumeTimer`, `PauseTimer` and `TimerStart` do when a timer's own handler calls them, measured for [#986](https://github.com/phmilk/reforged-ts/issues/986), a Ticket of the Spec [#970](https://github.com/phmilk/reforged-ts/issues/970). The timers stub of `reforged-test` copies the game under the Game clock, and neither [timer-answers.md](timer-answers.md) nor [timer-resume-cases.md](timer-resume-cases.md) measured these cases.
+What a Trigger registered with `TriggerRegisterTimerExpireEvent` answers and when it fires, and what `ResumeTimer`, `PauseTimer`, `TimerStart` and `DestroyTimer` do when a timer's own handler, or a Trigger of its expire event, calls them, measured for [#986](https://github.com/phmilk/reforged-ts/issues/986), a Ticket of the Spec [#970](https://github.com/phmilk/reforged-ts/issues/970). The timers stub of `reforged-test` copies the game under the Game clock, and neither [timer-answers.md](timer-answers.md) nor [timer-resume-cases.md](timer-resume-cases.md) measured these cases.
 
 ## TL;DR
 
-Everything below is Observed, in two runs that agree on every value.
+Everything below is Observed, in four runs that agree on every value they share.
 
 | Question                                                             | Answer                                                                                               |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -27,15 +27,22 @@ Everything below is Observed, in two runs that agree on every value.
 | `ResumeTimer` in a periodic timer's handler                          | nothing changes                                                                                      |
 | `ResumeTimer` in a one-shot timer's handler                          | a second fire 0.0001 s later, a third a full timeout later, then the stop                            |
 | `PauseTimer` in a periodic timer's handler, `ResumeTimer` afterwards | paused, it reads the timeout and 0; resumed, it fires 0.0001 s later and a full timeout later, stops |
+| `DestroyTimer` in a timer's handler                                  | no fire after it: a periodic timer stops, and a resumed one has no second fire                       |
+| `TimerStart` in a Trigger of the expire event                        | the handler of that expiry is the new one, which runs again when the new start expires               |
+| `PauseTimer` in a Trigger of the expire event                        | the handler still runs; a periodic timer never fires again, a one-shot one is not changed            |
+| `ResumeTimer` in a Trigger of the expire event                       | on a one-shot timer, as in its handler: two more fires; on a periodic one, nothing                   |
+| `DestroyTimer` in a Trigger of the expire event                      | the handler of that expiry still runs, and nothing after it                                          |
 
 "The rule" is what [#947](https://github.com/phmilk/reforged-ts/issues/947) found: a resumed timer fires when what was left runs out, once more a full timeout later, then stops, one-shot or periodic alike.
 
 ## The runs
 
 - Probe: `probe/probes/timer-expire-event.ts`.
-- Run `c902d400-f6f3-42d2-bc54-51fc9cae4f7d`, 2026-11-26, `finished`, 438 records.
+- Run `c902d400-f6f3-42d2-bc54-51fc9cae4f7d`, 2026-11-26, `finished`, 438 records: the expire event and the calls of a handler.
 - Run `b0769e67-9c40-4504-bf49-abe19b121e5e`, 2026-11-26, `finished`, 438 records: the same Probe, unchanged, every fire and every reading identical.
-- Between the two, run `56a553de-aa3f-4144-ac9e-42a889184549` ended `not-started`: the game showed "There was an error in handling the request. Please check your VPN" in place of the map, and was ended there.
+- Run `81206d89-c289-4279-8ba9-1e61867d84c8`, 2026-11-26, `finished`, 622 records: the same 438 records, every value identical, then the calls of a Trigger of the expire event and `DestroyTimer` in a handler, added after a review of the stub found them unmeasured.
+- Run `5b29d2a4-a19d-4148-b3f3-86e8d921d17e`, 2026-11-26, `finished`, 622 records: the Probe of the third run, unchanged, every fire and every reading identical.
+- Between the second and the third, run `56a553de-aa3f-4144-ac9e-42a889184549` ended `not-started`: the game showed "There was an error in handling the request. Please check your VPN" in place of the map, and was ended there.
 - Typings of Patch 3.0.1.24370; client on Build 3.0.1.24371, accepted with `--client-build 3.0.1.24371` (a hotfix of the same Game version, `probe/README.md`, "Running a Probe run").
 - Command: `pnpm probe:run timer-expire-event --client-build 3.0.1.24371`.
 
@@ -99,11 +106,30 @@ The ordinary timers, each of timeout 1, the call made in the first fire:
 
 A periodic timer is running in its handler, at the end of its countdown (the timeout and 0): `ResumeTimer` does nothing to a running timer, and `PauseTimer` stores the 0 left, so the timer reads the timeout and 0 while paused and a later `ResumeTimer` counts 0.0001 s, the least the game counts, then the timeout. A one-shot timer is not running in its handler, so `ResumeTimer` there is the one on an expired timer ([timer-resume-cases.md](timer-resume-cases.md#the-doubled-calls)).
 
+`DestroyTimer` in a handler ends the timer there: a periodic timer of 1 destroyed in its first fire never fired again, and a resumed timer destroyed in the first of its two fires (2.5) had no second one. Neither was read after the call.
+
+## A call a Trigger of the expire event makes on its timer
+
+A Trigger of the timer's expire event, whose action makes the call at the first expiry, before the handler of that expiry. Each timer has a timeout of 1 and a handler; the Trigger's action reads the timeout and 0 before the call, on the one-shot and on the periodic timer alike.
+
+| The Trigger calls                   | Timer    | Reading right after the call | Handlers at `t`                                 |
+| ----------------------------------- | -------- | ---------------------------- | ----------------------------------------------- |
+| `TimerStart(timer, 0.75, false, …)` | one-shot | elapsed 0, remaining 0.75    | the new one at 1 and at 1.75; the old one never |
+| `TimerStart(timer, 0.75, false, …)` | periodic | elapsed 0, remaining 0.75    | the new one at 1 and at 1.75; the old one never |
+| `PauseTimer`                        | one-shot | elapsed 1, remaining 0       | 1, and no other, as without the call            |
+| `PauseTimer`                        | periodic | elapsed 1, remaining 0       | 1, and never again                              |
+| `ResumeTimer`                       | one-shot | elapsed 0, remaining 0.0001  | 1, 1.0001, 2.0001                               |
+| `ResumeTimer`                       | periodic | elapsed 1, remaining 0       | 1, 2 … 10, as any                               |
+
+So the handler of an expiry runs after the Triggers of the expire event whatever they did to the timer, and it is the handler the timer has by then: after a `TimerStart` in the Trigger the new handler runs at once, reading the new countdown (elapsed 0, remaining 0.75), and again 0.75 s later, when that countdown ends. In the Trigger the timer is in the state it has in its handler: a one-shot timer is not running, so `PauseTimer` writes nothing and `ResumeTimer` starts the two fires of the rule; a periodic timer is running, so `ResumeTimer` does nothing and `PauseTimer` stops it with 0 left.
+
+`DestroyTimer` in the Trigger, at 6, on a one-shot timer of 6 at its expiry and on a periodic timer of 2 at its third: the handler of that expiry ran after the call, both times, and no handler and no expire event came after it in the 4.5 s that followed. Nothing crashed.
+
 ## What it means for the Game clock
 
-All of it follows from the rule of [timer-resume-cases.md](timer-resume-cases.md#one-rule-that-fits-every-case) and two additions, which the stub copies:
+All of it follows from the rule of [timer-resume-cases.md](timer-resume-cases.md#one-rule-that-fits-every-case) and these additions, which the stub copies:
 
-- **The expire event is part of the timer's expiry.** At each expiry the stub dispatches the timer event to the Triggers registered for that timer, in registration order, with the timer as `GetExpiredTimer`'s answer, then runs the handler. A timer never started, resumed, has that event and no handler.
+- **The expire event is part of the timer's expiry.** At each expiry the stub dispatches the timer event to the Triggers registered for that timer, in registration order, with the timer as `GetExpiredTimer`'s answer, then runs the handler. A timer never started, resumed, has that event and no handler. The handler is the one the timer has once the Triggers ran, and it runs even when one of them destroyed the timer.
 - **A one-shot timer stops running before its handler; a periodic one is still running in it, its countdown at its end.** So in a handler `PauseTimer` and `ResumeTimer` act as they do on a timer in that state.
 - **The second countdown of a resumed timer starts when the handler of its first fire returns**, unless that handler called `TimerStart` or destroyed the timer.
 
@@ -111,7 +137,6 @@ The 0.0001 s of a countdown of 0 is not copied: under `game.advanceTime` it ends
 
 ## Limits
 
-- Two runs, one client, timeouts of 0.75, 1, 1.5, 2 and 3.
-- `DestroyTimer` in a handler was not measured: the stub fires a destroyed timer no more.
-- A Trigger of the expire event that pauses, starts or destroys its timer, before the handler of that expiry, was not measured: the stub then runs the handler of the `TimerStart` before it, unless the timer was destroyed.
+- Four runs, one client, timeouts of 0.75, 1, 1.5, 2, 3 and 6.
+- A timer was never read after `DestroyTimer`.
 - `ResumeTimer` then `PauseTimer` on one line in the first fire of a resumed timer was not measured.

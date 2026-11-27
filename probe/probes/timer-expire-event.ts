@@ -13,7 +13,10 @@
 // - where a timer's expire event runs among the timers of one instant;
 // - what `ResumeTimer`, `PauseTimer` and `TimerStart` do when a timer's own
 //   handler calls them: in the first and in the second fire of a resumed
-//   timer, and in the handler of an ordinary one-shot and periodic timer.
+//   timer, and in the handler of an ordinary one-shot and periodic timer;
+// - what the same calls and `DestroyTimer` do when a Trigger of the timer's
+//   expire event makes them, before the handler of that expiry, and what
+//   `DestroyTimer` does in a timer's own handler.
 //
 // Every record carries `t`, the elapsed time of a reference timer started
 // first. Every timer is read in its handler, before and after each call made
@@ -290,6 +293,151 @@ export function run(p: ProbeContext): void {
   );
   step(2.5, "periodic-pause-in-handler", pausedInHandler, "resume", () => {
     ResumeTimer(pausedInHandler);
+  });
+
+  /**
+   * A Trigger of the timer's expire event whose action records each event
+   * and, in its event `at`, makes the call `act` on the timer, reading it
+   * after the call unless the call destroyed it.
+   */
+  function actingTrigger(
+    name: string,
+    timer: timer,
+    at: number,
+    act: () => void,
+    destroys: boolean,
+  ): void {
+    const self = CreateTrigger();
+    let events = 0;
+    TriggerAddAction(self, () => {
+      events += 1;
+      p.record("TRIGGER", {
+        timer: name,
+        n: events,
+        t: t(),
+        elapsed: TimerGetElapsed(timer),
+        remaining: TimerGetRemaining(timer),
+        timeout: TimerGetTimeout(timer),
+        fires: fires.get(name) ?? 0,
+      });
+      if (events !== at) return;
+      act();
+      if (destroys) {
+        p.record("DESTROYED", { timer: name, where: "trigger", t: t() });
+      } else {
+        read(name, timer, "after-call-in-trigger");
+      }
+    });
+    TriggerRegisterTimerExpireEvent(self, timer);
+    triggers.push(self);
+  }
+
+  // A Trigger of the expire event that calls on its timer, at the first
+  // expiry (1), before the handler: on a one-shot and on a periodic timer.
+  for (const periodic of [false, true]) {
+    const kind = periodic ? "periodic" : "one-shot";
+    const started = start(`trigger-starts-${kind}`, 1, periodic);
+    actingTrigger(
+      `trigger-starts-${kind}`,
+      started,
+      1,
+      () => {
+        TimerStart(
+          started,
+          0.75,
+          false,
+          handler(`trigger-starts-${kind}`, started, "second"),
+        );
+      },
+      false,
+    );
+    const paused = start(`trigger-pauses-${kind}`, 1, periodic);
+    actingTrigger(
+      `trigger-pauses-${kind}`,
+      paused,
+      1,
+      () => {
+        PauseTimer(paused);
+      },
+      false,
+    );
+    const resumedByTrigger = start(`trigger-resumes-${kind}`, 1, periodic);
+    actingTrigger(
+      `trigger-resumes-${kind}`,
+      resumedByTrigger,
+      1,
+      () => {
+        ResumeTimer(resumedByTrigger);
+      },
+      false,
+    );
+  }
+
+  /**
+   * Starts a timer that is never read from outside, since it is destroyed
+   * on the way: its handler records its fire and, in its fire `destroyAt`,
+   * destroys it.
+   */
+  function destroyed(
+    name: string,
+    timeout: number,
+    periodic: boolean,
+    destroyAt: number,
+  ): timer {
+    const timer = CreateTimer();
+    let n = 0;
+    TimerStart(timer, timeout, periodic, () => {
+      n += 1;
+      p.record("FIRE", { timer: name, n, handler: "first", t: t() });
+      if (n === destroyAt) {
+        DestroyTimer(timer);
+        p.record("DESTROYED", { timer: name, where: "handler", t: t() });
+      }
+    });
+    return timer;
+  }
+
+  // DestroyTimer in a timer's own handler: a periodic timer, in its first
+  // fire (1), and a resumed one, in the first of its two fires (2.5).
+  destroyed("destroy-in-periodic-handler", 1, true, 1);
+  const destroyedResumed = destroyed("destroy-in-first-fire", 2, false, 1);
+  p.after(0.5, () => {
+    PauseTimer(destroyedResumed);
+  });
+  p.after(1, () => {
+    ResumeTimer(destroyedResumed);
+  });
+
+  // DestroyTimer in a Trigger of the expire event, at 6, before the handler
+  // of that expiry: a one-shot timer of 6, and a periodic one of 2 in its
+  // third expiry. A checkpoint comes first, since it may crash.
+  const destroyedOneShot = destroyed("trigger-destroys-one-shot", 6, false, 0);
+  actingTrigger(
+    "trigger-destroys-one-shot",
+    destroyedOneShot,
+    1,
+    () => {
+      DestroyTimer(destroyedOneShot);
+    },
+    true,
+  );
+  const destroyedPeriodic = destroyed("trigger-destroys-periodic", 2, true, 0);
+  actingTrigger(
+    "trigger-destroys-periodic",
+    destroyedPeriodic,
+    3,
+    () => {
+      DestroyTimer(destroyedPeriodic);
+    },
+    true,
+  );
+  p.after(5.875, () => {
+    p.pending("DestroyTimer in a Trigger of the timer's expire event");
+    p.checkpoint();
+  });
+  p.after(6.125, () => {
+    p.pending("after DestroyTimer in a Trigger of the timer's expire event");
+    p.checkpoint();
   });
 
   function sample(): void {
