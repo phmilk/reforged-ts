@@ -40,14 +40,15 @@ const ON_NPM = {
 };
 
 describe("templateDispatch", () => {
-  it("dispatches a library release under its tag, with every package's version", async () => {
+  it("dispatches a library release under its tag, with every package's version, to the Template's main from master", async () => {
     const root = await workspace({ ...ON_NPM, "reforged-ts": "1.0.0-alpha.3" });
     const pack = await packDir(entry("reforged-ts", "1.0.0-alpha.3"));
 
-    expect(await templateDispatch(pack, root)).toEqual({
+    expect(await templateDispatch(pack, root, "master")).toEqual({
       event_type: "reforged-ts-release",
       client_payload: {
         tag: "reforged-ts@1.0.0-alpha.3",
+        branch: "main",
         versions: {
           "reforged-ts": "1.0.0-alpha.3",
           "reforged-types": "1.0.0-alpha.1",
@@ -79,8 +80,11 @@ describe("templateDispatch", () => {
       entry("reforged-types", "1.3.0"),
     );
 
-    expect((await templateDispatch(pack, root))?.client_payload).toEqual({
+    expect(
+      (await templateDispatch(pack, root, "master"))?.client_payload,
+    ).toEqual({
       tag: "reforged-types@1.3.0",
+      branch: "main",
       versions: {
         "reforged-ts": "1.2.0",
         "reforged-types": "1.3.0",
@@ -96,6 +100,36 @@ describe("templateDispatch", () => {
     });
   });
 
+  it("dispatches a release from next to the Template's next, which its sync applies it to", async () => {
+    const root = await workspace({
+      "reforged-ts": "2.0.0-beta.0",
+      "reforged-types": "1.3.0",
+      "reforged-test": "1.1.1",
+      "eslint-plugin-reforged": "1.2.0",
+      "reforged-map": "1.0.2",
+      "reforged-builtins": "1.0.1",
+      "reforged-studio": "1.0.3",
+    });
+    const pack = await packDir(entry("reforged-ts", "2.0.0-beta.1"));
+
+    expect(
+      (await templateDispatch(pack, root, "next"))?.client_payload,
+    ).toMatchObject({
+      tag: "reforged-ts@2.0.0-beta.1",
+      branch: "next",
+      llmsUrl: "https://phmilk.github.io/reforged-ts/docs/next/llms.txt",
+    });
+  });
+
+  it("refuses a branch with no Release channel, naming master and next, before reading the plan", async () => {
+    const root = await workspace(ON_NPM);
+    await expect(
+      templateDispatch(await tempDir("empty"), root, "feature/1065"),
+    ).rejects.toThrow(
+      'A release runs from master or next, and "feature/1065" is neither',
+    );
+  });
+
   it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the seven", async () => {
     const root = await workspace({
       ...ON_NPM,
@@ -107,7 +141,9 @@ describe("templateDispatch", () => {
       entry("reforged-map", "1.0.0-alpha.0"),
     );
 
-    expect((await templateDispatch(pack, root))?.client_payload).toMatchObject({
+    expect(
+      (await templateDispatch(pack, root, "master"))?.client_payload,
+    ).toMatchObject({
       tag: "reforged-types@1.0.0-alpha.5",
       versions: {
         ...ON_NPM,
@@ -117,16 +153,16 @@ describe("templateDispatch", () => {
     });
 
     const alone = await packDir(entry("reforged-map", "1.0.1"));
-    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
-      {
-        tag: "reforged-map@1.0.1",
-        versions: {
-          ...ON_NPM,
-          "reforged-types": "1.0.0-alpha.5",
-          "reforged-map": "1.0.1",
-        },
+    expect(
+      (await templateDispatch(alone, root, "master"))?.client_payload,
+    ).toMatchObject({
+      tag: "reforged-map@1.0.1",
+      versions: {
+        ...ON_NPM,
+        "reforged-types": "1.0.0-alpha.5",
+        "reforged-map": "1.0.1",
       },
-    );
+    });
   });
 
   it("dispatches the first release of reforged-builtins with the version of each package, under its own tag when alone", async () => {
@@ -136,19 +172,19 @@ describe("templateDispatch", () => {
     });
     const alone = await packDir(entry("reforged-builtins", "1.0.0-alpha.0"));
 
-    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
-      {
-        tag: "reforged-builtins@1.0.0-alpha.0",
-        versions: ON_NPM,
-      },
-    );
+    expect(
+      (await templateDispatch(alone, root, "master"))?.client_payload,
+    ).toMatchObject({
+      tag: "reforged-builtins@1.0.0-alpha.0",
+      versions: ON_NPM,
+    });
 
     const withLibrary = await packDir(
       entry("reforged-builtins", "1.0.0-alpha.0"),
       entry("reforged-ts", "1.0.0-alpha.2"),
     );
     expect(
-      (await templateDispatch(withLibrary, root))?.client_payload,
+      (await templateDispatch(withLibrary, root, "master"))?.client_payload,
     ).toMatchObject({ tag: "reforged-ts@1.0.0-alpha.2", versions: ON_NPM });
   });
 
@@ -156,31 +192,33 @@ describe("templateDispatch", () => {
     const root = await workspace(ON_NPM);
     const alone = await packDir(entry("reforged-studio", "1.0.0-alpha.0"));
 
-    expect((await templateDispatch(alone, root))?.client_payload).toMatchObject(
-      {
-        tag: "reforged-studio@1.0.0-alpha.0",
-        versions: ON_NPM,
-      },
-    );
+    expect(
+      (await templateDispatch(alone, root, "master"))?.client_payload,
+    ).toMatchObject({
+      tag: "reforged-studio@1.0.0-alpha.0",
+      versions: ON_NPM,
+    });
 
     const withMap = await packDir(
       entry("reforged-studio", "1.0.0-alpha.0"),
       entry("reforged-map", "1.0.0-alpha.0"),
     );
     expect(
-      (await templateDispatch(withMap, root))?.client_payload,
+      (await templateDispatch(withMap, root, "master"))?.client_payload,
     ).toMatchObject({ tag: "reforged-map@1.0.0-alpha.0", versions: ON_NPM });
   });
 
   it("dispatches nothing for a release of create-reforged-map alone, which leaves the Template's ranges as they are", async () => {
     const root = await workspace(ON_NPM);
     const pack = await packDir(entry("create-reforged-map", "1.0.0-alpha.1"));
-    expect(await templateDispatch(pack, root)).toBeUndefined();
+    expect(await templateDispatch(pack, root, "master")).toBeUndefined();
   });
 
   it("refuses a plan that publishes no package", async () => {
     const root = await workspace(ON_NPM);
-    await expect(templateDispatch(await packDir(), root)).rejects.toThrow(
+    await expect(
+      templateDispatch(await packDir(), root, "master"),
+    ).rejects.toThrow(
       "The publish plan publishes no package: there is no release to dispatch.",
     );
   });
@@ -190,15 +228,15 @@ describe("templateDispatch", () => {
       PACKAGES.filter(({ name }) => name !== "reforged-test"),
     );
     const pack = await packDir(entry("reforged-ts", "1.0.0"));
-    await expect(templateDispatch(pack, root)).rejects.toThrow(
+    await expect(templateDispatch(pack, root, "master")).rejects.toThrow(
       "Neither the publish plan nor the workspace has reforged-test.",
     );
   });
 
   it("refuses a library version that names no docs version", async () => {
-    const root = await workspace({ ...ON_NPM, "reforged-ts": "next" });
-    const pack = await packDir(entry("reforged-types", "1.0.0-alpha.2"));
-    await expect(templateDispatch(pack, root)).rejects.toThrow(
+    const root = await workspace(ON_NPM);
+    const pack = await packDir(entry("reforged-ts", "next"));
+    await expect(templateDispatch(pack, root, "master")).rejects.toThrow(
       "reforged-ts next is not a semantic version: it names no docs version for the llmsUrl.",
     );
   });
@@ -317,24 +355,25 @@ describe("release:template-dispatch", () => {
     return { status, stdout, stderr };
   }
 
-  it("writes the request body to the out file, and the payload to stdout and the job summary", async () => {
+  it("writes the request body of the branch's channel to the out file, and the payload to stdout and the job summary", async () => {
     const root = await workspace({ ...ON_NPM, "reforged-ts": "1.0.0-alpha.3" });
     const pack = await packDir(entry("reforged-ts", "1.0.0-alpha.3"));
     const cwd = await tempDir("cwd");
     const summary = join(cwd, "summary.md");
 
     const result = await runCli(
-      ["--pack-dir", pack, "--out", "dispatch.json"],
+      ["--pack-dir", pack, "--out", "dispatch.json", "--branch", "next"],
       root,
       cwd,
       { GITHUB_STEP_SUMMARY: summary },
     );
 
-    const body = await templateDispatch(pack, root);
+    const body = await templateDispatch(pack, root, "next");
+    expect(body?.client_payload.branch).toBe("next");
     const payload = JSON.stringify(body?.client_payload, null, 2);
     expect(result).toEqual({
       status: 0,
-      stdout: `reforged-ts-release, tag reforged-ts@1.0.0-alpha.3:\n${payload}\n`,
+      stdout: `reforged-ts-release, tag reforged-ts@1.0.0-alpha.3, Template branch next:\n${payload}\n`,
       stderr: "",
     });
     expect(
@@ -342,7 +381,7 @@ describe("release:template-dispatch", () => {
     ).toEqual(body);
     expect(await readFile(summary, "utf8")).toBe(
       "## Template dispatch\n\n" +
-        "`reforged-ts-release` to phmilk/reforged-ts-template, tag `reforged-ts@1.0.0-alpha.3`:\n\n" +
+        "`reforged-ts-release` to phmilk/reforged-ts-template, tag `reforged-ts@1.0.0-alpha.3`, Template branch `next`:\n\n" +
         `\`\`\`json\n${payload}\n\`\`\`\n`,
     );
   });
@@ -365,6 +404,8 @@ describe("release:template-dispatch", () => {
       pack,
       "--out",
       "dispatch.json",
+      "--branch",
+      "master",
       "--await-npm",
       "1",
     ];
@@ -375,7 +416,7 @@ describe("release:template-dispatch", () => {
     expect(listed.asked.get("reforged-ts")).toBe(2);
     expect(
       JSON.parse(await readFile(join(cwd, "dispatch.json"), "utf8")),
-    ).toEqual(await templateDispatch(pack, root));
+    ).toEqual(await templateDispatch(pack, root, "master"));
 
     const late = await tempDir("cwd");
     const unlisted = registry({ "reforged-ts": [["1.0.0-alpha.2"]] });
@@ -399,7 +440,16 @@ describe("release:template-dispatch", () => {
 
     expect(
       await runCli(
-        ["--pack-dir", pack, "--out", "dispatch.json", "--await-npm", "1"],
+        [
+          "--pack-dir",
+          pack,
+          "--out",
+          "dispatch.json",
+          "--branch",
+          "master",
+          "--await-npm",
+          "1",
+        ],
         root,
         cwd,
         { GITHUB_STEP_SUMMARY: summary },
@@ -411,12 +461,13 @@ describe("release:template-dispatch", () => {
     );
   });
 
-  it("exits 1 on a plan it cannot dispatch and 2 on bad arguments", async () => {
+  it("exits 1 on a plan it cannot dispatch or a branch with no channel, and 2 on bad arguments", async () => {
     const root = await workspace(ON_NPM);
     const cwd = await tempDir("cwd");
+    const empty = await tempDir("empty");
     expect(
       await runCli(
-        ["--pack-dir", await tempDir("empty"), "--out", "dispatch.json"],
+        ["--pack-dir", empty, "--out", "dispatch.json", "--branch", "master"],
         root,
         cwd,
       ),
@@ -426,17 +477,37 @@ describe("release:template-dispatch", () => {
         "Cannot read the publish plan",
       ) as unknown,
     });
+    expect(
+      await runCli(
+        ["--pack-dir", empty, "--out", "dispatch.json", "--branch", "main"],
+        root,
+        cwd,
+      ),
+    ).toMatchObject({
+      status: 1,
+      stderr: expect.stringContaining(
+        'A release runs from master or next, and "main" is neither',
+      ) as unknown,
+    });
     for (const args of [
       [],
-      ["--pack-dir", "pack"],
-      ["--out", "x", "--out", "y"],
-      ["--pack-dir", "pack", "--out", "x", "--await-npm", "0"],
-      ["--pack-dir", "pack", "--out", "x", "--await-npm", "soon"],
+      ["--pack-dir", "pack", "--branch", "master"],
+      ["--pack-dir", "pack", "--out", "x"],
+      ["--out", "x", "--out", "y", "--branch", "master"],
+      ["--pack-dir", "pack", "--out", "x", "--branch"],
+      [
+        ...["--pack-dir", "pack", "--out", "x", "--branch", "master"],
+        ...["--await-npm", "0"],
+      ],
+      [
+        ...["--pack-dir", "pack", "--out", "x", "--branch", "master"],
+        ...["--await-npm", "soon"],
+      ],
     ]) {
       expect(await runCli(args, root, cwd)).toMatchObject({
         status: 2,
         stderr:
-          "Usage: release:template-dispatch --pack-dir <dir> --out <file> [--await-npm <minutes>]\n",
+          "Usage: release:template-dispatch --pack-dir <dir> --out <file> --branch <name> [--await-npm <minutes>]\n",
       });
     }
   });

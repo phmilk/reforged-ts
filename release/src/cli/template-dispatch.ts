@@ -1,8 +1,11 @@
 /**
- * `release:template-dispatch --pack-dir <dir> --out <file> [--await-npm <minutes>]`:
+ * `release:template-dispatch --pack-dir <dir> --out <file> --branch <name> [--await-npm <minutes>]`:
  * writes to `<file>` the body of the `reforged-ts-release`
  * `repository_dispatch` the release in the `changeset pack` output `<dir>`
- * sends the Template, which the release workflow posts with `gh api`.
+ * sends the Template, which the release workflow posts with `gh api`. Its
+ * `branch` is the Template ref of the Release channel of the branch
+ * `<name>` the release runs from: `main` from `master`, `next` from `next`;
+ * any other branch is refused.
  * Prints the payload; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) it also
  * goes to the job summary, so a dry run shows what a release would send.
  *
@@ -15,8 +18,9 @@
  * `<file>`, which the workflow reads as no dispatch.
  *
  * Relative paths resolve against the folder the command was started from.
- * Exit codes: 0 written, or nothing to dispatch, 1 the plan cannot be read
- * or dispatched, or npm does not list the release in time, 2 usage.
+ * Exit codes: 0 written, or nothing to dispatch, 1 a branch with no
+ * channel, a plan that cannot be read or dispatched, or npm does not list
+ * the release in time, 2 usage.
  */
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -39,7 +43,7 @@ import {
 } from "./common.js";
 
 const USAGE =
-  "Usage: release:template-dispatch --pack-dir <dir> --out <file> [--await-npm <minutes>]\n";
+  "Usage: release:template-dispatch --pack-dir <dir> --out <file> --branch <name> [--await-npm <minutes>]\n";
 
 /** The pause between two rounds of registry requests. */
 const NPM_INTERVAL_MS = 15_000;
@@ -66,8 +70,8 @@ export async function main(
 ): Promise<number> {
   const options = parseOptions(
     args,
-    ["--pack-dir", "--out", "--await-npm"],
-    ["--pack-dir", "--out"],
+    ["--pack-dir", "--out", "--branch", "--await-npm"],
+    ["--pack-dir", "--out", "--branch"],
   );
   const minutes =
     options?.["--await-npm"] === undefined
@@ -85,6 +89,7 @@ export async function main(
     const body = await templateDispatch(
       resolve(context.cwd, options["--pack-dir"]),
       context.root,
+      options["--branch"],
     );
     if (body === undefined) {
       const message = `The release publishes none of ${Object.values(ROW_PACKAGES).join(", ")}: the Template has nothing to sync, and nothing is dispatched.`;
@@ -104,13 +109,15 @@ export async function main(
       resolve(context.cwd, options["--out"]),
       `${JSON.stringify(body)}\n`,
     );
-    const { tag } = body.client_payload;
+    const { tag, branch } = body.client_payload;
     const payload = JSON.stringify(body.client_payload, null, 2);
-    output.stdout(`${body.event_type}, tag ${tag}:\n${payload}\n`);
+    output.stdout(
+      `${body.event_type}, tag ${tag}, Template branch ${branch}:\n${payload}\n`,
+    );
     await appendSummary(
       context.env,
       "## Template dispatch\n\n" +
-        `\`${body.event_type}\` to ${TEMPLATE_REPOSITORY}, tag \`${tag}\`:\n\n` +
+        `\`${body.event_type}\` to ${TEMPLATE_REPOSITORY}, tag \`${tag}\`, Template branch \`${branch}\`:\n\n` +
         `\`\`\`json\n${payload}\n\`\`\`\n`,
     );
     return 0;
