@@ -32,7 +32,13 @@ async function runStep(step: Step, env: Record<string, string>) {
   await writeText(root, "step.sh", step.run ?? "");
   const result = spawnSync(
     bash ?? "bash",
-    ["--noprofile", "--norc", "-eo", "pipefail", slashed(join(root, "step.sh"))],
+    [
+      "--noprofile",
+      "--norc",
+      "-eo",
+      "pipefail",
+      slashed(join(root, "step.sh")),
+    ],
     {
       cwd: root,
       encoding: "utf8",
@@ -43,11 +49,14 @@ async function runStep(step: Step, env: Record<string, string>) {
       },
     },
   );
-  const outputs = Object.fromEntries(
+  const outputs: Record<string, string> = Object.fromEntries(
     (await readFile(join(root, "github-output"), "utf8"))
       .split("\n")
       .filter((line) => line.includes("="))
-      .map((line) => line.split("=", 2)),
+      .map((line): [string, string] => [
+        line.slice(0, line.indexOf("=")),
+        line.slice(line.indexOf("=") + 1),
+      ]),
   );
   return { status: result.status, stdout: result.stdout, outputs };
 }
