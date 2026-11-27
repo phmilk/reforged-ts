@@ -1,6 +1,6 @@
 # What Timer.resume does over TimerStart
 
-What the library's `Timer.resume` does once it no longer calls `ResumeTimer` but starts the Timer again with `TimerStart` for what was left at the pause, and the facts of the game it relies on, measured for [#962](https://github.com/phmilk/reforged-ts/issues/962). Why `ResumeTimer` is not used: [timer-answers.md](https://github.com/phmilk/reforged-ts/blob/research/timer-answers/docs/research/timer-answers.md), "What `ResumeTimer` leaves behind" ([#947](https://github.com/phmilk/reforged-ts/issues/947)), and [timer-resume-cases.md](https://github.com/phmilk/reforged-ts/blob/research/timer-resume-cases/docs/research/timer-resume-cases.md) ([#961](https://github.com/phmilk/reforged-ts/issues/961)): a timer `ResumeTimer` resumes fires when what was left runs out, once more a full timeout later, then stops, one-shot or periodic alike.
+What the library's `Timer.resume` does once it no longer calls `ResumeTimer` but starts the Timer again with `TimerStart` for what was left at the pause, and the facts of the game it relies on, measured for [#962](https://github.com/phmilk/reforged-ts/issues/962). Why `ResumeTimer` is not used: [timer-answers.md](timer-answers.md), "What `ResumeTimer` leaves behind" ([#947](https://github.com/phmilk/reforged-ts/issues/947)), and [timer-resume-cases.md](timer-resume-cases.md) ([#961](https://github.com/phmilk/reforged-ts/issues/961)): a timer `ResumeTimer` resumes fires when what was left runs out, once more a full timeout later, then stops, one-shot or periodic alike.
 
 ## TL;DR
 

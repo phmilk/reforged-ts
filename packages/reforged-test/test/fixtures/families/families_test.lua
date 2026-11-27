@@ -382,8 +382,9 @@ describe("timers", function()
     TimerStart(timer, 2.0, false, function() end)
     PauseTimer(timer)
     ResumeTimer(timer)
+    -- Paused with its whole timeout left, the resumed timer counts it.
     expect(TimerGetElapsed(timer)).toEqual(0.0)
-    expect(TimerGetRemaining(timer)).toEqual(0.0)
+    expect(TimerGetRemaining(timer)).toEqual(2.0)
     DestroyTimer(timer)
     expect(function() __stub_fire_timer(timer) end).toThrow(ref(timer) .. " was destroyed")
     for _, name in ipairs({ "PauseTimer", "ResumeTimer", "TimerGetElapsed", "TimerGetRemaining" }) do

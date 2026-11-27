@@ -1,17 +1,19 @@
 -- The Game clock on reforged-test/lua: one clock for the Lua state of the
--- file, moved by __stub_advance_time, and a timer that reads as before when
--- no test advances it.
+-- file, moved by __stub_advance_time, and a timer that fires nothing when no
+-- test advances it.
 local runner = require("lua_modules.reforged-test.lua.index")
 local it, describe, expect = runner.it, runner.describe, runner.expect
 
 describe("the Game clock, on reforged-test/lua", function()
-  it("reads as before when never advanced", function()
+  it("fires nothing when never advanced, and reads a running timer as the game does", function()
     local timer = CreateTimer()
     local fired = 0
     TimerStart(timer, 1.5, true, function() fired = fired + 1 end)
     expect(TimerGetTimeout(timer)).toEqual(1.5)
     expect(TimerGetElapsed(timer)).toEqual(0.0)
-    expect(TimerGetRemaining(timer)).toEqual(0.0)
+    -- A running timer has its timeout left right after TimerStart
+    -- (docs/research/timer-answers.md, "A paused timer").
+    expect(TimerGetRemaining(timer)).toEqual(1.5)
     expect(fired).toEqual(0)
     __stub_fire_timer(timer)
     expect(fired).toEqual(1)

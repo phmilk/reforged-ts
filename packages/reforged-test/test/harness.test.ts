@@ -341,7 +341,9 @@ describe("game.fire and the Event dispatch, on reforged-test/map", () => {
 });
 
 describe("the Game clock and game.advanceTime", () => {
-  const [clock, entry] = runLuaTestFiles({ outDir: outDir("clock") });
+  const [clock, entry, readings] = runLuaTestFiles({
+    outDir: outDir("clock"),
+  });
 
   /** The tests of one describe of a fixture file. */
   function suite(
@@ -358,10 +360,14 @@ describe("the Game clock and game.advanceTime", () => {
     return names.map((name) => ({ name, status: "pass" }));
   }
 
-  it("loads both files of the fixture", () => {
-    expect([clock.error, entry.error]).toEqual([undefined, undefined]);
+  it("loads the three files of the fixture", () => {
+    expect([clock.error, entry.error, readings.error]).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ]);
     expect(
-      [...clock.tests, ...entry.tests]
+      [...clock.tests, ...entry.tests, ...readings.tests]
         .filter((test) => test.status !== "pass")
         .map((test) => test.suite[0]),
     ).toEqual(["an error no test catches"]);
@@ -448,10 +454,92 @@ describe("the Game clock and game.advanceTime", () => {
     );
   });
 
-  it("is one clock on reforged-test/lua too, read as before when never advanced", () => {
+  it("reads a timer as the game does: running, paused, expired, never started", () => {
+    expect(suite(readings, "the readings of a timer")).toEqual(
+      passing(
+        "reads 0, 0 and a timeout of 0 on a timer never started",
+        "reads a running timer by the time since TimerStart",
+        "freezes a paused timer at the pause, and never fires it",
+        "reads the timeout and 0 on a one-shot timer, in its handler and ever after",
+        "reads the timeout and 0 in a periodic timer's handler, and counts again after it",
+        "reads 0.0001 left on a timer of timeout 0 right after its start, and 0 in its handler",
+        "changes no reading with PauseTimer on a timer that is not running",
+        "keeps the remaining of a pause across TimerStart, read once the timer is not running",
+        "reads a timer in a handler __stub_fire_timer runs as in the handler of an expiry",
+        "answers a handler __stub_fire_timer runs as an expiry would, until the handler starts the timer",
+      ),
+    );
+  });
+
+  it("resumes a timer as the game does: two fires, then the stop", () => {
+    expect(suite(readings, "ResumeTimer")).toEqual(
+      passing(
+        "fires when what was left runs out, a full timeout later, then stops, one-shot or periodic alike",
+        "reads what was left, then a full timeout, and the values of the pause in its handlers and after",
+        "ends a periodic timer paused after a fire: two more fires, then the stop",
+        "fires the timer's expire event at both fires, each time before the handler",
+        "does nothing on a running timer, resumed or not",
+        "is one resume when called twice in a row on a paused timer",
+        "fires an expired one-shot timer on the next advance, never inside the call, then a timeout later",
+        "fires an expired timer of timeout 0 twice on the next advance",
+        "counts what was left at a second pause in the first countdown: two fires in all",
+        "counts what was left of the second countdown at a pause in it: three fires in all",
+        "starts the rule over on a resumed timer that stopped, with the remaining of the same pause",
+        "is dropped by TimerStart, an ordinary start: in the first countdown, in the second and after the stop",
+        "counts the remaining of an old pause on a timer that expired after a TimerStart",
+        "fires the expire-event Triggers of a timer never started once, on the next advance",
+        "does nothing on a destroyed timer",
+      ),
+    );
+  });
+
+  it("fires a timer's expire event through the Event dispatch, before its handler", () => {
+    expect(suite(readings, "a timer's expire event")).toEqual(
+      passing(
+        "fires before the handler, with the timer as GetExpiredTimer's answer, one-shot or periodic",
+        "fires the Triggers of one timer in registration order, one registered twice twice",
+        "skips a disabled or destroyed Trigger silently, and fires it again once enabled",
+        "takes its timer's turn among the timers of one instant",
+        "is not reached by an event the test fires, nor by a Trigger of TriggerRegisterTimerEvent",
+        "is left alone by __stub_fire_timer, which runs the handler only",
+      ),
+    );
+  });
+
+  it("answers a call a handler makes on its own timer as the game does", () => {
+    expect(suite(readings, "a call a handler makes on its own timer")).toEqual(
+      passing(
+        "keeps the second countdown of a resumed timer after ResumeTimer or PauseTimer in its first fire",
+        "starts the rule over with ResumeTimer in the second fire of a resumed timer, and nothing with PauseTimer",
+        "starts ordinarily with TimerStart in the first fire of a resumed timer: no second countdown",
+        "changes nothing with ResumeTimer in a periodic timer's handler",
+        "fires a one-shot timer again with ResumeTimer in its handler, then a timeout later, and stops",
+        "fires a timer destroyed in its handler no more: a periodic one, and a resumed one in its first fire",
+        "stops a periodic timer paused in its handler, which a resume fires on the next advance",
+      ),
+    );
+  });
+
+  it("answers a call a Trigger of the expire event makes on its timer as the game does", () => {
+    expect(
+      suite(
+        readings,
+        "a call a Trigger of the expire event makes on its timer",
+      ),
+    ).toEqual(
+      passing(
+        "runs the handler of a TimerStart the Trigger made, at that expiry and at the new one",
+        "runs the handler after a PauseTimer of the Trigger, which stops a periodic timer and no one-shot one",
+        "fires a one-shot timer the Trigger resumed again, then a timeout later, and leaves a periodic one alone",
+        "still runs the handler of the expiry when the Trigger destroys the timer, and never again",
+      ),
+    );
+  });
+
+  it("is one clock on reforged-test/lua too, where a timer never advanced fires nothing", () => {
     expect(suite(entry, "the Game clock, on reforged-test/lua")).toEqual(
       passing(
-        "reads as before when never advanced",
+        "fires nothing when never advanced, and reads a running timer as the game does",
         "moves through __stub_advance_time, which adds no call-log line",
         "keeps the clock of the Lua state from one test to the next",
         "refuses a negative and an endless advance",

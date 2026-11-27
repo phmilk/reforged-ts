@@ -67,4 +67,4 @@ At that same `t`, `every-1` and `disabled-until-2.25`, registered before the fou
 ## Limits
 
 - One run, one client, a timeout of 1 and of 3: the order of one instant was not measured for timeouts that only add up to the same instant (0.1 three times against 0.3).
-- `TriggerRegisterTimerExpireEvent` was not measured, and the Game clock does not fire it.
+- `TriggerRegisterTimerExpireEvent` was not measured here: [timer-expire-event.md](timer-expire-event.md) measured it later ([#986](https://github.com/phmilk/reforged-ts/issues/986)), and the Game clock fires it at each expiry of its timer.
