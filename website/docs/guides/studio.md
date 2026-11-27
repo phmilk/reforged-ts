@@ -11,7 +11,7 @@ The **Studio** is the Toolchain's local app: a page in the browser, served from 
 The Studio edits the map folder, as the World Editor does, and never a copy: the decision behind it is [ADR 0015](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0015-map-folder-owns-object-data-and-any-faithful-editor-may-edit-it.md), under which the map folder owns the map's Object data and any faithful editor may edit it. Every read and every write is `reforged-map`'s, in the Editor form the 3.0 World Editor saves, so a World Editor save after the Studio's leaves its edits where they are. Terrain, placed units, triggers and the map's options stay the World Editor's.
 
 :::note[In the Template]
-A Map project gets `pnpm studio` once the Template takes the package up ([phmilk/reforged-ts-template#145](https://github.com/phmilk/reforged-ts-template/issues/145)). Until then, a Map project installs it with `pnpm add -D reforged-studio@next` beside `reforged-map`, and runs its command:
+A Map project gets `pnpm studio` once the Template takes the package up ([phmilk/reforged-ts-template#145](https://github.com/phmilk/reforged-ts-template/issues/145)). Until then, a Map project installs it with `pnpm add -D reforged-studio` beside `reforged-map`, and runs its command:
 
 ```sh
 pnpm exec reforged-studio --map my-map.w3m

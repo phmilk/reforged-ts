@@ -26,3 +26,9 @@ We decide that a Creation CLI, `create-reforged-map`, is a package of this monor
 - The CLI is a convenience, never a boundary: the Template stays public and can be cloned or used as a template, so the guards of the Template-only workflows hold whatever the CLI does (ADR 0017).
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/657
+
+## Amendment (2026-11-27)
+
+[ADR 0031](0031-a-releases-channel-follows-the-branch-it-runs-from.md) reverses the option "downloading the Template's default branch" turned down above. The Template's `main` takes only pull requests its own CI passed, the sync pull requests among them, and every release gates the Template's `main` with the packed packages, so it is not ahead of what a release checked; the tag `v<major>`, moved by hand, was the larger risk: on 2026-11-27 `v1` was 11 commits behind `main`, and every release since 2026-11-12 had been gated against that old Template. The Creation CLI and the Template gate take the Template ref of the release's channel, the Template's `main` for a release from `master` and its `next` for one from `next`, instead of `v<major>` of the library's version; the CLI's command is `npx create-reforged-map my-map`, with `@next` only for a beta.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/1062

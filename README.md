@@ -12,12 +12,12 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps
 | [`eslint-plugin-reforged`](packages/eslint-plugin-reforged) | The lint layer of the Guards: type-aware ESLint rules that report the scripting pitfalls (desync, crash, leak) before the map compiles.     |
 | [`reforged-map`](packages/reforged-map)                     | Reads a Map project's map folder at build time and writes the declarations and the Lua stub of its Editor globals.                          |
 | [`reforged-builtins`](packages/reforged-builtins)           | The Built-in objects of each Patch: `FourCC` overloads by Object kind and a constant per object, derived from the game's data.              |
-| [`create-reforged-map`](packages/create-reforged-map)       | The Creation CLI: `npx create-reforged-map@next my-map` makes a Map project from the Template, its maintenance files left out.              |
+| [`create-reforged-map`](packages/create-reforged-map)       | The Creation CLI: `npx create-reforged-map my-map` makes a Map project from the Template, its maintenance files left out.                   |
 | [`reforged-studio`](packages/reforged-studio)               | The Studio: a local app that edits a Map project's Object data through `reforged-map`, its peer, taking turns with the World Editor.        |
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.1`.
 
-**Build phase.** Until 1.0.0, every version of the eight packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to each package's first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
+**Build phase.** Until 1.0.0, every version of the eight packages is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version: `pnpm add reforged-ts reforged-types` installs the current alpha. See [Release channels](docs/release.md#release-channels).
 
 ## Requirements
 
@@ -31,13 +31,13 @@ The library's own tests run on `reforged-test`, and the library compiles against
 A Map project starts from the Template, [`phmilk/reforged-ts-template`](https://github.com/phmilk/reforged-ts-template): a Warcraft III 3.0.0 map whose code lives in `src`, built into the map with `pnpm build` and opened in the game with `pnpm test:map`. The Creation CLI makes one in a single command:
 
 ```sh
-npx create-reforged-map@next my-map   # or: pnpm create reforged-map@next my-map
+npx create-reforged-map my-map   # or: pnpm create reforged-map my-map
 cd my-map
 # open maps/reforged-ts-template.w3m in the World Editor and save it once (the script language stays Lua)
-pnpm test:map                         # builds the map and opens it in the game
+pnpm test:map                    # builds the map and opens it in the game
 ```
 
-It downloads the Template, installs the packages from npm, removes the files that serve only the Template's own development and makes a first commit; it needs pnpm, and git unless `--skip-git`. [Its README](packages/create-reforged-map) lists its options. Write `@next` until 1.0.0, as the build phase above explains: a bare `npx create-reforged-map` runs `1.0.0-alpha.0`.
+It downloads the Template, installs the packages from npm, removes the files that serve only the Template's own development and makes a first commit; it needs pnpm, and git unless `--skip-git`. [Its README](packages/create-reforged-map) lists its options.
 
 The other way in is GitHub's **Use this template**, on the Template's page: in a clone of the new repository, `pnpm install`, then `pnpm template:detach`, and commit what it deletes. The Template's README has [the full first run](https://github.com/phmilk/reforged-ts-template#first-run). To build a Map project against a clone of this repository instead of npm, run `pnpm use:local ../reforged-ts` in it.
 

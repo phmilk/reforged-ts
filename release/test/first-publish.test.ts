@@ -21,7 +21,7 @@ const FIRST_FOUR = [
   "eslint-plugin-reforged",
 ];
 
-// npm: `view <pkg> dist-tags.next` answers FAKE_NPM_NEXT ("pkg=version ...")
+// npm: `view <pkg> dist-tags.latest` answers FAKE_NPM_LATEST ("pkg=version ...")
 // and what the fake publish published, or E404; `view <pkg>@<x> version`
 // answers nothing; whoami answers once the token is set, and refuses it as
 // revoked afterwards: the wizard asks once to check the token and then
@@ -31,8 +31,8 @@ const FAKE_NPM = `#!/usr/bin/env bash
 printf 'npm %s\\n' "$*" >>"$FAKE_LOG"
 case "$1" in
   view)
-    if [[ "$3" == dist-tags.next ]]; then
-      for pair in $FAKE_NPM_NEXT $(cat "$FAKE_STATE/published" 2>/dev/null); do
+    if [[ "$3" == dist-tags.latest ]]; then
+      for pair in $FAKE_NPM_LATEST $(cat "$FAKE_STATE/published" 2>/dev/null); do
         [[ "\${pair%%=*}" == "$2" ]] && { printf '%s\\n' "\${pair#*=}"; exit 0; }
       done
       echo "npm error code E404" >&2
@@ -58,7 +58,7 @@ exit 0
 
 // pnpm: `changeset pack --out-dir <dir>` copies FAKE_PLAN there, and
 // `changeset publish` publishes each entry of the plan it is given (npm then
-// answers its version as `next`) and tags it locally; every call is logged.
+// answers its version as `latest`) and tags it locally; every call is logged.
 const FAKE_PNPM = `#!/usr/bin/env bash
 printf 'pnpm %s\\n' "$*" >>"$FAKE_LOG"
 if [[ "$1 $2" == "changeset pack" ]]; then cp "$FAKE_PLAN" "$4/publish-plan.json"; fi
@@ -77,7 +77,7 @@ interface Fixture {
   versions: Record<string, string>;
   /** The packages whose manifest is private. */
   private?: string[];
-  /** Each package npm holds and its `next`. */
+  /** Each package npm holds and its `latest`. */
   npm?: Record<string, string>;
   /** The publish plan `changeset pack` writes. */
   plan?: unknown;
@@ -151,8 +151,8 @@ async function wizard(fixture: Fixture, args: string[], input = "") {
       FAKE_LOG: join(state, "log"),
       FAKE_STATE: state,
       FAKE_PLAN: join(state, "plan.json"),
-      FAKE_NPM_NEXT: Object.entries(fixture.npm ?? {})
-        .map(([name, next]) => `${name}=${next}`)
+      FAKE_NPM_LATEST: Object.entries(fixture.npm ?? {})
+        .map(([name, tag]) => `${name}=${tag}`)
         .join(" "),
     },
   });
@@ -214,7 +214,7 @@ describe.skipIf(process.platform === "win32")(
         expect(result.status).toBe(0);
       });
 
-      it("publishes nothing again when npm's next is that version", async () => {
+      it("publishes nothing again when npm's latest is that version", async () => {
         const result = await wizard(
           {
             ...laterPackage("1.0.0-alpha.3"),
@@ -223,7 +223,7 @@ describe.skipIf(process.platform === "win32")(
           studio,
         );
         expect(result.output).toContain(
-          "reforged-studio: next is 1.0.0-alpha.3, already published",
+          "reforged-studio: latest is 1.0.0-alpha.3, already published",
         );
         expect(result.output).toContain("nothing to publish");
         expect(result.status).toBe(0);
@@ -238,7 +238,7 @@ describe.skipIf(process.platform === "win32")(
           studio,
         );
         expect(result.output).toContain(
-          "reforged-studio: npm's next is 1.0.0-alpha.2, past the first publish.",
+          "reforged-studio: npm's latest is 1.0.0-alpha.2, past the first publish.",
         );
         expect(result.status).toBe(1);
       });
@@ -274,13 +274,13 @@ describe.skipIf(process.platform === "win32")(
       it.each([
         [
           "another version",
-          publishEntry("reforged-studio", "1.0.0-alpha.2", "next"),
-          "1.0.0-alpha.2 under 'next'",
+          publishEntry("reforged-studio", "1.0.0-alpha.2", "latest"),
+          "1.0.0-alpha.2 under 'latest'",
         ],
         [
           "another dist-tag",
-          publishEntry("reforged-studio", "1.0.0-alpha.3", "alpha"),
-          "1.0.0-alpha.3 under 'alpha'",
+          publishEntry("reforged-studio", "1.0.0-alpha.3", "next"),
+          "1.0.0-alpha.3 under 'next'",
         ],
       ])(
         "refuses a publish plan entry at %s, and publishes nothing",
@@ -295,20 +295,20 @@ describe.skipIf(process.platform === "win32")(
             "\n\npaulo\ntoken\ny\n",
           );
           expect(result.output).toContain(
-            `The publish plan has reforged-studio at ${found}, not 1.0.0-alpha.3 under 'next'.`,
+            `The publish plan has reforged-studio at ${found}, not 1.0.0-alpha.3 under 'latest'.`,
           );
           expect(result.log).not.toContain("changeset publish");
           expect(result.status).toBe(1);
         },
       );
 
-      it("publishes alpha.3, waits for npm's next at it and pushes its tag", async () => {
+      it("publishes alpha.3, waits for npm's latest at it and pushes its tag", async () => {
         const result = await wizard(
           {
             ...laterPackage("1.0.0-alpha.3"),
             plan: publishPlan([
               await packed(
-                publishEntry("reforged-studio", "1.0.0-alpha.3", "next"),
+                publishEntry("reforged-studio", "1.0.0-alpha.3", "latest"),
               ),
             ]),
           },
@@ -317,17 +317,17 @@ describe.skipIf(process.platform === "win32")(
           "y\n".repeat(20),
         );
         expect(result.output).toContain(
-          "the publish plan: reforged-studio at 1.0.0-alpha.3 under 'next'",
+          "the publish plan: reforged-studio at 1.0.0-alpha.3 under 'latest'",
         );
         expect(result.log).toContain("changeset publish");
         expect(result.output).toContain(
-          "reforged-studio: next is 1.0.0-alpha.3",
+          "reforged-studio: latest is 1.0.0-alpha.3",
         );
         expect(result.originTags).toContain(
           "refs/tags/reforged-studio@1.0.0-alpha.3",
         );
         expect(result.output).toContain(
-          "reforged-studio is on npm with next at 1.0.0-alpha.3",
+          "reforged-studio is on npm with latest at 1.0.0-alpha.3",
         );
         expect(result.status).toBe(0);
       });

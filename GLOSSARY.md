@@ -120,6 +120,14 @@ _Avoid_: diff check, consistency check, sync check
 A frozen copy of the docs site, cut for one minor or major release of the library and labelled by its `major.minor` (`1.0`); the docs of `master`, served as "Next", are not a Docs version.
 _Avoid_: docs release, snapshot, versioned docs
 
+**Release channel**:
+What a release publishes and what it is checked against, decided by the branch it runs from (ADR 0031): from `master`, every package on the `latest` dist-tag and the Template's `main`; from the **Next branch**, the `next` dist-tag and the Template's `next`.
+_Avoid_: release line, track, stream, dist-tag (one part of a channel)
+
+**Next branch**:
+The branch `next`, where a major is prepared: cut from `master` in Changesets pre mode (`beta`, then `rc`), released on the `next` dist-tag, and merged into `master` by a human when the major ships, then deleted.
+_Avoid_: beta branch, develop, major branch, the `next` dist-tag (what it publishes on)
+
 **Rawcode**:
 The four-character id of one type of object (`hfoo`, `AHbz`), which a map script holds as an integer (`FourCC("hfoo")`).
 _Avoid_: object id, type id, fourcc

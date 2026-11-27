@@ -8,12 +8,12 @@ TypeScript declarations for the Natives of Warcraft III Reforged, generated from
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
-**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add -D reforged-types@next`. npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version: `pnpm add -D reforged-types` installs the current alpha.
 
 ## Usage
 
 ```sh
-npm install --save-dev reforged-types@next
+npm install --save-dev reforged-types
 ```
 
 Add the entry of your Game version to `types` in `tsconfig.json`, next to the typescript-to-lua language extensions:

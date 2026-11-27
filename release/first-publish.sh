@@ -206,7 +206,7 @@ finish() {
 # pre mode whatever N is: a Version Packages pull request can bump the
 # package again before its first publish (#885). It checks that npm does not
 # hold the package yet and that the publish plan's entry for it is that
-# version under `next`, and publishes that entry alone: the other packages
+# version under `latest`, and publishes that entry alone: the other packages
 # the plan holds are the release workflow's, whose failed publish job is
 # re-run afterwards. When a peer or dependency packed
 # in the package is a version npm does not hold yet (reforged-types bumped by
@@ -218,7 +218,7 @@ finish() {
 # check, saying what to fix. What only npmjs.com shows (the trusted
 # publisher, the package's publishing access, the token's 2FA setting and
 # its revocation) it asks the maintainer to confirm. It is safe to re-run: a
-# package npm already holds with `next` at the version it publishes is not
+# package npm already holds with `latest` at the version it publishes is not
 # published again, and its local tag is pushed when origin lacks it. A
 # version npm does not show five minutes after a successful publish is
 # waited for again while the maintainer asks to. It never stores or prints
@@ -235,7 +235,7 @@ readonly FIRST_FOUR=(reforged-ts reforged-types reforged-test eslint-plugin-refo
 # The version of the first four. The one-package mode publishes the version
 # the package's manifest holds instead, any 1.0.0-alpha.N.
 readonly FIRST_VERSION=1.0.0-alpha.0
-readonly DIST_TAG=next
+readonly DIST_TAG=latest
 readonly PRE_TAG=alpha
 readonly ALPHA_VERSION_PATTERN="^1\\.0\\.0-$PRE_TAG\\.(0|[1-9][0-9]*)\$"
 readonly REPO_OWNER=phmilk
@@ -362,10 +362,10 @@ native_path() {
   if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi
 }
 
-# npm_next PACKAGE prints the version the `next` dist-tag of PACKAGE points
+# npm_tagged PACKAGE prints the version the `latest` dist-tag of PACKAGE points
 # at: empty when npm has no such package or no such tag. Stops the wizard
 # when npm cannot be asked.
-npm_next() {
+npm_tagged() {
   local out
   if out=$(npm view "$1" "dist-tags.$DIST_TAG" 2>"$ERR_FILE"); then
     printf '%s' "$out"
@@ -376,16 +376,16 @@ npm_next() {
   fi
 }
 
-# npm_next_within PACKAGE polls npm_next for about five minutes, until it
+# npm_tagged_within PACKAGE polls npm_tagged for about five minutes, until it
 # prints VERSION, and prints what it last printed.
-npm_next_within() {
-  local next="" attempt
+npm_tagged_within() {
+  local tagged="" attempt
   for ((attempt = 1; attempt <= 30; attempt++)); do
-    next=$(npm_next "$1") || return 1
-    [[ "$next" == "$VERSION" || $attempt -eq 30 ]] && break
+    tagged=$(npm_tagged "$1") || return 1
+    [[ "$tagged" == "$VERSION" || $attempt -eq 30 ]] && break
     sleep 10
   done
-  printf '%s' "$next"
+  printf '%s' "$tagged"
 }
 
 # origin_has_tag TAG: whether origin holds the tag TAG. Stops the wizard when
@@ -463,7 +463,7 @@ manifest_field() {
 # ──────────────────────────────────────────────────────────────────────────
 
 TOTAL_STAGES=$((4 + ${#PACKAGES[@]}))
-PENDING=()      # the packages npm does not hold with next at VERSION yet
+PENDING=()      # the packages npm does not hold with latest at VERSION yet
 PUBLISHED=false # changeset publish ran and exited 0
 
 TITLE="First publish of $VERSION"
@@ -556,11 +556,11 @@ ok "$WHAT at $VERSION"
 say ""
 say "What npm holds:"
 for pkg in "${PACKAGES[@]}"; do
-  next=$(npm_next "$pkg") || exit 1
-  if [[ "$next" == "$VERSION" ]]; then
+  tagged=$(npm_tagged "$pkg") || exit 1
+  if [[ "$tagged" == "$VERSION" ]]; then
     ok "$pkg: $DIST_TAG is $VERSION, already published"
-  elif [[ -n "$next" ]]; then
-    fail "$pkg: npm's $DIST_TAG is $next, past the first publish." \
+  elif [[ -n "$tagged" ]]; then
+    fail "$pkg: npm's $DIST_TAG is $tagged, past the first publish." \
       "This wizard only does the first publish of $VERSION; the release workflow publishes the later ones."
   else
     note "  $pkg: not published yet"
@@ -630,7 +630,7 @@ else
   run pnpm typings:check || fail "The Typings differ from what their generator writes." "Fix it on master first."
   PACK_DIR=$(native_path "$(mktemp -d)")
   run pnpm changeset pack --out-dir "$PACK_DIR" || fail "changeset pack failed." "Read the error above."
-  run pnpm release:dist-tag --pack-dir "$PACK_DIR" ||
+  run pnpm release:dist-tag --pack-dir "$PACK_DIR" --branch master ||
     fail "release:dist-tag refused the publish plan." "Read the error above: $GUIDE, \"The dist-tag\"."
   if [[ -n "$ONE_PACKAGE" ]]; then
     note "The other packages of the plan are the release workflow's: re-run its failed publish job afterwards."
@@ -698,20 +698,20 @@ else
       run npm view "$pkg" "dist-tags.$DIST_TAG"
       continue
     fi
-    next=$(npm_next_within "$pkg") || exit 1
+    tagged=$(npm_tagged_within "$pkg") || exit 1
     # changeset publish exited 0: the version may still be propagating.
-    while $PUBLISHED && [[ "$next" != "$VERSION" ]] && ! npm_has_version "$pkg"; do
+    while $PUBLISHED && [[ "$tagged" != "$VERSION" ]] && ! npm_has_version "$pkg"; do
       warn "$pkg@$VERSION is not on npm yet, though changeset publish succeeded: it may still be propagating."
       confirm "Keep waiting for $pkg@$VERSION?" ||
         fail "$pkg@$VERSION is not on npm yet." \
           "changeset publish succeeded, so the version may still be propagating." \
           "Re-run once npm view $pkg dist-tags shows it: the re-run publishes nothing again and goes on from here."
-      next=$(npm_next_within "$pkg") || exit 1
+      tagged=$(npm_tagged_within "$pkg") || exit 1
     done
-    if [[ "$next" == "$VERSION" ]]; then
+    if [[ "$tagged" == "$VERSION" ]]; then
       ok "$pkg: $DIST_TAG is $VERSION"
     elif npm_has_version "$pkg"; then
-      warn "$pkg@$VERSION is on npm, but its $DIST_TAG dist-tag is '${next:-missing}'."
+      warn "$pkg@$VERSION is on npm, but its $DIST_TAG dist-tag is '${tagged:-missing}'."
       confirm "Point $DIST_TAG at $pkg@$VERSION now?" ||
         fail "$pkg has no $DIST_TAG at $VERSION." "npm dist-tag add $pkg@$VERSION $DIST_TAG"
       run npm dist-tag add "$pkg@$VERSION" "$DIST_TAG" ||
