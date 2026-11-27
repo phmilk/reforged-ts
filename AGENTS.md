@@ -46,7 +46,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
 - Every `@example` is included with `{@includeCode}` from a compiled file: the library's under `packages/reforged-ts/examples/`, `harness/` or `game/`, and `reforged-test/map`'s under `packages/reforged-test/examples/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
-- A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
+- A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). It is never a Judgement call, and its issue carries the label `probe`, put before the Probe runs (`docs/agents/triage-labels.md`, "The `probe` label"). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
 - Before working on an issue, claim it: `gh issue edit <n> --add-assignee @me`, your first write, before the branch, the first commit, any comment and the pull request; a Ticket or an issue assigned to another login is theirs. A Ticket is claimed together with its Spec, and the stale rule and the takeover are in `docs/agents/issue-tracker.md`, "Claim".
 - A Replaced skill (`to-spec`, replaced by `write-spec`; `to-tickets`, replaced by `split-spec`) is never run or recommended: run and name its Skill variant, and name the Replaced skill only beside its variant, on the same line (ADR 0027).
 - Before running Subagents, read `docs/agents/development-loop.md`, "Subagents".
@@ -80,7 +80,7 @@ Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The w
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `write-spec`, `ticket` on one created with `split-spec`. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Three kind labels sit next to them: `spec` on an issue created with `write-spec`, `ticket` on one created with `split-spec`, `probe` on one whose work includes a Probe run. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
 
 ### Skills
 

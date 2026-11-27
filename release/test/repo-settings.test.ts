@@ -181,7 +181,7 @@ describe("planRepositorySettings", () => {
     });
   });
 
-  it("updates spec, ticket and needs-split to their committed description, the skills' text", () => {
+  it("updates spec, ticket, needs-split and probe to their committed description, the skills' text", () => {
     const plan = planRepositorySettings(REPOSITORY, RULESET, {
       ...CONFIGURED,
       labels: CONFIGURED.labels.map((label) =>
@@ -206,7 +206,7 @@ describe("planRepositorySettings", () => {
       summary: "Update the label ticket.",
     });
     expect(LABELS.filter(({ owned }) => owned).map(({ name }) => name)).toEqual(
-      ["game-patch", "spec", "ticket", "needs-split"],
+      ["game-patch", "spec", "ticket", "needs-split", "probe"],
     );
   });
 
@@ -342,5 +342,22 @@ describe("requiredStatusChecks", () => {
 
   it("is empty without the rule", () => {
     expect(requiredStatusChecks({ name: "x", rules: [] })).toEqual([]);
+  });
+});
+
+describe("the labels' descriptions", () => {
+  it("name the Probe run and the Battle.net login on probe", () => {
+    const probe = LABELS.find(({ name }) => name === "probe");
+
+    expect(probe?.description).toContain("Probe run");
+    expect(probe?.description).toContain("Battle.net");
+  });
+
+  it("stay within the 100 characters GitHub takes", () => {
+    expect(
+      LABELS.filter(({ description }) => description.length > 100).map(
+        ({ name }) => name,
+      ),
+    ).toEqual([]);
   });
 });
