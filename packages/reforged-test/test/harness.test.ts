@@ -1142,8 +1142,8 @@ describe("matchers", () => {
     // The same fixture, its describe, it and expect taken from
     // reforged-test/map on the line that took them from reforged-test/lua,
     // so every line number stays. The toContainCall tests are left out: the
-    // expect of /map has no toContainCall, a test reading Recorded calls
-    // with the spy matchers and calls instead.
+    // expect of /map is typed without toContainCall, a test reading Recorded
+    // calls with the spy matchers and `calls` instead.
     const dir = outDir("matchers");
     const path = join(dir, "matchers_test.lua");
     const onLua =
