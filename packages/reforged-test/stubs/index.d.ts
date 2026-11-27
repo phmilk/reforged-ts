@@ -197,13 +197,13 @@ declare function __stub_deselect_unit(
 declare function __stub_selected(whichPlayer: player, whichUnit: unit): boolean;
 
 /**
- * The player leaves the game: its slot reads `PLAYER_SLOT_STATE_LEFT` from
- * now on, then `EVENT_PLAYER_LEAVE` is dispatched to the triggers registered
- * for it, `GetTriggerPlayer` answering it. Its units, its controller and its
- * selection stay, and no defeat or victory fires. No Probe run measured a
- * player leaving, which takes a second client: the slot written before the
- * event is the harness's choice. It checks nothing, a player who already
- * left included, and records no call.
+ * The player leaves the game, as a Probe run with two clients measured it:
+ * `EVENT_PLAYER_LEAVE` is dispatched to the triggers registered for it,
+ * `GetTriggerPlayer` answering it and its slot still reading
+ * `PLAYER_SLOT_STATE_PLAYING`, then the slot reads `PLAYER_SLOT_STATE_LEFT`,
+ * even when a handler throws. Its units, its controller and its selection
+ * stay, and no defeat or victory fires. It checks nothing, a player who
+ * already left included, and records no call.
  */
 declare function __stub_leave_player(whichPlayer: player): void;
 

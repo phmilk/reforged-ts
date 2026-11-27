@@ -864,7 +864,7 @@ end)
 
 describe("players", function()
   -- Last of the file: the slot stays left for the rest of this Lua state.
-  it("reports a slot as left after __stub_leave_player, which dispatches the leave and records no call", function()
+  it("reports a slot as left after __stub_leave_player, which dispatches the leave first and records no call", function()
     local leaving = __stub_player(1)
     local left = nil
     local trigger = CreateTrigger()
@@ -874,11 +874,11 @@ describe("players", function()
     end)
     local mark = #runner.stubCalls()
     __stub_leave_player(leaving)
-    expect(left).toEqual({ leaving, PLAYER_SLOT_STATE_LEFT })
+    expect(left).toEqual({ leaving, PLAYER_SLOT_STATE_PLAYING })
     expect(since(mark)).toEqual({ "GetTriggerPlayer()" })
     expect(GetPlayerSlotState(leaving)).toBe(PLAYER_SLOT_STATE_LEFT)
     expect(GetPlayerSlotState(__stub_player(0))).toBe(PLAYER_SLOT_STATE_PLAYING)
-    -- The controller is not derived from the leave.
+    -- The controller stays, as in the game (docs/research/player-leave.md).
     expect(GetPlayerController(leaving)).toBe(MAP_CONTROL_USER)
   end)
 end)

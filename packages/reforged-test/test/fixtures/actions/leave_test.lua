@@ -1,8 +1,8 @@
 -- Hand-written stand-in for a compiled leave.test.ts on reforged-test/map:
--- game.leave. No Probe run measured a player leaving, which takes a second
--- client (probe/README.md, "What stays for a human"): the cases state what
--- the Spec decided, the slot written as PLAYER_SLOT_STATE_LEFT, then
--- EVENT_PLAYER_LEAVE, and nothing derived.
+-- game.leave. The cases state what a Probe run with two clients measured
+-- (docs/research/player-leave.md): EVENT_PLAYER_LEAVE of that player, its
+-- slot still PLAYER_SLOT_STATE_PLAYING in the handler, then the slot
+-- written as PLAYER_SLOT_STATE_LEFT, and nothing else.
 local map = require("lua_modules.reforged-test.map.index")
 local it, describe, expect, startGame = map.it, map.describe, map.expect, map.startGame
 
@@ -30,7 +30,7 @@ local function watchPlayers(log, readings, name, event)
 end
 
 describe("game.leave", function()
-  it("writes PLAYER_SLOT_STATE_LEFT, then dispatches EVENT_PLAYER_LEAVE of that player", function()
+  it("dispatches EVENT_PLAYER_LEAVE of that player, the slot still playing, then writes PLAYER_SLOT_STATE_LEFT", function()
     local game = startGame()
     local log, readings = {}, {}
     watchPlayers(log, readings, "EVENT_PLAYER_LEAVE", EVENT_PLAYER_LEAVE)
@@ -38,14 +38,14 @@ describe("game.leave", function()
     expect(game.leave(Player(1))).toBeUndefined()
     expect(log).toEqual({ "EVENT_PLAYER_LEAVE of 1 condition", "EVENT_PLAYER_LEAVE of 1 action" })
     expect(readings["EVENT_PLAYER_LEAVE of 1"]).toEqual({
-      triggerPlayer = Player(1), eventId = EVENT_PLAYER_LEAVE, slotState = PLAYER_SLOT_STATE_LEFT,
+      triggerPlayer = Player(1), eventId = EVENT_PLAYER_LEAVE, slotState = PLAYER_SLOT_STATE_PLAYING,
     })
     expect(GetPlayerSlotState(Player(1))).toBe(PLAYER_SLOT_STATE_LEFT)
     expect(GetPlayerSlotState(Player(0))).toBe(PLAYER_SLOT_STATE_PLAYING)
     expect(GetTriggerPlayer()).toBeUndefined()
   end)
 
-  it("fires no defeat and no victory, and keeps the player's units", function()
+  it("fires no defeat and no victory, and keeps the player's units and controller", function()
     local game = startGame()
     local log = {}
     watchPlayers(log, {}, "EVENT_PLAYER_DEFEAT", EVENT_PLAYER_DEFEAT)
@@ -60,6 +60,7 @@ describe("game.leave", function()
     expect(log).toEqual({})
     expect(UnitAlive(unit)).toBe(true)
     expect(GetOwningPlayer(unit)).toBe(Player(1))
+    expect(GetPlayerController(Player(1))).toBe(MAP_CONTROL_USER)
   end)
 
   it("takes anything with .handle", function()

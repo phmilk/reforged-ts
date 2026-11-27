@@ -458,17 +458,17 @@ export interface Game {
     unit: unit | { readonly handle: unit },
   ): void;
   /**
-   * Makes `player` leave the game: its slot reads `PLAYER_SLOT_STATE_LEFT`
-   * from now on, then the Triggers of `EVENT_PLAYER_LEAVE` of that player
-   * run.
+   * Makes `player` leave the game: the Triggers of `EVENT_PLAYER_LEAVE` of
+   * that player run, then its slot reads `PLAYER_SLOT_STATE_LEFT`.
    * @remarks
-   * - In a handler `GetTriggerPlayer` answers the player, whose slot
-   *   already reads `PLAYER_SLOT_STATE_LEFT`.
-   * - No Probe run measured a player leaving, which takes a second client:
-   *   the slot written before the event, and nothing else fired, are what
-   *   the harness decided, not what the game was seen to do.
-   * - It writes the slot and nothing derived: no defeat, no victory, and
-   *   the player's units, its controller and its selection stay.
+   * - In a handler `GetTriggerPlayer` answers the player, whose slot still
+   *   reads `PLAYER_SLOT_STATE_PLAYING`, as in the game: there it reads
+   *   `PLAYER_SLOT_STATE_LEFT` from a timer of timeout 0 on.
+   * - It writes the slot and nothing else, as a Probe run with two clients
+   *   saw the game do, whichever way the player left: no defeat, no
+   *   victory, and the player's units, its controller (`MAP_CONTROL_USER`)
+   *   and its selection stay.
+   * - A handler's error leaves the slot written.
    * - After it, the player is not playing: `game.chat`, `game.select` and
    *   `game.leave` refuse it.
    * - A handler's error is thrown out of the action when nothing caught it.

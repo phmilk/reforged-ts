@@ -182,12 +182,12 @@ describe("game.select and game.deselect, on reforged-test/map", () => {
 describe("game.leave, on reforged-test/map", () => {
   const leave = file("leave.test.ts");
 
-  it("writes PLAYER_SLOT_STATE_LEFT and dispatches EVENT_PLAYER_LEAVE, with nothing derived", () => {
+  it("dispatches EVENT_PLAYER_LEAVE, then writes PLAYER_SLOT_STATE_LEFT, with nothing else", () => {
     expect(leave.error).toBeUndefined();
     expect(suite(leave, "game.leave")).toEqual(
       passing(
-        "writes PLAYER_SLOT_STATE_LEFT, then dispatches EVENT_PLAYER_LEAVE of that player",
-        "fires no defeat and no victory, and keeps the player's units",
+        "dispatches EVENT_PLAYER_LEAVE of that player, the slot still playing, then writes PLAYER_SLOT_STATE_LEFT",
+        "fires no defeat and no victory, and keeps the player's units and controller",
         "takes anything with .handle",
         "throws a handler's error out of the action, the player gone",
       ),
