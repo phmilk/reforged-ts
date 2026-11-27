@@ -103,14 +103,19 @@ export function readPlayers(w3i: Uint8Array): PlayerSlot[] {
 }
 
 /**
- * A copy of `w3i` declaring `players` user slots: the first record copied
- * for each new one, with its number, the name `Player <n>` and a start of
- * its own, each in the force; every byte before and after the tables
- * unchanged. The map's own tables are read first, and the step writes
- * only over what it knows: one record, Player 1's, a user slot, and one
- * force.
+ * A copy of `w3i` declaring `players` user slots, one of
+ * `SUPPORTED_PLAYERS`: the first record copied for the second, with its
+ * number, the name `Player 2` and a start of its own, both in the force;
+ * every byte before and after the tables unchanged. The map's own tables
+ * are read first, and the step writes only over what it knows: one
+ * record, Player 1's, a user slot, and one force.
  */
 export function writePlayers(w3i: Uint8Array, players: number): Uint8Array {
+  if (players !== 2) {
+    throw new AuthorError(
+      `The runner stages ${SUPPORTED_PLAYERS.join(", ")} players, not ${String(players)}.`,
+    );
+  }
   const tables = locate(w3i);
   if (tables.players.length !== 1) {
     throw new AuthorError(
@@ -130,12 +135,10 @@ export function writePlayers(w3i: Uint8Array, players: number): Uint8Array {
   }
   const [force] = tables.forces;
 
-  const records = [w3i.subarray(first.start, first.end)];
-  for (let player = 1; player < players; player++) {
-    records.push(
-      copyRecord(w3i, first, player, startOf(tables, first, player)),
-    );
-  }
+  const records = [
+    w3i.subarray(first.start, first.end),
+    copyRecord(w3i, first, 1, mirroredStart(tables, first)),
+  ];
   const forceTable = copyOf(w3i, tables.forcesStart, tables.tablesEnd);
   const maskOffset = force.maskOffset - tables.forcesStart;
   const mask = (force.mask | ((1 << players) - 1)) >>> 0;
@@ -211,13 +214,13 @@ export function writePlayersScript(
       inside = undefined;
       continue;
     }
-    const other = /\bPlayer\((\d+)\)/.exec(line);
-    if (other !== null && other[1] !== "0") {
+    const named = /\bPlayer\((\d+)\)/.exec(line);
+    if (named !== null && named[1] !== "0") {
       throw refuse(line, "for another player than Player 1");
     }
     out.push(line);
     if (inside !== "config") {
-      if (other !== null) ownLines.push(line);
+      if (named !== null) ownLines.push(line);
       continue;
     }
     const players = /^SetPlayers\((\d+)\)$/.exec(line);
@@ -283,16 +286,10 @@ function coordinate(value: number): string {
  * The start of a new player: the second's mirrors the first's through the
  * centre of the camera bounds, so the two stand apart on any map.
  */
-function startOf(
+function mirroredStart(
   tables: Tables,
   first: PlayerRecord,
-  player: number,
 ): [x: number, y: number] {
-  if (player !== 1) {
-    throw new AuthorError(
-      `The runner stages ${SUPPORTED_PLAYERS.join(", ")} players, not ${String(player + 1)}.`,
-    );
-  }
   const { centreX, centreY } = tables;
   return [2 * centreX - first.x, 2 * centreY - first.y];
 }

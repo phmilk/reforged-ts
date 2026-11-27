@@ -69,12 +69,12 @@ export function readState(
     typeof gameData === "object" && gameData !== null
       ? gameDataFrom((name) => (gameData as Record<string, unknown>)[name])
       : {};
-  const slots = playersFrom(players);
+  const stagedPlayers = playersFrom(players);
   return {
     probe,
     runId,
     ...(typeof client === "string" && { client }),
     ...(Object.keys(staged).length > 0 && { gameData: staged }),
-    ...(slots !== undefined && { players: slots }),
+    ...(stagedPlayers !== undefined && { players: stagedPlayers }),
   };
 }
