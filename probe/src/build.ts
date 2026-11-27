@@ -36,6 +36,7 @@ import {
   stagingFolderFor,
 } from "./stage.js";
 import { writeState } from "./state.js";
+import { probeTitle, writeTitle } from "./title.js";
 
 /** The module specifier the runner imports the Probe by. */
 export const CURRENT_PROBE = "@probe/current";
@@ -59,6 +60,9 @@ export const PLACEHOLDERS = {
 
 /** The map's info file, which declares its Game data and its players. */
 const MAP_INFO = "war3map.w3i";
+
+/** The map's strings file, where a `TRIGSTR_<n>` of `war3map.w3i` points. */
+const MAP_STRINGS = "war3map.wts";
 
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
 const RUN_ID_PATTERN = /^[A-Za-z0-9-]+$/;
@@ -105,7 +109,9 @@ export function builtMessage(result: BuildResult): string {
  * bundle, and whose `war3map.w3i` declares the Game Data Set, the Game
  * Data Version and the melee map flag `gameData` sets, the map folder's
  * where it sets none (#575); with `players`, both files declare that many
- * user slots (#1043); then that folder packed, as
+ * user slots (#1043), and the map's title in the lobby's list is
+ * `Probe <probe>` (`probeTitle`), for the humans who host it; then that
+ * folder packed, as
  * `<folders.output>/<probe>/<map folder's name>`, since 3.0.1 opens no map
  * folder (#642). The runner writes the Patch of
  * `folders.manifest` in the run's `BEGIN` line, so the run names the
@@ -150,6 +156,16 @@ export function buildProbe(
     if (players !== undefined) {
       info = writePlayers(info, players);
       script = writePlayersScript(editorScript, readPlayers(info));
+      // Humans host this map from the lobby's list: name the Probe there.
+      const wtsFile = path.join(stagingFolder, MAP_STRINGS);
+      const wts = fs.statSync(wtsFile, { throwIfNoEntry: false })?.isFile()
+        ? fs.readFileSync(wtsFile, "utf8")
+        : undefined;
+      const titled = writeTitle(info, wts, probeTitle(probe));
+      info = titled.w3i;
+      if (titled.wts !== undefined && titled.wts !== wts) {
+        fs.writeFileSync(wtsFile, titled.wts, "utf8");
+      }
     }
     fs.writeFileSync(w3i, info);
   }
