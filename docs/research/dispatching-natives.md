@@ -6,14 +6,14 @@ Five facts the Shipped stubs of the Dispatching Natives rested on with no Probe 
 
 Everything below is Observed, in one run.
 
-| Fact                                                                  | The game                                                                                                                                  | The Shipped stub before this run |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| One unit event, a Trigger on the player's event and one on the unit's | the player's runs first, whichever was registered first and whichever was created first; the widget death runs before both                | the same                         |
-| `UnitAddItemById`, a unit without an inventory                        | returns `nil`; the item is made all the same and left on the ground; no event                                                             | **returned the item**            |
-| `UnitRemoveItem`, an item the unit does not carry                     | no event, and nothing moves: an item on the ground stays there, an item another unit carries stays with it                                | the same                         |
-| `UnitRemoveItemFromSlot`, a filled slot                               | returns the item; `EVENT_PLAYER_UNIT_DROP_ITEM`, then `EVENT_UNIT_DROP_ITEM`, inside the call, the item still in its slot in the handlers | **fired nothing**                |
-| `UnitRemoveItemFromSlot`, an empty slot                               | returns `nil`; no event                                                                                                                   | the same                         |
-| `GetTriggerWidget` in a handler of the widget's death                 | the dying unit in the widget death (`TriggerRegisterDeathEvent`); `nil` in `EVENT_PLAYER_UNIT_DEATH` and in `EVENT_UNIT_DEATH`            | the same                         |
+| Fact                                                                  | The game                                                                                                                                  | The Shipped stub before this run           |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| One unit event, a Trigger on the player's event and one on the unit's | the player's runs first, whichever was registered first and whichever was created first; the widget death runs before both                | the same                                   |
+| `UnitAddItemById`, a unit without an inventory                        | returns `nil`; the item is made all the same and left on the ground; no event                                                             | **returned the item**                      |
+| `UnitRemoveItem`, an item the unit does not carry                     | no event, and nothing moves: an item on the ground stays there, an item another unit carries stays with it                                | the same                                   |
+| `UnitRemoveItemFromSlot`, a filled slot                               | returns the item; `EVENT_PLAYER_UNIT_DROP_ITEM`, then `EVENT_UNIT_DROP_ITEM`, inside the call, the item still in its slot in the handlers | **fired nothing**                          |
+| `UnitRemoveItemFromSlot`, an empty slot                               | returns `nil`; no event                                                                                                                   | the same                                   |
+| `GetTriggerWidget` in a handler of the widget's death                 | the dying unit in the widget death (`TriggerRegisterDeathEvent`); `nil` in `EVENT_PLAYER_UNIT_DEATH` and in `EVENT_UNIT_DEATH`            | the same unit, as the unit's own Lua value |
 
 - **The two disagreements are fixed in the Shipped stubs** by the pull request of #982: `UnitAddItemById` returns `nil` for a unit without an inventory, and `UnitRemoveItemFromSlot` is a Dispatching Native, which dispatches the drop as `UnitRemoveItem` does.
 - **A unit read as a `widget` is another Lua value than the unit**, equal to it by `==` and not by `rawequal`, so it does not find the unit's entry in a table. The run was not made for this, and the Shipped stubs answer the unit itself: see [A unit read as a widget](#a-unit-read-as-a-widget).
@@ -117,7 +117,7 @@ In the widget death handler, `GetTriggerWidget()` and `GetTriggerUnit()` are the
 
 The same holds with no event, through a hashtable, which stores a Handle under either type: after `SaveUnitHandle` and `SaveWidgetHandle` of one paladin, `LoadUnitHandle` answered the very value of the unit (`rawequal` `true`, and it finds the unit's entry in a table), while `LoadWidgetHandle` answered a `widget: <address>` that is `==` to the unit, not `rawequal` to it, and does not find its entry; two `LoadWidgetHandle` calls answered the same value (`rawequal` `true`).
 
-So a Handle is one Lua value per type it is read as, and the values of one Handle are equal by `==` alone. This is outside the five facts of #982, and the Shipped stubs were left as they are: their `GetTriggerWidget` answers the unit's own value, so a table keyed by the unit is found with it in a test and not in the game. The rule "Handle identity is stable across Natives: a Handle is a safe table key" (`AGENTS.md`, "Runtime constraints") holds for one type only.
+So a Handle is one Lua value per type it is read as, and the values of one Handle are equal by `==` alone. This is a fact of every Handle read as another type, not of the death handlers, so the Shipped stubs were left as they are: their `GetTriggerWidget` answers the unit's own value, so a table keyed by the unit is found with it in a test and not in the game. The fixture case of `GetTriggerWidget` compares with `==`, which holds in both. The rule "Handle identity is stable across Natives: a Handle is a safe table key" (`AGENTS.md`, "Runtime constraints") holds for one type only.
 
 ## After the returns
 
@@ -126,7 +126,7 @@ Within the 3 seconds after the last case, eight firings came: `EVENT_PLAYER_UNIT
 ## What this settles for the Shipped stubs
 
 - The dispatch of a unit event to the player's registrations, then to the unit's, is the game's order, not an accident of the first Probe's registration order.
-- `UnitAddItemById` returns `nil` for a unit without an inventory. The item it makes has no Shipped stub that reads it back.
+- `UnitAddItemById` returns `nil` for a unit without an inventory. The item the game leaves on the ground has no Shipped stub that would read it back, so the stub makes none.
 - `UnitRemoveItem` of an item the unit does not carry does nothing.
 - `UnitRemoveItemFromSlot` is a Dispatching Native: the drop of the item in the slot, the item still carried in the handlers, and nothing for an empty slot.
 - `GetTriggerWidget` answers the unit in the widget death alone.

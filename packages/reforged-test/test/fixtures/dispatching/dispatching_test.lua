@@ -167,13 +167,15 @@ describe("KillUnit", function()
 
   -- "GetTriggerWidget in the death handlers" of
   -- docs/research/dispatching-natives.md: the unit in the widget death, nil
-  -- in the player's and in the unit's death.
+  -- in the player's and in the unit's death. The game's answer is equal to
+  -- the unit by `==`, which is all this case reads of it ("A unit read as a
+  -- widget").
   it("answers GetTriggerWidget in the widget death alone", function()
     startGame()
     local unit = footman()
     local _, readings = watchAll(unit)
     KillUnit(unit)
-    expect(readings["widget death"].triggerWidget).toBe(unit)
+    expect(readings["widget death"].triggerWidget == unit).toBe(true)
     expect(readings["EVENT_PLAYER_UNIT_DEATH of 0"].triggerWidget).toBeUndefined()
     expect(readings["EVENT_UNIT_DEATH"].triggerWidget).toBeUndefined()
   end)
@@ -327,19 +329,16 @@ describe("UnitAddItem and UnitAddItemById", function()
   end)
 
   -- The case UnitAddItemById(footman, 'ratc'), no inventory, of
-  -- docs/research/dispatching-natives.md: the game makes the item, leaves it
-  -- on the ground and returns nothing.
+  -- docs/research/dispatching-natives.md: the game returns nothing. The item
+  -- it leaves on the ground is not made here, as no Shipped stub reads it.
   it("UnitAddItemById returns nothing for a unit without an inventory, and fires nothing", function()
     startGame()
     map.stubNative("UnitInventorySize", function() return 0 end)
     local unit = footman()
     local log = watchAll(unit)
-    local mark = __stub_new_handle("mark").__handleId
     expect(UnitAddItemById(unit, FourCC("ratc"))).toBeUndefined()
     expect(log).toEqual({})
     expect(UnitItemInSlot(unit, 0)).toBeUndefined()
-    -- The item was made all the same: it took the next handle id.
-    expect(__stub_new_handle("mark").__handleId).toBe(mark + 2)
   end)
 end)
 
@@ -370,8 +369,10 @@ describe("UnitRemoveItem", function()
     startGame()
     local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
     local log = watchAll(paladin)
-    UnitRemoveItem(paladin, CreateItem(FourCC("ratc"), 0, 0))
+    local ground = CreateItem(FourCC("ratc"), 0, 0)
+    UnitRemoveItem(paladin, ground)
     expect(log).toEqual({})
+    expect(UnitHasItem(paladin, ground)).toBe(false)
   end)
 
   it("fires nothing for an item another unit carries, which keeps it", function()
@@ -397,8 +398,9 @@ describe("UnitRemoveItem", function()
   end)
 end)
 
--- The four cases of UnitRemoveItemFromSlot of
--- docs/research/dispatching-natives.md.
+-- The cases of UnitRemoveItemFromSlot of
+-- docs/research/dispatching-natives.md: a filled slot, an empty slot beside
+-- a filled one, an empty inventory and a unit without an inventory.
 describe("UnitRemoveItemFromSlot", function()
   it("dispatches the drop of a filled slot, the item still in its slot in the handler, and returns it", function()
     startGame()

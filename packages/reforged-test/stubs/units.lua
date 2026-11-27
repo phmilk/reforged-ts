@@ -72,8 +72,7 @@ function GetUnitRallyDestructable(whichUnit)
 end
 
 -- The inventory: an item is carried in a slot, slot 0 first, in added order;
--- a freed slot is not refilled. UnitItemInSlot reads a slot and
--- UnitRemoveItemFromSlot empties it, returning what it held.
+-- a freed slot is not refilled. UnitItemInSlot reads a slot.
 --
 -- Giving and taking an item are Dispatching Natives: the game fires their
 -- events inside the call (docs/research/unit-event-timing.md, and
@@ -157,17 +156,17 @@ end
 
 -- UnitAddItemById creates a new item and gives it to the unit as UnitAddItem
 -- does, the pickup dispatched before it returns the item. A unit without an
--- inventory gets nothing and nothing fires: the item is created all the
--- same, and nil is returned, as the game leaves the item on the ground and
--- returns nothing (docs/research/dispatching-natives.md). No Shipped stub
--- reads that item back.
+-- inventory gets nothing, nothing fires and nil is returned, as in the game
+-- (docs/research/dispatching-natives.md). The game leaves there an item on
+-- the ground that the call does not return; no Shipped stub would read it
+-- back, so the stub makes none.
 function UnitAddItemById(whichUnit, itemId)
   __stub_record("UnitAddItemById", whichUnit, itemId)
-  local item = __stub_new_handle("item")
-  item.typeId = itemId
   if not hasInventory(whichUnit) then
     return nil
   end
+  local item = __stub_new_handle("item")
+  item.typeId = itemId
   carry(whichUnit, item)
   dispatchPickup(whichUnit, item)
   return item
