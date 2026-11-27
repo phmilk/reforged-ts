@@ -1,7 +1,8 @@
 /**
- * What the release scripts ask git, and the git commands they run. Every
- * question goes through a `Git` function and every command through a
- * `GitRunner`, so a test answers them without a repository or a network.
+ * What the release scripts ask git, the git commands they run, and how
+ * they read a ref's branch. Every question goes through a `Git` function
+ * and every command through a `GitRunner`, so a test answers them without
+ * a repository or a network.
  */
 import { execFile } from "node:child_process";
 import { runInherited } from "./process.js";
@@ -71,6 +72,19 @@ export async function defaultBase(git: Git): Promise<string> {
   throw new Error(
     `Neither ${MAIN_BRANCH} nor origin/${MAIN_BRANCH} exists; name the base ref.`,
   );
+}
+
+/**
+ * The branch a base ref names, the ref without its prefix `refs/heads/`,
+ * `refs/remotes/origin/` or `origin/`: `origin/next`,
+ * `refs/remotes/origin/next` and `refs/heads/next` name `next`. Any other
+ * ref (a commit, `HEAD`) is returned as given.
+ */
+export function baseBranch(ref: string): string {
+  for (const prefix of ["refs/heads/", "refs/remotes/origin/", "origin/"]) {
+    if (ref.startsWith(prefix)) return ref.slice(prefix.length);
+  }
+  return ref;
 }
 
 /** How a file changed: git's status letter (`A`, `M`, `D`, `T`). */

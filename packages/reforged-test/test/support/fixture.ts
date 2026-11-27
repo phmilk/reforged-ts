@@ -18,6 +18,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const RUNNER_MODULE = "lua_modules.reforged-test.lua.index";
+export const MAP_MODULE = "lua_modules.reforged-test.map.index";
 
 const fixtures = fileURLToPath(new URL("../fixtures/", import.meta.url));
 const runner = fileURLToPath(new URL("../../lua/index.lua", import.meta.url));

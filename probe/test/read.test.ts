@@ -423,8 +423,61 @@ describe("probe:read", () => {
     expect(read([], context)).toEqual({
       code: 4,
       stdout: "",
-      stderr: "Usage: probe:read <probe>\n",
+      stderr: "Usage: probe:read <probe> [--label <name>]\n",
     });
+  });
+
+  it("reads <probe>-<label>.txt with --label, the label on the status line, and leaves <probe>.txt unread", async () => {
+    const { context, resultFile } = await setup();
+    const labelled = resultFile.replace(/\.txt$/, "-alt-f4.txt");
+    await writeResult(labelled, preloadFile(bridgeLines()));
+    await writeResult(resultFile, "not a Result file");
+
+    const { code, stdout, stderr } = read(
+      [BRIDGE_PROBE, "--label", "alt-f4"],
+      context,
+    );
+    expect({ code, stderr }).toEqual({ code: 0, stderr: "" });
+    expect(stdout.split("\n")[0]).toBe(
+      "finished: Probe hello, label alt-f4, run bridge, 2 records",
+    );
+    expect(readProbeRun(BRIDGE_PROBE, context, "alt-f4")).toMatchObject({
+      label: "alt-f4",
+      file: labelled,
+      state: "finished",
+    });
+  });
+
+  it("gives not-started, exit code 3, naming the labelled file, when the label has no Result file", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(read([BRIDGE_PROBE, "--label", "menu"], context)).toEqual({
+      code: 3,
+      stdout: `not-started: no Result file at ${resultFile.replace(/\.txt$/, "-menu.txt")}\n`,
+      stderr: "",
+    });
+  });
+
+  it("refuses, with exit code 4, a label outside lower-case a to z, 0 to 9 and -", async () => {
+    const { context } = await setup();
+    for (const label of ["Menu", "", "a b", "../x"]) {
+      expect(read([BRIDGE_PROBE, "--label", label], context)).toEqual({
+        code: 4,
+        stdout: "",
+        stderr: `probe:read failed: The label ${JSON.stringify(label)} is not one a Probe run writes: it is lower-case a to z, 0 to 9 and -, and not empty.\n`,
+      });
+    }
+  });
+
+  it("fails with exit code 4 on an unknown option", async () => {
+    const { context } = await setup();
+    const { code, stdout, stderr } = read(
+      [BRIDGE_PROBE, "--lable", "x"],
+      context,
+    );
+    expect({ code, stdout }).toEqual({ code: 4, stdout: "" });
+    expect(stderr).toMatch(/^probe:read failed: .*--lable/);
   });
 });
 

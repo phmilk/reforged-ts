@@ -26,6 +26,7 @@
     "release:version": "tsc -p tsconfig.json && node build/cli/version.js",
     "release:dist-tag": "tsc -p tsconfig.json && node build/cli/dist-tag.js",
     "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
+    "release:template-ref": "tsc -p tsconfig.json && node build/cli/template-ref.js",
     "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js",
     "release:template-dispatch": "tsc -p tsconfig.json && node build/cli/template-dispatch.js",
     "release:docs-cut": "tsc -p tsconfig.json && node build/cli/docs-cut.js",

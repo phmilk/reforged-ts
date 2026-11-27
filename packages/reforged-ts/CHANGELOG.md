@@ -1,5 +1,14 @@
 # reforged-ts
 
+## 1.0.0-alpha.24
+
+### Patch Changes
+
+- [#1072](https://github.com/phmilk/reforged-ts/pull/1072) [`488b0d9`](https://github.com/phmilk/reforged-ts/commit/488b0d995b3011fba236b8856d7bc5eae4695fee) Thanks [@phmilk](https://github.com/phmilk)! - The alphas are published under npm's `latest` dist-tag, so `pnpm add reforged-ts` and `npx create-reforged-map my-map` install the current alpha without `@next`, and `pnpm update` moves a Map project to it. Each README's install commands drop `@next`. The `next` dist-tag now carries only the betas of a major in preparation; until one exists, it stays on the last alpha it got.
+- Updated dependencies [[`488b0d9`](https://github.com/phmilk/reforged-ts/commit/488b0d995b3011fba236b8856d7bc5eae4695fee), [`786fcd9`](https://github.com/phmilk/reforged-ts/commit/786fcd93336cea91d829a839102204be21236592), [`654fafb`](https://github.com/phmilk/reforged-ts/commit/654fafb614fcedf03a8f306fac4d253349ee39fc), [`2b6ccce`](https://github.com/phmilk/reforged-ts/commit/2b6ccce71191c09c435676d8fd757a483c81868c), [`4a6fa84`](https://github.com/phmilk/reforged-ts/commit/4a6fa8462cba267eb682895df810f17fdac78a1c), [`f9dbbb3`](https://github.com/phmilk/reforged-ts/commit/f9dbbb3631612d2f694f1408d72e49f3fa4077a8), [`3b1c8f8`](https://github.com/phmilk/reforged-ts/commit/3b1c8f865860d34d5cfee25be52c3569f8decec7)]:
+  - reforged-types@1.0.0-alpha.9
+  - reforged-test@1.0.0-alpha.16
+
 ## 1.0.0-alpha.23
 
 ### Patch Changes

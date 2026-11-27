@@ -30,6 +30,49 @@ describe("the creation step", () => {
     );
   });
 
+  it("runs the plan's create-reforged-map when it downloads the channel's Template ref, next from next", async () => {
+    const packDir = await packOutput([
+      ...ALL_FOUR,
+      { name: CLI, templateRef: "next" },
+    ]);
+
+    const { result } = await gate(
+      await templateCheckout(),
+      packDir,
+      fakeRunner().run,
+      "next",
+    );
+
+    expect(result.ok).toBe(true);
+  });
+
+  it("refuses the plan's create-reforged-map when it downloads another Template ref than the channel's, before running it", async () => {
+    const packDir = await packOutput([...ALL_FOUR, { name: CLI }]);
+    const runner = fakeRunner();
+
+    await expect(
+      gate(await templateCheckout(), packDir, runner.run, "next"),
+    ).rejects.toThrow(
+      /^The tarball of create-reforged-map \(.+\) downloads the Template at main, not at next, the Template ref of the release's channel: write it into the build output with release:template-ref before changeset pack\.$/,
+    );
+    expect(runner.commands.some(({ command }) => command === "node")).toBe(
+      false,
+    );
+  });
+
+  it("leaves the Template ref of the workspace's create-reforged-map unchecked, since the release does not publish it", async () => {
+    const packDir = await packOutput(ALL_FOUR);
+
+    const { result } = await gate(
+      await templateCheckout(),
+      packDir,
+      fakeRunner().run,
+      "next",
+    );
+
+    expect(result.ok).toBe(true);
+  });
+
   it("stops when the project keeps a path of the Template's maintenance manifest, naming it", async () => {
     const packDir = await packOutput(ALL_FOUR);
     const runner = fakeRunner({ created: { "scripts/detach.ts": "" } });

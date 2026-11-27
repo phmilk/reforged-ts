@@ -9,10 +9,12 @@ import { dirname, join, posix, sep } from "node:path";
 import { parse } from "yaml";
 import { CREATED_PROJECT } from "../../src/creation-step.js";
 import { commandLine, type Command, type Runner } from "../../src/process.js";
+import type { TemplateRef } from "../../src/release-channel.js";
 import {
   runTemplateGate,
   type TemplateGateResult,
 } from "../../src/template-gate.js";
+import { TEMPLATE_REF_MODULE } from "../../src/template-ref.js";
 import { packageTarball } from "./tarball.js";
 import { tempDir, writeText, writeWorkspace } from "./workspace.js";
 
@@ -24,6 +26,8 @@ export interface PlanEntry {
   name: string;
   version?: string;
   kind?: "publish" | "tag-only";
+  /** The Template ref the Creation CLI's tarball downloads: `main` unless given. */
+  templateRef?: TemplateRef;
 }
 
 export async function writeBytes(
@@ -36,8 +40,14 @@ export async function writeBytes(
   await writeFile(target, bytes);
 }
 
-/** A tarball of the Creation CLI, as `pnpm pack` writes it. */
-export const cliTarball = (version: string) =>
+/**
+ * A tarball of the Creation CLI, as `pnpm pack` writes it, downloading the
+ * Template at `templateRef`.
+ */
+export const cliTarball = (
+  version: string,
+  templateRef: TemplateRef = "main",
+) =>
   packageTarball({
     "package.json": JSON.stringify({
       name: CLI,
@@ -45,6 +55,7 @@ export const cliTarball = (version: string) =>
       bin: { [CLI]: "./dist/cli.js" },
     }),
     "dist/cli.js": "#!/usr/bin/env node\n",
+    [TEMPLATE_REF_MODULE]: `export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";\nexport const TEMPLATE_REF = "${templateRef}";\n`,
   });
 
 /**
@@ -59,14 +70,21 @@ export async function packOutput(
 ): Promise<string> {
   const dir = await tempDir("pack");
   const plan = [];
-  for (const { name, version = ALPHA, kind = "publish" } of entries) {
+  for (const {
+    name,
+    version = ALPHA,
+    kind = "publish",
+    templateRef,
+  } of entries) {
     if (kind === "tag-only") {
       plan.push([{ kind, name, version }]);
       continue;
     }
     const path = `packages/${name}-${version}.tgz`;
     const bytes =
-      name === CLI ? cliTarball(version) : `tarball of ${name}@${version}`;
+      name === CLI
+        ? cliTarball(version, templateRef)
+        : `tarball of ${name}@${version}`;
     await writeBytes(dir, path, bytes);
     const integrity = `sha256-${createHash("sha256").update(bytes).digest("base64")}`;
     plan.push([
@@ -269,13 +287,15 @@ export const STEP_LABELS = [
 ];
 
 /**
- * Runs the gate on `template` with the pack output `packDir`, over a
- * fixture workspace and a new scratch folder.
+ * Runs the gate on `template` with the pack output `packDir`, for a release
+ * whose channel's Template ref is `templateRef`, over a fixture workspace
+ * and a new scratch folder.
  */
 export async function gate(
   template: string,
   packDir: string,
   run: Runner = fakeRunner().run,
+  templateRef: TemplateRef = "main",
 ): Promise<{ result: TemplateGateResult; root: string; scratch: string }> {
   const root = await writeWorkspace();
   const scratch = await tempDir("scratch");
@@ -283,6 +303,7 @@ export async function gate(
     template,
     packDir,
     root,
+    templateRef,
     scratch,
     run,
   });

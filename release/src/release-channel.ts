@@ -2,7 +2,8 @@
  * The Release channel (ADR 0031): what a release publishes and checks
  * against, decided by the branch it runs from. The one module that knows
  * the rule; the dist-tag of the publish plan, the Template ref and the
- * verdict on a major changeset are read from it.
+ * verdict on a major changeset (`release:check-changeset`, on a pull
+ * request's base branch) are read from it.
  *
  * - `master` is the stable channel: the `latest` dist-tag and the
  *   Template's `main`. A package may take a major there only while it is
@@ -11,7 +12,8 @@
  * - `next` is the channel of a major in preparation: the `next` dist-tag
  *   and the Template's `next`, and a major for every package.
  *
- * Any other branch has no channel and is refused.
+ * Any other branch has no channel and a release from it is refused; the
+ * changeset check of a pull request based on it refuses no major.
  */
 import { compareSemver, parseSemver, type SemVer } from "./semver.js";
 import { readPublishablePackages } from "./workspace.js";
@@ -31,6 +33,12 @@ export const NEXT_TAG = "next";
 /** The dist-tag of a channel: `latest` or `next`. */
 export type DistTag = typeof LATEST_TAG | typeof NEXT_TAG;
 
+/**
+ * The Template's branch of a channel, which the release checks against and
+ * the packed Creation CLI downloads: `main` or `next`.
+ */
+export type TemplateRef = "main" | "next";
+
 /** A package of the workspace, as the channel reads it. */
 export interface ChannelPackage {
   name: string;
@@ -48,7 +56,7 @@ export interface ReleaseChannel {
    * The Template's branch the release checks against and the packed
    * Creation CLI downloads.
    */
-  templateRef: "main" | "next";
+  templateRef: TemplateRef;
   /** Whether each package, by name, may take a major changeset. */
   majors: Readonly<Record<string, boolean>>;
 }
@@ -70,7 +78,8 @@ const FIRST_STABLE: SemVer = {
   build: [],
 };
 
-function isChannelBranch(branch: string): branch is ChannelBranch {
+/** Whether `branch` has a channel: `master` or `next`. */
+export function isChannelBranch(branch: string): branch is ChannelBranch {
   return (CHANNEL_BRANCHES as readonly string[]).includes(branch);
 }
 

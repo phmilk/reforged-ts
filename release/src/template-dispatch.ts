@@ -10,6 +10,7 @@ import { DOCS_BASE_URL, FRAGMENT_FILE } from "./matrix-model.js";
 import { ROW_PACKAGES } from "./packages.js";
 import { REGISTRY } from "./publish-check.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
+import { readReleaseChannel, type ReleaseChannel } from "./release-channel.js";
 import { readPublishablePackages } from "./workspace.js";
 
 /** The event type the Template's sync workflow listens for. */
@@ -30,6 +31,12 @@ export type ReleasedPackage = (typeof ROW_PACKAGES)[keyof typeof ROW_PACKAGES];
 export interface ReleasePayload {
   /** The release's git tag: `<package>@<version>`. */
   tag: string;
+  /**
+   * The Template's branch the sync applies the release to and opens its
+   * sync pull request against: the Template ref of the release's channel,
+   * `main` from `master` and `next` from `next` (ADR 0031).
+   */
+  branch: ReleaseChannel["templateRef"];
   /** The version on npm of each of the seven packages, after the release. */
   versions: Record<ReleasedPackage, string>;
   /**
@@ -57,13 +64,14 @@ export class TemplateDispatchError extends Error {
 
 /**
  * The dispatch of the release in the `changeset pack` output `packDir`,
- * over the workspace at `root`.
+ * over the workspace at `root`, run from `branch`.
  *
  * - `tag`: the git tag of the first of the seven packages, in matrix order
  *   (the library, the Typings, the harness, the plugin, the map reader, the
  *   Built-in objects, the Studio), the plan publishes.
  *   A release without the library dispatches too: its versions change the
  *   Template's ranges.
+ * - `branch`: the Template ref of the Release channel of `branch`.
  * - `versions`: the plan's version of each package it publishes, the
  *   workspace's of the others, which npm already holds.
  * - `llmsUrl`: the docs version the packages of the library version link
@@ -72,15 +80,18 @@ export class TemplateDispatchError extends Error {
  * Resolves with `undefined` when the plan publishes packages, but none of
  * the seven: a release of the Creation CLI alone, which no Map project
  * depends on, leaves the Template's ranges as they are. Throws a
- * `TemplateDispatchError` when the plan publishes no package, one of the
- * seven is in neither the plan nor the workspace, or the library version
- * names no docs version, and a `PublishPlanError` on a plan that cannot be
- * read.
+ * `ReleaseChannelError` on a branch with no channel, before reading the
+ * plan, a `TemplateDispatchError` when the plan publishes no package, one
+ * of the seven is in neither the plan nor the workspace, or the library
+ * version names no docs version, and a `PublishPlanError` on a plan that
+ * cannot be read.
  */
 export async function templateDispatch(
   packDir: string,
   root: string,
+  branch: string,
 ): Promise<TemplateDispatch | undefined> {
+  const { templateRef } = await readReleaseChannel(branch, root);
   const { file, plan } = await readPublishPlan(packDir);
   const planned = new Map(
     publishEntries(plan, file).map(({ name, version }) => [name, version]),
@@ -125,6 +136,7 @@ export async function templateDispatch(
     event_type: TEMPLATE_DISPATCH_EVENT,
     client_payload: {
       tag,
+      branch: templateRef,
       versions,
       contextUrl: `${RAW_BASE_URL}/${tag}/GLOSSARY.md`,
       matrixUrl: `${RAW_BASE_URL}/${tag}/${FRAGMENT_FILE}`,

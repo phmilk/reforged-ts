@@ -26,7 +26,7 @@ create-reforged-map [<folder>] [--template <archive or folder>] [--name <name>] 
 ```
 
 - `<folder>` is the new project's folder. It must not exist, or be empty; its missing parents are created.
-- Without `--template`, it downloads the Template from GitHub: the tarball of `phmilk/reforged-ts-template` at `v1`, the line the library's release gate checks out for its major (`templateRef` in the release scripts; a test holds the two equal). It embeds no Template file. A failed download says whether this machine looks offline, GitHub cannot be reached or answers an error, or the ref does not exist, and leaves nothing in the folder.
+- Without `--template`, it downloads the Template from GitHub: the tarball of `phmilk/reforged-ts-template` at the Template's branch of the [Release channel](https://github.com/phmilk/reforged-ts/blob/master/docs/release.md#release-channels) it was released from, the ref the library's release gate checks: `main` for the stable line, `next` for a beta. It embeds no Template file. A failed download says whether this machine looks offline, GitHub cannot be reached or answers an error, or the ref does not exist, and leaves nothing in the folder.
 - `--template` is a local Template instead: a tar archive, gzipped or not, whose one top-level folder is left out (GitHub's tarball of a ref, or `git archive --prefix=<name>/`), or a folder, copied but for its `.git` and `node_modules`. Its `package.json` must have the `template:detach` script.
 - `--name` is the project name, the folder's base name when not given. It must be a valid npm package name (lowercase, URL-safe, at most 214 characters, an optional `@scope/`), so that `pnpm install` takes it.
 - `--description` is a one-line description of the map.

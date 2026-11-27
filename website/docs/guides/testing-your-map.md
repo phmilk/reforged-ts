@@ -47,21 +47,35 @@ Each test runs in a Test game of its own, and starts that game itself:
 
 ## Making the game happen
 
-**A Game action says what happens in the game.** It takes its subject, then what else it needs in an options object, a unit being its Handle or anything with `.handle`, as a `Unit` of the library. It fires every event the game would fire, with every response the game gives, writes the state its name states and nothing derived, and returns nothing. What the game refuses is an error, so a test cannot describe a game that cannot happen:
+**A Game action says what happens in the game.** It takes its subject, then what else it needs, a unit or a player being its Handle or anything with `.handle`, as a `Unit` or a `MapPlayer` of the library. It fires every event the game would fire, with every response the game gives, writes the state its name states and nothing derived, and returns nothing. What the game refuses is an error, so a test cannot describe a game that cannot happen:
 
-| Game action                | Fires, in this order                                                                          | A handler reads                                                                                                                                                                                                                                                         | Writes        | Refuses                                              |
-| -------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------- |
-| `game.kill(unit, { by? })` | the widget death (`TriggerRegisterDeathEvent`), `EVENT_PLAYER_UNIT_DEATH`, `EVENT_UNIT_DEATH` | `GetTriggerUnit` the unit, already dead (`UnitAlive` false, its life 0); in the two death events of the unit, `GetDyingUnit` the unit, `GetTriggerPlayer` its owner and `GetKillingUnit` the unit given as `by`, nil without it; in the widget death, none of the three | the unit dead | a unit already dead or removed, and a removed killer |
-
-{/* The rows of game.chat, game.select, game.deselect and game.leave are written with them (#984). */}
+| Game action                   | Fires, in this order                                                                                                                              | A handler reads                                                                                                                                                                                                                                                         | Writes                                                              | Refuses                                                                   |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `game.kill(unit, { by? })`    | the widget death (`TriggerRegisterDeathEvent`), `EVENT_PLAYER_UNIT_DEATH`, `EVENT_UNIT_DEATH`                                                     | `GetTriggerUnit` the unit, already dead (`UnitAlive` false, its life 0); in the two death events of the unit, `GetDyingUnit` the unit, `GetTriggerPlayer` its owner and `GetKillingUnit` the unit given as `by`, nil without it; in the widget death, none of the three | the unit dead                                                       | a unit already dead or removed, and a removed killer                      |
+| `game.chat(player, text)`     | every Trigger whose chat registration of the player matches the message, once per matching registration, in the order the registrations were made | `GetEventPlayerChatString` the message as given, `GetEventPlayerChatStringMatched` the registration's filter in lower case, `GetTriggerPlayer` the player; `GetTriggerEventId` the event of id 96, as in the game, not `EVENT_PLAYER_CHAT`                              | nothing                                                             | a player who is not playing                                               |
+| `game.select(player, unit)`   | `EVENT_PLAYER_UNIT_SELECTED` of the player who selects, `EVENT_UNIT_SELECTED`                                                                     | `GetTriggerUnit` the unit; `GetTriggerPlayer` the player in the first event and the unit's owner in the second; `IsUnitSelected` already true, and the unit in `GroupEnumUnitsSelected` only after the handlers                                                         | the unit in the player's selection, after the units selected before | a unit already selected, dead or removed, and a player who is not playing |
+| `game.deselect(player, unit)` | `EVENT_PLAYER_UNIT_DESELECTED` of the player who deselects, `EVENT_UNIT_DESELECTED`                                                               | `GetTriggerUnit` the unit, still selected; `GetTriggerPlayer` the player in the first event and the unit's owner in the second                                                                                                                                          | the unit out of the player's selection                              | a unit that is not in the selection                                       |
+| `game.leave(player)`          | `EVENT_PLAYER_LEAVE` of the player                                                                                                                | `GetTriggerPlayer` the player, its slot still `PLAYER_SLOT_STATE_PLAYING`                                                                                                                                                                                               | the slot as `PLAYER_SLOT_STATE_LEFT`, after the handlers            | a player who is not playing                                               |
 
 A killer already dead is accepted. A handler reads the killer the test names:
 
 {@includeCode ../../../packages/reforged-test/examples/kill.test.ts}
 
+**A chat message matches as the game matches it.** A registration matches when its filter is empty, or when, both in lower case, it equals the message (an exact match) or is found anywhere in it; nothing is trimmed. A Trigger runs once per matching registration, and a handler reads the message as typed:
+
+{@includeCode ../../../packages/reforged-test/examples/chat.test.ts}
+
+**A selection is the player's own.** `game.select` says a unit entered a player's selection, and `game.deselect` that it left: it adds to the selection and clears nothing, and the event is the selecting player's, whoever owns the unit. `IsUnitSelected` and `GroupEnumUnitsSelected` read the selection:
+
+{@includeCode ../../../packages/reforged-test/examples/select.test.ts}
+
+**Players 0 and 1 are playing**, and every other slot is empty. A player who is not playing types, selects and leaves nothing: naming one is an error, as it is for a player after `game.leave`, and in a handler of its leave. `game.leave` copies [a Probe run of two clients](https://github.com/phmilk/reforged-ts/blob/master/docs/research/player-leave.md): the handlers run first, the slot still playing, then the slot is written, and nothing else, no defeat, no victory, the units, the controller and the selection kept. The [chat](https://github.com/phmilk/reforged-ts/blob/master/docs/research/chat-event-matching.md) and the [selection](https://github.com/phmilk/reforged-ts/blob/master/docs/research/selection-events.md) each copy a Probe run too:
+
+{@includeCode ../../../packages/reforged-test/examples/leave.test.ts}
+
 There is no `game.createUnit`: a test creates its units as the map does.
 
-**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, whichever Trigger was registered first, as in the game:
+**A Native the map calls fires its event inside the call**, where the game does: a Dispatching Native. When the map's code kills a unit, changes its owner or gives and takes an item, every Trigger the game would fire runs before the call returns, a handler that calls one of them runs its own chain inside it, and the test fires nothing by hand. A player's event reaches the Triggers of the unit's owner (the new owner for a change of owner), before the unit's own event, whichever Trigger was registered first, as two Probe runs measured the game ([which Natives fire inside the call](https://github.com/phmilk/reforged-ts/blob/master/docs/research/unit-event-timing.md), [what their handlers read](https://github.com/phmilk/reforged-ts/blob/master/docs/research/dispatching-natives.md)):
 
 | Native                                     | Fires, in this order                                                                                               | A handler reads                                                                                                                 | Fires nothing for                                                                      |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -72,7 +86,7 @@ There is no `game.createUnit`: a test creates its units as the map does.
 
 - **Dead or alive, no hit points.** A unit is alive until it dies; after its death `UnitAlive` is false and its life reads 0. The harness keeps no life for a live unit: a test that reads one gives it with `stubNative`.
 - **An inventory for every unit.** The harness holds no object data, so every unit has one; a test makes a unit without one by answering `UnitInventorySize` with 0.
-- **Nothing else fires on its own.** `RemoveUnit` fires nothing, and a lethal `UnitDamageTarget` fires its damage events but no death. A Dispatching Native replaced with `stubNative` fires nothing either.
+- **Nothing else fires on its own.** `RemoveUnit` fires nothing, and a lethal `UnitDamageTarget` fires its damage events but no death. `SelectUnit` and `ClearSelection` write the local player's selection, the one `game.select` writes, and fire nothing: in the game their selection events come after the call, so a test that needs them says `game.select` or `game.deselect`. A Dispatching Native replaced with `stubNative` fires nothing either.
 
 **Every other event goes through `game.fire`.** An event no Game action and no Dispatching Native covers (a spell, an order, a construction, a hero's level) is fired with `game.fire`, the one way to fire it. It takes the event and its Firing context: what each response Native answers while the event's Triggers run, by name. Every Trigger the game would fire for the event runs, the map's handlers among them, and the test never picks one:
 
@@ -162,7 +176,7 @@ A test gives such a Native its answer with `stubNative`:
 - **Typed from the Typings.** The name is a Native of `common.j`, and the answer has that Native's signature: its parameters need no annotation, and a wrong return is a compile error. The answer may be left out only for a Native that returns nothing: `stubNative("PauseGame")`.
 - **Recorded.** Every call is recorded before the answer runs, as a Shipped stub records its own.
 - **Anywhere, for this test.** Call it at the top of the file, for every test of it, or inside one test, before or after `startGame()`. The last call for a name wins, and an answer lives in its test's game only.
-- **A `stubNative` replacement is whole: over a Native a Shipped stub covers, the Shipped stub no longer runs, so the state it kept and its Event dispatch are gone; keep `stubNative` for the Natives that answer a value.**
+- **Whole.** A `stubNative` replacement is whole: over a Native a Shipped stub covers, the Shipped stub does not run, so the state it kept and its Event dispatch are gone; keep `stubNative` for the Natives that answer a value.
 
 An answer that creates a Handle returns one made with `newHandle(kind)`, the kind being the Handle type's name in the Typings. It takes the next handle id of the test's game, as a Handle a Shipped stub creates does:
 
@@ -172,9 +186,7 @@ An answer that creates a Handle returns one made with `newHandle(kind)`, the kin
 
 {@includeCode ../../../packages/reforged-test/examples/set-local-player.test.ts}
 
-A Lua stub file listed in the `stubs` option of the harness still loads, after the shipped ones; `stubNative` replaces it where a test needs the answer in TypeScript.
-
-{/* Completed with the message that names stubNative (#990). */}
+A Lua stub file listed in the `stubs` option of the harness loads after the shipped ones; `stubNative` replaces it where a test needs the answer in TypeScript.
 
 ## Focus and skip
 
