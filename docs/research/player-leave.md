@@ -12,6 +12,7 @@ Everything below is Observed, in four games that agree on every record they shar
 - **No defeat and no victory fire**: neither `EVENT_PLAYER_DEFEAT` nor `EVENT_PLAYER_VICTORY`, for either player, in a game without the melee rules (the runner turns `MeleeInitVictoryDefeat` into a no-op, #348).
 - **The leaver's selection stays**: `IsUnitSelected(footman, leaver)` answers `true` and `GroupEnumUnitsSelected` of the leaver holds the footman, in the handler and for the 5 seconds after. No `EVENT_PLAYER_UNIT_DESELECTED` fires.
 - **The four ways of leaving give the same records** on the client that stays.
+- **The network cut showed the host no waiting dialog**: some time after the leaver cut the network, the only thing on the host's screen was the Probe's message that the run had finished (seen by the host, 2026-11-27).
 - **The leaver's own client runs the handler of its own leave when it leaves by the menu**, reading its slot as playing, and writes nothing after it; Alt+F4, the network cut and the killed process write nothing after the leaver's last record before the leave.
 
 ## The runs
@@ -55,6 +56,7 @@ Where they differ: the harness has no timer between the handlers and the write, 
 
 ## Not measured
 
-- What the screens showed: the host's waiting dialog in the network cut, and how long the game waited before the leave. The time from the selection to the leave, 4.82 to 25.04 seconds of game time, mixes the human's own pace with the game's detection, so it measures neither.
+- How long the game waits before a network cut becomes a leave. The time from the selection to the leave, 4.82 to 25.04 seconds of game time, mixes the human's own pace with the game's detection, so it measures neither, and no one timed the cut.
+- What the screens showed in the menu, Alt+F4 and killed-process games.
 - A game of more than two players, a leaver on a team, and a game with the melee rules, where `MeleeInitVictoryDefeat` reacts to a leave.
 - Whether the slot reads `PLAYER_SLOT_STATE_LEFT` before the timer of timeout 0: no read sits between the end of the handler and that timer.
