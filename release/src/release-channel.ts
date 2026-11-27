@@ -12,7 +12,8 @@
  * - `next` is the channel of a major in preparation: the `next` dist-tag
  *   and the Template's `next`, and a major for every package.
  *
- * Any other branch has no channel and is refused.
+ * Any other branch has no channel and a release from it is refused; the
+ * changeset check of a pull request based on it refuses no major.
  */
 import { compareSemver, parseSemver, type SemVer } from "./semver.js";
 import { readPublishablePackages } from "./workspace.js";

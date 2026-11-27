@@ -1,7 +1,8 @@
 /**
- * What the release scripts ask git, and the git commands they run. Every
- * question goes through a `Git` function and every command through a
- * `GitRunner`, so a test answers them without a repository or a network.
+ * What the release scripts ask git, the git commands they run, and how
+ * they read a ref's branch. Every question goes through a `Git` function
+ * and every command through a `GitRunner`, so a test answers them without
+ * a repository or a network.
  */
 import { execFile } from "node:child_process";
 import { runInherited } from "./process.js";
