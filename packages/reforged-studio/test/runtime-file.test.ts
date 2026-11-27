@@ -5,7 +5,6 @@
  * the first one's URL instead of starting, and which the hover of
  * `reforged-map`'s plugin reads for its link.
  */
-import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
@@ -40,9 +39,13 @@ function secondMapFolder(project: Project): string {
   return other;
 }
 
-/** The pid of a process that has ended. */
+/**
+ * The pid of no process: above Linux's highest `pid_max` (2^22) and every
+ * pid Windows hands out. The pid of a child that has ended is not one: on
+ * Windows, under the load of the full test run, it read as running.
+ */
 function deadPid(): number {
-  return spawnSync(process.execPath, ["-e", ""]).pid;
+  return 2 ** 31 - 4;
 }
 
 describe("the Studio's runtime file", () => {
