@@ -3,7 +3,12 @@
 -- Probe of unit event timing, docs/research/unit-event-timing.md ("The
 -- firings, per case" and "What the response Natives answer in a handler"):
 -- the events each Native fires inside the call, their order, what a handler
--- reads, and nothing where the game fires nothing.
+-- reads, and nothing where the game fires nothing. The cases that say so
+-- copy the Probe of the Dispatching Natives,
+-- docs/research/dispatching-natives.md: the player's event before the
+-- unit's whatever was registered first, UnitAddItemById on a unit without
+-- an inventory, UnitRemoveItem of an item the unit does not carry,
+-- UnitRemoveItemFromSlot, and GetTriggerWidget in the death handlers.
 local map = require("lua_modules.reforged-test.map.index")
 local it, describe, expect, startGame = map.it, map.describe, map.expect, map.startGame
 
@@ -90,6 +95,55 @@ local function footman(slot)
   return CreateUnit(Player(slot or 0), FourCC("hfoo"), 0, 0, 0)
 end
 
+-- A trigger per name of `created`, made in that order, each appending its
+-- name to the log it returns when its condition runs and when its action
+-- runs; `register[name]` then registers each, in the order of `registered`.
+-- `fire` then fires the event, and the triggers are destroyed, as the Probe
+-- destroyed each case's, so the cases of one test share its game.
+local function ordered(created, registered, register, fire)
+  local log, triggers = {}, {}
+  for _, name in ipairs(created) do
+    triggers[name] = watch(log, name)
+  end
+  for _, name in ipairs(registered) do
+    register[name](triggers[name])
+  end
+  fire()
+  for _, trigger in pairs(triggers) do
+    DestroyTrigger(trigger)
+  end
+  return log
+end
+
+-- Every order of the names given.
+local function permutations(names)
+  if #names <= 1 then
+    return { names }
+  end
+  local all = {}
+  for i = 1, #names do
+    local rest = {}
+    for j = 1, #names do
+      if j ~= i then
+        rest[#rest + 1] = names[j]
+      end
+    end
+    for _, tail in ipairs(permutations(rest)) do
+      table.insert(tail, 1, names[i])
+      all[#all + 1] = tail
+    end
+  end
+  return all
+end
+
+local function reversed(names)
+  local back = {}
+  for i = #names, 1, -1 do
+    back[#back + 1] = names[i]
+  end
+  return back
+end
+
 -- The cases KillUnit(live), KillUnit(dead), RemoveUnit(live) and
 -- RemoveUnit(dead) of docs/research/unit-event-timing.md.
 describe("KillUnit", function()
@@ -109,6 +163,21 @@ describe("KillUnit", function()
         alive = false, owner = Player(0),
       })
     end
+  end)
+
+  -- "GetTriggerWidget in the death handlers" of
+  -- docs/research/dispatching-natives.md: the unit in the widget death, nil
+  -- in the player's and in the unit's death. The game's answer is equal to
+  -- the unit by `==`, which is all this case reads of it ("A unit read as a
+  -- widget").
+  it("answers GetTriggerWidget in the widget death alone", function()
+    startGame()
+    local unit = footman()
+    local _, readings = watchAll(unit)
+    KillUnit(unit)
+    expect(readings["widget death"].triggerWidget == unit).toBe(true)
+    expect(readings["EVENT_PLAYER_UNIT_DEATH of 0"].triggerWidget).toBeUndefined()
+    expect(readings["EVENT_UNIT_DEATH"].triggerWidget).toBeUndefined()
   end)
 
   it("fires nothing for a unit already dead", function()
@@ -256,9 +325,23 @@ describe("UnitAddItem and UnitAddItemById", function()
     local log = watchAll(unit)
     expect(UnitAddItem(unit, claws)).toBe(false)
     expect(UnitHasItem(unit, claws)).toBe(false)
-    local made = UnitAddItemById(unit, FourCC("ratc"))
-    expect(UnitHasItem(unit, made)).toBe(false)
     expect(log).toEqual({})
+  end)
+
+  -- The case UnitAddItemById(footman, 'ratc'), no inventory, of
+  -- docs/research/dispatching-natives.md: the game makes the item, leaves it
+  -- on the ground and returns nothing.
+  it("UnitAddItemById returns nothing for a unit without an inventory, and fires nothing", function()
+    startGame()
+    map.stubNative("UnitInventorySize", function() return 0 end)
+    local unit = footman()
+    local log = watchAll(unit)
+    local before = __stub_new_handle("mark").__handleId
+    expect(UnitAddItemById(unit, FourCC("ratc"))).toBeUndefined()
+    expect(log).toEqual({})
+    expect(UnitItemInSlot(unit, 0)).toBeUndefined()
+    -- The item exists, though nothing reads it back: it took a handle id.
+    expect(__stub_new_handle("mark").__handleId).toBe(before + 2)
   end)
 end)
 
@@ -283,13 +366,160 @@ describe("UnitRemoveItem", function()
     expect(UnitItemInSlot(paladin, 0)).toBeUndefined()
   end)
 
+  -- The three cases of UnitRemoveItem of an item the unit does not carry of
+  -- docs/research/dispatching-natives.md: nothing fires and nothing moves.
   it("fires nothing for an item the unit does not carry", function()
     startGame()
     local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
     local log = watchAll(paladin)
-    UnitRemoveItem(paladin, CreateItem(FourCC("ratc"), 0, 0))
+    local ground = CreateItem(FourCC("ratc"), 0, 0)
+    UnitRemoveItem(paladin, ground)
+    expect(log).toEqual({})
+    expect(UnitHasItem(paladin, ground)).toBe(false)
+  end)
+
+  it("fires nothing for an item another unit carries, which keeps it", function()
+    startGame()
+    local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+    local carrier = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+    local claws = CreateItem(FourCC("ratc"), 0, 0)
+    UnitAddItem(carrier, claws)
+    local log = watchAll(paladin, carrier)
+    UnitRemoveItem(paladin, claws)
+    expect(log).toEqual({})
+    expect(UnitHasItem(carrier, claws)).toBe(true)
+    expect(UnitItemInSlot(carrier, 0)).toBe(claws)
+  end)
+
+  it("fires nothing for a unit without an inventory", function()
+    startGame()
+    map.stubNative("UnitInventorySize", function() return 0 end)
+    local unit = footman()
+    local log = watchAll(unit)
+    UnitRemoveItem(unit, CreateItem(FourCC("ratc"), 0, 0))
     expect(log).toEqual({})
   end)
+end)
+
+-- The cases of UnitRemoveItemFromSlot of
+-- docs/research/dispatching-natives.md: a filled slot, an empty slot beside
+-- a filled one, an empty inventory and a unit without an inventory.
+describe("UnitRemoveItemFromSlot", function()
+  it("dispatches the drop of a filled slot, the item still in its slot in the handler, and returns it", function()
+    startGame()
+    local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+    local claws = CreateItem(FourCC("ratc"), 0, 0)
+    UnitAddItem(paladin, claws)
+    local log, readings = watchAll(paladin)
+    local inSlot = {}
+    local trigger = CreateTrigger()
+    TriggerAddAction(trigger, function()
+      inSlot[#inSlot + 1] = UnitItemInSlot(GetManipulatingUnit(), 0)
+    end)
+    TriggerRegisterUnitEvent(trigger, paladin, EVENT_UNIT_DROP_ITEM)
+    expect(UnitRemoveItemFromSlot(paladin, 0)).toBe(claws)
+    expect(log).toEqual(fired("EVENT_PLAYER_UNIT_DROP_ITEM of 0", "EVENT_UNIT_DROP_ITEM"))
+    for _, name in ipairs({ "EVENT_PLAYER_UNIT_DROP_ITEM of 0", "EVENT_UNIT_DROP_ITEM" }) do
+      expect(readings[name]).toEqual({
+        triggerUnit = paladin, triggerPlayer = Player(0), manipulatingUnit = paladin, manipulatedItem = claws,
+        eventId = name == "EVENT_UNIT_DROP_ITEM" and EVENT_UNIT_DROP_ITEM or EVENT_PLAYER_UNIT_DROP_ITEM,
+        alive = true, owner = Player(0), hasItem = true,
+      })
+    end
+    expect(inSlot).toEqual({ claws })
+    expect(UnitHasItem(paladin, claws)).toBe(false)
+    expect(UnitItemInSlot(paladin, 0)).toBeUndefined()
+  end)
+
+  it("fires nothing and returns nothing for an empty slot beside a filled one", function()
+    startGame()
+    local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+    local claws = CreateItem(FourCC("ratc"), 0, 0)
+    UnitAddItem(paladin, claws)
+    local log = watchAll(paladin)
+    expect(UnitRemoveItemFromSlot(paladin, 1)).toBeUndefined()
+    expect(log).toEqual({})
+    expect(UnitItemInSlot(paladin, 0)).toBe(claws)
+  end)
+
+  it("fires nothing and returns nothing for an empty inventory, and for a unit without one", function()
+    startGame()
+    local paladin = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+    local log = watchAll(paladin)
+    expect(UnitRemoveItemFromSlot(paladin, 0)).toBeUndefined()
+    map.stubNative("UnitInventorySize", function() return 0 end)
+    expect(UnitRemoveItemFromSlot(paladin, 0)).toBeUndefined()
+    expect(log).toEqual({})
+  end)
+end)
+
+-- "The order of the player's and the unit's event" of
+-- docs/research/dispatching-natives.md: for one event, the Trigger of the
+-- player's event runs before the Trigger of the unit's, whichever was
+-- registered first and whichever was created first; the widget death runs
+-- before both.
+describe("the player's event and the unit's", function()
+  it("run the widget death, the player's death, then the unit's, in each of the six registration orders", function()
+    startGame()
+    for _, registered in ipairs(permutations({ "player", "unit", "widget" })) do
+      for _, created in ipairs({ registered, reversed(registered) }) do
+        local unit = footman()
+        local log = ordered(created, registered, {
+          player = function(trigger) TriggerRegisterPlayerUnitEvent(trigger, Player(0), EVENT_PLAYER_UNIT_DEATH, nil) end,
+          unit = function(trigger) TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DEATH) end,
+          widget = function(trigger) TriggerRegisterDeathEvent(trigger, unit) end,
+        }, function() KillUnit(unit) end)
+        expect(log).toEqual(fired("widget", "player", "unit"))
+      end
+    end
+  end)
+
+  -- One case per event: its registrations, and the Native that fires it.
+  local EVENTS = {
+    {
+      name = "the change of owner",
+      playerEvent = "EVENT_PLAYER_UNIT_CHANGE_OWNER", unitEvent = "EVENT_UNIT_CHANGE_OWNER",
+      -- The change of owner is the new owner's event.
+      player = 1,
+      make = function() return footman() end,
+      fire = function(unit) SetUnitOwner(unit, Player(1), true) end,
+    },
+    {
+      name = "the pickup",
+      playerEvent = "EVENT_PLAYER_UNIT_PICKUP_ITEM", unitEvent = "EVENT_UNIT_PICKUP_ITEM",
+      player = 0,
+      make = function() return CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0) end,
+      fire = function(unit) UnitAddItem(unit, CreateItem(FourCC("ratc"), 0, 0)) end,
+    },
+    {
+      name = "the drop",
+      playerEvent = "EVENT_PLAYER_UNIT_DROP_ITEM", unitEvent = "EVENT_UNIT_DROP_ITEM",
+      player = 0,
+      make = function()
+        local unit = CreateUnit(Player(0), FourCC("Hpal"), 0, 0, 0)
+        UnitAddItem(unit, CreateItem(FourCC("ratc"), 0, 0))
+        return unit
+      end,
+      fire = function(unit) UnitRemoveItem(unit, UnitItemInSlot(unit, 0)) end,
+    },
+  }
+  for _, event in ipairs(EVENTS) do
+    it("run the player's before the unit's for " .. event.name .. ", in both registration orders", function()
+      startGame()
+      for _, registered in ipairs(permutations({ "player", "unit" })) do
+        for _, created in ipairs({ registered, reversed(registered) }) do
+          local unit = event.make()
+          local log = ordered(created, registered, {
+            player = function(trigger)
+              TriggerRegisterPlayerUnitEvent(trigger, Player(event.player), _G[event.playerEvent], nil)
+            end,
+            unit = function(trigger) TriggerRegisterUnitEvent(trigger, unit, _G[event.unitEvent]) end,
+          }, function() event.fire(unit) end)
+          expect(log).toEqual(fired("player", "unit"))
+        end
+      end
+    end)
+  end
 end)
 
 describe("a Dispatching Native under stubNative", function()

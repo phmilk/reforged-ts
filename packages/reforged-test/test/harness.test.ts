@@ -569,6 +569,7 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
     expect(suite("KillUnit")).toEqual(
       passing(
         "dispatches the widget death, the player unit death and the unit death, the unit already dead",
+        "answers GetTriggerWidget in the widget death alone",
         "fires nothing for a unit already dead",
         "leaves the unit dead: UnitAlive false, its life 0",
         "keeps no hit points: a live unit's life has no answer",
@@ -595,6 +596,7 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
         "dispatch the drop, then the pickup, for an item the unit carries",
         "UnitAddItemById dispatches the pickup before it returns the item",
         "fire nothing for a unit without an inventory, UnitAddItem returning false",
+        "UnitAddItemById returns nothing for a unit without an inventory, and fires nothing",
       ),
     );
   });
@@ -604,6 +606,29 @@ describe("the Dispatching Natives, on reforged-test/map", () => {
       passing(
         "dispatches the drop, the item still carried in the handler and gone after",
         "fires nothing for an item the unit does not carry",
+        "fires nothing for an item another unit carries, which keeps it",
+        "fires nothing for a unit without an inventory",
+      ),
+    );
+  });
+
+  it("UnitRemoveItemFromSlot dispatches the drop of a filled slot, and nothing for an empty one", () => {
+    expect(suite("UnitRemoveItemFromSlot")).toEqual(
+      passing(
+        "dispatches the drop of a filled slot, the item still in its slot in the handler, and returns it",
+        "fires nothing and returns nothing for an empty slot beside a filled one",
+        "fires nothing and returns nothing for an empty inventory, and for a unit without one",
+      ),
+    );
+  });
+
+  it("the player's event runs before the unit's, whichever was registered first", () => {
+    expect(suite("the player's event and the unit's")).toEqual(
+      passing(
+        "run the widget death, the player's death, then the unit's, in each of the six registration orders",
+        "run the player's before the unit's for the change of owner, in both registration orders",
+        "run the player's before the unit's for the pickup, in both registration orders",
+        "run the player's before the unit's for the drop, in both registration orders",
       ),
     );
   });
