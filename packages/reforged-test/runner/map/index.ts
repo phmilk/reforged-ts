@@ -289,8 +289,7 @@ export interface DisplayedText {
  * `createUnit`: a test creates its units with the map's own API.
  *
  * A Caught error, an error the library caught from a Map project's
- * callback, fails
- * the test at its end, after its last `afterEach`, unless
+ * callback, fails the test at its end, after its last `afterEach`, unless
  * {@link Game.expectError} expected it; the failure lists each before the
  * test's own failure, when it has one, and the game goes on meanwhile, as
  * in the game. One raised during `startGame()`, a `beforeEach` or an
@@ -436,20 +435,20 @@ export interface Game {
   setLocalPlayer(player: player | { readonly handle: player }): void;
   /**
    * Expects the Caught errors so far whose message contains `text`: an
-   * error the library caught from a Map project's callback, which otherwise fails
-   * the test at its end. Call it after the act, in a test of a map meant to
-   * report an error.
+   * error the library caught from a Map project's callback, which
+   * otherwise fails the test at its end. Call it after the act, in a test
+   * of a map meant to report an error.
    * @remarks
    * - It marks expected every Caught error not yet expected whose message
    *   holds `text`, as plain text, not a pattern, its repeats included. A
    *   Caught error after the call needs another call.
    * - A Caught error is one the library reports through
    *   `__reforged_caught_error`: of an Init stage's callback, and, in Dev
-   *   mode, of a protected callback or of `MapPlayer.runLocal`. The Test game forces
-   *   no Dev mode: with Dev mode off a handler's error is not caught, and it
-   *   fails the test at once, thrown out of the Game action.
+   *   mode, of a protected callback or of `MapPlayer.runLocal`. The Test
+   *   game forces no Dev mode: with Dev mode off a handler's error is not
+   *   caught, and it fails the test at once, thrown out of the Game action.
    * - A warning the library prints is no Caught error, and fails nothing.
-   * @example A map whose Init callback breaks
+   * @example A map whose Init stage's callback breaks
    * {@includeCode ../../examples/expect-error.test.ts}
    * @param text - A part of the message: `"attempt to index a nil value"`.
    * @throws When no Caught error not yet expected holds `text`, naming it:
