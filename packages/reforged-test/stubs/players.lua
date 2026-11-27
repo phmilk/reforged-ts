@@ -30,12 +30,37 @@ end
 -- the README names the two slots so a test can rely on them.
 local playingUsers = { [0] = true, [1] = true }
 
-function GetPlayerSlotState(whichPlayer)
-  __stub_record("GetPlayerSlotState", whichPlayer)
+-- The slots whose player left the game (__stub_leave_player).
+local left = {}
+
+-- The slot state of a player, without a call-log line: for the Game actions
+-- of reforged-test/map, which act for a playing player only.
+function __stub_slot_state(whichPlayer)
+  if left[whichPlayer.number] then
+    return PLAYER_SLOT_STATE_LEFT
+  end
   if playingUsers[whichPlayer.number] then
     return PLAYER_SLOT_STATE_PLAYING
   end
   return PLAYER_SLOT_STATE_EMPTY
+end
+
+function GetPlayerSlotState(whichPlayer)
+  __stub_record("GetPlayerSlotState", whichPlayer)
+  return __stub_slot_state(whichPlayer)
+end
+
+-- The player leaves the game: its slot reads PLAYER_SLOT_STATE_LEFT from
+-- now on, then EVENT_PLAYER_LEAVE is dispatched to the triggers registered
+-- for that player (__stub_dispatch, triggers.lua), GetTriggerPlayer
+-- answering it, the slot already left in every handler. Nothing derived is
+-- written: its controller, its units and its selection stay, and no defeat
+-- or victory fires. It checks nothing, a player who already left included.
+-- No Probe run measured a player leaving, which takes a second client. Not
+-- a Native, so it adds no call-log line.
+function __stub_leave_player(whichPlayer)
+  left[whichPlayer.number] = true
+  __stub_dispatch(EVENT_PLAYER_LEAVE, whichPlayer, { GetTriggerPlayer = whichPlayer })
 end
 
 function GetPlayerController(whichPlayer)

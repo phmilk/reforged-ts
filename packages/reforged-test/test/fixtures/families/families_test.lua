@@ -782,3 +782,103 @@ describe("the Dispatching Natives", function()
     })
   end)
 end)
+
+-- What the Game actions of reforged-test/map are built on, on
+-- reforged-test/lua: the Natives record their calls, and the helpers, which
+-- are no Natives, record none.
+describe("the selection", function()
+  it("is written by SelectUnit and ClearSelection for the local player, and read by the two readers", function()
+    local unit = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
+    local group = CreateGroup()
+    local ref, groupRef, player = __stub_format(unit), __stub_format(group), __stub_format(Player(0))
+    local mark = #runner.stubCalls()
+    SelectUnit(unit, true)
+    expect(IsUnitSelected(unit, __stub_player(0))).toBe(true)
+    expect(IsUnitSelected(unit, __stub_player(1))).toBe(false)
+    GroupEnumUnitsSelected(group, __stub_player(0), nil)
+    expect(BlzGroupUnitAt(group, 0)).toBe(unit)
+    ClearSelection()
+    expect(IsUnitSelected(unit, __stub_player(0))).toBe(false)
+    expect(since(mark)).toEqual({
+      "SelectUnit(" .. ref .. ", true)",
+      "IsUnitSelected(" .. ref .. ", " .. player .. ")",
+      "IsUnitSelected(" .. ref .. ", " .. __stub_format(__stub_player(1)) .. ")",
+      "GroupEnumUnitsSelected(" .. groupRef .. ", " .. player .. ", nil)",
+      "BlzGroupUnitAt(" .. groupRef .. ", 0)",
+      "ClearSelection()",
+      "IsUnitSelected(" .. ref .. ", " .. player .. ")",
+    })
+  end)
+
+  it("is written by __stub_select_unit and __stub_deselect_unit, which dispatch and record no call", function()
+    local unit = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
+    local log = {}
+    local function watch(name, register)
+      local trigger = CreateTrigger()
+      TriggerAddAction(trigger, function()
+        log[#log + 1] = name .. (__stub_selected(__stub_player(1), unit) and ", selected" or ", not selected")
+      end)
+      register(trigger)
+    end
+    watch("the unit's selection", function(trigger)
+      TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SELECTED)
+    end)
+    watch("the player's selection", function(trigger)
+      TriggerRegisterPlayerUnitEvent(trigger, __stub_player(1), EVENT_PLAYER_UNIT_SELECTED, nil)
+    end)
+    watch("the player's deselection", function(trigger)
+      TriggerRegisterPlayerUnitEvent(trigger, __stub_player(1), EVENT_PLAYER_UNIT_DESELECTED, nil)
+    end)
+    watch("the unit's deselection", function(trigger)
+      TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DESELECTED)
+    end)
+    local mark = #runner.stubCalls()
+    __stub_select_unit(__stub_player(1), unit)
+    expect(__stub_selected(__stub_player(1), unit)).toBe(true)
+    __stub_deselect_unit(__stub_player(1), unit)
+    expect(__stub_selected(__stub_player(1), unit)).toBe(false)
+    expect(since(mark)).toEqual({})
+    expect(log).toEqual({
+      "the player's selection, selected", "the unit's selection, selected",
+      "the player's deselection, selected", "the unit's deselection, selected",
+    })
+  end)
+end)
+
+describe("chat", function()
+  it("is dispatched by __stub_dispatch_chat to the registrations whose filter matches, with no call recorded", function()
+    local readings = {}
+    local trigger = CreateTrigger()
+    TriggerRegisterPlayerChatEvent(trigger, __stub_player(0), "-GO", false)
+    TriggerAddAction(trigger, function()
+      readings[#readings + 1] = { GetEventPlayerChatString(), GetEventPlayerChatStringMatched() }
+    end)
+    local mark = #runner.stubCalls()
+    expect(__stub_dispatch_chat(__stub_player(0), "Ready -Go")).toBe(1)
+    expect(__stub_dispatch_chat(__stub_player(1), "Ready -Go")).toBe(0)
+    expect(__stub_dispatch_chat(__stub_player(0), "ready")).toBe(0)
+    expect(readings).toEqual({ { "Ready -Go", "-go" } })
+    expect(since(mark)).toEqual({ "GetEventPlayerChatString()", "GetEventPlayerChatStringMatched()" })
+  end)
+end)
+
+describe("players", function()
+  -- Last of the file: the slot stays left for the rest of this Lua state.
+  it("reports a slot as left after __stub_leave_player, which dispatches the leave and records no call", function()
+    local leaving = __stub_player(1)
+    local left = nil
+    local trigger = CreateTrigger()
+    TriggerRegisterPlayerEvent(trigger, leaving, EVENT_PLAYER_LEAVE)
+    TriggerAddAction(trigger, function()
+      left = { GetTriggerPlayer(), __stub_slot_state(leaving) }
+    end)
+    local mark = #runner.stubCalls()
+    __stub_leave_player(leaving)
+    expect(left).toEqual({ leaving, PLAYER_SLOT_STATE_LEFT })
+    expect(since(mark)).toEqual({ "GetTriggerPlayer()" })
+    expect(GetPlayerSlotState(leaving)).toBe(PLAYER_SLOT_STATE_LEFT)
+    expect(GetPlayerSlotState(__stub_player(0))).toBe(PLAYER_SLOT_STATE_PLAYING)
+    -- The controller is not derived from the leave.
+    expect(GetPlayerController(leaving)).toBe(MAP_CONTROL_USER)
+  end)
+end)

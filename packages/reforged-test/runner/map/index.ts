@@ -281,8 +281,9 @@ export interface DisplayedText {
  * The Test game of one test, which `startGame` returns: the Game actions,
  * which say what happens in it, and what the player observed of it.
  * @remarks
- * A Game action (`kill`) takes its subject, a unit as its Handle or
- * anything with `.handle`, then an options object in the game's words. It
+ * A Game action (`kill`, `chat`, `select`, `deselect`, `leave`) takes its
+ * subject, a unit or a player as its Handle or anything with `.handle`,
+ * then what else it needs, in an options object in the game's words. It
  * fires every event the game would fire, with every response the game
  * gives, writes the state its name states and nothing derived, refuses what
  * the game refuses with an error, and returns nothing. There is no
@@ -339,6 +340,143 @@ export interface Game {
     unit: unit | { readonly handle: unit },
     options?: { readonly by?: unit | { readonly handle: unit } },
   ): void;
+  /**
+   * Types `text` in the chat as `player`, as the game hears it: every
+   * Trigger whose chat registration of that player matches the message
+   * runs, once per matching registration, in the order the registrations
+   * were made, over every Trigger.
+   * @remarks
+   * - A registration of `TriggerRegisterPlayerChatEvent` matches when its
+   *   filter is empty, or when, both in lower case, it equals the message
+   *   (`exactMatchOnly` true) or is found anywhere in it (false). Nothing
+   *   is trimmed: a message between two spaces matches no exact filter.
+   * - In a handler `GetEventPlayerChatString` answers the message as given,
+   *   `GetEventPlayerChatStringMatched` that registration's filter in lower
+   *   case, and `GetTriggerPlayer` the player.
+   * - `GetTriggerEventId` answers the event of id 96, as in the game, and
+   *   not `EVENT_PLAYER_CHAT`: code that compares the two works in neither.
+   * - It writes no state and shows nothing: `game.displayed` is unchanged.
+   * - A handler's error is thrown out of the action when nothing caught it.
+   * @example A chat command with an argument
+   * {@includeCode ../../examples/chat.test.ts}
+   * @param player - The player who types: its Handle, or anything with
+   * `.handle`, as a `MapPlayer` of the library.
+   * @param text - The message, as typed.
+   * @throws When `player` is not a player the Test game made, a bare number
+   * included:
+   * `game.chat: expected a player of the Test game, its Handle or anything with .handle, such as Player(0)`.
+   * @throws When `player` is not playing, an empty slot or a player who
+   * left:
+   * `game.chat: Player(2) is not playing: its slot is empty`, or
+   * `game.chat: Player(1) is not playing: it left the game`.
+   * @throws When `text` is not a string:
+   * `game.chat: expected the message, a string`.
+   */
+  chat(player: player | { readonly handle: player }, text: string): void;
+  /**
+   * Puts `unit` in the selection of `player`, as the game tells the map: the
+   * Triggers of `EVENT_PLAYER_UNIT_SELECTED` of that player run, then those
+   * of `EVENT_UNIT_SELECTED` of the unit, and the unit is in the selection
+   * `IsUnitSelected` and `GroupEnumUnitsSelected` read.
+   * @remarks
+   * - It adds to the selection and clears nothing: it says "the unit
+   *   entered the selection", not "the player clicked". The units selected
+   *   before stay, with no deselection event.
+   * - The player unit event is the selecting player's, whoever owns the
+   *   unit: another player's unit can be selected, and its owner's
+   *   registration hears nothing.
+   * - In a handler `GetTriggerUnit` answers the unit. `GetTriggerPlayer`
+   *   answers `player` in the player unit event and the unit's owner in the
+   *   unit event, as in the game.
+   * - In a handler `IsUnitSelected` already answers true, and
+   *   `GroupEnumUnitsSelected` holds the unit only after the handlers, as in
+   *   the game.
+   * - It is not `SelectUnit`, which writes the local player's selection
+   *   and fires nothing.
+   * - A handler's error is thrown out of the action when nothing caught it.
+   * @example Who selected whose unit
+   * {@includeCode ../../examples/select.test.ts}
+   * @param player - The player who selects: its Handle, or anything with
+   * `.handle`, as a `MapPlayer` of the library.
+   * @param unit - The unit selected: its Handle, or anything with
+   * `.handle`, as a `Unit` of the library.
+   * @throws When `player` is not a player the Test game made:
+   * `game.select: expected a player of the Test game, its Handle or anything with .handle, such as Player(0)`.
+   * @throws When `player` is not playing:
+   * `game.select: Player(2) is not playing: its slot is empty`, or
+   * `game.select: Player(1) is not playing: it left the game`.
+   * @throws When `unit` is not a unit, a bare number included:
+   * `game.select: expected a unit, its Handle or anything with .handle, such as a Unit of the library`.
+   * @throws When `unit` was removed from the game, naming it:
+   * `game.select: unit#1048579 was removed from the game`.
+   * @throws When `unit` is dead, naming it:
+   * `game.select: unit#1048579 is dead, and the game selects no dead unit`.
+   * @throws When `unit` is already in that player's selection:
+   * `game.select: unit#1048579 is already in the selection of Player(0)`.
+   */
+  select(
+    player: player | { readonly handle: player },
+    unit: unit | { readonly handle: unit },
+  ): void;
+  /**
+   * Takes `unit` out of the selection of `player`, as the game tells the
+   * map: the Triggers of `EVENT_PLAYER_UNIT_DESELECTED` of that player run,
+   * then those of `EVENT_UNIT_DESELECTED` of the unit, and the unit is out
+   * of the selection `IsUnitSelected` and `GroupEnumUnitsSelected` read.
+   * @remarks
+   * - In a handler the unit is still selected, for `IsUnitSelected` and
+   *   `GroupEnumUnitsSelected` alike, as in the game; it leaves after the
+   *   handlers. The other units stay selected, in their order.
+   * - In a handler `GetTriggerUnit` answers the unit. `GetTriggerPlayer`
+   *   answers `player` in the player unit event and the unit's owner in the
+   *   unit event.
+   * - A unit that died or was removed while selected is still selected
+   *   here, and can be deselected: a death writes nothing derived.
+   * - A handler's error is thrown out of the action when nothing caught it.
+   * @example How many units a player has selected
+   * {@includeCode ../../examples/deselect.test.ts}
+   * @param player - The player who deselects: its Handle, or anything with
+   * `.handle`, as a `MapPlayer` of the library.
+   * @param unit - The unit deselected: its Handle, or anything with
+   * `.handle`, as a `Unit` of the library.
+   * @throws When `player` is not a player the Test game made:
+   * `game.deselect: expected a player of the Test game, its Handle or anything with .handle, such as Player(0)`.
+   * @throws When `player` is not playing:
+   * `game.deselect: Player(2) is not playing: its slot is empty`, or
+   * `game.deselect: Player(1) is not playing: it left the game`.
+   * @throws When `unit` is not a unit, a bare number included:
+   * `game.deselect: expected a unit, its Handle or anything with .handle, such as a Unit of the library`.
+   * @throws When `unit` is not in that player's selection:
+   * `game.deselect: unit#1048579 is not in the selection of Player(0)`.
+   */
+  deselect(
+    player: player | { readonly handle: player },
+    unit: unit | { readonly handle: unit },
+  ): void;
+  /**
+   * Makes `player` leave the game: its slot reads `PLAYER_SLOT_STATE_LEFT`
+   * from now on, then the Triggers of `EVENT_PLAYER_LEAVE` of that player
+   * run.
+   * @remarks
+   * - In a handler `GetTriggerPlayer` answers the player, whose slot
+   *   already reads `PLAYER_SLOT_STATE_LEFT`.
+   * - It writes the slot and nothing derived: no defeat, no victory, and
+   *   the player's units, its controller and its selection stay.
+   * - After it, the player is not playing: `game.chat`, `game.select`,
+   *   `game.deselect` and `game.leave` refuse it.
+   * - A handler's error is thrown out of the action when nothing caught it.
+   * @example Saying who left
+   * {@includeCode ../../examples/leave.test.ts}
+   * @param player - The player who leaves: its Handle, or anything with
+   * `.handle`, as a `MapPlayer` of the library.
+   * @throws When `player` is not a player the Test game made:
+   * `game.leave: expected a player of the Test game, its Handle or anything with .handle, such as Player(0)`.
+   * @throws When `player` is not playing, an empty slot or a player who
+   * already left:
+   * `game.leave: Player(2) is not playing: its slot is empty`, or
+   * `game.leave: Player(1) is not playing: it left the game`.
+   */
+  leave(player: player | { readonly handle: player }): void;
   /**
    * Every line printed since the Test game began, the library's included,
    * oldest first: one entry per `print` call, its arguments joined by a
@@ -490,19 +628,30 @@ function handleOf(value: unknown): unknown {
   return (value as { handle?: unknown }).handle ?? value;
 }
 
+/** What the Shipped stubs keep on a player they made: its kind and its slot. */
+interface PlayerState {
+  readonly __kind?: unknown;
+  readonly number: number;
+}
+
+/**
+ * The player of the Test game a Game action or a Test control was given,
+ * as its Handle or anything with `.handle`; undefined for anything else. A
+ * Handle of newHandle("player") has no slot, so it is none.
+ */
+function playerOf(value: unknown): PlayerState | undefined {
+  const handle = handleOf(value);
+  if (type(handle) !== "table") return undefined;
+  const made = handle as Partial<PlayerState>;
+  return made.__kind === "player" && type(made.number) === "number"
+    ? (made as PlayerState)
+    : undefined;
+}
+
 function setLocalPlayer(player: player | { readonly handle: player }): void {
-  const handle = handleOf(player);
-  // What the Shipped stubs keep on a player they made: its kind and its
-  // slot. A Handle of newHandle("player") has no slot, so it is refused.
-  const made = handle as { __kind?: unknown; number?: unknown };
-  if (
-    type(handle) !== "table" ||
-    made.__kind !== "player" ||
-    type(made.number) !== "number"
-  ) {
-    error(NOT_A_PLAYER, 2);
-  }
-  __stub_set_local_player(made.number as number);
+  const made = playerOf(player);
+  if (made === undefined) error(NOT_A_PLAYER, 2);
+  __stub_set_local_player(made.number);
 }
 
 function advanceTime(seconds: number): void {
@@ -576,6 +725,97 @@ function kill(
   // The death KillUnit fires (docs/research/unit-event-timing.md), with the
   // killer the test named.
   __stub_kill_unit(dying as unit, killer as unit | undefined);
+}
+
+const A_PLAYER =
+  "a player of the Test game, its Handle or anything with .handle, such as Player(0)";
+
+/** A player as an error names it: `Player(1)`. */
+function playerName(made: PlayerState): string {
+  return `Player(${tostring(made.number)})`;
+}
+
+/**
+ * The playing player the Game action `action` was given. A player who is
+ * not playing does nothing in the game, so it is an error, raised at the
+ * line that called the action.
+ */
+function playingPlayer(action: string, value: unknown): PlayerState {
+  const made = playerOf(value);
+  if (made === undefined) error(`game.${action}: expected ${A_PLAYER}`, 3);
+  const state = __stub_slot_state(made as unknown as player);
+  if (state !== PLAYER_SLOT_STATE_PLAYING) {
+    const why =
+      state === PLAYER_SLOT_STATE_LEFT
+        ? "it left the game"
+        : "its slot is empty";
+    error(`game.${action}: ${playerName(made)} is not playing: ${why}`, 3);
+  }
+  return made;
+}
+
+function chat(
+  player: player | { readonly handle: player },
+  text: string,
+): void {
+  const typist = playingPlayer("chat", player);
+  if (type(text) !== "string") {
+    error("game.chat: expected the message, a string", 2);
+  }
+  // What the game matches and what a handler reads
+  // (docs/research/chat-event-matching.md).
+  __stub_dispatch_chat(typist as unknown as player, text);
+}
+
+// Not `select`: the name would hide Lua's own in the emitted file.
+function selectUnit(
+  player: player | { readonly handle: player },
+  unit: unit | { readonly handle: unit },
+): void {
+  const who = playingPlayer("select", player);
+  const selected = unitOf(unit);
+  if (selected === undefined) error(`game.select: expected ${A_UNIT}`, 2);
+  if (selected.destroyed === true) {
+    error(
+      `game.select: ${__stub_format(selected)} was removed from the game`,
+      2,
+    );
+  }
+  // SelectUnit selects no dead unit (docs/research/selection-events.md).
+  if (selected.dead === true) {
+    error(
+      `game.select: ${__stub_format(selected)} is dead, and the game selects no dead unit`,
+      2,
+    );
+  }
+  if (__stub_selected(who as unknown as player, selected as unit)) {
+    error(
+      `game.select: ${__stub_format(selected)} is already in the selection of ${playerName(who)}`,
+      2,
+    );
+  }
+  __stub_select_unit(who as unknown as player, selected as unit);
+}
+
+function deselectUnit(
+  player: player | { readonly handle: player },
+  unit: unit | { readonly handle: unit },
+): void {
+  const who = playingPlayer("deselect", player);
+  const deselected = unitOf(unit);
+  if (deselected === undefined) error(`game.deselect: expected ${A_UNIT}`, 2);
+  if (!__stub_selected(who as unknown as player, deselected as unit)) {
+    error(
+      `game.deselect: ${__stub_format(deselected)} is not in the selection of ${playerName(who)}`,
+      2,
+    );
+  }
+  __stub_deselect_unit(who as unknown as player, deselected as unit);
+}
+
+function leave(player: player | { readonly handle: player }): void {
+  const leaving = playingPlayer("leave", player);
+  __stub_leave_player(leaving as unknown as player);
 }
 
 // The response each event family derives its subject from.
@@ -744,7 +984,17 @@ __reforged_test_caught = unexpectedCaughtErrors;
 // printed and displayed are read at each access, so each read is a copy and
 // the map's later lines show.
 const game = setmetatable(
-  { advanceTime, kill, fire, setLocalPlayer, expectError } as Game,
+  {
+    advanceTime,
+    kill,
+    chat,
+    select: selectUnit,
+    deselect: deselectUnit,
+    leave,
+    fire,
+    setLocalPlayer,
+    expectError,
+  } as Game,
   {
     __index: (_: Game, key: unknown): unknown => {
       if (key === "printed") return __stub_printed();
