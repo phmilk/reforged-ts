@@ -98,7 +98,7 @@ describe("game.leave refuses what the game refuses", function()
     expect(log).toEqual({})
   end)
 
-  it("after leaving, that player's chat, select and deselect", function()
+  it("after leaving, that player's chat and select, its selection kept", function()
     local game = startGame()
     local unit = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
     local selected = CreateUnit(Player(0), FourCC("hfoo"), 0, 0, 0)
@@ -108,8 +108,10 @@ describe("game.leave refuses what the game refuses", function()
       "game.chat: Player(1) is not playing: it left the game")
     expect(function() game.select(Player(1), unit) end).toThrow(
       "game.select: Player(1) is not playing: it left the game")
-    expect(function() game.deselect(Player(1), selected) end).toThrow(
-      "game.deselect: Player(1) is not playing: it left the game")
+    -- The selection it had is kept, and a unit can still leave it.
+    expect(IsUnitSelected(selected, Player(1))).toBe(true)
+    game.deselect(Player(1), selected)
+    expect(IsUnitSelected(selected, Player(1))).toBe(false)
     -- The other player goes on.
     game.chat(Player(0), "-go")
     game.select(Player(0), unit)

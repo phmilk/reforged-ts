@@ -31,12 +31,12 @@ end
 local playingUsers = { [0] = true, [1] = true }
 
 -- The slots whose player left the game (__stub_leave_player).
-local left = {}
+local leftSlots = {}
 
 -- The slot state of a player, without a call-log line: for the Game actions
 -- of reforged-test/map, which act for a playing player only.
 function __stub_slot_state(whichPlayer)
-  if left[whichPlayer.number] then
+  if leftSlots[whichPlayer.number] then
     return PLAYER_SLOT_STATE_LEFT
   end
   if playingUsers[whichPlayer.number] then
@@ -59,7 +59,7 @@ end
 -- No Probe run measured a player leaving, which takes a second client. Not
 -- a Native, so it adds no call-log line.
 function __stub_leave_player(whichPlayer)
-  left[whichPlayer.number] = true
+  leftSlots[whichPlayer.number] = true
   __stub_dispatch(EVENT_PLAYER_LEAVE, whichPlayer, { GetTriggerPlayer = whichPlayer })
 end
 

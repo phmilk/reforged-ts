@@ -308,8 +308,9 @@ describe("game.select and game.deselect refuse what the game refuses", function(
     local unit = footman()
     expect(function() game.select(Player(2), unit) end).toThrow(
       "game.select: Player(2) is not playing: its slot is empty")
+    -- A deselection needs no playing player: an empty slot selected nothing.
     expect(function() game.deselect(Player(2), unit) end).toThrow(
-      "game.deselect: Player(2) is not playing: its slot is empty")
+      "game.deselect: " .. __stub_format(unit) .. " is not in the selection of Player(2)")
     expect(IsUnitSelected(unit, Player(2))).toBe(false)
   end)
 
@@ -330,7 +331,7 @@ describe("game.select and game.deselect refuse what the game refuses", function(
     local game = startGame()
     local unit = footman()
     for _, act in ipairs({ game.select, game.deselect }) do
-      local ok, message = pcall(function() act(Player(2), unit) end)
+      local ok, message = pcall(function() act(Player(0), nil) end)
       expect(ok).toBe(false)
       expect(message).toMatch("select_test.lua:")
     end

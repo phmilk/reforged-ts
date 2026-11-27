@@ -392,7 +392,8 @@ local selections = {}
 
 -- The selections being made: { player, unit } per __stub_select_unit whose
 -- handlers are running. In them IsUnitSelected already answers true, while
--- GroupEnumUnitsSelected does not hold the unit yet, as in the game.
+-- GroupEnumUnitsSelected does not hold the unit yet, as the Probe read both
+-- in the game's handlers.
 local selecting = {}
 
 local function selectionOf(whichPlayer)
@@ -492,8 +493,11 @@ end
 -- selected before, or takes it out, and dispatches nothing: in the game no
 -- selection event fires before it returns. A unit already selected stays
 -- where it is, one that is not selected stays out, and a dead or a removed
--- unit is not selected, as in the game. The events the game fires later, on
--- no order of the test, are game.select's and game.deselect's.
+-- unit is not selected: the game selects neither. Both readers read the
+-- change at once, where the game's read it at different times, and the
+-- events the game fires later, on no order of the test, are game.select's
+-- and game.deselect's (docs/research/selection-events.md, "Where the
+-- Shipped stubs differ").
 function SelectUnit(whichUnit, flag)
   __stub_record("SelectUnit", whichUnit, flag)
   local whichPlayer = __stub_local_player()
