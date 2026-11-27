@@ -345,16 +345,19 @@ describe("requiredStatusChecks", () => {
   });
 });
 
-describe("the probe label", () => {
-  it("names the Probe run and the Battle.net login", () => {
+describe("the labels' descriptions", () => {
+  it("name the Probe run and the Battle.net login on probe", () => {
     const probe = LABELS.find(({ name }) => name === "probe");
 
     expect(probe?.description).toContain("Probe run");
     expect(probe?.description).toContain("Battle.net");
   });
 
-  it("keeps every label's description within the 100 characters GitHub takes", () => {
-    for (const { description } of LABELS)
-      expect(description.length).toBeLessThanOrEqual(100);
+  it("stay within the 100 characters GitHub takes", () => {
+    expect(
+      LABELS.filter(({ description }) => description.length > 100).map(
+        ({ name }) => name,
+      ),
+    ).toEqual([]);
   });
 });

@@ -34,7 +34,7 @@ An issue carrying `wayfinder:*`, `ticket` or `spec` is not triaged: its body is 
 
 `probe` says the issue's work includes a Probe run. A Probe run can stop at the Battle.net login: the game's saved session expires, and `probe:run` waits for a human, then gives up ([Running a Probe run](../../probe/README.md#running-a-probe-run)). The label tells a Collaborator beforehand to stay within reach, and lets them ask an Agent to leave such work alone when nobody is ("no Probe Tickets").
 
-- **It is about the Probe run, not the game.** It marks a run of the library's Probe runner only: a check through the Template's `test:map` or `run-in-game` does not get it. Both repos have the label, as they have the other kind labels.
+- **It is about the Probe run, not the game.** It marks an issue for a run of the library's Probe runner only: a check through the Template's `test:map` or `run-in-game` does not get it. Both repos have the label, as they have the other kind labels.
 - **It stays beside the triage label.** A Probe run is the Agent's, so the issue stays `ready-for-agent`, and takeable: the Claim board and the `claim` check read nothing from it.
 - **Who puts it, and when.** `split-spec`, when it creates a Ticket one of whose criteria rests on a fact of the game that `docs/research/` does not measure yet; and whoever finds that need in the middle of an implement, at once, before running the Probe: `gh issue edit <n> --add-label probe`. It is put by hand: the board cannot derive it.
 - **It is permanent.** It is not removed once the Probe ran: it says what the work included.
