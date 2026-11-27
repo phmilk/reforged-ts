@@ -76,10 +76,11 @@ end
 -- UnitRemoveItemFromSlot empties it, returning what it held.
 --
 -- Giving and taking an item are Dispatching Natives: the game fires their
--- events inside the call (docs/research/unit-event-timing.md), so the stubs
--- dispatch them through the Event dispatch (__stub_dispatch, triggers.lua),
--- the player unit event of the unit's owner before the unit event. A
--- handler reads the unit and the item from GetTriggerUnit,
+-- events inside the call (docs/research/unit-event-timing.md, and
+-- docs/research/dispatching-natives.md for UnitRemoveItemFromSlot), so the
+-- stubs dispatch them through the Event dispatch (__stub_dispatch,
+-- triggers.lua), the player unit event of the unit's owner before the unit
+-- event. A handler reads the unit and the item from GetTriggerUnit,
 -- GetManipulatingUnit, GetTriggerPlayer (the owner) and GetManipulatedItem.
 
 -- The slot the unit carries `whichItem` in, nil when it does not.
@@ -102,10 +103,10 @@ end
 
 -- Dispatches one event of the unit with `context`: the player unit event
 -- `playerEvent` to the registrations of `player`, then the unit event
--- `unitEvent` to the unit's, the order the Probe measured for every
--- Dispatching Native (docs/research/unit-event-timing.md, "Limits": it could
--- not tell that order from registration order, as the Probe registered the
--- player Triggers first).
+-- `unitEvent` to the unit's. That order is the game's, whichever Trigger
+-- was registered or created first, for the death, the change of owner, the
+-- pickup and the drop (docs/research/dispatching-natives.md, "The order of
+-- the player's and the unit's event").
 local function dispatchUnitEvent(whichUnit, player, playerEvent, unitEvent, context)
   __stub_dispatch(playerEvent, player, context)
   __stub_dispatch(unitEvent, whichUnit, context)
@@ -157,13 +158,15 @@ end
 -- UnitAddItemById creates a new item and gives it to the unit as UnitAddItem
 -- does, the pickup dispatched before it returns the item. A unit without an
 -- inventory gets nothing and nothing fires: the item is created all the
--- same, and returned.
+-- same, and nil is returned, as the game leaves the item on the ground and
+-- returns nothing (docs/research/dispatching-natives.md). No Shipped stub
+-- reads that item back.
 function UnitAddItemById(whichUnit, itemId)
   __stub_record("UnitAddItemById", whichUnit, itemId)
   local item = __stub_new_handle("item")
   item.typeId = itemId
   if not hasInventory(whichUnit) then
-    return item
+    return nil
   end
   carry(whichUnit, item)
   dispatchPickup(whichUnit, item)
@@ -189,20 +192,28 @@ function UnitAddItem(whichUnit, whichItem)
   return true
 end
 
--- UnitRemoveItem dispatches the drop of an item the unit carries, the item
--- still carried in the handler, then empties its slot. An item the unit
--- does not carry fires nothing.
-function UnitRemoveItem(whichUnit, whichItem)
-  __stub_record("UnitRemoveItem", whichUnit, whichItem)
-  if slotOf(whichUnit, whichItem) == nil then
-    return
-  end
+-- Dispatches the drop of an item the unit carries, the item still carried
+-- in the handler, then empties its slot.
+local function drop(whichUnit, whichItem)
   dispatchDrop(whichUnit, whichItem)
   -- Read again: a drop handler may have moved or removed the item.
   local slot = slotOf(whichUnit, whichItem)
   if slot ~= nil then
     whichUnit.inventory[slot] = nil
   end
+end
+
+-- UnitRemoveItem dispatches the drop of an item the unit carries, the item
+-- still carried in the handler, then empties its slot. An item the unit
+-- does not carry fires nothing and stays where it is, on the ground or with
+-- the unit that carries it, as in the game
+-- (docs/research/dispatching-natives.md).
+function UnitRemoveItem(whichUnit, whichItem)
+  __stub_record("UnitRemoveItem", whichUnit, whichItem)
+  if slotOf(whichUnit, whichItem) == nil then
+    return
+  end
+  drop(whichUnit, whichItem)
 end
 
 -- Whether the unit carries the item.
@@ -216,11 +227,17 @@ function UnitItemInSlot(whichUnit, itemSlot)
   return (whichUnit.inventory or {})[itemSlot]
 end
 
+-- UnitRemoveItemFromSlot is UnitRemoveItem of the item in the slot, which it
+-- returns: the drop is dispatched, the item still in its slot in the
+-- handler, then the slot is emptied. An empty slot fires nothing and
+-- returns nil, as in the game (docs/research/dispatching-natives.md).
 function UnitRemoveItemFromSlot(whichUnit, itemSlot)
   __stub_record("UnitRemoveItemFromSlot", whichUnit, itemSlot)
-  local inventory = whichUnit.inventory or {}
-  local item = inventory[itemSlot]
-  inventory[itemSlot] = nil
+  local item = (whichUnit.inventory or {})[itemSlot]
+  if item == nil then
+    return nil
+  end
+  drop(whichUnit, item)
   return item
 end
 

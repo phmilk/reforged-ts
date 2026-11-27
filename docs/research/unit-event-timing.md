@@ -78,7 +78,7 @@ The same in the condition and in the action. "nil" is `nil`; a Native not listed
 | `EVENT_PLAYER_UNIT_PICKUP_ITEM`, `EVENT_UNIT_PICKUP_ITEM`   | the unit         | its owner          | `GetManipulatingUnit` the unit; `GetManipulatedItem` the item                                                | `UnitHasItem` `true`                                     |
 | `EVENT_PLAYER_UNIT_DROP_ITEM`, `EVENT_UNIT_DROP_ITEM`       | the unit         | its owner          | `GetManipulatingUnit` the unit; `GetManipulatedItem` the item                                                | `UnitHasItem` `true`: the item leaves after the handlers |
 
-`GetTriggerWidget`, `GetEventDamageSource`, `GetEventDamageTarget` and the other damage responses were not read.
+`GetEventDamageSource`, `GetEventDamageTarget` and the other damage responses were not read. `GetTriggerWidget` was not read in this run: [dispatching-natives.md](dispatching-natives.md#gettriggerwidget-in-the-death-handlers) measured it, the unit in the widget death and `nil` in the two other death events.
 
 ## What this settles for the Event dispatch
 
@@ -90,6 +90,7 @@ The same in the condition and in the action. "nil" is `nil`; a Native not listed
 ## Limits
 
 - One run, on one Build, in single player.
-- **The order between registrations is the one measured, not a rule proved**: the player's Triggers were registered before the unit's, and fired before them, so the run cannot tell "player events first" from "in registration order". The widget death Trigger was registered last for its unit and fired first, so that one is the game's order.
+- **The order of the player's and the unit's event was not settled by this run, and is now**: the player's Triggers were registered before the unit's, and fired before them, so this run could not tell "player events first" from "in registration order". A later run tried both registration orders: the player's event runs first, whichever was registered first ([dispatching-natives.md](dispatching-natives.md#the-order-of-the-players-and-the-units-event)). The widget death Trigger was registered last for its unit and fired first, so that one is the game's order.
+- `UnitAddItemById` on a unit without an inventory, `UnitRemoveItem` of an item the unit does not carry and `UnitRemoveItemFromSlot` were not measured here: [dispatching-natives.md](dispatching-natives.md) measured them.
 - When the deferred widget death of `RemoveUnit` fires was not timed: after the Probe's `run` returned and before the first damage of the fight, so within about a second.
 - `KillUnit` and `RemoveUnit` were measured on a footman; a hero, a building or a unit with a death ability may differ.
