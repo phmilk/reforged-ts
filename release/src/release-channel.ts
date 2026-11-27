@@ -28,6 +28,9 @@ export const LATEST_TAG = "latest";
 /** The dist-tag of the Next branch: `pnpm add reforged-ts@next`. */
 export const NEXT_TAG = "next";
 
+/** The dist-tag of a channel: `latest` or `next`. */
+export type DistTag = typeof LATEST_TAG | typeof NEXT_TAG;
+
 /** A package of the workspace, as the channel reads it. */
 export interface ChannelPackage {
   name: string;
@@ -40,7 +43,7 @@ export interface ReleaseChannel {
   /** The branch the release runs from. */
   branch: ChannelBranch;
   /** The npm dist-tag every package of the release goes out under. */
-  distTag: typeof LATEST_TAG | typeof NEXT_TAG;
+  distTag: DistTag;
   /**
    * The Template's branch the release checks against and the packed
    * Creation CLI downloads.

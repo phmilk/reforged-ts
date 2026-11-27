@@ -20,7 +20,7 @@ import {
   readPublishPlan,
   writePublishPlan,
 } from "./publish-plan.js";
-import { readReleaseChannel, type ReleaseChannel } from "./release-channel.js";
+import { readReleaseChannel, type DistTag } from "./release-channel.js";
 
 /** The version of a package whose versions were never applied. */
 export const UNVERSIONED = "0.0.0";
@@ -32,7 +32,7 @@ export interface TaggedRelease {
   /** The tag Changesets wrote. */
   from: string;
   /** The tag the plan now holds. */
-  tag: string;
+  tag: DistTag;
 }
 
 export interface DistTagResult {
@@ -44,14 +44,12 @@ export interface DistTagResult {
 
 /**
  * Sets the dist-tag of every publish entry of `plan` (the parsed
- * `publish-plan.json`) to `tag`, a Release channel's dist-tag. Tag-only entries are left alone. Does not
- * modify `plan`. Throws a `PublishPlanError` on a plan that is not a
- * Changesets 3 one or that publishes a package at `0.0.0`.
+ * `publish-plan.json`) to `tag`, a Release channel's dist-tag. Tag-only
+ * entries are left alone. Does not modify `plan`. Throws a
+ * `PublishPlanError` on a plan that is not a Changesets 3 one or that
+ * publishes a package at `0.0.0`.
  */
-export function setDistTags(
-  plan: unknown,
-  tag: ReleaseChannel["distTag"],
-): DistTagResult {
+export function setDistTags(plan: unknown, tag: DistTag): DistTagResult {
   const copy: unknown = structuredClone(plan);
   const releases = publishEntries(copy).map((entry): TaggedRelease => {
     const release = {
