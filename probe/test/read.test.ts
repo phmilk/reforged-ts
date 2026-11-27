@@ -191,6 +191,51 @@ describe("probe:read", () => {
     );
   });
 
+  it("prints the players of the BEGIN line on their own line, after the Game data's", async () => {
+    const { context, resultFile } = await setup();
+    const [begin = "", ...rest] = bridgeLines();
+    await writeResult(
+      resultFile,
+      preloadFile([
+        begin.replace(
+          " patch=3.0.1.12345 ",
+          " gameDataVersion=roc patch=3.0.1.12345 players=2 ",
+        ),
+        ...rest,
+      ]),
+    );
+
+    expect(
+      read([BRIDGE_PROBE], context).stdout.split("\n").slice(0, 3),
+    ).toEqual([
+      "finished: Probe hello, run bridge, 2 records",
+      "Game data: Game Data Version Reign of Chaos; the rest the map's own",
+      "Players: 2 user slots, staged by the build; the map folder's own has 1",
+    ]);
+    expect(readProbeRun(BRIDGE_PROBE, context).players).toBe(2);
+  });
+
+  it("prints no players line for a run whose build kept the map's own", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(read([BRIDGE_PROBE], context).stdout).not.toContain("Players");
+    expect(readProbeRun(BRIDGE_PROBE, context)).not.toHaveProperty("players");
+  });
+
+  it("takes the players from the state file for a BEGIN line without them, an older runner's", async () => {
+    const { context, resultFile } = await setup();
+    await writeFile(
+      stateFile(context.stateFolder, BRIDGE_PROBE),
+      JSON.stringify({ probe: BRIDGE_PROBE, runId: BRIDGE_RUN_ID, players: 2 }),
+    );
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(read([BRIDGE_PROBE], context).stdout.split("\n")[1]).toBe(
+      "Players: 2 user slots, staged by the build; the map folder's own has 1",
+    );
+  });
+
   it("joins a value of exactly 200 bytes once encoded from its continuation line", async () => {
     const { context, resultFile } = await setup();
     const value = `${"é".repeat(33)}ab`;

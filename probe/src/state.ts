@@ -1,13 +1,15 @@
 /**
  * A Probe's state file, `<state>/<probe>.json`: the runId of its last build,
  * which `probe:read` compares with the Result file's, the Build of the
- * game client `probe:run` built it for, and the Game data it staged.
+ * game client `probe:run` built it for, and the Game data and the players
+ * it staged.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { AuthorError } from "./errors.js";
 import { gameDataFrom, type GameData } from "./game-data.js";
 import type { Machine } from "./machine.js";
+import { playersFrom } from "./players.js";
 
 export interface ProbeState {
   probe: string;
@@ -20,6 +22,8 @@ export interface ProbeState {
   client?: string;
   /** The Game data the last build staged, for the report; absent when it kept the map's own. */
   gameData?: GameData;
+  /** The user slots the last build staged, for the report; absent when it kept the map's own. */
+  players?: number;
 }
 
 /** The state file of `probe` in the state folder. */
@@ -50,10 +54,11 @@ export function readState(
   } catch {
     state = undefined;
   }
-  const { runId, client, gameData } = (state ?? {}) as {
+  const { runId, client, gameData, players } = (state ?? {}) as {
     runId?: unknown;
     client?: unknown;
     gameData?: unknown;
+    players?: unknown;
   };
   if (typeof runId !== "string" || runId === "") {
     throw new AuthorError(
@@ -64,10 +69,12 @@ export function readState(
     typeof gameData === "object" && gameData !== null
       ? gameDataFrom((name) => (gameData as Record<string, unknown>)[name])
       : {};
+  const slots = playersFrom(players);
   return {
     probe,
     runId,
     ...(typeof client === "string" && { client }),
     ...(Object.keys(staged).length > 0 && { gameData: staged }),
+    ...(slots !== undefined && { players: slots }),
   };
 }
