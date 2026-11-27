@@ -9,22 +9,26 @@
 //
 // - The cases of a Native that fires its event inside the call
 //   (`docs/research/unit-event-timing.md`) are read on the line after it:
-//   `KillUnit` for the three death events, `UnitDamageTarget` for the damage
+//   `KillUnit` for the death events, `UnitDamageTarget` for the damage
 //   events.
 // - A timer event, a sync event and two player events are read later: the
-//   two registrations of the timer event share one timeout, and the player
+//   three registrations of the timer event share one timeout, and the player
 //   events are tried with `ForceUICancel` and `RemovePlayer`, which may fire
 //   nothing.
+// - The filter cases measure one registration each, with a filter that
+//   answers `true`, one that answers `false` and none: how often the filter
+//   ran, and whether its Trigger did. They were added because no filter ran
+//   in the cases above.
 
 import type { ProbeContext } from "../game/probe";
 
-/** A case's three registrations, and the log their Triggers write. */
+/** A case's two Triggers, and the log they write. */
 interface Case {
   readonly label: string;
   readonly log: string[];
   readonly twice: trigger;
   readonly between: trigger;
-  /** How often the filters of the registrations ran, when they have one. */
+  /** How often the filters of the registrations ran; 0 without a filter. */
   filters: number;
 }
 

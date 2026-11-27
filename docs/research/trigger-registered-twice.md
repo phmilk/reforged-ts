@@ -16,8 +16,8 @@ Everything below is Observed, in one run.
 | A filter given to `TriggerRegisterPlayerUnitEvent`              | never ran, and its Trigger ran whatever the filter would answer     |
 | A Trigger registered with `TriggerRegisterFilterUnitEvent`      | never ran, with a filter that answers `true`, `false`, or no filter |
 
-- **The game fires registrations, not Triggers.** With the Trigger `twice` registered, then `between`, then `twice` again, one event ran `twice`, `between`, `twice`, each condition before its action. The Event dispatch, `__stub_dispatch_damage` and `__stub_deliver_sync` of `reforged-test` already do this: the stub did not change.
-- **The filters disagree with the stub, which this run was not made for.** The Event dispatch evaluates a registration's filter and fires a registration of `TriggerRegisterFilterUnitEvent`; the game did neither here. See [The filters](#the-filters).
+- **The game fires registrations, not Triggers.** With the Trigger `twice` registered, then `between`, then `twice` again, one event ran `twice`, `between`, `twice`, each condition before its action. The Event dispatch, `__stub_dispatch_damage` and `__stub_deliver_sync` of `reforged-test` already do this: the Shipped stubs did not change.
+- **The filters disagree with the Shipped stubs, which this run was not made for.** The Event dispatch evaluates a registration's filter and fires a registration of `TriggerRegisterFilterUnitEvent`; the game did neither here. See [The filters](#the-filters).
 
 ## The run
 
@@ -49,13 +49,13 @@ Every case makes two Triggers, `twice` and `between`, each with a condition that
 In every case where a Trigger ran, the log is, in this order: `twice` condition, `twice` action, `between` condition, `between` action, `twice` condition, `twice` action. `GetTriggerEvalCount(twice)` and `GetTriggerExecCount(twice)` both answer 2.
 
 - The death and the damage cases are read on the line after the Native that fires them, which fires its event inside the call ([unit-event-timing.md](unit-event-timing.md)).
-- The timer, the sync and the player event cases are read 2 seconds after what fires them. `BlzSendSyncData` returned `true`.
+- The timer and the sync cases are read 2 seconds after their registrations, so 1 second after the timer event's expiry and 2 seconds after `BlzSendSyncData`, which returned `true`. The player event cases are read 2 seconds after `ForceUICancel` and `RemovePlayer`.
 - `ForceUICancel` fired `EVENT_PLAYER_END_CINEMATIC` for `Player(0)`: the run pressed no key after the screens before the map.
 - `RemovePlayer(Player(1), PLAYER_GAME_RESULT_DEFEAT)` fired nothing: `Player(1)` is not a playing slot in the Probe's map. That case measures nothing.
 
 ## The filters
 
-The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitEvent` ran 0 times while its Triggers ran, and the Triggers of `TriggerRegisterFilterUnitEvent` did not run at all. So the run measures each kind of filter on one registration of one Trigger: how often the filter ran, and whether the Trigger did. The filter is made with `Filter`, and records `GetFilterUnit`.
+The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitEvent` ran 0 times while its Triggers ran, and the Triggers of `TriggerRegisterFilterUnitEvent` did not run at all. So the run measures each kind of filter on one registration of one Trigger: how often the filter ran, and whether the Trigger did. The filter is made with `Filter` from a Lua function that counts its runs.
 
 | Registration                                                | Filter answers | Filter ran | Trigger ran |
 | ----------------------------------------------------------- | -------------- | ---------- | ----------- |
@@ -69,12 +69,12 @@ The two cases with a filter stood out: the filter of `TriggerRegisterPlayerUnitE
 | `TriggerRegisterFilterUnitEvent`, `EVENT_UNIT_DAMAGED`      | `false`        | 0          | 0           |
 | `TriggerRegisterFilterUnitEvent`, `EVENT_UNIT_DAMAGED`      | no filter      |            | 0           |
 
-No filter ran later either: the count of every filter's runs, read at the end of the run, 4 seconds after the cases, is 0.
+No filter of these nine cases ran later either: the count of their runs, read at the end of the run, 4 seconds after the cases, is 0. The filters of the two cases above with a filter were counted once, on the line after `KillUnit`.
 
 - **`TriggerRegisterPlayerUnitEvent` ignored its filter**: the Trigger ran with a filter that answers `false`.
 - **`TriggerRegisterFilterUnitEvent` fired nothing**, for a death or a damage, with or without a filter, where `TriggerRegisterUnitEvent` on the same events fired.
 
-The stub answers otherwise: the Event dispatch and `__stub_dispatch_damage` run a registration's filter with the unit as `GetFilterUnit` and skip the Trigger when it answers `false`, and the Event dispatch fires a registration of `TriggerRegisterFilterUnitEvent`. This run was made for the question above, so the stub's filters were left as they are, for a piece of work of their own.
+The Shipped stubs answer otherwise: the Event dispatch and `__stub_dispatch_damage` run a registration's filter with the unit as `GetFilterUnit` and skip the Trigger when it answers `false`, and the Event dispatch fires a registration of `TriggerRegisterFilterUnitEvent`. This run was made for the question above, so the filters of the Shipped stubs were left as they are, for a piece of work of their own.
 
 ## Limits
 

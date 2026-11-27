@@ -151,6 +151,21 @@ describe("nested damage dispatch", function()
     expect(__stub_dispatch_damage({ source = other, target = target, amount = 1 })).toEqual(0)
     expect(ran).toEqual(0)
   end)
+  -- docs/research/trigger-registered-twice.md, "The cases", the row of
+  -- TriggerRegisterUnitEvent with EVENT_UNIT_DAMAGED: a Trigger registered
+  -- twice runs twice on one damage, each run in the turn of its registration.
+  it("fires a Trigger registered twice on the target twice, each in its registration's turn", function()
+    local target = CreateUnit(Player(1), 1, 0, 0, 0)
+    local order = {}
+    local twice, between = CreateTrigger(), CreateTrigger()
+    TriggerAddAction(twice, function() order[#order + 1] = "twice" end)
+    TriggerAddAction(between, function() order[#order + 1] = "between" end)
+    for _, trigger in ipairs({ twice, between, twice }) do
+      TriggerRegisterUnitEvent(trigger, target, EVENT_UNIT_DAMAGED)
+    end
+    expect(__stub_dispatch_damage({ source = target, target = target, amount = 10 })).toEqual(3)
+    expect(order).toEqual({ "twice", "between", "twice" })
+  end)
   it("fires a player-unit registration for the target's owner, damaging before damaged", function()
     local target = CreateUnit(Player(1), 1, 0, 0, 0)
     local order = {}

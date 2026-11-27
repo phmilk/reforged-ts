@@ -350,8 +350,8 @@ describe("the Triggers of TriggerRegisterTimerEvent", function()
     })
   end)
 
-  -- The case "TriggerRegisterTimerEvent, one timeout" of
-  -- docs/research/trigger-registered-twice.md: a Trigger registered twice
+  -- docs/research/trigger-registered-twice.md, "The cases", the row of
+  -- TriggerRegisterTimerEvent: a Trigger registered twice
   -- with one timeout runs twice at that instant, each run in the turn of
   -- its registration.
   it("fire a Trigger registered twice with one timeout twice at that instant", function()
