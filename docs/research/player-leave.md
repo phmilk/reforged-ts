@@ -12,7 +12,6 @@ Everything below is Observed, in four games that agree on every record they shar
 - **No defeat and no victory fire**: neither `EVENT_PLAYER_DEFEAT` nor `EVENT_PLAYER_VICTORY`, for either player, in a game without the melee rules (the runner turns `MeleeInitVictoryDefeat` into a no-op, #348).
 - **The leaver's selection stays**: `IsUnitSelected(footman, leaver)` answers `true` and `GroupEnumUnitsSelected` of the leaver holds the footman, in the handler and for the 5 seconds after. No `EVENT_PLAYER_UNIT_DESELECTED` fires.
 - **The four ways of leaving give the same records** on the client that stays.
-- **The network cut showed the host no waiting dialog**: some time after the leaver cut the network, the only thing on the host's screen was the Probe's message that the run had finished (seen by the host, 2026-11-27).
 - **The leaver's own client runs the handler of its own leave when it leaves by the menu**, reading its slot as playing, and writes nothing after it; Alt+F4, the network cut and the killed process write nothing after the leaver's last record before the leave.
 
 ## The runs
@@ -47,6 +46,10 @@ On the host's client, every game:
 | `kill-process` | 36.25          | 59.83      | 16      |
 
 The leaver's files hold the same records as the host's, field for field, up to where they end. In `menu` they end with the `LEAVE` record and the handler's read after its work, both reading `slot1=PLAYING`. In the three others they end before the leave, at the leaver's last checkpoint. `probe:read` reports them as `crashed`: the client stopped without the run's `END` line.
+
+### The check on screen
+
+[#1040](https://github.com/phmilk/reforged-ts/issues/1040), a check made by looking at the screen, 2026-11-27, on 3.0.1.24371, in the `disconect` game alone: nothing appeared on the host's screen for the leave, no dialog included. Some time after the leaver cut the network, the only message was the Probe's, that the run had finished. Nobody timed it.
 
 ## What the Shipped stubs copy
 
