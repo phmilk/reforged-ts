@@ -61,6 +61,8 @@ export interface ResultLine {
 /** A Probe run, as its Result file and the Probe's last build tell it. */
 export interface ProbeRun {
   probe: string;
+  /** The label the run's Result file is named with; undefined for `<probe>.txt`. */
+  label?: string;
   state: RunState;
   /** The Result file, found or not. */
   file: string;
@@ -122,20 +124,32 @@ export interface ReadContext {
  * `Warcraft III.exe` runs or not, and `incomplete` elsewhere, with the
  * label of the last `PENDING` line. Of a file of another run, only the
  * BEGIN line is parsed. A bad name, a Probe never built or a file the game
- * did not write is an AuthorError. Reads only: the file, the Probe's state
- * file and, for a run that ends with a checkpoint on Windows, the process
- * list.
+ * did not write is an AuthorError. With `label`, reads the file the run
+ * labelled so writes, `<probe>-<label>.txt` (`resultFile`), and a label
+ * outside its alphabet is an AuthorError. Reads only: the file, the Probe's
+ * state file and, for a run that ends with a checkpoint on Windows, the
+ * process list.
  */
-export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
+export function readProbeRun(
+  probe: string,
+  context: ReadContext,
+  label?: string,
+): ProbeRun {
   checkProbeName(probe);
+  if (label !== undefined) checkLabel(label);
   const state = readState(context.machine, context.stateFolder, probe);
   if (state === undefined) {
     throw new AuthorError(
       `Probe ${probe} has no build to compare the Result file with: run \`pnpm probe:build ${probe}\` first.`,
     );
   }
-  const file = resultFile(context.machine, probe);
-  const run = { probe, file, expectedRunId: state.runId };
+  const file = resultFile(context.machine, probe, label);
+  const run = {
+    probe,
+    ...(label !== undefined && { label }),
+    file,
+    expectedRunId: state.runId,
+  };
   const text = context.machine.readFile(file);
   if (text === undefined) {
     return { ...run, state: "not-started", records: [] };
@@ -222,14 +236,35 @@ function errorOf(file: string, lines: readonly ResultLine[]): string {
   return message;
 }
 
-/** The Result file of `probe`: `reforged-ts\probes\<probe>.txt` in `CustomMapData`. */
-export function resultFile(machine: Machine, probe: string): string {
+/**
+ * The Result file of `probe`: `reforged-ts\probes\<probe>.txt` in
+ * `CustomMapData`, or `<probe>-<label>.txt` for the run a Probe renamed
+ * with `p.rename(label)`.
+ */
+export function resultFile(
+  machine: Machine,
+  probe: string,
+  label?: string,
+): string {
+  const name = label === undefined ? probe : `${probe}-${label}`;
   return pathsOf(machine).join(
     customMapDataFolder(machine),
     "reforged-ts",
     "probes",
-    `${probe}.txt`,
+    `${name}.txt`,
   );
+}
+
+/**
+ * Raises an AuthorError unless `label` is one the runner's `p.rename`
+ * takes: lower-case `a` to `z`, `0` to `9` and `-`, and not empty.
+ */
+export function checkLabel(label: string): void {
+  if (!/^[a-z0-9-]+$/.test(label)) {
+    throw new AuthorError(
+      `The label ${quote(label)} is not one a Probe run writes: it is lower-case a to z, 0 to 9 and -, and not empty.`,
+    );
+  }
 }
 
 const HEADER = "function PreloadFiles takes nothing returns nothing";
@@ -511,18 +546,22 @@ function statusLine(run: ProbeRun): string {
   const count = run.records.length;
   const records = `${String(count)} record${count === 1 ? "" : "s"}`;
   const game = CHECKPOINT_STATES[run.state];
+  const probe =
+    run.label === undefined
+      ? `Probe ${run.probe}`
+      : `Probe ${run.probe}, label ${run.label}`;
   if (run.state === "finished") {
-    return `finished: Probe ${run.probe}, run ${run.expectedRunId}, ${records}`;
+    return `finished: ${probe}, run ${run.expectedRunId}, ${records}`;
   }
   if (game !== undefined) {
     const pending =
       run.pending === undefined
         ? "no pending step"
         : `pending step ${formatValue(run.pending)}`;
-    return `${run.state}: Probe ${run.probe}, run ${run.expectedRunId}, ${records} to its last checkpoint, ${pending}; ${game}`;
+    return `${run.state}: ${probe}, run ${run.expectedRunId}, ${records} to its last checkpoint, ${pending}; ${game}`;
   }
   if (run.state === "failed") {
-    return `failed: Probe ${run.probe}, run ${run.expectedRunId}, ${records}, then the error ${quote(run.error ?? "")}`;
+    return `failed: ${probe}, run ${run.expectedRunId}, ${records}, then the error ${quote(run.error ?? "")}`;
   }
   return run.runId === undefined
     ? `not-started: no Result file at ${run.file}`

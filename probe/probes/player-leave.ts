@@ -21,11 +21,58 @@
 // game time, so both clients' records agree up to the leave. The run waits
 // up to `HOLD_LIMIT` seconds for a leave, recording `no-leave-seen` if none
 // comes; after the first leave it reads for 5 seconds, then ends.
+//
+// A human runs it several times on one map, one way of leaving each, so a
+// player names the run in chat, `teste <name>`, before the leave: the
+// chat string is synced, so every client takes the same label, records
+// `LABEL name=<name>` and from then on writes
+// `player-leave-<name>.txt` (`p.rename`), every record so far included.
+// The first label taken wins. A run without one writes `player-leave.txt`,
+// which also holds the start of every labelled run, up to its label. The
+// messages on screen are in Portuguese, for the humans who run it.
 
 import type { ProbeContext } from "../game/probe";
 
 /** How long the run waits for a leave, in seconds of game time. */
 const HOLD_LIMIT = 600;
+
+/** What a chat message that names the run starts with, in any case. */
+const LABEL_PREFIX = "teste ";
+
+/** The longest label, in characters. */
+const LABEL_LIMIT = 32;
+
+/** How long the message at the start, which asks for a label, stays on screen. */
+const ASK_SECONDS = 120;
+
+/** How long the answer to a `teste` message stays on screen. */
+const ANSWER_SECONDS = 30;
+
+/**
+ * The label of a chat message's name: in lower case, each character
+ * outside `a` to `z`, `0` to `9` and `-` turned into `-` (the bytes of a
+ * UTF-8 character into one), the spaces around it dropped, cut at
+ * `LABEL_LIMIT` characters; empty when the name is. Bytes only, no
+ * pattern and no percent sign: Lua's `string.lower` changes ASCII alone.
+ */
+function labelOf(name: string): string {
+  const lower = string.lower(name);
+  let first = 1;
+  let last = lower.length;
+  while (first <= last && string.byte(lower, first) === 32) first++;
+  while (last >= first && string.byte(lower, last) === 32) last--;
+  let label = "";
+  for (let index = first; index <= last; index++) {
+    const byte = string.byte(lower, index);
+    // A UTF-8 continuation byte: its character is already one `-`.
+    if (byte >= 128 && byte < 192) continue;
+    const kept =
+      (byte >= 97 && byte <= 122) || (byte >= 48 && byte <= 57) || byte === 45;
+    label += kept ? string.char(byte) : "-";
+    if (label.length >= LABEL_LIMIT) break;
+  }
+  return label;
+}
 
 /** The seconds between two reads while the run waits, within the stall timeout. */
 const TICK = 10;
@@ -262,6 +309,57 @@ export function run(p: ProbeContext): void {
     });
   }
 
+  /** The run's label, once a player named the run in chat. */
+  let label: string | undefined;
+
+  /**
+   * Takes the label of each `teste <name>` message of `who`, the first
+   * one only: renames the Result file, records `LABEL` and checkpoints, so
+   * the new file holds every record so far.
+   */
+  function watchLabel(who: player): void {
+    const self = CreateTrigger();
+    TriggerRegisterPlayerChatEvent(self, who, LABEL_PREFIX, false);
+    TriggerAddAction(self, () => {
+      // The registration matches the prefix anywhere in the message.
+      const message = GetEventPlayerChatString() ?? "";
+      const head = string.sub(message, 1, LABEL_PREFIX.length);
+      if (string.lower(head) !== LABEL_PREFIX) return;
+      if (label !== undefined) {
+        p.show(
+          `O nome deste teste já é ${label}: mensagem ignorada.`,
+          ANSWER_SECONDS,
+        );
+        return;
+      }
+      if (done) {
+        p.show("O teste já terminou: o nome não foi aplicado.", ANSWER_SECONDS);
+        return;
+      }
+      const name = labelOf(string.sub(message, LABEL_PREFIX.length + 1));
+      if (name === "") {
+        p.show(
+          "Nome vazio recusado: digite teste <nome>, com letras, números ou -.",
+          ANSWER_SECONDS,
+        );
+        return;
+      }
+      label = name;
+      p.rename(name);
+      p.record("LABEL", {
+        name,
+        player: playerOf(GetTriggerPlayer()),
+        t: now(),
+      });
+      p.checkpoint();
+      p.show(
+        `Teste nomeado: ${name}. O resultado vai para player-leave-${name}.txt.`,
+        ANSWER_SECONDS,
+      );
+    });
+  }
+
+  for (const who of players) watchLabel(who);
   for (const who of players) watchLeave(who);
   for (const who of players) {
     watchOutcome(who, EVENT_PLAYER_DEFEAT, "defeat");
@@ -280,6 +378,10 @@ export function run(p: ProbeContext): void {
   });
   read("start");
   p.checkpoint();
+  p.show(
+    "Para nomear este teste, digite no chat: teste <nome> (letras, números ou -). Sem nome, o resultado vai para player-leave.txt.",
+    ASK_SECONDS,
+  );
 
   let waited = 0;
   function tick(): void {
