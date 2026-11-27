@@ -7,7 +7,12 @@ import {
   type LuaTestFile,
   type LuaTestResult,
 } from "../src/index.js";
-import { fixturePath, outDir, removeOutDirs } from "./support/fixture.js";
+import {
+  fixturePath,
+  MAP_MODULE,
+  outDir,
+  removeOutDirs,
+} from "./support/fixture.js";
 
 afterAll(removeOutDirs);
 
@@ -1136,23 +1141,25 @@ describe("matchers", () => {
   it("serve reforged-test/map as they serve reforged-test/lua", () => {
     // The same fixture, its describe, it and expect taken from
     // reforged-test/map on the line that took them from reforged-test/lua,
-    // so every line number stays. toContainCall is left out: /map has no
-    // call log.
+    // so every line number stays. The toContainCall tests are left out: the
+    // expect of /map has no toContainCall, a test reading Recorded calls
+    // with the spy matchers and calls instead.
     const dir = outDir("matchers");
     const path = join(dir, "matchers_test.lua");
     const onLua =
       "local describe, it, expect = runner.describe, runner.it, runner.expect";
-    const onMap =
-      'local map = require("lua_modules.reforged-test.map.index"); local describe, it, expect = map.describe, map.it, map.expect';
+    const onMap = `local map = require("${MAP_MODULE}"); local describe, it, expect = map.describe, map.it, map.expect`;
     const source = readFileSync(path, "utf8");
     if (!source.includes(onLua)) {
       throw new Error(`matchers_test.lua no longer holds ${onLua}`);
     }
     writeFileSync(path, source.replace(onLua, onMap));
     const [onMapFile] = runLuaTestFiles({ outDir: dir });
-    const withoutCallLog = (results: readonly LuaTestResult[]) =>
+    const withoutToContainCall = (results: readonly LuaTestResult[]) =>
       results.filter((test) => !test.name.includes("toContainCall"));
-    expect(withoutCallLog(onMapFile.tests)).toEqual(withoutCallLog(tests));
+    expect(withoutToContainCall(onMapFile.tests)).toEqual(
+      withoutToContainCall(tests),
+    );
   });
 });
 
