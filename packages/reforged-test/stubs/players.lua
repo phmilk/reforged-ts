@@ -34,7 +34,7 @@ local playingUsers = { [0] = true, [1] = true }
 local leftSlots = {}
 
 -- The slot state of a player, without a call-log line: for the Game actions
--- of reforged-test/map, which act for a playing player only.
+-- of reforged-test/map that act for a playing player only.
 function __stub_slot_state(whichPlayer)
   if leftSlots[whichPlayer.number] then
     return PLAYER_SLOT_STATE_LEFT

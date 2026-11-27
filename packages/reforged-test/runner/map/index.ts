@@ -437,7 +437,8 @@ export interface Game {
    *   here, and can be deselected: a death writes nothing derived. In the
    *   game such a unit leaves the selection by itself, with no event.
    * - A player who left keeps its selection, and its units can still be
-   *   deselected.
+   *   deselected: the harness's choice, as no Probe run measured the
+   *   selection of a player who left.
    * - A handler's error is thrown out of the action when nothing caught it.
    * @example How many units a player has selected
    * {@includeCode ../../examples/deselect.test.ts}
@@ -742,14 +743,23 @@ function playerName(who: player): string {
 }
 
 /**
+ * The player of the Test game the Game action `action` was given, playing
+ * or not. Anything else is an error raised `level` calls up, at the line
+ * that called the action.
+ */
+function gamePlayer(action: string, value: unknown, level: number): player {
+  const made = playerOf(value);
+  if (made === undefined) error(`game.${action}: expected ${A_PLAYER}`, level);
+  return made as unknown as player;
+}
+
+/**
  * The playing player the Game action `action` was given. A player who is
  * not playing does nothing in the game, so it is an error, raised at the
  * line that called the action.
  */
 function playingPlayer(action: string, value: unknown): player {
-  const made = playerOf(value);
-  if (made === undefined) error(`game.${action}: expected ${A_PLAYER}`, 3);
-  const who = made as unknown as player;
+  const who = gamePlayer(action, value, 4);
   const state = __stub_slot_state(who);
   if (state !== PLAYER_SLOT_STATE_PLAYING) {
     const why =
@@ -808,11 +818,9 @@ function deselectUnit(
   player: player | { readonly handle: player },
   unit: unit | { readonly handle: unit },
 ): void {
-  // Any player of the Test game: the Spec refuses a deselection for a unit
-  // that is not selected only, and a player who left keeps its selection.
-  const made = playerOf(player);
-  if (made === undefined) error(`game.deselect: expected ${A_PLAYER}`, 2);
-  const who = made as unknown as player;
+  // Any player of the Test game, playing or not: the one refusal is a unit
+  // that is not selected, and a player who left keeps its selection.
+  const who = gamePlayer("deselect", player, 3);
   const deselected = unitOf(unit);
   if (deselected === undefined) error(`game.deselect: expected ${A_UNIT}`, 2);
   if (!__stub_selected(who, deselected as unit)) {

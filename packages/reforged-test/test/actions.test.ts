@@ -150,6 +150,7 @@ describe("game.select and game.deselect, on reforged-test/map", () => {
         "selecting a removed unit, alive or dead",
         "deselecting a unit that is not selected",
         "a player who is not playing: an empty slot",
+        "deselecting for a player who selected nothing, playing or not",
         "what is not a player or not a unit",
         "names the test's line, not the harness's",
       ),

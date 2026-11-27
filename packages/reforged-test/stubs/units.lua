@@ -392,8 +392,8 @@ local selections = {}
 
 -- The selections being made: { player, unit } per __stub_select_unit whose
 -- handlers are running. In them IsUnitSelected already answers true, while
--- GroupEnumUnitsSelected does not hold the unit yet, as the Probe read both
--- in the game's handlers.
+-- GroupEnumUnitsSelected does not hold the unit yet, as a Probe run read
+-- both in the game's handlers.
 local selecting = {}
 
 local function selectionOf(whichPlayer)

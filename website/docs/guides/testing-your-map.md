@@ -69,7 +69,7 @@ A killer already dead is accepted. A handler reads the killer the test names:
 
 {@includeCode ../../../packages/reforged-test/examples/select.test.ts}
 
-**Players 0 and 1 are playing**, and every other slot is empty. A player who is not playing types, selects and leaves nothing: naming one is an error, as it is for a player after `game.leave`, which writes the slot and nothing derived, no defeat, no victory, the units kept. A player leaving takes two clients, so no Probe run measured it, where the chat and the selection copy one:
+**Players 0 and 1 are playing**, and every other slot is empty. A player who is not playing types, selects and leaves nothing: naming one is an error, as it is for a player after `game.leave`, which writes the slot and nothing derived, no defeat, no victory, the units kept. A player leaving takes two clients, so no Probe run measured it; the chat and the selection each copy a Probe run:
 
 {@includeCode ../../../packages/reforged-test/examples/leave.test.ts}
 
