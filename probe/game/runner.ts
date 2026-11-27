@@ -20,16 +20,21 @@ const runProbe: (p: ProbeContext) => void = run;
 
 // Replaced in the bundle by probe:build (src/build.ts, PLACEHOLDERS) with the
 // Probe's name, the build's runId, the Patch of the Typings the Probe was
-// built against and the Game data the build staged, "" for a field it left
-// to the map's own. Each literal must appear here once.
+// built against, and the Game data and the players the build staged, "" for
+// a field it left to the map's own. Each literal must appear here once.
 const PROBE = "$PROBE_NAME$";
 const RUN_ID = "$PROBE_RUN_ID$";
 const PATCH = "$PROBE_PATCH$";
-/** The BEGIN line's key of each field of the Game data (src/game-data.ts, BEGIN_KEYS), and its value. */
-const GAME_DATA: readonly (readonly [key: string, value: string])[] = [
+/**
+ * The BEGIN line's key of each field the build staged, and its value: the
+ * Game data (src/game-data.ts, BEGIN_KEYS) and the players
+ * (src/players.ts, PLAYERS_BEGIN_KEY).
+ */
+const STAGED: readonly (readonly [key: string, value: string])[] = [
   ["gameDataSet", "$PROBE_GAME_DATA_SET$"],
   ["gameDataVersion", "$PROBE_GAME_DATA_VERSION$"],
   ["meleeMap", "$PROBE_MELEE_MAP$"],
+  ["players", "$PROBE_PLAYERS$"],
 ];
 
 /** The Result file, under CustomMapData. */
@@ -212,8 +217,8 @@ function start(): void {
 
 /**
  * The fields of the BEGIN line: the Patch, the Probe and the runId, then
- * each field of the Game data the build set, none when it kept the map's
- * own. `recordLine` sorts them.
+ * each field of the Game data and the players the build set, none when it
+ * kept the map's own. `recordLine` sorts them.
  */
 function beginFields(): Record<string, FieldValue> {
   const fields: Record<string, FieldValue> = {
@@ -221,7 +226,7 @@ function beginFields(): Record<string, FieldValue> {
     probe: PROBE,
     run: RUN_ID,
   };
-  for (const [key, value] of GAME_DATA) {
+  for (const [key, value] of STAGED) {
     if (value !== "") fields[key] = value;
   }
   return fields;

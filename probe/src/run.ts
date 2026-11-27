@@ -91,9 +91,10 @@ export const KEY_REPEAT_MILLISECONDS = 2000;
 /** How long the command waits for the game's process to go once ended, in milliseconds. */
 export const END_WAIT_MILLISECONDS = 10_000;
 
-/** Where the game is, and the Game data the staged map declares (`buildProbe`'s). */
+/** Where the game is, and the Game data and the players the staged map declares (`buildProbe`'s). */
 export interface RunOptions extends GameOptions {
   gameData?: GameData;
+  players?: number;
   /**
    * A later Build of the Typings' Game version the client may be on in
    * place of their Patch (`--client-build`): a hotfix the Patch files still
@@ -181,6 +182,7 @@ export async function runProbe(
   const build = buildProbe(probe, folders, {
     client: client.build,
     ...(options.gameData !== undefined && { gameData: options.gameData }),
+    ...(options.players !== undefined && { players: options.players }),
   });
   progress(builtMessage(build));
 

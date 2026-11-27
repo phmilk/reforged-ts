@@ -19,6 +19,7 @@ import {
 } from "../src/folders.js";
 import { readGameData } from "../src/game-data.js";
 import { openArchive } from "../src/pack.js";
+import { readPlayers } from "../src/players.js";
 import { stateFile } from "../src/state.js";
 
 /** The fixture Probes folders this file made, removed after its tests. */
@@ -173,6 +174,77 @@ describe("buildProbe", () => {
     expect(() =>
       buildProbe("hello", folders, { gameData: { set: "custom" } }),
     ).toThrow(/has no war3map\.w3i/);
+  });
+
+  it("stages the players it is given in war3map.w3i and war3map.lua, and leaves the map folder's", async () => {
+    const folders = await tempFolders();
+    const w3i = await readFile(join(folders.map, "war3map.w3i"));
+    const script = await readFile(join(folders.map, "war3map.lua"));
+    const result = buildProbe("hello", folders, { players: 2 });
+
+    expect(
+      readPlayers(await readFile(join(result.stagingFolder, "war3map.w3i"))),
+    ).toEqual([
+      { player: 0, user: true, x: -1408, y: 1728, force: 0 },
+      { player: 1, user: true, x: 1408, y: -2240, force: 0 },
+    ]);
+    const staged = await readFile(
+      join(result.stagingFolder, "war3map.lua"),
+      "latin1",
+    );
+    expect(staged).toContain("\r\nSetPlayers(2)\r\n");
+    expect(staged).toContain(
+      "\r\nSetPlayerSlotAvailable(Player(1), MAP_CONTROL_USER)\r\n",
+    );
+    expect(await readFile(join(folders.map, "war3map.w3i"))).toEqual(w3i);
+    expect(await readFile(join(folders.map, "war3map.lua"))).toEqual(script);
+  });
+
+  it("stages players and Game data together", async () => {
+    const folders = await tempFolders();
+    const result = buildProbe("hello", folders, {
+      players: 2,
+      gameData: { set: "custom" },
+    });
+
+    const staged = await readFile(join(result.stagingFolder, "war3map.w3i"));
+    expect(readPlayers(staged)).toHaveLength(2);
+    expect(readGameData(staged)).toMatchObject({ set: "custom" });
+  });
+
+  it("bakes the players it staged into the bundle, for the BEGIN line, and the empty string when it kept the map's own", async () => {
+    const folders = await tempFolders();
+    const staged = buildProbe("hello", folders, { players: 2 });
+    const kept = buildProbe("held", folders);
+
+    expect(await readFile(staged.bundleFile, "latin1")).toContain(
+      '{"players", "2"}',
+    );
+    expect(await readFile(kept.bundleFile, "latin1")).toContain(
+      '{"players", ""}',
+    );
+  });
+
+  it("keeps the players it staged in the Probe's state file", async () => {
+    const folders = await tempFolders();
+    buildProbe("hello", folders, { players: 2 });
+
+    expect(
+      JSON.parse(await readFile(stateFile(folders.state, "hello"), "utf8")),
+    ).toMatchObject({ players: 2 });
+  });
+
+  it("refuses players for a map folder without war3map.w3i, with a one-line author error", async () => {
+    const map = await mkdtemp(join(tmpdir(), "probe-map-"));
+    await writeFile(
+      join(map, "war3map.lua"),
+      await readFile(join(PROBE_FOLDERS.map, "war3map.lua")),
+    );
+    const folders = await tempFolders({ map });
+
+    expect(() => buildProbe("hello", folders, { players: 2 })).toThrow(
+      /has no war3map\.w3i/,
+    );
   });
 
   it("keeps the map's Game data when it is given none", async () => {
@@ -370,6 +442,37 @@ describe("probe:build", () => {
     ).toBe(1);
     expect(output.stderr).toBe(
       'probe:build failed: --game-data-version is "v2": it takes one of roc, tft, fk.\n',
+    );
+  });
+
+  it("stages the players of --players, naming them in its line", async () => {
+    const folders = await tempFolders();
+    const { output, streams } = captureOutput();
+
+    expect(
+      main(["hello", "--players", "2", "--game-data-set", "custom"], streams, {
+        folders,
+      }),
+    ).toBe(0);
+    expect(output.stdout).toMatch(
+      /^Built Probe hello under the Game Data Set Custom with 2 player slots, run \S+: .+\n$/,
+    );
+    expect(
+      readPlayers(
+        await readFile(
+          join(folders.output, "hello", "staging", "probe.w3m", "war3map.w3i"),
+        ),
+      ),
+    ).toHaveLength(2);
+  });
+
+  it("refuses a number of players it does not stage on one line, with exit code 1", async () => {
+    const folders = await tempFolders();
+    const { output, streams } = captureOutput();
+
+    expect(main(["hello", "--players", "3"], streams, { folders })).toBe(1);
+    expect(output.stderr).toMatch(
+      /^probe:build failed: --players is "3": it takes 2, .*\n$/,
     );
   });
 

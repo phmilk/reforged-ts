@@ -2,7 +2,8 @@
 // (../lua) with typescript-to-lua, builds the hello, failing, held,
 // failing-later and calibration Probes and the Probes of the Lua tests
 // (../lua/probes) with the bridge fixtures' runId and Patch, hello once
-// more with Game data (`hello_game_data_bundle`), and puts their bundles
+// more with Game data (`hello_game_data_bundle`) and once with two player
+// slots (`hello_players_bundle`), and puts their bundles
 // and the fixtures' lines next to the tests as Lua modules: `<probe>_bundle`,
 // `bridge_fixture`
 // (hello's, the table `{ finished = {...}, checkpoint = {...} }`) and
@@ -99,15 +100,21 @@ function compile(): string {
       });
       copyFileSync(bundleFile, join(outDir, `${probe}_bundle.lua`));
     }
-    // hello again, built with Game data: `hello_game_data_bundle`.
-    const { bundleFile } = buildProbe(BRIDGE_PROBE, folders, {
-      runId: BRIDGE_RUN_ID,
-      gameData: GAME_DATA_BUILD,
-    });
-    copyFileSync(
-      bundleFile,
-      join(outDir, `${BRIDGE_PROBE}_game_data_bundle.lua`),
-    );
+    // hello again, built with Game data, `hello_game_data_bundle`, and
+    // with two player slots, `hello_players_bundle`.
+    for (const [name, options] of [
+      ["game_data", { gameData: GAME_DATA_BUILD }],
+      ["players", { players: 2 }],
+    ] as const) {
+      const { bundleFile } = buildProbe(BRIDGE_PROBE, folders, {
+        runId: BRIDGE_RUN_ID,
+        ...options,
+      });
+      copyFileSync(
+        bundleFile,
+        join(outDir, `${BRIDGE_PROBE}_${name}_bundle.lua`),
+      );
+    }
   } catch (error) {
     if (error instanceof AuthorError) return error.message;
     throw error;

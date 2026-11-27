@@ -21,6 +21,12 @@ import {
 import { gameDataMessage, writeGameData, type GameData } from "./game-data.js";
 import { gameVersion, readPatch } from "./manifest.js";
 import { packMapFolder } from "./pack.js";
+import {
+  playersMessage,
+  readPlayers,
+  writePlayers,
+  writePlayersScript,
+} from "./players.js";
 import { probeFile } from "./probes.js";
 import {
   EDITOR_SCRIPT,
@@ -37,8 +43,9 @@ export const CURRENT_PROBE = "@probe/current";
 /**
  * The string literals of the in-game module (game/runner.ts) that a build
  * replaces in the bundle, quotes included, with the Probe's name, the
- * build's runId, the Patch of the Typings and the Game data it staged (the
- * empty string for a field it left to the map's own).
+ * build's runId, the Patch of the Typings, and the Game data and the
+ * players it staged (the empty string for a field it left to the map's
+ * own).
  */
 export const PLACEHOLDERS = {
   probe: '"$PROBE_NAME$"',
@@ -47,9 +54,10 @@ export const PLACEHOLDERS = {
   gameDataSet: '"$PROBE_GAME_DATA_SET$"',
   gameDataVersion: '"$PROBE_GAME_DATA_VERSION$"',
   meleeMap: '"$PROBE_MELEE_MAP$"',
+  players: '"$PROBE_PLAYERS$"',
 } as const;
 
-/** The map's info file, which declares its Game data. */
+/** The map's info file, which declares its Game data and its players. */
 const MAP_INFO = "war3map.w3i";
 
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
@@ -69,6 +77,8 @@ export interface BuildResult {
   bundleFile: string;
   /** The Game data the staged `war3map.w3i` was given; empty when it keeps the map's own. */
   gameData: GameData;
+  /** The user slots the staged map was given; undefined when it keeps the map's own. */
+  players?: number;
 }
 
 /** What a build may be given; each has a default. */
@@ -79,11 +89,13 @@ export interface BuildOptions {
   client?: string;
   /** The Game data the staged map declares: the map folder's by default. */
   gameData?: GameData;
+  /** The user slots the staged map declares (`--players`): the map folder's by default. */
+  players?: number;
 }
 
-/** The line a command prints for a build: the Probe, the Game data it set, its runId and its archive. */
+/** The line a command prints for a build: the Probe, the Game data and the players it set, its runId and its archive. */
 export function builtMessage(result: BuildResult): string {
-  return `Built Probe ${result.probe}${gameDataMessage(result.gameData)}, run ${result.runId}: ${result.archive}`;
+  return `Built Probe ${result.probe}${gameDataMessage(result.gameData)}${playersMessage(result.players)}, run ${result.runId}: ${result.archive}`;
 }
 
 /**
@@ -92,23 +104,26 @@ export function builtMessage(result: BuildResult): string {
  * map folder whose `war3map.lua` is the editor script, one newline and the
  * bundle, and whose `war3map.w3i` declares the Game Data Set, the Game
  * Data Version and the melee map flag `gameData` sets, the map folder's
- * where it sets none (#575); then that folder packed, as
+ * where it sets none (#575); with `players`, both files declare that many
+ * user slots (#1043); then that folder packed, as
  * `<folders.output>/<probe>/<map folder's name>`, since 3.0.1 opens no map
  * folder (#642). The runner writes the Patch of
  * `folders.manifest` in the run's `BEGIN` line, so the run names the
- * Typings it was built against, and the Game data it set (#619). Stores the runId, with `client`, the Build
- * of the game client `probe:run` runs it on, and the Game data it set, in
+ * Typings it was built against, and the Game data and the players it set
+ * (#619). Stores the runId, with `client`, the Build of the game client
+ * `probe:run` runs it on, and the Game data and the players it set, in
  * the Probe's state file last, so a failed build leaves the previous
  * one's. A bad name, a missing Probe, a manifest without a Patch, Game data
- * for a map folder without `war3map.w3i` or a compile error is an
- * AuthorError of one line.
+ * or players for a map folder without `war3map.w3i`, players the step
+ * does not know how to add, or a compile error is an AuthorError of one
+ * line.
  */
 export function buildProbe(
   probe: string,
   folders: ProbeFolders = PROBE_FOLDERS,
   options: BuildOptions = {},
 ): BuildResult {
-  const { runId = randomUUID(), client, gameData = {} } = options;
+  const { runId = randomUUID(), client, gameData = {}, players } = options;
   const source = probeFile(folders.probes, probe);
   if (!RUN_ID_PATTERN.test(runId)) {
     throw new Error(`Not a runId: ${JSON.stringify(runId)}`);
@@ -122,14 +137,21 @@ export function buildProbe(
   const stagingFolder = stagingFolderFor(outputFolder, folders.map);
   stageMapFolder(folders.map, stagingFolder);
   const setsGameData = Object.keys(gameData).length > 0;
-  if (setsGameData) {
+  let script = editorScript;
+  if (setsGameData || players !== undefined) {
     const w3i = path.join(stagingFolder, MAP_INFO);
     if (!fs.statSync(w3i, { throwIfNoEntry: false })?.isFile()) {
       throw new AuthorError(
-        `${path.basename(folders.map)} has no ${MAP_INFO}, where the Game data is set: save the map folder with the World Editor of 3.0.`,
+        `${path.basename(folders.map)} has no ${MAP_INFO}, where the Game data and the players are set: save the map folder with the World Editor of 3.0.`,
       );
     }
-    fs.writeFileSync(w3i, writeGameData(fs.readFileSync(w3i), gameData));
+    let info: Uint8Array = fs.readFileSync(w3i);
+    if (setsGameData) info = writeGameData(info, gameData);
+    if (players !== undefined) {
+      info = writePlayers(info, players);
+      script = writePlayersScript(editorScript, readPlayers(info));
+    }
+    fs.writeFileSync(w3i, info);
   }
 
   const bundle = compileBundle({
@@ -149,11 +171,14 @@ export function buildProbe(
     [PLACEHOLDERS.meleeMap]: JSON.stringify(
       gameData.melee === true ? "true" : "",
     ),
+    [PLACEHOLDERS.players]: JSON.stringify(
+      players === undefined ? "" : String(players),
+    ),
   });
   fs.writeFileSync(bundle.file, baked);
   fs.writeFileSync(
     path.join(stagingFolder, EDITOR_SCRIPT),
-    composeMapScript(editorScript, baked),
+    composeMapScript(script, baked),
   );
   const archive = path.join(outputFolder, path.basename(folders.map));
   fs.writeFileSync(archive, packMapFolder(stagingFolder));
@@ -163,6 +188,7 @@ export function buildProbe(
     runId,
     ...(client !== undefined && { client }),
     ...(setsGameData && { gameData }),
+    ...(players !== undefined && { players }),
   });
   return {
     probe,
@@ -172,6 +198,7 @@ export function buildProbe(
     archive,
     bundleFile: bundle.file,
     gameData,
+    ...(players !== undefined && { players }),
   };
 }
 
