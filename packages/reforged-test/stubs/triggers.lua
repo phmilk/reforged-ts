@@ -343,6 +343,26 @@ for name, read in pairs(remembered) do
   end
 end
 
+-- The timer events: TriggerRegisterTimerEvent arms an expiry on the Game
+-- clock (timers.lua), once or once per `timeout`, and each expiry goes
+-- through the Event dispatch to the trigger of that registration alone, the
+-- event handle it returned being the subject. A disabled or destroyed
+-- trigger is skipped, as for any event. Its call-log line and event handle
+-- are the ones every registration has. As measured in the game
+-- (docs/research/timer-event.md): GetTriggerEventId answers
+-- EVENT_GAME_TIMER_EXPIRED, GetExpiredTimer nil, and a timer and a timer
+-- event of one instant run in the order they were started.
+local registerTimerEvent = TriggerRegisterTimerEvent
+
+function TriggerRegisterTimerEvent(whichTrigger, timeout, periodic)
+  local event = registerTimerEvent(whichTrigger, timeout, periodic)
+  remember(whichTrigger, EVENT_GAME_TIMER_EXPIRED, event, nil)
+  __stub_schedule(timeout, periodic, function()
+    __stub_dispatch(EVENT_GAME_TIMER_EXPIRED, event)
+  end)
+  return event
+end
+
 -- Whether a registration's filter accepts the event on `unit`: no filter
 -- accepts it; a filter runs with `unit` as GetFilterUnit's answer.
 local function filterAccepts(filter, unit)

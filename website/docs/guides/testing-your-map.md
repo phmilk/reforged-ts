@@ -84,7 +84,21 @@ There is no `game.createUnit`: a test creates its units as the map does.
 
 ## Time
 
-{/* Written with the Game clock and game.advanceTime (#985) and the timer readings under it (#986). */}
+Game time is the Test game's own. It starts at 0 and nothing expires on its own: `game.advanceTime` moves it, and every timer that expires on the way fires, the library's own included. A test of a countdown never looks for its timer:
+
+{@includeCode ../../../packages/reforged-test/examples/advance-time.test.ts}
+
+- **In the game's order.** The timers fire in the order of their instants, those of one instant in the order they were started. Each handler runs with the clock at its instant, so a timer it starts fires in the same advance when it expires before the advance ends.
+- **Exact counts.** A periodic timer fires once per period, without drift: 120 times in `game.advanceTime(120)` at a period of 1, however the test splits the 120 seconds.
+- **Stopped timers stay quiet.** A destroyed or paused timer does not fire, and starting a timer again drops what it had pending.
+- **An error stops the clock.** An error a handler throws leaves `game.advanceTime`, the clock at that instant and the later timers still pending.
+- **Timers, and nothing else.** An advance fires timers and the Triggers of `TriggerRegisterTimerEvent`. Nothing else has a duration on the harness: a wait (`TriggerSleepAction`), a cooldown, a buff and a unit's life span do not move, and neither does `os.clock`.
+
+**A timeout of 0 is deferred work.** A one-shot timer of timeout 0 never fires inside the call that starts it, [as in the game](https://github.com/phmilk/reforged-ts/blob/master/docs/research/timer-answers.md#a-timer-of-timeout-0): it fires on the next advance, `game.advanceTime(0)` included. A periodic one fires every 0.0001 s, the period the game runs it at, so one second of it is 10000 handlers.
+
+{@includeCode ../../../packages/reforged-test/examples/deferred.test.ts}
+
+{/* What a timer reads (its elapsed and remaining time) and what a resumed timer does, written with the timer readings (#986). */}
 
 ## Assertions
 
