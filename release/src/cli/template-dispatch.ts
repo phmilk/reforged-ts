@@ -112,12 +112,12 @@ export async function main(
     const { tag, branch } = body.client_payload;
     const payload = JSON.stringify(body.client_payload, null, 2);
     output.stdout(
-      `${body.event_type}, tag ${tag}, Template branch ${branch}:\n${payload}\n`,
+      `${body.event_type}, tag ${tag}, Template ref ${branch}:\n${payload}\n`,
     );
     await appendSummary(
       context.env,
       "## Template dispatch\n\n" +
-        `\`${body.event_type}\` to ${TEMPLATE_REPOSITORY}, tag \`${tag}\`, Template branch \`${branch}\`:\n\n` +
+        `\`${body.event_type}\` to ${TEMPLATE_REPOSITORY}, tag \`${tag}\`, Template ref \`${branch}\`:\n\n` +
         `\`\`\`json\n${payload}\n\`\`\`\n`,
     );
     return 0;

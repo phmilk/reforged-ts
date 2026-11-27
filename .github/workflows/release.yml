@@ -359,7 +359,7 @@ jobs:
           path: ${{ runner.temp }}/pack
       # The versions of the plan, the workspace's for a package the release
       # does not publish; the tag and the URLs follow from them, and the
-      # Template branch its sync goes to from the branch's Release channel.
+      # Template ref its sync goes to from the branch's Release channel.
       # It waits until npm lists them: the Template's sync installs them as
       # soon as it starts. A release of none of the seven packages of a
       # matrix row (the Creation CLI alone) writes no body, and nothing is

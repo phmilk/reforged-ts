@@ -373,7 +373,7 @@ describe("release:template-dispatch", () => {
     const payload = JSON.stringify(body?.client_payload, null, 2);
     expect(result).toEqual({
       status: 0,
-      stdout: `reforged-ts-release, tag reforged-ts@1.0.0-alpha.3, Template branch next:\n${payload}\n`,
+      stdout: `reforged-ts-release, tag reforged-ts@1.0.0-alpha.3, Template ref next:\n${payload}\n`,
       stderr: "",
     });
     expect(
@@ -381,7 +381,7 @@ describe("release:template-dispatch", () => {
     ).toEqual(body);
     expect(await readFile(summary, "utf8")).toBe(
       "## Template dispatch\n\n" +
-        "`reforged-ts-release` to phmilk/reforged-ts-template, tag `reforged-ts@1.0.0-alpha.3`, Template branch `next`:\n\n" +
+        "`reforged-ts-release` to phmilk/reforged-ts-template, tag `reforged-ts@1.0.0-alpha.3`, Template ref `next`:\n\n" +
         `\`\`\`json\n${payload}\n\`\`\`\n`,
     );
   });
