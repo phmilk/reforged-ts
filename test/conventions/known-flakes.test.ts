@@ -93,7 +93,7 @@ describe("flakes", () => {
 describe("the known-flake catalogue", () => {
   const entries = flakes(read(catalogue));
 
-  it("lists the four timeouts #658 measured on ci (windows)", () => {
+  it("lists the four timeouts #658 measured on ci (windows), and the one #1043's red run showed", () => {
     expect(
       entries.map(({ job, file }) => `${job} ${file}`),
       catalogue,
@@ -102,6 +102,7 @@ describe("the known-flake catalogue", () => {
       "ci (windows) release/test/matrix.test.ts",
       "ci (windows) packages/reforged-map/test/world-editor.test.ts",
       "ci (windows) packages/reforged-map/test/object-data-text.test.ts",
+      "ci (windows) release/test/skills-update.test.ts",
     ]);
   });
 
