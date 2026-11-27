@@ -1,13 +1,16 @@
 /**
- * `release:dist-tag --pack-dir <dir>`: sets the npm dist-tag of every
- * package in the publish plan of the `changeset pack` output `<dir>`:
- * `next` while `.changeset/pre.json` is in pre mode, else what Changesets
- * wrote. Refuses a plan that publishes a package at `0.0.0`. Prints one
- * line per package; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) the plan
- * also goes to the job summary as a table.
+ * `release:dist-tag --pack-dir <dir> --branch <name>`: sets the npm
+ * dist-tag of every package in the publish plan of the `changeset pack`
+ * output `<dir>` to the dist-tag of the Release channel of the branch
+ * `<name>` the release runs from: `latest` from `master`, `next` from
+ * `next` (ADR 0031). Refuses any other branch, and a plan that publishes a
+ * package at `0.0.0`. Prints one line per package; in GitHub Actions
+ * (`GITHUB_STEP_SUMMARY` set) the plan also goes to the job summary as a
+ * table.
  *
  * Relative paths resolve against the folder the command was started from.
- * Exit codes: 0 done, 1 the plan cannot be read or is unversioned, 2 usage.
+ * Exit codes: 0 done, 1 a branch with no channel, or a plan that cannot be
+ * read or is unversioned, 2 usage.
  */
 import { resolve } from "node:path";
 import { distTag, formatReleases } from "../dist-tag.js";
@@ -16,16 +19,17 @@ import {
   appendSummary,
   errorMessage,
   invokedDirectly,
+  parseOptions,
   PROCESS_OUTPUT,
   type Output,
 } from "./common.js";
 
-const USAGE = "Usage: release:dist-tag --pack-dir <dir>\n";
+const USAGE = "Usage: release:dist-tag --pack-dir <dir> --branch <name>\n";
 
 export interface Context {
   /** The folder relative paths resolve against. */
   cwd: string;
-  /** The workspace, for its pre state. */
+  /** The workspace, for the versions of its packages. */
   root: string;
   env: Readonly<Record<string, string | undefined>>;
 }
@@ -40,16 +44,21 @@ export async function main(
     env: process.env,
   },
 ): Promise<number> {
-  const [option, value] = args;
-  if (args.length !== 2 || option !== "--pack-dir" || value === "") {
+  const options = parseOptions(
+    args,
+    ["--pack-dir", "--branch"],
+    ["--pack-dir", "--branch"],
+  );
+  if (options === undefined) {
     output.stderr(USAGE);
     return 2;
   }
 
   try {
     const { releases } = await distTag(
-      resolve(context.cwd, value),
+      resolve(context.cwd, options["--pack-dir"]),
       context.root,
+      options["--branch"],
     );
     output.stdout(
       releases

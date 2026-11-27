@@ -8,7 +8,7 @@ Runs TypeScript tests for Warcraft III Reforged map code on real Lua 5.3, with t
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
-**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add -D reforged-test@next`. npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version: `pnpm add -D reforged-test` installs the current alpha.
 
 The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/) exactly like map code, then run on Lua 5.3.6 compiled to WebAssembly ([lua-wasm-bindings](https://www.npmjs.com/package/lua-wasm-bindings), the VM typescript-to-lua's own suite uses). What a test observes is the Lua your code emits, the Native calls it makes and the objects it returns.
 

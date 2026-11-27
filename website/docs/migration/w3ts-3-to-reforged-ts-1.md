@@ -27,8 +27,6 @@ npm uninstall w3ts
 npm install reforged-ts reforged-types
 ```
 
-Until 1.0.0 is published, install the prereleases with `@next`: `npm install reforged-ts@next reforged-types@next`.
-
 w3ts 3.x brought the Typings of Patch 1.33.0 through its own dependency, `war3-types-strict`, which its declarations referenced. reforged-ts references none: the Map project selects the Typings of its Game version in `tsconfig.json`, next to the typescript-to-lua language extensions:
 
 ```json

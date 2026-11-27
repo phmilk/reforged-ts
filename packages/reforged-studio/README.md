@@ -6,7 +6,7 @@ It holds two parts: the Studio's server and page ([#831](https://github.com/phmi
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
-**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`, beside its peer `reforged-map`: `pnpm add -D reforged-studio@next reforged-map@next`. npm gives `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version: `pnpm add -D reforged-studio reforged-map` installs the current alpha of the Studio and of `reforged-map`, its peer.
 
 **Supported Patch: 3.0.1.24370.** The `reforged.patch` field of `package.json` carries the same Build. The Studio reads the game from the developer's own install of that Patch, and the install's own files only: it needs the game installed ([What needs the game](#what-needs-the-game)).
 

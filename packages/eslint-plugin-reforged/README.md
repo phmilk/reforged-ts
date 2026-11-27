@@ -8,7 +8,7 @@ Type-aware ESLint rules that catch the Warcraft III scripting pitfalls (desync, 
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
-**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add -D eslint-plugin-reforged@next`. npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`), published under the `latest` dist-tag like a stable version: `pnpm add -D eslint-plugin-reforged` installs the current alpha.
 
 ## Setup
 

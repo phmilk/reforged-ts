@@ -26,12 +26,12 @@ On Linux the game runs through Wine: set `winePath` in `reforged.config.ts`.
 Run the Creation CLI from the folder to create the project in; it makes the project's own folder, `my-map` here:
 
 ```sh
-npx create-reforged-map@next my-map
+npx create-reforged-map my-map
 ```
 
-`pnpm create reforged-map@next my-map` does the same. In a terminal it asks for the project name, the folder's name when left blank, and a one-line description of the map; then it downloads the Template into `my-map`, writes the name and the description into `package.json` and the README, and the description into `AGENTS.md` too, names the map folder after the project (`my-map.w3m`, at its root) and points `mapFolder` in `reforged.config.ts` at it, installs the packages, runs `pnpm template:detach` to remove the files that serve only the Template's own development, and makes a first commit. `--yes` takes the defaults without asking, and `--name` and `--description` give the answers; [its README](https://github.com/phmilk/reforged-ts/tree/master/packages/create-reforged-map#usage) lists the other options.
+`pnpm create reforged-map my-map` does the same. In a terminal it asks for the project name, the folder's name when left blank, and a one-line description of the map; then it downloads the Template into `my-map`, writes the name and the description into `package.json` and the README, and the description into `AGENTS.md` too, names the map folder after the project (`my-map.w3m`, at its root) and points `mapFolder` in `reforged.config.ts` at it, installs the packages, runs `pnpm template:detach` to remove the files that serve only the Template's own development, and makes a first commit. `--yes` takes the defaults without asking, and `--name` and `--description` give the answers; [its README](https://github.com/phmilk/reforged-ts/tree/master/packages/create-reforged-map#usage) lists the other options.
 
-Write `@next` until 1.0.0. During the build phase the library publishes its packages as `1.0.0-alpha.N` under npm's `next` dist-tag, and npm keeps `latest` on the first alpha, so a bare `npx create-reforged-map` runs that one.
+During the build phase the library publishes its packages as `1.0.0-alpha.N` under npm's `latest` dist-tag, like a stable version, so the command runs the newest alpha of the Creation CLI, which installs the newest alphas of the packages.
 
 ### Or use the Template on GitHub
 

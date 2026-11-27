@@ -5,7 +5,6 @@
 // process has ended, a Studio on another map folder, and no file. Each
 // hovers a literal, a generated constant and the shared `B000`.
 
-import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -56,9 +55,13 @@ const AFTER_INTERVAL = 1200;
 const wait = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-/** The pid of a process that has ended. */
+/**
+ * The pid of no process: above Linux's highest `pid_max` (2^22) and every
+ * pid Windows hands out. The pid of a child that has ended is not one: on
+ * Windows, under the load of the full test run, it read as running.
+ */
 function deadPid(): number {
-  return spawnSync(process.execPath, ["-e", ""]).pid;
+  return 2 ** 31 - 4;
 }
 
 /** A Map project whose map folder is `maps/editor-objects.w3m`. */

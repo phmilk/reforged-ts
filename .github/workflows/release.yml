@@ -36,6 +36,9 @@ jobs:
     outputs:
       mode: ${{ steps.select.outputs.mode }}
       dry-run: ${{ steps.dry-run.outputs.dry-run }}
+      # The branch whose Release channel the run publishes or rehearses
+      # (release/src/release-channel.ts).
+      branch: ${{ steps.branch.outputs.branch }}
     steps:
       - id: dry-run
         name: Dry run or release
@@ -47,6 +50,16 @@ jobs:
             exit 1
           fi
           echo "dry-run=$DRY_RUN" >> "$GITHUB_OUTPUT"
+      # A dry run of a branch with no channel rehearses a release from
+      # master, where the branch's pull request goes.
+      - id: branch
+        name: Release channel's branch
+        run: |
+          case "$GITHUB_REF_NAME" in
+            master | next) branch=$GITHUB_REF_NAME ;;
+            *) branch=master ;;
+          esac
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -198,14 +211,16 @@ jobs:
       - name: Typings generator output check
         run: pnpm typings:check
       # The Changesets CLI rather than the pack sub-action, which uploads the
-      # artifact itself: the plan's tags must be rewritten to next
+      # artifact itself: the plan's tags must be rewritten to the channel's
       # (release:dist-tag) before the upload.
       - name: Pack
         run: pnpm changeset pack --out-dir "$RUNNER_TEMP/pack"
-      # The next dist-tag in pre mode, written into the plan the Template
-      # gate and the publish job read.
+      # The dist-tag of the branch's Release channel, latest from master,
+      # written into the plan the Template gate and the publish job read.
       - name: Dist-tags
-        run: pnpm release:dist-tag --pack-dir "$RUNNER_TEMP/pack"
+        env:
+          BRANCH: ${{ needs.select.outputs.branch }}
+        run: pnpm release:dist-tag --pack-dir "$RUNNER_TEMP/pack" --branch "$BRANCH"
       - id: upload
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

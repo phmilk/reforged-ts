@@ -262,7 +262,7 @@ Each of these variables then keeps the type `war3map.lua` gives it, which every 
 
 A Map project generated from the Template before `reforged-map` declares its GUI variables with the copy of `scripts/editor-globals.ts` it was generated with, and that copy declares each of them `number`. To have them declared by kind, switch to the package as the Template does:
 
-1. Add it as a dev dependency: `pnpm add -D reforged-map@next`.
+1. Add it as a dev dependency: `pnpm add -D reforged-map`.
 2. In `scripts/generate.ts`, replace the editor globals `Generator` imported from `./editor-globals.ts` with one that calls `reforged-map`, passes on its warnings and turns its `MapFolderError` into the Template's `AuthorError`:
 
    ```ts fragment
@@ -292,7 +292,7 @@ The generated files keep their names, `editor-globals.d.ts` and `editor-globals.
 `reforged-builtins` holds the Built-in objects of each Patch, the objects the game ships rather than the map: for each one, its Rawcode, its Object kind, its race, its enUS name and the Game data sets that hold it. With it, a `FourCC` literal of a Built-in object has its kind, and each object has a constant named after it. It is optional: a Map project that does not list it keeps every literal an `UnknownRawcode`, as above.
 
 :::note[Install]
-`pnpm add -D reforged-builtins@next`. The Template does not install it yet: add it to a Map project yourself.
+`pnpm add -D reforged-builtins`. The Template does not install it yet: add it to a Map project yourself.
 :::
 
 ### The overloads: literals with no edit
@@ -545,7 +545,7 @@ The overloads cost type-check time for each literal `FourCC` call, and nothing a
 
 A Map project generated before the Template wrote the map's objects turns them on in three steps. It needs a release of `reforged-map` that writes them:
 
-1. Add both packages as dev dependencies: `pnpm add -D reforged-map@next reforged-builtins@next`. `reforged-builtins` names a Custom object that keeps its base's name after its base. Its overloads stay off until its entry is in `types`.
+1. Add both packages as dev dependencies: `pnpm add -D reforged-map reforged-builtins`. `reforged-builtins` names a Custom object that keeps its base's name after its base. Its overloads stay off until its entry is in `types`.
 2. In `scripts/generate.ts`, add a `Generator` that calls `reforged-map` for the map's objects and passes on its warnings, and run it after the Editor globals' one, which already turns a missing map folder into an `AuthorError`:
 
    ```ts fragment
