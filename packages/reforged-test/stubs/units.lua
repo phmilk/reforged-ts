@@ -381,3 +381,174 @@ function UnitDamageTarget(whichUnit, target, amount, attack, ranged, attackType,
   })
   return true
 end
+
+-- The selection: per player, the units it selected, in the order they
+-- entered. SelectUnit and ClearSelection write the local player's, as the
+-- Natives act for the local player, and game.select and game.deselect of
+-- reforged-test/map write any player's (__stub_select_unit and
+-- __stub_deselect_unit). IsUnitSelected and GroupEnumUnitsSelected read it.
+-- What the game does is in docs/research/selection-events.md.
+local selections = {}
+
+-- The selections being made: { player, unit } per __stub_select_unit whose
+-- handlers are running. In them IsUnitSelected already answers true, while
+-- GroupEnumUnitsSelected does not hold the unit yet, as a Probe run read
+-- both in the game's handlers.
+local selecting = {}
+
+local function selectionOf(whichPlayer)
+  local selected = selections[whichPlayer]
+  if selected == nil then
+    selected = {}
+    selections[whichPlayer] = selected
+  end
+  return selected
+end
+
+-- Where the unit stands in the player's selection, nil when it is not in.
+local function selectedAt(whichPlayer, whichUnit)
+  local selected = selectionOf(whichPlayer)
+  for index = 1, #selected do
+    if rawequal(selected[index], whichUnit) then
+      return index
+    end
+  end
+  return nil
+end
+
+local function beingSelected(whichPlayer, whichUnit)
+  for index = 1, #selecting do
+    if rawequal(selecting[index][1], whichPlayer) and rawequal(selecting[index][2], whichUnit) then
+      return true
+    end
+  end
+  return false
+end
+
+-- Whether the unit is in the player's selection, without a call-log line:
+-- what IsUnitSelected answers.
+function __stub_selected(whichPlayer, whichUnit)
+  return selectedAt(whichPlayer, whichUnit) ~= nil or beingSelected(whichPlayer, whichUnit)
+end
+
+-- Dispatches one selection event of `whichPlayer` on the unit: the player
+-- unit event to the registrations of the player who selects, whoever owns
+-- the unit, then the unit event to the unit's, whichever was registered
+-- first. GetTriggerUnit answers the unit; GetTriggerPlayer answers the
+-- player who selects in the player unit event, and the unit's owner in the
+-- unit event.
+local function dispatchSelection(whichPlayer, whichUnit, playerEvent, unitEvent)
+  __stub_dispatch(playerEvent, whichPlayer, {
+    GetTriggerUnit = whichUnit,
+    GetTriggerPlayer = whichPlayer,
+  })
+  __stub_dispatch(unitEvent, whichUnit, {
+    GetTriggerUnit = whichUnit,
+    GetTriggerPlayer = whichUnit.owner,
+  })
+end
+
+-- The unit enters the player's selection, as the game tells the script:
+-- EVENT_PLAYER_UNIT_SELECTED of that player and EVENT_UNIT_SELECTED are
+-- dispatched, IsUnitSelected already answering true in the handlers, then
+-- the unit is added after the units selected before, where
+-- GroupEnumUnitsSelected finds it. It clears nothing and checks nothing: the
+-- caller decides what a unit already selected, a dead one or a removed one
+-- means. Not a Native, so it adds no call-log line.
+function __stub_select_unit(whichPlayer, whichUnit)
+  local entry = { whichPlayer, whichUnit }
+  selecting[#selecting + 1] = entry
+  local ok, message = pcall(dispatchSelection,
+    whichPlayer, whichUnit, EVENT_PLAYER_UNIT_SELECTED, EVENT_UNIT_SELECTED)
+  for index = #selecting, 1, -1 do
+    if rawequal(selecting[index], entry) then
+      table.remove(selecting, index)
+      break
+    end
+  end
+  if not ok then
+    error(message, 0)
+  end
+  if selectedAt(whichPlayer, whichUnit) == nil then
+    local selected = selectionOf(whichPlayer)
+    selected[#selected + 1] = whichUnit
+  end
+end
+
+-- The unit leaves the player's selection, as the game tells the script:
+-- EVENT_PLAYER_UNIT_DESELECTED of that player and EVENT_UNIT_DESELECTED are
+-- dispatched, the unit still selected in the handlers, then it is taken
+-- out. It checks nothing: the caller decides what a unit that is not
+-- selected means. Not a Native, so it adds no call-log line.
+function __stub_deselect_unit(whichPlayer, whichUnit)
+  dispatchSelection(whichPlayer, whichUnit, EVENT_PLAYER_UNIT_DESELECTED, EVENT_UNIT_DESELECTED)
+  -- Read again: a handler may have changed the selection.
+  local index = selectedAt(whichPlayer, whichUnit)
+  if index ~= nil then
+    table.remove(selectionOf(whichPlayer), index)
+  end
+end
+
+-- SelectUnit adds the unit to the local player's selection, after the units
+-- selected before, or takes it out, and dispatches nothing: in the game no
+-- selection event fires before it returns. A unit already selected stays
+-- where it is, one that is not selected stays out, and a dead or a removed
+-- unit is not selected: the game selects neither. Both readers read the
+-- change at once, where the game's read it at different times, and the
+-- events the game fires later, on no order of the test, are game.select's
+-- and game.deselect's (docs/research/selection-events.md, "Where the
+-- Shipped stubs differ").
+function SelectUnit(whichUnit, flag)
+  __stub_record("SelectUnit", whichUnit, flag)
+  local whichPlayer = __stub_local_player()
+  local index = selectedAt(whichPlayer, whichUnit)
+  if not flag then
+    if index ~= nil then
+      table.remove(selectionOf(whichPlayer), index)
+    end
+    return
+  end
+  if index == nil and not whichUnit.dead and not whichUnit.destroyed then
+    local selected = selectionOf(whichPlayer)
+    selected[#selected + 1] = whichUnit
+  end
+end
+
+-- ClearSelection empties the local player's selection and dispatches
+-- nothing, as SelectUnit does.
+function ClearSelection()
+  __stub_record("ClearSelection")
+  selections[__stub_local_player()] = {}
+end
+
+function IsUnitSelected(whichUnit, whichPlayer)
+  __stub_record("IsUnitSelected", whichUnit, whichPlayer)
+  return __stub_selected(whichPlayer, whichUnit)
+end
+
+-- GroupEnumUnitsSelected empties the group, then puts in it the units of
+-- the player's selection, in the order they entered it, that the filter
+-- accepts: no filter accepts every unit; a filter runs once per unit, with
+-- the unit as GetFilterUnit's answer.
+function GroupEnumUnitsSelected(whichGroup, whichPlayer, filter)
+  __stub_record("GroupEnumUnitsSelected", whichGroup, whichPlayer, filter)
+  local func = nil
+  if filter ~= nil then
+    func = filter.func
+    if func == nil then
+      error(__stub_format(filter) .. " was not created by Condition or Filter", 0)
+    end
+  end
+  local selected = selectionOf(whichPlayer)
+  local units = {}
+  for index = 1, #selected do
+    local whichUnit = selected[index]
+    local accepted = func == nil or __stub_with_context({ GetFilterUnit = whichUnit }, function()
+      return func() and true or false
+    end)
+    if accepted then
+      units[#units + 1] = whichUnit
+    end
+  end
+  whichGroup.units = units
+end

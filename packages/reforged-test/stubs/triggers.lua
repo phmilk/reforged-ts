@@ -7,7 +7,8 @@
 -- the response Natives answer from, or one event with __stub_dispatch, which
 -- reaches every trigger registered for it. Registrations are remembered where a delivery
 -- needs them: the ones that name their event (__stub_dispatch), the damage
--- ones (__stub_dispatch_damage) and the sync ones (__stub_deliver_sync).
+-- ones (__stub_dispatch_damage), the chat ones (__stub_dispatch_chat) and
+-- the sync ones (__stub_deliver_sync).
 
 -- The game's constants the registration Natives take and the event response
 -- Natives answer with, per kind in the order the Typings declare them: opaque
@@ -705,6 +706,85 @@ function __stub_dispatch(event, subject, context)
         firing.GetTriggerEventId = event
       end
       if __stub_fire_trigger(whichTrigger, firing) then
+        fired = fired + 1
+      end
+    end
+  end
+  return fired
+end
+
+-- The chat exception: a chat registration keeps its trigger, its player,
+-- its filter in lower case and whether it matches the whole message, in
+-- registration order, because a chat message reaches the registrations
+-- whose filter matches it (__stub_dispatch_chat, below). Its call-log line
+-- and event handle are the ones every registration has.
+local chatRegistrations = {}
+local registerChat = TriggerRegisterPlayerChatEvent
+
+function TriggerRegisterPlayerChatEvent(whichTrigger, whichPlayer, chatMessageToDetect, exactMatchOnly)
+  local event = registerChat(whichTrigger, whichPlayer, chatMessageToDetect, exactMatchOnly)
+  -- A registration without a filter, which the Typings do not allow, is
+  -- recorded and matches nothing: no Probe run measured one.
+  if type(chatMessageToDetect) == "string" then
+    chatRegistrations[#chatRegistrations + 1] = {
+      trigger = whichTrigger,
+      player = whichPlayer,
+      filter = string.lower(chatMessageToDetect),
+      exact = exactMatchOnly and true or false,
+    }
+  end
+  return event
+end
+
+-- What GetTriggerEventId answers in a chat handler in the game: the event
+-- of id 96, which common.j names nowhere, and not EVENT_PLAYER_CHAT, whose
+-- id is 16 (docs/research/chat-event-matching.md). It is the one constant
+-- GetHandleId reads an id from.
+local chatEvent = __stub_constant("playerevent", "the playerevent of id 96")
+chatEvent.__handleId = 96
+
+-- Whether a chat registration matches the message, given in lower case: an
+-- empty filter matches every message; an exact one the whole message and
+-- nothing else, spaces included; any other one wherever it is found.
+local function chatMatches(registration, lowered)
+  if registration.filter == "" then
+    return true
+  end
+  if registration.exact then
+    return registration.filter == lowered
+  end
+  return string.find(lowered, registration.filter, 1, true) ~= nil
+end
+
+-- Dispatches one chat message of `whichPlayer` as the game does
+-- (docs/research/chat-event-matching.md): walks that player's chat
+-- registrations in registration order, over every trigger, and fires the
+-- trigger of each one that matches, once per registration, skipping a
+-- disabled or destroyed trigger. The comparison ignores case and trims
+-- nothing. The firing context answers GetEventPlayerChatString (the message
+-- as given), GetEventPlayerChatStringMatched (that registration's filter in
+-- lower case), GetTriggerPlayer, GetTriggeringTrigger and, as
+-- GetTriggerEventId, the event of id 96. A registration made during the
+-- dispatch waits for the next one. Returns how many triggers ran their
+-- actions. Not a Native, so it adds no call-log line.
+function __stub_dispatch_chat(whichPlayer, message)
+  local lowered = string.lower(message)
+  local fired = 0
+  for _, registration in ipairs(table.move(chatRegistrations, 1, #chatRegistrations, 1, {})) do
+    local whichTrigger = registration.trigger
+    if rawequal(registration.player, whichPlayer)
+      and not whichTrigger.destroyed
+      and not whichTrigger.disabled
+      and chatMatches(registration, lowered)
+    then
+      local ran = __stub_fire_trigger(whichTrigger, {
+        GetEventPlayerChatString = message,
+        GetEventPlayerChatStringMatched = registration.filter,
+        GetTriggerPlayer = whichPlayer,
+        GetTriggeringTrigger = whichTrigger,
+        GetTriggerEventId = chatEvent,
+      })
+      if ran then
         fired = fired + 1
       end
     end

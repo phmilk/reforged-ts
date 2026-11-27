@@ -5,13 +5,14 @@
 // throws, or, after `p.hold()`, when the Probe calls `p.finish()` or a
 // callback of `p.after` throws, and
 // writes the Result file,
-// `reforged-ts\probes\<probe>.txt` under CustomMapData, through the Preload
+// `reforged-ts\probes\<probe>.txt` under CustomMapData, or
+// `<probe>-<suffix>.txt` from the write after `p.rename(suffix)`, through the Preload
 // Natives: a full rewrite at each checkpoint the Probe asks for, and one at
 // the end. It calls Natives only, never the library, so a Probe checks the
 // library without the library writing its results.
 
 import { run } from "@probe/current";
-import { recordLine, splitLine } from "./encoding";
+import { encodeValue, recordLine, splitLine } from "./encoding";
 import { errorMessage } from "./errors";
 import type { FieldValue, ProbeContext } from "./probe";
 
@@ -37,8 +38,15 @@ const STAGED: readonly (readonly [key: string, value: string])[] = [
   ["players", "$PROBE_PLAYERS$"],
 ];
 
-/** The Result file, under CustomMapData. */
-const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
+/** The folder of the Result files, under CustomMapData. */
+const RESULT_FOLDER = "reforged-ts\\probes\\";
+
+/**
+ * The Result file, under CustomMapData: `<probe>.txt`, or
+ * `<probe>-<suffix>.txt` once the Probe called `p.rename(suffix)`. Read at
+ * each write, so a rename takes effect at the next one.
+ */
+let resultFile = `${RESULT_FOLDER}${PROBE}.txt`;
 
 /** How long the message at the end stays on screen, in seconds. */
 const END_MESSAGE_SECONDS = 3600;
@@ -104,7 +112,23 @@ function writeResultFile(last: readonly string[]): void {
   for (const line of last) {
     Preload(line);
   }
-  PreloadGenEnd(RESULT_FILE);
+  PreloadGenEnd(resultFile);
+}
+
+/**
+ * Whether `suffix` may end the Result file's name: not empty, and made of
+ * the bytes of lower-case `a` to `z`, `0` to `9` and `-` only, so the name
+ * stays a plain file name on every machine.
+ */
+function isSuffix(suffix: string): boolean {
+  if (suffix === "") return false;
+  for (let index = 1; index <= suffix.length; index++) {
+    const byte = string.byte(suffix, index);
+    const kept =
+      (byte >= 97 && byte <= 122) || (byte >= 48 && byte <= 57) || byte === 45;
+    if (!kept) return false;
+  }
+  return true;
 }
 
 /** The count of records as the messages on screen give it. */
@@ -186,6 +210,18 @@ const p: ProbeContext = {
       `Probe ${PROBE}: checkpoint ${String(checkpointCount)}, ${records(recordCount)} so far.`,
       CHECKPOINT_MESSAGE_SECONDS,
     );
+  },
+  rename: (suffix) => {
+    checkNotEnded("renames");
+    if (!isSuffix(suffix)) {
+      error(
+        `Probe ${PROBE}: the suffix "${encodeValue(suffix)}", percent-encoded here, is not one a Result file name takes: lower-case a to z, 0 to 9 and -, and not empty.`,
+        0,
+      );
+    }
+    // Every line so far stays in preloadLines: the next write rewrites
+    // them all into the new file, and the old one keeps its last write.
+    resultFile = `${RESULT_FOLDER}${PROBE}-${suffix}.txt`;
   },
   hold: () => {
     held = true;

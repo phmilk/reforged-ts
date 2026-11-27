@@ -21,6 +21,7 @@ import { readGameData } from "../src/game-data.js";
 import { openArchive } from "../src/pack.js";
 import { readPlayers } from "../src/players.js";
 import { stateFile } from "../src/state.js";
+import { readTitle } from "../src/title.js";
 
 /** The fixture Probes folders this file made, removed after its tests. */
 const createdProbesFolders: string[] = [];
@@ -198,6 +199,25 @@ describe("buildProbe", () => {
     );
     expect(await readFile(join(folders.map, "war3map.w3i"))).toEqual(w3i);
     expect(await readFile(join(folders.map, "war3map.lua"))).toEqual(script);
+  });
+
+  it("titles the map with players after the Probe, for the lobby's list, and keeps the map's title without them", async () => {
+    const folders = await tempFolders();
+    const wts = await readFile(join(folders.map, "war3map.wts"), "utf8");
+    const staged = buildProbe("hello", folders, { players: 2 });
+    const stagedTitle = readTitle(
+      await readFile(join(staged.stagingFolder, "war3map.w3i")),
+      await readFile(join(staged.stagingFolder, "war3map.wts"), "utf8"),
+    );
+    const kept = buildProbe("held", folders);
+    const keptTitle = readTitle(
+      await readFile(join(kept.stagingFolder, "war3map.w3i")),
+      await readFile(join(kept.stagingFolder, "war3map.wts"), "utf8"),
+    );
+
+    expect(stagedTitle).toBe("Probe hello");
+    expect(keptTitle).toBe("reforged-ts-templante");
+    expect(await readFile(join(folders.map, "war3map.wts"), "utf8")).toBe(wts);
   });
 
   it("stages players and Game data together", async () => {

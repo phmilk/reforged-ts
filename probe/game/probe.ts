@@ -40,6 +40,17 @@ export interface ProbeContext {
   checkpoint(): void;
 
   /**
+   * Renames the Result file from the next write on, the next checkpoint or
+   * the end: `<probe>-<suffix>.txt` in place of `<probe>.txt`, in the same
+   * folder. That write puts every line so far into the new file, so no
+   * record is lost; the file written before keeps what its last write put
+   * there. The suffix is lower-case `a` to `z`, `0` to `9` and `-`, and not
+   * empty: any other raises an error, and so does a call once the run has
+   * ended. Called again, the last suffix wins.
+   */
+  rename(suffix: string): void;
+
+  /**
    * Keeps the Probe run going after `run` returns: `END` then waits for
    * `finish()`, which a timer or an event the Probe set up calls once its
    * work is done. An error `run` throws still ends the run at once, as a
