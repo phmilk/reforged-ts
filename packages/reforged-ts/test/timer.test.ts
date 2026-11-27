@@ -265,7 +265,7 @@ describe("Timer readings", () => {
       callsDuring(() => {
         expect(running.timeout).toEqual(2);
         expect(running.elapsed).toEqual(0);
-        expect(running.remaining).toEqual(0);
+        expect(running.remaining).toEqual(2);
       }),
     ).toEqual([
       `TimerGetTimeout(${ref})`,

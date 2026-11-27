@@ -332,6 +332,11 @@ local remembered = {
   TriggerRegisterDeathEvent = function(whichWidget)
     return EVENT_WIDGET_DEATH, whichWidget, nil
   end,
+  -- A timer's expire event is the game's timer event on that timer, which
+  -- the timer's expiry dispatches before its handler (timers.lua).
+  TriggerRegisterTimerExpireEvent = function(t)
+    return EVENT_GAME_TIMER_EXPIRED, t, nil
+  end,
 }
 
 for name, read in pairs(remembered) do

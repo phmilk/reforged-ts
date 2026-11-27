@@ -402,6 +402,12 @@ export interface Game {
    *   timer of timeout 0 fires every 0.0001 s, as in the game.
    * - A destroyed or paused timer is skipped, and a new `TimerStart` drops
    *   the expiry the timer had pending.
+   * - The Triggers of a timer's expire event fire at each of its expiries,
+   *   before its handler.
+   * - A timer reads its elapsed and remaining time as in the game, and a
+   *   timer `ResumeTimer` resumed fires as in the game: when what was left
+   *   at the pause runs out, once more a full timeout later, then never
+   *   again, one-shot or periodic alike.
    * - An error a handler throws leaves the advance, the clock stopped at
    *   that instant.
    * - It moves timers and nothing else: no wait, no cooldown, no buff, and

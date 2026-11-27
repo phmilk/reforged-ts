@@ -87,7 +87,9 @@ declare function __stub_dispatch(
 
 /**
  * Runs the handler `TimerStart` stored for this timer, once, with the timer as
- * `GetExpiredTimer`'s answer. Throws for a timer never started or destroyed.
+ * `GetExpiredTimer`'s answer. It moves no clock, arms nothing and fires no
+ * expire event; inside the handler the timer reads as in the handler of an
+ * expiry. Throws for a timer never started or destroyed.
  */
 declare function __stub_fire_timer(whichTimer: timer): void;
 
@@ -95,7 +97,10 @@ declare function __stub_fire_timer(whichTimer: timer): void;
  * Moves the Game clock `seconds` forward, firing every timer and every
  * Trigger of `TriggerRegisterTimerEvent` that expires inside the window: in
  * the order of their instants, ties in the order they were started, the
- * clock standing at each instant while its handler runs. A periodic timer
+ * clock standing at each instant while its handler runs. The Triggers of a
+ * timer's expire event fire at each of its expiries, before its handler. A
+ * resumed timer fires as `ResumeTimer` makes it fire in the game: when what
+ * was left runs out, once more a timeout later, then never. A periodic timer
  * fires once per period, without drift, and a timer a handler starts fires
  * in the same advance when it expires inside the window. A one-shot timer
  * of timeout 0 fires on the next advance, one of 0 seconds included; a
