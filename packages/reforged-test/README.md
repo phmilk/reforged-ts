@@ -40,14 +40,6 @@ The guide [Testing your map](https://phmilk.github.io/reforged-ts/docs/next/guid
 
 Every export of `reforged-test/map` carries its doc comment, shown on hover and in the `reforged-test` section of the docs site's API reference, with an example: a test file of [`examples/`](examples), which the package's own tests compile and run, each `it` as a test.
 
-A Native no Stub answers gets its answer in the test, in TypeScript: `stubNative("GetUnitName", (unit) => "Footman")`, typed from the Typings and recorded as a Shipped stub records its calls, with `newHandle(kind)` for an answer that creates a Handle. `game.setLocalPlayer(player)` makes the test act as another client. A Lua stub file listed in the `stubs` option still loads, after the shipped ones.
-
-`stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated from the Typings of their newest Patch by `pnpm --filter reforged-test natives:generate`. The same command generates `stubs/unstubbed.lua`, the shipped stub file that makes a Native without a Stub throw a message naming `stubNative`. `test/natives.test.ts` is the Drift check of both: it fails, naming the command, when a committed file is not what the generator emits, as on a new Patch.
-
-An error the library caught from a Map project's callback, a Caught error, fails the test at its end unless the test expected it with `game.expectError(text)`; with Dev mode off, which the Test game does not force on, a handler's error is not caught and fails the test at once. [The Caught error contract](#the-caught-error-contract) is how the library tells the harness.
-
-`it.skip`, `it.only`, `it.todo(name)`, `describe.skip` and `describe.only` are Vitest's: the glue registers each in Vitest's native form, so a test skipped, todo or out of focus opens no Test game, and a forgotten `only` fails the run under `CI`. `only` reaches every Lua test of the Map project, not its file's only.
-
 A helper a map's test needs that has no import in `reforged-test/map` is a gap of the package: [file it as an issue](https://github.com/phmilk/reforged-ts/issues/new), rather than reaching for the helpers of the part below. Sync, the preload file and `os.clock` have no form in `reforged-test/map`.
 
 ## Testing a library
@@ -175,6 +167,8 @@ LuaError: handles/unit_test.lua:12: GetUnitName is a Native reforged-test does n
 ```
 
 When that call is a tail call (`return GetUnitLevel(unit)`, as many members of a Wrapper compile), it leaves no frame of its caller: the line is then the nearest caller's still on the stack, the one that called the member, and there is no line when that caller is not Lua (`pcall`). The fix in a Map project's test is `stubNative`, from `reforged-test/map`; in the library's tests, a stub for the Native in a stub file. The function that throws is defined for every Native of `common.j` in the Typings that no Shipped stub covers, by `stubs/unstubbed.lua`, which `pnpm --filter reforged-test natives:generate` generates from the Typings of their newest Patch and `test/natives.test.ts` holds to them, as it does `runner/map/natives.ts`. So a Native without a Stub is a function, not `nil`: `__stub_unstubbed(name)` tells whether the global `name` still is that function. A stub file of the `stubs` option defines over it. `_G` gets no metatable, and a function of `blizzard.j` or `common.ai` stays undefined: the glue rewrites the VM's `attempt to call a nil value (global 'X')` for it into `Native X is not stubbed`.
+
+`stubNative` takes the name of a Native of `common.j`, and `newHandle` the name of one of its Handle types: `runner/map/natives.ts` lists both, generated with `stubs/unstubbed.lua` by the same command. `test/natives.test.ts`, the Drift check of both files, fails, naming the command, when a committed file is not what the generator emits, as on a new Patch.
 
 Every error the VM raises is caught and reported with its Lua message only.
 
