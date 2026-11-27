@@ -73,6 +73,19 @@ export async function defaultBase(git: Git): Promise<string> {
   );
 }
 
+/**
+ * The branch a base ref names, the ref without its prefix `refs/heads/`,
+ * `refs/remotes/origin/` or `origin/`: `origin/next`,
+ * `refs/remotes/origin/next` and `refs/heads/next` name `next`. Any other
+ * ref (a commit, `HEAD`) is returned as given.
+ */
+export function baseBranch(ref: string): string {
+  for (const prefix of ["refs/heads/", "refs/remotes/origin/", "origin/"]) {
+    if (ref.startsWith(prefix)) return ref.slice(prefix.length);
+  }
+  return ref;
+}
+
 /** How a file changed: git's status letter (`A`, `M`, `D`, `T`). */
 export interface FileChange {
   status: string;

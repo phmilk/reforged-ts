@@ -21,7 +21,7 @@ export interface ChangesetCheckInput {
    * say which packages may take a major changeset. Absent when the base is
    * no channel branch (neither `master` nor `next`): no major is refused.
    */
-  channel?: Pick<ReleaseChannel, "branch" | "majors">;
+  channel?: Pick<ReleaseChannel, "majors">;
 }
 
 /** A major changeset the channel of the base branch refuses. */
@@ -41,18 +41,6 @@ export interface ChangesetCheckResult {
   missing: string[];
   /** The major changesets the base's channel refuses, by package then file. */
   refused: RefusedMajor[];
-}
-
-/**
- * The branch a base ref names: `origin/next`, `refs/remotes/origin/next`
- * and `refs/heads/next` name `next`. Any other ref (a commit, `HEAD`) is
- * returned as given, and names no channel branch.
- */
-export function baseBranch(ref: string): string {
-  for (const prefix of ["refs/heads/", "refs/remotes/origin/", "origin/"]) {
-    if (ref.startsWith(prefix)) return ref.slice(prefix.length);
-  }
-  return ref;
 }
 
 /**

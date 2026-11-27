@@ -6,7 +6,7 @@
  * request is `HEAD` against its merge base with the base ref: `--base`, else
  * the environment variable `RELEASE_BASE_REF` (CI names the pull request's
  * base there, as `origin/<branch>`), else `master`. The base branch is the
- * ref's last name after `refs/heads/`, `refs/remotes/origin/` or `origin/`;
+ * ref without its prefix `refs/heads/`, `refs/remotes/origin/` or `origin/`;
  * a base that is neither `master` nor `next` refuses no major. The
  * changesets it adds are read from the working tree. On failure it prints
  * one line per package missing a changeset and one per refused major. Exit
@@ -16,9 +16,15 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { isChangesetPath, parseChangeset } from "../changesets.js";
-import { baseBranch, checkChangeset } from "../check-changeset.js";
-import { changesSince, defaultBase, gitIn, type Git } from "../git.js";
-import { CHANNEL_BRANCHES, releaseChannel } from "../release-channel.js";
+import { checkChangeset } from "../check-changeset.js";
+import {
+  baseBranch,
+  changesSince,
+  defaultBase,
+  gitIn,
+  type Git,
+} from "../git.js";
+import { isChannelBranch, releaseChannel } from "../release-channel.js";
 import { readPublishablePackages, repositoryRoot } from "../workspace.js";
 import {
   BASE_OPTION,
@@ -54,6 +60,7 @@ export async function main(
   }
 
   let base: string;
+  let branch: string;
   let input: Parameters<typeof checkChangeset>[0];
   try {
     base = parsed.base ?? (await defaultBase(context.git));
@@ -66,12 +73,12 @@ export async function main(
       }
     }
     const packages = await readPublishablePackages(context.root);
-    const branch = baseBranch(base);
+    branch = baseBranch(base);
     input = {
       packages,
       changedFiles: changes.map((change) => change.path),
       changesets,
-      ...((CHANNEL_BRANCHES as readonly string[]).includes(branch)
+      ...(isChannelBranch(branch)
         ? { channel: releaseChannel(branch, packages) }
         : {}),
     };
@@ -95,7 +102,7 @@ export async function main(
     }
     for (const refused of result.refused) {
       lines.push(
-        `Major refused on ${String(input.channel?.branch)}: ${refused.changeset} bumps ${refused.package} by a major, and ${refused.package} is at its first stable version or after.\n`,
+        `Major refused on ${branch}: ${refused.changeset} bumps ${refused.package} by a major, and ${refused.package} is at its first stable version or after.\n`,
       );
     }
     if (result.refused.length > 0) {

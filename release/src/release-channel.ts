@@ -2,7 +2,8 @@
  * The Release channel (ADR 0031): what a release publishes and checks
  * against, decided by the branch it runs from. The one module that knows
  * the rule; the dist-tag of the publish plan, the Template ref and the
- * verdict on a major changeset are read from it.
+ * verdict on a major changeset (`release:check-changeset`, on a pull
+ * request's base branch) are read from it.
  *
  * - `master` is the stable channel: the `latest` dist-tag and the
  *   Template's `main`. A package may take a major there only while it is
@@ -70,7 +71,8 @@ const FIRST_STABLE: SemVer = {
   build: [],
 };
 
-function isChannelBranch(branch: string): branch is ChannelBranch {
+/** Whether `branch` has a channel: `master` or `next`. */
+export function isChannelBranch(branch: string): branch is ChannelBranch {
   return (CHANNEL_BRANCHES as readonly string[]).includes(branch);
 }
 
