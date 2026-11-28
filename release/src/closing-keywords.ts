@@ -18,6 +18,13 @@
  */
 import { isFence, linesOf } from "./issue-markdown.ts";
 
+/**
+ * The Next branch (docs/release.md, "Release channels"), the branch whose
+ * pull requests GitHub links no closing issue to, though they deliver
+ * Tickets.
+ */
+export const NEXT_BRANCH = "next";
+
 /** An issue named by its repository (`owner/name`) and number. */
 export interface IssueRef {
   repository: string;

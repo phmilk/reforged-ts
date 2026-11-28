@@ -62,7 +62,7 @@ describe("closingReferences", () => {
     expect(closingReferences(body, REPOSITORY)).toEqual(ours(7));
   });
 
-  it("reads nothing from an empty or missing description", () => {
+  it("reads nothing from an empty description", () => {
     expect(closingReferences("", REPOSITORY)).toEqual([]);
   });
 });

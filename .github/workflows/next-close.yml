@@ -16,6 +16,10 @@ on:
 permissions:
   contents: read
 
+# No concurrency group: each run closes the issues of its own push's pull
+# request, and two runs that name the same issue are harmless, since gh
+# leaves an issue already closed as it is.
+
 jobs:
   # Which issues, without the App: the closing keywords of the merged pull
   # request's body, read by release/src/next-close.ts with GITHUB_TOKEN.

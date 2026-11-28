@@ -41,7 +41,7 @@ import { appendFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { closingReferences } from "./closing-keywords.ts";
+import { closingReferences, NEXT_BRANCH } from "./closing-keywords.ts";
 import { criteriaOf, gapsOf } from "./issue-markdown.ts";
 
 const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
@@ -820,11 +820,16 @@ async function rest(
   return response;
 }
 
-/** The `data` of a GraphQL query; GitHub answers errors with a 200 too. */
+/**
+ * The `data` of a GraphQL query; GitHub answers errors with a 200 too.
+ * With `notFound`, an error of type `NOT_FOUND` is passed over, its field
+ * left `null` in the data; any other error stops the check.
+ */
 async function graphql(
   api: Api,
   query: string,
   variables: Readonly<Record<string, unknown>>,
+  { notFound = false }: { notFound?: boolean } = {},
 ): Promise<Record<string, unknown>> {
   const response = await api({
     method: "POST",
@@ -837,8 +842,13 @@ async function graphql(
       `POST /graphql answered ${apiMessage(response)}.`,
     );
   }
-  if (isList(body.errors) && body.errors.length > 0) {
-    const messages = body.errors.map((error) =>
+  const errors = isList(body.errors)
+    ? body.errors.filter(
+        (error) => !(notFound && isRecord(error) && error.type === "NOT_FOUND"),
+      )
+    : [];
+  if (errors.length > 0) {
+    const messages = errors.map((error) =>
       isRecord(error) && typeof error.message === "string"
         ? error.message
         : JSON.stringify(error),
@@ -1033,14 +1043,6 @@ ${indexes
 }`;
 };
 
-/**
- * The branch whose pull requests GitHub links no closing issue to, the Next
- * branch (docs/release.md, "Release channels"): GitHub reads closing
- * keywords only on a pull request into the default branch, so the check
- * reads them from the body of a pull request into this one.
- */
-export const NEXT_BRANCH = "next";
-
 const CLOSED_BY = `query($owner: String!, $name: String!, $number: Int!) {
   repository(owner: $owner, name: $name) {
     issue(number: $number) {
@@ -1126,12 +1128,19 @@ async function readLinkedIssues(
     );
   }
   if (totalCount > nodes.length) {
-    throw new ClaimCheckError(
-      `#${String(pullRequest.number)} closes ${String(totalCount)} issues, more than the ${String(nodes.length)} the check read: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
-    );
+    throw tooManyIssues(pullRequest.number, totalCount, nodes.length);
   }
   return nodes;
 }
+
+/**
+ * The error of pull request `number`, which closes `count` issues, more
+ * than the `read` the check read.
+ */
+const tooManyIssues = (number: number, count: number, read: number) =>
+  new ClaimCheckError(
+    `#${String(number)} closes ${String(count)} issues, more than the ${String(read)} the check read: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
+  );
 
 /**
  * The issues the closing keywords of the pull request's body name, read in
@@ -1147,9 +1156,7 @@ async function readNamedIssues(
   const refs = closingReferences(pullRequest.body, repository);
   if (refs.length === 0) return [];
   if (refs.length > CLOSING_PAGE) {
-    throw new ClaimCheckError(
-      `#${String(pullRequest.number)} closes ${String(refs.length)} issues, more than the ${String(CLOSING_PAGE)} the check reads: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
-    );
+    throw tooManyIssues(pullRequest.number, refs.length, CLOSING_PAGE);
   }
   const variables: Record<string, unknown> = {};
   refs.forEach((ref, index) => {
@@ -1158,7 +1165,11 @@ async function readNamedIssues(
     variables[`n${String(index)}`] = name;
     variables[`k${String(index)}`] = ref.number;
   });
-  const data = await graphql(api, namedIssuesQuery(refs.length), variables);
+  // A number that names no issue is answered null with a NOT_FOUND error:
+  // GitHub links no such issue on master either, so it is left out.
+  const data = await graphql(api, namedIssuesQuery(refs.length), variables, {
+    notFound: true,
+  });
   return refs.flatMap((_, index) => {
     const node = at(data, `r${String(index)}`, "issueOrPullRequest");
     return at(node, "__typename") === "Issue" ? [node] : [];

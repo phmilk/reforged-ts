@@ -29,6 +29,8 @@ interface Answers {
   rest: Record<string, Answer>;
   /** GraphQL `data` answers by the field the query names; an error otherwise. */
   graphql: Record<string, unknown>;
+  /** GraphQL `errors` answered beside the `data`; none when absent. */
+  errors?: unknown[];
 }
 
 /** Whether a parsed JSON value is an object (not an array, not `null`). */
@@ -58,7 +60,13 @@ function answer(method: string, path: string, body: unknown): Answer {
           status: 200,
           body: { errors: [{ message: `unexpected query: ${query}` }] },
         }
-      : { status: 200, body: { data: answers.graphql[field] } };
+      : {
+          status: 200,
+          body: {
+            data: answers.graphql[field],
+            ...(answers.errors === undefined ? {} : { errors: answers.errors }),
+          },
+        };
   }
   return (
     answers.rest[`${method} ${path}`] ?? {
@@ -793,6 +801,50 @@ describe("claim-check pull-request into next", () => {
     );
   });
 
+  it("leaves out a number that names no issue, as GitHub links none, and passes", async () => {
+    // GitHub answers the issue it cannot find with a null and a NOT_FOUND error.
+    answers.graphql.issueOrPullRequest = { r0: { issueOrPullRequest: null } };
+    answers.errors = [
+      {
+        type: "NOT_FOUND",
+        path: ["r0", "issueOrPullRequest"],
+        message:
+          "Could not resolve to an issue or pull request with the number of 99999.",
+      },
+    ];
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+
+    const result = await run(["pull-request"], {
+      ...NEXT_EVENT,
+      pull_request: { ...NEXT_EVENT.pull_request, body: "Fixes #99999" },
+    });
+
+    expect(result).toMatchObject({
+      code: 0,
+      stdout: "- #34 closes no issue of this repository; passed.\n",
+    });
+  });
+
+  it("stops on any other error of the query", async () => {
+    answers.graphql.issueOrPullRequest = { r0: { issueOrPullRequest: null } };
+    answers.errors = [
+      { type: "FORBIDDEN", message: "Resource not accessible" },
+    ];
+
+    const result = await run(["pull-request"], {
+      ...NEXT_EVENT,
+      pull_request: { ...NEXT_EVENT.pull_request, body: "Fixes #12" },
+    });
+
+    expect(result).toMatchObject({
+      code: 1,
+      stderr: "POST /graphql answered: Resource not accessible\n",
+    });
+  });
+
   it("passes a body that names no issue, with no query", async () => {
     answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
       status: 200,
@@ -827,7 +879,7 @@ describe("claim-check pull-request into next", () => {
     expect(result).toMatchObject({
       code: 1,
       stderr:
-        "#34 closes 51 issues, more than the 50 the check reads: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.\n",
+        "#34 closes 51 issues, more than the 50 the check read: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.\n",
     });
     expect(sent()).toEqual([]);
   });

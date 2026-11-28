@@ -23,10 +23,7 @@ import { appendFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { closingReferences } from "./closing-keywords.ts";
-
-/** The Next branch, whose merged pull requests this script reads. */
-export const NEXT_BRANCH = "next";
+import { closingReferences, NEXT_BRANCH } from "./closing-keywords.ts";
 
 /**
  * The pull requests into `next` read, the most recently updated first: the
@@ -35,7 +32,7 @@ export const NEXT_BRANCH = "next";
 const PULLS_PAGE = 100;
 
 /** An error that stops the script with a message and exit code 1. */
-export class NextCloseError extends Error {
+class NextCloseError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options);
     this.name = "NextCloseError";
@@ -122,7 +119,7 @@ async function get(
 }
 
 /** The pull request a push merged into `next`, as the script reads it. */
-export interface MergedPullRequest {
+interface MergedPullRequest {
   number: number;
   /** Its description, Markdown; empty when it has none. */
   body: string;
@@ -133,7 +130,7 @@ export interface MergedPullRequest {
  * `next`, that merged as commit `sha`; `null` when none did (a push made
  * without a pull request).
  */
-export function mergedPullRequest(
+function mergedPullRequest(
   pulls: unknown,
   sha: string,
 ): MergedPullRequest | null {
@@ -162,7 +159,7 @@ export function mergedPullRequest(
 }
 
 /** What one run found: the pull request, the issues to close and the summary lines. */
-export interface Found {
+interface FindResult {
   pullRequest: number | null;
   issues: number[];
   summary: string[];
@@ -173,7 +170,11 @@ export interface Found {
  * `next` merged names in its closing keywords and that are open, read
  * through `api`.
  */
-async function find(api: Api, repository: string, sha: string): Promise<Found> {
+async function find(
+  api: Api,
+  repository: string,
+  sha: string,
+): Promise<FindResult> {
   const pulls = await get(
     api,
     `/repos/${repository}/pulls?state=closed&base=${NEXT_BRANCH}&sort=updated&direction=desc&per_page=${String(PULLS_PAGE)}`,
@@ -236,8 +237,8 @@ export interface Context {
   fetcher: typeof fetch;
 }
 
-/** The variable's value when set and not empty. */
-function variable(
+/** The variable's value; stops the script when it is unset or empty. */
+function requiredVariable(
   env: Readonly<Record<string, string | undefined>>,
   name: string,
 ): string {
@@ -270,15 +271,15 @@ export async function main(
 ): Promise<number> {
   const { env } = context;
   try {
-    const token = variable(env, "GITHUB_TOKEN");
-    const repository = variable(env, "GITHUB_REPOSITORY");
+    const token = requiredVariable(env, "GITHUB_TOKEN");
+    const repository = requiredVariable(env, "GITHUB_REPOSITORY");
     if (!/^[\w.-]+\/[\w.-]+$/.test(repository)) {
       throw new NextCloseError(
         "GITHUB_REPOSITORY does not name a repository as owner/name.",
       );
     }
-    const sha = variable(env, "GITHUB_SHA");
-    const outputs = variable(env, "GITHUB_OUTPUT");
+    const sha = requiredVariable(env, "GITHUB_SHA");
+    const outputs = requiredVariable(env, "GITHUB_OUTPUT");
     const base = (env.GITHUB_API_URL ?? "https://api.github.com").replace(
       /\/+$/,
       "",
