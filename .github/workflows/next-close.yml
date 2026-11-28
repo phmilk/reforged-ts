@@ -1,0 +1,100 @@
+# Closing a Ticket delivered on next: GitHub closes an issue from a pull
+# request's closing keywords only when it merges into the default branch,
+# so at each push to the Next branch, next, this workflow closes with the
+# App the open issues of this repository that the pull request the push
+# merged names in its closing keywords, each with a comment linking it, as
+# completed: the Spec's coverage check and the board then read it as one
+# delivered on master. A push that merged no pull request closes nothing.
+# docs/release.md, "Closing a Ticket delivered on `next`", describes it;
+# release/test/next-close.test.ts holds its shape and runs its close step.
+name: next-close
+
+on:
+  push:
+    branches: [next]
+
+permissions:
+  contents: read
+
+jobs:
+  # Which issues, without the App: the closing keywords of the merged pull
+  # request's body, read by release/src/next-close.ts with GITHUB_TOKEN.
+  find:
+    name: find
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+    outputs:
+      pull-request: ${{ steps.find.outputs.pull-request }}
+      issues: ${{ steps.find.outputs.issues }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Node alone, at the .node-version of the checkout: the script runs
+      # with no install and no build, and no cache is restored.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - id: find
+        name: The issues the merged pull request closes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node release/src/next-close.ts
+
+  close:
+    name: close
+    needs: find
+    if: needs.find.outputs.issues != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # The App's key lives in the environment app, whose deployment branch
+    # policy admits master and next alone (docs/release.md, "Repository
+    # variables and secrets"); this workflow runs on pushes to next alone.
+    environment: app
+    permissions:
+      contents: read
+    steps:
+      # For the local token action alone: the job runs no other code of the
+      # checkout, gh alone.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-issues: write
+      # Each issue closed as completed, with a comment linking the pull
+      # request; one that fails does not stop the others, and fails the step.
+      - id: close
+        name: Close the issues
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PULL_REQUEST: ${{ needs.find.outputs.pull-request }}
+          ISSUES: ${{ needs.find.outputs.issues }}
+        run: |
+          comment="Closed by #$PULL_REQUEST, merged into the Next branch, \`next\`: GitHub closes an issue from a pull request's closing keywords only when it merges into the default branch, so [next-close.yml]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) closes it. [docs/release.md, \"Closing a Ticket delivered on \`next\`\"]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/master/docs/release.md#closing-a-ticket-delivered-on-next)."
+          failed=0
+          for issue in $ISSUES; do
+            case "$issue" in
+              '' | *[!0-9]*)
+                echo "::error title=Not an issue number::$issue"
+                failed=1
+                continue
+                ;;
+            esac
+            if gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --reason completed --comment "$comment"; then
+              echo "- #$issue: closed." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "- #$issue: not closed (above)." >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+            fi
+          done
+          exit "$failed"

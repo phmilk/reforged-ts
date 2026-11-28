@@ -37,7 +37,10 @@ const CODE_SPAN = /(`+)[^`]*?\1/g;
  * `repository` carries that spelling of it, since GitHub reads owners and
  * names in any case.
  */
-export function closingReferences(body: string, repository: string): IssueRef[] {
+export function closingReferences(
+  body: string,
+  repository: string,
+): IssueRef[] {
   const found: IssueRef[] = [];
   const seen = new Set<string>();
   let fence = false;
@@ -48,7 +51,8 @@ export function closingReferences(body: string, repository: string): IssueRef[] 
     }
     if (fence) continue;
     for (const match of line.replace(CODE_SPAN, " ").matchAll(CLOSING)) {
-      const named = match[1];
+      // Undefined when `#<n>` names no repository.
+      const named = match.at(1);
       const ref = {
         repository:
           named === undefined ||
