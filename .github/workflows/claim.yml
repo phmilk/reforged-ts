@@ -1,6 +1,7 @@
 # The claim check of this repository: on every pull request, drafts
-# included, when it opens, reopens, is pushed or is edited, and on every
-# assignment and unassignment of an issue, it runs the reusable
+# included, when it opens, reopens, is pushed or is edited, on every
+# assignment and unassignment of an issue, and on every edit of a Ticket
+# (its criteria, #1084), it runs the reusable
 # claim-check.yml, which holds the logic, the texts and the reasons for its
 # run shape. The check reports as `claim / check`, a required check of the
 # ruleset on master: renaming either job stops protecting master.
@@ -15,7 +16,9 @@ on:
     # reads there; one into any other branch closes nothing and passes.
     types: [opened, reopened, synchronize, edited]
   issues:
-    types: [assigned, unassigned]
+    # edited: a Ticket's body holds its criteria, which the check reads; the
+    # called job skips an edit of any other issue.
+    types: [assigned, unassigned, edited]
 
 permissions:
   contents: read
@@ -25,8 +28,9 @@ jobs:
     name: claim
     # The called jobs can only lower these: the checkout, the assignment and
     # the comment on the issue, the comment on the pull request (the check),
-    # and the dispatch of board.yml after an assignment (the dispatch job,
-    # the one that holds actions: write).
+    # the dispatch of board.yml after an assignment (the dispatch job) and
+    # the re-run of the check after a Ticket's edit (the rerun job), the two
+    # that hold actions: write.
     permissions:
       contents: read
       issues: write
