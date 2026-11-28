@@ -1330,7 +1330,7 @@ describe("claim-check.yml", () => {
     });
   });
 
-  it("dispatches board.yml from its own job after an assignment in the library, the one job with actions: write", async () => {
+  it("dispatches board.yml from its own job after an assignment in the library, with actions: write alone", async () => {
     const { jobs } = await workflow("claim-check.yml");
     const pullRequest = jobs.check?.steps?.find(
       (step) => step.run === "node release/src/claim-check.ts pull-request",
@@ -1421,6 +1421,17 @@ describe("claim-check.yml", () => {
     );
     expect(rerun?.permissions).toEqual({ actions: "write" });
     expect(rerun?.["timeout-minutes"]).toBe(5);
+    // Two close edits never start the same run twice.
+    expect(rerun?.concurrency).toEqual({
+      group: "claim-rerun-${{ github.event.issue.number }}",
+      "cancel-in-progress": false,
+    });
+    // An edit's pending run never replaces an assignment's, nor the reverse.
+    expect(jobs.check?.concurrency).toEqual({
+      group:
+        "claim-${{ github.event_name == 'issues' && github.event.action == 'edited' && 'issue-edit' || github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}",
+      "cancel-in-progress": "${{ github.event_name == 'pull_request_target' }}",
+    });
     expect(rerun?.steps).toHaveLength(1);
     expect(rerun?.steps?.[0]).toMatchObject({
       env: {
@@ -1436,12 +1447,12 @@ describe("claim-check.yml", () => {
 /** The step of the job `rerun`: each run waited for, then run again. */
 const RERUN = `for run in \${RUNS//,/ }; do
   gh run watch "$run" --interval 5 > /dev/null || true
-  gh run rerun "$run"
+  gh run rerun "$run" || echo "::warning title=Claim check not run again::GitHub did not re-run the run $run: push to its pull request, or edit it, to run the check."
 done
 `;
 
 describe("claim.yml", () => {
-  it("calls the reusable workflow as the job `claim`, on pull requests and assignments, granting what it needs", async () => {
+  it("calls the reusable workflow as the job `claim`, on pull requests, assignments and edits, granting what it needs", async () => {
     const { on, jobs } = await workflow("claim.yml");
 
     expect(on).toEqual({

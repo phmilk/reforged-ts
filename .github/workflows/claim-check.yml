@@ -63,9 +63,12 @@ jobs:
       # head, which the job rerun starts again.
       actions: read
     # One run per pull request, a newer push or edit replacing the running
-    # one; one per issue, every assignment and edit seen in order.
+    # one; one per issue for its assignments and one for its edits, each
+    # waiting for the running one. Apart, since a group keeps one pending
+    # run: an edit never replaces a pending assignment's run, nor the
+    # reverse.
     concurrency:
-      group: claim-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}
+      group: claim-${{ github.event_name == 'issues' && github.event.action == 'edited' && 'issue-edit' || github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}
       cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
     outputs:
       # The issues the run assigned, comma-separated; empty when none.
@@ -106,7 +109,8 @@ jobs:
   # library, which holds board.yml, by this job; in another Board repository
   # by board-dispatch, below. A workflow_dispatch is the one event
   # GITHUB_TOKEN does start. Its own job, so that `actions: write` is held
-  # by this one step and by nothing that reads the event; it runs when the
+  # by this step (and rerun's, below) and by nothing that reads the event;
+  # it runs when the
   # check failed too (one issue assigned, another claimed by someone else),
   # which `!cancelled()` allows and a plain `needs` would not.
   dispatch:
@@ -153,7 +157,10 @@ jobs:
   # `actions: write` is held by one step that reads no event value: the run
   # ids are the check job's output, numbers it read from the API. Each run
   # still going is waited for first, since a running run cannot be re-run
-  # and may have read the body before the edit.
+  # and may have read the body before the edit. One per Ticket at a time,
+  # so that two close edits do not start the same run twice; a run GitHub
+  # will not re-run (past 30 days, or started meanwhile by an edit of
+  # another Ticket) is a warning, and the loop goes on to the next.
   rerun:
     name: rerun
     needs: check
@@ -162,6 +169,9 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: write
+    concurrency:
+      group: claim-rerun-${{ github.event.issue.number }}
+      cancel-in-progress: false
     steps:
       # No checkout: gh needs the token, the repository and the run ids.
       - name: Run the check of each pull request again
@@ -172,5 +182,5 @@ jobs:
         run: |
           for run in ${RUNS//,/ }; do
             gh run watch "$run" --interval 5 > /dev/null || true
-            gh run rerun "$run"
+            gh run rerun "$run" || echo "::warning title=Claim check not run again::GitHub did not re-run the run $run: push to its pull request, or edit it, to run the check."
           done

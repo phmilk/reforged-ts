@@ -22,8 +22,9 @@
  * and those of a Spec and of a blocker carry the rules of ADR 0025.
  * `planPullRequest`, `planIssue` and `planEdit` are pure: the event and the
  * fetched state in; the verdict, the assignments, the comment upserts, the
- * runs to start again, the summary lines and the exit code out. `main` reads the state through the GitHub
- * API with the token of the environment and applies the plan.
+ * runs to start again, the summary lines and the exit code out. `main`
+ * reads the state through the GitHub API with the token of the
+ * environment and applies the plan.
  *
  * Self-contained on purpose: Node built-ins only and erasable syntax only
  * (no enum, no namespace, no parameter property), so that Node 24 runs it
@@ -757,7 +758,7 @@ export function planEdit(input: EditInput): EditPlan {
   const n = String(issue);
   const summary: string[] = [];
   const reruns: number[] = [];
-  const head = `- #${n}, a Ticket: its body edited;`;
+  const prefix = `- #${n}, a Ticket: its body edited;`;
   if (!bodyChanged) {
     summary.push(`- #${n}: edited, its body unchanged; nothing to run again.`);
   } else if (!isTicket) {
@@ -765,19 +766,19 @@ export function planEdit(input: EditInput): EditPlan {
       `- #${n}: its body edited, not a Ticket; nothing to run again.`,
     );
   } else if (pullRequests.length === 0) {
-    summary.push(`${head} no open pull request closes it.`);
+    summary.push(`${prefix} no open pull request closes it.`);
   } else {
     for (const pullRequest of pullRequests) {
       const number = `#${String(pullRequest.number)}`;
       if (pullRequest.bot) {
-        summary.push(`${head} ${number} is a bot's, outside the check.`);
+        summary.push(`${prefix} ${number} is a bot's, outside the check.`);
       } else if (pullRequest.run === null) {
         summary.push(
-          `${head} ${number} has no run of the check on its head: push to it, or edit it, to run one.`,
+          `${prefix} ${number} has no run of the check on its head: push to it, or edit it, to run one.`,
         );
       } else {
         if (!reruns.includes(pullRequest.run)) reruns.push(pullRequest.run);
-        summary.push(`${head} the check of ${number} runs again.`);
+        summary.push(`${prefix} the check of ${number} runs again.`);
       }
     }
   }
@@ -1496,6 +1497,24 @@ async function readOpenClosingPullRequests(
   number: number,
 ): Promise<OpenPullRequest[]> {
   const found = new Map<number, OpenPullRequest>();
+  /** Keeps the pull request read as `number` and `head`, or stops, naming `source`. */
+  const keep = (
+    pullRequest: unknown,
+    head: unknown,
+    bot: boolean,
+    source: string,
+  ): void => {
+    if (
+      typeof pullRequest !== "number" ||
+      typeof head !== "string" ||
+      !SHA.test(head)
+    ) {
+      throw new ClaimCheckError(
+        `${source} answered an open pull request without a number and a head.`,
+      );
+    }
+    found.set(pullRequest, { number: pullRequest, bot, head });
+  };
   const data = await graphql(api, OPEN_CLOSED_BY, {
     ...ownerAndName(repository),
     number,
@@ -1503,28 +1522,18 @@ async function readOpenClosingPullRequests(
   for (const node of nodesOf(
     at(data, "repository", "issue", "closedByPullRequestsReferences"),
   )) {
-    const pullRequest = at(node, "number");
-    const head = at(node, "headRefOid");
     if (
       at(node, "state") !== "OPEN" ||
       at(node, "repository", "nameWithOwner") !== repository
     ) {
       continue;
     }
-    if (
-      typeof pullRequest !== "number" ||
-      typeof head !== "string" ||
-      !SHA.test(head)
-    ) {
-      throw new ClaimCheckError(
-        "closedByPullRequestsReferences answered an open pull request without a number and a head.",
-      );
-    }
-    found.set(pullRequest, {
-      number: pullRequest,
-      bot: at(node, "author", "__typename") === "Bot",
-      head,
-    });
+    keep(
+      at(node, "number"),
+      at(node, "headRefOid"),
+      at(node, "author", "__typename") === "Bot",
+      "closedByPullRequestsReferences",
+    );
   }
   const path = `/repos/${repository}/pulls?state=open&base=${NEXT_BRANCH}&per_page=${String(PAGE_SIZE)}`;
   const { body } = await rest(api, "GET", path, undefined, [200]);
@@ -1536,22 +1545,12 @@ async function readOpenClosingPullRequests(
       repository,
     ).some((ref) => ref.repository === repository && ref.number === number);
     if (!named) continue;
-    const pullRequest = at(item, "number");
-    const head = at(item, "head", "sha");
-    if (
-      typeof pullRequest !== "number" ||
-      typeof head !== "string" ||
-      !SHA.test(head)
-    ) {
-      throw new ClaimCheckError(
-        `GET ${path} answered a pull request without a number and a head.`,
-      );
-    }
-    found.set(pullRequest, {
-      number: pullRequest,
-      bot: at(item, "user", "type") === "Bot",
-      head,
-    });
+    keep(
+      at(item, "number"),
+      at(item, "head", "sha"),
+      at(item, "user", "type") === "Bot",
+      `GET ${path}`,
+    );
   }
   return [...found.values()];
 }
@@ -1608,15 +1607,17 @@ export const SPEC_LABEL = "spec";
  */
 export const TICKET_LABEL = "ticket";
 
-/** Whether a label object, REST's or GraphQL's, is the Spec label. */
-function isSpecLabel(label: unknown): boolean {
-  return isRecord(label) && label.name === SPEC_LABEL;
-}
+/** Whether a label object, REST's or GraphQL's, is the label `name`. */
+const isLabel =
+  (name: string) =>
+  (label: unknown): boolean =>
+    isRecord(label) && label.name === name;
 
-/** Whether a label object, REST's or GraphQL's, is the Ticket label. */
-function isTicketLabel(label: unknown): boolean {
-  return isRecord(label) && label.name === TICKET_LABEL;
-}
+/** Whether a label object is the Spec label. */
+const isSpecLabel = isLabel(SPEC_LABEL);
+
+/** Whether a label object is the Ticket label. */
+const isTicketLabel = isLabel(TICKET_LABEL);
 
 // A Spec splits into far fewer Tickets than a page, each with at most ten
 // assignees.
@@ -1912,10 +1913,11 @@ async function checkEdit(
 ): Promise<EditPlan> {
   const { issue, bodyChanged } = editEventOf(event);
   const { repository } = settings;
-  const nothing = { issue, bodyChanged, isTicket: false, pullRequests: [] };
-  if (!bodyChanged) return planEdit(nothing);
+  /** The input of an edit that runs nothing again. */
+  const unread = { issue, bodyChanged, isTicket: false, pullRequests: [] };
+  if (!bodyChanged) return planEdit(unread);
   const { isTicket } = await readIssueState(api, repository, issue);
-  if (!isTicket) return planEdit(nothing);
+  if (!isTicket) return planEdit(unread);
   const open = await readOpenClosingPullRequests(api, repository, issue);
   const pullRequests: EditedPullRequest[] = [];
   let workflow: number | null = null;
@@ -1936,7 +1938,7 @@ async function checkEdit(
       run: await readLatestRun(api, repository, workflow, pullRequest.head),
     });
   }
-  return planEdit({ ...nothing, isTicket, pullRequests });
+  return planEdit({ issue, bodyChanged, isTicket, pullRequests });
 }
 
 /** The issue branch's plan, the state read through `api`. */
