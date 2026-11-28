@@ -204,7 +204,7 @@ const count = (text: string) => text.split(KEY).length - 1;
 const PASSED = { APP_PRIVATE_KEY: `\${{ ${KEY} }}` };
 
 describe("the App's private key", () => {
-  it("is read only in a job of an environment that admits master alone, or passed by name to board-dispatch.yml and docs-cut.yml", async () => {
+  it("is read only in a job of an environment that admits master and next alone, or passed by name to board-dispatch.yml and docs-cut.yml", async () => {
     const readers: string[] = [];
     const passers: string[] = [];
     for (const { file, text, workflow } of await readWorkflows()) {

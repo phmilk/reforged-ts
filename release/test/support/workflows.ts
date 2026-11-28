@@ -9,6 +9,7 @@ import { repositoryRoot } from "../../src/workspace.js";
 
 export interface Step {
   id?: string;
+  name?: string;
   if?: string;
   uses?: string;
   with?: Partial<Record<string, unknown>>;

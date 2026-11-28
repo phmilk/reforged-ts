@@ -31,9 +31,16 @@ export const CLIENT_ID_VARIABLE = "APP_CLIENT_ID";
 export const PRIVATE_KEY_SECRET = "APP_PRIVATE_KEY";
 /**
  * The environment every job minting the App's token runs in, the home of
- * `PRIVATE_KEY_SECRET`: its deployment branch policy admits master alone.
+ * `PRIVATE_KEY_SECRET`: its deployment branch policy admits `APP_BRANCHES`
+ * alone.
  */
 export const APP_ENVIRONMENT = "app";
+/**
+ * The branches the deployment branch policy of `APP_ENVIRONMENT` admits,
+ * and no other: the two a release runs from, `master` and the Next branch
+ * (docs/release.md, "Release channels"). The setup wizard writes them.
+ */
+export const APP_BRANCHES: readonly string[] = ["master", "next"];
 
 /**
  * The page registering the App on the personal account `owner/…` of

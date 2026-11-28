@@ -1,11 +1,13 @@
-# The release: every push to master versions or publishes, with no token held
-# by anyone. docs/release.md, "The release workflow", describes the jobs, the
-# dry run, and the variables, secrets and outside prerequisites they need.
+# The release: every push to master or next versions or publishes, on the
+# Release channel of its branch, with no token held by anyone.
+# docs/release.md, "The release workflow", describes the jobs, the dry run,
+# and the variables, secrets and outside prerequisites they need; "Release
+# channels", what each branch publishes.
 name: release
 
 on:
   push:
-    branches: [master]
+    branches: [master, next]
   workflow_dispatch:
     inputs:
       dry-run:
@@ -45,9 +47,14 @@ jobs:
         env:
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
         run: |
-          if [ "$DRY_RUN" != true ] && [ "$GITHUB_REF" != refs/heads/master ]; then
-            echo "::error title=Not master::A release runs from master only; this run is on $GITHUB_REF. Dispatch the workflow with dry-run to rehearse another branch."
-            exit 1
+          if [ "$DRY_RUN" != true ]; then
+            case "$GITHUB_REF" in
+              refs/heads/master | refs/heads/next) ;;
+              *)
+                echo "::error title=Not a release branch::A release runs from master or next only; this run is on $GITHUB_REF. Dispatch the workflow with dry-run to rehearse another branch."
+                exit 1
+                ;;
+            esac
           fi
           echo "dry-run=$DRY_RUN" >> "$GITHUB_OUTPUT"
       # A dry run of a branch with no channel rehearses a release from
@@ -92,12 +99,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The App's key lives in the environment app, whose deployment branch
-    # policy admits master alone: a run on any other ref is refused it
-    # before any step. Every job of the library that mints the App's token
-    # runs in it, one environment for all of them: one copy of the key to
-    # rotate. It is not the environment board, so no job holding the App
-    # sees the board's project token (docs/release.md, "Repository
-    # variables and secrets").
+    # policy admits master and next alone, the branches a release runs
+    # from: a run on any other ref is refused it before any step. Every job
+    # of the library that mints the App's token runs in it, one environment
+    # for all of them: one copy of the key to rotate. It is not the
+    # environment board, so no job holding the App sees the board's project
+    # token (docs/release.md, "Repository variables and secrets").
     environment: app
     permissions:
       contents: read
@@ -327,9 +334,10 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
   # The docs version of a reforged-ts minor, from the commit the publish job
-  # tagged (docs-cut.yml decides whether the version cuts one). Here, not on
-  # the tag's own run: the App's environment admits master alone, and a
-  # tag's run is on the tag's ref; admitting tags would let a tag pushed on a
+  # tagged (docs-cut.yml decides whether the version cuts one: a prerelease,
+  # such as every version next publishes, cuts none). Here, not on the tag's
+  # own run: the App's environment admits master and next alone, and a tag's
+  # run is on the tag's ref; admitting tags would let a tag pushed on a
   # branch's commit read the key.
   docs-cut:
     name: docs-cut

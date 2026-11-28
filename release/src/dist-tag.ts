@@ -12,7 +12,11 @@
  * receives, is rewritten here.
  *
  * A package at `0.0.0` has not had its versions applied and is never
- * published: a plan holding one is refused.
+ * published: a plan holding one is refused. So is a stable version on
+ * `next`, whose releases are prereleases only: one reaches `next` when
+ * `next-sync` merges `master`'s Version Packages commit before `master`'s
+ * release published it, or when a Version Packages pull request is merged
+ * into `next` after pre mode exited there.
  */
 import {
   publishEntries,
@@ -21,6 +25,7 @@ import {
   writePublishPlan,
 } from "./publish-plan.js";
 import { readReleaseChannel, type DistTag } from "./release-channel.js";
+import { isPrerelease, parseSemver } from "./semver.js";
 
 /** The version of a package whose versions were never applied. */
 export const UNVERSIONED = "0.0.0";
@@ -46,8 +51,9 @@ export interface DistTagResult {
  * Sets the dist-tag of every publish entry of `plan` (the parsed
  * `publish-plan.json`) to `tag`, a Release channel's dist-tag. Tag-only
  * entries are left alone. Does not modify `plan`. Throws a
- * `PublishPlanError` on a plan that is not a Changesets 3 one or that
- * publishes a package at `0.0.0`.
+ * `PublishPlanError` on a plan that is not a Changesets 3 one, that
+ * publishes a package at `0.0.0`, or that publishes a stable version under
+ * `next`.
  */
 export function setDistTags(plan: unknown, tag: DistTag): DistTagResult {
   const copy: unknown = structuredClone(plan);
@@ -69,6 +75,21 @@ export function setDistTags(plan: unknown, tag: DistTag): DistTagResult {
         .join(", ")}. A package at ${UNVERSIONED} is never published: ` +
         'apply the versions first (docs/release.md, "Applying the versions").',
     );
+  }
+  if (tag === "next") {
+    const stable = releases.filter(({ version }) => {
+      const parsed = parseSemver(version);
+      return parsed === undefined || !isPrerelease(parsed);
+    });
+    if (stable.length > 0) {
+      throw new PublishPlanError(
+        `A release from next publishes prereleases only, and the publish plan holds stable versions: ${stable
+          .map(({ name, version }) => `${name}@${version}`)
+          .join(", ")}. A stable version goes out from master, on latest: ` +
+          "re-run this job once master's release has published it " +
+          '(docs/release.md, "Release channels").',
+      );
+    }
   }
   return { plan: copy, releases };
 }
