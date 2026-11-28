@@ -245,7 +245,7 @@ Each form applies its kind label (`bug`, `enhancement` or `game-patch`) and `nee
 | `ready-for-human` | Accepted, and it needs a person: a judgement call, or a check in the game [a Probe run cannot make](probe/README.md#what-stays-for-a-human). Assign yourself before you start on one. |
 | `wontfix`         | It will not be done; the closing comment says why.                                                                                                                                    |
 
-The `spec` and `ticket` labels mark the maintainer's planning issues (a spec and the tickets it is split into), and `probe` an issue whose work includes a Probe run in the game. [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md) is the reference.
+The `spec` and `ticket` labels mark the maintainer's planning issues (a spec and the tickets it is split into), `probe` an issue whose work includes a Probe run in the game, and `next` a Spec or Ticket whose delivery needs a major, which goes to the Next branch. [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md) is the reference.
 
 ### Taking an issue
 

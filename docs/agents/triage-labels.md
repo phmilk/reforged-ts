@@ -18,15 +18,16 @@ A check in game is `ready-for-agent`, with the label `probe` beside it ([The `pr
 
 ## Kind labels
 
-Three more labels say what an issue is, next to its triage label. Apply `spec` and `ticket` when creating the issue, and `probe` as [The `probe` label](#the-probe-label) says.
+Four more labels say what an issue is, next to its triage label. Apply `spec` and `ticket` when creating the issue, `probe` as [The `probe` label](#the-probe-label) says, and `next` as [The `next` label](#the-next-label) says.
 
-| Label    | Applied to                                                                                                                                                |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `spec`   | A spec, created with the `write-spec` skill. Its tickets are sub-issues.                                                                                  |
-| `ticket` | A ticket of a spec, created with the `split-spec` skill (a sub-issue), which splits a Spec with its Coverage table.                                       |
-| `probe`  | An issue whose work includes a Probe run, so a human may have to log in to Battle.net while it is worked. A **Probe Ticket** is a Ticket that carries it. |
+| Label    | Applied to                                                                                                                                                           |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spec`   | A spec, created with the `write-spec` skill. Its tickets are sub-issues.                                                                                             |
+| `ticket` | A ticket of a spec, created with the `split-spec` skill (a sub-issue), which splits a Spec with its Coverage table.                                                  |
+| `probe`  | An issue whose work includes a Probe run, so a human may have to log in to Battle.net while it is worked. A **Probe Ticket** is a Ticket that carries it.            |
+| `next`   | A Spec or Ticket whose delivery needs a major: its worktree starts from `origin/next` and its pull request goes to the **Next branch**, never to the default branch. |
 
-Both repos (`phmilk/reforged-ts` and `phmilk/reforged-ts-template`) have the three. Issues of the wayfinder map, bugs and follow-ups carry neither `spec` nor `ticket`; any issue can carry `probe`.
+Both repos (`phmilk/reforged-ts` and `phmilk/reforged-ts-template`) have the four. Issues of the wayfinder map, bugs and follow-ups carry neither `spec` nor `ticket`; any issue can carry `probe` or `next`.
 
 An issue carrying `wayfinder:*`, `ticket` or `spec` is not triaged: its body is its brief, and the map or the split gave it its labels. An assigned Ticket or issue is taken, whatever its labels, and a Spec carries the logins of its Tickets: see "Claim" in `docs/agents/issue-tracker.md`.
 
@@ -42,6 +43,16 @@ An issue carrying `wayfinder:*`, `ticket` or `spec` is not triaged: its body is 
 - **The default is to take it.** An Agent leaves an issue labelled `probe` alone only when the prompt asks for it ("no Probe Tickets").
 
 A fact only the game can settle is never a Judgement call: the Agent that meets one runs the Probe there, or states it as an Open decision, which holds the auto-merge.
+
+### The `next` label
+
+`next` says the issue's delivery needs a major: a change that breaks a public API of a package at its first stable version or after. Such a change goes to the Next branch, `next`, where a major is prepared in pre mode, and never to the default branch ([Release channels](../release.md#release-channels), [ADR 0031](../adr/0031-a-releases-channel-follows-the-branch-it-runs-from.md)). Without the label, everything goes to the default branch, `master` in the library and `main` in the Template.
+
+- **`write-spec` decides it.** In its explore step it asks whether the Spec's delivery needs a major, and when it does, it publishes the Spec with `next` beside `spec`. During the build phase no Spec needs one: every package is a prerelease of its first stable, and `master` takes a major of any of them.
+- **`split-spec` copies it.** Each Ticket of a Spec labelled `next` gets `next` too, so every Ticket says its branch.
+- **The loop follows it.** An implement of an issue labelled `next` starts its worktree or branch from `origin/next`, whoever runs it: `ship-spec` makes its worktree from `origin/next`, the Template's from its `origin/next`, and an `/implement` or `/implement-spec` run by hand branches from `origin/next` too; `ship-branch` reviews against `origin/next` and opens the pull request with `--base next`; `next-step` names `origin/next` where it names the base. A Ticket delivered on `next` is closed when its pull request merges ([Closing a Ticket delivered on `next`](../release.md#closing-a-ticket-delivered-on-next)).
+- **It needs the branch.** Work labelled `next` starts only once the Next branch exists ([Starting a major](../release.md#starting-a-major)): with no `origin/next`, the Agent stops and says so, and never sends the work to the default branch instead.
+- **It is put by hand otherwise.** An issue found to need a major after it was written gets it with `gh issue edit <n> --add-label next`, before its work starts; the board does not derive it.
 
 ## State labels
 

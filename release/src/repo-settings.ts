@@ -42,11 +42,13 @@ export interface Label {
 /**
  * The labels the issue forms, the triage skills and the board apply.
  * `game-patch` is this repository's own, and `spec`, `ticket`,
- * `needs-split` and `probe` carry the skills' and the board's text
+ * `needs-split`, `probe` and `next` carry the skills' and the board's text
  * (`needs-split`, which `board:labels` derives, ADR 0025; `probe`, put by
- * hand on an issue whose work includes a Probe run, #1029): those are kept as
- * committed. The others are GitHub's defaults and the triage skills', only
- * created when missing, so an existing one keeps its colour and description.
+ * hand on an issue whose work includes a Probe run, #1029; `next`, put by
+ * `write-spec`, `split-spec` or by hand on a Spec or Ticket whose delivery
+ * needs a major, ADR 0031): those are kept as committed. The others are
+ * GitHub's defaults and the triage skills', only created when missing, so an
+ * existing one keeps its colour and description.
  */
 export const LABELS: readonly (Label & { owned: boolean })[] = [
   {
@@ -123,6 +125,13 @@ export const LABELS: readonly (Label & { owned: boolean })[] = [
     color: "ff8c00",
     description:
       "Its work includes a Probe run: a human may have to log in to Battle.net",
+    owned: true,
+  },
+  {
+    name: "next",
+    color: "b60205",
+    description:
+      "Its delivery needs a major: its work and pull requests go to the branch next",
     owned: true,
   },
 ];
