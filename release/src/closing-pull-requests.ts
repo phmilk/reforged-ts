@@ -14,12 +14,14 @@
  * `answerJson`, the shape `ship-spec`'s `template-tickets.md` reads, so a
  * change to it changes that file in the same pull request.
  *
- * Self-contained on purpose, as `spec-frontier.ts`, which reads through it:
- * Node built-ins, the self-contained `closing-keywords.ts`, and erasable
- * syntax only, so that Node runs it from a checkout with no install and no
- * build: `node release/src/closing-pull-requests.ts`. `isRecord`,
- * `errorMessage`, the GraphQL call, the token and the "started directly"
- * test are copied from `spec-frontier.ts`. It only reads.
+ * Self-contained on purpose, as `spec-frontier.ts` and the claim check
+ * are, so that a script Node runs from source can import it: Node
+ * built-ins, the self-contained `closing-keywords.ts`, and erasable syntax
+ * only, so that Node runs it from a checkout with no install and no build:
+ * `node release/src/closing-pull-requests.ts`. Its readers of a GraphQL
+ * answer (`isRecord`, `at`, `nodesOf`), `errorMessage`, the GraphQL call,
+ * the token and the "started directly" test are copied from
+ * `spec-frontier.ts`. It only reads.
  */
 import { execFile } from "node:child_process";
 import { resolve } from "node:path";
@@ -210,7 +212,7 @@ function ownerAndName(repository: string): { owner: string; name: string } {
 }
 
 /** The pull requests one page of a list reads, GitHub's largest. */
-const PAGE = 100;
+const PULLS_PAGE = 100;
 
 /** More pages than a list of pull requests fills: a guard against a cursor that never ends. */
 const MAX_PAGES = 50;
@@ -248,7 +250,7 @@ async function readPages(
   for (let pages = 0; pages < MAX_PAGES; pages += 1) {
     const data = await graphql(api, query, {
       ...variables,
-      first: PAGE,
+      first: PULLS_PAGE,
       cursor,
     });
     const connection = at(data, ...path);
@@ -267,87 +269,9 @@ async function readPages(
   );
 }
 
-/**
- * The reader of Closing pull requests through `api`, as
- * `readClosingPullRequests` reads them. It reads the open pull requests
- * into `next` of a repository once, for every issue of it it is asked
- * about, so that a reader of many issues (the Claim board) lists them once.
- */
-export function closingPullRequestsReader(
-  api: Api,
-): (issue: IssueRef, options?: ReadOptions) => Promise<ClosingPullRequest[]> {
-  const openIntoNext = new Map<string, Promise<unknown[]>>();
-  return async (issue, { merged = false } = {}) => {
-    const data = await graphql(api, LINKED_QUERY, {
-      ...ownerAndName(issue.repository),
-      number: issue.number,
-    });
-    const linked = at(
-      data,
-      "repository",
-      "issue",
-      "closedByPullRequestsReferences",
-    );
-    const linkedNodes = nodesOf(linked);
-    const total = at(linked, "totalCount");
-    if (typeof total !== "number" || total > linkedNodes.length) {
-      throw new ClosingPullRequestsError(
-        `${fullRef(issue)} has ${String(total)} linked pull requests, more than the ${String(linkedNodes.length)} read.`,
-      );
-    }
-    // Into next, a pull request counts only when its closing keywords name the issue.
-    const named: unknown[] = [];
-    if (isRecord(at(data, "repository", "ref"))) {
-      let open = openIntoNext.get(issue.repository);
-      if (open === undefined) {
-        open = readPages(
-          api,
-          OPEN_INTO_NEXT_QUERY,
-          ownerAndName(issue.repository),
-          ["repository", "pullRequests"],
-        );
-        openIntoNext.set(issue.repository, open);
-      }
-      named.push(...(await open));
-      if (merged) {
-        named.push(
-          ...(await readPages(
-            api,
-            MERGED_INTO_NEXT_QUERY,
-            {
-              query: `repo:${issue.repository} is:pr is:merged base:${NEXT_BRANCH} ${String(issue.number)} in:body`,
-            },
-            ["search"],
-          )),
-        );
-      }
-    }
-    const found = new Map<number, ClosingPullRequest>();
-    const keep = (node: unknown, naming: boolean): void => {
-      const pullRequest = pullRequestOf(node, issue);
-      if (
-        pullRequest?.repository !== issue.repository ||
-        (pullRequest.state === "merged" && !merged)
-      ) {
-        return;
-      }
-      if (naming) {
-        const body = at(node, "body");
-        const names = closingReferences(
-          typeof body === "string" ? body : "",
-          pullRequest.repository,
-        ).some(
-          (ref) =>
-            ref.repository === issue.repository && ref.number === issue.number,
-        );
-        if (pullRequest.base !== NEXT_BRANCH || !names) return;
-      }
-      found.set(pullRequest.number, pullRequest);
-    };
-    for (const node of linkedNodes) keep(node, false);
-    for (const node of named) keep(node, true);
-    return [...found.values()].sort((a, b) => a.number - b.number);
-  };
+/** Whether two repositories, `owner/name`, are one: GitHub reads them in any case. */
+function sameRepository(a: string, b: string): boolean {
+  return a.toLowerCase() === b.toLowerCase();
 }
 
 /**
@@ -362,9 +286,84 @@ export function closingPullRequestsReader(
 export async function readClosingPullRequests(
   api: Api,
   issue: IssueRef,
-  options: ReadOptions = {},
+  { merged = false }: ReadOptions = {},
 ): Promise<ClosingPullRequest[]> {
-  return closingPullRequestsReader(api)(issue, options);
+  const data = await graphql(api, LINKED_QUERY, {
+    ...ownerAndName(issue.repository),
+    number: issue.number,
+  });
+  const linked = at(
+    data,
+    "repository",
+    "issue",
+    "closedByPullRequestsReferences",
+  );
+  const linkedNodes = nodesOf(linked);
+  const total = at(linked, "totalCount");
+  if (typeof total !== "number" || total > linkedNodes.length) {
+    throw new ClosingPullRequestsError(
+      `${fullRef(issue)} has ${String(total)} linked pull requests, more than the ${String(linkedNodes.length)} read.`,
+    );
+  }
+  const intoNextNodes: unknown[] = [];
+  if (isRecord(at(data, "repository", "ref"))) {
+    intoNextNodes.push(
+      ...(await readPages(
+        api,
+        OPEN_INTO_NEXT_QUERY,
+        ownerAndName(issue.repository),
+        ["repository", "pullRequests"],
+      )),
+    );
+    if (merged) {
+      intoNextNodes.push(
+        ...(await readPages(
+          api,
+          MERGED_INTO_NEXT_QUERY,
+          {
+            query: `repo:${issue.repository} is:pr is:merged base:${NEXT_BRANCH} ${String(issue.number)} in:body`,
+          },
+          ["search"],
+        )),
+      );
+    }
+  }
+  /** The pull request of `node` when it is of the issue's repository and in a state asked. */
+  const asked = (node: unknown): ClosingPullRequest | undefined => {
+    const pullRequest = pullRequestOf(node, issue);
+    return pullRequest !== undefined &&
+      sameRepository(pullRequest.repository, issue.repository) &&
+      (pullRequest.state === "open" || merged)
+      ? pullRequest
+      : undefined;
+  };
+  /** Whether the closing keywords of the body of `node`, into `next`, name the issue. */
+  const bodyNamesIssue = (node: unknown, pullRequest: ClosingPullRequest) => {
+    const body = at(node, "body");
+    return (
+      pullRequest.base === NEXT_BRANCH &&
+      closingReferences(
+        typeof body === "string" ? body : "",
+        pullRequest.repository,
+      ).some(
+        (ref) =>
+          sameRepository(ref.repository, issue.repository) &&
+          ref.number === issue.number,
+      )
+    );
+  };
+  const found = new Map<number, ClosingPullRequest>();
+  for (const node of linkedNodes) {
+    const pullRequest = asked(node);
+    if (pullRequest !== undefined) found.set(pullRequest.number, pullRequest);
+  }
+  for (const node of intoNextNodes) {
+    const pullRequest = asked(node);
+    if (pullRequest !== undefined && bodyNamesIssue(node, pullRequest)) {
+      found.set(pullRequest.number, pullRequest);
+    }
+  }
+  return [...found.values()].sort((a, b) => a.number - b.number);
 }
 
 // The command.

@@ -68,8 +68,12 @@ function fakeGitHub(state: FakeState): Api {
       variables: Record<string, unknown>;
     };
     const operation = /^\s*query\s+(\w+)/.exec(query)?.[1];
-    const repository = `${String(variables.owner)}/${String(variables.name)}`;
-    const branches = state.branches[repository] ?? ["master"];
+    // GitHub reads owners and names in any case.
+    const repository =
+      `${String(variables.owner)}/${String(variables.name)}`.toLowerCase();
+    const branches = Object.entries(state.branches).find(
+      ([name]) => name.toLowerCase() === repository,
+    )?.[1] ?? ["master"];
     const data = (): unknown => {
       switch (operation) {
         case "ClosingPullRequests": {
@@ -79,7 +83,7 @@ function fakeGitHub(state: FakeState): Api {
               pull.state !== "CLOSED" &&
               (pull.links ?? []).some(
                 (link) =>
-                  link.repository === repository &&
+                  link.repository.toLowerCase() === repository &&
                   link.number === variables.number,
               ),
           );
@@ -102,7 +106,7 @@ function fakeGitHub(state: FakeState): Api {
                 state.pulls
                   .filter(
                     (pull) =>
-                      pull.repository === repository &&
+                      pull.repository.toLowerCase() === repository &&
                       pull.base === "next" &&
                       pull.state === "OPEN",
                   )
@@ -121,7 +125,7 @@ function fakeGitHub(state: FakeState): Api {
               state.pulls
                 .filter(
                   (pull) =>
-                    pull.repository === searched &&
+                    pull.repository.toLowerCase() === searched.toLowerCase() &&
                     pull.base === base &&
                     pull.state === "MERGED" &&
                     (pull.body ?? "").includes(term),
@@ -366,6 +370,22 @@ describe("readClosingPullRequests", () => {
           merged: true,
         }),
       ).toEqual([answered(329, "next", "merged")]);
+    });
+
+    it("reads the issue's repository in any case, as GitHub does", async () => {
+      expect(
+        await readClosingPullRequests(
+          fakeGitHub({
+            ...state,
+            branches: { [LIBRARY]: ["master", "next"] },
+          }),
+          { repository: "PHMILK/Reforged-TS", number: 5 },
+        ),
+      ).toEqual([
+        answered(20, "master", "open"),
+        answered(40, "next", "open"),
+        answered(41, "next", "open", { draft: true }),
+      ]);
     });
 
     it("answers none into next in a repository with no branch next", async () => {

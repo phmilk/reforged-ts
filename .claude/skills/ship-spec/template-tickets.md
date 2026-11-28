@@ -50,7 +50,7 @@ The library releases before the Template consumes a new version: the release pub
      --jq '.[] | select(.repository_url | endswith("/phmilk/reforged-ts")) | .number'
    ```
 
-2. **The merged pull requests that closed each one**, its merged Closing pull requests (into `master`, or into the Next branch, where GitHub links none), and their merge commits, from the library's clone:
+2. **The merged Closing pull requests of each one** (into `master`, or into the Next branch, where GitHub links none), and their merge commits, from the library's clone:
 
    ```sh
    pnpm closing-pull-requests phmilk/reforged-ts#<blocker> --json
