@@ -50,13 +50,13 @@ The library releases before the Template consumes a new version: the release pub
      --jq '.[] | select(.repository_url | endswith("/phmilk/reforged-ts")) | .number'
    ```
 
-2. **The merged pull requests that closed each one**, and their merge commits on `master`:
+2. **The merged pull requests that closed each one**, its merged Closing pull requests (into `master`, or into the Next branch, where GitHub links none), and their merge commits, from the library's clone:
 
    ```sh
-   gh api graphql -F n=<blocker> -f query='query($n: Int!) { repository(owner: "phmilk", name: "reforged-ts") { issue(number: $n) { closedByPullRequestsReferences(first: 10, includeClosedPrs: true) { nodes { number merged mergeCommit { oid } } } } } }'
+   pnpm closing-pull-requests phmilk/reforged-ts#<blocker> --json
    ```
 
-   Keep the nodes with `merged: true`. A blocker closed with none needs no version.
+   It prints one JSON object, `{ issue, pullRequests: [{ repository, number, base, state, draft, mergeCommit }] }`. Keep the pull requests whose `state` is `merged`, with their `mergeCommit`. On a non-zero exit stdout holds no JSON object and stderr says why: stop the run and say so. A blocker closed with none needs no version.
 
 3. **The packages each merge changes**, from the changesets it added, after `git fetch origin master --tags`: `git diff-tree --no-commit-id --name-only --diff-filter=A -r <oid> -- .changeset/` lists them (not those under `.changeset/pre/`), and `git show <oid>:<file>` gives each one's frontmatter, one `"<package>": <bump>` line per package. Keep the packages the Template's `package.json` on `origin/main` depends on, and those the Ticket names (a package the Template takes up for the first time). An empty changeset needs no version.
 4. **The first version of each package that carries the merge**, `<package>@<version>`, from the first branch that holds:

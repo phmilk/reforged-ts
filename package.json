@@ -62,6 +62,7 @@
     "board:reconcile": "pnpm --filter reforged-ts-release board:reconcile",
     "board:labels": "pnpm --filter reforged-ts-release board:labels",
     "spec:frontier": "node release/src/spec-frontier.ts",
+    "closing-pull-requests": "node release/src/closing-pull-requests.ts",
     "spec:check": "pnpm --filter reforged-ts-release spec:check",
     "github-app": "pnpm --filter reforged-ts-release github-app",
     "renovate:check": "pnpm --package=renovate@44.263.4 dlx renovate-config-validator --strict",
