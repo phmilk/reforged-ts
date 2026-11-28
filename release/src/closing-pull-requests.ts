@@ -15,13 +15,12 @@
  * change to it changes that file in the same pull request.
  *
  * Self-contained on purpose, as `spec-frontier.ts` and the claim check
- * are, so that a script Node runs from source can import it: Node
- * built-ins, the self-contained `closing-keywords.ts`, and erasable syntax
- * only, so that Node runs it from a checkout with no install and no build:
- * `node release/src/closing-pull-requests.ts`. Its readers of a GraphQL
- * answer (`isRecord`, `at`, `nodesOf`), `errorMessage`, the GraphQL call,
- * the token and the "started directly" test are copied from
- * `spec-frontier.ts`. It only reads.
+ * are: Node built-ins, the self-contained `closing-keywords.ts`, and
+ * erasable syntax only, so that Node runs it from a checkout with no
+ * install and no build: `node release/src/closing-pull-requests.ts`. Its
+ * readers of a GraphQL answer (`isRecord`, `at`, `nodesOf`),
+ * `errorMessage`, the GraphQL call, the token and the "started directly"
+ * test are copied from `spec-frontier.ts`. It only reads.
  */
 import { execFile } from "node:child_process";
 import { resolve } from "node:path";
@@ -275,6 +274,37 @@ function sameRepository(a: string, b: string): boolean {
 }
 
 /**
+ * The pull requests into `next` that may close `issue`, with their bodies:
+ * the open ones of its repository, and the merged ones its number finds in
+ * GitHub's issue search with `merged`; none when `hasNext` is false, the
+ * repository having no branch `next`.
+ */
+async function readIntoNext(
+  api: Api,
+  issue: IssueRef,
+  hasNext: boolean,
+  merged: boolean,
+): Promise<unknown[]> {
+  if (!hasNext) return [];
+  const open = await readPages(
+    api,
+    OPEN_INTO_NEXT_QUERY,
+    ownerAndName(issue.repository),
+    ["repository", "pullRequests"],
+  );
+  if (!merged) return open;
+  const found = await readPages(
+    api,
+    MERGED_INTO_NEXT_QUERY,
+    {
+      query: `repo:${issue.repository} is:pr is:merged base:${NEXT_BRANCH} ${String(issue.number)} in:body`,
+    },
+    ["search"],
+  );
+  return [...open, ...found];
+}
+
+/**
  * The Closing pull requests of `issue` through `api`: the open ones, and
  * the merged ones too with `merged`; those of its own repository only,
  * once each, ordered by number. Into the default branch, those GitHub
@@ -305,31 +335,14 @@ export async function readClosingPullRequests(
       `${fullRef(issue)} has ${String(total)} linked pull requests, more than the ${String(linkedNodes.length)} read.`,
     );
   }
-  const intoNextNodes: unknown[] = [];
-  if (isRecord(at(data, "repository", "ref"))) {
-    intoNextNodes.push(
-      ...(await readPages(
-        api,
-        OPEN_INTO_NEXT_QUERY,
-        ownerAndName(issue.repository),
-        ["repository", "pullRequests"],
-      )),
-    );
-    if (merged) {
-      intoNextNodes.push(
-        ...(await readPages(
-          api,
-          MERGED_INTO_NEXT_QUERY,
-          {
-            query: `repo:${issue.repository} is:pr is:merged base:${NEXT_BRANCH} ${String(issue.number)} in:body`,
-          },
-          ["search"],
-        )),
-      );
-    }
-  }
+  const intoNextNodes = await readIntoNext(
+    api,
+    issue,
+    isRecord(at(data, "repository", "ref")),
+    merged,
+  );
   /** The pull request of `node` when it is of the issue's repository and in a state asked. */
-  const asked = (node: unknown): ClosingPullRequest | undefined => {
+  const inScope = (node: unknown): ClosingPullRequest | undefined => {
     const pullRequest = pullRequestOf(node, issue);
     return pullRequest !== undefined &&
       sameRepository(pullRequest.repository, issue.repository) &&
@@ -338,7 +351,10 @@ export async function readClosingPullRequests(
       : undefined;
   };
   /** Whether the closing keywords of the body of `node`, into `next`, name the issue. */
-  const bodyNamesIssue = (node: unknown, pullRequest: ClosingPullRequest) => {
+  const namesIssueIntoNext = (
+    node: unknown,
+    pullRequest: ClosingPullRequest,
+  ) => {
     const body = at(node, "body");
     return (
       pullRequest.base === NEXT_BRANCH &&
@@ -354,12 +370,12 @@ export async function readClosingPullRequests(
   };
   const found = new Map<number, ClosingPullRequest>();
   for (const node of linkedNodes) {
-    const pullRequest = asked(node);
+    const pullRequest = inScope(node);
     if (pullRequest !== undefined) found.set(pullRequest.number, pullRequest);
   }
   for (const node of intoNextNodes) {
-    const pullRequest = asked(node);
-    if (pullRequest !== undefined && bodyNamesIssue(node, pullRequest)) {
+    const pullRequest = inScope(node);
+    if (pullRequest !== undefined && namesIssueIntoNext(node, pullRequest)) {
       found.set(pullRequest.number, pullRequest);
     }
   }
