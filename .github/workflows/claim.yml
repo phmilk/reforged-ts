@@ -10,7 +10,9 @@ name: claim
 on:
   pull_request_target:
     # Drafts included: the collision begins at the draft. No base-branch
-    # filter: a pull request to another branch closes nothing and passes.
+    # filter: a pull request into the Next branch, next, closes the issues
+    # its body's closing keywords name (next-close.yml), which the check
+    # reads there; one into any other branch closes nothing and passes.
     types: [opened, reopened, synchronize, edited]
   issues:
     types: [assigned, unassigned]

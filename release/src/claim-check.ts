@@ -27,10 +27,14 @@
  * (no enum, no namespace, no parameter property), so that Node 24 runs it
  * from a checkout with no install and no build, as the workflow does:
  * `node release/src/claim-check.ts <pull-request|issue>`. Of the other
- * release scripts it imports `issue-markdown.ts` alone, self-contained in
- * the same way and named by its `.ts` file, which Node runs and the build
- * rewrites (`rewriteRelativeImportExtensions`), so that a Ticket's criteria
- * and their gaps are read as `pnpm spec:check` reads them; `isRecord`, `errorMessage`,
+ * release scripts it imports `issue-markdown.ts` and `closing-keywords.ts`
+ * alone, self-contained in the same way and named by their `.ts` files,
+ * which Node runs and the build rewrites
+ * (`rewriteRelativeImportExtensions`), so that a Ticket's criteria and
+ * their gaps are read as `pnpm spec:check` reads them, and the Next branch
+ * (`NEXT_BRANCH`) and the closing keywords of a pull request into it, to
+ * which GitHub links no closing issue, as `next-close.yml` reads them;
+ * `isRecord`, `errorMessage`,
  * the job summary and the "started directly" test are copied from the
  * others.
  */
@@ -38,6 +42,7 @@ import { appendFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { closingReferences, NEXT_BRANCH } from "./closing-keywords.ts";
 import { criteriaOf, gapsOf } from "./issue-markdown.ts";
 
 const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
@@ -816,11 +821,16 @@ async function rest(
   return response;
 }
 
-/** The `data` of a GraphQL query; GitHub answers errors with a 200 too. */
+/**
+ * The `data` of a GraphQL query; GitHub answers errors with a 200 too.
+ * With `notFound`, an error of type `NOT_FOUND` is passed over, the field
+ * at its `path` left `null` in the data; any other error stops the check.
+ */
 async function graphql(
   api: Api,
   query: string,
   variables: Readonly<Record<string, unknown>>,
+  { notFound = false }: { notFound?: boolean } = {},
 ): Promise<Record<string, unknown>> {
   const response = await api({
     method: "POST",
@@ -833,8 +843,13 @@ async function graphql(
       `POST /graphql answered ${apiMessage(response)}.`,
     );
   }
-  if (isList(body.errors) && body.errors.length > 0) {
-    const messages = body.errors.map((error) =>
+  const errors = isList(body.errors)
+    ? body.errors.filter(
+        (error) => !(notFound && isRecord(error) && error.type === "NOT_FOUND"),
+      )
+    : [];
+  if (errors.length > 0) {
+    const messages = errors.map((error) =>
       isRecord(error) && typeof error.message === "string"
         ? error.message
         : JSON.stringify(error),
@@ -978,13 +993,7 @@ const BLOCKED_BY = `blockedBy(first: ${String(BLOCKER_PAGE)}) {
 // An issue holds at most ten assignees: that connection is read whole. The
 // parent is read with its labels, to tell a Spec from a wayfinder map, and
 // each issue with its own labels and blockers (ADR 0025).
-const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $first: Int!) {
-  repository(owner: $owner, name: $name) {
-    pullRequest(number: $number) {
-      closingIssuesReferences(first: $first) {
-        totalCount
-        nodes {
-          number
+const CLOSING_ISSUE_FIELDS = `number
           body
           repository { nameWithOwner }
           assignees(first: 20) { nodes { login } }
@@ -996,12 +1005,44 @@ const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $f
             repository { nameWithOwner }
             labels(first: 50) { nodes { name } }
             assignees(first: 20) { nodes { login } }
-          }
+          }`;
+
+const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $first: Int!) {
+  repository(owner: $owner, name: $name) {
+    pullRequest(number: $number) {
+      closingIssuesReferences(first: $first) {
+        totalCount
+        nodes {
+          ${CLOSING_ISSUE_FIELDS}
         }
       }
     }
   }
 }`;
+
+/**
+ * The query reading `count` issues named in a pull request's body, the
+ * `i`th as `r<i>` with the variables `o<i>`, `n<i>` (its repository's owner
+ * and name) and `k<i>` (its number). `issueOrPullRequest`, since `#<n>`
+ * may name a pull request, which closes nothing.
+ */
+const namedIssuesQuery = (count: number): string => {
+  const indexes = Array.from({ length: count }, (_, index) => String(index));
+  return `query(${indexes.map((i) => `$o${i}: String!, $n${i}: String!, $k${i}: Int!`).join(", ")}) {
+${indexes
+  .map(
+    (i) => `  r${i}: repository(owner: $o${i}, name: $n${i}) {
+    issueOrPullRequest(number: $k${i}) {
+      __typename
+      ... on Issue {
+          ${CLOSING_ISSUE_FIELDS}
+      }
+    }
+  }`,
+  )
+  .join("\n")}
+}`;
+};
 
 const CLOSED_BY = `query($owner: String!, $name: String!, $number: Int!) {
   repository(owner: $owner, name: $name) {
@@ -1060,16 +1101,15 @@ function ownerAndName(repository: string): { owner: string; name: string } {
 }
 
 /**
- * The issues the pull request closes, with whether `author` may be assigned
- * to each one of this repository. Stops when the pull request closes more
- * issues than one page holds: an issue the check did not read could be
- * claimed by another login, and the check never passes on one unread.
+ * The issues GitHub links to the pull request as closed by it, the nodes
+ * of `closingIssuesReferences`. Stops when the pull request closes more
+ * issues than one page holds.
  */
-async function readClosingIssues(
+async function readLinkedIssues(
   api: Api,
   repository: string,
-  pullRequest: { number: number; author: string },
-): Promise<ClosingIssue[]> {
+  pullRequest: EventPullRequest,
+): Promise<unknown[]> {
   const data = await graphql(api, CLOSING_ISSUES, {
     ...ownerAndName(repository),
     number: pullRequest.number,
@@ -1089,10 +1129,72 @@ async function readClosingIssues(
     );
   }
   if (totalCount > nodes.length) {
-    throw new ClaimCheckError(
-      `#${String(pullRequest.number)} closes ${String(totalCount)} issues, more than the ${String(nodes.length)} the check read: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
-    );
+    throw tooManyIssues(pullRequest.number, totalCount, nodes.length);
   }
+  return nodes;
+}
+
+/**
+ * The error of pull request `number`, which closes `count` issues, more
+ * than the `limit` the check reads in one query.
+ */
+const tooManyIssues = (number: number, count: number, limit: number) =>
+  new ClaimCheckError(
+    `#${String(number)} closes ${String(count)} issues, more than the ${String(limit)} the check reads: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
+  );
+
+/**
+ * The issues the closing keywords of the pull request's body name, read in
+ * one query, as `closingIssuesReferences` would answer them: a pull request
+ * a keyword names closes nothing and is left out. Stops on a body that
+ * names more issues than `CLOSING_PAGE`, as `readLinkedIssues` does.
+ */
+async function readNamedIssues(
+  api: Api,
+  repository: string,
+  pullRequest: EventPullRequest,
+): Promise<unknown[]> {
+  const refs = closingReferences(pullRequest.body, repository);
+  if (refs.length === 0) return [];
+  if (refs.length > CLOSING_PAGE) {
+    throw tooManyIssues(pullRequest.number, refs.length, CLOSING_PAGE);
+  }
+  const variables: Record<string, unknown> = {};
+  refs.forEach((ref, index) => {
+    const { owner, name } = ownerAndName(ref.repository);
+    variables[`o${String(index)}`] = owner;
+    variables[`n${String(index)}`] = name;
+    variables[`k${String(index)}`] = ref.number;
+  });
+  // A number that names no issue, and a repository that does not exist or
+  // that the token cannot read, are answered null with a NOT_FOUND error:
+  // GitHub links no such issue on master either, so each is left out.
+  const data = await graphql(api, namedIssuesQuery(refs.length), variables, {
+    notFound: true,
+  });
+  return refs.flatMap((_, index) => {
+    const node = at(data, `r${String(index)}`, "issueOrPullRequest");
+    return at(node, "__typename") === "Issue" ? [node] : [];
+  });
+}
+
+/**
+ * The issues the pull request closes, with whether `author` may be assigned
+ * to each one of this repository: those GitHub links to it, or, into the
+ * Next branch, where GitHub links none, those its body's closing keywords
+ * name. Stops when the pull request closes more issues than one page
+ * holds: an issue the check did not read could be claimed by another
+ * login, and the check never passes on one unread.
+ */
+async function readClosingIssues(
+  api: Api,
+  repository: string,
+  pullRequest: EventPullRequest,
+): Promise<ClosingIssue[]> {
+  const nodes =
+    pullRequest.base === NEXT_BRANCH
+      ? await readNamedIssues(api, repository, pullRequest)
+      : await readLinkedIssues(api, repository, pullRequest);
   const issues: ClosingIssue[] = [];
   for (const node of nodes) {
     const nameWithOwner = at(node, "repository", "nameWithOwner");
@@ -1440,8 +1542,18 @@ function settingsOf(
   };
 }
 
-/** The pull request of a `pull_request_target` event: its number and its author. */
-function pullRequestOf(event: unknown): { number: number; author: string } {
+/** The pull request of a `pull_request_target` event, as the check reads it. */
+interface EventPullRequest {
+  number: number;
+  author: string;
+  /** The branch it merges into; `null` when the event names none. */
+  base: string | null;
+  /** Its description, Markdown; empty when it has none. */
+  body: string;
+}
+
+/** The pull request of a `pull_request_target` event. */
+function pullRequestOf(event: unknown): EventPullRequest {
   const number = at(event, "pull_request", "number");
   const author = at(event, "pull_request", "user", "login");
   if (typeof number !== "number" || typeof author !== "string") {
@@ -1449,7 +1561,14 @@ function pullRequestOf(event: unknown): { number: number; author: string } {
       "The event holds no pull request with a number and an author: the pull-request mode runs on pull_request_target.",
     );
   }
-  return { number, author };
+  const base = at(event, "pull_request", "base", "ref");
+  const body = at(event, "pull_request", "body");
+  return {
+    number,
+    author,
+    base: typeof base === "string" ? base : null,
+    body: typeof body === "string" ? body : "",
+  };
 }
 
 /** The issue, the login added or removed and the sender of an `issues` event. */
@@ -1495,7 +1614,7 @@ async function checkPullRequest(
   ]);
   return planPullRequest({
     repository,
-    pullRequest,
+    pullRequest: { number: pullRequest.number, author: pullRequest.author },
     closing,
     comment: comments.get(MARKER) ?? null,
     criteriaComment: comments.get(CRITERIA_MARKER) ?? null,

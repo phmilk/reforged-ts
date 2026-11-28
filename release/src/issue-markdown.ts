@@ -2,7 +2,8 @@
  * How the coverage check (`spec-check.ts`) and the claim check
  * (`claim-check.ts`) read an issue's body: its sections, its list items and
  * a Ticket's criteria, by the rule of `docs/agents/issue-tracker.md`, "A
- * Spec's coverage". Self-contained on purpose, as the claim check is: no
+ * Spec's coverage"; `closing-keywords.ts` reads a pull request's body by
+ * its lines and fences. Self-contained on purpose, as the claim check is: no
  * import and erasable syntax only, so that Node runs it from a checkout
  * with no install and no build.
  */
