@@ -1330,7 +1330,7 @@ describe("claim-check.yml", () => {
     });
   });
 
-  it("dispatches board.yml from its own job after an assignment in the library, with actions: write alone", async () => {
+  it("dispatches board.yml from its own job after an assignment in the library, a job whose one permission is actions: write", async () => {
     const { jobs } = await workflow("claim-check.yml");
     const pullRequest = jobs.check?.steps?.find(
       (step) => step.run === "node release/src/claim-check.ts pull-request",

@@ -109,10 +109,9 @@ jobs:
   # library, which holds board.yml, by this job; in another Board repository
   # by board-dispatch, below. A workflow_dispatch is the one event
   # GITHUB_TOKEN does start. Its own job, so that `actions: write` is held
-  # by this step (and rerun's, below) and by nothing that reads the event;
-  # it runs when the
-  # check failed too (one issue assigned, another claimed by someone else),
-  # which `!cancelled()` allows and a plain `needs` would not.
+  # by a step that reads no event value, as rerun's is, below; it runs when
+  # the check failed too (one issue assigned, another claimed by someone
+  # else), which `!cancelled()` allows and a plain `needs` would not.
   dispatch:
     name: dispatch
     needs: check
@@ -155,12 +154,14 @@ jobs:
   # the check green without a push. A re-run is not a new event, which
   # GITHUB_TOKEN may start. Its own job, as dispatch is, so that
   # `actions: write` is held by one step that reads no event value: the run
-  # ids are the check job's output, numbers it read from the API. Each run
+  # ids are the check job's output, numbers it read from the API; the
+  # issue's number keys the concurrency group alone, outside any shell. Each run
   # still going is waited for first, since a running run cannot be re-run
   # and may have read the body before the edit. One per Ticket at a time,
   # so that two close edits do not start the same run twice; a run GitHub
-  # will not re-run (past 30 days, or started meanwhile by an edit of
-  # another Ticket) is a warning, and the loop goes on to the next.
+  # will not re-run, for any reason (past 30 days, started meanwhile by an
+  # edit of another Ticket, an error of the API), is a warning, and the
+  # loop goes on to the next: the job is no required check.
   rerun:
     name: rerun
     needs: check

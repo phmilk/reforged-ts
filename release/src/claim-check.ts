@@ -1497,13 +1497,15 @@ async function readOpenClosingPullRequests(
   number: number,
 ): Promise<OpenPullRequest[]> {
   const found = new Map<number, OpenPullRequest>();
-  /** Keeps the pull request read as `number` and `head`, or stops, naming `source`. */
-  const keep = (
-    pullRequest: unknown,
-    head: unknown,
-    bot: boolean,
+  /**
+   * Validates the open pull request `read` from the answer of `source` and
+   * adds it to `found`; stops on one without a number and a head.
+   */
+  const addValidated = (
+    read: { number: unknown; head: unknown; bot: boolean },
     source: string,
   ): void => {
+    const { number: pullRequest, head, bot } = read;
     if (
       typeof pullRequest !== "number" ||
       typeof head !== "string" ||
@@ -1528,10 +1530,12 @@ async function readOpenClosingPullRequests(
     ) {
       continue;
     }
-    keep(
-      at(node, "number"),
-      at(node, "headRefOid"),
-      at(node, "author", "__typename") === "Bot",
+    addValidated(
+      {
+        number: at(node, "number"),
+        head: at(node, "headRefOid"),
+        bot: at(node, "author", "__typename") === "Bot",
+      },
       "closedByPullRequestsReferences",
     );
   }
@@ -1545,10 +1549,12 @@ async function readOpenClosingPullRequests(
       repository,
     ).some((ref) => ref.repository === repository && ref.number === number);
     if (!named) continue;
-    keep(
-      at(item, "number"),
-      at(item, "head", "sha"),
-      at(item, "user", "type") === "Bot",
+    addValidated(
+      {
+        number: at(item, "number"),
+        head: at(item, "head", "sha"),
+        bot: at(item, "user", "type") === "Bot",
+      },
       `GET ${path}`,
     );
   }
@@ -1913,11 +1919,16 @@ async function checkEdit(
 ): Promise<EditPlan> {
   const { issue, bodyChanged } = editEventOf(event);
   const { repository } = settings;
-  /** The input of an edit that runs nothing again. */
-  const unread = { issue, bodyChanged, isTicket: false, pullRequests: [] };
-  if (!bodyChanged) return planEdit(unread);
+  /** The input of an edit that runs nothing again: no pull request read. */
+  const nothingToRun = {
+    issue,
+    bodyChanged,
+    isTicket: false,
+    pullRequests: [],
+  };
+  if (!bodyChanged) return planEdit(nothingToRun);
   const { isTicket } = await readIssueState(api, repository, issue);
-  if (!isTicket) return planEdit(unread);
+  if (!isTicket) return planEdit(nothingToRun);
   const open = await readOpenClosingPullRequests(api, repository, issue);
   const pullRequests: EditedPullRequest[] = [];
   let workflow: number | null = null;
