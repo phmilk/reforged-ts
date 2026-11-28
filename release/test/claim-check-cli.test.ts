@@ -201,14 +201,15 @@ const PULL_REQUEST_EVENT = {
 
 /**
  * The closing references of #34: #12 of this repository, with `parent` as
- * its parent issue when given and `body` as its body, #5 of the other;
- * `totalCount` as GitHub counts them.
+ * its parent issue when given, `body` as its body and `labels` as its
+ * labels, #5 of the other; `totalCount` as GitHub counts them.
  */
 function closing(
   assignees: string[],
   totalCount = 2,
   parent: unknown = null,
   body = "",
+  labels: string[] = [],
 ): unknown {
   return {
     repository: {
@@ -221,6 +222,7 @@ function closing(
               body,
               repository: { nameWithOwner: REPOSITORY },
               assignees: { nodes: assignees.map((login) => ({ login })) },
+              labels: { nodes: labels.map((name) => ({ name })) },
               parent,
             },
             {
@@ -352,7 +354,7 @@ describe("claim-check pull-request", () => {
     ]);
   });
 
-  it("reads the Ticket's body and edits its criteria comment to the criteria still left, beside the claim comment", async () => {
+  it("reads the Ticket's labels and body, fails on the criteria still left and edits their comment to them, beside the claim comment", async () => {
     answers.graphql.closingIssuesReferences = closing(
       ["alice"],
       2,
@@ -364,6 +366,7 @@ describe("claim-check pull-request", () => {
         assignees: { nodes: [{ login: "alice" }] },
       },
       "## Acceptance criteria\n\n- [x] The check passes.\n- [ ] The doc names the comment.\n",
+      ["ticket"],
     );
     answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
       status: 200,
@@ -384,9 +387,10 @@ describe("claim-check pull-request", () => {
 
     const result = await run(["pull-request"], PULL_REQUEST_EVENT);
 
-    expect(result.code).toBe(0);
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain("::error title=Claim check failed::");
     expect(result.summary).toContain(
-      "- #12: 1 criterion unchecked or without their outcome; commented.\n",
+      "- #12: 1 criterion unchecked or without their outcome; failed.\n",
     );
     expect(sent()).toEqual([
       [
@@ -401,7 +405,7 @@ describe("claim-check pull-request", () => {
       [
         `PATCH ${ISSUES}/comments/8`,
         {
-          body: `${CRITERIA_MARKER}\n\n**Criteria left.** #12, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #12. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+          body: `${CRITERIA_MARKER}\n\n**Criteria left.** #12, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes, and the check fails until none is left:\n\n- unchecked: The doc names the comment.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #12: an edit of that body runs this check again. See \`docs/agents/issue-tracker.md\`, "Claim".`,
         },
       ],
     ]);
@@ -1118,6 +1122,192 @@ describe("claim-check issue", () => {
       "POST",
       "GET",
     ]);
+  });
+});
+
+/** An edit of #12's body, a Ticket in the payload. */
+const EDIT_EVENT = {
+  action: "edited",
+  issue: { number: 12, labels: [{ name: "ticket" }] },
+  changes: { body: { from: "- [ ] The doc names the comment." } },
+  sender: { login: "alice" },
+};
+
+/** The run of this job, whose workflow the runs started again are of. */
+const RUN_ENV = { GITHUB_RUN_ID: "700" };
+
+const HEAD_34 = "a".repeat(40);
+const HEAD_36 = "b".repeat(40);
+const HEAD_40 = "c".repeat(40);
+
+describe("claim-check issue, an edit (#1084)", () => {
+  it("finds the run of the check on the head of each open pull request that closes the Ticket, into master or next, and outputs them", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: { number: 12, labels: [{ name: "ticket" }], assignees: [] },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: {
+        issue: {
+          closedByPullRequestsReferences: {
+            nodes: [
+              {
+                number: 34,
+                state: "OPEN",
+                headRefOid: HEAD_34,
+                repository: { nameWithOwner: REPOSITORY },
+                author: { __typename: "User" },
+              },
+              {
+                number: 30,
+                state: "MERGED",
+                headRefOid: "d".repeat(40),
+                repository: { nameWithOwner: REPOSITORY },
+                author: { __typename: "User" },
+              },
+              {
+                number: 35,
+                state: "OPEN",
+                headRefOid: "e".repeat(40),
+                repository: { nameWithOwner: REPOSITORY },
+                author: { __typename: "Bot" },
+              },
+            ],
+          },
+        },
+      },
+    };
+    answers.rest[
+      `GET /repos/${REPOSITORY}/pulls?state=open&base=next&per_page=100`
+    ] = {
+      status: 200,
+      body: [
+        {
+          number: 36,
+          body: "Closes #12.",
+          head: { sha: HEAD_36 },
+          user: { login: "alice", type: "User" },
+        },
+        {
+          number: 37,
+          body: "Closes #13.",
+          head: { sha: "f".repeat(40) },
+          user: { login: "alice", type: "User" },
+        },
+      ],
+    };
+    answers.rest[`GET /repos/${REPOSITORY}/actions/runs/700`] = {
+      status: 200,
+      body: { id: 700, workflow_id: 55 },
+    };
+    const runs = (head: string) =>
+      `GET /repos/${REPOSITORY}/actions/workflows/55/runs?event=pull_request_target&head_sha=${head}&per_page=1`;
+    answers.rest[runs(HEAD_34)] = {
+      status: 200,
+      body: { workflow_runs: [{ id: 900, status: "completed" }] },
+    };
+    answers.rest[runs(HEAD_36)] = {
+      status: 200,
+      body: { workflow_runs: [] },
+    };
+
+    const result = await run(["issue"], EDIT_EVENT, RUN_ENV);
+
+    expect(result).toEqual({
+      code: 0,
+      stdout:
+        "- #12, a Ticket: its body edited; the check of #34 runs again.\n" +
+        "- #12, a Ticket: its body edited; #35 is a bot's, outside the check.\n" +
+        "- #12, a Ticket: its body edited; #36 has no run of the check on its head: push to it, or edit it, to run one.\n",
+      stderr: "",
+      summary:
+        "## Claim check\n\n" +
+        "- #12, a Ticket: its body edited; the check of #34 runs again.\n" +
+        "- #12, a Ticket: its body edited; #35 is a bot's, outside the check.\n" +
+        "- #12, a Ticket: its body edited; #36 has no run of the check on its head: push to it, or edit it, to run one.\n",
+      // The workflow's job rerun starts it again.
+      output: "rerun=900\n",
+    });
+    expect(sent()).toEqual([
+      [`GET ${ISSUES}/12`, undefined],
+      [
+        "POST /graphql",
+        expect.objectContaining({
+          query: expect.stringContaining("headRefOid") as unknown,
+          variables: { owner: "owner", name: "fork", number: 12 },
+        }) as unknown,
+      ],
+      [
+        `GET /repos/${REPOSITORY}/pulls?state=open&base=next&per_page=100`,
+        undefined,
+      ],
+      [`GET /repos/${REPOSITORY}/actions/runs/700`, undefined],
+      [runs(HEAD_34), undefined],
+      [runs(HEAD_36), undefined],
+    ]);
+  });
+
+  it("reads nothing past an edit that left the body alone, or past an issue that is not a Ticket", async () => {
+    const untouched = await run(
+      ["issue"],
+      { ...EDIT_EVENT, changes: { title: { from: "Old" } } },
+      RUN_ENV,
+    );
+
+    expect(untouched).toMatchObject({
+      code: 0,
+      stdout: "- #12: edited, its body unchanged; nothing to run again.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([]);
+
+    // The labels are re-read: the payload's may be stale.
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: { number: 12, labels: [{ name: "spec" }], assignees: [] },
+    };
+    const spec = await run(["issue"], EDIT_EVENT, RUN_ENV);
+
+    expect(spec).toMatchObject({
+      code: 0,
+      stdout: "- #12: its body edited, not a Ticket; nothing to run again.\n",
+      output: "",
+    });
+    expect(sent()).toEqual([[`GET ${ISSUES}/12`, undefined]]);
+  });
+
+  it("stops, exit 1, without the run's id when a pull request needs its workflow", async () => {
+    answers.rest[`GET ${ISSUES}/12`] = {
+      status: 200,
+      body: { number: 12, labels: [{ name: "ticket" }], assignees: [] },
+    };
+    answers.graphql.closedByPullRequestsReferences = {
+      repository: {
+        issue: {
+          closedByPullRequestsReferences: {
+            nodes: [
+              {
+                number: 40,
+                state: "OPEN",
+                headRefOid: HEAD_40,
+                repository: { nameWithOwner: REPOSITORY },
+                author: { __typename: "User" },
+              },
+            ],
+          },
+        },
+      },
+    };
+    answers.rest[
+      `GET /repos/${REPOSITORY}/pulls?state=open&base=next&per_page=100`
+    ] = { status: 200, body: [] };
+
+    const result = await run(["issue"], EDIT_EVENT, { GITHUB_RUN_ID: "" });
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toBe(
+      "GITHUB_RUN_ID is not set: the edit branch reads the run's workflow.\n",
+    );
   });
 });
 
