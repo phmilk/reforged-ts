@@ -6,13 +6,15 @@
 # 0025), and the author joins each Ticket's Spec (assigned in the caller's
 # repository; in the other Board repository, which github.token cannot
 # write, a comment on the Ticket names the command), and a Ticket's criteria
-# still unchecked draw a comment on the pull request; on an assignment, a
-# conflict, or a Claim of an unsplit Spec or a blocked issue, draws a
-# comment on the issue. Adding to a Spec a login that holds or delivered one
-# of its Tickets is not a conflict, nor is a login the maintainer adds. After
-# an assignment it made, it tells the Claim board, from the library or from
-# another Board repository (the jobs dispatch and board-dispatch). It never
-# reverts anything. The library's claim.yml and the Template's call it, so
+# still unchecked fail the check, named in a comment on the pull request; on
+# an assignment, a conflict, or a Claim of an unsplit Spec or a blocked
+# issue, draws a comment on the issue. Adding to a Spec a login that holds or
+# delivered one of its Tickets is not a conflict, nor is a login the
+# maintainer adds. After an assignment it made, it tells the Claim board,
+# from the library or from another Board repository (the jobs dispatch and
+# board-dispatch). On an edit of a Ticket's body, the check of each open pull
+# request that closes it runs again (the job rerun). It never reverts
+# anything. The library's claim.yml and the Template's call it, so
 # that the check reports as `claim / check` in both; the logic and the texts
 # are release/src/claim-check.ts, the protocol docs/agents/issue-tracker.md,
 # "Claim".
@@ -45,8 +47,10 @@ jobs:
   check:
     name: check
     # A bot's pull request (Renovate's, the App's "Version Packages") is
-    # outside the protocol: the job is skipped, which counts as success.
-    if: github.event_name != 'pull_request_target' || github.event.pull_request.user.type != 'Bot'
+    # outside the protocol: the job is skipped, which counts as success. An
+    # edit matters on a Ticket alone, whose body holds its criteria (#1084):
+    # an edit of any other issue starts no runner.
+    if: (github.event_name != 'pull_request_target' || github.event.pull_request.user.type != 'Bot') && (github.event_name != 'issues' || github.event.action != 'edited' || contains(github.event.issue.labels.*.name, 'ticket'))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -55,14 +59,20 @@ jobs:
       issues: write
       # The sticky comment on the pull request.
       pull-requests: write
+      # On a Ticket's edit, the run of the check on each pull request's
+      # head, which the job rerun starts again.
+      actions: read
     # One run per pull request, a newer push or edit replacing the running
-    # one; one per issue, every assignment event seen in order.
+    # one; one per issue, every assignment and edit seen in order.
     concurrency:
       group: claim-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}
       cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
     outputs:
       # The issues the run assigned, comma-separated; empty when none.
       assigned: ${{ steps.pull-request.outputs.assigned }}
+      # The runs of the check to start again, by id, comma-separated; empty
+      # when none.
+      rerun: ${{ steps.issue.outputs.rerun }}
     steps:
       # master of the library, never a ref of the pull request; named in
       # full, since a checkout in a called workflow defaults to the caller's
@@ -84,7 +94,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node release/src/claim-check.ts pull-request
-      - name: claim-check issue
+      - id: issue
+        name: claim-check issue
         if: github.event_name == 'issues'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -133,3 +144,33 @@ jobs:
     uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  # On an edit of a Ticket's body, the check of each open pull request that
+  # closes it runs again (#1084): its criteria live in that body, which no
+  # push or edit of the pull request touches, so ticking the boxes turns
+  # the check green without a push. A re-run is not a new event, which
+  # GITHUB_TOKEN may start. Its own job, as dispatch is, so that
+  # `actions: write` is held by one step that reads no event value: the run
+  # ids are the check job's output, numbers it read from the API. Each run
+  # still going is waited for first, since a running run cannot be re-run
+  # and may have read the body before the edit.
+  rerun:
+    name: rerun
+    needs: check
+    if: ${{ !cancelled() && needs.check.outputs.rerun != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      # No checkout: gh needs the token, the repository and the run ids.
+      - name: Run the check of each pull request again
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUNS: ${{ needs.check.outputs.rerun }}
+        run: |
+          for run in ${RUNS//,/ }; do
+            gh run watch "$run" --interval 5 > /dev/null || true
+            gh run rerun "$run"
+          done

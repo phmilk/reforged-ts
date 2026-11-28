@@ -4,12 +4,16 @@ import {
   CRITERIA_MARKER,
   MARKER,
   MAX_ASSIGNMENTS,
+  planEdit,
   planIssue,
   planPullRequest,
   SPEC_LABEL,
   SPEC_MARKER,
+  TICKET_LABEL,
   type ClosingIssue,
   type ClosingPullRequest,
+  type EditedPullRequest,
+  type EditInput,
   type IssueInput,
   type ParentSpec,
   type PullRequestInput,
@@ -58,6 +62,7 @@ function issue(
     authorAssignable: true,
     spec: null,
     isSpec: false,
+    isTicket: false,
     openBlockers: [],
     body: "",
     ...more,
@@ -677,7 +682,7 @@ const TICKET_BODY = `## What to build
 
 /** What the check says of Ticket #12's body, word for word. */
 const TEXT_CRITERIA =
-  '**Criteria left.** #12, which this pull request closes, has what `pnpm spec:check` counts as gaps when its Spec closes:\n\n- unchecked: The doc names the comment.\n- unchecked, no `Outcome:` line: **Check whether** the token can write labels.\n- no `Outcome:` line: Check whether the reconcile follows.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented `Outcome:` line under it, in the body of #12. This comment is updated on the pull request\'s next push or edit. See `docs/agents/issue-tracker.md`, "A Spec\'s coverage".';
+  '**Criteria left.** #12, which this pull request closes, has what `pnpm spec:check` counts as gaps when its Spec closes, and the check fails until none is left:\n\n- unchecked: The doc names the comment.\n- unchecked, no `Outcome:` line: **Check whether** the token can write labels.\n- no `Outcome:` line: Check whether the reconcile follows.\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented `Outcome:` line under it, in the body of #12: an edit of that body runs this check again. See `docs/agents/issue-tracker.md`, "Claim".';
 
 /** The criteria comment once nothing is left. */
 const TEXT_CRITERIA_SETTLED = "**Criteria left:** none.";
@@ -688,34 +693,35 @@ const criteriaBody = (...texts: string[]) =>
 
 /** Ticket #12 of Spec #10, the author's, with `body`. */
 const ticket = (body: string): ClosingIssue =>
-  issue(12, ["alice"], { spec: spec(["alice"]), body });
+  issue(12, ["alice"], { spec: spec(["alice"]), isTicket: true, body });
 
 describe("planPullRequest, a Ticket's criteria", () => {
-  it("comments the criteria a closed Ticket still lacks, and passes", () => {
+  it("fails a pull request that closes a Ticket with criteria left, naming them in its comment (#1084)", () => {
     expect(planPullRequest(pullRequest([ticket(TICKET_BODY)]))).toEqual({
-      verdict: "passed",
+      verdict: "failed",
       assignments: [],
       comments: [{ number: 34, id: null, body: criteriaBody(TEXT_CRITERIA) }],
       summary: [
         "- #12: claimed by @alice, the author; passed.",
         "- #10, the Spec of #12: the author @alice among its assignees.",
-        "- #12: 3 criteria unchecked or without their outcome; commented.",
+        "- #12: 3 criteria unchecked or without their outcome; failed.",
       ],
-      exitCode: 0,
+      exitCode: 1,
     });
   });
 
-  it("settles its comment once every criterion is checked, with its outcome", () => {
+  it("passes once every criterion is checked, with its outcome, and settles its comment", () => {
     const delivered = TICKET_BODY.replaceAll("- [ ]", "- [x]")
       .replace("labels.\n", "labels.\n  Outcome: it can.\n")
       .replace("follows.\n", "follows.\n  Outcome: it does.\n");
+    const plan = planPullRequest({
+      ...pullRequest([ticket(delivered)]),
+      criteriaComment: { id: 8, body: criteriaBody(TEXT_CRITERIA) },
+    });
 
-    expect(
-      planPullRequest({
-        ...pullRequest([ticket(delivered)]),
-        criteriaComment: { id: 8, body: criteriaBody(TEXT_CRITERIA) },
-      }).comments,
-    ).toEqual([
+    expect(plan.verdict).toBe("passed");
+    expect(plan.exitCode).toBe(0);
+    expect(plan.comments).toEqual([
       { number: 34, id: 8, body: criteriaBody(TEXT_CRITERIA_SETTLED) },
     ]);
     expect(planPullRequest(pullRequest([ticket(delivered)])).comments).toEqual(
@@ -723,16 +729,66 @@ describe("planPullRequest, a Ticket's criteria", () => {
     );
   });
 
-  it("reads only Tickets: an issue outside a Spec keeps its boxes to itself", () => {
-    expect(
-      planPullRequest(
-        pullRequest([issue(12, ["alice"], { body: TICKET_BODY })]),
-      ).comments,
-    ).toEqual([]);
+  it("reads only Tickets: an issue not labelled ticket keeps its boxes to itself, and passes", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(12, ["alice"], { spec: spec(["alice"]), body: TICKET_BODY }),
+      ]),
+    );
+
+    expect(plan.comments).toEqual([]);
+    expect(plan.exitCode).toBe(0);
+  });
+
+  it("ignores the criteria of a Ticket of the other repository", () => {
+    const plan = planPullRequest(
+      pullRequest([
+        issue(5, [], {
+          repository: "owner/other",
+          isTicket: true,
+          body: TICKET_BODY,
+        }),
+      ]),
+    );
+
+    expect(plan.comments).toEqual([]);
+    expect(plan.exitCode).toBe(0);
+  });
+
+  it("passes a pull request that closes no Ticket, with no criteria comment", () => {
+    expect(planPullRequest(pullRequest([]))).toEqual({
+      verdict: "passed",
+      assignments: [],
+      comments: [],
+      summary: ["- #34 closes no issue of this repository; passed."],
+      exitCode: 0,
+    });
+  });
+
+  it("settles a Claim failure to its own pass while the criteria still fail the check", () => {
+    const plan = planPullRequest(
+      pullRequest([ticket(TICKET_BODY)], { id: 7, body: body(TEXT_2) }),
+    );
+
+    expect(plan.exitCode).toBe(1);
+    expect(plan.comments).toEqual([
+      {
+        number: 34,
+        id: 7,
+        body: body(
+          "**Claim check** passed on the Claim; it still fails on the criteria the **Criteria left** comment names.",
+        ),
+      },
+      { number: 34, id: null, body: criteriaBody(TEXT_CRITERIA) },
+    ]);
   });
 
   it("names the criteria of a Ticket another login holds, beside the failure", () => {
-    const held = issue(12, ["bob"], { spec: spec(["bob"]), body: TICKET_BODY });
+    const held = issue(12, ["bob"], {
+      spec: spec(["bob"]),
+      isTicket: true,
+      body: TICKET_BODY,
+    });
 
     expect(planPullRequest(pullRequest([held])).comments).toEqual([
       { number: 34, id: null, body: body(TEXT_2) },
@@ -1156,9 +1212,80 @@ describe("planIssue", () => {
 /** The parsed workflow `file` of this repository. */
 const workflow = async (file: string) => (await readWorkflow(file)).workflow;
 
-describe("SPEC_LABEL", () => {
-  it("is the Spec label repo:settings declares", () => {
-    expect(LABELS.map(({ name }) => name)).toContain(SPEC_LABEL);
+/** The `edited` event on #12, a Ticket whose body changed, closed by `pullRequests`. */
+function edited(
+  pullRequests: EditedPullRequest[],
+  more: Partial<EditInput> = {},
+): EditInput {
+  return {
+    issue: 12,
+    bodyChanged: true,
+    isTicket: true,
+    pullRequests,
+    ...more,
+  };
+}
+
+describe("planEdit", () => {
+  it("runs again the check of each open pull request that closes a Ticket whose body changed (#1084)", () => {
+    expect(
+      planEdit(
+        edited([
+          { number: 34, bot: false, run: 900 },
+          { number: 36, bot: false, run: 901 },
+        ]),
+      ),
+    ).toEqual({
+      verdict: "clear",
+      assignments: [],
+      comments: [],
+      summary: [
+        "- #12, a Ticket: its body edited; the check of #34 runs again.",
+        "- #12, a Ticket: its body edited; the check of #36 runs again.",
+      ],
+      exitCode: 0,
+      reruns: [900, 901],
+    });
+  });
+
+  it("passes over a bot's pull request, and names one with no run of the check", () => {
+    const plan = planEdit(
+      edited([
+        { number: 35, bot: true, run: 902 },
+        { number: 36, bot: false, run: null },
+      ]),
+    );
+
+    expect(plan.reruns).toEqual([]);
+    expect(plan.summary).toEqual([
+      "- #12, a Ticket: its body edited; #35 is a bot's, outside the check.",
+      "- #12, a Ticket: its body edited; #36 has no run of the check on its head: push to it, or edit it, to run one.",
+    ]);
+  });
+
+  it("runs nothing again on an edit that left the body alone, on an issue that is not a Ticket, or with no open pull request", () => {
+    expect(planEdit(edited([], { bodyChanged: false }))).toMatchObject({
+      summary: ["- #12: edited, its body unchanged; nothing to run again."],
+      reruns: [],
+    });
+    expect(planEdit(edited([], { isTicket: false }))).toMatchObject({
+      summary: ["- #12: its body edited, not a Ticket; nothing to run again."],
+      reruns: [],
+    });
+    expect(planEdit(edited([]))).toMatchObject({
+      summary: [
+        "- #12, a Ticket: its body edited; no open pull request closes it.",
+      ],
+      reruns: [],
+    });
+  });
+});
+
+describe("SPEC_LABEL and TICKET_LABEL", () => {
+  it("are the labels repo:settings declares", () => {
+    expect(LABELS.map(({ name }) => name)).toEqual(
+      expect.arrayContaining([SPEC_LABEL, TICKET_LABEL]),
+    );
   });
 });
 
@@ -1168,7 +1295,12 @@ describe("claim-check.yml", () => {
     const steps = Object.values(jobs).flatMap((job) => job?.steps ?? []);
 
     expect(Object.keys(on)).toEqual(["workflow_call"]);
-    expect(Object.keys(jobs)).toEqual(["check", "dispatch", "board-dispatch"]);
+    expect(Object.keys(jobs)).toEqual([
+      "check",
+      "dispatch",
+      "board-dispatch",
+      "rerun",
+    ]);
     expect(steps.length).toBeGreaterThan(0);
     for (const step of steps) {
       if (step.uses?.startsWith("actions/checkout@")) {
@@ -1191,6 +1323,7 @@ describe("claim-check.yml", () => {
       "node release/src/claim-check.ts pull-request",
       "node release/src/claim-check.ts issue",
       "gh workflow run board.yml --repo phmilk/reforged-ts",
+      RERUN,
     ]);
     expect(jobs.check?.steps?.map((step) => step.env ?? {})).toContainEqual({
       GITHUB_TOKEN: "${{ github.token }}",
@@ -1207,11 +1340,14 @@ describe("claim-check.yml", () => {
     expect(pullRequest?.id).toBe("pull-request");
     expect(jobs.check?.outputs).toEqual({
       assigned: "${{ steps.pull-request.outputs.assigned }}",
+      rerun: "${{ steps.issue.outputs.rerun }}",
     });
+    // actions: read, to find the run of the check on a pull request's head.
     expect(jobs.check?.permissions).toEqual({
       contents: "read",
       issues: "write",
       "pull-requests": "write",
+      actions: "read",
     });
     expect(dispatch?.needs).toBe("check");
     // Not cancelled, not a plain success: the run that assigned one issue
@@ -1265,7 +1401,44 @@ describe("claim-check.yml", () => {
       APP_PRIVATE_KEY: "${{ secrets.APP_PRIVATE_KEY }}",
     });
   });
+
+  it("runs the issue mode on an edit of a Ticket alone, and the pull requests' runs again from its own job with actions: write (#1084)", async () => {
+    const { jobs } = await workflow("claim-check.yml");
+    const issue = jobs.check?.steps?.find(
+      (step) => step.run === "node release/src/claim-check.ts issue",
+    );
+    const rerun = jobs.rerun;
+
+    expect(issue?.id).toBe("issue");
+    // An edit of any other issue starts no runner.
+    expect(jobs.check?.if).toBe(
+      "(github.event_name != 'pull_request_target' || github.event.pull_request.user.type != 'Bot') && (github.event_name != 'issues' || github.event.action != 'edited' || contains(github.event.issue.labels.*.name, 'ticket'))",
+    );
+    expect(issue?.if).toBe("github.event_name == 'issues'");
+    expect(rerun?.needs).toBe("check");
+    expect(rerun?.if).toBe(
+      "${{ !cancelled() && needs.check.outputs.rerun != '' }}",
+    );
+    expect(rerun?.permissions).toEqual({ actions: "write" });
+    expect(rerun?.["timeout-minutes"]).toBe(5);
+    expect(rerun?.steps).toHaveLength(1);
+    expect(rerun?.steps?.[0]).toMatchObject({
+      env: {
+        GH_TOKEN: "${{ github.token }}",
+        GH_REPO: "${{ github.repository }}",
+        RUNS: "${{ needs.check.outputs.rerun }}",
+      },
+      run: RERUN,
+    });
+  });
 });
+
+/** The step of the job `rerun`: each run waited for, then run again. */
+const RERUN = `for run in \${RUNS//,/ }; do
+  gh run watch "$run" --interval 5 > /dev/null || true
+  gh run rerun "$run"
+done
+`;
 
 describe("claim.yml", () => {
   it("calls the reusable workflow as the job `claim`, on pull requests and assignments, granting what it needs", async () => {
@@ -1275,7 +1448,7 @@ describe("claim.yml", () => {
       pull_request_target: {
         types: ["opened", "reopened", "synchronize", "edited"],
       },
-      issues: { types: ["assigned", "unassigned"] },
+      issues: { types: ["assigned", "unassigned", "edited"] },
     });
     expect(Object.keys(jobs)).toEqual(["claim"]);
     expect(jobs.claim?.uses).toBe("./.github/workflows/claim-check.yml");

@@ -57,6 +57,7 @@ flowchart LR
       subgraph claim_yml_claim_board_dispatch["board-dispatch.yml, called by the job claim / board-dispatch"]
         claim_yml_claim_board_dispatch_dispatch["claim / board-dispatch / dispatch, skipped here"]
       end
+      claim_yml_claim_rerun["claim / rerun"]
     end
   end
   pull_request -->|"pull_request_target into master: opened, reopened, closed, edited, converted_to_draft, ready_for_review"| board_yml
@@ -65,6 +66,7 @@ flowchart LR
   board_yml_labels --> board_yml_reconcile
   claim_yml_claim_check --> claim_yml_claim_dispatch
   claim_yml_claim_check --> claim_yml_claim_board_dispatch
+  claim_yml_claim_check --> claim_yml_claim_rerun
   classDef required stroke-width:4px
   class ci_yml_ci_ubuntu,ci_yml_ci_windows,claim_yml_claim_check required
   classDef skipped stroke-dasharray:5 5

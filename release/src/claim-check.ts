@@ -13,14 +13,16 @@
  * unsplit Spec or of an issue with an open blocker draws a comment too,
  * and is never undone (ADR 0025). A Ticket the pull request closes with
  * criteria still unchecked, or a "check whether…" without its `Outcome:`
- * line, draws a comment on the pull request under `CRITERIA_MARKER` that
- * never weighs on the verdict (#792). The protocol is
+ * line, fails the check, named in a comment on the pull request under
+ * `CRITERIA_MARKER` (#792, #1084); since those criteria live in the
+ * Ticket's body, an edit of that body starts again the check of each open
+ * pull request that closes it. The protocol is
  * `docs/agents/issue-tracker.md`, "Claim"; the texts are the spec's (#529),
  * the logins filled at run time, those of a Ticket's Spec follow ADR 0023,
  * and those of a Spec and of a blocker carry the rules of ADR 0025.
- * `planPullRequest` and `planIssue` are pure: the event and the fetched
- * state in; the verdict, the assignments, the comment upserts, the summary
- * lines and the exit code out. `main` reads the state through the GitHub
+ * `planPullRequest`, `planIssue` and `planEdit` are pure: the event and the
+ * fetched state in; the verdict, the assignments, the comment upserts, the
+ * runs to start again, the summary lines and the exit code out. `main` reads the state through the GitHub
  * API with the token of the environment and applies the plan.
  *
  * Self-contained on purpose: Node built-ins only and erasable syntax only
@@ -60,7 +62,7 @@ export const SPEC_MARKER = "<!-- claim-check: spec -->";
 /**
  * The hidden marker of the check's comment on a pull request that lists
  * the criteria its Tickets still lack; apart from `MARKER`, so that it is
- * settled on its own and never weighs on the verdict.
+ * settled on its own, once none is left.
  */
 export const CRITERIA_MARKER = "<!-- claim-check: criteria -->";
 
@@ -168,11 +170,14 @@ export const TEXTS = {
    * without its `Outcome:` line.
    */
   criteriaLeft: (ticket: number, gaps: readonly string[]): string =>
-    `**Criteria left.** #${String(ticket)}, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes:\n\n${gaps.join("\n")}\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #${String(ticket)}. This comment is updated on the pull request's next push or edit. See \`docs/agents/issue-tracker.md\`, "A Spec's coverage".`,
+    `**Criteria left.** #${String(ticket)}, which this pull request closes, has what \`pnpm spec:check\` counts as gaps when its Spec closes, and the check fails until none is left:\n\n${gaps.join("\n")}\n\nCheck each box once the review confirms it holds, and write the outcome of each "check whether…" in an indented \`Outcome:\` line under it, in the body of #${String(ticket)}: an edit of that body runs this check again. See \`docs/agents/issue-tracker.md\`, "Claim".`,
   /** How `criteriaLeft` names each gap of a criterion. */
   gapNames: { unchecked: "unchecked", "no-outcome": "no `Outcome:` line" },
   /** The criteria comment once no Ticket lacks any. */
   criteriaSettled: "**Criteria left:** none.",
+  /** Text 7 while a Ticket's criteria still fail the check. */
+  claimPassed:
+    "**Claim check** passed on the Claim; it still fails on the criteria the **Criteria left** comment names.",
   /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
   tooMany: (issues: readonly number[]): string =>
     `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
@@ -215,6 +220,8 @@ export interface ClosingIssue {
   spec: ParentSpec | null;
   /** Whether it is itself a Spec (labelled `spec`). */
   isSpec: boolean;
+  /** Whether it is a Ticket (labelled `ticket`): its criteria are read. */
+  isTicket: boolean;
   /** The issues it is blocked by that are open, of any repository. */
   openBlockers: readonly IssueRef[];
   /** Its body, Markdown: a Ticket's criteria are read from it. */
@@ -386,7 +393,10 @@ function criteriaGaps(body: string): string[] {
  * summary line; a pull request that closes no issue passes with one. The
  * worst verdict wins: exit 1 when any issue fails. With nothing to say, an
  * earlier comment is left alone unless it holds a failure, which a pass
- * replaces with text 7.
+ * replaces with text 7, or with `claimPassed` while criteria still fail.
+ * A Ticket of this repository (labelled `ticket`) whose body still has a
+ * criterion `pnpm spec:check` counts as a gap fails too (#1084), named in
+ * the comment under `CRITERIA_MARKER`, settled once none is left.
  */
 export function planPullRequest(input: PullRequestInput): Plan {
   const { repository, pullRequest, closing, comment } = input;
@@ -525,19 +535,27 @@ ${command}`,
       `- #${String(pullRequest.number)} closes no issue of this repository; passed.`,
     );
   }
-  // Only a failure is replaced on a pass; a reminder (text 1, text 3) stays.
-  const settled =
-    comment?.body.includes(FAILED_HEAD) === true ? TEXTS.passed : null;
+  // A Ticket's criteria left fail the check (#1084): their own comment,
+  // settled on its own once none is left.
   const criteria: string[] = [];
   for (const issue of closing) {
-    if (issue.repository !== repository || issue.spec === null) continue;
+    if (issue.repository !== repository || !issue.isTicket) continue;
     const gaps = criteriaGaps(issue.body);
     if (gaps.length === 0) continue;
+    failed = true;
     criteria.push(TEXTS.criteriaLeft(issue.number, gaps));
     summary.push(
-      `- #${String(issue.number)}: ${String(gaps.length)} ${gaps.length === 1 ? "criterion" : "criteria"} unchecked or without their outcome; commented.`,
+      `- #${String(issue.number)}: ${String(gaps.length)} ${gaps.length === 1 ? "criterion" : "criteria"} unchecked or without their outcome; failed.`,
     );
   }
+  // Only a failure is replaced on a pass; a reminder (text 1, text 3) stays.
+  // While criteria still fail the check, the Claim's pass says so.
+  const settled =
+    comment?.body.includes(FAILED_HEAD) === true
+      ? criteria.length > 0
+        ? TEXTS.claimPassed
+        : TEXTS.passed
+      : null;
   return {
     verdict: failed ? "failed" : "passed",
     assignments,
@@ -689,6 +707,87 @@ export function planIssue(input: IssueInput): Plan {
     comments: upsert(issue, [...lines, ...premature], comment, settleText),
     summary,
     exitCode: 0,
+  };
+}
+
+/** An open pull request of this repository that closes an edited Ticket. */
+export interface EditedPullRequest {
+  number: number;
+  /** Whether its author is a bot: outside the check. */
+  bot: boolean;
+  /**
+   * The latest run of the check's workflow on its head, the run to start
+   * again; `null` when it has none.
+   */
+  run: number | null;
+}
+
+/** The edit branch's input: the `edited` event and what was fetched. */
+export interface EditInput {
+  issue: number;
+  /** Whether the edit changed its body (`changes.body` in the event). */
+  bodyChanged: boolean;
+  /** Whether it is a Ticket (labelled `ticket`), re-read after the event. */
+  isTicket: boolean;
+  /**
+   * The open pull requests of this repository that close it; read only for
+   * a Ticket whose body changed, empty otherwise.
+   */
+  pullRequests: readonly EditedPullRequest[];
+}
+
+/** The edit branch's plan: a `Plan`, and the runs to start again. */
+export interface EditPlan extends Plan {
+  /** The runs of the check to start again, by id, each once. */
+  reruns: number[];
+}
+
+/**
+ * The edit branch, on `edited` (#1084): a Ticket's criteria live in its
+ * body, which no push or edit of the pull request touches, so an edit of
+ * the body of a Ticket starts again the check of each open pull request
+ * that closes it, its latest run on its head; ticking the boxes turns it
+ * green without a push. A bot's pull request is outside the check, and
+ * one with no run is named. An edit of the title or the labels, or of an
+ * issue that is not a Ticket, runs nothing again. Never a comment, never
+ * a failure: always exit 0.
+ */
+export function planEdit(input: EditInput): EditPlan {
+  const { issue, bodyChanged, isTicket, pullRequests } = input;
+  const n = String(issue);
+  const summary: string[] = [];
+  const reruns: number[] = [];
+  const head = `- #${n}, a Ticket: its body edited;`;
+  if (!bodyChanged) {
+    summary.push(`- #${n}: edited, its body unchanged; nothing to run again.`);
+  } else if (!isTicket) {
+    summary.push(
+      `- #${n}: its body edited, not a Ticket; nothing to run again.`,
+    );
+  } else if (pullRequests.length === 0) {
+    summary.push(`${head} no open pull request closes it.`);
+  } else {
+    for (const pullRequest of pullRequests) {
+      const number = `#${String(pullRequest.number)}`;
+      if (pullRequest.bot) {
+        summary.push(`${head} ${number} is a bot's, outside the check.`);
+      } else if (pullRequest.run === null) {
+        summary.push(
+          `${head} ${number} has no run of the check on its head: push to it, or edit it, to run one.`,
+        );
+      } else {
+        if (!reruns.includes(pullRequest.run)) reruns.push(pullRequest.run);
+        summary.push(`${head} the check of ${number} runs again.`);
+      }
+    }
+  }
+  return {
+    verdict: "clear",
+    assignments: [],
+    comments: [],
+    summary,
+    exitCode: 0,
+    reruns,
   };
 }
 
@@ -1218,6 +1317,7 @@ async function readClosingIssues(
       assignees: loginsOf(nodesOf(at(node, "assignees"))),
       authorAssignable,
       isSpec: nodesOf(at(node, "labels")).some(isSpecLabel),
+      isTicket: nodesOf(at(node, "labels")).some(isTicketLabel),
       openBlockers,
       body: typeof body === "string" ? body : "",
       spec: ours
@@ -1330,13 +1430,19 @@ async function readClosingPullRequestsAndBlockers(
 
 /**
  * The assignees of issue `number`, read now rather than from the event,
- * whether it is a Spec (labelled `spec`) and whether it is open.
+ * whether it is a Spec (labelled `spec`) or a Ticket (labelled `ticket`),
+ * and whether it is open.
  */
 async function readIssueState(
   api: Api,
   repository: string,
   number: number,
-): Promise<{ assignees: string[]; isSpec: boolean; open: boolean }> {
+): Promise<{
+  assignees: string[];
+  isSpec: boolean;
+  isTicket: boolean;
+  open: boolean;
+}> {
   const path = `/repos/${repository}/issues/${String(number)}`;
   const { body } = await rest(api, "GET", path, undefined, [200]);
   if (!isRecord(body) || !isList(body.assignees)) {
@@ -1345,8 +1451,148 @@ async function readIssueState(
   return {
     assignees: loginsOf(body.assignees),
     isSpec: isList(body.labels) && body.labels.some(isSpecLabel),
+    isTicket: isList(body.labels) && body.labels.some(isTicketLabel),
     open: body.state === "open",
   };
+}
+
+/** An open pull request that closes an edited Ticket, with its head. */
+interface OpenPullRequest {
+  number: number;
+  bot: boolean;
+  /** The commit at its head, which the runs of the check are on. */
+  head: string;
+}
+
+const OPEN_CLOSED_BY = `query($owner: String!, $name: String!, $number: Int!) {
+  repository(owner: $owner, name: $name) {
+    issue(number: $number) {
+      closedByPullRequestsReferences(first: 50, includeClosedPrs: false) {
+        nodes {
+          number
+          state
+          headRefOid
+          repository { nameWithOwner }
+          author { __typename }
+        }
+      }
+    }
+  }
+}`;
+
+/** A commit's full SHA, as the API names a head. */
+const SHA = /^[0-9a-f]{40}$/;
+
+/**
+ * The open pull requests of this repository that close issue `number`:
+ * those GitHub links to it, and those into the Next branch whose body's
+ * closing keywords name it, to which GitHub links none, as the
+ * pull-request branch reads them. One page of each: an issue is closed by
+ * a handful.
+ */
+async function readOpenClosingPullRequests(
+  api: Api,
+  repository: string,
+  number: number,
+): Promise<OpenPullRequest[]> {
+  const found = new Map<number, OpenPullRequest>();
+  const data = await graphql(api, OPEN_CLOSED_BY, {
+    ...ownerAndName(repository),
+    number,
+  });
+  for (const node of nodesOf(
+    at(data, "repository", "issue", "closedByPullRequestsReferences"),
+  )) {
+    const pullRequest = at(node, "number");
+    const head = at(node, "headRefOid");
+    if (
+      at(node, "state") !== "OPEN" ||
+      at(node, "repository", "nameWithOwner") !== repository
+    ) {
+      continue;
+    }
+    if (
+      typeof pullRequest !== "number" ||
+      typeof head !== "string" ||
+      !SHA.test(head)
+    ) {
+      throw new ClaimCheckError(
+        "closedByPullRequestsReferences answered an open pull request without a number and a head.",
+      );
+    }
+    found.set(pullRequest, {
+      number: pullRequest,
+      bot: at(node, "author", "__typename") === "Bot",
+      head,
+    });
+  }
+  const path = `/repos/${repository}/pulls?state=open&base=${NEXT_BRANCH}&per_page=${String(PAGE_SIZE)}`;
+  const { body } = await rest(api, "GET", path, undefined, [200]);
+  if (!isList(body)) throw new ClaimCheckError(`GET ${path} answered no list.`);
+  for (const item of body) {
+    const text = at(item, "body");
+    const named = closingReferences(
+      typeof text === "string" ? text : "",
+      repository,
+    ).some((ref) => ref.repository === repository && ref.number === number);
+    if (!named) continue;
+    const pullRequest = at(item, "number");
+    const head = at(item, "head", "sha");
+    if (
+      typeof pullRequest !== "number" ||
+      typeof head !== "string" ||
+      !SHA.test(head)
+    ) {
+      throw new ClaimCheckError(
+        `GET ${path} answered a pull request without a number and a head.`,
+      );
+    }
+    found.set(pullRequest, {
+      number: pullRequest,
+      bot: at(item, "user", "type") === "Bot",
+      head,
+    });
+  }
+  return [...found.values()];
+}
+
+/** The id of the workflow run `runId` is of: the caller's, `claim.yml`. */
+async function readWorkflowId(
+  api: Api,
+  repository: string,
+  runId: string,
+): Promise<number> {
+  const path = `/repos/${repository}/actions/runs/${runId}`;
+  const { body } = await rest(api, "GET", path, undefined, [200]);
+  const id = at(body, "workflow_id");
+  if (typeof id !== "number") {
+    throw new ClaimCheckError(`GET ${path} answered no workflow_id.`);
+  }
+  return id;
+}
+
+/**
+ * The latest run of workflow `workflow` on a pull request's commit `head`,
+ * the run whose `claim / check` the pull request shows; `null` when none.
+ */
+async function readLatestRun(
+  api: Api,
+  repository: string,
+  workflow: number,
+  head: string,
+): Promise<number | null> {
+  const path = `/repos/${repository}/actions/workflows/${String(workflow)}/runs?event=pull_request_target&head_sha=${head}&per_page=1`;
+  const { body } = await rest(api, "GET", path, undefined, [200]);
+  const runs = at(body, "workflow_runs");
+  if (!isList(runs)) {
+    throw new ClaimCheckError(`GET ${path} answered no workflow_runs.`);
+  }
+  if (runs.length === 0) return null;
+  const id = at(runs[0], "id");
+  if (typeof id !== "number") {
+    throw new ClaimCheckError(`GET ${path} answered a run without an id.`);
+  }
+  return id;
 }
 
 /**
@@ -1356,9 +1602,20 @@ async function readIssueState(
  */
 export const SPEC_LABEL = "spec";
 
+/**
+ * The label of a Ticket, as `split-spec` sets it; copied as
+ * `SPEC_LABEL` is, and checked against `repo-settings.ts` by the same test.
+ */
+export const TICKET_LABEL = "ticket";
+
 /** Whether a label object, REST's or GraphQL's, is the Spec label. */
 function isSpecLabel(label: unknown): boolean {
   return isRecord(label) && label.name === SPEC_LABEL;
+}
+
+/** Whether a label object, REST's or GraphQL's, is the Ticket label. */
+function isTicketLabel(label: unknown): boolean {
+  return isRecord(label) && label.name === TICKET_LABEL;
 }
 
 // A Spec splits into far fewer Tickets than a page, each with at most ten
@@ -1478,6 +1735,9 @@ const OUTPUT_VARIABLE = "GITHUB_OUTPUT";
 /** The step output that lists the issues the run assigned, comma-separated. */
 export const ASSIGNED_OUTPUT = "assigned";
 
+/** The step output that lists the runs to start again, comma-separated. */
+export const RERUN_OUTPUT = "rerun";
+
 /**
  * Sets the step output `name` to `value` when the environment `env` names
  * the outputs file (a step of GitHub Actions); does nothing elsewhere.
@@ -1502,6 +1762,8 @@ interface Settings {
   /** The API root, `GITHUB_API_URL`; GraphQL is `/graphql` under it. */
   base: string;
   eventPath: string;
+  /** The run's id, `GITHUB_RUN_ID`, all digits; read by the edit branch only. */
+  runId: string | undefined;
 }
 
 /** The variable's value when set and not empty. */
@@ -1530,7 +1792,12 @@ function settingsOf(
   if (eventPath === undefined) {
     throw new ClaimCheckError("GITHUB_EVENT_PATH is not set.");
   }
+  const runId = variable(env, "GITHUB_RUN_ID");
+  if (runId !== undefined && !/^\d+$/.test(runId)) {
+    throw new ClaimCheckError("GITHUB_RUN_ID is not a run's id.");
+  }
   return {
+    runId,
     token,
     repository,
     owner: variable(env, "GITHUB_REPOSITORY_OWNER") ?? repository.split("/")[0],
@@ -1588,7 +1855,7 @@ function issueEventOf(event: unknown): {
     typeof sender !== "string"
   ) {
     throw new ClaimCheckError(
-      "The event is not an assignment with an issue and a sender: the issue mode runs on issues (assigned, unassigned).",
+      "The event is not an assignment with an issue and a sender: the issue mode runs on issues (assigned, unassigned, edited).",
     );
   }
   return {
@@ -1619,6 +1886,57 @@ async function checkPullRequest(
     comment: comments.get(MARKER) ?? null,
     criteriaComment: comments.get(CRITERIA_MARKER) ?? null,
   });
+}
+
+/** The issue of an `issues` `edited` event, and whether its body changed. */
+function editEventOf(event: unknown): { issue: number; bodyChanged: boolean } {
+  const issue = at(event, "issue", "number");
+  if (at(event, "action") !== "edited" || typeof issue !== "number") {
+    throw new ClaimCheckError(
+      "The event is not an edit of an issue: the edit branch runs on issues (edited).",
+    );
+  }
+  return { issue, bodyChanged: isRecord(at(event, "changes", "body")) };
+}
+
+/**
+ * The edit branch's plan, the state read through `api`: no more than the
+ * plan needs, each read stopping at an edit that runs nothing again. The
+ * workflow is the run's own (`GITHUB_RUN_ID`), so that the run started
+ * again is of the caller's workflow, whatever its file is named.
+ */
+async function checkEdit(
+  api: Api,
+  settings: Settings,
+  event: unknown,
+): Promise<EditPlan> {
+  const { issue, bodyChanged } = editEventOf(event);
+  const { repository } = settings;
+  const nothing = { issue, bodyChanged, isTicket: false, pullRequests: [] };
+  if (!bodyChanged) return planEdit(nothing);
+  const { isTicket } = await readIssueState(api, repository, issue);
+  if (!isTicket) return planEdit(nothing);
+  const open = await readOpenClosingPullRequests(api, repository, issue);
+  const pullRequests: EditedPullRequest[] = [];
+  let workflow: number | null = null;
+  for (const pullRequest of open) {
+    if (pullRequest.bot) {
+      pullRequests.push({ number: pullRequest.number, bot: true, run: null });
+      continue;
+    }
+    if (settings.runId === undefined) {
+      throw new ClaimCheckError(
+        "GITHUB_RUN_ID is not set: the edit branch reads the run's workflow.",
+      );
+    }
+    workflow ??= await readWorkflowId(api, repository, settings.runId);
+    pullRequests.push({
+      number: pullRequest.number,
+      bot: false,
+      run: await readLatestRun(api, repository, workflow, pullRequest.head),
+    });
+  }
+  return planEdit({ ...nothing, isTicket, pullRequests });
 }
 
 /** The issue branch's plan, the state read through `api`. */
@@ -1659,9 +1977,12 @@ async function checkIssue(
  * of `GITHUB_EVENT_PATH`, in `GITHUB_REPOSITORY`, with `GITHUB_TOKEN`,
  * through the API at `GITHUB_API_URL`; writes a line per issue, or the
  * error that stopped it, to the job summary when `GITHUB_STEP_SUMMARY`
- * names one, and the issues it assigned to the step output `assigned` when
- * `GITHUB_OUTPUT` names the file. Exit codes: 0 passed, 1 an issue claimed
- * by another login (pull-request mode) or an error, 2 usage.
+ * names one, and the issues it assigned to the step output `assigned`, and
+ * the runs it starts again on a Ticket's edit to `rerun`, when
+ * `GITHUB_OUTPUT` names the file. The issue mode takes the edit branch on
+ * an `edited` event, which reads `GITHUB_RUN_ID`. Exit codes: 0 passed, 1
+ * a failure of the pull-request mode (an issue claimed by another login, a
+ * Spec, a blocker, a Ticket's criteria left) or an error, 2 usage.
  */
 export async function main(
   args: readonly string[],
@@ -1679,10 +2000,17 @@ export async function main(
       await readFile(settings.eventPath, "utf8"),
     );
     const api = gitHubApi(settings.base, settings.token, context.fetcher);
-    const plan =
-      mode === "pull-request"
-        ? await checkPullRequest(api, settings, event)
-        : await checkIssue(api, settings, event);
+    let plan: Plan;
+    let reruns: number[] = [];
+    if (mode === "pull-request") {
+      plan = await checkPullRequest(api, settings, event);
+    } else if (at(event, "action") === "edited") {
+      const edit = await checkEdit(api, settings, event);
+      plan = edit;
+      reruns = edit.reruns;
+    } else {
+      plan = await checkIssue(api, settings, event);
+    }
     for (const line of plan.summary) output.stdout(`${line}\n`);
     await apply(api, settings.repository, plan, output);
     // An assignment made with GITHUB_TOKEN raises no issues event: the
@@ -1694,13 +2022,17 @@ export async function main(
         plan.assignments.map(({ issue }) => String(issue)).join(","),
       );
     }
+    // The workflow's job rerun starts these again, with actions: write.
+    if (reruns.length > 0) {
+      await setOutput(context.env, RERUN_OUTPUT, reruns.join(","));
+    }
     await appendSummary(
       context.env,
       `## Claim check\n\n${plan.summary.join("\n")}\n`,
     );
     if (plan.verdict === "failed") {
       output.stdout(
-        "::error title=Claim check failed::An issue this pull request closes is claimed by another login, is a Spec, or has an open blocker the pull request does not close; the comment on the pull request names the way out.\n",
+        "::error title=Claim check failed::An issue this pull request closes is claimed by another login, is a Spec, has an open blocker the pull request does not close, or is a Ticket with criteria left; the comments on the pull request name the way out.\n",
       );
     }
     return plan.exitCode;
