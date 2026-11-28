@@ -128,6 +128,10 @@ _Avoid_: release line, track, stream, dist-tag (one part of a channel)
 The branch `next`, where a major is prepared: cut from `master` in Changesets pre mode (`beta`, then `rc`), released on the `next` dist-tag, and merged into `master` by a human when the major ships, then deleted.
 _Avoid_: beta branch, develop, major branch, the `next` dist-tag (what it publishes on)
 
+**Closing pull request**:
+A pull request of an issue's own repository that closes it when it merges: into `master` (the Template's `main`), one GitHub links by its closing keywords; into the **Next branch**, where GitHub links none, one whose body's closing keywords name it.
+_Avoid_: linked pull request (GitHub's link, which a pull request into the **Next branch** lacks), fixing PR, PR for the issue
+
 **Rawcode**:
 The four-character id of one type of object (`hfoo`, `AHbz`), which a map script holds as an integer (`FourCC("hfoo")`).
 _Avoid_: object id, type id, fourcc
