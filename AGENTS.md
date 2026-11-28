@@ -43,6 +43,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Every member backed by a Native carries `@native` naming the Natives behind it.
 - `*BJ` functions are never mirrored: what one offers is reimplemented over Natives (ADR 0008).
 - A Wrapper covers every Native whose first parameter is its Handle type, or excludes it with a reason (ADR 0008).
+- Work goes to `master`; a Spec or Ticket labelled `next` goes to `next`, its worktree from `origin/next` and its pull request with `--base next`. Dist-tags, publishes and Template refs are the release workflow's alone, never set by hand: [Release channels](docs/release.md#release-channels).
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
 - Every `@example` is included with `{@includeCode}` from a compiled file: the library's under `packages/reforged-ts/examples/`, `harness/` or `game/`, and `reforged-test/map`'s under `packages/reforged-test/examples/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
@@ -80,7 +81,7 @@ Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The w
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Three kind labels sit next to them: `spec` on an issue created with `write-spec`, `ticket` on one created with `split-spec`, `probe` on one whose work includes a Probe run. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Four kind labels sit next to them: `spec` on an issue created with `write-spec`, `ticket` on one created with `split-spec`, `probe` on one whose work includes a Probe run, `next` on a Spec or Ticket whose delivery needs a major. One state label, `needs-split`, is derived by the board on an open Spec with no Ticket. See `docs/agents/triage-labels.md`.
 
 ### Skills
 
