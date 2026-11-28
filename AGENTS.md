@@ -43,7 +43,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Every member backed by a Native carries `@native` naming the Natives behind it.
 - `*BJ` functions are never mirrored: what one offers is reimplemented over Natives (ADR 0008).
 - A Wrapper covers every Native whose first parameter is its Handle type, or excludes it with a reason (ADR 0008).
-- Work goes to `master`; a Spec or Ticket labelled `next` goes to `next` ([The `next` label](docs/agents/triage-labels.md#the-next-label)). Dist-tags, publishes and Template refs are the release workflow's alone, never set by hand outside the human steps `docs/release.md` names: [Release channels](docs/release.md#release-channels).
+- Work goes to `master`; a Spec or Ticket labelled `next` goes to `next` ([The `next` label](docs/agents/triage-labels.md#the-next-label)). Dist-tags, publishes and Template refs are the release workflow's alone, never set by hand: [Release channels](docs/release.md#release-channels).
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
 - Every `@example` is included with `{@includeCode}` from a compiled file: the library's under `packages/reforged-ts/examples/`, `harness/` or `game/`, and `reforged-test/map`'s under `packages/reforged-test/examples/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.

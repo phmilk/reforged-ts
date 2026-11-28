@@ -353,7 +353,7 @@ describe("the labels' descriptions", () => {
     expect(probe?.description).toContain("Battle.net");
   });
 
-  it("name the major and the branch it goes to on the label next", () => {
+  it("name the major and the Next branch on next", () => {
     const next = LABELS.find(({ name }) => name === "next");
 
     expect(next?.description).toContain("major");
