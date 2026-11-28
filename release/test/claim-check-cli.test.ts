@@ -678,6 +678,161 @@ describe("claim-check pull-request", () => {
   });
 });
 
+/**
+ * #34 into the Next branch: GitHub links no closing issue to a pull request
+ * into a branch other than the default, so the check reads the closing
+ * keywords of its body.
+ */
+const NEXT_EVENT = {
+  ...PULL_REQUEST_EVENT,
+  pull_request: {
+    ...PULL_REQUEST_EVENT.pull_request,
+    base: { ref: "next" },
+    body: "Closes #12, closes owner/other#5, fixes #7 and `closes #8`.",
+  },
+};
+
+/** The issues #34's body names, as `issueOrPullRequest` answers each; #7 is a pull request. */
+const NAMED = {
+  r0: {
+    issueOrPullRequest: {
+      __typename: "Issue",
+      number: 12,
+      body: "",
+      repository: { nameWithOwner: REPOSITORY },
+      assignees: { nodes: [] },
+      parent: null,
+    },
+  },
+  r1: {
+    issueOrPullRequest: {
+      __typename: "Issue",
+      number: 5,
+      repository: { nameWithOwner: "owner/other" },
+      assignees: { nodes: [] },
+    },
+  },
+  r2: { issueOrPullRequest: { __typename: "PullRequest" } },
+};
+
+describe("claim-check pull-request into next", () => {
+  it("reads the issues the body's closing keywords name, and claims them as on master", async () => {
+    answers.graphql.issueOrPullRequest = NAMED;
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/12/assignees`] = {
+      status: 201,
+      body: { assignees: [{ login: "alice" }] },
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["pull-request"], NEXT_EVENT);
+
+    expect(result).toMatchObject({
+      code: 0,
+      stdout:
+        "- #12: no assignee; assigned to the author @alice.\n" +
+        "- owner/other#5: an issue of another repository; ignored.\n" +
+        "Assigned #12 to @alice.\n" +
+        "Commented on #34.\n",
+      output: "assigned=12\n",
+    });
+    expect(sent()[0]).toEqual([
+      "POST /graphql",
+      expect.objectContaining({
+        variables: {
+          o0: "owner",
+          n0: "fork",
+          k0: 12,
+          o1: "owner",
+          n1: "other",
+          k1: 5,
+          o2: "owner",
+          n2: "fork",
+          k2: 7,
+        },
+      }) as unknown,
+    ]);
+    // Never the default branch's links, which are empty here.
+    expect(JSON.stringify(received[0]?.body)).not.toContain(
+      "closingIssuesReferences",
+    );
+  });
+
+  it("fails on an issue the body names that another login claimed", async () => {
+    answers.graphql.issueOrPullRequest = {
+      ...NAMED,
+      r0: {
+        issueOrPullRequest: {
+          ...NAMED.r0.issueOrPullRequest,
+          assignees: { nodes: [{ login: "bob" }] },
+        },
+      },
+    };
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 1 },
+    };
+
+    const result = await run(["pull-request"], NEXT_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain(
+      "- #12: claimed by @bob, not by the author @alice; failed.\n",
+    );
+  });
+
+  it("passes a body that names no issue, with no query", async () => {
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [],
+    };
+
+    const result = await run(["pull-request"], {
+      ...NEXT_EVENT,
+      pull_request: { ...NEXT_EVENT.pull_request, body: null },
+    });
+
+    expect(result).toMatchObject({
+      code: 0,
+      stdout: "- #34 closes no issue of this repository; passed.\n",
+    });
+    expect(sent().map(([request]) => request)).toEqual([
+      `GET ${ISSUES}/34/comments?per_page=100&page=1`,
+    ]);
+  });
+
+  it("stops, exit 1, on a body that names more issues than one query reads", async () => {
+    const body = Array.from(
+      { length: 51 },
+      (_, index) => `Closes #${String(index + 1)}`,
+    ).join("\n");
+
+    const result = await run(["pull-request"], {
+      ...NEXT_EVENT,
+      pull_request: { ...NEXT_EVENT.pull_request, body },
+    });
+
+    expect(result).toMatchObject({
+      code: 1,
+      stderr:
+        "#34 closes 51 issues, more than the 50 the check reads: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.\n",
+    });
+    expect(sent()).toEqual([]);
+  });
+});
+
 const ISSUE_EVENT = {
   action: "assigned",
   issue: { number: 12, assignees: [{ login: "alice" }, { login: "bob" }] },
