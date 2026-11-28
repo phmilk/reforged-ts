@@ -102,9 +102,9 @@ jobs:
     # policy admits master and next alone, the branches a release runs
     # from: a run on any other ref is refused it before any step. Every job
     # of the library that mints the App's token runs in it, one environment
-    # for all of them: one copy of the key to rotate. It is not the environment board, so no job holding the App
-    # sees the board's project token (docs/release.md, "Repository
-    # variables and secrets").
+    # for all of them: one copy of the key to rotate. It is not the
+    # environment board, so no job holding the App sees the board's project
+    # token (docs/release.md, "Repository variables and secrets").
     environment: app
     permissions:
       contents: read

@@ -64,6 +64,8 @@ async function runStep(step: Step, env: Record<string, string>) {
 describe("release.yml", () => {
   it("runs on each push to master and to next, the branches the environment app admits", async () => {
     const { workflow } = await readWorkflow(FILE);
+    // The two branches of a Release channel, and the environment's list,
+    // which the wizard test below holds to the wizard's.
     expect(workflow.on.push).toEqual({ branches: ["master", "next"] });
     expect(workflow.on.push).toEqual({ branches: APP_BRANCHES });
   });

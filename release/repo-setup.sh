@@ -506,8 +506,8 @@ admits_alone() {
   [[ "$(policy_branches "$environment" "$repository" | sort)" == "$(tr ' ' '\n' <<<"$branches" | sort)" ]]
 }
 
-# branches_alone BRANCHES prints a space-separated list of branches as the wizard
-# says it: "master alone", "master and next alone".
+# branches_alone BRANCHES prints the words the wizard says a space-separated
+# list of branches with: "master alone", "master and next alone".
 branches_alone() {
   printf '%s alone' "${1// / and }"
 }

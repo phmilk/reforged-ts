@@ -64,6 +64,21 @@ describe("setDistTags", () => {
         "A package at 0.0.0 is never published",
     );
   });
+
+  it("refuses a stable version on next, naming it, and takes it on latest", () => {
+    // master's Version Packages commit, merged into next by next-sync
+    // before master's own release published it.
+    const merged = plan([
+      entry("reforged-types", "1.3.0", "latest"),
+      entry("reforged-ts", "2.0.0-beta.1", "beta"),
+    ]);
+    expect(() => setDistTags(merged, "next")).toThrow(
+      "A release from next publishes prereleases only, and the publish plan holds stable versions: reforged-types@1.3.0. " +
+        "A stable version goes out from master, on latest: re-run this job once master's release has published it " +
+        '(docs/release.md, "Release channels").',
+    );
+    expect(setDistTags(merged, "latest").releases).toHaveLength(2);
+  });
 });
 
 describe("formatReleases", () => {
