@@ -655,7 +655,7 @@ describe("claim-check pull-request", () => {
     const result = await run(["pull-request"], PULL_REQUEST_EVENT);
 
     const message =
-      "#34 closes 51 issues, more than the 2 the check read: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.";
+      "#34 closes 51 issues, more than the 2 the check reads: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.";
     expect(result).toEqual({
       code: 1,
       stdout: "",
@@ -879,7 +879,7 @@ describe("claim-check pull-request into next", () => {
     expect(result).toMatchObject({
       code: 1,
       stderr:
-        "#34 closes 51 issues, more than the 50 the check read: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.\n",
+        "#34 closes 51 issues, more than the 50 the check reads: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.\n",
     });
     expect(sent()).toEqual([]);
   });

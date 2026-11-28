@@ -31,9 +31,10 @@
  * alone, self-contained in the same way and named by their `.ts` files,
  * which Node runs and the build rewrites
  * (`rewriteRelativeImportExtensions`), so that a Ticket's criteria and
- * their gaps are read as `pnpm spec:check` reads them, and the closing
- * keywords of a pull request into the Next branch, to which GitHub links no
- * closing issue, as `next-close.yml` reads them; `isRecord`, `errorMessage`,
+ * their gaps are read as `pnpm spec:check` reads them, and the Next branch
+ * (`NEXT_BRANCH`) and the closing keywords of a pull request into it, to
+ * which GitHub links no closing issue, as `next-close.yml` reads them;
+ * `isRecord`, `errorMessage`,
  * the job summary and the "started directly" test are copied from the
  * others.
  */
@@ -822,8 +823,8 @@ async function rest(
 
 /**
  * The `data` of a GraphQL query; GitHub answers errors with a 200 too.
- * With `notFound`, an error of type `NOT_FOUND` is passed over, its field
- * left `null` in the data; any other error stops the check.
+ * With `notFound`, an error of type `NOT_FOUND` is passed over, the field
+ * at its `path` left `null` in the data; any other error stops the check.
  */
 async function graphql(
   api: Api,
@@ -1135,11 +1136,11 @@ async function readLinkedIssues(
 
 /**
  * The error of pull request `number`, which closes `count` issues, more
- * than the `read` the check read.
+ * than the `limit` the check reads in one query.
  */
-const tooManyIssues = (number: number, count: number, read: number) =>
+const tooManyIssues = (number: number, count: number, limit: number) =>
   new ClaimCheckError(
-    `#${String(number)} closes ${String(count)} issues, more than the ${String(read)} the check read: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
+    `#${String(number)} closes ${String(count)} issues, more than the ${String(limit)} the check reads: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
   );
 
 /**
@@ -1165,8 +1166,9 @@ async function readNamedIssues(
     variables[`n${String(index)}`] = name;
     variables[`k${String(index)}`] = ref.number;
   });
-  // A number that names no issue is answered null with a NOT_FOUND error:
-  // GitHub links no such issue on master either, so it is left out.
+  // A number that names no issue, and a repository that does not exist or
+  // that the token cannot read, are answered null with a NOT_FOUND error:
+  // GitHub links no such issue on master either, so each is left out.
   const data = await graphql(api, namedIssuesQuery(refs.length), variables, {
     notFound: true,
   });

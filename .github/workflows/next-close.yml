@@ -17,8 +17,9 @@ permissions:
   contents: read
 
 # No concurrency group: each run closes the issues of its own push's pull
-# request, and two runs that name the same issue are harmless, since gh
-# leaves an issue already closed as it is.
+# request. A later run that names an issue already closed leaves it as it
+# is (gh issue close neither comments nor fails); two runs at the same
+# moment may at worst comment twice.
 
 jobs:
   # Which issues, without the App: the closing keywords of the merged pull
