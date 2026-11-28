@@ -45,9 +45,10 @@ export interface Label {
  * `needs-split`, `probe` and `next` carry the skills' and the board's text
  * (`needs-split`, which `board:labels` derives, ADR 0025; `probe`, put by
  * hand on an issue whose work includes a Probe run, #1029; `next`, put by
- * `write-spec` and `split-spec` on a Spec or Ticket whose delivery needs a
- * major, ADR 0031): those are kept as committed. The others are GitHub's defaults and the triage skills', only
- * created when missing, so an existing one keeps its colour and description.
+ * `write-spec`, `split-spec` or by hand on a Spec or Ticket whose delivery
+ * needs a major, ADR 0031): those are kept as committed. The others are
+ * GitHub's defaults and the triage skills', only created when missing, so an
+ * existing one keeps its colour and description.
  */
 export const LABELS: readonly (Label & { owned: boolean })[] = [
   {
