@@ -22,7 +22,8 @@ on:
       dry_run:
         description: >
           Dry run: print the plan, the issue and the pull request the watch
-          would open; open nothing. Runs from master only, as every run.
+          would open; open nothing. Runs from master or next only, as
+          every run.
         type: boolean
         default: false
 

@@ -65,8 +65,9 @@ jobs:
     timeout-minutes: 10
     # The App's key lives in the environment app, whose deployment branch
     # policy admits master and next alone (docs/release.md, "Repository
-    # variables and secrets"); this workflow runs on pushes to master alone. The App opens
-    # the pull request, so CI runs on it, and the issue.
+    # variables and secrets"); this workflow runs on pushes to master
+    # alone. The App opens the pull request, so CI runs on it, and the
+    # issue.
     environment: app
     permissions:
       contents: read

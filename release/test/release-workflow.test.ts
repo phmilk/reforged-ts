@@ -65,7 +65,7 @@ describe("release.yml", () => {
   it("runs on each push to master and to next, the branches the environment app admits", async () => {
     const { workflow } = await readWorkflow(FILE);
     expect(workflow.on.push).toEqual({ branches: ["master", "next"] });
-    expect(APP_BRANCHES).toEqual(["master", "next"]);
+    expect(workflow.on.push).toEqual({ branches: APP_BRANCHES });
   });
 
   describe("the select job", () => {

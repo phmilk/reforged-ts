@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # The App's key's home, whose deployment branch policy admits master
-    # alone (docs/release.md, "Repository variables and secrets").
+    # and next alone (docs/release.md, "Repository variables and secrets").
     environment: app
     permissions:
       contents: read

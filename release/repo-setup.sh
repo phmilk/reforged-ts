@@ -506,16 +506,16 @@ admits_alone() {
   [[ "$(policy_branches "$environment" "$repository" | sort)" == "$(tr ' ' '\n' <<<"$branches" | sort)" ]]
 }
 
-# alone BRANCHES prints a space-separated list of branches as the wizard
+# branches_alone BRANCHES prints a space-separated list of branches as the wizard
 # says it: "master alone", "master and next alone".
-alone() {
+branches_alone() {
   printf '%s alone' "${1// / and }"
 }
 
 # make_environment ENVIRONMENT BRANCHES [REPOSITORY] creates ENVIRONMENT in
 # REPOSITORY (this one by default) with a deployment branch policy of its
 # own that admits BRANCHES alone, a space-separated list, then checks it
-# (admit_branch_alone). Both calls are idempotent: the PUT sets custom
+# (admit_branches_alone). Both calls are idempotent: the PUT sets custom
 # branch policies, the POST adds each branch that is not listed.
 make_environment() {
   local environment="$1" branches="$2" repository="${3:-$REPO}"
@@ -525,15 +525,15 @@ make_environment() {
     printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$repository/environments/$environment" --input - ||
       fail "gh api -X PUT repos/$repository/environments/$environment failed." "Read the error above."
   fi
-  admit_branch_alone "$environment" "$branches" "$repository"
+  admit_branches_alone "$environment" "$branches" "$repository"
 }
 
-# admit_branch_alone ENVIRONMENT BRANCHES [REPOSITORY] adds each branch of
+# admit_branches_alone ENVIRONMENT BRANCHES [REPOSITORY] adds each branch of
 # BRANCHES, a space-separated list, to the deployment branch policy of
 # ENVIRONMENT in REPOSITORY (this one by default) when it is not listed,
 # then checks that the policy admits BRANCHES alone; in the dry run it only
 # lists the policy.
-admit_branch_alone() {
+admit_branches_alone() {
   local environment="$1" branches="$2" repository="${3:-$REPO}" branch listed
   local name="the environment $environment" title="The environment $environment"
   if [[ "$repository" != "$REPO" ]]; then
@@ -551,11 +551,11 @@ admit_branch_alone() {
   done
   if $DRY_RUN; then
     run gh api "repos/$repository/environments/$environment/deployment-branch-policies"
-    note "A real run then checks that the environment admits $(alone "$branches")."
+    note "A real run then checks that the environment admits $(branches_alone "$branches")."
   else
     admits_alone "$environment" "$branches" "$repository" ||
-      fail "$title does not admit $(alone "$branches"): its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
-    ok "$name exists and admits $(alone "$branches")"
+      fail "$title does not admit $(branches_alone "$branches"): its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
+    ok "$name exists and admits $(branches_alone "$branches")"
   fi
 }
 
@@ -727,7 +727,7 @@ pause "Press Enter to continue"
 stage "Register the GitHub App"
 
 if app_stored; then
-  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and its environment $APP_ENVIRONMENT, admitting $(alone "$APP_BRANCHES"), the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
+  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and its environment $APP_ENVIRONMENT, admitting $(branches_alone "$APP_BRANCHES"), the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
   if confirm "Set the App up again (another App, or a new private key)?"; then
     note "For a new key of the same App, do not register another: answer yes below."
   else
@@ -738,16 +738,16 @@ if app_stored; then
 elif client_id_stored && secret_stored "$PRIVATE_KEY_SECRET"; then
   ok "$REPO holds the variable $CLIENT_ID_VARIABLE and the repository secret $PRIVATE_KEY_SECRET: the App was set up before the environment $APP_ENVIRONMENT."
   say "A repository secret is readable by a workflow of any branch; the environment"
-  say "$APP_ENVIRONMENT admits $(alone "$APP_BRANCHES")."
+  say "$APP_ENVIRONMENT admits $(branches_alone "$APP_BRANCHES")."
   confirm "Keep the App, and store its key in the environment $APP_ENVIRONMENT?" && KEY_ONLY=true
 # The environment from an earlier run, holding the key, with a policy of
 # other branches (master alone, before a release ran from next): the App and
 # its key stay, the missing branches are added.
 elif client_id_stored && app_key_stored; then
   ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and the secret $PRIVATE_KEY_SECRET in its environment $APP_ENVIRONMENT: the App was set up on an earlier run."
-  say "The environment's policy admits '$(policy_branches "$APP_ENVIRONMENT" | tr '\n' ' ')', not $(alone "$APP_BRANCHES"),"
+  say "The environment's policy admits '$(policy_branches "$APP_ENVIRONMENT" | tr '\n' ' ')', not $(branches_alone "$APP_BRANCHES"),"
   say "the branches a release runs from."
-  if confirm "Keep the App and its key, and admit $(alone "$APP_BRANCHES") in the environment's policy?"; then
+  if confirm "Keep the App and its key, and admit $(branches_alone "$APP_BRANCHES") in the environment's policy?"; then
     APP_DONE=true
     POLICY_ONLY=true
   fi
@@ -854,12 +854,12 @@ if $APP_DONE; then
   if $POLICY_ONLY; then
     # The environment exists: no PUT rewrites its settings, only the
     # missing branches are added to its custom branch policies.
-    say "Its deployment branch policy, widened to $(alone "$APP_BRANCHES"), the branches a"
+    say "Its deployment branch policy, widened to $(branches_alone "$APP_BRANCHES"), the branches a"
     say "release runs from:"
     [[ "$(gh_read api "repos/$REPO/environments/$APP_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] ||
       fail "The environment $APP_ENVIRONMENT does not admit selected branches only." \
-        "Set its Deployment branches to Selected branches and tags, with $(alone "$APP_BRANCHES"): https://github.com/$REPO/settings/environments"
-    admit_branch_alone "$APP_ENVIRONMENT" "$APP_BRANCHES"
+        "Set its Deployment branches to Selected branches and tags, with $(branches_alone "$APP_BRANCHES"): https://github.com/$REPO/settings/environments"
+    admit_branches_alone "$APP_ENVIRONMENT" "$APP_BRANCHES"
   fi
 else
   if ! $KEY_ONLY; then
@@ -867,7 +867,7 @@ else
       fail "gh variable set failed." "Read the error above."
   fi
   say "The environment $APP_ENVIRONMENT, the key's home, with a deployment branch policy"
-  say "of its own ($(alone "$APP_BRANCHES"), below, the branches a release runs from): every"
+  say "of its own ($(branches_alone "$APP_BRANCHES"), below, the branches a release runs from): every"
   say "job that mints the App's token runs in it, so a run on any other ref is refused the"
   say "key. Both calls are idempotent:"
   make_environment "$APP_ENVIRONMENT" "$APP_BRANCHES"
@@ -1145,7 +1145,7 @@ if ! $TEMPLATE_OK; then
     [[ "$(gh_read api "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] ||
       fail "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT does not admit selected branches only." \
         "Set its Deployment branches to Selected branches and tags, with $TEMPLATE_BRANCH alone: https://github.com/$TEMPLATE/settings/environments"
-    admit_branch_alone "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
+    admit_branches_alone "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
   else
     say "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT, the key's home, with a deployment branch"
     say "policy of its own ($TEMPLATE_BRANCH alone, below); both calls are idempotent:"
